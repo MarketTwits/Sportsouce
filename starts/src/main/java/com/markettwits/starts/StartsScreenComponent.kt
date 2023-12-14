@@ -35,6 +35,10 @@ class StartsScreenComponent(
         toDetail(startdId)
     }
 
+    override fun onPageClick() {
+        dataSource.startsWithFilter()
+    }
+
     override val data: MutableValue<StartsCloud> = someLogic.state
     override val starts: Value<StartsUiState> = someLogic.starts
 

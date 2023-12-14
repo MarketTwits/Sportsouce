@@ -24,7 +24,14 @@ class StartHandler(
             starts.value = it
         }
     }
-
+    fun fetchWithFilter(){
+        scope.launch {
+            dataSource.startsWithFilter()
+        }
+        dataSource.starts.subscribe {
+            starts.value = it
+        }
+    }
     private fun fetch() {
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {

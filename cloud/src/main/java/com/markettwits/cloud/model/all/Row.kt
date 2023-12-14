@@ -1,5 +1,7 @@
 package com.markettwits.sportsourcedemo.all
 
+
+import com.markettwits.cloud.model.all.Result
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,16 +35,16 @@ data class Row(
     val payment_type: String?,
     val photos_link: String?,
     val posterLinkFile: PosterLinkFile?,
-    val poster_link: Int,
+    val poster_link: Int?,
     val rang: String?,
     val reg_link: String?,
     val reg_on_loc: String?,
-    val reg_on_site: Boolean,
+    val reg_on_site: Boolean?,
     val registration_end_date: String,
     val registration_start_date: String,
     val result_columns_json: String?,
     val result_json: String?,
-    val results: List<String>,
+    val results: List<Result>,
     val results_link: String?,
     val search_service: String?,
     val season: Season,

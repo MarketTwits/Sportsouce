@@ -2,17 +2,22 @@ package com.markettwits.starts.components.success
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dehaze
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,8 +41,9 @@ fun StartCard(
 ) {
     Box(
         modifier = Modifier
-            .background(Color.White)
+            .background(Color(245, 245, 245))
             .fillMaxWidth()
+            .height(height = 200.dp)
             .padding(10.dp)
             .clickable {
                 onItemClick(start.id)
@@ -56,10 +62,9 @@ private fun ImageCard(modifier: Modifier = Modifier, image: String, date: String
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .wrapContentSize()
-            .background(Color.LightGray)
             .size(width = 145.dp, height = 170.dp)
+            .clip(RoundedCornerShape(10.dp))
+            //.wrapContentSize()
     ) {
         AsyncImage(
             model = image,
@@ -80,7 +85,7 @@ private fun ImageCardInfoStroke(title: String) {
         modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
             .fillMaxWidth()
-            .background(Color(77,183,254))
+            .background(Color(77, 183, 254))
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -123,13 +128,16 @@ private fun ImageCardInfo(
     place: String,
     distance: String
 ) {
-    Column(modifier = modifier.padding(10.dp)) {
+    Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
         Text(text = title, fontSize = 16.sp)
-        Text(
-            text = place,
-            fontSize = 10.sp
-        )
-        HtmlText(text = distance, fontSize = 10.sp)
+        Row(horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically) {
+            Icon(imageVector = Icons.Default.LocationOn, contentDescription = "location", modifier = Modifier.size(10.dp))
+            Text(
+                text = place,
+                fontSize = 10.sp
+            )
+        }
+        HtmlText(text = distance, fontSize = 10.sp, overflow = TextOverflow.Ellipsis)
     }
 }
 
@@ -138,7 +146,7 @@ private fun ImageInfoButton(modifier: Modifier = Modifier) {
     Icon(
         imageVector = Icons.Default.Info,
         contentDescription = null,
-        tint = Color.Cyan,
+        tint = Color.Gray,
         modifier = modifier.size(20.dp)
     )
 }

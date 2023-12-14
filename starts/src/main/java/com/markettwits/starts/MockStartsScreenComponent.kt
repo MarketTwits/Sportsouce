@@ -9,6 +9,7 @@ import ru.alexpanov.core_network.model.all.StartsCloud
 
 class MockStartsScreenComponent() : StartsScreen {
     override fun onItemClick(startdId: Int) = Unit
+    override fun onPageClick() = Unit
 
     override val data: Value<StartsCloud> = MutableValue(StartsCloud(0, emptyList()))
     override val starts: Value<StartsUiState> = MutableValue(

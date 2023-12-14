@@ -9,10 +9,10 @@ import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.StartScreenComponent
+import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.BaseTimeMapper
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json.Default.configuration
 import ru.alexpanov.core_network.api.SportSouceReposiotryImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider

@@ -1,12 +1,16 @@
 package com.markettwits.starts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -14,6 +18,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.start.StartScreen
 import com.markettwits.starts.components.loading.StartScreenLoading
 import com.markettwits.starts.components.success.StartCard
+import com.markettwits.topbar.TabBar
 
 
 @Preview
@@ -25,17 +30,25 @@ private fun StartsScreenPreview() {
 @Composable
 fun StartsScreen(component: StartsScreen) {
     val starts by component.starts.subscribeAsState()
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(245, 245, 245))) {
         when (starts) {
             is StartsUiState.Success -> {
-                LazyColumn {
-                    items((starts as StartsUiState.Success).items) {
-                        StartCard(start = it, onItemClick = {
-                            component.onItemClick(it)
-                        })
-                    }
+                Column {
+                    TabBar(component = component, content = {
+                        LazyColumn {
+                            items((starts as StartsUiState.Success).items) {
+                                StartCard(start = it, onItemClick = {
+                                    component.onItemClick(it)
+                                })
+                            }
+                        }
+                    })
                 }
             }
+            is StartsUiState.Failed -> {
+                Text(text = "eror : ${(starts as StartsUiState.Failed).message}")}
 
             is StartsUiState.Loading -> {
                 StartScreenLoading()

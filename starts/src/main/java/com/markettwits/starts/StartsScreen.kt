@@ -8,6 +8,7 @@ import ru.alexpanov.core_network.model.all.StartsCloud
 
 interface StartsScreen {
     fun onItemClick(startdId : Int)
+    fun onPageClick()
     val data : Value<StartsCloud>
     val starts : Value<StartsUiState>
 }

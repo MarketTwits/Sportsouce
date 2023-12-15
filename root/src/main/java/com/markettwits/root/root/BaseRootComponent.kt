@@ -19,7 +19,7 @@ class BaseRootComponent(
             source = navigation,
             serializer = RootComponent.Configuration.serializer(),
             initialStack = { listOf(RootComponent.Configuration.Starts) },
-            handleBackButton = true,
+//            handleBackButton = true,
             childFactory = ::createChild,
         )
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = stack

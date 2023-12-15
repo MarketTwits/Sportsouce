@@ -9,11 +9,12 @@ import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.StartScreenComponent
+import com.markettwits.start.data.BaseStartDataSource
 import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.BaseTimeMapper
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import kotlinx.serialization.Serializable
-import ru.alexpanov.core_network.api.SportSouceReposiotryImpl
+import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 
@@ -41,16 +42,16 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
             is Config.Start -> Child.Start(
                 StartScreenComponent(
                     componentContext,
-                    config.startId
+                    config.startId,
+                    BaseStartDataSource(StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())))
                 )
             )
 
             is Config.Starts ->
                 Child.Starts(StartsScreenComponent(
                     componentContext = componentContext,
-                    repository = SportSouceReposiotryImpl(HttpClientProvider2(JsonProvider().get())),
                     dataSource = BaseStartsDataSource(
-                        SportSouceReposiotryImpl(HttpClientProvider2(JsonProvider().get())),
+                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
                         StartsCloudToUiMapper.Base(
                             BaseTimeMapper()
                         )

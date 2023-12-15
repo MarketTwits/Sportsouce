@@ -3,6 +3,7 @@ package com.markettwits.root.bottom_bar
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -13,10 +14,12 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,27 +46,31 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
     val activeComponent = childStack.active.configuration
     val items = menuItems()
 
-    NavigationBar(containerColor = Color.White) {
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = activeComponent == item.configuration,
-                onClick = {
-                    component.navigate(item.configuration)
-                },
-                label = {
-                    Text(text = item.title, color = Color(61, 82, 139))
-                },
-                alwaysShowLabel = false,
-                icon = {
-                    Icon(
-                        imageVector = if (activeComponent == item.configuration) {
-                            item.selectedIcon
-                        } else item.unselectedIcon,
-                        contentDescription = item.title,
-                        tint = Color(61, 82, 139)
-                    )
-                }
-            )
+    Column {
+        HorizontalDivider()
+        NavigationBar(containerColor = Color.White) {
+            items.forEach { item ->
+                NavigationBarItem(
+                    colors = NavigationBarItemDefaults.colors(indicatorColor = Color(61, 82, 139).copy(alpha = 0.3f)),
+                    selected = activeComponent == item.configuration,
+                    onClick = {
+                        component.navigate(item.configuration)
+                    },
+                    label = {
+                        Text(text = item.title, color = Color(61, 82, 139))
+                    },
+                    alwaysShowLabel = true,
+                    icon = {
+                        Icon(
+                            imageVector = if (activeComponent == item.configuration) {
+                                item.selectedIcon
+                            } else item.unselectedIcon,
+                            contentDescription = item.title,
+                            tint = Color(61, 82, 139)
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -71,21 +78,21 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
 private fun menuItems(): List<BottomNavigationItem> {
     val items = listOf(
         BottomNavigationItem(
-            title = "Starts",
+            title = "Старты",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
             configuration = RootComponent.Configuration.Starts,
             hasNews = false,
         ),
         BottomNavigationItem(
-            title = "News",
+            title = "Новости",
             selectedIcon = Icons.Filled.Newspaper,
             unselectedIcon = Icons.Outlined.Newspaper,
             hasNews = false,
             configuration = RootComponent.Configuration.News,
         ),
         BottomNavigationItem(
-            title = "Profile",
+            title = "Профиль",
             selectedIcon = Icons.Filled.AccountCircle,
             unselectedIcon = Icons.Outlined.AccountCircle,
             hasNews = false,

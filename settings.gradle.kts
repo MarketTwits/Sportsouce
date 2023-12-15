@@ -19,5 +19,5 @@ include(":app")
 include(":starts")
 include(":start")
 include(":cloud")
-
+include(":core-ui")
 include(":root")

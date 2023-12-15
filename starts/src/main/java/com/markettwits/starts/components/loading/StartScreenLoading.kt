@@ -7,6 +7,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
 fun StartScreenLoading() {
@@ -14,6 +15,9 @@ fun StartScreenLoading() {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        CircularProgressIndicator(
+            color = SportSouceColor.SportSouceBlue,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }

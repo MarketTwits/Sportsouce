@@ -1,10 +1,12 @@
-package com.markettwits.cloud.model.all
+package com.markettwits.cloud.model.start
 
 import kotlinx.serialization.Serializable
+import java.io.Serial
 
 @Serializable
 data class Result(
     val createdAt: String,
+    val `file`: File,
     val fileID: Int,
     val id: Int,
     val name: String,

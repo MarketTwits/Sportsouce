@@ -1,4 +1,4 @@
-package com.markettwits.sportsourcedemo.all
+package com.markettwits.cloud.model.common
 
 import kotlinx.serialization.Serializable
 

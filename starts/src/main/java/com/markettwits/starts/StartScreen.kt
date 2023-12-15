@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.StartScreen
 import com.markettwits.starts.components.loading.StartScreenLoading
 import com.markettwits.starts.components.success.StartCard
@@ -24,7 +25,9 @@ import com.markettwits.topbar.TabBar
 @Preview
 @Composable
 private fun StartsScreenPreview() {
-    StartsScreen(MockStartsScreenComponent())
+    SportSouceTheme {
+        StartsScreen(MockStartsScreenComponent())
+    }
 }
 
 @Composable
@@ -32,13 +35,15 @@ fun StartsScreen(component: StartsScreen) {
     val starts by component.starts.subscribeAsState()
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(Color(245, 245, 245))) {
+        .background(Color.White)
+    )
+    {
         when (starts) {
             is StartsUiState.Success -> {
                 Column {
-                    TabBar(component = component, content = {
+                    TabBar(content = {page ->
                         LazyColumn {
-                            items((starts as StartsUiState.Success).items) {
+                            items((starts as StartsUiState.Success).items[page]) {
                                 StartCard(start = it, onItemClick = {
                                     component.onItemClick(it)
                                 })

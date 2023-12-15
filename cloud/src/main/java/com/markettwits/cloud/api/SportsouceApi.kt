@@ -1,8 +1,9 @@
 package ru.alexpanov.core_network.api
 
-import ru.alexpanov.core_network.model.all.StartsCloud
+import com.markettwits.cloud.model.start.StartRemote
 
 interface SportsouceApi {
-    suspend fun fetchStarts() : StartsCloud
-    suspend fun fetchStartsWithFilter() : StartsCloud
+    suspend fun fetchStarts() : ru.alexpanov.core_network.model.all.StartsRemote
+    suspend fun fetchStartsWithFilter() : ru.alexpanov.core_network.model.all.StartsRemote
+    suspend fun fetchStart(startId : Int) : StartRemote
 }

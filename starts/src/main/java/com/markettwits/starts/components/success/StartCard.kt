@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dehaze
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,22 +27,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.starts.R
 import com.markettwits.starts.StartsListItem
 import de.charlex.compose.material3.HtmlText
 
 @Composable
 fun StartCard(
-    start : StartsListItem,
-    onItemClick : (Int) -> Unit
+    start: StartsListItem,
+    onItemClick: (Int) -> Unit
 ) {
     Box(
         modifier = Modifier
-            .background(Color(245, 245, 245))
+            .background(Color.White)
             .fillMaxWidth()
             .height(height = 200.dp)
             .padding(10.dp)
@@ -51,30 +58,45 @@ fun StartCard(
     ) {
         Row {
             ImageCard(Modifier.weight(1f), start.image, start.date, start.statusCode)
-            ImageCardInfo(Modifier.weight(2f), title = start.name, place = start.place, start.distance)
+            ImageCardInfo(
+                Modifier.weight(2f),
+                title = start.name,
+                place = start.place,
+                start.distance
+            )
             ImageInfoButton()
         }
     }
 }
 
 @Composable
-private fun ImageCard(modifier: Modifier = Modifier, image: String, date: String, status : StartsListItem.StatusCode) {
+private fun ImageCard(
+    modifier: Modifier = Modifier,
+    image: String,
+    date: String,
+    status: StartsListItem.StatusCode
+) {
 
     Box(
         modifier = modifier
             .size(width = 145.dp, height = 170.dp)
             .clip(RoundedCornerShape(10.dp))
-            //.wrapContentSize()
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = image,
             contentDescription = "",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            error = {
+                SubcomposeAsyncImageContent(modifier = modifier, painter = painterResource(id = R.drawable.default_start_image))
+            },
+            success = {
+                SubcomposeAsyncImageContent(modifier = modifier)
+            }
         )
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            ImageCardInfoStatus(status)
             ImageCardInfoStroke(date)
+            ImageCardInfoStatus(status)
         }
     }
 }
@@ -83,14 +105,13 @@ private fun ImageCard(modifier: Modifier = Modifier, image: String, date: String
 private fun ImageCardInfoStroke(title: String) {
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-            .fillMaxWidth()
-            .background(Color(77, 183, 254))
+            .background(SportSouceColor.SportSouceLighBlue)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,
             color = Color.White,
+            fontFamily = FontNunito.bold,
             fontSize = 10.sp,
             textAlign = TextAlign.Center
         )
@@ -99,20 +120,22 @@ private fun ImageCardInfoStroke(title: String) {
 
 @Composable
 private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
-    val backgroundColor = when(status.id){
-        3 -> Color(94,207,177)
-        2 -> Color(248,189,56)
-        6 -> Color.Red
+    val backgroundColor = when (status.id) {
+        3 -> SportSouceColor.SportSouceRegistryOpenGreen
+        2 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
+        6 -> SportSouceColor.SportSouceStartEndedPink
         else -> Color.Blue
     }
     Row(
         modifier = Modifier
+            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
             .background(backgroundColor)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = status.message,
             color = Color.White,
+            fontFamily = FontNunito.bold,
             fontSize = 10.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -129,24 +152,38 @@ private fun ImageCardInfo(
     distance: String
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
-        Text(text = title, fontSize = 16.sp)
-        Row(horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.LocationOn, contentDescription = "location", modifier = Modifier.size(10.dp))
-            Text(
-                text = place,
-                fontSize = 10.sp
-            )
-        }
-        HtmlText(text = distance, fontSize = 10.sp, overflow = TextOverflow.Ellipsis)
+        Text(
+            text = title,
+            fontSize = 16.sp,
+            fontFamily = FontNunito.bold,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+            color = SportSouceColor.SportSouceBlue
+        )
+        Text(
+            color = SportSouceColor.SportSouceBlue,
+            text = place,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            fontFamily = FontNunito.medium,
+            fontSize = 12.sp
+        )
+        HtmlText(
+            text = distance,
+            fontSize = 12.sp,
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = FontNunito.medium,
+            color = SportSouceColor.SportSouceBlue
+        )
     }
 }
 
 @Composable
 private fun ImageInfoButton(modifier: Modifier = Modifier) {
     Icon(
-        imageVector = Icons.Default.Info,
+        imageVector = Icons.Default.MoreVert,
         contentDescription = null,
-        tint = Color.Gray,
+        tint = SportSouceColor.SportSouceBlue,
         modifier = modifier.size(20.dp)
     )
 }

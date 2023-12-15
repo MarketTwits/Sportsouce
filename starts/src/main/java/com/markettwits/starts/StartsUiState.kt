@@ -1,7 +1,7 @@
 package com.markettwits.starts
 
 sealed class StartsUiState {
-    class Success(val items: List<StartsListItem>) : StartsUiState()
+    class Success(val items: List<List<StartsListItem>>) : StartsUiState()
     class Failed(val message: String) : StartsUiState()
     object Loading : StartsUiState()
 }

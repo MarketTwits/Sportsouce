@@ -3,7 +3,6 @@ package com.markettwits.starts.data
 import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.starts.StartsUiState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

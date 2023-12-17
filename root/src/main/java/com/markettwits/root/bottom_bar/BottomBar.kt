@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.root.root.MockRootComponent
 import com.markettwits.root.root.RootComponent
 
@@ -51,7 +52,9 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
         NavigationBar(containerColor = Color.White) {
             items.forEach { item ->
                 NavigationBarItem(
-                    colors = NavigationBarItemDefaults.colors(indicatorColor = Color(61, 82, 139).copy(alpha = 0.3f)),
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = SportSouceColor.SportSouceLighBlue.copy(alpha = 0.3f)
+                    ),
                     selected = activeComponent == item.configuration,
                     onClick = {
                         component.navigate(item.configuration)

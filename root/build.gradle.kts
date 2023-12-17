@@ -14,6 +14,7 @@ dependencies {
     api(project(":cloud"))
     implementation(project(":start"))
     implementation(project(":starts"))
+    implementation(project(":core-ui"))
     api(libs.bundles.composeUiBundle)
     api(libs.junit.ext.ktx)
     debugApi(libs.bundles.composeUiBundleDebug)

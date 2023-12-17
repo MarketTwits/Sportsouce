@@ -16,9 +16,9 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceTheme
+import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.membres.screen.StartMembersScreen
 import com.markettwits.start.presentation.start.screen.StartScreen
-import com.markettwits.starts.components.loading.StartScreenLoading
 import com.markettwits.starts.components.success.StartCard
 import com.markettwits.topbar.TabBar
 
@@ -57,7 +57,7 @@ fun StartsScreen(component: StartsScreen) {
                 Text(text = "eror : ${(starts as StartsUiState.Failed).message}")}
 
             is StartsUiState.Loading -> {
-                StartScreenLoading()
+                LoadingScreen()
             }
 
             else -> {}

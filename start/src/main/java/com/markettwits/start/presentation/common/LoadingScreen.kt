@@ -1,4 +1,4 @@
-package com.markettwits.starts.components.loading
+package com.markettwits.start.presentation.common
 
 
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun StartScreenLoading() {
+fun LoadingScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()

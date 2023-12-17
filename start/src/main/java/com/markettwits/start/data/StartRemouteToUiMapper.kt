@@ -28,16 +28,18 @@ interface StartRemoteToUiMapper {
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
             val list = mutableListOf<StartMembersUi>()
             startMember.forEach {
-                list.add(
-                    StartMembersUi(
-                        id = it.id,
-                        member = it.surname + it.name,
-                        distance = it.distance,
-                        team = it.team,
-                        group = it.mapStartMember(it.group).name,
-                        city = it.city
+                if (it.payment != null){
+                    list.add(
+                        StartMembersUi(
+                            id = it.id,
+                            member = "${it.surname} ${it.name}",
+                            distance = it.distance,
+                            team = it.team,
+                            group = it.mapStartMember(it.group).name,
+                            city = it.city ?: ""
+                        )
                     )
-                )
+                }
             }
             return list
         }
@@ -45,7 +47,11 @@ interface StartRemoteToUiMapper {
             val json = Json {
                 ignoreUnknownKeys = true
             }
-            return json.decodeFromString<List<DistanceInfo>>(text)
+            return try {
+                json.decodeFromString<List<DistanceInfo>>(text)
+            }catch (e : Exception){
+                emptyList()
+            }
         }
     }
 

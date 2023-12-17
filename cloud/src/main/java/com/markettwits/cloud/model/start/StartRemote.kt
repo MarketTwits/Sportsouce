@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartRemote(
-    val start_data: StartData?
+    val start_data: StartData
 )

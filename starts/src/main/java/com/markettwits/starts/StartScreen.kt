@@ -16,7 +16,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceTheme
-import com.markettwits.start.StartScreen
+import com.markettwits.start.presentation.membres.screen.StartMembersScreen
+import com.markettwits.start.presentation.start.screen.StartScreen
 import com.markettwits.starts.components.loading.StartScreenLoading
 import com.markettwits.starts.components.success.StartCard
 import com.markettwits.topbar.TabBar
@@ -73,6 +74,7 @@ fun DefaultStartsScreen(component: DefaultStartsComponent) {
         when (val child = it.instance) {
             is DefaultStartsComponent.Child.Start -> StartScreen(component = child.component)
             is DefaultStartsComponent.Child.Starts -> StartsScreen(component = child.component)
+            is DefaultStartsComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
         }
     }
 }

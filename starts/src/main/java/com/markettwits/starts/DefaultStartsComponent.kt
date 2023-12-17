@@ -8,8 +8,10 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.markettwits.start.StartScreenComponent
+import com.markettwits.start.presentation.start.StartScreenComponent
 import com.markettwits.start.data.BaseStartDataSource
+import com.markettwits.start.data.StartRemoteToUiMapper
+import com.markettwits.start.presentation.membres.StartMembersScreenComponent
 import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.BaseTimeMapper
 import com.markettwits.starts.data.StartsCloudToUiMapper
@@ -43,7 +45,16 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 StartScreenComponent(
                     componentContext,
                     config.startId,
-                    BaseStartDataSource(StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())))
+                    BaseStartDataSource(
+                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        mapper = StartRemoteToUiMapper.Base()
+                    ),
+                    back = {
+                        onBackClicked()
+                    },
+                    members = {
+                        openMembersScreen(it)
+                    }
                 )
             )
 
@@ -60,6 +71,19 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                         onItemClick(it)
                     }
                 ))
+            is Config.StartMembers -> Child.StartMembers(
+                StartMembersScreenComponent(
+                    componentContext = componentContext,
+                    service = BaseStartDataSource(
+                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        mapper = StartRemoteToUiMapper.Base()
+                    ),
+                    startId = config.startId,
+                    onBack = {
+                        onBackClicked()
+                    }
+                ),
+            )
         }
 
 
@@ -67,9 +91,6 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
         navigation.pop()
     }
 
-    fun onBackClicked(toIndex: Int) {
-        navigation.popTo(index = toIndex)
-    }
 
     @Serializable
     sealed class Config {
@@ -81,17 +102,21 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object Starts : Config()
-
+        @Serializable
+        data class StartMembers(val startId: Int) : Config()
     }
 
     sealed class Child {
         data class Start(val component: StartScreenComponent) : Child()
         data class Starts(val component: StartsScreenComponent) : Child()
+        data class StartMembers(val component : StartMembersScreenComponent) : Child()
     }
 
     fun onItemClick(startdId: Int) {
-        // toDetail(startdId)
         navigation.push(Config.Start(startdId, true))
+    }
+    fun openMembersScreen(startId: Int){
+        navigation.push(Config.StartMembers(startId))
     }
 
 }

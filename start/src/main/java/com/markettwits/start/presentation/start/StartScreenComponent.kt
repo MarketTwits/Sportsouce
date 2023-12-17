@@ -4,13 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
 import com.markettwits.start.data.StartDataSource
+import com.markettwits.start.presentation.membres.StartMembersUi
 
 class StartScreenComponent(
     componentContext: ComponentContext,
     private val startId: Int,
     private val service: StartDataSource,
     private val back : () -> Unit,
-    private val members : (Int) -> Unit
+    private val members : (Int, List<StartMembersUi>) -> Unit
 ) :
     ComponentContext by componentContext, StartScreen {
     private val keeper =
@@ -21,8 +22,8 @@ class StartScreenComponent(
         back()
     }
 
-    override fun goMembers() {
-        members(startId)
+    override fun goMembers(membersUi: List<StartMembersUi>) {
+        members(startId, membersUi)
     }
 
 }

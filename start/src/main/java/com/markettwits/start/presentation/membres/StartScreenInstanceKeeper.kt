@@ -10,14 +10,15 @@ import kotlinx.coroutines.launch
 
 class StartMembersScreenInstanceKeeper(
     private val service: StartDataSource,
-    private val startId: Int
+    private val startId: Int,
+    private val membersUi: List<StartMembersUi>
 ) : InstanceKeeper.Instance {
     private val scope = CoroutineScope(Dispatchers.Main)
     val start: MutableValue<List<StartMembersUi>> = MutableValue(emptyList())
 
     init {
         scope.launch {
-            start.value = service.startMember(startId)
+            start.value = membersUi
         }
     }
 }

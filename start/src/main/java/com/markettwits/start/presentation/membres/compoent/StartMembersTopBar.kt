@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.presentation.start.component.OnClick
+import com.markettwits.start.presentation.common.OnClick
+
 
 @Composable
 fun StartMembersTopBar(onClick: OnClick) {

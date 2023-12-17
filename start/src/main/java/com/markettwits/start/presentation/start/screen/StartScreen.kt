@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.start.MockStartScreen
 import com.markettwits.start.presentation.start.StartItemUi
 import com.markettwits.start.presentation.start.StartScreen
@@ -35,7 +36,9 @@ fun StartScreen(component: StartScreen) {
     when(startData){
         is StartItemUi.StartItemUiSuccess -> {
             val data = (startData as StartItemUi.StartItemUiSuccess)
-            Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     CustomScreen(imageUrl = data.image)
                     val modifier = Modifier.padding(5.dp)
@@ -47,13 +50,12 @@ fun StartScreen(component: StartScreen) {
                         )
                         StartStatus(
                             modifier = modifier,
-                            status = data.startStatus, date = data.startData
+                            status = data.startStatus, date = data.startTime
                         )
                         StartDescription(modifier = modifier, description = data.description)
-                        HorizontalDivider()
                         StartDistances(modifier = modifier, distance = data.distanceInfo)
-                        StartMembersPanel(modifier = modifier){
-                            component.goMembers()
+                        StartMembersPanel(modifier = modifier, membersCount = data.membersUi.size){
+                            component.goMembers(data.membersUi)
                         }
                     }
                 }
@@ -62,8 +64,8 @@ fun StartScreen(component: StartScreen) {
                 }
             }
         }
-        is StartItemUi.Initial -> {
-
+        is StartItemUi.Loading -> {
+            LoadingScreen()
         }
     }
 

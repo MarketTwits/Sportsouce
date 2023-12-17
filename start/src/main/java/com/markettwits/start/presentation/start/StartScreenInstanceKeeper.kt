@@ -12,7 +12,7 @@ class StartScreenInstanceKeeper(
     private val startId: Int
 ) : InstanceKeeper.Instance {
     private val scope = CoroutineScope(Dispatchers.Main)
-    val start: MutableValue<StartItemUi> = MutableValue(StartItemUi.Initial)
+    val start: MutableValue<StartItemUi> = MutableValue(StartItemUi.Loading)
 
     init {
         scope.launch {

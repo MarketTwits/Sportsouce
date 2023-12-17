@@ -25,7 +25,8 @@ import com.markettwits.start.data.model.DistanceInfo
 
 @Composable
 fun StartDistances(modifier: Modifier = Modifier, distance: List<DistanceInfo>) {
-    if (distance.isNotEmpty()){
+    if (distance.isNotEmpty()) {
+        HorizontalDivider()
         Column(modifier = modifier) {
             Text(
                 text = "Дистанции",
@@ -43,7 +44,6 @@ fun StartDistances(modifier: Modifier = Modifier, distance: List<DistanceInfo>) 
                 }
             }
         }
-        HorizontalDivider()
     }
 }
 
@@ -59,9 +59,11 @@ fun DistanceItem(item: DistanceInfo) {
 
 
     ) {
-        Column(modifier = Modifier
-            .align(Alignment.Center)
-            .padding(10.dp)) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(10.dp)
+        ) {
             Text(
                 text = item.value,
                 fontSize = 12.sp,

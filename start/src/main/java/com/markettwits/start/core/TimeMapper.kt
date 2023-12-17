@@ -1,10 +1,9 @@
-package com.markettwits.starts.data
+package com.markettwits.start.core
 
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.TimeZone
-
 
 interface TimeMapper{
     fun mapTime(formatter: TimePattern, time : String) : String

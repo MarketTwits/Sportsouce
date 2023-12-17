@@ -3,27 +3,48 @@ package com.markettwits.start.data
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_member.StartMember
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.start.core.TimeMapper
+import com.markettwits.start.core.TimePattern
 import com.markettwits.start.data.model.DistanceInfo
 import com.markettwits.start.presentation.membres.StartMembersUi
 import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.serialization.json.Json
 
 interface StartRemoteToUiMapper {
-    fun map(startRemote: StartRemote) : StartItemUi
+    fun map(startRemote: StartRemote,startMember: List<StartMemberItem>) : StartItemUi
+   // fun map(startRemote: StartRemote) : StartItemUi
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
-    class Base : StartRemoteToUiMapper{
-        override fun map(startRemote: StartRemote): StartItemUi {
+    class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper{
+        override fun map(
+            startRemote: StartRemote,
+            startMember: List<StartMemberItem>
+        ): StartItemUi {
             return StartItemUi.StartItemUiSuccess(
                 id = startRemote.start_data.id,
                 title = startRemote.start_data.name,
                 startPlace = startRemote.start_data.coordinates,
                 image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
                 startStatus = startRemote.start_data.start_status,
+                startTime = mapper.mapTime(TimePattern.ddMMMMyyyy, startRemote.start_data.start_date),
                 startData = startRemote.start_data.start_date,
                 description = startRemote.start_data.description,
                 distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
+                membersUi = map(startMember)
             )
         }
+
+//        override fun map(startRemote: StartRemote): StartItemUi {
+//            return StartItemUi.StartItemUiSuccess(
+//                id = startRemote.start_data.id,
+//                title = startRemote.start_data.name,
+//                startPlace = startRemote.start_data.coordinates,
+//                image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
+//                startStatus = startRemote.start_data.start_status,
+//                startData = startRemote.start_data.start_date,
+//                description = startRemote.start_data.description,
+//                distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
+//            )
+//        }
 
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
             val list = mutableListOf<StartMembersUi>()

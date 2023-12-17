@@ -2,6 +2,7 @@
 
 package com.markettwits.start.presentation.start.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -33,7 +35,7 @@ fun StartScreen(component: StartScreen) {
     when(startData){
         is StartItemUi.StartItemUiSuccess -> {
             val data = (startData as StartItemUi.StartItemUiSuccess)
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     CustomScreen(imageUrl = data.image)
                     val modifier = Modifier.padding(5.dp)
@@ -50,7 +52,6 @@ fun StartScreen(component: StartScreen) {
                         StartDescription(modifier = modifier, description = data.description)
                         HorizontalDivider()
                         StartDistances(modifier = modifier, distance = data.distanceInfo)
-                        HorizontalDivider()
                         StartMembersPanel(modifier = modifier){
                             component.goMembers()
                         }

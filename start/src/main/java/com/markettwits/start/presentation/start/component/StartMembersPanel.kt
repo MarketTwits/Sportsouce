@@ -22,8 +22,6 @@ import com.markettwits.core_ui.theme.SportSouceColor
 fun StartMembersPanel(modifier: Modifier = Modifier, onClick: OnClick) {
     Row(
         modifier = modifier
-            .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 10.dp)
             .fillMaxWidth()
             .clickable {
                 onClick()

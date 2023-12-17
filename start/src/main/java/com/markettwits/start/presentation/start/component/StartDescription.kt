@@ -38,20 +38,19 @@ fun StartDescription(modifier: Modifier, description: String) {
                 it.textSize = 12f
             }
         )
+        if (description.length > 150){
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable {
+                        lines = if (lines == 5) Int.MAX_VALUE else 5
+                    },
+                text = "Подробнее",
+                fontFamily = FontNunito.bold,
+                fontSize = 12.sp,
+                color = SportSouceColor.SportSouceBlue,
+            )
+        }
 
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clickable {
-                    lines = if (lines == 5) Int.MAX_VALUE else 5
-                },
-            text = "Подробнее",
-            fontFamily = FontNunito.bold,
-            fontSize = 12.sp,
-            color = SportSouceColor.SportSouceBlue,
-            maxLines = lines,
-            overflow = TextOverflow.Ellipsis,
-            softWrap = true
-        )
     }
 }

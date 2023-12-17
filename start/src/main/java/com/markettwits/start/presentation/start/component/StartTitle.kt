@@ -17,7 +17,7 @@ fun StartTitle(modifier: Modifier = Modifier, title : String, place : String) {
     Column(modifier = modifier) {
         Text(
             text = title,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             fontFamily = FontNunito.extraBold,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,

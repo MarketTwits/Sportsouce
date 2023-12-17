@@ -25,22 +25,25 @@ import com.markettwits.start.data.model.DistanceInfo
 
 @Composable
 fun StartDistances(modifier: Modifier = Modifier, distance: List<DistanceInfo>) {
-    Column(modifier = modifier) {
-        Text(
-            text = "Дистанции",
-            fontSize = 16.sp,
-            fontFamily = FontNunito.extraBold,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-            color = SportSouceColor.SportSouceBlue
-        )
-        LazyRow {
-            items(distance) {
-                Column(modifier.clip(Shapes.medium)) {
-                    DistanceItem(it)
+    if (distance.isNotEmpty()){
+        Column(modifier = modifier) {
+            Text(
+                text = "Дистанции",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                color = SportSouceColor.SportSouceBlue
+            )
+            LazyRow {
+                items(distance) {
+                    Column(modifier.clip(Shapes.medium)) {
+                        DistanceItem(it)
+                    }
                 }
             }
         }
+        HorizontalDivider()
     }
 }
 
@@ -77,7 +80,7 @@ fun DistanceItem(item: DistanceInfo) {
                 color = SportSouceColor.SportSouceBlue
             )
             Text(
-                text = "Цена : " + item.distance.price,
+                text = "Цена : " + item.distance.price + " р.",
                 fontSize = 12.sp,
                 fontFamily = FontNunito.bold,
                 maxLines = 1,

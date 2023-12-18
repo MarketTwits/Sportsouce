@@ -1,7 +1,10 @@
 package com.markettwits.start.presentation.start
 
 import com.markettwits.cloud.model.common.StartStatus
+import com.markettwits.cloud.model.start.Organizer
+import com.markettwits.cloud.model.start.SocialNetwork
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.sportsourcedemo.all.ConditionFile
 import com.markettwits.start.data.model.DistanceInfo
 import com.markettwits.start.presentation.membres.StartMembersUi
 
@@ -16,7 +19,14 @@ sealed class StartItemUi{
         val startTime : String,
         val description : String,
         val distanceInfo: List<DistanceInfo>,
-        val membersUi: List<StartMembersUi>
-    ) : StartItemUi()
+        val organizers: List<Organizer>,
+        val membersUi: List<StartMembersUi>,
+        val conditionFile: ConditionFile,
+    ) : StartItemUi(){
+        sealed class ConditionFile{
+            data class Base(val url : String) : ConditionFile()
+            object Empty : ConditionFile()
+        }
+    }
     object Loading : StartItemUi()
 }

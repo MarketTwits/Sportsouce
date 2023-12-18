@@ -46,7 +46,7 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
                     fontFamily = FontNunito.bold,
                     fontSize = 16.sp
                 )
-                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(modifier = Modifier.padding(start = 5.dp))
                 Box(modifier = Modifier
                     .clip(Shapes.small)
                     .background(SportSouceColor.VeryLighBlue)

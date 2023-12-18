@@ -37,6 +37,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.presentation.common.startStatusBackground
 import com.markettwits.starts.R
 import com.markettwits.starts.StartsListItem
 import de.charlex.compose.material3.HtmlText
@@ -120,16 +121,10 @@ private fun ImageCardInfoStroke(title: String) {
 
 @Composable
 private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
-    val backgroundColor = when (status.id) {
-        3 -> SportSouceColor.SportSouceRegistryOpenGreen
-        2 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
-        6 -> SportSouceColor.SportSouceStartEndedPink
-        else -> Color.Blue
-    }
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-            .background(backgroundColor)
+            .background(startStatusBackground(status.id))
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),

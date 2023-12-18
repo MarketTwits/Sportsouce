@@ -1,6 +1,7 @@
 package com.markettwits.start.data
 
 import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_comments.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMember
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.core.TimeMapper
@@ -11,14 +12,19 @@ import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.serialization.json.Json
 
 interface StartRemoteToUiMapper {
-    fun map(startRemote: StartRemote, startMember: List<StartMemberItem>): StartItemUi
+    fun map(
+        startRemote: StartRemote,
+        startMember: List<StartMemberItem>,
+        commentsRemote: StartCommentsRemote
+    ): StartItemUi
 
     // fun map(startRemote: StartRemote) : StartItemUi
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
     class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper {
         override fun map(
             startRemote: StartRemote,
-            startMember: List<StartMemberItem>
+            startMember: List<StartMemberItem>,
+            commentsRemote: StartCommentsRemote
         ): StartItemUi {
             return StartItemUi.StartItemUiSuccess(
                 id = startRemote.start_data.id,
@@ -35,26 +41,14 @@ interface StartRemoteToUiMapper {
                 distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
                 organizers = startRemote.start_data.organizers,
                 membersUi = map(startMember),
-                conditionFile = if (startRemote.start_data.conditionFile != null){
+                commentsRemote = mapComments(commentsRemote),
+                conditionFile = if (startRemote.start_data.conditionFile != null) {
                     StartItemUi.StartItemUiSuccess.ConditionFile.Base(startRemote.start_data.conditionFile!!.fullPath)
-                }else{
+                } else {
                     StartItemUi.StartItemUiSuccess.ConditionFile.Empty
                 }
             )
         }
-
-//        override fun map(startRemote: StartRemote): StartItemUi {
-//            return StartItemUi.StartItemUiSuccess(
-//                id = startRemote.start_data.id,
-//                title = startRemote.start_data.name,
-//                startPlace = startRemote.start_data.coordinates,
-//                image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
-//                startStatus = startRemote.start_data.start_status,
-//                startData = startRemote.start_data.start_date,
-//                description = startRemote.start_data.description,
-//                distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
-//            )
-//        }
 
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
             val list = mutableListOf<StartMembersUi>()
@@ -73,6 +67,51 @@ interface StartRemoteToUiMapper {
                 }
             }
             return list
+        }
+
+        private fun mapComments(commentsRemote: StartCommentsRemote): StartItemUi.StartItemUiSuccess.Comments {
+            return StartItemUi.StartItemUiSuccess.Comments(
+                id = commentsRemote.count,
+                rows = commentsRemote.rows.map {
+                    StartItemUi.StartItemUiSuccess.Comments.Row(
+                        id = it.id,
+                        comment = it.comment,
+                        countSub = it.countSub,
+                        createdAt = mapper.mapTime(
+                            TimePattern.ddMMMMyyyy,
+                            it.createdAt
+                        ),
+                        personId = it.personId,
+                        replies = it.replies.map { reply ->
+                            StartItemUi.StartItemUiSuccess.Comments.Reply(
+                                id = reply.id,
+                                comment = reply.comment,
+                                createdAt = mapper.mapTime(
+                                    TimePattern.ddMMMMyyyy,
+                                    reply.createdAt
+                                ),
+                                user = StartItemUi.StartItemUiSuccess.Comments.User(
+                                    id = reply.user.id,
+                                    name = reply.user.name,
+                                    surname = reply.user.surname,
+                                    photo = reply.user.photo ?: "",
+                                ),
+                            )
+                        },
+                        startId = it.startId,
+                        updatedAt = mapper.mapTime(
+                            TimePattern.ddMMMMyyyy,
+                            it.updatedAt
+                        ),
+                        user = StartItemUi.StartItemUiSuccess.Comments.User(
+                            id = it.user.id,
+                            name = it.user.name,
+                            surname = it.user.surname,
+                            photo = it.user.photo ?: "",
+                        ),
+                    )
+                }
+            )
         }
 
         private fun mapDistanceInfo(text: String): List<DistanceInfo> {

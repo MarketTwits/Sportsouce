@@ -22,6 +22,7 @@ import com.markettwits.start.presentation.start.MockStartScreen
 import com.markettwits.start.presentation.start.StartItemUi
 import com.markettwits.start.presentation.start.StartScreen
 import com.markettwits.start.presentation.start.component.BackFloatingActionButton
+import com.markettwits.start.presentation.start.component.CommentTextField
 import com.markettwits.start.presentation.start.component.CustomScreen
 import com.markettwits.start.presentation.start.component.StartCommentsPanel
 import com.markettwits.start.presentation.start.component.StartConditionPanel
@@ -62,7 +63,10 @@ fun StartScreen(component: StartScreen) {
                         StartMembersPanel(modifier = modifier, membersCount = data.membersUi.size){
                             component.goMembers(data.membersUi)
                         }
-                        StartCommentsPanel(modifier = modifier)
+                        StartCommentsPanel(modifier = modifier, data.commentsRemote)
+                    }
+                    CommentTextField(modifier = modifier){ comment ->
+
                     }
                 }
                 BackFloatingActionButton{

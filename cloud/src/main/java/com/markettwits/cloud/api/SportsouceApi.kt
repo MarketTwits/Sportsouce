@@ -1,6 +1,7 @@
 package ru.alexpanov.core_network.api
 
 import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_comments.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 
 interface SportsouceApi {
@@ -8,4 +9,5 @@ interface SportsouceApi {
     suspend fun fetchStartsWithFilter() : ru.alexpanov.core_network.model.all.StartsRemote
     suspend fun fetchStart(startId : Int) : StartRemote
     suspend fun fetchStartMember(startId: Int) : List<StartMemberItem>
+    suspend fun fetchStartComments(startId: Int) : StartCommentsRemote
 }

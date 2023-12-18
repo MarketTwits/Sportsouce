@@ -51,17 +51,17 @@ data class StartMemberItem(
     @Serializable
     data class Group(
         @SerialName("name") val name: String,
-        @SerialName("sex")
-        @Serializable(with = UserListSerializer::class)
-        val sex: List<String>,
+        @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String>,
         @SerialName("ageFrom") val ageFrom: String,
         @SerialName("ageTo") val ageTo: String
     )
 
 
-    fun mapStartMember(text: String): StartMemberItem.Group {
-
-        return Json.decodeFromString<Group>(text)
+    fun mapStartMember(text: String): Group {
+        val json = Json {
+            ignoreUnknownKeys = true
+        }
+        return json.decodeFromString<Group>(text)
     }
 }
 object UserListSerializer : JsonTransformingSerializer<List<String>>(ListSerializer(String.serializer())) {

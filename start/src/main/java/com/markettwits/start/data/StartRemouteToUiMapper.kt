@@ -11,10 +11,11 @@ import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.serialization.json.Json
 
 interface StartRemoteToUiMapper {
-    fun map(startRemote: StartRemote,startMember: List<StartMemberItem>) : StartItemUi
-   // fun map(startRemote: StartRemote) : StartItemUi
+    fun map(startRemote: StartRemote, startMember: List<StartMemberItem>): StartItemUi
+
+    // fun map(startRemote: StartRemote) : StartItemUi
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
-    class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper{
+    class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper {
         override fun map(
             startRemote: StartRemote,
             startMember: List<StartMemberItem>
@@ -25,11 +26,20 @@ interface StartRemoteToUiMapper {
                 startPlace = startRemote.start_data.coordinates,
                 image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
                 startStatus = startRemote.start_data.start_status,
-                startTime = mapper.mapTime(TimePattern.ddMMMMyyyy, startRemote.start_data.start_date),
+                startTime = mapper.mapTime(
+                    TimePattern.ddMMMMyyyy,
+                    startRemote.start_data.start_date
+                ),
                 startData = startRemote.start_data.start_date,
                 description = startRemote.start_data.description,
                 distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
-                membersUi = map(startMember)
+                organizers = startRemote.start_data.organizers,
+                membersUi = map(startMember),
+                conditionFile = if (startRemote.start_data.conditionFile != null){
+                    StartItemUi.StartItemUiSuccess.ConditionFile.Base(startRemote.start_data.conditionFile!!.fullPath)
+                }else{
+                    StartItemUi.StartItemUiSuccess.ConditionFile.Empty
+                }
             )
         }
 
@@ -49,7 +59,7 @@ interface StartRemoteToUiMapper {
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
             val list = mutableListOf<StartMembersUi>()
             startMember.forEach {
-                if (it.payment != null){
+                if (it.payment != null) {
                     list.add(
                         StartMembersUi(
                             id = it.id,
@@ -64,13 +74,14 @@ interface StartRemoteToUiMapper {
             }
             return list
         }
+
         private fun mapDistanceInfo(text: String): List<DistanceInfo> {
             val json = Json {
                 ignoreUnknownKeys = true
             }
             return try {
                 json.decodeFromString<List<DistanceInfo>>(text)
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 emptyList()
             }
         }

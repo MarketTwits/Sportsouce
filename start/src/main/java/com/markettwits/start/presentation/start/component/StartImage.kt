@@ -3,6 +3,7 @@ package com.markettwits.start.presentation.start.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.start.R
+import io.ktor.client.utils.EmptyContent.status
 
 @Composable
 fun StartImage(modifier: Modifier = Modifier, imageUrl: String) {
@@ -54,82 +56,72 @@ fun StartImage(modifier: Modifier = Modifier, imageUrl: String) {
 }
 
 @Composable
-fun CustomScreen(modifier: Modifier = Modifier,imageUrl: String) {
+fun CustomScreen(modifier: Modifier = Modifier, imageUrl: String) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(300.dp)
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             model = imageUrl,
-            contentDescription = null,
+            contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.2f)
-
+                .alpha(0.2f),
+            error = {
+                SubcomposeAsyncImageContent(
+                    modifier = modifier,
+                    painter = painterResource(id = R.drawable.default_start_image)
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent(modifier = modifier)
+            }
         )
+//        AsyncImage(
+//            model = imageUrl,
+//            contentDescription = null,
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .alpha(0.2f)
+//
+//        )
         Card(
             modifier = Modifier
                 .padding(18.dp)
                 .align(Alignment.Center),
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 model = imageUrl,
-                contentDescription = null,
+                contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .wrapContentSize()
                     .width(200.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp)),
+                error = {
+                    SubcomposeAsyncImageContent(
+                        modifier = modifier,
+                        painter = painterResource(id = R.drawable.default_start_image)
+                    )
+                },
+                success = {
+                    SubcomposeAsyncImageContent(modifier = modifier)
+                }
             )
+//            AsyncImage(
+//                model = imageUrl,
+//                contentDescription = null,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .wrapContentSize()
+//                    .width(200.dp)
+//                    .clip(RoundedCornerShape(10.dp))
+//            )
         }
 
     }
 }
-@Composable
-fun CustomScreen(modifier: Modifier = Modifier) {
-
-    val image = painterResource(id = com.markettwits.core_ui.R.drawable.default_start_image)
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(300.dp)
-    ) {
-        Image(
-            painter = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.2f)
-
-        )
-        Card(
-            modifier = Modifier
-                .padding(18.dp)
-                .align(Alignment.Center),
-            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-        ) {
-            Image(
-                painter = image,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .width(200.dp)
-                    .clip(RoundedCornerShape(10.dp))
-            )
-        }
-
-    }
-}
-@Composable
-fun debugPlaceholder(@DrawableRes debugPreview: Int) =
-    if (LocalInspectionMode.current) {
-        painterResource(id = debugPreview)
-    } else {
-        null
-    }

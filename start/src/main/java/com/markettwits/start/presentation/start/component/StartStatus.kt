@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,21 +20,17 @@ import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.presentation.common.startStatusBackground
 
 @Composable
 fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date : String) {
     Column(modifier = modifier) {
-        val backgroundColor = when (status.code) {
-            3 -> SportSouceColor.SportSouceRegistryOpenGreen
-            2 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
-            6 -> SportSouceColor.SportSouceStartEndedPink
-            else -> Color.Blue
-        }
+        val color = startStatusBackground(status.code)
         Box(
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth()
-                .border(width = 3.dp, color = backgroundColor, shape = Shapes.medium)
+                .border(width = 3.dp, color = color, shape = Shapes.medium)
                 .clip(Shapes.medium)
         ) {
             Text(
@@ -43,7 +40,8 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date : Strin
                 fontFamily = FontNunito.bold,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = backgroundColor
+                color = color,
+                textAlign = TextAlign.Center
             )
         }
         Box(
@@ -52,7 +50,6 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date : Strin
                 .fillMaxWidth()
                 .clip(Shapes.medium)
                 .background(SportSouceColor.SportSouceLighBlue)
-                //.border(width = 3.dp, color = backgroundColor)
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center).padding(8.dp),

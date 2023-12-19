@@ -3,6 +3,7 @@ package com.markettwits.start.presentation.start
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.cloud.model.start.SocialNetwork
+import com.markettwits.cloud.model.start.UsefulLinks
 import com.markettwits.cloud.model.start_comments.Reply
 import com.markettwits.cloud.model.start_comments.StartCommentsRemote
 import com.markettwits.cloud.model.start_comments.User
@@ -25,12 +26,19 @@ sealed class StartItemUi {
         val organizers: List<Organizer>,
         val membersUi: List<StartMembersUi>,
         val conditionFile: ConditionFile,
-        val commentsRemote: Comments
+        val commentsRemote: Comments,
+        val result : List<Result>,
+        val usefulLinks: List<Result>
     ) : StartItemUi() {
         sealed class ConditionFile {
             data class Base(val url: String) : ConditionFile()
             object Empty : ConditionFile()
         }
+        data class Result(
+            val id : Int,
+            val name : String,
+            val url: String
+        )
 
         data class Comments(
             val id: Int,

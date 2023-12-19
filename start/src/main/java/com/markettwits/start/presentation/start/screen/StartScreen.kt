@@ -30,6 +30,7 @@ import com.markettwits.start.presentation.start.component.StartDescription
 import com.markettwits.start.presentation.start.component.StartDistances
 import com.markettwits.start.presentation.start.component.StartMembersPanel
 import com.markettwits.start.presentation.start.component.StartOrganizers
+import com.markettwits.start.presentation.start.component.StartResult
 import com.markettwits.start.presentation.start.component.StartStatus
 import com.markettwits.start.presentation.start.component.StartTitle
 
@@ -59,6 +60,8 @@ fun StartScreen(component: StartScreen) {
                         StartDescription(modifier = modifier, description = data.description)
                         StartDistances(modifier = modifier, distance = data.distanceInfo, data.startStatus)
                         StartOrganizers(modifier = modifier, organizer = data.organizers)
+                        StartResult(modifier = modifier,results = data.result, title = "Результаты")
+                        StartResult(modifier = modifier,results = data.usefulLinks, title = "Полезные ссылки")
                         StartConditionPanel(modifier = modifier, file = data.conditionFile)
                         StartMembersPanel(modifier = modifier, membersCount = data.membersUi.size){
                             component.goMembers(data.membersUi)

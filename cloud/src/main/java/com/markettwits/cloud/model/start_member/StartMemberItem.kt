@@ -51,7 +51,7 @@ data class StartMemberItem(
     @Serializable
     data class Group(
         @SerialName("name") val name: String,
-        @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String>,
+        @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String> = emptyList(),
         @SerialName("ageFrom") val ageFrom: String,
         @SerialName("ageTo") val ageTo: String
     )
@@ -60,6 +60,8 @@ data class StartMemberItem(
     fun mapStartMember(text: String): Group {
         val json = Json {
             ignoreUnknownKeys = true
+            isLenient = true
+            explicitNulls = false
         }
         return json.decodeFromString<Group>(text)
     }

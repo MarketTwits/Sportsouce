@@ -46,7 +46,21 @@ interface StartRemoteToUiMapper {
                     StartItemUi.StartItemUiSuccess.ConditionFile.Base(startRemote.start_data.conditionFile!!.fullPath)
                 } else {
                     StartItemUi.StartItemUiSuccess.ConditionFile.Empty
-                }
+                },
+                result = startRemote.start_data.results.map {
+                    StartItemUi.StartItemUiSuccess.Result(
+                        id = it.id,
+                        name = it.name,
+                        url = it.file.fullPath
+                    )
+                },
+                usefulLinks = startRemote.start_data.useful_links?.map {
+                    StartItemUi.StartItemUiSuccess.Result(
+                        id = it.id,
+                        name = it.text,
+                        url = it.url,
+                    )
+                } ?: emptyList()
             )
         }
 

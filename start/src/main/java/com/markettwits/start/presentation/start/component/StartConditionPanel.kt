@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
@@ -53,13 +54,13 @@ fun StartConditionPanel(modifier: Modifier = Modifier, file: StartItemUi.StartIt
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Полезные ссылки",
+                    text = "Положение",
                     color = SportSouceColor.SportSouceBlue,
                     fontFamily = FontNunito.bold,
                     fontSize = 16.sp
                 )
                 Icon(
-                    imageVector = if (!panelState) Icons.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
+                    imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                     contentDescription = "",
                     tint = SportSouceColor.SportSouceBlue
                 )

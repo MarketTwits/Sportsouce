@@ -1,9 +1,13 @@
 package com.markettwits.start.presentation.membres.compoent
 
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable.Orientation
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,6 +33,7 @@ import eu.wewox.lazytable.LazyTableItem
 import eu.wewox.lazytable.LazyTableScrollDirection
 import eu.wewox.lazytable.lazyTableDimensions
 import eu.wewox.lazytable.rememberLazyTableState
+import kotlinx.serialization.json.JsonNull.content
 
 
 @Composable
@@ -50,20 +55,27 @@ fun TestTable(items : List<StartMembersUi>) {
     val rows = items.size
     if (items.isNotEmpty()){
         val configuration = LocalConfiguration.current
-        val screenHeight = configuration.screenHeightDp.dp
+        val dimensionPortrait = lazyTableDimensions(110.dp, 50.dp)
         val screenWidth = configuration.screenWidthDp.dp
+        val dimensionLandscape = lazyTableDimensions(screenWidth / 5, 60.dp)
+        val dimension = when(configuration.orientation){
+            Configuration.ORIENTATION_LANDSCAPE -> dimensionLandscape
+            Configuration.ORIENTATION_PORTRAIT -> dimensionPortrait
+            else -> dimensionLandscape
+        }
         LazyTable(
             modifier = Modifier.fillMaxWidth(),
-           // dimensions = lazyTableDimensions(96.dp, 48.dp),
-            dimensions = lazyTableDimensions(screenWidth / 5, 60.dp),
+            dimensions = dimension,
             scrollDirection = LazyTableScrollDirection.BOTH
         ) {
+
+
             items(
                 count = columns * rows,
                 layoutInfo = {
                     LazyTableItem(
                         column = it % columns,
-                        row = it / columns,
+                        row = it / columns + 1,
                     )
                 }
             ) { index ->
@@ -80,17 +92,18 @@ fun TestTable(items : List<StartMembersUi>) {
             ) {
                 HeaderCell(column = it)
             }
+
         }
     }
 }
-@Suppress("ComplexMethod")
+
 @Composable
 private fun Cell(
     pokemon: StartMembersUi,
     column: Int,
 ) {
     val content = when (column) {
-        0 -> pokemon.member
+        0 -> "${pokemon.surname} ${pokemon.name}"
         1 -> pokemon.distance
         2 -> pokemon.team
         3 -> pokemon.group
@@ -114,8 +127,8 @@ private fun HeaderCell(column: Int) {
         0 -> "Участник"
         1 -> "Дистанция"
         2 -> "Команда"
-        3 -> "Группа (cm)"
-        4 -> "Город (kg)"
+        3 -> "Группа"
+        4 -> "Город"
         else -> error("")
     }
     Box(

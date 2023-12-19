@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +23,7 @@ import com.markettwits.start.presentation.common.OnClick
 
 
 @Composable
-fun StartMembersTopBar(onClick: OnClick) {
+fun StartMembersTopBar(goBack: OnClick) {
     Row(
         Modifier
             .padding(start = 5.dp, end = 8.dp)
@@ -37,7 +36,7 @@ fun StartMembersTopBar(onClick: OnClick) {
             modifier = Modifier
                 .padding(10.dp)
                 .noRippleClickable {
-                    onClick()
+                    goBack()
                 },
             imageVector = Icons.Default.ArrowBackIosNew,
             contentDescription = "back",

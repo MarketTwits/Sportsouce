@@ -4,5 +4,6 @@ import com.arkivanov.decompose.value.Value
 
 interface StartMembersScreen {
     val members : Value<List<StartMembersUi>>
+    fun filter(value : String)
     fun back()
 }

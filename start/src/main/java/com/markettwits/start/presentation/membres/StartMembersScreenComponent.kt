@@ -16,6 +16,10 @@ class StartMembersScreenComponent(
     private val keeper =
         instanceKeeper.getOrCreateSimple { StartMembersScreenInstanceKeeper(service, startId, membersUi) }
     override val members: Value<List<StartMembersUi>> = keeper.start
+    override fun filter(value: String) {
+        keeper.filter(value)
+    }
+
     override fun back() {
        onBack()
     }

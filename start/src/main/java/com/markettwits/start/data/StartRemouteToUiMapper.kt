@@ -71,7 +71,8 @@ interface StartRemoteToUiMapper {
                     list.add(
                         StartMembersUi(
                             id = it.id,
-                            member = "${it.surname} ${it.name}",
+                            name = it.name,
+                            surname = it.surname,
                             distance = it.distance,
                             team = it.team,
                             group = it.mapStartMember(it.group).name,

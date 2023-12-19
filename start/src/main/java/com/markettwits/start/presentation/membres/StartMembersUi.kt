@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StartMembersUi(
     val id: Int,
-    val member: String,
+    val name: String,
+    val surname : String,
     val distance: String,
     val team: String,
     val group : String,

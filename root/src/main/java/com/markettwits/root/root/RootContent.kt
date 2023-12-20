@@ -1,13 +1,11 @@
 package com.markettwits.root.root
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
@@ -19,9 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.markettwits.profile.ProfileScreen
-import com.markettwits.starts.DefaultStartsScreen
+import com.markettwits.profile.presentation.screens.ProfileScreen
+import com.markettwits.profile.presentation.sign_in.AuthScreen
 import com.markettwits.root.bottom_bar.BottomBar
+import com.markettwits.starts.DefaultStartsScreen
 
 @Composable
 fun RootContent(component: BaseRootComponent, modifier: Modifier = Modifier) {
@@ -55,6 +54,7 @@ private fun Children(component: BaseRootComponent, modifier: Modifier = Modifier
             is RootComponent.Child.Starts -> DefaultStartsScreen(child.component)
             is RootComponent.Child.Profile ->  ProfileScreen()
             is RootComponent.Child.News -> ProfileScreen()
+            is RootComponent.Child.Login -> AuthScreen(component = child.component)
         }
     }
 }

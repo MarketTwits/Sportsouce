@@ -57,7 +57,7 @@ data class StartData(
     val season: Season,
     val season_id: Int,
     val select_kinds_sport: String,
-    val serial_number: Int?,
+    val serial_number: String?,
     val short_name: String,
     val slug: String?,
     val smallImageFile: String?,

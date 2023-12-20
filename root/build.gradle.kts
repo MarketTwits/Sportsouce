@@ -14,7 +14,9 @@ dependencies {
     api(project(":cloud"))
     implementation(project(":start"))
     implementation(project(":starts"))
+    implementation(project(":profile"))
     implementation(project(":core-ui"))
+    implementation(project(":auth"))
     api(libs.bundles.composeUiBundle)
     api(libs.junit.ext.ktx)
     debugApi(libs.bundles.composeUiBundleDebug)
@@ -24,5 +26,4 @@ dependencies {
     implementation ("de.charlex.compose.material3:material3-html-text:2.0.0-beta01")
     implementation(libs.decompose.android)
     implementation(libs.kotlinx.datetime)
-    api("androidx.appcompat:appcompat:1.6.1")
 }

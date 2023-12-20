@@ -2,7 +2,6 @@ package com.markettwits.starts.data
 
 import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
-import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.starts.StartsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,14 +19,15 @@ class BaseStartsDataSource(
     override suspend fun starts() {
         val executionTime = measureTimeMillis {
             try {
-                val (data, withFilter) = coroutineScope {
+                val (actual, paste, preview) = coroutineScope {
                     withContext(Dispatchers.IO){
-                        val deferredData = async { service.fetchStarts() }
-                        val deferredWithFilter = async { service.fetchStartsWithFilter() }
-                        Pair(deferredData.await(), deferredWithFilter.await())
+                        val deferredActual = async { service.fetchActualStarts() }
+                        val deferredPaste = async { service.fetchPasteStarts() }
+                        val deferredPreview = async { service.fetchPreview() }
+                        Triple(deferredActual.await(), deferredPaste.await(), deferredPreview.await())
                     }
                 }
-                starts.value = mapper.map(data.rows, withFilter.rows)
+                starts.value = mapper.mapAll(actual.rows, paste.rows, preview.rows)
             } catch (e: Exception) {
                 starts.value = mapper.map(e)
             }

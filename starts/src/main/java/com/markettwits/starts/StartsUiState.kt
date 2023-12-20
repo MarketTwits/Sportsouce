@@ -23,9 +23,15 @@ data class StartsListItem(
 ){
     data class StatusCode(val id : Int, val message: String)
 }
-sealed class StartScreenBoard {
-    class Actual(val items : List<StartsListItem>) : StartScreenBoard()
-    class Past(val items : List<StartsListItem>): StartScreenBoard()
-    class Review(val items : List<StartsListItem>): StartScreenBoard()
-    data object MyPanel : StartScreenBoard()
+sealed class StartScreenBoard(val title : String) {
+    class Actual(
+        val items : List<StartsListItem>
+    ) : StartScreenBoard("Близжайжие")
+    class Past(
+        val items : List<StartsListItem>
+    ): StartScreenBoard("Прошедшие")
+    class Review(
+        val items : List<StartsListItem>
+    ): StartScreenBoard("Обзор")
+    data object MyPanel : StartScreenBoard("Моя вкладка")
 }

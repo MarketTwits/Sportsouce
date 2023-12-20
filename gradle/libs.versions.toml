@@ -1,6 +1,7 @@
 [versions]
 #plugins
 coreSplashscreen = "1.0.1"
+datastorePreferences = "1.0.0"
 kotlin = "1.9.10"
 gradle = "8.1.1"
 
@@ -67,6 +68,7 @@ kotlinx-datetime = "0.4.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 compose-ui = { group = "androidx.compose", name = "ui:ui", version.ref = "compose" }
 compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-ui" }

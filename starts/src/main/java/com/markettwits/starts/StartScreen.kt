@@ -54,16 +54,15 @@ fun StartsScreen(component: StartsScreen) {
                     })
                 }
             }
-
             is StartsUiState.Failed -> {
-                Text(text = "error : ${(starts as StartsUiState.Failed).message}", color = Color.Red)
+                Text(
+                    text = "error : ${(starts as StartsUiState.Failed).message}",
+                    color = Color.Red
+                )
             }
-
             is StartsUiState.Loading -> {
                 LoadingScreen()
             }
-
-            else -> {}
         }
     }
 }

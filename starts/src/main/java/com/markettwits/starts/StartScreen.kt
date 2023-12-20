@@ -34,15 +34,16 @@ private fun StartsScreenPreview() {
 @Composable
 fun StartsScreen(component: StartsScreen) {
     val starts by component.starts.subscribeAsState()
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     )
     {
         when (starts) {
             is StartsUiState.Success -> {
                 Column {
-                    TabBar(content = {page ->
+                    TabBar(content = { page ->
                         LazyColumn {
                             items((starts as StartsUiState.Success).items[page]) {
                                 StartCard(start = it, onItemClick = {
@@ -53,8 +54,10 @@ fun StartsScreen(component: StartsScreen) {
                     })
                 }
             }
+
             is StartsUiState.Failed -> {
-                Text(text = "eror : ${(starts as StartsUiState.Failed).message}")}
+                Text(text = "error : ${(starts as StartsUiState.Failed).message}", color = Color.Red)
+            }
 
             is StartsUiState.Loading -> {
                 LoadingScreen()

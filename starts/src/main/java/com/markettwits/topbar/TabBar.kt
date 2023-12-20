@@ -64,8 +64,8 @@ private fun TabBarPreview() {
 @Composable
 fun TabBar(content: @Composable (Int) -> Unit) {
     val scope = rememberCoroutineScope()
-    val pages = listOf("Ближайшие", "Прошедшие")
-    val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 0)
+    val pages = listOf("Моя вкладка","Ближайшие", "Прошедшие", "Обзор")
+    val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
 
     val indicator = @Composable { tabPositions: List<TabPosition> ->
 
@@ -92,12 +92,10 @@ fun TabBar(content: @Composable (Int) -> Unit) {
                 ,
                 selectedContentColor = Color(46, 63, 110),
                 unselectedContentColor = Color.Gray,
-//                modifier = Modifier.pad(10.dp),
                 selected = pagerState.currentPage == index,
                 text = {
                     Text(
                         text = item,
-                      //  color = Color(46, 63, 110),
                         fontSize = 16.sp,
                     )
                 },

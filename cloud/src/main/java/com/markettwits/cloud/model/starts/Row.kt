@@ -23,7 +23,7 @@ data class Row(
     val copernico_id: Int?,
     val copernico_preset: String?,
     val createdAt: String,
-    val description: String,
+    val description: String? = "",
     val driving_directions: String?,
     val end_date: String,
     val finish_reg: String?,

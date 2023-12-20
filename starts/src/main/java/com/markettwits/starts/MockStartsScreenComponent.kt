@@ -2,7 +2,6 @@ package com.markettwits.starts
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import ru.alexpanov.core_network.model.all.StartsRemote
 
 class MockStartsScreenComponent() : StartsScreen {
     override fun onItemClick(startId: Int) = Unit
@@ -43,6 +42,7 @@ class MockStartsScreenComponent() : StartsScreen {
                     )
                 )
             )
-        )
+        ),
+
     )
 }

@@ -6,7 +6,7 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.decodeFromString
-import ru.alexpanov.core_network.model.all.StartsRemote
+import com.markettwits.cloud.model.starts.StartsRemote
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 
 class StartsRemoteDataSourceImpl(
@@ -23,7 +23,7 @@ class StartsRemoteDataSourceImpl(
 
     override suspend fun fetchStartsWithFilter(): StartsRemote {
         val serializer = StartsRemote.serializer()
-        val response = client.get("start?skipCount=6&maxResultCount=6&group=true&name=%D0%9B%D0%B5%D1%82%D0%BE+2024,%D0%9B%D0%B5%D1%82%D0%BE+2023&year=&kindOfSports=&city=&fromDate=&toDate=&status=0,6")
+        val response = client.get("start?maxResultCount=40&group=true&name=Зима+2023-2024,Лето 2023&status=0,6")
         return json.decodeFromString(serializer, response.body<String>())
     }
 

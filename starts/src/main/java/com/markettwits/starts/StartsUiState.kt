@@ -1,9 +1,15 @@
 package com.markettwits.starts
 
+import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.sportsourcedemo.all.Row
+
 sealed class StartsUiState {
-    class Success(val items: List<List<StartsListItem>>) : StartsUiState()
+    class Success(
+        val items: List<List<StartsListItem>>,
+    ) : StartsUiState(){
+    }
     class Failed(val message: String) : StartsUiState()
-    object Loading : StartsUiState()
+    data object Loading : StartsUiState()
 }
 
 data class StartsListItem(
@@ -16,4 +22,10 @@ data class StartsListItem(
     val distance: String
 ){
     data class StatusCode(val id : Int, val message: String)
+}
+sealed class StartScreenBoard {
+    class Actual(val items : List<StartsListItem>) : StartScreenBoard()
+    class Past(val items : List<StartsListItem>): StartScreenBoard()
+    class Review(val items : List<StartsListItem>): StartScreenBoard()
+    data object MyPanel : StartScreenBoard()
 }

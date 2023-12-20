@@ -18,7 +18,6 @@ interface StartRemoteToUiMapper {
         commentsRemote: StartCommentsRemote
     ): StartItemUi
 
-    // fun map(startRemote: StartRemote) : StartItemUi
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
     class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper {
         override fun map(
@@ -37,7 +36,7 @@ interface StartRemoteToUiMapper {
                     startRemote.start_data.start_date
                 ),
                 startData = startRemote.start_data.start_date,
-                description = startRemote.start_data.description,
+                description = startRemote.start_data.description ?: "",
                 distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
                 organizers = startRemote.start_data.organizers,
                 membersUi = map(startMember),
@@ -47,11 +46,13 @@ interface StartRemoteToUiMapper {
                 } else {
                     StartItemUi.StartItemUiSuccess.ConditionFile.Empty
                 },
-                result = startRemote.start_data.results.map {
+                result = startRemote.start_data.results.filter {
+                    it.file != null
+                }.map {
                     StartItemUi.StartItemUiSuccess.Result(
                         id = it.id,
                         name = it.name,
-                        url = it.file.fullPath
+                        url = it.file?.fullPath ?: ""
                     )
                 },
                 usefulLinks = startRemote.start_data.useful_links?.map {
@@ -109,7 +110,7 @@ interface StartRemoteToUiMapper {
                                     id = reply.user.id,
                                     name = reply.user.name,
                                     surname = reply.user.surname,
-                                    photo = reply.user.photo ?: "",
+                                    photo = reply.user.photo?.fullPath ?: ""
                                 ),
                             )
                         },
@@ -122,7 +123,7 @@ interface StartRemoteToUiMapper {
                             id = it.user.id,
                             name = it.user.name,
                             surname = it.user.surname,
-                            photo = it.user.photo ?: "",
+                            photo = it.user.photo?.fullPath ?: ""
                         ),
                     )
                 }

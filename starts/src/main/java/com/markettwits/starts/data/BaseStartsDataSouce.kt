@@ -2,6 +2,7 @@ package com.markettwits.starts.data
 
 import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
+import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.starts.StartsUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -12,7 +13,7 @@ import kotlin.system.measureTimeMillis
 
 class BaseStartsDataSource(
     private val service: SportsouceApi,
-    private val mapper: StartsCloudToUiMapper
+    private val mapper: StartsCloudToUiMapper,
 ) : StartsDataSource {
 
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)

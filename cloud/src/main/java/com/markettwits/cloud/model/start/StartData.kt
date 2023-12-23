@@ -20,7 +20,7 @@ data class StartData(
     val condition_file: Int?,
     val condition_short: String?,
     val coordinates: String,
-    val copernico_id: Int?,
+    val copernico_id: String?,
     val copernico_preset: Int?,
     val createdAt: String,
     val days: List<Int>?,

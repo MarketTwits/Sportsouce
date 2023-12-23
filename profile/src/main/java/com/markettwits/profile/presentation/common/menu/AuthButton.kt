@@ -1,9 +1,8 @@
-package com.markettwits.profile.presentation.component.menu
+package com.markettwits.profile.presentation.common.menu
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,10 +14,10 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun ExitButton(modifier: Modifier = Modifier) {
+fun ExitButton(modifier: Modifier = Modifier, onClick : () ->Unit) {
     Button(
         modifier = modifier.fillMaxWidth().padding(30.dp),
-        onClick = { /*TODO*/ },
+        onClick = { onClick() },
         shape = Shapes.medium,
         colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceBlue,disabledContainerColor = SportSouceColor.SportSouceBlue)
     ){

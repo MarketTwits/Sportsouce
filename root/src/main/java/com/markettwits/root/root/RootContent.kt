@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.markettwits.profile.presentation.DefaultProfileComponent
+import com.markettwits.profile.presentation.DefaultProfileScreen
 import com.markettwits.profile.presentation.screens.ProfileScreen
 import com.markettwits.profile.presentation.sign_in.AuthScreen
 import com.markettwits.root.bottom_bar.BottomBar
@@ -52,9 +54,8 @@ private fun Children(component: BaseRootComponent, modifier: Modifier = Modifier
     ) {
         when (val child = it.instance) {
             is RootComponent.Child.Starts -> DefaultStartsScreen(child.component)
-            is RootComponent.Child.Profile ->  ProfileScreen()
-            is RootComponent.Child.News -> ProfileScreen()
-            is RootComponent.Child.Login -> AuthScreen(component = child.component)
+            is RootComponent.Child.Profile ->  DefaultProfileScreen(child.component)
+            else -> {}
         }
     }
 }

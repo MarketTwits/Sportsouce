@@ -1,4 +1,4 @@
-package com.markettwits.data.store
+package com.markettwits.profile.data.database.data.store
 
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.entities.UserSettingsRealmCache
@@ -16,7 +16,7 @@ class AuthCacheDataSource(
 
     fun read(): UserSettingsRealmCache {
         val result = realm.query(UserSettingsRealmCache::class).find()
-        return result.first()
+        return result.last()
     }
 
     fun delete(id: Long) {
@@ -29,5 +29,10 @@ class AuthCacheDataSource(
             }
         }
     }
-
+    fun clearAll(){
+        realm.writeBlocking {
+            val writeTransactionItems = query<UserSettingsRealmCache>().find()
+            delete(writeTransactionItems)
+        }
+    }
 }

@@ -1,29 +1,34 @@
 package com.markettwits.profile.presentation.sign_in
 
-import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.data.AuthDataSource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
+
 
 class SignInScreenComponent(
-    private val service : AuthDataSource
-) : SignInScreen {
-    private val _state = MutableValue("")
-    override val state: Value<String> = _state
-    val scope = CoroutineScope(Dispatchers.Main)
+    private val context: ComponentContext,
+    private val signInInstanceKeeper: SignInInstanceKeeper,
+) : SignInScreen, ComponentContext by context {
+    private val keeper = instanceKeeper.getOrCreateSimple { signInInstanceKeeper }
+    override val state: Value<SignInUiState> = keeper.authUiState
+    override val fieldState: Value<SignInFieldUiState> = keeper.fieldState
 
-    override fun logIn(password: String, email: String) {
-        scope.launch {
-            service.auth(email, password)
-        }
+    override fun logIn() {
+        keeper.login()
     }
 
-    override fun show(){
-        scope.launch {
-            _state.value =  service.show()
-        }
+    override fun messageHasBeenShowed() {
+        keeper.authUiState.value = SignInUiState.Error("", true)
     }
+
+    override fun handleEmail(email: String) {
+        keeper.fieldState.value = keeper.fieldState.value.copy(email = email)
+        keeper.validate()
+    }
+
+    override fun handlePassword(password: String) {
+        keeper.fieldState.value = keeper.fieldState.value.copy(password = password)
+        keeper.validate()
+    }
+
 }

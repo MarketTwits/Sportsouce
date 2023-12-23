@@ -1,7 +1,11 @@
 package ru.alexpanov.core_network.api
 
+import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponse
+import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
+import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
@@ -9,10 +13,15 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.decodeFromString
 import com.markettwits.cloud.model.starts.StartsRemote
+import io.ktor.client.request.header
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.utils.EmptyContent.headers
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 
 class StartsRemoteDataSourceImpl(
@@ -59,10 +68,20 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun signIn(signInRequest: SignInRequest): SignInResponse {
+    override suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess {
         val response = client.post("authentication/log-in"){
             contentType(ContentType.Application.Json)
             setBody(signInRequest)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun auth(token: String): User {
+        val response = client.get("authentication"){
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
         }
         return json.decodeFromString(response.body())
     }

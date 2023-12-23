@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.component.menu
+package com.markettwits.profile.presentation.common.menu
 
 sealed class MenuItem(val title : String) {
     class Base(title: String) : MenuItem(title)

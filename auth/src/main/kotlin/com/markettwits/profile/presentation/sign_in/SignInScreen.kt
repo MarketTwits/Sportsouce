@@ -4,7 +4,10 @@ import com.arkivanov.decompose.value.Value
 
 
 interface SignInScreen {
-    val state : Value<String>
-    fun logIn(password : String, email : String)
-    fun show()
+    val state : Value<SignInUiState>
+    val fieldState : Value<SignInFieldUiState>
+    fun logIn()
+    fun messageHasBeenShowed()
+    fun handleEmail(email : String)
+    fun handlePassword(password: String)
 }

@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.component.top_bar
+package com.markettwits.profile.presentation.common.top_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun ProfileTopBar(modifier: Modifier = Modifier) {
+fun ProfileTopBar(modifier: Modifier = Modifier, userName : String) {
     Row(
         modifier = modifier
             .padding(start = 5.dp, end = 8.dp)
@@ -40,7 +40,7 @@ fun ProfileTopBar(modifier: Modifier = Modifier) {
                     .background(Color.Gray)
             )
             Text(
-                text = "Кулаков Данилл",
+                text = userName.ifEmpty { "Профиль" },
                 color = SportSouceColor.SportSouceBlue,
                 fontFamily = FontNunito.bold,
                 modifier = Modifier.padding(10.dp)
@@ -58,5 +58,5 @@ fun ProfileTopBar(modifier: Modifier = Modifier) {
 @Composable
 @Preview(showBackground = true)
 private fun ProfileTopBarPreview() {
-    ProfileTopBar()
+    ProfileTopBar(userName = "Кулаков Даниил")
 }

@@ -2,6 +2,7 @@ package com.markettwits.root.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.profile.presentation.DefaultProfileComponent
 import com.markettwits.profile.presentation.ProfileScreenComponent
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import com.markettwits.starts.DefaultStartsComponent
@@ -18,14 +19,13 @@ interface RootComponent {
         object News : Configuration()
         @Serializable
         object Profile : Configuration()
-        @Serializable
-        object Login : Configuration()
+//        @Serializable
+//        object Login : Configuration()
     }
 
     sealed class Child {
         data class Starts(val component: DefaultStartsComponent) : Child()
-        data class Profile(val component: ProfileScreenComponent) : Child()
-        data class Login(val component: SignInScreenComponent) : Child()
+        data class Profile(val component: DefaultProfileComponent) : Child()
         object News : Child()
     }
 }

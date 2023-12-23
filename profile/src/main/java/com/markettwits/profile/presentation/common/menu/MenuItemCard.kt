@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.component.menu
+package com.markettwits.profile.presentation.common.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

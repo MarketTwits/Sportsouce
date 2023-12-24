@@ -6,4 +6,5 @@ interface ProfileScreen {
     val nameState : Value<ProfileUiState>
     fun goToSignInScreen()
     fun exit()
+    fun init()
 }

@@ -1,4 +1,4 @@
-package com.markettwits.cloud.model.start_comments
+package com.markettwits.cloud.model.start_comments.response
 
 import kotlinx.serialization.Serializable
 

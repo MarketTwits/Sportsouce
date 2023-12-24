@@ -7,6 +7,11 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.markettwits.profile.data.BaseAuthDataSource
+import com.markettwits.profile.data.SignInRemoteToCacheMapper
+import com.markettwits.profile.data.SignInRemoteToUiMapper
+import com.markettwits.profile.data.database.core.RealmDatabaseProvider
+import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.start.core.BaseTimeMapper
 import com.markettwits.start.data.BaseStartDataSource
 import com.markettwits.start.data.StartRemoteToUiMapper
@@ -46,7 +51,14 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     componentContext,
                     config.startId,
                     BaseStartDataSource(
-                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        service = StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        authService = BaseAuthDataSource(
+                            remoteService =
+                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                            signInMapper = SignInRemoteToUiMapper.Base(),
+                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                        ),
                         mapper = StartRemoteToUiMapper.Base(BaseTimeMapper())
                     ),
                     back = {
@@ -76,6 +88,13 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     componentContext = componentContext,
                     service = BaseStartDataSource(
                         StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        authService = BaseAuthDataSource(
+                            remoteService =
+                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                            signInMapper = SignInRemoteToUiMapper.Base(),
+                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                        ),
                         mapper = StartRemoteToUiMapper.Base(BaseTimeMapper())
                     ),
                     startId = config.startId,

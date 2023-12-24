@@ -8,6 +8,7 @@ interface SignInRemoteToCacheMapper {
 
     class Base : SignInRemoteToCacheMapper {
         override fun map(remote: SignInResponseSuccess,password: String): UserSettingsRealmCache = UserSettingsRealmCache().apply {
+            _userId = remote.user.id
             _email = remote.user.email
             _password = password
             _accessToken = remote.accessToken

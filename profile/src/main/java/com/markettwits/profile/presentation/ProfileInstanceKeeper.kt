@@ -13,23 +13,25 @@ import kotlinx.coroutines.launch
 
 class ProfileInstanceKeeper(
     private val service: ProfileDataSource,
-    private val goToAuth : () -> Unit
+    private val goToAuth: () -> Unit
 ) : InstanceKeeper.Instance {
     private val scope = CoroutineScope(Dispatchers.Main)
     val state: MutableValue<ProfileUiState> = MutableValue(ProfileUiState.Initial)
 
-    fun init(){
+    fun init() {
         scope.launch {
             state.value = service.profile()
         }
     }
+
     fun exit() {
         scope.launch {
             service.exit()
             openAuthScreen()
         }
     }
-    fun openAuthScreen(){
+
+    fun openAuthScreen() {
         goToAuth()
     }
 }

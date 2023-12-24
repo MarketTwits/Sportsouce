@@ -1,8 +1,7 @@
 package com.markettwits.start.data
 
 import com.markettwits.cloud.model.start.StartRemote
-import com.markettwits.cloud.model.start_comments.StartCommentsRemote
-import com.markettwits.cloud.model.start_member.StartMember
+import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.core.TimeMapper
 import com.markettwits.start.core.TimePattern
@@ -98,7 +97,7 @@ interface StartRemoteToUiMapper {
                             it.createdAt
                         ),
                         personId = it.personId,
-                        replies = it.replies.map { reply ->
+                        replies = it.replies?.map { reply ->
                             StartItemUi.StartItemUiSuccess.Comments.Reply(
                                 id = reply.id,
                                 comment = reply.comment,
@@ -113,8 +112,8 @@ interface StartRemoteToUiMapper {
                                     photo = reply.user.photo?.fullPath ?: ""
                                 ),
                             )
-                        },
-                        startId = it.startId,
+                        } ?: emptyList(),
+                        //startId = it.startId,
                         updatedAt = mapper.mapTime(
                             TimePattern.ddMMMMyyyy,
                             it.updatedAt

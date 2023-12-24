@@ -1,7 +1,6 @@
 package com.markettwits.profile.data
 
 import com.markettwits.cloud.model.auth.common.AuthException
-import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.profile.presentation.ProfileUiState
 
 class BaseProfileDataSource(
@@ -9,7 +8,7 @@ class BaseProfileDataSource(
 ) : ProfileDataSource {
     override suspend fun profile(): ProfileUiState {
         return try {
-            authDataSource.authInner()
+            authDataSource.updateToken()
             val user = authDataSource.auth()
             ProfileUiState.Base(user)
         } catch (e: Exception) {

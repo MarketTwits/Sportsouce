@@ -11,6 +11,7 @@ dependencies {
     api(project(":cloud"))
     implementation(project(":start"))
     implementation(project(":core-ui"))
+    implementation(project(":auth"))
     implementation(libs.bundles.decompose.compose)
     implementation (libs.material3.html.text)
     implementation(libs.kotlinx.datetime)

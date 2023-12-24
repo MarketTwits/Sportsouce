@@ -1,5 +1,6 @@
 package com.markettwits.start.data
 
+import android.util.Log
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
@@ -36,7 +37,11 @@ interface StartRemoteToUiMapper {
                 ),
                 startData = startRemote.start_data.start_date,
                 description = startRemote.start_data.description ?: "",
-                distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
+                //  distanceInfo = mapDistanceInfo(startRemote.start_data.select_kinds_sport),
+                distanceInfo = calculateRemainingSlots(
+                    mapDistanceInfo(startRemote.start_data.select_kinds_sport),
+                    startMember
+                ),
                 organizers = startRemote.start_data.organizers,
                 membersUi = map(startMember),
                 commentsRemote = mapComments(commentsRemote),
@@ -113,7 +118,6 @@ interface StartRemoteToUiMapper {
                                 ),
                             )
                         } ?: emptyList(),
-                        //startId = it.startId,
                         updatedAt = mapper.mapTime(
                             TimePattern.ddMMMMyyyy,
                             it.updatedAt
@@ -139,6 +143,19 @@ interface StartRemoteToUiMapper {
                 emptyList()
             }
         }
+
+        fun calculateRemainingSlots(
+            distanceInfos: List<DistanceInfo>,
+            startMembers: List<StartMemberItem>
+        ): List<DistanceInfo> {
+            return distanceInfos.map { distanceInfo ->
+                val matchingStartMembers = startMembers.filter { it.distance == distanceInfo.value }
+                    .filter { it.payment != null }
+                val remainingSlots = distanceInfo.distance.slots.toInt() - matchingStartMembers.size
+                distanceInfo.copy(distance = distanceInfo.distance.copy(slots = remainingSlots.toString()))
+            }
+        }
+
     }
 
 }

@@ -12,4 +12,8 @@ class MockProfileScreenComponent : ProfileScreen{
     override fun exit() {
 
     }
+
+    override fun init() {
+
+    }
 }

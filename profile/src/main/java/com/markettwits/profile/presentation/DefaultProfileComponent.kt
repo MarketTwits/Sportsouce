@@ -32,7 +32,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         childStack(
             source = navigation,
             serializer = Config.serializer(),
-            initialConfiguration = Config.Profile,
+            initialConfiguration = Config.Profile(ProfileLaunchPolicy.Base),
             handleBackButton = true,
             childFactory = ::child,
         )
@@ -61,6 +61,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                             navigation.push(Config.Login)
                         }
                     ),
+                    launchPolicy = config.launchPolicy
                 )
             )
 
@@ -76,7 +77,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()
                         ),
                         toProfile = {
-                            navigation.replaceAll(Config.Profile)
+                            navigation.replaceAll(Config.Profile(ProfileLaunchPolicy.Update))
                             //navigation.bringToFront(Config.Profile)
                         }
                     ),
@@ -94,7 +95,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     sealed class Config {
 
         @Serializable
-        data object Profile : Config()
+        data class Profile(val launchPolicy: ProfileLaunchPolicy) : Config()
 
         @Serializable
         data object Login : Config()

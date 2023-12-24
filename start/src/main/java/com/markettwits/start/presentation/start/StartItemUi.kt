@@ -2,13 +2,6 @@ package com.markettwits.start.presentation.start
 
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start.Organizer
-import com.markettwits.cloud.model.start.SocialNetwork
-import com.markettwits.cloud.model.start.UsefulLinks
-import com.markettwits.cloud.model.start_comments.Reply
-import com.markettwits.cloud.model.start_comments.StartCommentsRemote
-import com.markettwits.cloud.model.start_comments.User
-import com.markettwits.cloud.model.start_member.StartMemberItem
-import com.markettwits.sportsourcedemo.all.ConditionFile
 import com.markettwits.start.data.model.DistanceInfo
 import com.markettwits.start.presentation.membres.StartMembersUi
 
@@ -51,7 +44,7 @@ sealed class StartItemUi {
                 val id: Int,
                 val personId: String,
                 val replies: List<Reply>,
-                val startId: Int,
+            //    val startId: Int,
                 val updatedAt: String,
                 val user: User
             )

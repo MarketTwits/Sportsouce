@@ -1,7 +1,6 @@
 package com.markettwits.profile.presentation.sign_in
 
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.profile.data.AuthDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +20,7 @@ class SignInInstanceKeeper(
     fun login() {
         scope.launch {
             authUiState.value = SignInUiState.Loading
-            authUiState.value = service.auth(fieldState.value.email, fieldState.value.password)
+            authUiState.value = service.logIn(fieldState.value.email, fieldState.value.password)
             if (authUiState.value is SignInUiState.Success){
                 withContext(Dispatchers.Main){
                     toProfile()

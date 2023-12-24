@@ -1,8 +1,15 @@
 package com.markettwits.start.data
 
-import com.markettwits.cloud.model.start_comments.StartCommentsRemote
+import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.model.auth.common.AuthException
+import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
+import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
+import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.presentation.membres.StartMembersUi
+import com.markettwits.start.presentation.start.CommentUiState
 import com.markettwits.start.presentation.start.StartItemUi
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -11,6 +18,7 @@ import ru.alexpanov.core_network.api.SportsouceApi
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
+    private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper
 ) : StartDataSource {
     override suspend fun start(startId: Int): StartItemUi {
@@ -30,4 +38,43 @@ class BaseStartDataSource(
         return mapper.map(startMember)
     }
 
+    override suspend fun writeComment(comment: String, startId: Int): CommentUiState {
+        return try {
+            val token = authService.updateToken()
+            val user = authService.auth()
+            service.writeComment(
+                startCommentRequest = StartCommentRequest(comment, startId, user.id.toString()),
+                token = token
+            )
+            CommentUiState.Success
+        } catch (e: Exception) {
+            when (e) {
+                is AuthException -> CommentUiState.Error(e.exception)
+                is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
+                else -> CommentUiState.Error(e.message.toString())
+            }
+        }
+    }
+
+    override suspend fun writeSubComment(comment: String, parentCommentId: Int): CommentUiState {
+        return try {
+            val token = authService.updateToken()
+            val user = authService.auth()
+            service.writeSubComment(
+                startSubCommentRequest = StartSubCommentRequest(
+                    comment,
+                    parentCommentId,
+                    user.id.toString()
+                ),
+                token = token
+            )
+            CommentUiState.Success
+        } catch (e: Exception) {
+            when (e) {
+                is AuthException -> CommentUiState.Error(e.exception)
+                is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
+                else -> CommentUiState.Error(e.message.toString())
+            }
+        }
+    }
 }

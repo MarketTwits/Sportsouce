@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.markettwits.cloud.api.TimeApiImpl
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.SignInRemoteToUiMapper
@@ -51,15 +52,16 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     componentContext,
                     config.startId,
                     BaseStartDataSource(
-                        service = StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        service = StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get(),"https://sport-73zoq.ondigitalocean.app")),
                         authService = BaseAuthDataSource(
                             remoteService =
-                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get(),"https://sport-73zoq.ondigitalocean.app")),
                             local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                             signInMapper = SignInRemoteToUiMapper.Base(),
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()
                         ),
-                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper())
+                        timeService = TimeApiImpl(HttpClientProvider2(JsonProvider().get(),"https://timeapi.io")),
+                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper()),
                     ),
                     back = {
                         onBackClicked()
@@ -74,7 +76,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 Child.Starts(StartsScreenComponent(
                     componentContext = componentContext,
                     dataSource = BaseStartsDataSource(
-                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get(),"https://sport-73zoq.ondigitalocean.app")),
                         StartsCloudToUiMapper.Base(
                             BaseTimeMapper()
                         )
@@ -87,15 +89,16 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 StartMembersScreenComponent(
                     componentContext = componentContext,
                     service = BaseStartDataSource(
-                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get(),"https://sport-73zoq.ondigitalocean.app")),
                         authService = BaseAuthDataSource(
                             remoteService =
-                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get(),"https://sport-73zoq.ondigitalocean.app")),
                             local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                             signInMapper = SignInRemoteToUiMapper.Base(),
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()
                         ),
-                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper())
+                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper()),
+                        timeService = TimeApiImpl(HttpClientProvider2(JsonProvider().get(),"https://timeapi.io")),
                     ),
                     startId = config.startId,
                     membersUi = config.items,

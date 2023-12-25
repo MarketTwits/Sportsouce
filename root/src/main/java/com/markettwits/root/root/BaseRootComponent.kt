@@ -40,13 +40,7 @@ class BaseRootComponent(
     override fun navigate(configuration: RootComponent.Configuration) {
         navigation.bringToFront(configuration)
     }
-    private val authDataSource = BaseAuthDataSource(
-        remoteService =
-        StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
-        local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-        signInMapper = SignInRemoteToUiMapper.Base(),
-        signInCacheMapper = SignInRemoteToCacheMapper.Base()
-    )
+
     private fun createChild(
         configuration: RootComponent.Configuration,
         componentContext: ComponentContext

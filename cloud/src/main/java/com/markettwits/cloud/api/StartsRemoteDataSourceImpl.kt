@@ -48,6 +48,11 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(serializer, response.body<String>())
     }
 
+    override suspend fun fetchStartMain(): StartsRemote {
+        val response = client.get("start?mainPage=true")
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun fetchStart(startId: Int): StartRemote {
         val serializer = StartRemote.serializer()
         val response = client.get("start/$startId")

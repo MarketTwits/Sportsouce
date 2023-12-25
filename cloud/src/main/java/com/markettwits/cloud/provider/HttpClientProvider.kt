@@ -18,7 +18,8 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 
 class HttpClientProvider2(
-     private val json: Json
+    private val json: Json,
+    private val baseUrl: String
 ) {
     fun get() = HttpClient(OkHttp) {
         expectSuccess = true
@@ -37,12 +38,13 @@ class HttpClientProvider2(
             header(HttpHeaders.ContentType, ContentType.Application.Json)
             url.takeFrom(
                 URLBuilder()
-                    .takeFrom(endpoint)
+                    .takeFrom(baseUrl)
                     .apply { encodedPath += url.encodedPath }
             )
         }
     }
-    fun getJson() : Json = json
+
+    fun getJson(): Json = json
 
     companion object {
         private const val endpoint = "https://sport-73zoq.ondigitalocean.app"

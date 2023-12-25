@@ -25,7 +25,7 @@ data class Distance(
     val prices: List<Price>,
     val slots: String,
     val infinitySlots: Boolean,
-    val track_link: Map<String, String>, // You might want to create a class for track_link
+    val track_link: Map<String, String>,
     val track_code: String,
 )
 

@@ -18,6 +18,7 @@ interface SportsouceApi {
     suspend fun fetchActualStarts() : StartsRemote
     suspend fun fetchPasteStarts() : StartsRemote
     suspend fun fetchPreview() : StartsRemote
+    suspend fun fetchStartMain() : StartsRemote
     //Start
     suspend fun fetchStart(startId : Int) : StartRemote
     suspend fun fetchStartMember(startId: Int) : List<StartMemberItem>

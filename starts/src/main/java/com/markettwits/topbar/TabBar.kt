@@ -64,7 +64,7 @@ private fun TabBarPreview() {
 @Composable
 fun TabBar(content: @Composable (Int) -> Unit) {
     val scope = rememberCoroutineScope()
-    val pages = listOf("Ближайшие", "Прошедшие", "Анонсы")
+    val pages = listOf("Главная","Ближайшие", "Прошедшие", "Анонсы")
     val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
 
     val indicator = @Composable { tabPositions: List<TabPosition> ->

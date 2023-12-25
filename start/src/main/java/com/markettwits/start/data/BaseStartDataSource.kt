@@ -1,9 +1,12 @@
 package com.markettwits.start.data
 
+import android.util.Log
+import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
+import com.markettwits.core_ui.base.Fourth
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.presentation.membres.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState
@@ -18,19 +21,28 @@ import ru.alexpanov.core_network.api.SportsouceApi
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
+    private val timeService : TimeApi,
     private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper
 ) : StartDataSource {
     override suspend fun start(startId: Int): StartItemUi {
-        val (data, withFilter, comments) = coroutineScope {
+        val (data, withFilter, comments, time) = coroutineScope {
             withContext(Dispatchers.IO) {
+                val deferredTime = async { timeService.currentTime() }
                 val deferredData = async { service.fetchStart(startId) }
                 val deferredWithFilter = async { service.fetchStartMember(startId) }
                 val deferredComments = async { service.fetchStartComments(startId) }
-                Triple(deferredData.await(), deferredWithFilter.await(), deferredComments.await())
+                Fourth(deferredData.await(), deferredWithFilter.await(), deferredComments.await(), deferredTime.await())
             }
         }
-        return mapper.map(data, withFilter, comments)
+        val map = mapper.map(data, withFilter, comments, time)
+//        if (map is StartItemUi.StartItemUiSuccess){
+//            map.distanceInfo.forEach {
+//                Log.d("mt05", it.distance.price)
+//            }
+//        }
+     //   return mapper.map(data, withFilter, comments)
+        return mapper.map(data, withFilter, comments, time)
     }
 
     override suspend fun startMember(startId: Int): List<StartMembersUi> {

@@ -51,7 +51,12 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         BaseProfileDataSource(
                             BaseAuthDataSource(
                                 remoteService =
-                                StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                                StartsRemoteDataSourceImpl(
+                                    HttpClientProvider2(
+                                        JsonProvider().get(),
+                                        "https://sport-73zoq.ondigitalocean.app"
+                                    )
+                                ),
                                 local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                                 signInMapper = SignInRemoteToUiMapper.Base(),
                                 signInCacheMapper = SignInRemoteToCacheMapper.Base()
@@ -71,7 +76,12 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     signInInstanceKeeper = SignInInstanceKeeper(
                         BaseAuthDataSource(
                             remoteService =
-                            StartsRemoteDataSourceImpl(HttpClientProvider2(JsonProvider().get())),
+                            StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
                             local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                             signInMapper = SignInRemoteToUiMapper.Base(),
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()

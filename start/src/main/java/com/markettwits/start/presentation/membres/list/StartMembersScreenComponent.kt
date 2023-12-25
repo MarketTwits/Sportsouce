@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres
+package com.markettwits.start.presentation.membres.list
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
@@ -11,6 +11,7 @@ class StartMembersScreenComponent(
     private val startId : Int,
     private val membersUi: List<StartMembersUi>,
     private val service: StartDataSource,
+    private val openFilterScreen : OnClick,
     private val onBack : OnClick
 ) : ComponentContext by componentContext, StartMembersScreen {
     private val keeper =
@@ -18,6 +19,10 @@ class StartMembersScreenComponent(
     override val members: Value<List<StartMembersUi>> = keeper.start
     override fun filter(value: String) {
         keeper.filter(value)
+    }
+
+    override fun openFilter() {
+        openFilterScreen()
     }
 
     override fun back() {

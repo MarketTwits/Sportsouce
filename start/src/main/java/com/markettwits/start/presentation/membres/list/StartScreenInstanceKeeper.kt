@@ -1,13 +1,11 @@
-package com.markettwits.start.presentation.membres
+package com.markettwits.start.presentation.membres.list
 
 import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.start.data.StartDataSource
-import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class StartMembersScreenInstanceKeeper(
     private val service: StartDataSource,

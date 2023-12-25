@@ -1,6 +1,6 @@
 package com.markettwits.start.data
 
-import com.markettwits.start.presentation.membres.StartMembersUi
+import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState
 import com.markettwits.start.presentation.start.StartItemUi
 

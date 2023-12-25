@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres
+package com.markettwits.start.presentation.membres.list
 
 import kotlinx.serialization.Serializable
 

@@ -17,7 +17,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.common.LoadingScreen
-import com.markettwits.start.presentation.membres.screen.StartMembersScreen
+import com.markettwits.start.presentation.membres.filter_screen.screen.StartMembersFilterScreen
+import com.markettwits.start.presentation.membres.list.screen.StartMembersScreen
 import com.markettwits.start.presentation.start.screen.StartScreen
 import com.markettwits.starts.components.success.StartCard
 import com.markettwits.topbar.TabBar
@@ -54,12 +55,14 @@ fun StartsScreen(component: StartsScreen) {
                     })
                 }
             }
+
             is StartsUiState.Failed -> {
                 Text(
                     text = "error : ${(starts as StartsUiState.Failed).message}",
                     color = Color.Red
                 )
             }
+
             is StartsUiState.Loading -> {
                 LoadingScreen()
             }
@@ -77,6 +80,7 @@ fun DefaultStartsScreen(component: DefaultStartsComponent) {
             is DefaultStartsComponent.Child.Start -> StartScreen(component = child.component)
             is DefaultStartsComponent.Child.Starts -> StartsScreen(component = child.component)
             is DefaultStartsComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
+            is DefaultStartsComponent.Child.StartMembersFilter -> StartMembersFilterScreen(component = child.component)
         }
     }
 }

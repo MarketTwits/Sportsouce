@@ -2,7 +2,7 @@ package com.markettwits.start.presentation.start
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.markettwits.start.presentation.membres.StartMembersUi
+import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class MockStartScreen : StartScreen {
     override val start: Value<StartItemUi> = MutableValue(StartItemUi.Loading)

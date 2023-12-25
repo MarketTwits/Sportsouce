@@ -1,7 +1,7 @@
 package com.markettwits.start.presentation.start
 
 import com.arkivanov.decompose.value.Value
-import com.markettwits.start.presentation.membres.StartMembersUi
+import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 interface StartScreen {
     val start: Value<StartItemUi>

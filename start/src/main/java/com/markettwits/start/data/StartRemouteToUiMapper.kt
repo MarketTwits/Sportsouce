@@ -1,6 +1,5 @@
 package com.markettwits.start.data
 
-import android.util.Log
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
@@ -9,12 +8,10 @@ import com.markettwits.start.core.TimeMapper
 import com.markettwits.start.core.TimePattern
 import com.markettwits.start.data.model.Distance
 import com.markettwits.start.data.model.DistanceInfo
-import com.markettwits.start.data.model.Price
-import com.markettwits.start.presentation.membres.StartMembersUi
+import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -157,7 +154,10 @@ interface StartRemoteToUiMapper {
             val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
 
             // Parse the input date string
-            val inputDate = LocalDateTime.parse(time, inputFormat)
+
+            //FIXME fix 6 or 7 elements in time
+          //  val inputDate = LocalDateTime.parse(time, inputFormat)
+            val inputDate = LocalDateTime.parse("2023-12-25T22:46:48.5554295", inputFormat)
 
             // Format the output date string
             val outputDate = inputDate.atOffset(ZoneOffset.UTC).format(outputFormat)

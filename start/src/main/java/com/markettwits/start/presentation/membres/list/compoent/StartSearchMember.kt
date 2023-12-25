@@ -1,14 +1,14 @@
-package com.markettwits.start.presentation.membres.compoent
+package com.markettwits.start.presentation.membres.list.compoent
 
-import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -17,10 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,20 +28,22 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.presentation.membres.MockStartMembersScreen
-import com.markettwits.start.presentation.membres.StartMembersScreen
-import com.markettwits.start.presentation.membres.StartMembersScreenComponent
-import com.markettwits.start.presentation.start.MockStartScreen
+import com.markettwits.start.presentation.membres.list.MockStartMembersScreen
+import com.markettwits.start.presentation.membres.list.StartMembersScreen
 
 @Composable
 fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScreen) {
     var comment by rememberSaveable {
         mutableStateOf("")
     }
-
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
         TextField(
             modifier = Modifier
-                .fillMaxWidth()
+                // .fillMaxWidth()
                 .clip(Shapes.medium),
             value = comment,
             maxLines = 1,
@@ -49,7 +51,7 @@ fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScre
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White,
                 cursorColor = SportSouceColor.SportSouceBlue,
-                focusedIndicatorColor =  Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
             ),
             placeholder = {
@@ -66,12 +68,23 @@ fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScre
                 comment = it
                 component.filter(comment)
             })
-
+        Icon(
+            modifier = modifier.clickable {
+                component.openFilter()
+            },
+            imageVector = Icons.Default.Settings,
+            contentDescription = "filter",
+            tint = SportSouceColor.SportSouceBlue
+        )
     }
+
+
+}
+
 @Preview
 @Composable
-private fun StartSearchMemberPreview(){
-    Box(modifier = Modifier.padding(10.dp)){
+private fun StartSearchMemberPreview() {
+    Box(modifier = Modifier.padding(10.dp)) {
         StartSearchMember(component = MockStartMembersScreen())
     }
 }

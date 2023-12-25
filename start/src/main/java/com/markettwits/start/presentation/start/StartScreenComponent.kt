@@ -4,8 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
 import com.markettwits.start.data.StartDataSource
-import com.markettwits.start.presentation.membres.StartMembersUi
-import kotlinx.coroutines.CoroutineScope
+import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class StartScreenComponent(
     componentContext: ComponentContext,

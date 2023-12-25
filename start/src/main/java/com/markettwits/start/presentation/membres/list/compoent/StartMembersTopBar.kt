@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.compoent
+package com.markettwits.start.presentation.membres.list.compoent
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

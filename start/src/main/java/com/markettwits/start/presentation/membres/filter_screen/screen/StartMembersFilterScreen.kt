@@ -40,6 +40,13 @@ fun StartMembersFilterScreen(component: StartMembersFilterScreen) {
             }
             StartMembersSortWrapper2(filter,component)
         }
-        StartMembersFilterButtonSelectionPanel(modifier = Modifier.align(Alignment.BottomCenter))
+        StartMembersFilterButtonSelectionPanel(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onClickApply = {
+               component.apply()
+            },
+            onClickReset = {
+                component.reset()
+            })
     }
 }

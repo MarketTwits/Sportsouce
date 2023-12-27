@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.api.TimeApiImpl
@@ -16,6 +17,7 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.start.core.BaseTimeMapper
 import com.markettwits.start.data.BaseStartDataSource
 import com.markettwits.start.data.StartRemoteToUiMapper
+import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
@@ -33,6 +35,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
 
     private val navigation = StackNavigation<Config>()
 
+
     private val _configStack =
         childStack(
             source = navigation,
@@ -43,6 +46,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
         )
 
     val childStack: Value<ChildStack<*, Child>> get() = _configStack
+
 
     private fun child(
         config: Config,
@@ -84,7 +88,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                         onBackClicked()
                     },
                     members = { id: Int, list: List<StartMembersUi> ->
-                        openMembersScreen(startId = id, items = list)
+                        openMembersScreen(startId = id, items = list, emptyList())
                     }
                 )
             )
@@ -111,37 +115,9 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
             is Config.StartMembers -> Child.StartMembers(
                 StartMembersScreenComponent(
                     componentContext = componentContext,
-                    service = BaseStartDataSource(
-                        StartsRemoteDataSourceImpl(
-                            HttpClientProvider2(
-                                JsonProvider().get(),
-                                "https://sport-73zoq.ondigitalocean.app"
-                            )
-                        ),
-                        authService = BaseAuthDataSource(
-                            remoteService =
-                            StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
-                                    JsonProvider().get(),
-                                    "https://sport-73zoq.ondigitalocean.app"
-                                )
-                            ),
-                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-                            signInMapper = SignInRemoteToUiMapper.Base(),
-                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                        ),
-                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper()),
-                        timeService = TimeApiImpl(
-                            HttpClientProvider2(
-                                JsonProvider().get(),
-                                "https://timeapi.io"
-                            )
-                        ),
-                    ),
-                    startId = config.startId,
                     membersUi = config.items,
                     openFilterScreen = {
-                        openMembersFilter(config.items)
+                        openMembersFilter(it)
                     },
                     onBack = {
                         onBackClicked()
@@ -153,13 +129,21 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 StartMembersFilterScreenComponent(
                     context = componentContext,
                     items = config.items,
+//                    globalFilter = filter,
                     back = {
                         onBackClicked()
+                    },
+                    apply = { filter ->
+                        navigation.pop { // Pop ItemDetailsComponent
+                            // Deliver the result to ItemList component
+                            (childStack.value.active.instance as? Child.StartMembers)?.component?.updateFilter(
+                                filter = filter
+                            )
+                        }
                     }
                 )
             )
         }
-
 
     fun onBackClicked() {
         navigation.pop()
@@ -178,10 +162,14 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
         data object Starts : Config()
 
         @Serializable
-        data class StartMembers(val startId: Int, val items: List<StartMembersUi>) : Config()
+        data class StartMembers(
+            val startId: Int,
+            val items: List<StartMembersUi>,
+            val filter: List<MembersFilterGroup>
+        ) : Config()
 
         @Serializable
-        data class StartMembersFilter(val items: List<StartMembersUi>) : Config()
+        data class StartMembersFilter(val items: List<MembersFilterGroup>) : Config()
     }
 
     sealed class Child {
@@ -195,11 +183,15 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
         navigation.push(Config.Start(startdId, true))
     }
 
-    fun openMembersScreen(startId: Int, items: List<StartMembersUi>) {
-        navigation.push(Config.StartMembers(startId, items))
+    fun openMembersScreen(
+        startId: Int,
+        items: List<StartMembersUi>,
+        filter: List<MembersFilterGroup>
+    ) {
+        navigation.push(Config.StartMembers(startId, items, filter))
     }
 
-    fun openMembersFilter(items: List<StartMembersUi>) {
+    fun openMembersFilter(items: List<MembersFilterGroup>) {
         navigation.push(Config.StartMembersFilter(items))
     }
 

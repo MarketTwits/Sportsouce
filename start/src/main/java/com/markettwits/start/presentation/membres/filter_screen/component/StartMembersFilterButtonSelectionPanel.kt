@@ -18,9 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.presentation.common.OnClick
 
 @Composable
-fun StartMembersFilterButtonSelectionPanel(modifier: Modifier = Modifier) {
+fun StartMembersFilterButtonSelectionPanel(modifier: Modifier = Modifier, onClickReset : OnClick, onClickApply : OnClick) {
     Row(modifier = modifier.padding(10.dp)) {
         Button(
             modifier = Modifier.weight(1f),
@@ -29,7 +30,7 @@ fun StartMembersFilterButtonSelectionPanel(modifier: Modifier = Modifier) {
                 defaultElevation = 10.dp
             ),
             border = BorderStroke(0.5.dp, SportSouceColor.SportSouceBlue),
-            onClick = { /*TODO*/ }
+            onClick = { onClickReset() }
         ) {
             Text(
                 text = "Сбросить",
@@ -48,7 +49,7 @@ fun StartMembersFilterButtonSelectionPanel(modifier: Modifier = Modifier) {
             ),
             colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceBlue),
             border = BorderStroke(0.5.dp, SportSouceColor.SportSouceBlue),
-            onClick = { /*TODO*/ }
+            onClick = { onClickApply() }
         ) {
             Text(
                 text = "Прмиенить",
@@ -65,5 +66,5 @@ fun StartMembersFilterButtonSelectionPanel(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun StartMembersFilterButtonSelectionPanelPreview() {
-    StartMembersFilterButtonSelectionPanel()
+    StartMembersFilterButtonSelectionPanel(onClickApply = {}, onClickReset = {})
 }

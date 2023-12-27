@@ -16,8 +16,8 @@ class StartMembersFilterScreenComponent(
     private val context: ComponentContext,
     private val back: () -> Unit,
     //private val items: List<StartMembersUi>,
-    private val items : List<MembersFilterGroup>,
-    private val apply : (List<MembersFilterGroup>) -> Unit
+    private val items: List<MembersFilterGroup>,
+    private val apply: (List<MembersFilterGroup>) -> Unit
 ) : StartMembersFilterScreen, ComponentContext by context {
 
     override val filter: MutableValue<List<MembersFilterGroup>> = MutableValue(
@@ -28,11 +28,11 @@ class StartMembersFilterScreenComponent(
     )
 
     init {
-      //  updateFilterGroups()
+        //  updateFilterGroups()
         stateKeeper.register(
             key = "FILTER_STATE",
             ListSerializer(MembersFilterGroup.serializer())
-        ) {filter.value }
+        ) { filter.value }
     }
 
 
@@ -41,7 +41,8 @@ class StartMembersFilterScreenComponent(
     }
 
     override fun reset() {
-
+        val baseFilters = filter.value.map { convertToBaseFilter(it) }
+        apply(baseFilters)
     }
 
     override fun apply() {
@@ -51,6 +52,7 @@ class StartMembersFilterScreenComponent(
     override fun selectItem(item: MembersFilterItem) {
 
     }
+
     override fun toggleFilterItemState(categoryIndex: Int, itemIndex: Int) {
         val currentFilterGroups = filter.value.orEmpty().toMutableList()
         val category = currentFilterGroups[categoryIndex]
@@ -66,12 +68,19 @@ class StartMembersFilterScreenComponent(
                 filterItem
             }
         }
-
-        // Update the category with the toggled items
         currentFilterGroups[categoryIndex] = category.copy(items = toggledItems)
 
-        // Notify observers about the updated data
         filter.value = currentFilterGroups
+    }
+
+    fun convertToBaseFilter(filterGroup: MembersFilterGroup): MembersFilterGroup {
+        val baseItems = filterGroup.items.map {
+            when (it) {
+                is MembersFilterItem.Selected -> MembersFilterItem.Base(it.title)
+                is MembersFilterItem.Base -> it
+            }
+        }
+        return MembersFilterGroup(filterGroup.title, baseItems)
     }
 
 }

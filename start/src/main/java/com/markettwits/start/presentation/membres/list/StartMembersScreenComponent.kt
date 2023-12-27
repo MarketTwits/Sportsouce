@@ -1,13 +1,10 @@
 package com.markettwits.start.presentation.membres.list
 
-import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.operator.map
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterItem
-import com.markettwits.start.presentation.membres.filter_screen.component.findDuplicates
 import kotlinx.serialization.builtins.ListSerializer
 
 class StartMembersScreenComponent(
@@ -33,6 +30,7 @@ class StartMembersScreenComponent(
     fun updateFilter(filter: List<MembersFilterGroup>) {
         filterItems.value = filter
         //TODO CALL SORT FUN
+        members.value = filterMembersList(membersUi, filter)
     }
 
     init {
@@ -63,37 +61,145 @@ class StartMembersScreenComponent(
         }
     }
 
-    fun updateFilterGroups(): List<MembersFilterGroup> {
-        val categories = listOf(
-            "Дистанция" to StartMembersUi::distance,
-            "Команда" to StartMembersUi::team,
-            "Город" to StartMembersUi::city,
-            "Группа" to StartMembersUi::group
-        )
-
-        val updatedFilterGroups = categories.map { (categoryTitle, keyExtractor) ->
-            val items = findDuplicates(membersUi, keyExtractor)
-                .map { MembersFilterItem.Base(it) }
-
-            MembersFilterGroup(categoryTitle, items)
+    //    fun filterMembersList(
+//        membersList: List<StartMembersUi>,
+//        filters: List<MembersFilterGroup>
+//    ): List<StartMembersUi> {
+//        var filteredList = membersList.toMutableList()
+//
+//        filters.forEach { filterGroup ->
+//            filterGroup.items.forEach { filterItem ->
+//                when (filterItem) {
+//                    is MembersFilterItem.Selected -> {
+//                        filteredList = when (filterGroup.title) {
+//                            "Distance" -> filteredList.filter { it.distance == filterItem.title }
+//                                .toMutableList()
+//
+//                            "Team" -> filteredList.filter { it.team == filterItem.title }
+//                                .toMutableList()
+//
+//                            "Group" -> filteredList.filter { it.group == filterItem.title }
+//                                .toMutableList()
+//
+//                            "City" -> filteredList.filter { it.city == filterItem.title }
+//                                .toMutableList()
+//                            // Add more cases for other filters if needed
+//                            else -> filteredList
+//                        }
+//                    }
+//
+//                    is MembersFilterItem.Base -> {
+//                        // Handle base filter item if needed
+//                    }
+//                }
+//            }
+//        }
+//
+//        return filteredList
+//    }
+    fun filterMembersList(
+        membersList: List<StartMembersUi>,
+        filters: List<MembersFilterGroup>
+    ): List<StartMembersUi> {
+        return membersList.filter { member ->
+            filters.filter { it.items.any { filterItem -> filterItem is MembersFilterItem.Selected } }
+                .all { filterGroup ->
+                    filterGroup.items.any { filterItem ->
+                        when (filterItem) {
+                            is MembersFilterItem.Selected -> {
+                                when (filterGroup.title) {
+                                    "Distance" -> member.distance == filterItem.title
+                                    "Team" -> member.team == filterItem.title
+                                    "Group" -> member.group == filterItem.title
+                                    "City" -> member.city == filterItem.title
+                                    else -> false
+                                }
+                            }
+                            else -> false
+                        }
+                    }
+                }
         }
-        filterItems.value = updatedFilterGroups
-        return updatedFilterGroups
     }
 
+    //    fun generateFilterGroups(membersList: List<StartMembersUi>): List<MembersFilterGroup> {
+//        val filterGroups = mutableListOf<MembersFilterGroup>()
+//
+//        // Get distinct values for each property
+//        val distanceValues = membersList.map { it.distance }.distinct()
+//        val teamValues = membersList.map { it.team }.distinct()
+//        val groupValues = membersList.map { it.group }.distinct()
+//        val cityValues = membersList.map { it.city }.distinct()
+//
+//        // Create filter groups dynamically based on available properties
+//        if (distanceValues.isNotEmpty()) {
+//            val distanceFilterGroup = MembersFilterGroup(
+//                title = "Distance",
+//                items = distanceValues.map { MembersFilterItem.Base(it) }
+//            )
+//            filterGroups.add(distanceFilterGroup)
+//        }
+//
+//        if (teamValues.isNotEmpty()) {
+//            val teamFilterGroup = MembersFilterGroup(
+//                title = "Team",
+//                items = teamValues.map { MembersFilterItem.Base(it) }
+//            )
+//            filterGroups.add(teamFilterGroup)
+//        }
+//
+//        if (groupValues.isNotEmpty()) {
+//            val groupFilterGroup = MembersFilterGroup(
+//                title = "Group",
+//                items = groupValues.map { MembersFilterItem.Base(it) }
+//            )
+//            filterGroups.add(groupFilterGroup)
+//        }
+//
+//        if (cityValues.isNotEmpty()) {
+//            val cityFilterGroup = MembersFilterGroup(
+//                title = "City",
+//                items = cityValues.map { MembersFilterItem.Base(it) }
+//            )
+//            filterGroups.add(cityFilterGroup)
+//        }
+//
+//        return filterGroups
+//    }
+    fun generateFilterGroups(membersList: List<StartMembersUi>): List<MembersFilterGroup> {
+        val filterGroups = mutableListOf<MembersFilterGroup>()
 
-    fun <T> findDuplicates(
-        items: List<StartMembersUi>,
-        keyExtractor: (StartMembersUi) -> T
-    ): List<T> {
-        return items.groupBy(keyExtractor)
-            .filter { it.value.isNotEmpty() }
-            .map { it.key }
+        val propertyNames = listOf("Distance", "Team", "Group", "City")
+
+        for (propertyName in propertyNames) {
+            val distinctValues = membersList.mapNotNull {
+                when (propertyName) {
+                    "Distance" -> it.distance
+                    "Team" -> it.team
+                    "Group" -> it.group
+                    "City" -> it.city
+                    else -> null
+                }
+            }.distinct()
+
+            if (distinctValues.isNotEmpty()) {
+                val filterGroup = MembersFilterGroup(
+                    title = propertyName,
+                    items = distinctValues.map { MembersFilterItem.Base(it) }
+                )
+                filterGroups.add(filterGroup)
+            }
+        }
+
+        return filterGroups
     }
-
 
     override fun openFilter() {
-        updateFilterGroups()
+        // updateFilterGroups()
+        if (filterItems.value.isEmpty()) {
+            filterItems.value =
+                generateFilterGroups(membersUi)
+        }
         openFilterScreen(filterItems.value)
     }
 

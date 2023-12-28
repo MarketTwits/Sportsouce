@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
@@ -33,9 +34,7 @@ import com.markettwits.start.presentation.membres.list.StartMembersScreen
 
 @Composable
 fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScreen) {
-    var comment by rememberSaveable {
-        mutableStateOf("")
-    }
+    val comment by component.filterValue.subscribeAsState()
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +42,6 @@ fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScre
     ) {
         TextField(
             modifier = Modifier
-                // .fillMaxWidth()
                 .clip(Shapes.medium),
             value = comment,
             maxLines = 1,
@@ -65,8 +63,7 @@ fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScre
                 )
             },
             onValueChange = {
-                comment = it
-                component.filter(comment)
+                component.handleTextFiled(it)
             })
         Icon(
             modifier = modifier.clickable {

@@ -34,13 +34,6 @@ class BaseStartDataSource(
                 Fourth(deferredData.await(), deferredWithFilter.await(), deferredComments.await(), deferredTime.await())
             }
         }
-        val map = mapper.map(data, withFilter, comments, time)
-//        if (map is StartItemUi.StartItemUiSuccess){
-//            map.distanceInfo.forEach {
-//                Log.d("mt05", it.distance.price)
-//            }
-//        }
-     //   return mapper.map(data, withFilter, comments)
         return mapper.map(data, withFilter, comments, time)
     }
 

@@ -16,7 +16,7 @@ class ProfileInstanceKeeper(
     private val goToAuth: () -> Unit
 ) : InstanceKeeper.Instance {
     private val scope = CoroutineScope(Dispatchers.Main)
-    val state: MutableValue<ProfileUiState> = MutableValue(ProfileUiState.Initial)
+    val state: MutableValue<ProfileUiState> = MutableValue(ProfileUiState.Loading)
 
     fun init() {
         scope.launch {

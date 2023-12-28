@@ -1,9 +1,14 @@
 package com.markettwits.profile.presentation
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import kotlinx.serialization.Serializable
 
-sealed class ProfileUiState{
-    class Base(val user : User) : ProfileUiState()
-    object UnAuthorization : ProfileUiState()
-    object Initial : ProfileUiState()
+@Serializable
+sealed interface ProfileUiState{
+    @Serializable
+    data class Base(val user : User) : ProfileUiState
+    @Serializable
+    data class Error(val message : String) : ProfileUiState
+    @Serializable
+    data object Loading : ProfileUiState
 }

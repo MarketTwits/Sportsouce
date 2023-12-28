@@ -6,5 +6,7 @@ import com.markettwits.profile.presentation.ProfileUiState
 
 interface ProfileDataSource {
     suspend fun profile() : ProfileUiState
+    suspend fun authProfile() : String
+    suspend fun checkAuth() : Boolean
     suspend fun exit()
 }

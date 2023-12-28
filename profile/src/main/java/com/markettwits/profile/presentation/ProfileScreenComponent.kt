@@ -14,7 +14,6 @@ class ProfileScreenComponent(
 
     init {
         keeper.init()
-        //init()
     }
 
     override fun goToSignInScreen() {

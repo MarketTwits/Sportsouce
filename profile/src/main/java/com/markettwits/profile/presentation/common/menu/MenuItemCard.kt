@@ -1,6 +1,7 @@
 package com.markettwits.profile.presentation.common.menu
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,11 +15,12 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem) {
+fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem, onCLick : () -> Unit) {
     when (item) {
         is MenuItem.Base -> {
             Row(
                 modifier = Modifier
+                    .clickable { onCLick() }
                     .background(color = SportSouceColor.VeryLighBlue)
                     .fillMaxWidth()
                     .padding(10.dp)

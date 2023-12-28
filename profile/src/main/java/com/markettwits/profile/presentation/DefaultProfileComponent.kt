@@ -3,7 +3,6 @@ package com.markettwits.profile.presentation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
@@ -16,6 +15,14 @@ import com.markettwits.profile.data.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.SignInRemoteToUiMapper
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
+import com.markettwits.profile.presentation.component.authorized.AuthorizedProfile
+import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
+import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
+import com.markettwits.profile.presentation.component.edit_profile.data.EditProfileDataSourceBase
+import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponent
+import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
+import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import kotlinx.serialization.Serializable
@@ -32,7 +39,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         childStack(
             source = navigation,
             serializer = Config.serializer(),
-            initialConfiguration = Config.Profile(ProfileLaunchPolicy.Base),
+            initialConfiguration = Config.UnAuthProfile,
             handleBackButton = true,
             childFactory = ::child,
         )
@@ -44,32 +51,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         componentContext: ComponentContext,
     ): Child =
         when (config) {
-            is Config.Profile -> Child.Profile(
-                ProfileScreenComponent(
-                    context = componentContext,
-                    profileInstanceKeeper = ProfileInstanceKeeper(
-                        BaseProfileDataSource(
-                            BaseAuthDataSource(
-                                remoteService =
-                                StartsRemoteDataSourceImpl(
-                                    HttpClientProvider2(
-                                        JsonProvider().get(),
-                                        "https://sport-73zoq.ondigitalocean.app"
-                                    )
-                                ),
-                                local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-                                signInMapper = SignInRemoteToUiMapper.Base(),
-                                signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                            )
-                        ),
-                        goToAuth = {
-                            navigation.push(Config.Login)
-                        }
-                    ),
-                    launchPolicy = config.launchPolicy
-                )
-            )
-
             is Config.Login -> Child.Login(
                 SignInScreenComponent(
                     context = componentContext,
@@ -87,10 +68,88 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()
                         ),
                         toProfile = {
-                            navigation.replaceAll(Config.Profile(ProfileLaunchPolicy.Update))
-                            //navigation.bringToFront(Config.Profile)
+                            navigation.replaceAll(Config.AuthProfile)
                         }
                     ),
+                )
+            )
+
+            is Config.AuthProfile -> Child.AuthProfile(
+                AuthorizedProfileComponent(
+                    componentContext,
+                    BaseProfileDataSource(
+                        BaseAuthDataSource(
+                            remoteService =
+                            StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
+                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                            signInMapper = SignInRemoteToUiMapper.Base(),
+                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                        )
+                    ),
+                    event = {
+                        handleAuthorizedProfileEvent(it)
+                    }
+                )
+            )
+
+            is Config.UnAuthProfile -> Child.UnAuthProfile(
+                UnAuthorizedProfileComponent(
+                    componentContext,
+                    service = BaseProfileDataSource(
+                        BaseAuthDataSource(
+                            remoteService =
+                            StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
+                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                            signInMapper = SignInRemoteToUiMapper.Base(),
+                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                        )
+                    ),
+                    goSignIn = {
+                        navigation.push(Config.Login)
+                    },
+                    goAuthProfile = {
+                        navigation.replaceCurrent(Config.AuthProfile)
+                    }
+                )
+            )
+
+            is Config.EditProfile -> Child.EditProfile(
+                EditProfileComponent(
+                    componentContext,
+                    currentUser = config.user,
+                    mapper = RemoteUserToEditProfileMapper.Base(),
+                    goBack = ::onBackClicked,
+                    service = EditProfileDataSourceBase(
+                        RemoteUserToEditProfileMapper.Base(),
+                        BaseAuthDataSource(
+                            remoteService =
+                            StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
+                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                            signInMapper = SignInRemoteToUiMapper.Base(),
+                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                        ),
+                        StartsRemoteDataSourceImpl(
+                            HttpClientProvider2(
+                                JsonProvider().get(),
+                                "https://sport-73zoq.ondigitalocean.app"
+                            )
+                        ),
+                    )
                 )
             )
         }
@@ -100,19 +159,40 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         navigation.pop()
     }
 
+    fun handleAuthorizedProfileEvent(event: AuthorizedProfileEvent) {
+        when (event) {
+            is AuthorizedProfileEvent.SignOut -> navigation.replaceAll(Config.UnAuthProfile)
+            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfile(event.user))
+            is AuthorizedProfileEvent.MyRegistries -> TODO("not implement yet")
+            is AuthorizedProfileEvent.ChangePasswordProfile -> TODO("not implement yet")
+            is AuthorizedProfileEvent.MyMembers -> TODO("not implement yet")
+        }
+    }
+
 
     @Serializable
     sealed class Config {
 
+
         @Serializable
-        data class Profile(val launchPolicy: ProfileLaunchPolicy) : Config()
+        data class EditProfile(val user: com.markettwits.cloud.model.auth.sign_in.response.User) :
+            Config()
+
+        @Serializable
+        data object AuthProfile : Config()
+
+        @Serializable
+        data object UnAuthProfile : Config()
 
         @Serializable
         data object Login : Config()
     }
 
     sealed class Child {
-        data class Profile(val component: ProfileScreenComponent) : Child()
         data class Login(val component: SignInScreenComponent) : Child()
+        data class AuthProfile(val component: AuthorizedProfile) : Child()
+        data class UnAuthProfile(val component: UnAuthorizedProfile) : Child()
+        data class EditProfile(val component: com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfile) :
+            Child()
     }
 }

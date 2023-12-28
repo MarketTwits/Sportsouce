@@ -156,8 +156,9 @@ interface StartRemoteToUiMapper {
             // Parse the input date string
 
             //FIXME fix 6 or 7 elements in time
-          //  val inputDate = LocalDateTime.parse(time, inputFormat)
-            val inputDate = LocalDateTime.parse("2023-12-25T22:46:48.5554295", inputFormat)
+          //
+            val inputDate = LocalDateTime.parse(time, inputFormat)
+           // val inputDate = LocalDateTime.parse("2023-12-25T22:46:48.5554295", inputFormat)
 
             // Format the output date string
             val outputDate = inputDate.atOffset(ZoneOffset.UTC).format(outputFormat)

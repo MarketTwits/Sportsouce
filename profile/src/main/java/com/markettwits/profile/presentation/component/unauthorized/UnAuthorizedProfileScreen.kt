@@ -8,15 +8,17 @@ import com.markettwits.profile.presentation.common.menu.MenuItem
 import com.markettwits.profile.presentation.common.menu.SignInOrRegistryButton
 import com.markettwits.profile.presentation.common.top_bar.ProfileTopBar
 
+
 @Composable
-fun UnAuthorizedProfileScreen(component : ProfileScreen) {
-  //  val state by component.nameState.subscribeAsState()
+fun UnAuthorizedProfileScreen(component : UnAuthorizedProfile) {
     Column {
         ProfileTopBar(userName = "")
         SignInOrRegistryButton{
-            component.goToSignInScreen()
+            component.signIn()
         }
-        ProfileScreenContent(menu = unauthorizedProfileScreenMenu())
+        ProfileScreenContent(menu = unauthorizedProfileScreenMenu()){
+
+        }
     }
 }
 private fun unauthorizedProfileScreenMenu() =listOf<MenuItem>(

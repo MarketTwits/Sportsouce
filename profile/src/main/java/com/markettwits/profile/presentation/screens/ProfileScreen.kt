@@ -23,14 +23,13 @@ fun ProfileScreen(component: ProfileScreen) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        when (state) {
-            is ProfileUiState.Initial -> {}
-            is ProfileUiState.Base -> AuthorizedProfileScreen((state as ProfileUiState.Base).user.name){
-                component.exit()
-            }
-            is ProfileUiState.UnAuthorization -> UnAuthorizedProfileScreen(component = component)
-        }
-
+//        when (state) {
+//            is ProfileUiState.Initial -> {}
+//            is ProfileUiState.Base -> AuthorizedProfileScreen((state as ProfileUiState.Base).user.name){
+//                component.exit()
+//            }
+//            is ProfileUiState.UnAuthorization -> UnAuthorizedProfileScreen(component = component)
+//        }
     }
 }
 

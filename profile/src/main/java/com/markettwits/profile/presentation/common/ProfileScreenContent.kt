@@ -15,14 +15,16 @@ import com.markettwits.profile.presentation.common.menu.MenuItemCard
 import com.markettwits.profile.presentation.common.menu.profileMenu
 
 @Composable
-fun ProfileScreenContent(modifier: Modifier = Modifier, menu : List<MenuItem>) {
+fun ProfileScreenContent(modifier: Modifier = Modifier, menu : List<MenuItem>, onClickItem : () -> Unit) {
     Column(modifier = modifier
         .background(SportSouceColor.VeryLighBlue)
         .clip(Shapes.medium)
     ) {
         LazyColumn{
             items(menu){
-                MenuItemCard(item = it)
+                MenuItemCard(item = it){
+                    onClickItem()
+                }
             }
         }
     }

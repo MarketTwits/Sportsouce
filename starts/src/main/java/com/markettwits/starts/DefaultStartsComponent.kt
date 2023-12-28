@@ -17,11 +17,13 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.start.core.BaseTimeMapper
 import com.markettwits.start.data.BaseStartDataSource
 import com.markettwits.start.data.StartRemoteToUiMapper
+import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
+import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.StartScreenComponent
 import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.StartsCloudToUiMapper
@@ -121,7 +123,8 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     },
                     onBack = {
                         onBackClicked()
-                    }
+                    },
+                    membersFilter = MembersFilterBase()
                 ),
             )
 
@@ -129,18 +132,17 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 StartMembersFilterScreenComponent(
                     context = componentContext,
                     items = config.items,
-//                    globalFilter = filter,
                     back = {
                         onBackClicked()
                     },
                     apply = { filter ->
                         navigation.pop { // Pop ItemDetailsComponent
-                            // Deliver the result to ItemList component
                             (childStack.value.active.instance as? Child.StartMembers)?.component?.updateFilter(
                                 filter = filter
                             )
                         }
-                    }
+                    },
+                    handleMembersFilter = HandleMembersFilterBase()
                 )
             )
         }

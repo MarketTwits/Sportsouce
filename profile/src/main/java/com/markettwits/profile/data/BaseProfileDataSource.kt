@@ -13,9 +13,27 @@ class BaseProfileDataSource(
             ProfileUiState.Base(user)
         } catch (e: Exception) {
             when (e) {
-                is AuthException -> ProfileUiState.UnAuthorization
-                else -> ProfileUiState.UnAuthorization
+                else -> ProfileUiState.Error(e.toString())
             }
+        }
+    }
+
+    override suspend fun authProfile(): String {
+        return try {
+            authDataSource.updateToken()
+            val user = authDataSource.auth()
+            user.name
+        } catch (e: Exception) {
+            return e.toString()
+        }
+    }
+
+    override suspend fun checkAuth(): Boolean {
+        return try {
+            authDataSource.currentToken()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 

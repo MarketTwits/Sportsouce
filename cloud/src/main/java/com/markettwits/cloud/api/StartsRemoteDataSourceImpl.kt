@@ -5,6 +5,7 @@ import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
@@ -18,6 +19,7 @@ import kotlinx.serialization.decodeFromString
 import com.markettwits.cloud.model.starts.StartsRemote
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -98,6 +100,17 @@ class StartsRemoteDataSourceImpl(
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun changeProfileInfo(profile: User, token : String) : ChangeProfileInfoResponse {
+        val response = client.put("user/${profile.id}"){
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(profile)
         }
         return json.decodeFromString(response.body())
     }

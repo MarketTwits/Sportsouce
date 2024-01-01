@@ -19,7 +19,12 @@ fun AuthorizedProfileScreen(component: AuthorizedProfile) {
         if (name is ProfileUiState.Base){
             ProfileTopBar(userName =  (name as ProfileUiState.Base).user.name)
             ProfileScreenContent(menu = profileMenu()){
-                component.goEditScreen()
+                when(it){
+                    "Редактировать" -> component.goEditScreen()
+                    "Сменить пароль" -> component.goChangePasswordScreen()
+                    "Мои регистрации" -> component.goMyRegistryScreen()
+                    "Участники" -> component.goMyMembersScreen()
+                }
             }
             ExitButton {
                 component.signOut()

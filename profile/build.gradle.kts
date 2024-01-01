@@ -14,4 +14,6 @@ dependencies {
     implementation(libs.bundles.decompose.compose)
     implementation (libs.material3.html.text)
     implementation(libs.kotlinx.datetime)
+    // CALENDAR
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.2.0")
 }

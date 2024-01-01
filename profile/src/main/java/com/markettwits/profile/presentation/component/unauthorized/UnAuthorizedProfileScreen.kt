@@ -26,6 +26,5 @@ private fun unauthorizedProfileScreenMenu() =listOf<MenuItem>(
     MenuItem.Base("Написать в Telegram"),
     MenuItem.Base("Написать в WhatsApp"),
     MenuItem.Base("Карта магазина"),
-    MenuItem.Base("Мои регистрации"),
     MenuItem.Base("О нас"),
 )

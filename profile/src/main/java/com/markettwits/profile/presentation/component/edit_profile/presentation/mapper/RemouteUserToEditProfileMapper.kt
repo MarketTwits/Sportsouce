@@ -9,11 +9,17 @@ import com.markettwits.profile.presentation.component.edit_profile.models.CityUi
 import com.markettwits.profile.presentation.component.edit_profile.models.TeamUi
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 interface RemoteUserToEditProfileMapper {
-   // fun map(user: User): List<EditProfileUiPage>
+    // fun map(user: User): List<EditProfileUiPage>
     fun map(list: List<EditProfileUiPage>): ChangeProfileInfoRequest
-    fun map(e : Exception) : EditProfileUiState
+    fun map(e: Exception): EditProfileUiState
     fun map(cityRemote: CityRemote, teamsRemote: TeamsRemote, user: User): EditProfileUiState
     fun mapAll(
         cityRemote: CityRemote,
@@ -53,7 +59,19 @@ interface RemoteUserToEditProfileMapper {
 
             val userDataPage =
                 list.find { it is EditProfileUiPage.UserData } as? EditProfileUiPage.UserData
-                    ?: EditProfileUiPage.UserData(0,"", "", "", "", "", "", "", "", emptyList(), emptyList())
+                    ?: EditProfileUiPage.UserData(
+                        0,
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        emptyList(),
+                        emptyList()
+                    )
 
             val myInfoPage =
                 list.find { it is EditProfileUiPage.MyInfo } as? EditProfileUiPage.MyInfo
@@ -61,7 +79,7 @@ interface RemoteUserToEditProfileMapper {
 
             return ChangeProfileInfoRequest(
                 address = userDataPage.city,
-                birthday = userDataPage.birthday,
+                birthday = mapBirthdayStringToCloud(userDataPage.birthday),
                 comment_for_address = myInfoPage.description,
                 email = userDataPage.email,
                 favor = null, // You need to provide the correct value
@@ -113,7 +131,7 @@ interface RemoteUserToEditProfileMapper {
                 name = user.name,
                 surname = user.surname,
                 sex = user.sex,
-                birthday = user.birthday,
+                birthday = mapBirthdayCloudToUI(user.birthday),
                 email = user.email,
                 phoneNumber = user.number,
                 city = user.address,
@@ -133,5 +151,22 @@ interface RemoteUserToEditProfileMapper {
 
         private fun mapTeamCloudToUi(cloud: TeamsRemote): List<TeamUi> =
             cloud.rows.map { TeamUi(it.id, it.name) }
+
+        private fun mapBirthdayStringToCloud(date: String): String {
+            val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val pareseDate = inputFormat.parse(date)
+            val zoneId = ZoneId.of("Z")
+            val zonedDateTime = ZonedDateTime.ofInstant(pareseDate.toInstant(), zoneId)
+            val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+            return outputFormat.format(zonedDateTime)
+        }
+        private fun mapBirthdayCloudToUI(date: String): String {
+            val zonedDateTime =
+                ZonedDateTime.parse(date)
+            val localDate =
+                LocalDate.from(zonedDateTime)
+            val outputFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            return outputFormat.format(localDate)
+        }
     }
 }

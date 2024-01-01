@@ -15,12 +15,12 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem, onCLick : () -> Unit) {
+fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem, onCLick : (String) -> Unit) {
     when (item) {
         is MenuItem.Base -> {
             Row(
                 modifier = Modifier
-                    .clickable { onCLick() }
+                    .clickable { onCLick(item.title) }
                     .background(color = SportSouceColor.VeryLighBlue)
                     .fillMaxWidth()
                     .padding(10.dp)

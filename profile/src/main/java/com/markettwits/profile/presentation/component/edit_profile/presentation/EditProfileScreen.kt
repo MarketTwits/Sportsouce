@@ -70,33 +70,29 @@ fun EditProfileScreen(component: EditProfile) {
                             0 -> MySocialNetworkPage(
                                 user = state.data[0] as EditProfileUiPage.MySocialNetwork,
                                 onUserChange = { updatedUser ->
-                                    component.obtainTextFiled(
-                                        updatedUser
-                                    )
+                                    component.obtainTextFiled(updatedUser)
                                 }
                             )
-
                             1 ->
                                 UserDataPage(
                                     page = state.data[1] as EditProfileUiPage.UserData,
                                     onUserChange = { updatedUser ->
-                                        component.obtainTextFiled(
-                                            updatedUser
-                                        )
+                                        component.obtainTextFiled(updatedUser)
                                     }
                                 )
-
                             2 -> MyInfoPage(
                                 page = state.data[2] as EditProfileUiPage.MyInfo,
                                 onUserChange = { updatedUser ->
-                                    component.obtainTextFiled(
-                                        updatedUser
-                                    )
+                                    component.obtainTextFiled(updatedUser)
                                 }
                             )
                         }
+                        SaveChangesButton(
+                            state = state
+                        ) {
+                            component.saveChanges()
+                        }
                     }
-
                 }
             }
         }
@@ -107,13 +103,13 @@ fun EditProfileScreen(component: EditProfile) {
                 color = SportSouceColor.SportSouceBlue
             )
         }
-        SaveChangesButton(
-            modifier = Modifier
-                .align(Alignment.BottomCenter),
-            state = state
-        ) {
-            component.saveChanges()
-        }
+//        SaveChangesButton(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter),
+//            state = state
+//        ) {
+//            component.saveChanges()
+//        }
         SnackbarHost(
             hostState = snackBarHostState,
               modifier = Modifier.align(Alignment.BottomCenter)

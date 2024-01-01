@@ -36,21 +36,20 @@ class AuthorizedProfileComponent(
         ) { profileName.value }
     }
 
-
     override fun goEditScreen() {
         event(AuthorizedProfileEvent.EditProfile((profileName.value as ProfileUiState.Base).user))
     }
 
     override fun goChangePasswordScreen() {
-        TODO("Not yet implemented")
+        event(AuthorizedProfileEvent.ChangePasswordProfile)
     }
 
     override fun goMyRegistryScreen() {
-        TODO("Not yet implemented")
+        event(AuthorizedProfileEvent.MyRegistries)
     }
 
     override fun goMyMembersScreen() {
-        TODO("Not yet implemented")
+        event(AuthorizedProfileEvent.MyMembers)
     }
 
     override fun signOut() {

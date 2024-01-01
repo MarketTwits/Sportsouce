@@ -52,6 +52,7 @@ fun TabBar(modifier : Modifier = Modifier, content: @Composable (Int) -> Unit) {
         pages.forEachIndexed { index, item ->
             Tab(
                 modifier = Modifier
+                    .background(Color.White)
                     .wrapContentSize()
                     .clip(RoundedCornerShape(10.dp)),
                 selectedContentColor = SportSouceColor.SportSouceBlue,

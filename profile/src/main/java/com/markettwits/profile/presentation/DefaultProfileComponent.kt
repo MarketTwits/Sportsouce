@@ -18,9 +18,12 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfile
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
+import com.markettwits.profile.presentation.component.change_password.ChangePasswordComponent
 import com.markettwits.profile.presentation.component.edit_profile.data.EditProfileDataStoreBase
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.profile.presentation.component.my_members.MyMembersComponent
+import com.markettwits.profile.presentation.component.my_registries.MyRegistriesComponent
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
@@ -152,6 +155,18 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     )
                 )
             )
+
+            is Config.MyMembers -> Child.MyMembers(
+                MyMembersComponent(componentContext)
+            )
+
+            is Config.ChangePassword -> Child.ChangePassword(
+                ChangePasswordComponent(componentContext)
+            )
+
+            is Config.MyRegistries -> Child.MyRegistries(
+                MyRegistriesComponent(componentContext)
+            )
         }
 
 
@@ -163,16 +178,15 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         when (event) {
             is AuthorizedProfileEvent.SignOut -> navigation.replaceAll(Config.UnAuthProfile)
             is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfile(event.user.id))
-            is AuthorizedProfileEvent.MyRegistries -> TODO("not implement yet")
-            is AuthorizedProfileEvent.ChangePasswordProfile -> TODO("not implement yet")
-            is AuthorizedProfileEvent.MyMembers -> TODO("not implement yet")
+            is AuthorizedProfileEvent.MyRegistries -> navigation.push(Config.MyRegistries)
+            is AuthorizedProfileEvent.ChangePasswordProfile -> navigation.push(Config.ChangePassword)
+            is AuthorizedProfileEvent.MyMembers -> navigation.push(Config.MyMembers)
         }
     }
 
 
     @Serializable
     sealed class Config {
-
 
         @Serializable
         data class EditProfile(val userId: Int) :
@@ -186,6 +200,16 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object Login : Config()
+
+        @Serializable
+        data object ChangePassword : Config()
+
+        @Serializable
+        data object MyMembers : Config()
+
+        @Serializable
+        data object MyRegistries : Config()
+
     }
 
     sealed class Child {
@@ -193,6 +217,15 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class AuthProfile(val component: AuthorizedProfile) : Child()
         data class UnAuthProfile(val component: UnAuthorizedProfile) : Child()
         data class EditProfile(val component: com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfile) :
+            Child()
+
+        data class ChangePassword(val component: com.markettwits.profile.presentation.component.change_password.ChangePassword) :
+            Child()
+
+        data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :
+            Child()
+
+        data class MyRegistries(val component: com.markettwits.profile.presentation.component.my_registries.MyRegistries) :
             Child()
     }
 }

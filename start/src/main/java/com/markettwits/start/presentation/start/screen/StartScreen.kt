@@ -49,7 +49,6 @@ fun StartScreen(component: StartScreen) {
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
-    val scope = rememberCoroutineScope()
     when (startData) {
         is StartItemUi.StartItemUiSuccess -> {
             val data = (startData as StartItemUi.StartItemUiSuccess)

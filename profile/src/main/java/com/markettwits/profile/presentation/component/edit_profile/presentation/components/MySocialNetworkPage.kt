@@ -19,25 +19,30 @@ fun MySocialNetworkPage(
 ) {
     Column(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(20.dp)
             .background(Color.White)
     ) {
+        val modifier = Modifier.padding(5.dp)
         MyProfileTextField(
+            modifier = modifier,
             value = user.telegram ?: "",
             onValueChange = { newValue -> onUserChange(user.copy(telegram = newValue)) },
             label = "Telegram"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = user.whatsApp ?: "",
             onValueChange = { newValue -> onUserChange(user.copy(whatsApp = newValue)) },
             label = "WhatsApp"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = user.vk ?: "",
             onValueChange = { newValue -> onUserChange(user.copy(vk = newValue)) },
             label = "ВКонтакте"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = user.instagram ?: "",
             onValueChange = { newValue -> onUserChange(user.copy(instagram = newValue)) },
             label = "Instagram"

@@ -16,10 +16,12 @@ import com.markettwits.profile.presentation.component.edit_profile.presentation.
 fun MyInfoPage(page: EditProfileUiPage.MyInfo, onUserChange: (EditProfileUiPage.MyInfo) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(20.dp)
             .background(Color.White)
     ) {
+        val modifier = Modifier.padding(5.dp)
         MyProfileTextField(
+            modifier = modifier,
             value = page.description,
             onValueChange = { newValue -> onUserChange(page.copy(description = newValue)) },
             label = "Обо мне"

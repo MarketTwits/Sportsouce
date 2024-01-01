@@ -19,40 +19,48 @@ fun UserDataPage(
 ) {
     Column(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(20.dp)
             .background(Color.White)
     ) {
+        val modifier = Modifier.padding(5.dp)
         MyProfileTextField(
+            modifier = modifier,
             value = page.name,
             onValueChange = { newValue -> onUserChange(page.copy(name = newValue)) },
             label = "Имя"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.surname,
             onValueChange = { newValue -> onUserChange(page.copy(surname = newValue)) },
             label = "Фамилия"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.sex,
             onValueChange = { newValue -> onUserChange(page.copy(sex = newValue)) },
             label = "Пол"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.birthday,
             onValueChange = { newValue -> onUserChange(page.copy(birthday = newValue)) },
             label = "День рождения"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.phoneNumber,
             onValueChange = { newValue -> onUserChange(page.copy(phoneNumber = newValue)) },
             label = "Номер телефона"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.city,
             onValueChange = { newValue -> onUserChange(page.copy(city = newValue)) },
             label = "Город"
         )
         MyProfileTextField(
+            modifier = modifier,
             value = page.team,
             onValueChange = { newValue -> onUserChange(page.copy(team = newValue)) },
             label = "Команда"

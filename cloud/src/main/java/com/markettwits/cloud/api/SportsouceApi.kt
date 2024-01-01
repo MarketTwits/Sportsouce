@@ -4,6 +4,8 @@ import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.cloud.model.city.CityRemote
+import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
@@ -13,8 +15,12 @@ import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.starts.StartsRemote
+import com.markettwits.cloud.model.team.TeamsRemote
 
 interface SportsouceApi {
+    //Common
+    suspend fun teams() : TeamsRemote
+    suspend fun cities() : CityRemote
     //Starts
     suspend fun fetchActualStarts(): StartsRemote
     suspend fun fetchPasteStarts(): StartsRemote
@@ -30,11 +36,9 @@ interface SportsouceApi {
         startSubCommentRequest: StartSubCommentRequest,
         token: String
     ): Reply
-
     //Auth
     suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess
     suspend fun auth(token: String): User
-
     //Profile
-    suspend fun changeProfileInfo(profile: User, token: String) : ChangeProfileInfoResponse
+    suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
 }

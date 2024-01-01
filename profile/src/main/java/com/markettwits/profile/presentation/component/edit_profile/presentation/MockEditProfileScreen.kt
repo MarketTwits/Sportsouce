@@ -3,6 +3,9 @@ package com.markettwits.profile.presentation.component.edit_profile.presentation
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class MockEditProfileScreen : EditProfile {
     val fakeUser = User(
@@ -30,7 +33,8 @@ class MockEditProfileScreen : EditProfile {
         vk = "sample_vk",
         whatsapp = "+9876543210"
     )
-    override val user: Value<User> = MutableValue(fakeUser)
+    override val state: Value<EditProfileUiState> = MutableValue(EditProfileUiState.Loading())
+    override val events: SharedFlow<EditProfileEvent> = MutableSharedFlow()
 
     override fun pop() {
 
@@ -40,7 +44,11 @@ class MockEditProfileScreen : EditProfile {
 
     }
 
+    override fun messageHasBeenShowed() {
+
+    }
+
     override fun obtainTextFiled(value: EditProfileUiPage) = Unit
 
-    override val page: Value<List<EditProfileUiPage>> = MutableValue(emptyList())
+  //  override val page: Value<List<EditProfileUiPage>> = MutableValue(emptyList())
 }

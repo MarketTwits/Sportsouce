@@ -18,7 +18,7 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfile
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
-import com.markettwits.profile.presentation.component.edit_profile.data.EditProfileDataSourceBase
+import com.markettwits.profile.presentation.component.edit_profile.data.EditProfileDataStoreBase
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
@@ -126,10 +126,10 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             is Config.EditProfile -> Child.EditProfile(
                 EditProfileComponent(
                     componentContext,
-                    currentUser = config.user,
+                    userId = config.userId,
                     mapper = RemoteUserToEditProfileMapper.Base(),
                     goBack = ::onBackClicked,
-                    service = EditProfileDataSourceBase(
+                    service = EditProfileDataStoreBase(
                         RemoteUserToEditProfileMapper.Base(),
                         BaseAuthDataSource(
                             remoteService =
@@ -162,7 +162,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     fun handleAuthorizedProfileEvent(event: AuthorizedProfileEvent) {
         when (event) {
             is AuthorizedProfileEvent.SignOut -> navigation.replaceAll(Config.UnAuthProfile)
-            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfile(event.user))
+            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfile(event.user.id))
             is AuthorizedProfileEvent.MyRegistries -> TODO("not implement yet")
             is AuthorizedProfileEvent.ChangePasswordProfile -> TODO("not implement yet")
             is AuthorizedProfileEvent.MyMembers -> TODO("not implement yet")
@@ -175,7 +175,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
 
         @Serializable
-        data class EditProfile(val user: com.markettwits.cloud.model.auth.sign_in.response.User) :
+        data class EditProfile(val userId: Int) :
             Config()
 
         @Serializable

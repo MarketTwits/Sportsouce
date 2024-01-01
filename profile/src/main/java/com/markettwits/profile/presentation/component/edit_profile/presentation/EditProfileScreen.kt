@@ -1,72 +1,155 @@
 package com.markettwits.profile.presentation.component.edit_profile.presentation
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.profile.presentation.common.menu.SignInOrRegistryButton
+import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.presentation.common.top_bar.MyProfileTopBar
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.MyInfoPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.MySocialNetworkPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.SaveChangesButton
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.TabBar
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.UserDataPage
+import com.markettwits.profile.presentation.component.edit_profile.presentation.event.OnEvent
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(component: EditProfile) {
-    val page by component.page.subscribeAsState()
+    val state by component.state.subscribeAsState()
+    val snackBarHostState by remember {
+        mutableStateOf(SnackbarHostState())
+    }
+    val scope = rememberCoroutineScope()
     Box(
         modifier = Modifier
             .background(Color.White)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .align(Alignment.TopCenter)
+                .fillMaxSize()
                 .background(Color.White)
-             //   .verticalScroll(rememberScrollState())
+
         ) {
-            MyProfileTopBar {
-                component.pop()
-            }
-            TabBar(modifier = Modifier.fillMaxSize()) {
-                when (it) {
-                    0 -> MySocialNetworkPage(
-                        user = page[0] as EditProfileUiPage.MySocialNetwork,
-                        onUserChange = { updatedUser -> component.obtainTextFiled(updatedUser) }
-                    )
+            if (!state.isLoading) {
+                MyProfileTopBar {
+                    component.pop()
+                }
+                TabBar {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        when (it) {
+                            0 -> MySocialNetworkPage(
+                                user = state.data[0] as EditProfileUiPage.MySocialNetwork,
+                                onUserChange = { updatedUser ->
+                                    component.obtainTextFiled(
+                                        updatedUser
+                                    )
+                                }
+                            )
 
-                    1 -> UserDataPage(
-                        page = page[1] as EditProfileUiPage.UserData,
-                        onUserChange = { updatedUser -> component.obtainTextFiled(updatedUser) }
-                    )
+                            1 ->
+                                UserDataPage(
+                                    page = state.data[1] as EditProfileUiPage.UserData,
+                                    onUserChange = { updatedUser ->
+                                        component.obtainTextFiled(
+                                            updatedUser
+                                        )
+                                    }
+                                )
 
-                    2 -> MyInfoPage(
-                        page = page[2] as EditProfileUiPage.MyInfo,
-                        onUserChange = { updatedUser -> component.obtainTextFiled(updatedUser) }
-                    )
+                            2 -> MyInfoPage(
+                                page = state.data[2] as EditProfileUiPage.MyInfo,
+                                onUserChange = { updatedUser ->
+                                    component.obtainTextFiled(
+                                        updatedUser
+                                    )
+                                }
+                            )
+                        }
+                    }
+
                 }
             }
-
         }
-            SaveChangesButton(modifier = Modifier.align(Alignment.BottomCenter)) {
-                component.saveChanges()
+        if (state is EditProfileUiState.Loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(30.dp)
+                    .align(Alignment.Center),
+                color = SportSouceColor.SportSouceBlue
+            )
+        }
+        SaveChangesButton(
+            modifier = Modifier
+                .align(Alignment.BottomCenter),
+            state = state
+        ) {
+            component.saveChanges()
+        }
+        SnackbarHost(
+            hostState = snackBarHostState,
+              modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            Snackbar(
+                contentColor = Color.White,
+                containerColor = if (state is EditProfileUiState.Error) SportSouceColor.SportSouceLightRed else SportSouceColor.SportSouceLighBlue,
+                snackbarData = it
+            )
+        }
+        OnEvent(event = component.events, onEvent = {
+            when (it) {
+                is EditProfileEvent.ShowError -> {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = it.message,
+                            duration = SnackbarDuration.Long,
+                            withDismissAction = true
+                        )
+                    }
+                }
+
+                is EditProfileEvent.ShowSuccess -> {
+                    scope.launch {
+                        snackBarHostState.showSnackbar(
+                            message = it.message,
+                            duration = SnackbarDuration.Long,
+                            withDismissAction = true
+                        )
+                    }
+                }
             }
-//        SaveChangesButton(modifier = Modifier.align(Alignment.BottomCenter)) {
-//            component.saveChanges()
-//        }
+        })
     }
 }
+
 
 @Preview
 @Composable

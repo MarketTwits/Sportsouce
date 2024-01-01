@@ -2,8 +2,10 @@ package com.markettwits.profile.presentation.component.edit_profile.presentation
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,9 +14,14 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 
 @Composable
-fun SaveChangesButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SaveChangesButton(
+    modifier: Modifier = Modifier,
+    state: EditProfileUiState,
+    onClick: () -> Unit
+) {
     Button(
         modifier = modifier
             .fillMaxWidth()
@@ -28,11 +35,14 @@ fun SaveChangesButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
             disabledContainerColor = SportSouceColor.SportSouceBlue
         )
     ) {
-        Text(
-            text = "Сохранить изменения",
-            color = Color.White,
-            fontFamily = FontNunito.bold,
-            //  modifier = Modifier.padding(10.dp)
-        )
+        if (state is EditProfileUiState.LoadingChanges) {
+            CircularProgressIndicator(modifier = modifier.size(30.dp), color = Color.White)
+        } else {
+            Text(
+                text = "Сохранить изменения",
+                color = Color.White,
+                fontFamily = FontNunito.bold,
+            )
+        }
     }
 }

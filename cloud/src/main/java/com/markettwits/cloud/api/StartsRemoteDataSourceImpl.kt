@@ -5,6 +5,7 @@ import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
@@ -133,6 +134,17 @@ class StartsRemoteDataSourceImpl(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
             setBody(profile)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun changePassword(password: ChangePasswordRequest, token : String): String {
+        val response = client.put("authentication/change-password") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(password)
         }
         return json.decodeFromString(response.body())
     }

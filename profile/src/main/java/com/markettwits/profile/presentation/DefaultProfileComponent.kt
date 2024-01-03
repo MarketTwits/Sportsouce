@@ -9,6 +9,9 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.change_password.data.ChangePasswordDataSourceBase
+import com.markettwits.change_password.domain.ChangePasswordValidation
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.BaseProfileDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
@@ -18,7 +21,6 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfile
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
-import com.markettwits.profile.presentation.component.change_password.ChangePasswordComponent
 import com.markettwits.profile.presentation.component.edit_profile.data.EditProfileDataStoreBase
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
@@ -28,6 +30,9 @@ import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedP
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
+import com.markettwits.change_password.presentation.change_password.screen.ChangePassword
+import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordComponent
+import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordStoreFactory
 import kotlinx.serialization.Serializable
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
@@ -161,7 +166,34 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             )
 
             is Config.ChangePassword -> Child.ChangePassword(
-                ChangePasswordComponent(componentContext)
+                ChangePasswordComponent(
+                    context = componentContext,
+                    pop = navigation::pop,
+                    storeFactory = ChangePasswordStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        validation = ChangePasswordValidation.Base(),
+                        changePasswordDataSource = ChangePasswordDataSourceBase(
+                            service = StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
+                            auth = BaseAuthDataSource(
+                                remoteService =
+                                StartsRemoteDataSourceImpl(
+                                    HttpClientProvider2(
+                                        JsonProvider().get(),
+                                        "https://sport-73zoq.ondigitalocean.app"
+                                    )
+                                ),
+                                local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                                signInMapper = SignInRemoteToUiMapper.Base(),
+                                signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                            )
+                        )
+                    )
+                )
             )
 
             is Config.MyRegistries -> Child.MyRegistries(
@@ -219,7 +251,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class EditProfile(val component: com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfile) :
             Child()
 
-        data class ChangePassword(val component: com.markettwits.profile.presentation.component.change_password.ChangePassword) :
+        data class ChangePassword(val component: com.markettwits.change_password.presentation.change_password.screen.ChangePassword) :
             Child()
 
         data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :

@@ -105,7 +105,6 @@ class EditProfileComponent(
 
     private val _event = Channel<EditProfileEvent>()
     override val events = _event.receiveAsFlow().shareIn(scope, SharingStarted.Lazily)
-    protected suspend fun sendEvent(event: EditProfileEvent) = _event.send(event)
     protected fun sendEventSync(event: EditProfileEvent) = scope.launch { _event.send(event) }
 
     private companion object {

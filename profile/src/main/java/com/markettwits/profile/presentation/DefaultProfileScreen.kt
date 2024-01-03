@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileScreen
-import com.markettwits.profile.presentation.component.change_password.ChangePasswordScreen
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileScreen
 import com.markettwits.profile.presentation.component.my_members.MyMembersScreen
 import com.markettwits.profile.presentation.component.my_registries.MyRegistriesScreen
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileScreen
 import com.markettwits.profile.presentation.sign_in.AuthScreen
+import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordScreen
 
 @Composable
 fun DefaultProfileScreen(component: DefaultProfileComponent) {

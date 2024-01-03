@@ -4,6 +4,7 @@ import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
@@ -41,4 +42,5 @@ interface SportsouceApi {
     suspend fun auth(token: String): User
     //Profile
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
+    suspend fun changePassword(password : ChangePasswordRequest, token: String) : String
 }

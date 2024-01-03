@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.common.top_bar
+package com.markettwits.change_password.presentation.change_password.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

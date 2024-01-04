@@ -12,30 +12,16 @@ import ru.alexpanov.core_network.api.SportsouceApi
 
 class ChangePasswordDataSourceBase(
     private val service: SportsouceApi,
-    private val auth: AuthDataSource
+    private val auth: AuthDataSource,
+    private val authDataSource: AuthDataSource,
 ) : ChangePasswordDataSource {
-    override val state: MutableStateFlow<String> = MutableStateFlow("")
-    override suspend fun changePassword(password: String, newPassword: String) {
-        runCatching<String> {
-            val token = auth.updateToken()
-            service.changePassword(ChangePasswordRequest(password, newPassword), token)
-        }.onFailure {
-            val message = when (it) {
-                is ClientRequestException -> it.response.body<AuthErrorResponse>().message
-                is AuthException -> it.exception
-                else -> it.toString()
-            }
-            state.value = message
-        }.onSuccess {
-            state.value = it
-        }
-    }
 
-    override suspend fun changePasswordNew(password: String, newPassword: String): Result<String> {
+    override suspend fun changePassword(password: String, newPassword: String): Result<String> {
         return try {
             val token = auth.updateToken()
             val it = service.changePassword(ChangePasswordRequest(password, newPassword), token)
-            Result.success(it)
+            authDataSource.updatePassword(newPassword)
+            Result.success(it.message)
         } catch (e: Exception) {
             val message = when (e) {
                 is ClientRequestException -> e.response.body<AuthErrorResponse>().message

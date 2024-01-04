@@ -138,7 +138,7 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun changePassword(password: ChangePasswordRequest, token : String): String {
+    override suspend fun changePassword(password: ChangePasswordRequest, token : String): ChangeProfileInfoResponse {
         val response = client.put("authentication/change-password") {
             contentType(ContentType.Application.Json)
             headers {

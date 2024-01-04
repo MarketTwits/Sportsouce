@@ -27,5 +27,9 @@ class MockStartScreen : StartScreen {
 
     }
 
+    override fun retry() {
+
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.markettwits.change_password.presentation.change_password.component
+package com.markettwits.change_password.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

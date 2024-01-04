@@ -29,6 +29,10 @@ class BaseAuthDataSource(
         }
     }
 
+    override suspend fun updatePassword(password: String) {
+        local.updatePassword(password)
+    }
+
     override suspend fun auth(): User {
         return try {
             remoteService.auth(currentToken())

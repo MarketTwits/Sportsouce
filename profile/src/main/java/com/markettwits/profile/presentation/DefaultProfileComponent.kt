@@ -30,9 +30,9 @@ import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedP
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
-import com.markettwits.change_password.presentation.change_password.screen.ChangePassword
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordComponent
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordStoreFactory
+import com.markettwits.change_password.presentation.screen.ChangePassword
+import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
+import com.markettwits.change_password.presentation.screen.ChangePasswordStoreFactory
 import kotlinx.serialization.Serializable
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
@@ -190,6 +190,18 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                                 local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                                 signInMapper = SignInRemoteToUiMapper.Base(),
                                 signInCacheMapper = SignInRemoteToCacheMapper.Base()
+                            ),
+                            BaseAuthDataSource(
+                                remoteService =
+                                StartsRemoteDataSourceImpl(
+                                    HttpClientProvider2(
+                                        JsonProvider().get(),
+                                        "https://sport-73zoq.ondigitalocean.app"
+                                    )
+                                ),
+                                local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
+                                signInMapper = SignInRemoteToUiMapper.Base(),
+                                signInCacheMapper = SignInRemoteToCacheMapper.Base()
                             )
                         )
                     )
@@ -251,7 +263,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class EditProfile(val component: com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfile) :
             Child()
 
-        data class ChangePassword(val component: com.markettwits.change_password.presentation.change_password.screen.ChangePassword) :
+        data class ChangePassword(val component: com.markettwits.change_password.presentation.screen.ChangePassword) :
             Child()
 
         data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :

@@ -1,4 +1,4 @@
-package com.markettwits.change_password.presentation.change_password.screen
+package com.markettwits.change_password.presentation.screen
 
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ChangePassword {
     val state : StateFlow<ChangePasswordStore.State>
-    val events: SharedFlow<ChangePasswordEvent>
-    val newEvents : StateFlow<ChangePasswordEvent>
     fun onCurrentPasswordChanged(value : String)
     fun onNewPasswordChanged(value: String)
     fun onNewPasswordRepeatChanged(value: String)

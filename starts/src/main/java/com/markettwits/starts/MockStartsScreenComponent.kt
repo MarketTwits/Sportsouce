@@ -5,6 +5,8 @@ import com.arkivanov.decompose.value.Value
 
 class MockStartsScreenComponent() : StartsScreen {
     override fun onItemClick(startId: Int) = Unit
+    override fun retry() = Unit
+
     override val starts: Value<StartsUiState> = MutableValue(
         StartsUiState.Success(
             listOf(

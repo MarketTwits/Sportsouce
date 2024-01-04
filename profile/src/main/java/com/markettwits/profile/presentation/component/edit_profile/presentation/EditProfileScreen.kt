@@ -94,18 +94,12 @@ fun EditProfileScreen(component: EditProfile) {
         }
         if (state is EditProfileUiState.Loading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(30.dp)
+                modifier =
+                Modifier
                     .align(Alignment.Center),
                 color = SportSouceColor.SportSouceBlue
             )
         }
-//        SaveChangesButton(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter),
-//            state = state
-//        ) {
-//            component.saveChanges()
-//        }
         SnackbarHost(
             hostState = snackBarHostState,
               modifier = Modifier.align(Alignment.BottomCenter)

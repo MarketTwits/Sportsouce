@@ -16,24 +16,32 @@ class StartScreenInstanceKeeper(
     private val scope = CoroutineScope(Dispatchers.Main)
     val start: MutableValue<StartItemUi> = MutableValue(StartItemUi.Loading)
     val commentsState: MutableValue<CommentUiState> = MutableValue(CommentUiState.Success)
-    val commentMode : MutableValue<CommentMode> = MutableValue(CommentMode.Base)
+    val commentMode: MutableValue<CommentMode> = MutableValue(CommentMode.Base)
 
     init {
-        scope.launch {
-            start.value = service.start(startId)
-        }
+        launch()
     }
 
     fun sendComment(value: String, id: Int) {
         commentsState.value = CommentUiState.Loading
         scope.launch {
             if (commentMode.value is CommentMode.Reply) {
-                commentsState.value = service.writeSubComment(value, (commentMode.value as CommentMode.Reply).messageId)
+                commentsState.value = service.writeSubComment(
+                    value,
+                    (commentMode.value as CommentMode.Reply).messageId
+                )
             } else {
                 commentsState.value = service.writeComment(value, id)
             }
             if (commentsState.value is CommentUiState.Success)
                 start.value = service.start(startId)
+        }
+    }
+
+    fun launch() {
+        scope.launch {
+            start.value = StartItemUi.Loading
+            start.value = service.start(startId)
         }
     }
 

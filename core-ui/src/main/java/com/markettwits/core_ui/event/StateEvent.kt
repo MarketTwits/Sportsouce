@@ -33,3 +33,7 @@ val triggered = StateEvent.Triggered
  *  Shorter and more readable version of [StateEvent.Consumed]
  */
 val consumed = StateEvent.Consumed
+
+fun  StateEvent.isTriggered() : Boolean{
+    return this is StateEvent.Triggered
+}

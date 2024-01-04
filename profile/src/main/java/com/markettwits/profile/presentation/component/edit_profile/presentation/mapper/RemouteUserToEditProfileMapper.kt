@@ -134,7 +134,7 @@ interface RemoteUserToEditProfileMapper {
                 birthday = mapBirthdayCloudToUI(user.birthday),
                 email = user.email,
                 phoneNumber = user.number,
-                city = user.address,
+                city = user.address ?: "",
                 team = user.team ?: "",
                 _teams = mapTeamCloudToUi(teamsRemote),
                 _cities = mapCityCloudToUi(cityRemote)

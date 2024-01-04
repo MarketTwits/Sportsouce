@@ -65,4 +65,5 @@ sealed class StartItemUi {
     }
 
     object Loading : StartItemUi()
+    data class Error(val message : String) : StartItemUi()
 }

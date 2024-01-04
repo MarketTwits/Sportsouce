@@ -9,7 +9,7 @@ import com.markettwits.profile.presentation.component.my_members.MyMembersScreen
 import com.markettwits.profile.presentation.component.my_registries.MyRegistriesScreen
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileScreen
 import com.markettwits.profile.presentation.sign_in.AuthScreen
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordScreen
+import com.markettwits.change_password.presentation.screen.ChangePasswordScreen
 
 @Composable
 fun DefaultProfileScreen(component: DefaultProfileComponent) {

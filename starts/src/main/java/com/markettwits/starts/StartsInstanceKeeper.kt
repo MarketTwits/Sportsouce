@@ -12,6 +12,7 @@ class StartsInstanceKeeper(
 ) : InstanceKeeper.Instance {
     val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
     private val scope = CoroutineScope(Dispatchers.Main)
+
     init {
         scope.launch {
             dataSource.starts()
@@ -21,11 +22,11 @@ class StartsInstanceKeeper(
         }
     }
 
-    private fun loadStarts(){
+    fun retry() {
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
-
+            starts.value = StartsUiState.Loading
+            dataSource.starts()
         }
-//        dataSource.starts()
     }
 }

@@ -1,26 +1,21 @@
-package com.markettwits.change_password.presentation.change_password.screen
+package com.markettwits.change_password.presentation.screen
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.store.create
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.change_password.data.ChangePasswordDataSource
 import com.markettwits.change_password.domain.ChangePasswordValidation
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordStore.Intent
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordStore.Label
-import com.markettwits.change_password.presentation.change_password.screen.ChangePasswordStore.State
-import com.markettwits.core_ui.event.StateEvent
+import com.markettwits.change_password.presentation.screen.ChangePasswordStore.Intent
+import com.markettwits.change_password.presentation.screen.ChangePasswordStore.Label
+import com.markettwits.change_password.presentation.screen.ChangePasswordStore.State
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
-import com.markettwits.profile.data.AuthDataSource
 import kotlinx.coroutines.launch
-import okhttp3.internal.platform.android.AndroidLogHandler.publish
-import ru.alexpanov.core_network.api.SportsouceApi
 
 interface ChangePasswordStore : Store<Intent, State, Label> {
+
     sealed interface Intent {
         data class ChangeCurrentPassword(val value: String) : Intent
         data class ChangeNewPassword(val value: String) : Intent
@@ -36,18 +31,13 @@ interface ChangePasswordStore : Store<Intent, State, Label> {
         val newPassword: String,
         val newRepeatPassword: String,
         val isLoading: Boolean,
-        val isError: Boolean,
         val message: String,
-        //TODO
         val downloadSucceededEvent: StateEventWithContent<String> = consumed(),
         val downloadFailedEvent: StateEventWithContent<String> = consumed(),
     )
 
     sealed interface Label {
-        data class ShowError(val message: String) : Label
-        data class ShowSuccess(val message: String) : Label
         data object GoBack : Label
-        data object Launch : Label
     }
 }
 
@@ -60,8 +50,7 @@ class ChangePasswordStoreFactory(
     fun create(): ChangePasswordStore =
         object : ChangePasswordStore, Store<Intent, State, Label> by storeFactory.create(
             name = "ChangePasswordStore",
-            initialState = State("", "", "", false, false, ""),
-            //  bootstrapper = BootstrapperImpl(),
+            initialState = State("", "", "", false, ""),
             executorFactory = { ExecutorImpl() },
             reducer = ReducerImpl
         ) {}
@@ -93,10 +82,12 @@ class ChangePasswordStoreFactory(
                 is Intent.ChangeNewRepeatPassword -> {
                     dispatch(Msg.ChangeNewRepeatPassword(intent.value))
                 }
-                is Intent.OnConsumedFailedEvent ->{
+
+                is Intent.OnConsumedFailedEvent -> {
                     dispatch(Msg.OnConsumedFailedEvent)
                 }
-                is Intent.OnConsumedSucceededEvent-> {
+
+                is Intent.OnConsumedSucceededEvent -> {
                     dispatch(Msg.OnConsumedSucceededEvent)
                 }
 
@@ -109,21 +100,17 @@ class ChangePasswordStoreFactory(
                             newPassword2 = state.newRepeatPassword
                         )
                         validResult.onFailure {
-                            publish(Label.ShowError(it.message.toString()))
-
                             dispatch(Msg.UpdateFailed(it.message.toString()))
                         }
                             .onSuccess {
                                 dispatch(Msg.Loading)
-                                changePasswordDataSource.changePasswordNew(
+                                changePasswordDataSource.changePassword(
                                     password = state.currentPassword,
                                     newPassword = state.newPassword
                                 ).onSuccess {
                                     dispatch(Msg.UpdateSuccess("Данные успешно обновлены"))
-                                    publish(Label.ShowSuccess("Данные успешно"))
                                 }
                                     .onFailure {
-                                        publish(Label.ShowError(it.message.toString()))
                                         dispatch(Msg.UpdateFailed(it.message.toString()))
                                     }
                             }
@@ -144,12 +131,14 @@ class ChangePasswordStoreFactory(
                 is Msg.ChangeNewRepeatPassword -> copy(newRepeatPassword = message.password)
                 is Msg.Loading -> copy(isLoading = true)
                 is Msg.UpdateFailed -> copy(
-                    isError = true,
                     message = message.message,
                     isLoading = false,
                     downloadFailedEvent = triggered(message.message)
                 )
-                is Msg.UpdateSuccess -> copy(isLoading = false, isError = false, downloadSucceededEvent = triggered("Данные успешно обновлены"))
+                is Msg.UpdateSuccess -> copy(
+                    isLoading = false,
+                    downloadSucceededEvent = triggered(message.message)
+                )
                 is Msg.OnConsumedFailedEvent -> copy(downloadFailedEvent = consumed())
                 is Msg.OnConsumedSucceededEvent -> copy(downloadSucceededEvent = consumed())
             }

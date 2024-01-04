@@ -121,31 +121,33 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
             }
             val context = LocalContext.current
             Row(modifier = modifier) {
+
                 it.social_networks?.forEach {
-                    Box(
-                        modifier = modifier
-                            .clip(Shapes.medium)
-                            .background(SportSouceColor.SportSouceLighBlue)
-                            .size(30.dp)
-                            .clickable {
-                                openWebPage(it.url ?: "", context)
+                    if (it.url != null){
+                        Box(
+                            modifier = modifier
+                                .clip(Shapes.medium)
+                                .background(SportSouceColor.SportSouceLighBlue)
+                                .size(30.dp)
+                                .clickable {
+                                    openWebPage(it.url ?: "", context)
+                                }
+                        ) {
+                            val icon = when(it.code){
+                                "vk" -> painterResource(id = R.drawable.vk_org_icon)
+                                "telegram" -> painterResource(id = R.drawable.telegram_org_icon)
+                                else -> painterResource(id = R.drawable.vk_org_icon)
                             }
-                    ) {
-                        val icon = when(it.code){
-                            "vk" -> painterResource(id = R.drawable.vk_org_icon)
-                            "telegram" -> painterResource(id = R.drawable.telegram_org_icon)
-                            else -> painterResource(id = R.drawable.vk_org_icon)
+                            Icon(
+                                modifier = Modifier.size(15.dp).align(Alignment.Center),
+                                painter = icon,
+                                contentDescription = "icon",
+                                tint = Color.White
+                            )
                         }
-                        Icon(
-                            modifier = Modifier.size(15.dp).align(Alignment.Center),
-                            painter = icon,
-                            contentDescription = "icon",
-                            tint = Color.White
-                        )
                     }
                 }
             }
-
         }
     }
 }

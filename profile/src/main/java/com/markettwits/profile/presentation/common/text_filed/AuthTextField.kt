@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -38,9 +39,7 @@ fun MyProfileTextField(
             cursorColor = SportSouceColor.SportSouceBlue,
             focusedIndicatorColor = SportSouceColor.SportSouceBlue,
             unfocusedIndicatorColor = SportSouceColor.SportSouceBlue,
-            errorIndicatorColor = SportSouceColor.SportSouceLightRed,
-            errorContainerColor = Color.White,
-            errorTextColor = SportSouceColor.SportSouceLightRed,
+            selectionColors = TextSelectionColors(SportSouceColor.SportSouceBlue,SportSouceColor.SportSouceBlue),
             focusedLabelColor = SportSouceColor.SportSouceBlue,
             unfocusedLabelColor = SportSouceColor.SportSouceBlue,
             focusedTextColor = SportSouceColor.SportSouceBlue,

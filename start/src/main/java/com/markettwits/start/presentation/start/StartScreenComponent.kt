@@ -45,4 +45,8 @@ class StartScreenComponent(
         keeper.onClickCloseReply()
     }
 
+    override fun retry() {
+        keeper.launch()
+    }
+
 }

@@ -22,6 +22,7 @@ import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
 import eu.wewox.lazytable.LazyTableScrollDirection
 import eu.wewox.lazytable.lazyTableDimensions
+import kotlinx.serialization.json.JsonNull.content
 
 
 @Composable
@@ -38,15 +39,16 @@ fun StartMembersItemText(text: String) {
 }
 
 @Composable
-fun TestTable(items : List<StartMembersUi>) {
+fun TestTable(items: List<StartMembersUi>) {
     val columns = 5
     val rows = items.size
-    if (items.isNotEmpty()){
+    if (items.isNotEmpty()) {
         val configuration = LocalConfiguration.current
-        val dimensionPortrait = lazyTableDimensions(110.dp, 50.dp)
+        //val dimensionPortrait = lazyTableDimensions(110.dp, 50.dp)
+        val dimensionPortrait = lazyTableDimensions(150.dp, 100.dp)
         val screenWidth = configuration.screenWidthDp.dp
         val dimensionLandscape = lazyTableDimensions(screenWidth / 5, 60.dp)
-        val dimension = when(configuration.orientation){
+        val dimension = when (configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> dimensionLandscape
             Configuration.ORIENTATION_PORTRAIT -> dimensionPortrait
             else -> dimensionLandscape
@@ -56,8 +58,6 @@ fun TestTable(items : List<StartMembersUi>) {
             dimensions = dimension,
             scrollDirection = LazyTableScrollDirection.BOTH
         ) {
-
-
             items(
                 count = columns * rows,
                 layoutInfo = {
@@ -90,15 +90,43 @@ private fun Cell(
     pokemon: StartMembersUi,
     column: Int,
 ) {
+    if (pokemon is StartMembersUi.Single) {
+        val content = when (column) {
+            0 -> "${pokemon.surname} ${pokemon.name}"
+            1 -> pokemon.distance
+            2 -> pokemon.team
+            3 -> pokemon.group
+            4 -> pokemon.city
+            else -> error("Unknown column index: $column")
+        }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .background(SportSouceColor.VeryLighBlue)
+        ) {
+            if (content.isNotEmpty()) {
+                StartMembersItemText(content)
+            }
+        }
+    }
+    if (pokemon is StartMembersUi.Team) {
+        TeamCell(pokemon, column)
+    }
+}
+
+@Composable
+private fun TeamCell(
+    pokemon: StartMembersUi.Team,
+    column: Int,
+) {
     val content = when (column) {
-        0 -> "${pokemon.surname} ${pokemon.name}"
+        0 -> teamLabel(pokemon.members)
         1 -> pokemon.distance
         2 -> pokemon.team
         3 -> pokemon.group
         4 -> pokemon.city
         else -> error("Unknown column index: $column")
     }
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -109,6 +137,14 @@ private fun Cell(
         }
     }
 }
+
+private fun teamLabel(team: List<StartMembersUi.TeamMember>): String {
+    val members = team.map {
+        "${it.memberId} ${it.surname} ${it.name}"
+    }
+    return members.joinToString("\n")
+}
+
 @Composable
 private fun HeaderCell(column: Int) {
     val content = when (column) {

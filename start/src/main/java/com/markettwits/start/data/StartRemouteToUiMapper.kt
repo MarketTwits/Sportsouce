@@ -30,6 +30,7 @@ interface StartRemoteToUiMapper {
         commentsRemote: StartCommentsRemote,
         timeRemote: TimeRemote
     ): StartItemUi
+    fun map(e : Exception) : StartItemUi
 
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
     class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper {
@@ -136,6 +137,8 @@ interface StartRemoteToUiMapper {
                 } ?: emptyList()
             )
         }
+
+        override fun map(e: Exception): StartItemUi = StartItemUi.Error(e.message.toString())
 
         fun updateDistanceInfoList(
             distances: List<DistanceInfo>,

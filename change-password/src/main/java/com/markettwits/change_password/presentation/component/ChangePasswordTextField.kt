@@ -1,7 +1,8 @@
-package com.markettwits.change_password.presentation.change_password.component
+package com.markettwits.change_password.presentation.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -43,11 +44,9 @@ fun ChangePasswordTextField(
             unfocusedContainerColor = Color.White,
             focusedContainerColor = Color.White,
             cursorColor = SportSouceColor.SportSouceBlue,
+            selectionColors = TextSelectionColors(SportSouceColor.SportSouceBlue,SportSouceColor.SportSouceBlue),
             focusedIndicatorColor = SportSouceColor.SportSouceBlue,
             unfocusedIndicatorColor = SportSouceColor.SportSouceBlue,
-            errorIndicatorColor = SportSouceColor.SportSouceLightRed,
-            errorContainerColor = Color.White,
-            errorTextColor = SportSouceColor.SportSouceLightRed,
             focusedLabelColor = SportSouceColor.SportSouceBlue,
             unfocusedLabelColor = SportSouceColor.SportSouceBlue,
             focusedTextColor = SportSouceColor.SportSouceBlue,

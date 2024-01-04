@@ -17,6 +17,11 @@ class StartsScreenComponent(
     override fun onItemClick(startId: Int) {
         toDetail(startId)
     }
+
+    override fun retry() {
+        someLogic.retry()
+    }
+
     override val starts: Value<StartsUiState> = someLogic.starts
 
 }

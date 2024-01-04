@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.membres.filter_screen.screen.StartMembersFilterScreen
@@ -57,10 +58,16 @@ fun StartsScreen(component: StartsScreen) {
             }
 
             is StartsUiState.Failed -> {
-                Text(
-                    text = "error : ${(starts as StartsUiState.Failed).message}",
-                    color = Color.Red
-                )
+//                Text(
+//                    text = "error : ${(starts as StartsUiState.Failed).message}",
+//                    color = Color.Red
+//                )
+                FailedScreen(
+                    message = (starts as StartsUiState.Failed).message,
+                    onClickRetry = {
+                       component.retry()
+                    },
+                    onClickHelp = {})
             }
 
             is StartsUiState.Loading -> {

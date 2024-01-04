@@ -20,21 +20,31 @@ import ru.alexpanov.core_network.api.SportsouceApi
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
-    private val timeService : TimeApi,
+    private val timeService: TimeApi,
     private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper
 ) : StartDataSource {
     override suspend fun start(startId: Int): StartItemUi {
-        val (data, withFilter, comments, time) = coroutineScope {
-            withContext(Dispatchers.IO) {
-                val deferredTime = async { timeService.currentTime() }
-                val deferredData = async { service.fetchStart(startId) }
-                val deferredWithFilter = async { service.fetchStartMember(startId) }
-                val deferredComments = async { service.fetchStartComments(startId) }
-                Fourth(deferredData.await(), deferredWithFilter.await(), deferredComments.await(), deferredTime.await())
+        return try {
+            val (data, withFilter, comments, time) = coroutineScope {
+                withContext(Dispatchers.IO) {
+                    val deferredTime = async { timeService.currentTime() }
+                    val deferredData = async { service.fetchStart(startId) }
+                    val deferredWithFilter = async { service.fetchStartMember(startId) }
+                    val deferredComments = async { service.fetchStartComments(startId) }
+                    Fourth(
+                        deferredData.await(),
+                        deferredWithFilter.await(),
+                        deferredComments.await(),
+                        deferredTime.await()
+                    )
+                }
             }
+            mapper.map(data, withFilter, comments, time)
+        } catch (e: Exception) {
+            mapper.map(e)
         }
-        return mapper.map(data, withFilter, comments, time)
+
     }
 
     override suspend fun startMember(startId: Int): List<StartMembersUi> {

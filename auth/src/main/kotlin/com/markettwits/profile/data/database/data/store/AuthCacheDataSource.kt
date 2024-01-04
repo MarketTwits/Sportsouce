@@ -15,6 +15,12 @@ class AuthCacheDataSource(
         }
     }
 
+    fun updatePassword(password: String) {
+        realm.writeBlocking {
+            findLatest(read())?._password = password
+        }
+    }
+
 
     fun read(): UserSettingsRealmCache {
         val result = realm.query(UserSettingsRealmCache::class).find()
@@ -22,6 +28,14 @@ class AuthCacheDataSource(
             throw AuthException("Для продолжения авторизуйтесь в приложении")
         } else {
             return result.last()
+        }
+    }
+
+
+    fun clearAll() {
+        realm.writeBlocking {
+            val writeTransactionItems = query<UserSettingsRealmCache>().find()
+            delete(writeTransactionItems)
         }
     }
 
@@ -33,13 +47,6 @@ class AuthCacheDataSource(
             } catch (e: Exception) {
                 throw RuntimeException("ImagesCacheDataSource#delete" + e.localizedMessage)
             }
-        }
-    }
-
-    fun clearAll() {
-        realm.writeBlocking {
-            val writeTransactionItems = query<UserSettingsRealmCache>().find()
-            delete(writeTransactionItems)
         }
     }
 }

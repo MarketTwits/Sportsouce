@@ -1,4 +1,4 @@
-package com.markettwits.change_password.presentation.change_password.screen
+package com.markettwits.change_password.presentation.screen
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
@@ -29,24 +29,12 @@ class ChangePasswordComponent(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
-    override val newEvents: MutableStateFlow<ChangePasswordEvent> = MutableStateFlow(ChangePasswordEvent.ShowSuccess(""))
 
     init {
         scope.launch {
             store.labels.collect {
                 when (it) {
                     is ChangePasswordStore.Label.GoBack -> pop()
-                    is ChangePasswordStore.Label.ShowError -> {
-                        newEvents.emit(ChangePasswordEvent.ShowError(it.message))
-                       // sendEventSync(ChangePasswordEvent.ShowError(it.message))
-                    }
-                    is ChangePasswordStore.Label.ShowSuccess -> {
-                        newEvents.emit(ChangePasswordEvent.ShowSuccess(it.message))
-                     //   sendEventSync(ChangePasswordEvent.ShowSuccess(it.message))
-                    }
-                    is ChangePasswordStore.Label.Launch -> {
-
-                    }
                 }
             }
         }
@@ -54,9 +42,6 @@ class ChangePasswordComponent(
 
 
     override val state: StateFlow<ChangePasswordStore.State> = store.stateFlow
-    private val _event = Channel<ChangePasswordEvent>()
-    override val events = _event.receiveAsFlow().shareIn(scope, SharingStarted.Lazily)
-    protected fun sendEventSync(event: ChangePasswordEvent) = scope.launch { _event.send(event) }
 
     override fun onCurrentPasswordChanged(value: String) {
         store.accept(ChangePasswordStore.Intent.ChangeCurrentPassword(value))

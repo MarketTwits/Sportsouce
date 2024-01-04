@@ -14,6 +14,7 @@ interface StartScreen {
     fun messageHasBeenShowed()
     fun onClickReply(replier : String, id: Int)
     fun onClickCloseReply()
+    fun retry()
 }
 sealed class CommentUiState{
     data object Success : CommentUiState()

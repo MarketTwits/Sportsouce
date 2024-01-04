@@ -1,6 +1,7 @@
-package com.markettwits.change_password.presentation.change_password.component
+package com.markettwits.change_password.presentation.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -23,8 +24,8 @@ fun SaveChangesButton(
 ) {
     Button(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(30.dp),
+            .padding(10.dp)
+            .fillMaxWidth(),
         onClick = {
             onClick()
         },
@@ -35,7 +36,7 @@ fun SaveChangesButton(
         )
     ) {
         if (loading) {
-            CircularProgressIndicator(modifier = modifier.size(30.dp), color = Color.White)
+            CircularProgressIndicator(modifier = Modifier.size(25.dp), color = Color.White)
         } else {
             Text(
                 text = "Сохранить изменения",

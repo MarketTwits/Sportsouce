@@ -42,5 +42,5 @@ interface SportsouceApi {
     suspend fun auth(token: String): User
     //Profile
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
-    suspend fun changePassword(password : ChangePasswordRequest, token: String) : String
+    suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
 }

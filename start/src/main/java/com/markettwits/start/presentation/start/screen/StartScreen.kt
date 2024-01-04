@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.start.MockStartScreen
@@ -131,6 +132,16 @@ fun StartScreen(component: StartScreen) {
 
         is StartItemUi.Loading -> {
             LoadingScreen()
+        }
+
+        is StartItemUi.Error -> {
+            FailedScreen(
+                onClickHelp = {
+
+                },
+                onClickRetry = {
+                    component.retry()
+                })
         }
     }
 }

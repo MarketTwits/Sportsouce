@@ -35,3 +35,7 @@ fun <T> triggered(content: T) = StateEventWithContentTriggered(content)
  * A shorter and more readable way to create an [StateEventWithContent] in its consumed state.
  */
 fun consumed() = StateEventWithContentConsumed
+
+fun <T> StateEventWithContent<T>.isTriggered() : Boolean{
+    return this is StateEventWithContentTriggered
+}

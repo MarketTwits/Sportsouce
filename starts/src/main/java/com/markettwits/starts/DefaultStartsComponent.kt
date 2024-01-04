@@ -16,6 +16,7 @@ import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.start.core.BaseTimeMapper
 import com.markettwits.start.data.BaseStartDataSource
+import com.markettwits.start.data.StartMembersToUiMapper
 import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
@@ -84,7 +85,10 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                                 "https://timeapi.io"
                             )
                         ),
-                        mapper = StartRemoteToUiMapper.Base(BaseTimeMapper()),
+                        mapper = StartRemoteToUiMapper.Base(
+                            mapper = BaseTimeMapper(),
+                            membersToUiMapper = StartMembersToUiMapper.Base()
+                        )
                     ),
                     back = {
                         onBackClicked()

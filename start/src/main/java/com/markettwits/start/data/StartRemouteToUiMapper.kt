@@ -33,7 +33,10 @@ interface StartRemoteToUiMapper {
     fun map(e : Exception) : StartItemUi
 
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
-    class Base(private val mapper: TimeMapper) : StartRemoteToUiMapper {
+    class Base(
+        private val mapper: TimeMapper,
+        private val membersToUiMapper: StartMembersToUiMapper,
+    ) : StartRemoteToUiMapper {
         override fun map(
             startRemote: StartRemote,
             startMember: List<StartMemberItem>,
@@ -190,23 +193,24 @@ interface StartRemoteToUiMapper {
         }
 
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
-            val list = mutableListOf<StartMembersUi>()
-            startMember.forEach {
-                if (it.payment != null) {
-                    list.add(
-                        StartMembersUi(
-                            id = it.id,
-                            name = it.name,
-                            surname = it.surname,
-                            distance = it.distance,
-                            team = it.team,
-                            group = it.mapStartMember(it.group).name,
-                            city = it.city ?: ""
-                        )
-                    )
-                }
-            }
-            return list
+            return membersToUiMapper.maps(startMember)
+//            val list = mutableListOf<StartMembersUi>()
+//            startMember.forEach {
+//                if (it.payment != null) {
+//                    list.add(
+//                        StartMembersUi.Single(
+//                            id = it.id,
+//                            name = it.name,
+//                            surname = it.surname,
+//                            distance = it.distance,
+//                            team = it.team,
+//                            group = it.mapStartMember(it.group).name,
+//                            city = it.city ?: ""
+//                        )
+//                    )
+//                }
+//            }
+//            return list
         }
 
         private fun mapComments(commentsRemote: StartCommentsRemote): StartItemUi.StartItemUiSuccess.Comments {

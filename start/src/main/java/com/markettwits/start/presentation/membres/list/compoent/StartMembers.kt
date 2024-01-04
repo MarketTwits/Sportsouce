@@ -29,7 +29,6 @@ fun StartMembers(modifier: Modifier = Modifier, members: List<StartMembersUi>) {
             )
             TestTable(members)
         }
-
     }
 }
 

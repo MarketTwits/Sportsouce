@@ -5,7 +5,10 @@ import com.markettwits.start.presentation.membres.filter_screen.MembersFilterIte
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class MembersFilterBase : MembersFilter {
-    override fun filterByKeyWord(value: String,initialValue : List<StartMembersUi>) : List<StartMembersUi>{
+    override fun filterByKeyWordSingle(
+        value: String,
+        initialValue: List<StartMembersUi.Single>
+    ): List<StartMembersUi> {
         return if (value.isEmpty()) {
             initialValue
         } else {
@@ -16,6 +19,42 @@ class MembersFilterBase : MembersFilter {
                 ) || it.surname.contains(value, ignoreCase = true)
             }
             filteredMembers.sortedWith(compareBy({ it.name }, { it.surname }))
+        }
+    }
+
+    override fun filterByKeyWord(
+        value: String,
+        initialValue: List<StartMembersUi>
+    ): List<StartMembersUi> {
+        return if (value.isEmpty()) {
+            initialValue
+        } else {
+            val filteredList = initialValue.flatMap { member ->
+                when (member) {
+                    is StartMembersUi.Single -> filterByKeyWordSingle(value, listOf(member))
+                    is StartMembersUi.Team -> filterByKeyWordTeam(value, listOf(member))
+                }
+            }
+
+            filteredList
+        }
+    }
+
+    override fun filterByKeyWordTeam(
+        value: String,
+        initialValue: List<StartMembersUi.Team>
+    ): List<StartMembersUi> {
+        return if (value.isEmpty()) {
+            initialValue
+        } else {
+            val filteredMembers = initialValue.filter { team ->
+                team.members.any { member ->
+                    member.name.contains(value, ignoreCase = true) ||
+                            member.surname.contains(value, ignoreCase = true)
+                }
+            }
+
+            filteredMembers.sortedWith(compareBy({ it.team }, { it.distance }))
         }
     }
 

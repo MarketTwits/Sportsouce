@@ -28,14 +28,14 @@ class StartMembersScreenInstanceKeeper(
         if (value.isEmpty()) {
             start.value = membersUi
         } else {
-            val filteredMembers = membersUi.filter {
-                it.name.contains(
-                    value,
-                    ignoreCase = true
-                ) || it.surname.contains(value, ignoreCase = true)
-            }
-            val sortedMembers = filteredMembers.sortedWith(compareBy({ it.name }, { it.surname }))
-            start.value = sortedMembers
+//            val filteredMembers = membersUi.filter {
+//                it.name.contains(
+//                    value,
+//                    ignoreCase = true
+//                ) || it.surname.contains(value, ignoreCase = true)
+//            }
+           // val sortedMembers = filteredMembers.sortedWith(compareBy({ it.name }, { it.surname }))
+            //start.value = sortedMembers
         }
     }
 
@@ -49,15 +49,15 @@ class StartMembersScreenInstanceKeeper(
             start.value = membersUi
         } else {
             // Filter members based on selected categories
-            val filteredMembers = membersUi.filter { member ->
-                selectedCategories.any { category ->
-                    member.name.contains(category, ignoreCase = true) ||
-                            member.surname.contains(category, ignoreCase = true)
-                }
-            }
+//            val filteredMembers = membersUi.filter { member ->
+//                selectedCategories.any { category ->
+//                    member.name.contains(category, ignoreCase = true) ||
+//                            member.surname.contains(category, ignoreCase = true)
+//                }
+//            }
             // Sort the filtered members
-            val sortedMembers = filteredMembers.sortedWith(compareBy({ it.name }, { it.surname }))
-            start.value = sortedMembers
+//            val sortedMembers = filteredMembers.sortedWith(compareBy({ it.name }, { it.surname }))
+//            start.value = sortedMembers
         }
     }
 }

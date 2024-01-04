@@ -9,12 +9,12 @@ import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.api.TimeApiImpl
+import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.SignInRemoteToUiMapper
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
-import com.markettwits.start.core.BaseTimeMapper
 import com.markettwits.start.data.BaseStartDataSource
 import com.markettwits.start.data.StartMembersToUiMapper
 import com.markettwits.start.data.StartRemoteToUiMapper

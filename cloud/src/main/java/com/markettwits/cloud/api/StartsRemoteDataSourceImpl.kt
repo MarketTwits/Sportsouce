@@ -16,11 +16,13 @@ import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.serialization.decodeFromString
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
+import com.markettwits.sportsourcedemo.all.Row
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -145,6 +147,16 @@ class StartsRemoteDataSourceImpl(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
             setBody(password)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun userRegistries(userId: Int, token: String) : List<RemouteStartsUserItem> {
+        val response = client.get("user/startsByUserId/$userId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
         }
         return json.decodeFromString(response.body())
     }

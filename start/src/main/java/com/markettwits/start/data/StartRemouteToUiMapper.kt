@@ -4,8 +4,8 @@ import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.time.TimeRemote
-import com.markettwits.start.core.TimeMapper
-import com.markettwits.start.core.TimePattern
+import com.markettwits.core_ui.time.TimeMapper
+import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.start.data.model.Distance
 import com.markettwits.start.data.model.DistanceInfo
 import com.markettwits.start.presentation.membres.list.StartMembersUi

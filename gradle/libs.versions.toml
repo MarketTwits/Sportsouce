@@ -1,5 +1,6 @@
 [versions]
 #plugins
+calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.0.0"
 kotlin = "1.9.10"
@@ -10,6 +11,7 @@ gradle = "8.1.1"
 compileSdk = "34"
 material3HtmlText = "2.0.0-beta01"
 minSdk = "26"
+mvikotlin = "3.3.0"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 jvm = "8"
@@ -69,6 +71,7 @@ kotlinx-datetime = "0.4.0"
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "calendar" }
 compose-ui = { group = "androidx.compose", name = "ui:ui", version.ref = "compose" }
 compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-ui" }
@@ -85,6 +88,11 @@ compose-preview = { group = "androidx.compose.ui", name = "ui-tooling", version.
 compose-coil = {group = "io.coil-kt", name = "coil-compose", version.ref = "compose-coil"}
 compose-icons = {group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-ui"}
 material3-html-text = { module = "de.charlex.compose.material3:material3-html-text", version.ref = "material3HtmlText" }
+#MVI KOTLIN
+mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
+mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
+mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", version.ref = "mvikotlin" }
+mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
 onebone-toolbar = {group = "me.onebone", name = "toolbar-compose", version.ref = "onebone-toolbar"}
 android-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle-ktx" }
 realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realm-gradle-plugin" }
@@ -170,4 +178,5 @@ composeUiBundleDebug = [
     "compose-tooling-preview",
 ]
 decompose-compose = ["decompose-compose-extension", "decompose"]
+mviKotlin = ["mvikotlin","mvikotlin-extensions-coroutines","mvikotlin-logging","mvikotlin-main"]
 

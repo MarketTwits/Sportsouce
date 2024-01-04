@@ -2,7 +2,7 @@ package com.markettwits.start.data
 
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import java.util.TreeMap
+
 
 interface StartMembersToUiMapper {
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
@@ -30,39 +30,10 @@ interface StartMembersToUiMapper {
         }
 
         override fun maps(startMember: List<StartMemberItem>): List<StartMembersUi> {
-            val data = convertToStartMembersUiNew(startMember)
-            return data
+            return convertToStartMembersUiNew(startMember)
         }
 
-        fun convertToStartMembersUi(startMember: List<StartMemberItem>): List<StartMembersUi> {
-            val teamMap = mutableMapOf<String, MutableList<StartMemberItem>>()
 
-            for (item in startMember) {
-                if (item.payment != null) {
-                    val order = item.reg_code
-                    if (order.isNotEmpty()) {
-                        teamMap.computeIfAbsent(order) { mutableListOf() }.add(item)
-                    }
-
-                }
-            }
-
-            val result = mutableListOf<StartMembersUi>()
-            for ((_, teamMembers) in teamMap) {
-                if (teamMembers.size > 1) {
-                    // Create a team if there are duplicate order_numbers
-                    val team = createTeam(teamMembers)
-                    result.add(team)
-                } else {
-                    // Convert single member to StartMembersUi.Single
-                    val single = convertToSingle(teamMembers[0])
-                    result.add(single)
-                }
-            }
-            return result
-        }
-
-        @Deprecated("dd")
         private fun convertToStartMembersUiNew(startMember: List<StartMemberItem>): List<StartMembersUi> {
 
             val teamMap = mutableMapOf<String, MutableList<StartMemberItem>>()

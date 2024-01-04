@@ -12,6 +12,9 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.change_password.data.ChangePasswordDataSourceBase
 import com.markettwits.change_password.domain.ChangePasswordValidation
+import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
+import com.markettwits.change_password.presentation.screen.ChangePasswordStoreFactory
+import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.BaseProfileDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
@@ -25,14 +28,15 @@ import com.markettwits.profile.presentation.component.edit_profile.data.EditProf
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.profile.presentation.component.my_members.MyMembersComponent
-import com.markettwits.profile.presentation.component.my_registries.MyRegistriesComponent
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
-import com.markettwits.change_password.presentation.screen.ChangePassword
-import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
-import com.markettwits.change_password.presentation.screen.ChangePasswordStoreFactory
+import com.markettwits.registrations.data.RegistrationsDataSourceBase
+import com.markettwits.registrations.data.RemoteRegistrationsToUiMapper
+import com.markettwits.registrations.presentation.RegistrationsComponent
+import com.markettwits.registrations.presentation.RegistrationsComponentBase
+import com.markettwits.registrations.presentation.RegistrationsDataStoreFactory
 import kotlinx.serialization.Serializable
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
@@ -191,7 +195,24 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                                 signInMapper = SignInRemoteToUiMapper.Base(),
                                 signInCacheMapper = SignInRemoteToCacheMapper.Base()
                             ),
-                            BaseAuthDataSource(
+                        )
+                    )
+                )
+            )
+
+            is Config.MyRegistries -> Child.MyRegistries(
+                RegistrationsComponentBase(
+                    component = componentContext,
+                    storeFactory = RegistrationsDataStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        dataSource = RegistrationsDataSourceBase(
+                            service = StartsRemoteDataSourceImpl(
+                                HttpClientProvider2(
+                                    JsonProvider().get(),
+                                    "https://sport-73zoq.ondigitalocean.app"
+                                )
+                            ),
+                            auth = BaseAuthDataSource(
                                 remoteService =
                                 StartsRemoteDataSourceImpl(
                                     HttpClientProvider2(
@@ -202,14 +223,15 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                                 local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
                                 signInMapper = SignInRemoteToUiMapper.Base(),
                                 signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                            )
-                        )
-                    )
-                )
-            )
+                            ),
+                            mapper = RemoteRegistrationsToUiMapper.Base(BaseTimeMapper())
+                        ),
+                    ),
+                    pop = navigation::pop,
+                    onItemClick = {
 
-            is Config.MyRegistries -> Child.MyRegistries(
-                MyRegistriesComponent(componentContext)
+                    }
+                )
             )
         }
 
@@ -269,7 +291,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :
             Child()
 
-        data class MyRegistries(val component: com.markettwits.profile.presentation.component.my_registries.MyRegistries) :
+        data class MyRegistries(val component: RegistrationsComponent) :
             Child()
     }
 }

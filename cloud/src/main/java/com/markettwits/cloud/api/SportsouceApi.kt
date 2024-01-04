@@ -15,8 +15,10 @@ import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
+
 
 interface SportsouceApi {
     //Common
@@ -43,4 +45,5 @@ interface SportsouceApi {
     //Profile
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
+    suspend fun userRegistries(userId : Int, token : String) : List<RemouteStartsUserItem>
 }

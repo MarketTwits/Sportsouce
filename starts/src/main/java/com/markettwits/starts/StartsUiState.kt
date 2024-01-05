@@ -3,6 +3,8 @@ package com.markettwits.starts
 import androidx.compose.runtime.Immutable
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.sportsourcedemo.all.Row
+import kotlinx.serialization.Serializable
+
 @Immutable
 sealed class StartsUiState {
     class Success(
@@ -22,6 +24,7 @@ data class StartsListItem(
     val place: String,
     val distance: String
 ){
+    @Serializable
     @Immutable
     data class StatusCode(val id : Int, val message: String)
 }

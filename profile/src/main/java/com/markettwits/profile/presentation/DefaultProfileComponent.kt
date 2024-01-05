@@ -32,11 +32,8 @@ import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedP
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
-import com.markettwits.registrations.data.RegistrationsDataSourceBase
-import com.markettwits.registrations.data.RemoteRegistrationsToUiMapper
-import com.markettwits.registrations.presentation.RegistrationsComponent
-import com.markettwits.registrations.presentation.RegistrationsComponentBase
-import com.markettwits.registrations.presentation.RegistrationsDataStoreFactory
+import com.markettwits.registrations.root_registrations.RootRegistrationsComponent
+import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
 import kotlinx.serialization.Serializable
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
@@ -199,39 +196,8 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     )
                 )
             )
-
             is Config.MyRegistries -> Child.MyRegistries(
-                RegistrationsComponentBase(
-                    component = componentContext,
-                    storeFactory = RegistrationsDataStoreFactory(
-                        storeFactory = DefaultStoreFactory(),
-                        dataSource = RegistrationsDataSourceBase(
-                            service = StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
-                                    JsonProvider().get(),
-                                    "https://sport-73zoq.ondigitalocean.app"
-                                )
-                            ),
-                            auth = BaseAuthDataSource(
-                                remoteService =
-                                StartsRemoteDataSourceImpl(
-                                    HttpClientProvider2(
-                                        JsonProvider().get(),
-                                        "https://sport-73zoq.ondigitalocean.app"
-                                    )
-                                ),
-                                local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-                                signInMapper = SignInRemoteToUiMapper.Base(),
-                                signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                            ),
-                            mapper = RemoteRegistrationsToUiMapper.Base(BaseTimeMapper())
-                        ),
-                    ),
-                    pop = navigation::pop,
-                    onItemClick = {
-
-                    }
-                )
+                RootRegistrationsComponentBase(componentContext, pop = ::onBackClicked)
             )
         }
 
@@ -249,7 +215,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             is AuthorizedProfileEvent.MyMembers -> navigation.push(Config.MyMembers)
         }
     }
-
 
     @Serializable
     sealed class Config {
@@ -291,7 +256,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :
             Child()
 
-        data class MyRegistries(val component: RegistrationsComponent) :
+        data class MyRegistries(val component: RootRegistrationsComponent) :
             Child()
     }
 }

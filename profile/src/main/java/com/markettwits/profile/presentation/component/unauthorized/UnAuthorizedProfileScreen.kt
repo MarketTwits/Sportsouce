@@ -33,16 +33,23 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfile) {
             }
 
             is ProfileUiState.Base -> {
+//                ProfileTopBar(userName = "")
+//                SignInOrRegistryButton {
+//                    component.signIn()
+//                }
+//                ProfileScreenContent(menu = unauthorizedProfileScreenMenu()) {
+//
+//                }
+            }
+
+            is ProfileUiState.Error -> {
                 ProfileTopBar(userName = "")
                 SignInOrRegistryButton {
                     component.signIn()
                 }
                 ProfileScreenContent(menu = unauthorizedProfileScreenMenu()) {
+
                 }
-            }
-
-            is ProfileUiState.Error -> {
-
             }
         }
 

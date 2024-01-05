@@ -1,4 +1,4 @@
-package com.markettwits.registrations.presentation
+package com.markettwits.registrations.registrations.presentation
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
@@ -14,6 +14,7 @@ class RegistrationsComponentBase(
     component: ComponentContext,
     private val storeFactory: RegistrationsDataStoreFactory,
     private val pop: () -> Unit,
+    private val showPaymentDialog: (paymentState : RegistrationsStore.StartPaymentState) -> Unit,
     private val onItemClick: (itemId: Int) -> Unit
 ) : RegistrationsComponent, ComponentContext by component {
 
@@ -32,6 +33,7 @@ class RegistrationsComponentBase(
                 when (it) {
                     is RegistrationsStore.Label.GoBack -> pop()
                     is RegistrationsStore.Label.OnItemClick -> onItemClick(it.itemId)
+                    is RegistrationsStore.Label.ShowPaymentDialog -> showPaymentDialog(it.startPaymentState)
                 }
             }
         }

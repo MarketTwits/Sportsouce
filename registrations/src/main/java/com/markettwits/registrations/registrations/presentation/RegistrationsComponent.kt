@@ -1,4 +1,4 @@
-package com.markettwits.registrations.presentation
+package com.markettwits.registrations.registrations.presentation
 
 import kotlinx.coroutines.flow.StateFlow
 

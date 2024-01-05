@@ -1,4 +1,4 @@
-package com.markettwits.registrations.presentation.components
+package com.markettwits.registrations.registrations.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,34 +1,37 @@
-package com.markettwits.registrations.presentation
+package com.markettwits.registrations.registrations.presentation
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.core.store.create
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.registrations.data.RegistrationsDataSource
-import com.markettwits.registrations.presentation.RegistrationsStore.Intent
-import com.markettwits.registrations.presentation.RegistrationsStore.Label
-import com.markettwits.registrations.presentation.RegistrationsStore.State
+import com.markettwits.registrations.registrations.data.RegistrationsDataSource
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Intent
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Label
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore.State
 import com.markettwits.starts.StartsListItem
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 interface RegistrationsStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Pop : Intent
         data object LoadData : Intent
+        data class ShowPaymentDialog(val state: StartPaymentState) : Intent
         data class OnCLickItem(val itemId: Int) : Intent
     }
 
     data class State(
         val info: List<StartsStateInfo>,
-        val paymentList: List<StartsStateInfo> = emptyList(),
+        val paymentState: StartPaymentState = StartPaymentState(),
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = ""
     )
-
+    @Serializable
     data class StartsStateInfo(
         val id: Int,
         val name: String,
@@ -44,9 +47,16 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val startTitle: String,
         val cost: String,
     )
+    @Serializable
+    data class StartPaymentState(
+        val paymentList: List<StartsStateInfo> = emptyList(),
+        val totalCost: Int = 0,
+        val count: Int = 0
+    )
 
     sealed interface Label {
         data object GoBack : Label
+        data class ShowPaymentDialog(val startPaymentState : StartPaymentState) : Label
         data class OnItemClick(val itemId: Int) : Label
     }
 }
@@ -71,7 +81,7 @@ class RegistrationsDataStoreFactory(
         data object Loading : Msg
         data class InfoLoaded(
             val pokemonInfo: List<RegistrationsStore.StartsStateInfo>,
-            val paymentList: List<RegistrationsStore.StartsStateInfo>
+            val paymentState: RegistrationsStore.StartPaymentState
         ) : Msg
 
         data class InfoFailed(val message: String) : Msg
@@ -91,9 +101,9 @@ class RegistrationsDataStoreFactory(
                 is Intent.LoadData -> {
                     launch()
                 }
-
                 is Intent.OnCLickItem -> publish(Label.OnItemClick(intent.itemId))
                 is Intent.Pop -> publish(Label.GoBack)
+                is Intent.ShowPaymentDialog -> publish(Label.ShowPaymentDialog(intent.state))
             }
         }
 
@@ -110,7 +120,7 @@ class RegistrationsDataStoreFactory(
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
                     .onSuccess {
-                        dispatch(Msg.InfoLoaded(it.info, it.paymentList))
+                        dispatch(Msg.InfoLoaded(it.info, it.paymentState))
                     }
             }
         }
@@ -124,8 +134,8 @@ class RegistrationsDataStoreFactory(
                     isError = true,
                     message = msg.message
                 )
-                is Msg.InfoLoaded -> State(info = msg.pokemonInfo, paymentList = msg.paymentList)
-                Msg.Loading -> State(info = emptyList(), isLoading = true)
+                is Msg.InfoLoaded -> State(info = msg.pokemonInfo, paymentState = msg.paymentState)
+                is Msg.Loading -> State(info = emptyList(), isLoading = true)
             }
         }
     }

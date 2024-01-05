@@ -1,4 +1,4 @@
-package com.markettwits.registrations.presentation.components
+package com.markettwits.registrations.registrations.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.markettwits.registrations.R
-import com.markettwits.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 
 @Composable
 fun RegistrationsStartItem() {
@@ -113,7 +113,7 @@ fun EventCard(start: RegistrationsStore.StartsStateInfo) {
 
 // Компонент для отображения списка элементов
 @Composable
-fun RegistrationsStart(starts: List<RegistrationsStore.StartsStateInfo>,onClick: (Int) -> Unit) {
+fun RegistrationsStart(starts: List<RegistrationsStore.StartsStateInfo>, onClick: (Int) -> Unit) {
     // Ленивый список с вертикальной прокруткой
     LazyColumn {
         // Добавляем каждый элемент в список

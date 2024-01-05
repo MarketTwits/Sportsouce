@@ -1,8 +1,10 @@
 package com.markettwits.profile.presentation.component.authorized
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.profile.data.BaseProfileDataSource
 import com.markettwits.profile.presentation.ProfileUiState
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +30,7 @@ class AuthorizedProfileComponent(
 
     init {
         scope.launch {
+            Log.e("mt05", "launch #AuthorizedProfileComponent")
             profileName.value = service.profile()
         }
         stateKeeper.register(

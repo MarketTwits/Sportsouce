@@ -1,6 +1,7 @@
-package com.markettwits.registrations.presentation
+package com.markettwits.registrations.registrations.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,11 +22,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.failed_screen.FailedScreen
+import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.presentation.components.RegistrationsStart
-import com.markettwits.registrations.presentation.components.RegistrationsTopBar
+import com.markettwits.registrations.registrations.presentation.components.RegistrationsPayButton
+import com.markettwits.registrations.registrations.presentation.components.RegistrationsStart
+import com.markettwits.registrations.registrations.presentation.components.RegistrationsTopBar
 
 @Composable
 fun MyRegistrationsScreen(component: RegistrationsComponent) {
@@ -43,20 +50,12 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
                     component.obtainEvent(RegistrationsStore.Intent.OnCLickItem(it))
                 }
             }
-            if (state.paymentList.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .background(SportSouceColor.SportSouceLighBlue)
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .padding(10.dp)
+            if (state.paymentState.paymentList.isNotEmpty()) {
+                RegistrationsPayButton(
+                    count = state.paymentState.count,
+                    cost = state.paymentState.totalCost
                 ) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceLighBlue),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(text = "Оплатить")
-                    }
+                    component.obtainEvent(RegistrationsStore.Intent.ShowPaymentDialog(state.paymentState))
                 }
             }
 
@@ -80,4 +79,10 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun MyRegistrationsScreenPreview() {
+    MyRegistrationsScreen(RegistrationsComponentMock())
 }

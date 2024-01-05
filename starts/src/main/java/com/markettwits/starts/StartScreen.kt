@@ -21,6 +21,7 @@ import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.membres.filter_screen.screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.screen.StartMembersScreen
 import com.markettwits.start.presentation.start.screen.StartScreen
+import com.markettwits.start.root.RootStartScreen
 import com.markettwits.starts.components.success.StartCard
 import com.markettwits.topbar.TabBar
 
@@ -84,10 +85,10 @@ fun DefaultStartsScreen(component: DefaultStartsComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is DefaultStartsComponent.Child.Start -> StartScreen(component = child.component)
+            is DefaultStartsComponent.Child.Start -> RootStartScreen(component = child.component)
             is DefaultStartsComponent.Child.Starts -> StartsScreen(component = child.component)
-            is DefaultStartsComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
-            is DefaultStartsComponent.Child.StartMembersFilter -> StartMembersFilterScreen(component = child.component)
+//            is DefaultStartsComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
+//            is DefaultStartsComponent.Child.StartMembersFilter -> StartMembersFilterScreen(component = child.component)
         }
     }
 }

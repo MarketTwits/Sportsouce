@@ -7,11 +7,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.store.create
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.registrations.registrations.data.RegistrationsDataSource
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Intent
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Label
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.State
-import com.markettwits.starts.StartsListItem
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -34,10 +34,11 @@ interface RegistrationsStore : Store<Intent, State, Label> {
     @Serializable
     data class StartsStateInfo(
         val id: Int,
+        val startId : Int,
         val name: String,
         val image: String,
         val dateStart: String,
-        val statusCode: StartsListItem.StatusCode,
+        val statusCode: StartStatus,
         val team: String,
         val payment: Boolean,
         val ageGroup: String,

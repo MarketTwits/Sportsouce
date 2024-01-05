@@ -10,6 +10,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.core_ui.time.BaseTimeMapper
@@ -23,13 +24,14 @@ import com.markettwits.registrations.registrations.data.RegistrationsDataSourceB
 import com.markettwits.registrations.registrations.data.RemoteRegistrationsToUiMapper
 import com.markettwits.registrations.registrations.presentation.RegistrationsComponentBase
 import com.markettwits.registrations.registrations.presentation.RegistrationsDataStoreFactory
+import com.markettwits.start.root.RootStartScreenComponentBase
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootRegistrationsComponentBase(
     context: ComponentContext,
-    private val pop : () -> Unit
+    private val pop: () -> Unit
 ) : RootRegistrationsComponent, ComponentContext by context {
 
     private val stackNavigation = StackNavigation<RootRegistrationsComponent.ConfigStack>()
@@ -74,6 +76,14 @@ class RootRegistrationsComponentBase(
         componentContext: ComponentContext
     ): RootRegistrationsComponent.ChildStack {
         return when (configStack) {
+            is RootRegistrationsComponent.ConfigStack.Start -> RootRegistrationsComponent.ChildStack.Start(
+                RootStartScreenComponentBase(
+                    context = componentContext,
+                    startId = configStack.startId,
+                    pop = stackNavigation::pop
+                )
+            )
+
             is RootRegistrationsComponent.ConfigStack.Registrations -> RootRegistrationsComponent.ChildStack.Registrations(
                 RegistrationsComponentBase(
                     component = componentContext,
@@ -103,10 +113,9 @@ class RootRegistrationsComponentBase(
                     ),
                     pop = pop::invoke,
                     onItemClick = {
-
+                        stackNavigation.push(RootRegistrationsComponent.ConfigStack.Start(it))
                     },
                     showPaymentDialog = {
-
                         slotNavigation.activate(
                             RootRegistrationsComponent.ConfigChild.PaymentDialog(it)
                         )

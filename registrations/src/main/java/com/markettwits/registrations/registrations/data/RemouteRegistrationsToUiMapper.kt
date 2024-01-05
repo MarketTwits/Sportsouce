@@ -1,11 +1,11 @@
 package com.markettwits.registrations.registrations.data
 
+import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start_user.RemoteGroup
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
-import com.markettwits.starts.StartsListItem
 import kotlinx.serialization.json.Json
 
 interface RemoteRegistrationsToUiMapper {
@@ -18,10 +18,11 @@ interface RemoteRegistrationsToUiMapper {
             val base = cloud.map {
                 RegistrationsStore.StartsStateInfo(
                     id = it.id,
+                    startId = it.start_id,
                     name = it.name,
                     image = it.start.posterLinkFile?.fullPath ?: "",
                     dateStart = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start.start_date),
-                    statusCode = StartsListItem.StatusCode(
+                    statusCode = StartStatus(
                         it.start.start_status.code,
                         it.start.start_status.name
                     ),
@@ -76,7 +77,7 @@ interface RemoteRegistrationsToUiMapper {
                 name = "Sample Event",
                 image = "sample_image.jpg",
                 dateStart = "2022-01-01",
-                statusCode = StartsListItem.StatusCode(2, "Регистрация открыта"),
+                statusCode = StartStatus(2, "Регистрация открыта"),
                 team = "Sample Team",
                 payment = false,
                 ageGroup = "18-30",
@@ -84,6 +85,7 @@ interface RemoteRegistrationsToUiMapper {
                 member = "John Doe",
                 kindOfSport = "Running",
                 startTitle = "Sample Title",
+                startId = 0,
                 cost = "500"
             )
             val newList = base.toMutableList()

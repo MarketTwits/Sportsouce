@@ -28,7 +28,11 @@ import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 
-class RootStartScreenComponentBase(context: ComponentContext, private val startId: Int) :
+class RootStartScreenComponentBase(
+    context: ComponentContext,
+    private val startId: Int,
+    private val pop: () -> Unit
+) :
     RootStartScreenComponent,
     ComponentContext by context {
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
@@ -81,7 +85,7 @@ class RootStartScreenComponentBase(context: ComponentContext, private val startI
                         )
                     ),
                     back = {
-                        onBackClicked()
+                       pop()
                     },
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())

@@ -1,11 +1,10 @@
-package com.markettwits.starts
+package com.markettwits.start.root
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.api.TimeApiImpl
@@ -20,43 +19,34 @@ import com.markettwits.start.data.StartMembersToUiMapper
 import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.StartScreenComponent
-import com.markettwits.starts.data.BaseStartsDataSource
-import com.markettwits.starts.data.StartsCloudToUiMapper
-import kotlinx.serialization.Serializable
 import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 
-class DefaultStartsComponent(componentContext: ComponentContext) :
-    ComponentContext by componentContext {
-
-    private val navigation = StackNavigation<Config>()
-
-
-    private val _configStack =
+class RootStartScreenComponentBase(context: ComponentContext, private val startId: Int) :
+    RootStartScreenComponent,
+    ComponentContext by context {
+    private val navigation = StackNavigation<RootStartScreenComponent.Config>()
+    override val childStack: Value<ChildStack<*, RootStartScreenComponent.Child>> =
         childStack(
             source = navigation,
-            serializer = Config.serializer(),
-            initialConfiguration = Config.Starts,
+            serializer = RootStartScreenComponent.Config.serializer(),
+            initialConfiguration = RootStartScreenComponent.Config.Start(startId, true),
             handleBackButton = true,
             childFactory = ::child,
         )
 
-    val childStack: Value<ChildStack<*, Child>> get() = _configStack
-
-
     private fun child(
-        config: Config,
+        config: RootStartScreenComponent.Config,
         componentContext: ComponentContext,
-    ): Child =
+    ): RootStartScreenComponent.Child =
         when (config) {
-            is Config.Start -> Child.Start(
+            is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
                 StartScreenComponent(
                     componentContext,
                     config.startId,
@@ -99,26 +89,8 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 )
             )
 
-            is Config.Starts ->
-                Child.Starts(StartsScreenComponent(
-                    componentContext = componentContext,
-                    dataSource = BaseStartsDataSource(
-                        StartsRemoteDataSourceImpl(
-                            HttpClientProvider2(
-                                JsonProvider().get(),
-                                "https://sport-73zoq.ondigitalocean.app"
-                            )
-                        ),
-                        StartsCloudToUiMapper.Base(
-                            BaseTimeMapper()
-                        )
-                    ),
-                    toDetail = {
-                        onItemClick(it)
-                    }
-                ))
 
-            is Config.StartMembers -> Child.StartMembers(
+            is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
                     componentContext = componentContext,
                     membersUi = config.items,
@@ -132,7 +104,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                 ),
             )
 
-            is Config.StartMembersFilter -> Child.StartMembersFilter(
+            is RootStartScreenComponent.Config.StartMembersFilter -> RootStartScreenComponent.Child.StartMembersFilter(
                 StartMembersFilterScreenComponent(
                     context = componentContext,
                     items = config.items,
@@ -141,7 +113,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     },
                     apply = { filter ->
                         navigation.pop { // Pop ItemDetailsComponent
-                            (childStack.value.active.instance as? Child.StartMembers)?.component?.updateFilter(
+                            (childStack.value.active.instance as? RootStartScreenComponent.Child.StartMembers)?.component?.updateFilter(
                                 filter = filter
                             )
                         }
@@ -155,51 +127,15 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
         navigation.pop()
     }
 
-
-    @Serializable
-    sealed class Config {
-        @Serializable
-        data class Start(
-            val startId: Int,
-            val isBackEnabled: Boolean,
-        ) : Config()
-
-        @Serializable
-        data object Starts : Config()
-
-        @Serializable
-        data class StartMembers(
-            val startId: Int,
-            val items: List<StartMembersUi>,
-            val filter: List<MembersFilterGroup>
-        ) : Config()
-
-        @Serializable
-        data class StartMembersFilter(val items: List<MembersFilterGroup>) : Config()
-    }
-
-    sealed class Child {
-       // data class Start(val component: StartScreenComponent) : Child()
-        data class Start(val component: StartScreenComponent) : Child()
-        data class Starts(val component: StartsScreenComponent) : Child()
-        data class StartMembers(val component: StartMembersScreenComponent) : Child()
-        data class StartMembersFilter(val component: StartMembersFilterScreen) : Child()
-    }
-
-    fun onItemClick(startdId: Int) {
-        navigation.push(Config.Start(startdId, true))
-    }
-
     fun openMembersScreen(
         startId: Int,
         items: List<StartMembersUi>,
         filter: List<MembersFilterGroup>
     ) {
-        navigation.push(Config.StartMembers(startId, items, filter))
+        navigation.push(RootStartScreenComponent.Config.StartMembers(startId, items, filter))
     }
 
     fun openMembersFilter(items: List<MembersFilterGroup>) {
-        navigation.push(Config.StartMembersFilter(items))
+        navigation.push(RootStartScreenComponent.Config.StartMembersFilter(items))
     }
-
 }

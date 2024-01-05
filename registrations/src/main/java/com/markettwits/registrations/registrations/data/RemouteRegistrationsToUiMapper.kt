@@ -1,10 +1,10 @@
-package com.markettwits.registrations.data
+package com.markettwits.registrations.registrations.data
 
 import com.markettwits.cloud.model.start_user.RemoteGroup
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
-import com.markettwits.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import com.markettwits.starts.StartsListItem
 import kotlinx.serialization.json.Json
 
@@ -35,9 +35,10 @@ interface RemoteRegistrationsToUiMapper {
                     payment = mapPayment(it.payment, it.start.isOpen)
                 )
             }
+            val testBase = addUnPaymantStatrt(base)
             return RegistrationsStore.State(
-                info = base,
-                paymentList = mapPaymentList(base)
+                info = testBase,
+                paymentState = mapPaymentList(testBase),
             )
         }
 
@@ -45,8 +46,15 @@ interface RemoteRegistrationsToUiMapper {
             return !(payment == null && isOpen)
         }
 
-        private fun mapPaymentList(base: List<RegistrationsStore.StartsStateInfo>): List<RegistrationsStore.StartsStateInfo> {
-            return base.filter { !it.payment }
+        private fun mapPaymentList(base: List<RegistrationsStore.StartsStateInfo>): RegistrationsStore.StartPaymentState {
+            val list = base.filter { !it.payment }
+            val count = list.size
+            val cost = list.sumOf { it.cost.toDoubleOrNull() ?: 0.0 }
+            return RegistrationsStore.StartPaymentState(
+                paymentList = list,
+                count = count,
+                totalCost = cost.toInt()
+            )
         }
 
         private fun mapStartGroup(group: String): String {
@@ -60,5 +68,29 @@ interface RemoteRegistrationsToUiMapper {
                 ""
             }
         }
+
+        @SuppressWarnings("test method for add nonpayment start ")
+        private fun addUnPaymantStatrt(base: List<RegistrationsStore.StartsStateInfo>): List<RegistrationsStore.StartsStateInfo> {
+            val testItem = RegistrationsStore.StartsStateInfo(
+                id = 1,
+                name = "Sample Event",
+                image = "sample_image.jpg",
+                dateStart = "2022-01-01",
+                statusCode = StartsListItem.StatusCode(2, "Регистрация открыта"),
+                team = "Sample Team",
+                payment = false,
+                ageGroup = "18-30",
+                distance = "5K",
+                member = "John Doe",
+                kindOfSport = "Running",
+                startTitle = "Sample Title",
+                cost = "500"
+            )
+            val newList = base.toMutableList()
+            newList.add(0, testItem)
+            newList.add(1, testItem)
+            return newList
+        }
+
     }
 }

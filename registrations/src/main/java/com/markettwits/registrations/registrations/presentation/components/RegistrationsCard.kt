@@ -1,4 +1,4 @@
-package com.markettwits.registrations.presentation.components
+package com.markettwits.registrations.registrations.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +30,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import com.markettwits.starts.R
 import com.markettwits.starts.StartsListItem
 
@@ -72,7 +72,7 @@ fun RegistrationsCard(
 }
 
 @Composable
-private fun RegistrationsCardImageCard(
+fun RegistrationsCardImageCard(
     modifier: Modifier = Modifier,
     image: String,
     date: String,

@@ -1,9 +1,9 @@
-package com.markettwits.registrations.data
+package com.markettwits.registrations.registrations.data
 
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.profile.data.AuthDataSource
-import com.markettwits.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import ru.alexpanov.core_network.api.SportsouceApi

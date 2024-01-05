@@ -42,9 +42,10 @@ class UnAuthorizedProfileComponent(
     fun check() {
         state.value = ProfileUiState.Loading
         scope.launch {
-            val profile = service.profile()
-            if (profile is ProfileUiState.Base) {
-                goAuthProfile()
+            when(service.profile()){
+                is ProfileUiState.Base ->  goAuthProfile()
+                is ProfileUiState.Error -> state.value = ProfileUiState.Error("")
+                is ProfileUiState.Loading -> state.value = ProfileUiState.Loading
             }
         }
     }

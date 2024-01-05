@@ -1,6 +1,6 @@
 package com.markettwits.registrations.registrations.presentation
 
-import com.markettwits.starts.StartsListItem
+import com.markettwits.cloud.model.common.StartStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -27,7 +27,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                     name = "Sample Event",
                     image = "sample_image.jpg",
                     dateStart = "2022-01-01",
-                    statusCode = StartsListItem.StatusCode(2, "Регистрация открыта"),
+                    statusCode = StartStatus(2, "Регистрация открыта"),
                     team = "Sample Team",
                     payment = false,
                     ageGroup = "18-30",
@@ -35,6 +35,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                     member = "John Doe",
                     kindOfSport = "Running",
                     startTitle = "Sample Title",
+                    startId = 0,
                     cost = "500"
                 )
             )
@@ -44,7 +45,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 name = "Sample Event",
                 image = "sample_image.jpg",
                 dateStart = "2022-01-01",
-                statusCode = StartsListItem.StatusCode(2, "Регистрация открыта"),
+                statusCode = StartStatus(2, "Регистрация открыта"),
                 team = "Sample Team",
                 payment = false,
                 ageGroup = "18-30",
@@ -52,6 +53,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 member = "John Doe",
                 kindOfSport = "Running",
                 startTitle = "Sample Title",
+                startId = 0,
                 cost = "500"
             ),
             RegistrationsStore.StartsStateInfo(
@@ -59,7 +61,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 name = "Sample Event",
                 image = "sample_image.jpg",
                 dateStart = "2022-01-01",
-                statusCode = StartsListItem.StatusCode(2, "Регистрация открыта"),
+                statusCode = StartStatus(2, "Регистрация открыта"),
                 team = "Sample Team",
                 payment = true,
                 ageGroup = "18-30",
@@ -67,6 +69,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 member = "John Doe",
                 kindOfSport = "Running",
                 startTitle = "Sample Title",
+                startId = 0,
                 cost = "500"
             ),
 

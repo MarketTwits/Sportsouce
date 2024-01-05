@@ -28,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.registrations.R
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
-import com.markettwits.starts.R
-import com.markettwits.starts.StartsListItem
 
 @Composable
 fun RegistrationsCard(
@@ -46,7 +46,7 @@ fun RegistrationsCard(
             .height(height = 200.dp)
             .padding(10.dp)
             .clickable {
-                onItemClick(start.id)
+                onItemClick(start.startId)
             }
     ) {
         Row {
@@ -77,7 +77,7 @@ fun RegistrationsCardImageCard(
     image: String,
     date: String,
     payment: Boolean,
-    status: StartsListItem.StatusCode
+    status: StartStatus
 ) {
 
     Box(
@@ -93,7 +93,7 @@ fun RegistrationsCardImageCard(
             error = {
                 SubcomposeAsyncImageContent(
                     modifier = modifier,
-                    painter = painterResource(id = R.drawable.default_start_image)
+                    painter = painterResource(id = com.markettwits.start.R.drawable.default_start_image)
                 )
             },
             success = {
@@ -125,16 +125,16 @@ private fun RegistrationsCardInfoStroke(title: String) {
 }
 
 @Composable
-private fun RegistrationsCardInfoStatus(status: StartsListItem.StatusCode, payment: Boolean) {
+private fun RegistrationsCardInfoStatus(status: StartStatus, payment: Boolean) {
     if (payment) {
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-                .background(startStatusBackground(status.id))
+                .background(startStatusBackground(status.code))
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = status.message,
+                text = status.name,
                 color = Color.White,
                 fontFamily = FontNunito.bold,
                 fontSize = 10.sp,

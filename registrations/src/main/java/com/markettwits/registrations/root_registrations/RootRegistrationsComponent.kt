@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentComponent
 import com.markettwits.registrations.registrations.presentation.RegistrationsComponent
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
+import com.markettwits.start.root.RootStartScreenComponent
 import kotlinx.serialization.Serializable
 
 interface RootRegistrationsComponent {
@@ -17,17 +18,21 @@ interface RootRegistrationsComponent {
     sealed class ConfigStack {
         @Serializable
         data object Registrations : ConfigStack()
+        @Serializable
+        data class Start(val startId: Int) : ConfigStack()
     }
 
     @Serializable
     sealed class ConfigChild {
         @Serializable
-        data class PaymentDialog(val paymentState: RegistrationsStore.StartPaymentState) : ConfigChild()
+        data class PaymentDialog(val paymentState: RegistrationsStore.StartPaymentState) :
+            ConfigChild()
     }
 
 
     sealed class ChildStack {
         data class Registrations(val component: RegistrationsComponent) : ChildStack()
+        data class Start(val component: RootStartScreenComponent) : ChildStack()
     }
 
     sealed class ChildSlot {

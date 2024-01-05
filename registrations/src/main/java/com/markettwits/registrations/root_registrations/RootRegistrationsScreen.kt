@@ -28,6 +28,7 @@ import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentComponen
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentScreen
 import com.markettwits.registrations.registrations.presentation.MyRegistrationsScreen
 import com.markettwits.registrations.root_registrations.component.rememberSlotModalBottomSheetState
+import com.markettwits.start.root.RootStartScreen
 
 @OptIn(FaultyDecomposeApi::class)
 @Composable
@@ -58,6 +59,9 @@ fun RootRegistrationsScreen(component: RootRegistrationsComponent) {
         when (val child = it.instance) {
             is RootRegistrationsComponent.ChildStack.Registrations ->
                 MyRegistrationsScreen(component = child.component)
+
+            is RootRegistrationsComponent.ChildStack.Start ->
+                RootStartScreen(component = child.component)
         }
     }
 }

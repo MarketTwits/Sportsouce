@@ -2,6 +2,7 @@ package com.markettwits.cloud.model.team
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class TeamsRemote(
     val count: Int,

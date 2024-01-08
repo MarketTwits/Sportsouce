@@ -25,7 +25,7 @@ import com.markettwits.registrations.registrations.data.RemoteRegistrationsToUiM
 import com.markettwits.registrations.registrations.presentation.RegistrationsComponentBase
 import com.markettwits.registrations.registrations.presentation.RegistrationsDataStoreFactory
 import com.markettwits.start.root.RootStartScreenComponentBase
-import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
+import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 

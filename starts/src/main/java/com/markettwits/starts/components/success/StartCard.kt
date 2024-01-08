@@ -105,6 +105,8 @@ private fun ImageCardInfoStroke(title: String) {
             modifier = Modifier.fillMaxWidth(),
             text = title,
             color = Color.White,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
             fontFamily = FontNunito.bold,
             fontSize = 10.sp,
             textAlign = TextAlign.Center

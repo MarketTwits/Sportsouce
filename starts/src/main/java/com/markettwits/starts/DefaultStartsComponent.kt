@@ -13,7 +13,7 @@ import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import kotlinx.serialization.Serializable
-import ru.alexpanov.core_network.api.StartsRemoteDataSourceImpl
+import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
 import ru.alexpanov.core_network.provider.HttpClientProvider2
 import ru.alexpanov.core_network.provider.JsonProvider
 
@@ -79,7 +79,6 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object Starts : Config()
-
     }
 
     sealed class Child {

@@ -88,6 +88,13 @@ private fun menuItems(): List<BottomNavigationItem> {
             hasNews = false,
         ),
         BottomNavigationItem(
+            title = "Обзор",
+            selectedIcon = Icons.Filled.Newspaper,
+            unselectedIcon = Icons.Outlined.Newspaper,
+            hasNews = false,
+            configuration = RootComponent.Configuration.Review,
+        ),
+        BottomNavigationItem(
             title = "Новости",
             selectedIcon = Icons.Filled.Newspaper,
             unselectedIcon = Icons.Outlined.Newspaper,

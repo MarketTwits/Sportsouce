@@ -72,8 +72,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 startId = 0,
                 cost = "500"
             ),
-
-            )
+        )
     }
 
 }

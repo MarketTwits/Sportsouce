@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         gradlePluginPortal()
     }
 }
@@ -12,6 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 
 rootProject.name = "Sportsouce"
 includeBuild("build-logic")
@@ -25,3 +27,5 @@ include(":profile")
 include(":auth")
 include(":change-password")
 include(":registrations")
+include(":news")
+include(":review")

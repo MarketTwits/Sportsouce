@@ -4,7 +4,7 @@ calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.0.0"
 kotlin = "1.9.10"
-gradle = "8.1.1"
+gradle = "8.2.1"
 
 #SDK
 
@@ -12,6 +12,7 @@ compileSdk = "34"
 material3HtmlText = "2.0.0-beta01"
 minSdk = "26"
 mvikotlin = "3.3.0"
+orgJetbrainsComposeGradlePlugin = "1.5.11"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 jvm = "8"
@@ -19,7 +20,7 @@ jvm-dot = "1.8"
 
 # Compose
 compose = "1.5.3"
-compose-ui = "1.5.1"
+compose-ui = "1.5.3"
 compose-bom = "2023.03.00"
 compose-activity = "1.8.1"
 compose-lifecycle = "2.6.1"
@@ -59,7 +60,7 @@ realm = "1.11.0"
 ksp = "1.9.10-1.0.13"
 
 #Serialization
-kotlinx-serialization = "1.4.1"
+kotlinx-serialization = "1.6.2"
 jakewharton = "0.8.0"
 
 #Decompose
@@ -95,6 +96,7 @@ mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", vers
 mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
 onebone-toolbar = {group = "me.onebone", name = "toolbar-compose", version.ref = "onebone-toolbar"}
 android-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle-ktx" }
+org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "orgJetbrainsComposeGradlePlugin" }
 realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realm-gradle-plugin" }
 zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zoomable" }
 #androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
@@ -106,6 +108,7 @@ testing = { group = "org.testng", name = "testing", version.ref = "testing" }
 leakcanary = {group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary"}
 
 #Serialization
+kotlinx-serialization-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization"}
 kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 jakewharton = {group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "jakewharton"}
@@ -145,7 +148,8 @@ android-gradle = {module = "com.android.tools.build:gradle", version.ref = "grad
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
 
 [plugins]
-kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+#kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version = "1.9.10"}
 android-library = { id = "com.android.library", version.ref = "gradle" }
 android-application = {id = "com.android.application", version.ref = "gradle"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -157,6 +161,11 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 #Convention Plugins
 android-library-convention = {id = "android-library-convention", version = "unspecified"}
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
+
+#Test Plugins
+kotlin-multiplatform-android-convention = {id = "kotlin-multiplatform-android-convention", version = "unspecified"}
+multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
+compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
 
 
 [bundles]

@@ -1,0 +1,82 @@
+package com.markettwits.presentation.components.social_network
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.Shapes
+import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.theme.SportSouceColor
+
+@Composable
+fun SocialNetwork(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .padding(10.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        SocialNetworkButton(
+            modifier = Modifier.weight(1f),
+            title = "Мы ВКонтакте",
+            textColor = SportSouceColor.SportSouceBlue,
+            backgroundColor = SportSouceColor.VeryLighBlue
+        )
+        SocialNetworkButton(
+            modifier = Modifier.weight(1f),
+            title = "Мы в Telegram",
+            textColor = SportSouceColor.SportSouceBlue,
+            backgroundColor = SportSouceColor.VeryLighBlue
+        )
+    }
+}
+
+@Composable
+private fun SocialNetworkButton(
+    modifier: Modifier = Modifier,
+    title: String,
+    textColor: Color,
+    backgroundColor: Color,
+) {
+    Row(
+        modifier = modifier
+            .padding(5.dp)
+            .clip(Shapes.large)
+            .background(SportSouceColor.VeryLighBlue)
+            .padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .size(30.dp),
+            imageVector = IconTelegram,
+            contentDescription = null,
+            tint = textColor
+        )
+        Text(
+            text = title,
+            color = textColor,
+            maxLines = 1,
+            fontSize = 14.sp,
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = FontNunito.bold
+        )
+    }
+}

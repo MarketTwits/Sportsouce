@@ -6,6 +6,7 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
+import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.start.StartRemote
@@ -46,4 +47,6 @@ interface SportsouceApi {
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
     suspend fun userRegistries(userId : Int, token : String) : List<RemouteStartsUserItem>
+    //News
+    suspend fun news() : NewsRemote
 }

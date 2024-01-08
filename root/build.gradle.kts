@@ -15,6 +15,8 @@ dependencies {
     implementation(project(":start"))
     implementation(project(":starts"))
     implementation(project(":profile"))
+    implementation(project(":news"))
+    implementation(project(":review"))
     implementation(project(":core-ui"))
     implementation(project(":auth"))
     api(libs.bundles.composeUiBundle)

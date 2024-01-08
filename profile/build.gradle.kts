@@ -17,5 +17,4 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.bundles.mviKotlin)
     implementation (libs.calendar)
-
 }

@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.store.create
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.model.common.StartStatus
@@ -76,8 +75,6 @@ class RegistrationsDataStoreFactory(
             reducer = ReducerImpl
         ) {}
 
-    sealed interface Action
-
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(
@@ -86,14 +83,6 @@ class RegistrationsDataStoreFactory(
         ) : Msg
 
         data class InfoFailed(val message: String) : Msg
-    }
-
-    private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
-        override fun invoke() {
-            scope.launch {
-
-            }
-        }
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {

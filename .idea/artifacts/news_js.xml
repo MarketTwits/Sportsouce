@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="news-js">
+    <output-path>$PROJECT_DIR$/news/build/libs</output-path>
+    <root id="archive" name="news-js.jar">
+      <element id="module-output" name="Sportsouce.news.jsMain" />
+    </root>
+  </artifact>
+</component>

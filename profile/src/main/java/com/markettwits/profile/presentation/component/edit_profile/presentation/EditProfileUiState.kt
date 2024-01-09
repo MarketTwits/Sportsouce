@@ -5,18 +5,6 @@ import com.markettwits.profile.presentation.component.edit_profile.models.CityUi
 import com.markettwits.profile.presentation.component.edit_profile.models.TeamUi
 import kotlinx.serialization.Serializable
 
-//sealed interface EditProfileUiState {
-//    data class Base(
-//        val user : User,
-//        val teamsRemote: List<TeamUi>,
-//        val cityRemote: List<CityUi>,
-//        val show: Boolean
-//    ) : EditProfileUiState
-//    data class Error(val message : String, val show : Boolean) : EditProfileUiState
-//    data object Loading : EditProfileUiState
-//}
-
-
 @Serializable
 sealed interface EditProfileUiState {
     val data: List<EditProfileUiPage>

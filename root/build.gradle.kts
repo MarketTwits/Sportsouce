@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":starts"))
     implementation(project(":profile"))
     implementation(project(":news"))
-    implementation(project(":review"))
+    implementation(project(":review:review"))
     implementation(project(":core-ui"))
     implementation(project(":auth"))
     implementation(libs.bundles.mviKotlin)

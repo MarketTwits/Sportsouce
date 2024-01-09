@@ -31,6 +31,11 @@
             <option value="$PROJECT_DIR$/profile" />
             <option value="$PROJECT_DIR$/registrations" />
             <option value="$PROJECT_DIR$/review" />
+            <option value="$PROJECT_DIR$/review/popular" />
+            <option value="$PROJECT_DIR$/review/random" />
+            <option value="$PROJECT_DIR$/review/review" />
+            <option value="$PROJECT_DIR$/review/schedule" />
+            <option value="$PROJECT_DIR$/review/start-filter" />
             <option value="$PROJECT_DIR$/root" />
             <option value="$PROJECT_DIR$/start" />
             <option value="$PROJECT_DIR$/starts" />

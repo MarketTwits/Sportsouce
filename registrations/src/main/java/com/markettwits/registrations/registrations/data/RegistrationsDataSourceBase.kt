@@ -6,7 +6,7 @@ import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class RegistrationsDataSourceBase(
     private val service: SportsouceApi,

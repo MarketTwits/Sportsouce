@@ -7,6 +7,8 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.markettwits.ComponentKoinContext
 import com.markettwits.cloud.api.TimeApiImpl
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.data.BaseAuthDataSource
@@ -25,7 +27,9 @@ import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.StartScreenComponent
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.cloud.provider.HttpClientProvider
+import com.markettwits.start.di.startModule
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootStartScreenComponentBase(
@@ -35,6 +39,13 @@ class RootStartScreenComponentBase(
 ) :
     RootStartScreenComponent,
     ComponentContext by context {
+    private val koinContext = instanceKeeper.getOrCreate {
+        ComponentKoinContext()
+    }
+
+    private val scope = koinContext.getOrCreateKoinScope(
+        listOf(startModule)
+    )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
     override val childStack: Value<ChildStack<*, RootStartScreenComponent.Child>> =
         childStack(
@@ -52,58 +63,21 @@ class RootStartScreenComponentBase(
         when (config) {
             is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
                 StartScreenComponent(
-                    componentContext,
-                    config.startId,
-                    BaseStartDataSource(
-                        service = StartsRemoteDataSourceImpl(
-                            HttpClientProvider2(
-                                JsonProvider().get(),
-                                "https://sport-73zoq.ondigitalocean.app"
-                            )
-                        ),
-                        authService = BaseAuthDataSource(
-                            remoteService =
-                            StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
-                                    JsonProvider().get(),
-                                    "https://sport-73zoq.ondigitalocean.app"
-                                )
-                            ),
-                            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-                            signInMapper = SignInRemoteToUiMapper.Base(),
-                            signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                        ),
-                        timeService = TimeApiImpl(
-                            HttpClientProvider2(
-                                JsonProvider().get(),
-                                "https://timeapi.io"
-                            )
-                        ),
-                        mapper = StartRemoteToUiMapper.Base(
-                            mapper = BaseTimeMapper(),
-                            membersToUiMapper = StartMembersToUiMapper.Base()
-                        )
-                    ),
-                    back = {
-                       pop()
-                    },
+                    componentContext = componentContext,
+                    startId = config.startId,
+                    service = scope.get(),
+                    back = pop::invoke,
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())
                     }
                 )
             )
-
-
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
                     componentContext = componentContext,
                     membersUi = config.items,
-                    openFilterScreen = {
-                        openMembersFilter(it)
-                    },
-                    onBack = {
-                        onBackClicked()
-                    },
+                    openFilterScreen = ::openMembersFilter,
+                    onBack = navigation::pop,
                     membersFilter = MembersFilterBase()
                 ),
             )
@@ -112,9 +86,7 @@ class RootStartScreenComponentBase(
                 StartMembersFilterScreenComponent(
                     context = componentContext,
                     items = config.items,
-                    back = {
-                        onBackClicked()
-                    },
+                    handleMembersFilter = HandleMembersFilterBase(),
                     apply = { filter ->
                         navigation.pop { // Pop ItemDetailsComponent
                             (childStack.value.active.instance as? RootStartScreenComponent.Child.StartMembers)?.component?.updateFilter(
@@ -122,15 +94,10 @@ class RootStartScreenComponentBase(
                             )
                         }
                     },
-                    handleMembersFilter = HandleMembersFilterBase()
+                    back = navigation::pop
                 )
             )
         }
-
-    fun onBackClicked() {
-        navigation.pop()
-    }
-
     fun openMembersScreen(
         startId: Int,
         items: List<StartMembersUi>,

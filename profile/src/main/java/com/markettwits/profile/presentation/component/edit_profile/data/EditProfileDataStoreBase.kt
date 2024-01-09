@@ -1,17 +1,14 @@
 package com.markettwits.profile.presentation.component.edit_profile.data
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.core_ui.base.Fourth
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class EditProfileDataStoreBase(
     private val mapper: RemoteUserToEditProfileMapper,

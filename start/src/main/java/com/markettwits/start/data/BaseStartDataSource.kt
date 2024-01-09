@@ -16,16 +16,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
     private val timeService: TimeApi,
     private val authService: AuthDataSource,
-    private val mapper: StartRemoteToUiMapper
+    private val mapper: StartRemoteToUiMapper,
+    private val cache: StartMemoryCache
 ) : StartDataSource {
     override suspend fun start(startId: Int): StartItemUi {
-        return try {
+        return cache[startId] ?: try {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {
                     val deferredTime = async { timeService.currentTime() }
@@ -40,7 +41,9 @@ class BaseStartDataSource(
                     )
                 }
             }
-            mapper.map(data, withFilter, comments, time)
+            val result = mapper.map(data, withFilter, comments, time)
+            cache.set(value = result, key = startId)
+            result
         } catch (e: Exception) {
             mapper.map(e)
         }

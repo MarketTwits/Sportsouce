@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.social_network
+package com.markettwits.review.presentation.components.social_network
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,13 +35,15 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
         SocialNetworkButton(
             modifier = Modifier.weight(1f),
             title = "Мы ВКонтакте",
-            textColor = SportSouceColor.SportSouceBlue,
+            textColor = SportSouceColor.VkIcon,
+            icon = VkIcon,
             backgroundColor = SportSouceColor.VeryLighBlue
         )
         SocialNetworkButton(
             modifier = Modifier.weight(1f),
             title = "Мы в Telegram",
-            textColor = SportSouceColor.SportSouceBlue,
+            textColor = SportSouceColor.TelegramIcon,
+            icon = IconTelegram,
             backgroundColor = SportSouceColor.VeryLighBlue
         )
     }
@@ -49,6 +52,7 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
 @Composable
 private fun SocialNetworkButton(
     modifier: Modifier = Modifier,
+    icon : ImageVector,
     title: String,
     textColor: Color,
     backgroundColor: Color,
@@ -57,16 +61,17 @@ private fun SocialNetworkButton(
         modifier = modifier
             .padding(5.dp)
             .clip(Shapes.large)
-            .background(SportSouceColor.VeryLighBlue)
-            .padding(10.dp),
+            .background(backgroundColor)
+            .padding(15.dp)
+        ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         Icon(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .size(30.dp),
-            imageVector = IconTelegram,
+                .size(20.dp),
+            imageVector = icon,
             contentDescription = null,
             tint = textColor
         )

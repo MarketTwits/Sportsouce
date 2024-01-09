@@ -14,7 +14,7 @@ import com.markettwits.starts.data.BaseStartsDataSource
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import kotlinx.serialization.Serializable
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.provider.HttpClientProvider
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class DefaultStartsComponent(componentContext: ComponentContext) :
@@ -53,7 +53,7 @@ class DefaultStartsComponent(componentContext: ComponentContext) :
                     componentContext = componentContext,
                     dataSource = BaseStartsDataSource(
                         StartsRemoteDataSourceImpl(
-                            HttpClientProvider2(
+                            HttpClientProvider(
                                 JsonProvider().get(),
                                 "https://sport-73zoq.ondigitalocean.app"
                             )

@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":review"))
     implementation(project(":core-ui"))
     implementation(project(":auth"))
+    implementation(libs.bundles.mviKotlin)
     api(libs.bundles.composeUiBundle)
     api(libs.junit.ext.ktx)
     debugApi(libs.bundles.composeUiBundleDebug)

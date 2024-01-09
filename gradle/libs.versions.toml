@@ -9,6 +9,7 @@ gradle = "8.2.1"
 #SDK
 
 compileSdk = "34"
+lazytable = "1.6.0"
 material3HtmlText = "2.0.0-beta01"
 minSdk = "26"
 mvikotlin = "3.3.0"
@@ -17,6 +18,9 @@ targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 jvm = "8"
 jvm-dot = "1.8"
+
+#DI
+koin = "3.4.0"
 
 # Compose
 compose = "1.5.3"
@@ -88,6 +92,7 @@ compose-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-pr
 compose-preview = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-preview" }
 compose-coil = {group = "io.coil-kt", name = "coil-compose", version.ref = "compose-coil"}
 compose-icons = {group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-ui"}
+lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 material3-html-text = { module = "de.charlex.compose.material3:material3-html-text", version.ref = "material3HtmlText" }
 #MVI KOTLIN
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
@@ -138,6 +143,11 @@ decompose-compose-extension = { module = "com.arkivanov.decompose:extensions-com
 
 decompose-compose-jetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose" }
 decompose-android = { module = "com.arkivanov.decompose:extensions-android", version.ref = "decompose"}
+
+#DI
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 
 #UI
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

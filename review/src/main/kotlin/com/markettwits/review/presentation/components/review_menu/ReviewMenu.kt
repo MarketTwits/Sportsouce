@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.review_menu
+package com.markettwits.review.presentation.components.review_menu
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,7 +22,7 @@ fun ReviewMenu(modifier: Modifier = Modifier) {
     LazyVerticalGrid(
         userScrollEnabled = false,
         modifier = modifier
-            .height(150.dp)
+            .height(130.dp)
             .fillMaxWidth(),
         columns = GridCells.Fixed(2),
     ) {

@@ -6,11 +6,10 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.news_list.presentation.NewsComponent
-import com.markettwits.presentation.ReviewComponentBase
 import com.markettwits.profile.presentation.DefaultProfileComponent
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsComponentBase
+import com.markettwits.root.RootReviewComponentBase
 import com.markettwits.starts.DefaultStartsComponent
 
 class BaseRootComponent(
@@ -50,10 +49,10 @@ class BaseRootComponent(
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
-                component = ReviewComponentBase(
-                    context = componentContext
+                component = RootReviewComponentBase(
+                    context = componentContext,
+
                 ),
-                componentNews = newsComponent(componentContext)
             )
         }
 

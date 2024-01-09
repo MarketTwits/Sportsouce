@@ -35,7 +35,7 @@ import com.markettwits.registrations.root_registrations.RootRegistrationsCompone
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
 import kotlinx.serialization.Serializable
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.provider.HttpClientProvider
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class DefaultProfileComponent(componentContext: ComponentContext) :
@@ -66,7 +66,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         BaseAuthDataSource(
                             remoteService =
                             StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -89,7 +89,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         BaseAuthDataSource(
                             remoteService =
                             StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -112,7 +112,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         BaseAuthDataSource(
                             remoteService =
                             StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -142,7 +142,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         BaseAuthDataSource(
                             remoteService =
                             StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -152,7 +152,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                             signInCacheMapper = SignInRemoteToCacheMapper.Base()
                         ),
                         StartsRemoteDataSourceImpl(
-                            HttpClientProvider2(
+                            HttpClientProvider(
                                 JsonProvider().get(),
                                 "https://sport-73zoq.ondigitalocean.app"
                             )
@@ -174,7 +174,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                         validation = ChangePasswordValidation.Base(),
                         changePasswordDataSource = ChangePasswordDataSourceBase(
                             service = StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -182,7 +182,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                             auth = BaseAuthDataSource(
                                 remoteService =
                                 StartsRemoteDataSourceImpl(
-                                    HttpClientProvider2(
+                                    HttpClientProvider(
                                         JsonProvider().get(),
                                         "https://sport-73zoq.ondigitalocean.app"
                                     )

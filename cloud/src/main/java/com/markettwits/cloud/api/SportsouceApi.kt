@@ -1,4 +1,4 @@
-package ru.alexpanov.core_network.api
+package com.markettwits.cloud.api
 
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest

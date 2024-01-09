@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.archive
+package com.markettwits.review.presentation.components.archive
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.presentation.components.actual.StartCardSimple
+import com.markettwits.review.presentation.components.actual.StartCardSimple
 import com.markettwits.starts.StartsListItem
 import com.markettwits.starts.components.success.StartCard
 
@@ -34,7 +34,9 @@ fun ArchiveStarts(
     )
     LazyRow(modifier = modifier) {
         items(starts) {
-            StartCardSimple(start = it, onItemClick = {})
+            StartCardSimple(start = it, onItemClick = {
+                onClick(it)
+            })
         }
     }
 }

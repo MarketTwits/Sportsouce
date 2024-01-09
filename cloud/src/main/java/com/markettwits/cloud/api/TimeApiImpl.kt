@@ -1,14 +1,12 @@
 package com.markettwits.cloud.api
 
-import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.time.TimeRemote
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.serialization.decodeFromString
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.provider.HttpClientProvider
 
 class TimeApiImpl(
-    private val httpClient: HttpClientProvider2
+    private val httpClient: HttpClientProvider
 ) : TimeApi {
     private val json = httpClient.getJson()
     private val client = httpClient.get()

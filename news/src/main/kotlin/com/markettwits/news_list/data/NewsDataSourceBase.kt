@@ -1,7 +1,7 @@
 package com.markettwits.news_list.data
 
 import com.markettwits.news_list.domain.NewsInfo
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class NewsDataSourceBase(
     private val service: SportsouceApi,

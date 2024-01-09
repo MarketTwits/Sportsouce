@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.social_network
+package com.markettwits.review.presentation.components.social_network
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image

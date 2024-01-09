@@ -6,7 +6,7 @@ import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.profile.data.AuthDataSource
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class ChangePasswordDataSourceBase(
     private val service: SportsouceApi,

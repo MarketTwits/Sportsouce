@@ -10,6 +10,8 @@ object SportSouceColor{
     val SportSouceRegistryOpenGreen = Color(94,207,177)
     val SportSouceRegistryCommingSoonYellow = Color(248,189,56)
     val SportSouceLightRed = Color(239, 84, 80)
+    val TelegramIcon = Color(3,155,229)
+    val VkIcon = Color(0,120,255)
     val VeryLighBlue = Color(244,250,254)
     val DirtyWhite = Color(245,245,245)
 }

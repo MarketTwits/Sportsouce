@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.actual
+package com.markettwits.review.presentation.components.actual
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,9 +16,9 @@ import com.markettwits.starts.components.success.StartCard
 
 @Composable
 fun ActualStarts(
-    modifier : Modifier = Modifier,
-    starts : List<StartsListItem>,
-    onClick : (Int) -> Unit
+    modifier: Modifier = Modifier,
+    starts: List<StartsListItem>,
+    onClick: (Int) -> Unit
 ) {
     Text(
         modifier = modifier.padding(horizontal = 10.dp),
@@ -32,7 +32,9 @@ fun ActualStarts(
         userScrollEnabled = false,
     ) {
         items(starts) {
-            StartCard(start = it){}
+            StartCard(start = it, onItemClick = {
+                onClick(it)
+            })
         }
     }
 }

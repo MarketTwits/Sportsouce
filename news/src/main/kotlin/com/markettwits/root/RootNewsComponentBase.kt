@@ -8,19 +8,19 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import com.markettwits.core_ui.time.BaseTimeMapper
+import com.markettwits.di.ComponentKoinContext
+import com.markettwits.di.newsModule
 import com.markettwits.news_event.NewsEventComponentBase
-import com.markettwits.news_list.data.NewsDataSourceBase
-import com.markettwits.news_list.data.NewsRemoteToDomainMapper
-import com.markettwits.news_list.presentation.NewsComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory
-import com.markettwits.news_list.presentation.store.NewsStoreFactory
-import ru.alexpanov.core_network.provider.HttpClientProvider2
-import ru.alexpanov.core_network.provider.JsonProvider
+import com.markettwits.news_list.presentation.NewsComponentBase
 
 class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
     ComponentContext by context {
+    private val koinContext = ComponentKoinContext()
+
+    private val scope = koinContext.getOrCreateKoinScope(
+        listOf(newsModule)
+    )
     private val navigation = StackNavigation<RootNewsComponent.Config>()
 
     override val childStack: Value<ChildStack<*, RootNewsComponent.Child>> = childStack(
@@ -30,7 +30,6 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
         handleBackButton = true,
         childFactory = ::child,
     )
-
     private fun child(
         config: RootNewsComponent.Config,
         componentContext: ComponentContext,
@@ -39,18 +38,7 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
             is RootNewsComponent.Config.News -> RootNewsComponent.Child.News(
                 NewsComponentBase(
                     context = componentContext,
-                    storeFactory = NewsStoreFactory(
-                        storeFactory = DefaultStoreFactory(),
-                        dataSource = NewsDataSourceBase(
-                            StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
-                                    JsonProvider().get(),
-                                    "https://sport-73zoq.ondigitalocean.app"
-                                )
-                            ),
-                            mapper = NewsRemoteToDomainMapper.Base(BaseTimeMapper()),
-                        )
-                    ),
+                    storeFactory = scope.get(),
                     onItemClick = {
                         navigation.push(RootNewsComponent.Config.NewsEvent(it))
                     }

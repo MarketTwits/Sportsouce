@@ -26,7 +26,7 @@ import com.markettwits.registrations.registrations.presentation.RegistrationsCom
 import com.markettwits.registrations.registrations.presentation.RegistrationsDataStoreFactory
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.provider.HttpClientProvider
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootRegistrationsComponentBase(
@@ -91,7 +91,7 @@ class RootRegistrationsComponentBase(
                         storeFactory = DefaultStoreFactory(),
                         dataSource = RegistrationsDataSourceBase(
                             service = StartsRemoteDataSourceImpl(
-                                HttpClientProvider2(
+                                HttpClientProvider(
                                     JsonProvider().get(),
                                     "https://sport-73zoq.ondigitalocean.app"
                                 )
@@ -99,7 +99,7 @@ class RootRegistrationsComponentBase(
                             auth = BaseAuthDataSource(
                                 remoteService =
                                 StartsRemoteDataSourceImpl(
-                                    HttpClientProvider2(
+                                    HttpClientProvider(
                                         JsonProvider().get(),
                                         "https://sport-73zoq.ondigitalocean.app"
                                     )

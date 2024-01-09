@@ -11,8 +11,10 @@ android {
 dependencies {
     api(project(":cloud"))
     implementation(project(":core-ui"))
+    implementation(project(":core-koin"))
     implementation(project(":auth"))
+    implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.material3.html.text)
-    implementation ("io.github.oleksandrbalan:lazytable:1.6.0")
+    implementation (libs.lazytable)
 }

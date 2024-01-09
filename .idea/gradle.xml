@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/change-password" />
             <option value="$PROJECT_DIR$/cloud" />
+            <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/news" />
             <option value="$PROJECT_DIR$/profile" />

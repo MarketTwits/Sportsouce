@@ -27,11 +27,10 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import ru.alexpanov.core_network.api.SportsouceApi
-import ru.alexpanov.core_network.provider.HttpClientProvider2
+import com.markettwits.cloud.provider.HttpClientProvider
 
 class StartsRemoteDataSourceImpl(
-    private val httpClient: HttpClientProvider2
+    private val httpClient: HttpClientProvider
 ) : SportsouceApi {
 
     private val json = httpClient.getJson()

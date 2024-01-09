@@ -16,15 +16,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {
     implementation(project(":starts"))
     implementation(project(":root"))
+    implementation(project(":news"))
     implementation(project(":core-ui"))
+    implementation(libs.bundles.decompose.compose)
     implementation(libs.decompose.android)
-    implementation(libs.decompose)
-    implementation(libs.decompose.compose.extension)
+    implementation(libs.koin.android)
 
 }

@@ -1,4 +1,4 @@
-package ru.alexpanov.core_network.provider
+package com.markettwits.cloud.provider
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -15,9 +15,8 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 
-class HttpClientProvider2(
+class HttpClientProvider(
     private val json: Json,
     private val baseUrl: String
 ) {

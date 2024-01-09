@@ -1,5 +1,6 @@
 package com.markettwits.start.presentation.start
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
@@ -12,8 +13,7 @@ class StartScreenComponent(
     private val service: StartDataSource,
     private val back: () -> Unit,
     private val members: (Int, List<StartMembersUi>) -> Unit,
-) :
-    ComponentContext by componentContext, StartScreen {
+) : ComponentContext by componentContext, StartScreen {
     private val keeper =
         instanceKeeper.getOrCreateSimple { StartScreenInstanceKeeper(service, startId) }
     override val commentsState: Value<CommentUiState> = keeper.commentsState

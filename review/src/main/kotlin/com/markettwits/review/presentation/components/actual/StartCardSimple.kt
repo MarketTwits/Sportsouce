@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.actual
+package com.markettwits.review.presentation.components.actual
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,7 +41,9 @@ fun StartCardSimple(
     onItemClick: (Int) -> Unit
 ) {
     Column(modifier = modifier.padding(10.dp)) {
-        ImageCard(modifier = modifier, start.name,start.image, start.date)
+        ImageCard(modifier = modifier, start.name,start.image, start.date){
+            onItemClick(start.id)
+        }
     }
 
 }
@@ -52,13 +54,14 @@ private fun ImageCard(
     name : String,
     image: String,
     date: String,
+    onCLick : () -> Unit,
 ) {
     Column(modifier = modifier.size(width = 115.dp, height = 190.dp)) {
         Box(
             modifier = modifier
-              //  .padding(10.dp)
                 .size(width = 115.dp, height = 150.dp)
                 .clip(RoundedCornerShape(10.dp))
+                .clickable{onCLick()}
 
         ) {
             SubcomposeAsyncImage(
@@ -94,7 +97,7 @@ private fun ImageCard(
             maxLines = 2,
             lineHeight = 10.sp,
             fontFamily = FontNunito.bold,
-            fontSize = 10.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Start
         )
     }

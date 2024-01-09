@@ -8,7 +8,7 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.sign_in.SignInUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 class BaseAuthDataSource(
     private val remoteService: SportsouceApi,

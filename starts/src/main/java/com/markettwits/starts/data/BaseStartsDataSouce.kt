@@ -1,6 +1,5 @@
 package com.markettwits.starts.data
 
-import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.starts.StartsUiState
@@ -8,8 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import ru.alexpanov.core_network.api.SportsouceApi
-import kotlin.system.measureTimeMillis
+import com.markettwits.cloud.api.SportsouceApi
 
 class BaseStartsDataSource(
     private val service: SportsouceApi,

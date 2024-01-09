@@ -1,6 +1,6 @@
 package com.markettwits.starts
 
-import ru.alexpanov.core_network.api.SportsouceApi
+import com.markettwits.cloud.api.SportsouceApi
 
 interface StartsDependancies {
     val sportsouceApi : SportsouceApi

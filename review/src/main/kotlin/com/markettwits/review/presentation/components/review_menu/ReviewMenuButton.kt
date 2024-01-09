@@ -1,4 +1,4 @@
-package com.markettwits.presentation.components.review_menu
+package com.markettwits.review.presentation.components.review_menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,7 +38,7 @@ fun ReviewMenuButton(
             .fillMaxWidth()
     ) {
         Row(
-            modifier = modifier.padding(20.dp),
+            modifier = modifier.padding(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = fontColor)

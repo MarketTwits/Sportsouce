@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.core.KoinApplication.Companion.init
 
-class StartsFilteredComponentBase(
+internal class StartsFilteredComponentBase(
     context: ComponentContext,
     private val request: StartFilterUi,
     private val storeFactory: StartsFilteredStoreFactory,

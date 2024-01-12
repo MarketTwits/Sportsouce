@@ -1,6 +1,6 @@
 package com.markettwits.review.data
 
-import com.markettwits.starts.StartsListItem
+import com.markettwits.starts.presentation.StartsListItem
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

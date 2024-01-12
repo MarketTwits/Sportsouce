@@ -9,9 +9,11 @@ android {
 }
 dependencies {
     api(project(":cloud"))
+    implementation(project(":core-koin"))
     implementation(project(":start"))
     implementation(project(":core-ui"))
-    implementation(project(":auth"))
+    //implementation(project(":auth"))
+    implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation (libs.material3.html.text)
     implementation(libs.kotlinx.datetime)

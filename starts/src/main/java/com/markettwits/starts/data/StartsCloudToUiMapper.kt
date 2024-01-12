@@ -3,8 +3,8 @@ package com.markettwits.starts.data
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.sportsourcedemo.all.Row
-import com.markettwits.starts.StartsListItem
-import com.markettwits.starts.StartsUiState
+import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts.presentation.StartsUiState
 
 
 interface StartsCloudToUiMapper {

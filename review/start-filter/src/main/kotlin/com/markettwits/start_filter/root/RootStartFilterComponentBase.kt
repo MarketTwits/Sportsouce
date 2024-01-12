@@ -10,16 +10,18 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.start.root.RootStartScreenComponentBase
-import com.markettwits.start_filter.start_filter.di.startFilterModule
+import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
+import com.markettwits.start_filter.start_filter.di.createRocketsModules
 import com.markettwits.start_filter.start_filter.presentation.StartFilterComponentBase
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilerStoreFactory
 import com.markettwits.start_filter.starts.StartsFilteredComponentBase
 import com.markettwits.start_filter.starts.store.StartsFilteredStoreFactory
 
+
 class RootStartFilterComponentBase(
     context: ComponentContext,
+    private val dependencies: StartsFilterDependencies,
     private val pop : () -> Unit
 ) : RootStartFilterComponent,
     ComponentContext by context {
@@ -30,7 +32,7 @@ class RootStartFilterComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(sportSouceNetworkModule, startFilterModule)
+        createRocketsModules(dependencies)
     )
 
     override val childStack: Value<ChildStack<*, RootStartFilterComponent.Child>> = childStack(
@@ -56,7 +58,8 @@ class RootStartFilterComponentBase(
                     pop = pop::invoke,
                     show = {
                         navigation.push(RootStartFilterComponent.Config.Starts(it))
-                    }
+                    },
+
                 )
             )
 
@@ -82,5 +85,6 @@ class RootStartFilterComponentBase(
                     pop = navigation::pop
                 )
             )
+
         }
 }

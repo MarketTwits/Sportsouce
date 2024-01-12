@@ -2,12 +2,10 @@ package com.markettwits.review.presentation.store
 
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.news_list.domain.NewsInfo
-import com.markettwits.news_list.presentation.store.NewsStore
 import com.markettwits.review.presentation.store.ReviewStore.Intent
 import com.markettwits.review.presentation.store.ReviewStore.Label
 import com.markettwits.review.presentation.store.ReviewStore.State
-import com.markettwits.starts.StartsListItem
+import com.markettwits.starts.presentation.StartsListItem
 
 interface ReviewStore : Store<Intent, State, Label> {
 

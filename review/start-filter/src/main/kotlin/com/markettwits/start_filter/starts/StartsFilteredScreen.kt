@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,12 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start_filter.start_filter.presentation.components.StartFilterTopBar
 import com.markettwits.start_filter.starts.store.StartsFilteredStore
-import com.markettwits.starts.components.success.StartCard
+import com.markettwits.starts.components.StartCard
 
 @Composable
 fun StartsFilteredScreen(component: StartsFilteredComponent) {

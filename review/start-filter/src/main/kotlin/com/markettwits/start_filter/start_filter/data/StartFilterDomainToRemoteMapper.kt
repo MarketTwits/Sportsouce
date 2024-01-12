@@ -2,7 +2,7 @@ package com.markettwits.start_filter.start_filter.data
 
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 
-interface StartFilterDomainToRemoteMapper {
+internal interface StartFilterDomainToRemoteMapper {
     fun map(startItemUi: StartFilterUi): Map<String, String>
     class Base : StartFilterDomainToRemoteMapper {
         override fun map(startItemUi: StartFilterUi): Map<String, String> {

@@ -10,7 +10,7 @@ import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Intent
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Label
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.State
-import com.markettwits.starts.StartsListItem
+import com.markettwits.starts.presentation.StartsListItem
 import kotlinx.coroutines.launch
 
 interface StartsFilteredStore : Store<Intent, State, Label> {
@@ -35,7 +35,7 @@ interface StartsFilteredStore : Store<Intent, State, Label> {
     }
 }
 
-class StartsFilteredStoreFactory(
+internal class StartsFilteredStoreFactory(
     private val storeFactory: StoreFactory,
     private val startFilterRepository: StartFilterRepository
 ) {

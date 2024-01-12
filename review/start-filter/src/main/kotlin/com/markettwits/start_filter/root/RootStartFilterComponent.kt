@@ -16,6 +16,7 @@ interface RootStartFilterComponent {
         data object Filter : Config
         @Serializable
         data class Starts(val request: StartFilterUi) : Config
+
         @Serializable
         data class Start(val startId : Int) : Config
     }

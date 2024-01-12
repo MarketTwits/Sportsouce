@@ -2,14 +2,10 @@ package com.markettwits.root.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.news_list.presentation.NewsComponent
-import com.markettwits.review.presentation.ReviewComponent
 import com.markettwits.profile.presentation.DefaultProfileComponent
-import com.markettwits.profile.presentation.ProfileScreenComponent
-import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootReviewComponent
-import com.markettwits.starts.DefaultStartsComponent
+import com.markettwits.root.internal.RootStartsComponentBase
 import kotlinx.serialization.Serializable
 
 interface RootComponent {
@@ -28,7 +24,7 @@ interface RootComponent {
     }
 
     sealed class Child {
-        data class Starts(val component: DefaultStartsComponent) : Child()
+        data class Starts(val component: RootStartsComponentBase) : Child()
         data class Profile(val component: DefaultProfileComponent) : Child()
         data class News(val component : RootNewsComponent) : Child()
         data class Review(val component : RootReviewComponent) : Child()

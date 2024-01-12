@@ -5,7 +5,7 @@ import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 
-interface StartFilterRemoteToDomainMapper {
+internal interface StartFilterRemoteToDomainMapper {
     fun map(
         kindOfSportRemote: KindOfSportRemote,
         seasonsRemote: StartSeasonsRemote,
@@ -40,3 +40,7 @@ interface StartFilterRemoteToDomainMapper {
         }
     }
 }
+interface ABCD{
+    class Aplpha : ABCD
+}
+

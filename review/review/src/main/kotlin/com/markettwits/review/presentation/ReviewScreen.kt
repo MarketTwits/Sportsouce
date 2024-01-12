@@ -24,7 +24,6 @@ import com.markettwits.review.presentation.components.social_network.SocialNetwo
 import com.markettwits.review.presentation.store.ReviewStore
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsScreen
-import com.markettwits.starts.StartsListItem
 
 @Composable
 fun ReviewScreen(component: ReviewComponent, newsComponent: RootNewsComponent) {

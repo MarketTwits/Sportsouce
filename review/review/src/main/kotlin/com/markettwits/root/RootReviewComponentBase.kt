@@ -8,19 +8,16 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
-import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.di.ComponentKoinContext
 import com.markettwits.di.newsModule
+import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase
+import com.markettwits.root.di.rootModule
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.root.RootStartFilterComponentBase
-import com.markettwits.start_filter.start_filter.di.startFilterModule
-import com.markettwits.start_filter.start_filter.domain.StartFilter
-import com.markettwits.start_filter.start_filter.presentation.StartFilterComponentBase
-import com.markettwits.start_filter.start_filter.presentation.store.StartFilerStoreFactory
+
 
 class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     ComponentContext by context {
@@ -31,7 +28,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(newsModule, reviewModule, sportSouceNetworkModule, startFilterModule)
+        listOf(rootModule,newsModule, reviewModule, sportSouceNetworkModule)
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
@@ -72,7 +69,17 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             is RootReviewComponent.Config.Filter -> RootReviewComponent.Child.Filter(
                 RootStartFilterComponentBase(
                     context = componentContext,
+                    dependencies = scope.get(),
                     pop = navigation::pop
+                )
+            )
+
+            RootReviewComponent.Config.Random -> RootReviewComponent.Child.Random(
+                RootStartRandomComponentBase(
+                    context = componentContext,
+                    dependencies = scope.get(),
+                    pop = navigation::pop
+
                 )
             )
         }
@@ -83,6 +90,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             3 -> RootReviewComponent.Config.Filter
+            2 -> RootReviewComponent.Config.Random
             else -> RootReviewComponent.Config.Filter
         }
     }

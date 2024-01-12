@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.random.root.presentation.RootStartRandomComponent
 import com.markettwits.review.presentation.ReviewComponent
+import com.markettwits.schedule.root.RootStartsScheduleComponent
 import com.markettwits.start.root.RootStartScreenComponent
 import com.markettwits.start_filter.root.RootStartFilterComponent
 import com.markettwits.start_filter.start_filter.presentation.StartFilterComponent
@@ -21,6 +22,8 @@ interface RootReviewComponent {
         data object Filter : Config
         @Serializable
         data object Random : Config
+        @Serializable
+        data object Schedule : Config
     }
 
     sealed interface Child {
@@ -28,5 +31,6 @@ interface RootReviewComponent {
         data class Start(val component: RootStartScreenComponent) : Child
         data class Filter(val component : RootStartFilterComponent) : Child
         data class Random(val component : RootStartRandomComponent) : Child
+        data class Schedule(val component : RootStartsScheduleComponent) : Child
     }
 }

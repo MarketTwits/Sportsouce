@@ -6,9 +6,11 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
+import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
@@ -24,7 +26,10 @@ import com.markettwits.cloud.model.team.TeamsRemote
 interface SportsouceApi {
     //Common
     suspend fun teams() : TeamsRemote
-    suspend fun cities() : CityRemote
+    suspend fun cities(withStarts : Boolean = false) : CityRemote
+    suspend fun kindOfSports() : KindOfSportRemote
+    suspend fun seasons() : StartSeasonsRemote
+    suspend fun startWithFilter(request : Map<String, String>) : StartsRemote
     //Starts
     suspend fun fetchActualStarts(): StartsRemote
     suspend fun fetchPasteStarts(): StartsRemote

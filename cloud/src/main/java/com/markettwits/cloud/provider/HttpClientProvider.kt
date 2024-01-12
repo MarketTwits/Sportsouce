@@ -44,8 +44,4 @@ class HttpClientProvider(
     }
 
     fun getJson(): Json = json
-
-    companion object {
-        private const val endpoint = "https://sport-73zoq.ondigitalocean.app"
-    }
 }

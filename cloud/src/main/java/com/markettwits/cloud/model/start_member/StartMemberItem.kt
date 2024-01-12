@@ -33,27 +33,27 @@ data class StartMemberItem(
     val gender: String,
     val group: String,
     val id: Int,
-    val instagram: String,
+    val instagram: String? = "",
     val name: String,
     val order_number: String?,
     val payment: Int?,
     val phone: String? = "",
-    val price: Int,
-    val reg_code: String,
+    val price: Int? = 0,
+    val reg_code: String?,
     val sberbank_id: String?,
     val start_id: Int?,
     val surname: String,
     val team: String,
-    val teamNumber: Int,
+    val teamNumber: Int? = 0,
     val updatedAt: String,
     val user_id: Int?,
 ){
     @Serializable
     data class Group(
         @SerialName("name") val name: String,
-        @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String> = emptyList(),
-        @SerialName("ageFrom") val ageFrom: String,
-        @SerialName("ageTo") val ageTo: String
+       // @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String> = emptyList(),
+       // @SerialName("ageFrom") val ageFrom: String,
+      //  @SerialName("ageTo") val ageTo: String
     )
 
 

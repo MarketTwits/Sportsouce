@@ -5,9 +5,11 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
+import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
@@ -28,6 +30,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import com.markettwits.cloud.provider.HttpClientProvider
+import io.ktor.http.parametersOf
+import org.koin.core.parameter.parametersOf
 
 class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
@@ -40,8 +44,35 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(TeamsRemote.serializer(), response.body<String>())
     }
 
-    override suspend fun cities(): CityRemote {
-        val response = client.get("city")
+    override suspend fun cities(withStarts: Boolean): CityRemote {
+        val response = if (withStarts) {
+            client.get("city?withStarts=true")
+        } else {
+            client.get("city")
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun kindOfSports(): KindOfSportRemote {
+        val response = client.get("kind-of-sport")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun seasons(): StartSeasonsRemote {
+        val response = client.get("season")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun startWithFilter(request : Map<String, String>): StartsRemote {
+        val response = client.get("start") {
+            url {
+                parameters.apply {
+                    request.forEach { (param, value) ->
+                        append(param, value)
+                    }
+                }
+            }
+        }
         return json.decodeFromString(response.body<String>())
     }
 

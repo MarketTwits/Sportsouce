@@ -7,6 +7,7 @@ import com.markettwits.news_event.NewsEventScreen
 import com.markettwits.news_list.presentation.NewsScreen
 import com.markettwits.random.root.presentation.RootRandomStartScreen
 import com.markettwits.review.presentation.ReviewScreen
+import com.markettwits.schedule.root.RootStartsScheduleScreen
 import com.markettwits.start.presentation.start.screen.StartScreen
 import com.markettwits.start.root.RootStartScreen
 import com.markettwits.start_filter.root.RootStartFilterScreen
@@ -23,6 +24,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
             is RootReviewComponent.Child.Filter -> RootStartFilterScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)
+            is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
         }
     }
 }

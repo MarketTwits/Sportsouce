@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":starts"))
     implementation(project(":review:start-filter"))
     implementation(project(":review:random"))
+    implementation(project(":review:schedule"))
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
     implementation(libs.koin.core)

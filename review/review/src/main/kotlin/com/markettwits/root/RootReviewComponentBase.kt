@@ -15,6 +15,7 @@ import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase
 import com.markettwits.root.di.rootModule
+import com.markettwits.schedule.root.RootStartsScheduleComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.root.RootStartFilterComponentBase
 
@@ -28,7 +29,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(rootModule,newsModule, reviewModule, sportSouceNetworkModule)
+        listOf(rootModule, newsModule, reviewModule, sportSouceNetworkModule)
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
@@ -74,12 +75,20 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 )
             )
 
-            RootReviewComponent.Config.Random -> RootReviewComponent.Child.Random(
+            is RootReviewComponent.Config.Random -> RootReviewComponent.Child.Random(
                 RootStartRandomComponentBase(
                     context = componentContext,
                     dependencies = scope.get(),
                     pop = navigation::pop
 
+                )
+            )
+
+            is RootReviewComponent.Config.Schedule -> RootReviewComponent.Child.Schedule(
+                RootStartsScheduleComponentBase(
+                    context = componentContext,
+                    dependencies = scope.get(),
+                    pop = navigation::pop
                 )
             )
         }
@@ -89,8 +98,9 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
 
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
-            3 -> RootReviewComponent.Config.Filter
+            1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Random
+            3 -> RootReviewComponent.Config.Filter
             else -> RootReviewComponent.Config.Filter
         }
     }

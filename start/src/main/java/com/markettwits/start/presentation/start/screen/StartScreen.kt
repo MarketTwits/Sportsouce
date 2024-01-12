@@ -136,8 +136,8 @@ fun StartScreen(component: StartScreen) {
 
         is StartItemUi.Error -> {
             FailedScreen(
+                message = (startData as StartItemUi.Error).message,
                 onClickHelp = {
-
                 },
                 onClickRetry = {
                     component.retry()

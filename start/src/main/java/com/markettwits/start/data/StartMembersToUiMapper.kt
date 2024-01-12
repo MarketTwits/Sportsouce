@@ -40,9 +40,9 @@ interface StartMembersToUiMapper {
 
             // Group items by reg_code
             for (item in startMember) {
-                if (item.payment != null && item.reg_code.isNotEmpty()) {
-                    val regCode = item.reg_code
-                    teamMap.computeIfAbsent(regCode) { mutableListOf() }.add(item)
+                val safeRegCode = item.reg_code ?: ""
+                if (item.payment != null && safeRegCode.isNotEmpty()) {
+                    teamMap.computeIfAbsent(safeRegCode) { mutableListOf() }.add(item)
                 }
             }
 
@@ -57,18 +57,17 @@ interface StartMembersToUiMapper {
                     .map { createTeam(it) }
 
                 val singles = startMember
-                    .filter { it.payment != null && (it.reg_code == null || it.reg_code.isEmpty()) }
+                    .filter { it.payment != null && (it.reg_code.isNullOrEmpty()) }
                     .map { convertToSingle(it) }
 
                 singles + teams
             }
-
         }
 
         private fun createTeam(teamMembers: List<StartMemberItem>): StartMembersUi.Team {
             val teamMemberList = teamMembers.map {
                 StartMembersUi.TeamMember(
-                    memberId = it.teamNumber,
+                    memberId = it.teamNumber ?: 0,
                     name = it.name,
                     surname = it.surname
                 )
@@ -94,21 +93,5 @@ interface StartMembersToUiMapper {
                 city = startMemberItem.city ?: ""
             )
         }
-
-//        private fun mapToUi(teamMembers: List<StartMemberItem>): List<StartMembersUi> {
-//            // Implement logic to map team members to UI representation
-//            // This is a placeholder, you may need to adjust it based on your requirements
-//            return teamMembers.map {
-//                StartMembersUi(
-//                    id = it.id,
-//                    name = it.name,
-//                    surname = it.surname,
-//                    distance = it.distance,
-//                    team = it.team,
-//                    group = it.mapStartMember(it.group).name,
-//                    city = it.city ?: ""
-//                )
-//            }
-//        }
     }
 }

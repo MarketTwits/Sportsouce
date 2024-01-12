@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.startStatusBackground
@@ -44,11 +45,13 @@ fun StartCard(
         modifier = Modifier
             .background(Color.White)
             .fillMaxWidth()
-            .height(height = 200.dp)
+            .height(height = 180.dp)
             .padding(10.dp)
+            .clip(Shapes.medium)
             .clickable {
                 onItemClick(start.id)
             }
+
     ) {
         Row {
             ImageCard(Modifier.weight(1f), start.image, start.date, start.statusCode)
@@ -56,7 +59,7 @@ fun StartCard(
                 Modifier.weight(2f),
                 title = start.name,
                 place = start.place,
-                start.distance
+                distance = start.distance
             )
             ImageInfoButton()
         }

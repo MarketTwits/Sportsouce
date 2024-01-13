@@ -38,11 +38,12 @@ import de.charlex.compose.material3.HtmlText
 
 @Composable
 fun StartCard(
+    modifier: Modifier = Modifier,
     start: StartsListItem,
     onItemClick: (Int) -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(Color.White)
             .fillMaxWidth()
             .height(height = 180.dp)
@@ -51,7 +52,6 @@ fun StartCard(
             .clickable {
                 onItemClick(start.id)
             }
-
     ) {
         Row {
             ImageCard(Modifier.weight(1f), start.image, start.date, start.statusCode)

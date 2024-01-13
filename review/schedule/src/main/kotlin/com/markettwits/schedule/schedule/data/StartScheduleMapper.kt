@@ -1,35 +1,43 @@
 package com.markettwits.schedule.schedule.data
 
 import android.util.Log
+import com.markettwits.schedule.schedule.domain.StartsSchedule
+import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 import com.markettwits.starts.presentation.StartsListItem
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 interface StartScheduleMapper {
-    fun map(items: List<StartsListItem>) : List<StartsListItem>
+    fun map(items: List<StartsListItem>): List<StartsSchedule>
 }
+
 class StartScheduleMapperBase : StartScheduleMapper {
-    override fun map(items: List<StartsListItem>) : List<StartsListItem> {
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+    override fun map(items: List<StartsListItem>): List<StartsSchedule> {
+        val currentDate = LocalDate.now()
+        val startOfWeek =
+            currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - DayOfWeek.MONDAY.value)
 
-        // Sort the list by days of the week
-        val sortedList = items.sortedBy { item ->
-            val itemDate = LocalDate.parse(item.date, dateFormatter)
-            val currentDate = LocalDate.now()
-
-            // Calculate the difference in days between the item date and the current date
-            val dayDifference = itemDate.until(currentDate, java.time.temporal.ChronoUnit.DAYS)
-
-            // Ensure the day difference is non-negative
-            val adjustedDayDifference = if (dayDifference < 0) dayDifference + 7 else dayDifference
-
-            // Return the adjusted day difference to be used for sorting
-            adjustedDayDifference
+        return DayOfWeek.entries.map { dayOfWeek ->
+            val currentDay =
+                startOfWeek.plusDays((dayOfWeek.value - DayOfWeek.MONDAY.value).toLong())
+            val day =
+                currentDay.dayOfWeek.getDisplayName(TextStyle.FULL, Locale(RU_LOCAL_WEEK_FIELD))
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            val itemsForDay = items
+                .filter {
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("d MMMM yyyy"))
+                        .isEqual(currentDay)
+                }
+            StartsSchedule(day, "empty", itemsForDay)
         }
-
-        // Print the sorted list
-        sortedList.forEach { Log.e("mt05", it.name) }
-        return sortedList
     }
+
+    companion object {
+        const val RU_LOCAL_WEEK_FIELD = "ru-RU"
+    }
+
 }

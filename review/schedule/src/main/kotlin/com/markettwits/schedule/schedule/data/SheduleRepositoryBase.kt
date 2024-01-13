@@ -1,6 +1,8 @@
 package com.markettwits.schedule.schedule.data
 
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.schedule.schedule.domain.StartsSchedule
+import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import com.markettwits.starts.presentation.StartsListItem
@@ -15,7 +17,7 @@ internal class ScheduleRepositoryBase(
     private val startScheduleMapper : StartScheduleMapper
 ) : ScheduleRepository {
 
-    override suspend fun starts(): Result<List<StartsListItem>> {
+    override suspend fun starts(): Result<List<StartsSchedule>> {
         return runCatching {
             val actual  = coroutineScope {
                 withContext(Dispatchers.IO){

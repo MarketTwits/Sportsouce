@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
@@ -35,10 +36,10 @@ fun ReviewScreen(component: ReviewComponent, newsComponent: RootNewsComponent) {
             .background(Color.White)
             .padding(10.dp)
     ) {
-        if (state.actualStarts.isNotEmpty()){
+        if (state.actualStarts.isNotEmpty()) {
             RootNewsScreen(newsComponent)
         }
-        ReviewMenu{
+        ReviewMenu {
             component.obtainEvent(ReviewStore.Intent.OnClickMenu(it))
         }
         if (state.actualStarts.isNotEmpty()) {
@@ -55,7 +56,10 @@ fun ReviewScreen(component: ReviewComponent, newsComponent: RootNewsComponent) {
         }
         if (state.isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(Alignment.CenterHorizontally),
+                strokeCap = StrokeCap.Round,
                 color = SportSouceColor.SportSouceBlue
             )
         }

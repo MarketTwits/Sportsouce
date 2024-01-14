@@ -26,20 +26,14 @@ import com.markettwits.root.bottom_bar.BottomBar
 @Composable
 fun RootContent(component: BaseRootComponent, modifier: Modifier = Modifier) {
     MaterialTheme {
-        Surface(modifier = modifier, color = Color(245,245,245)) {
+        Surface(modifier = modifier, color = Color.White) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)),
             ) {
                 Children(component = component, modifier = Modifier.weight(1F))
-                BottomBar(component = component, modifier = Modifier
-                    .shadow(
-                        elevation = 30.dp,
-                        ambientColor = Color.Green,
-                        spotColor = Color.Green
-                    )
-                    .fillMaxWidth())
+                BottomBar(component = component, modifier = Modifier)
             }
         }
     }

@@ -54,9 +54,14 @@ fun StartCard(
             }
     ) {
         Row {
-            ImageCard(Modifier.weight(1f), start.image, start.date, start.statusCode)
+            ImageCard(
+               // modifier = Modifier.weight(1f),
+                image = start.image,
+                date = start.date,
+                status = start.statusCode
+            )
             ImageCardInfo(
-                Modifier.weight(2f),
+                modifier = Modifier.fillMaxWidth(),
                 title = start.name,
                 place = start.place,
                 distance = start.distance
@@ -76,7 +81,7 @@ private fun ImageCard(
 
     Box(
         modifier = modifier
-            .size(width = 145.dp, height = 170.dp)
+            .size(width = 120.dp, height = 170.dp)
             .clip(RoundedCornerShape(10.dp))
     ) {
         SubcomposeAsyncImage(

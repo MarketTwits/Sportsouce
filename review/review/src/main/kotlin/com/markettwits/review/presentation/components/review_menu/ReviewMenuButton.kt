@@ -46,7 +46,7 @@ fun ReviewMenuButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = fontColor)
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Spacer(modifier = Modifier.padding(horizontal = 5.dp))
             Text(
                 text = title,
                 color = fontColor,

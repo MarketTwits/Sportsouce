@@ -18,14 +18,12 @@ class BaseRootComponent(
 ) : ComponentContext by componentContext, RootComponent {
     private val navigation = StackNavigation<RootComponent.Configuration>()
 
-    private val stack =
-        childStack(
-            source = navigation,
-            serializer = RootComponent.Configuration.serializer(),
-            initialStack = { listOf(RootComponent.Configuration.Starts) },
-            childFactory = ::createChild,
-        )
-    override val childStack: Value<ChildStack<*, RootComponent.Child>> = stack
+    override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
+        source = navigation,
+        serializer = RootComponent.Configuration.serializer(),
+        initialStack = { listOf(RootComponent.Configuration.Starts) },
+        childFactory = ::createChild,
+    )
     override fun navigate(configuration: RootComponent.Configuration) {
         navigation.bringToFront(configuration)
     }

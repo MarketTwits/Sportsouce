@@ -1,6 +1,7 @@
 package com.markettwits.starts.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.theme.SportSouceColor
 import kotlinx.coroutines.launch
 
 
@@ -37,20 +39,20 @@ fun TabBar(content: @Composable (Int) -> Unit) {
     val scope = rememberCoroutineScope()
     val pages = listOf("Главная","Ближайшие", "Прошедшие", "Анонсы")
     val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
-
     val indicator = @Composable { tabPositions: List<TabPosition> ->
-
         TabRowDefaults.PrimaryIndicator(
             width = 120.dp,
             shape = RoundedCornerShape(10.dp),
-            color = Color(46, 63, 110),
+            color = SportSouceColor.SportSouceBlue,
             modifier = Modifier
                 .tabIndicatorOffset(tabPositions[pagerState.currentPage])
                 .fillMaxWidth()
         )
     }
     ScrollableTabRow(
-        modifier = Modifier.height(50.dp),
+        modifier = Modifier
+            .height(50.dp)
+            .background(Color.White),
         selectedTabIndex = pagerState.currentPage,
         divider = {},
         indicator = indicator
@@ -59,9 +61,10 @@ fun TabBar(content: @Composable (Int) -> Unit) {
             Tab(
                 modifier = Modifier
                     .wrapContentSize()
+                    .background(Color.White)
                     .clip(RoundedCornerShape(10.dp))
                 ,
-                selectedContentColor = Color(46, 63, 110),
+                selectedContentColor = SportSouceColor.SportSouceBlue,
                 unselectedContentColor = Color.Gray,
                 selected = pagerState.currentPage == index,
                 text = {

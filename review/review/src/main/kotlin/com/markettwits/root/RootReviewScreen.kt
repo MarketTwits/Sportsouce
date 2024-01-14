@@ -5,6 +5,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.news_event.NewsEventScreen
 import com.markettwits.news_list.presentation.NewsScreen
+import com.markettwits.popular.popular.presentation.PopularStartsScreen
 import com.markettwits.random.root.presentation.RootRandomStartScreen
 import com.markettwits.review.presentation.ReviewScreen
 import com.markettwits.schedule.root.RootStartsScheduleScreen
@@ -25,6 +26,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Filter -> RootStartFilterScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)
             is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
+            is RootReviewComponent.Child.Popular -> PopularStartsScreen(component = child.component)
         }
     }
 }

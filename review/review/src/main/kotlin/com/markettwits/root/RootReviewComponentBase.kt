@@ -11,6 +11,7 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.di.ComponentKoinContext
 import com.markettwits.di.newsModule
+import com.markettwits.popular.popular.presentation.PopularStartsComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase
@@ -91,6 +92,10 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     pop = navigation::pop
                 )
             )
+
+            is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
+                PopularStartsComponentBase(context = componentContext)
+            )
         }
 
     private fun newsComponent(componentContext: ComponentContext): RootNewsComponent =
@@ -98,6 +103,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
 
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
+            0 -> RootReviewComponent.Config.Popular
             1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Random
             3 -> RootReviewComponent.Config.Filter

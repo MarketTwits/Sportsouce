@@ -28,29 +28,6 @@ interface RemoteUserToEditProfileMapper {
     ): List<EditProfileUiPage>
 
     class Base : RemoteUserToEditProfileMapper {
-//        override fun map(user: User): List<EditProfileUiPage> {
-//            val mySocialNetworkPage = EditProfileUiPage.MySocialNetwork(
-//                telegram = user.telegram ?: "",
-//                whatsApp = user.whatsapp ?: "",
-//                vk = user.vk ?: "",
-//                instagram = user.instagram ?: ""
-//            )
-//            val userData = EditProfileUiPage.UserData(
-//                name = user.name,
-//                surname = user.surname,
-//                sex = user.sex,
-//                birthday = user.birthday,
-//                email = user.email,
-//                phoneNumber = user.number,
-//                city = user.address,
-//                team = user.team ?: ""
-//            )
-//            val userCustomInfo = EditProfileUiPage.MyInfo(
-//                description = user.comment_for_address ?: "",
-//                imageUrl = user.photo_id ?: ""
-//            )
-//            return listOf(mySocialNetworkPage, userData, userCustomInfo)
-//        }
 
         override fun map(list: List<EditProfileUiPage>): ChangeProfileInfoRequest {
             val mySocialNetworkPage =

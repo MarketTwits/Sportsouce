@@ -6,6 +6,7 @@ import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGro
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
+import com.markettwits.start.presentation.registration.StartRegistrationComponent
 import com.markettwits.start.presentation.start.StartScreenComponent
 import kotlinx.serialization.Serializable
 
@@ -28,9 +29,12 @@ interface RootStartScreenComponent{
 
         @Serializable
         data class StartMembersFilter(val items: List<MembersFilterGroup>) : Config()
+        @Serializable
+        data class StartRegistration(val startId: Int) : Config()
     }
     sealed class Child {
         data class Start(val component: StartScreenComponent) : Child()
+        data class StartRegistration(val component: StartRegistrationComponent) : Child()
         data class StartMembers(val component: StartMembersScreenComponent) : Child()
         data class StartMembersFilter(val component: StartMembersFilterScreen) : Child()
     }

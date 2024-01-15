@@ -1,4 +1,4 @@
-package com.markettwits.start.data.model
+package com.markettwits.start.data.start.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

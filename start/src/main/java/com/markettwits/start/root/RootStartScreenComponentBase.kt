@@ -9,16 +9,6 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
-import com.markettwits.cloud.api.TimeApiImpl
-import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.profile.data.BaseAuthDataSource
-import com.markettwits.profile.data.SignInRemoteToCacheMapper
-import com.markettwits.profile.data.SignInRemoteToUiMapper
-import com.markettwits.profile.data.database.core.RealmDatabaseProvider
-import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
-import com.markettwits.start.data.BaseStartDataSource
-import com.markettwits.start.data.StartMembersToUiMapper
-import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
@@ -26,11 +16,10 @@ import com.markettwits.start.presentation.membres.list.StartMembersScreenCompone
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.StartScreenComponent
-import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.cloud.provider.HttpClientProvider
 import com.markettwits.start.di.startModule
-import ru.alexpanov.core_network.provider.JsonProvider
+import com.markettwits.start.di.startRegistrationModule
+import com.markettwits.start.presentation.registration.StartRegistrationComponent
+import com.markettwits.start.presentation.registration.StartRegistrationComponentBase
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
@@ -44,7 +33,7 @@ class RootStartScreenComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(startModule)
+        listOf(startModule,startRegistrationModule)
     )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
     override val childStack: Value<ChildStack<*, RootStartScreenComponent.Child>> =
@@ -67,6 +56,9 @@ class RootStartScreenComponentBase(
                     startId = config.startId,
                     service = scope.get(),
                     back = pop::invoke,
+                    register = {
+                        navigation.push(RootStartScreenComponent.Config.StartRegistration(startId))
+                    },
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())
                     }
@@ -95,6 +87,14 @@ class RootStartScreenComponentBase(
                         }
                     },
                     back = navigation::pop
+                )
+            )
+            is RootStartScreenComponent.Config.StartRegistration -> RootStartScreenComponent.Child.StartRegistration(
+                StartRegistrationComponentBase(
+                    context = componentContext,
+                    startId = config.startId,
+                    storeFactory = scope.get(),
+                    pop = navigation::pop
                 )
             )
         }

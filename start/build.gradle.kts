@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
     implementation(project(":auth"))
+    implementation(libs.bundles.mviKotlin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.material3.html.text)

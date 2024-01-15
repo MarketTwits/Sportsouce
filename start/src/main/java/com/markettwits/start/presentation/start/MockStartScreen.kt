@@ -31,5 +31,9 @@ class MockStartScreen : StartScreen {
 
     }
 
+    override fun onClickDistance() {
+
+    }
+
 
 }

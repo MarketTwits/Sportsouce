@@ -1,10 +1,7 @@
 package com.markettwits.start.presentation.membres.list
 
-import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.start.data.StartDataSource
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterItem
 import kotlinx.coroutines.CoroutineScope

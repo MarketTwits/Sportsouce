@@ -1,27 +1,29 @@
 package com.markettwits.start.di
 
-import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import com.markettwits.cloud.api.TimeApi
-import com.markettwits.cloud.api.TimeApiImpl
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.cloud.di.timeApiNetworkModule
-import com.markettwits.cloud.provider.HttpClientProvider
 import com.markettwits.core_ui.time.BaseTimeMapper
+import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.SignInRemoteToUiMapper
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
-import com.markettwits.start.data.BaseStartDataSource
-import com.markettwits.start.data.StartDataSource
-import com.markettwits.start.data.StartMembersToUiMapper
-import com.markettwits.start.data.StartMemoryCache
-import com.markettwits.start.data.StartRemoteToUiMapper
-import org.koin.core.qualifier.named
-import org.koin.core.qualifier.qualifier
+import com.markettwits.start.data.registration.RegistrationRemoteToDomainMapper
+import com.markettwits.start.data.registration.RegistrationRemoteToDomainMapperBase
+import com.markettwits.start.data.registration.RegistrationStartRepository
+import com.markettwits.start.data.registration.RegistrationStartRepositoryBase
+import com.markettwits.start.data.start.BaseStartDataSource
+import com.markettwits.start.data.start.StartDataSource
+import com.markettwits.start.data.start.StartMembersToUiMapper
+import com.markettwits.start.data.start.StartMemoryCache
+import com.markettwits.start.data.start.StartRemoteToUiMapper
+import com.markettwits.start.presentation.registration.store.StartRegistrationStoreFactory
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
-import ru.alexpanov.core_network.provider.JsonProvider
 
 val startModule = module {
 
@@ -53,4 +55,25 @@ val startModule = module {
             local = AuthCacheDataSource(RealmDatabaseProvider.Base())
         )
     }
+
+}
+val startRegistrationModule = module{
+    includes(sportSouceNetworkModule, timeApiNetworkModule)
+    single<StartRegistrationStoreFactory> {
+        StartRegistrationStoreFactory(
+            storeFactory = DefaultStoreFactory(),
+            repository = get()
+        )
+    }
+    single<RegistrationStartRepository>{
+        RegistrationStartRepositoryBase(
+            service = get(),
+            authService = get(),
+            statementMapper = get()
+        )
+    }
+    single<TimeMapper>{
+        BaseTimeMapper()
+    }
+    singleOf(::RegistrationRemoteToDomainMapperBase) bind RegistrationRemoteToDomainMapper::class
 }

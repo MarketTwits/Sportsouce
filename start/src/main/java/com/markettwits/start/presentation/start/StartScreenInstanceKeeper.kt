@@ -1,10 +1,8 @@
 package com.markettwits.start.presentation.start
 
-import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.start.data.StartDataSource
+import com.markettwits.start.data.start.StartDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

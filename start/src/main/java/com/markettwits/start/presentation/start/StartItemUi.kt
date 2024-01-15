@@ -2,7 +2,7 @@ package com.markettwits.start.presentation.start
 
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start.Organizer
-import com.markettwits.start.data.model.DistanceInfo
+import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 sealed class StartItemUi {

@@ -1,10 +1,9 @@
 package com.markettwits.start.presentation.start
 
-import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
-import com.markettwits.start.data.StartDataSource
+import com.markettwits.start.data.start.StartDataSource
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class StartScreenComponent(
@@ -12,6 +11,7 @@ class StartScreenComponent(
     private val startId: Int,
     private val service: StartDataSource,
     private val back: () -> Unit,
+    private val register : () -> Unit,
     private val members: (Int, List<StartMembersUi>) -> Unit,
 ) : ComponentContext by componentContext, StartScreen {
     private val keeper =
@@ -47,6 +47,10 @@ class StartScreenComponent(
 
     override fun retry() {
         keeper.launch()
+    }
+
+    override fun onClickDistance() {
+        register()
     }
 
 }

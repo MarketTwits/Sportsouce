@@ -1,4 +1,4 @@
-package com.markettwits.start.data
+package com.markettwits.start.data.start
 
 import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse

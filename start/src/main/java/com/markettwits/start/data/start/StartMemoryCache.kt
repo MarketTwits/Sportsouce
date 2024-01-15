@@ -1,4 +1,4 @@
-package com.markettwits.start.data
+package com.markettwits.start.data.start
 
 import com.markettwits.core_ui.cache.Cache
 import com.markettwits.core_ui.cache.MemoryCache

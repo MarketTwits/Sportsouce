@@ -75,7 +75,10 @@ fun StartScreen(component: StartScreen) {
                         StartDistances(
                             modifier = modifier,
                             distance = data.distanceInfo,
-                            data.startStatus
+                            startStatus = data.startStatus,
+                            onClick = {
+                                component.onClickDistance()
+                            }
                         )
                         StartOrganizers(modifier = modifier, organizer = data.organizers)
                         StartResult(

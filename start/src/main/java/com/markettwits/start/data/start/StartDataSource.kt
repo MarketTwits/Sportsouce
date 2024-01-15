@@ -1,4 +1,4 @@
-package com.markettwits.start.data
+package com.markettwits.start.data.start
 
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState

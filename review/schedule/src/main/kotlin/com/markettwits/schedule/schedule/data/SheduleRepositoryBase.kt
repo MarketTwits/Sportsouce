@@ -2,10 +2,7 @@ package com.markettwits.schedule.schedule.data
 
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.schedule.schedule.domain.StartsSchedule
-import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
-import com.markettwits.start.data.StartRemoteToUiMapper
 import com.markettwits.starts.data.StartsCloudToUiMapper
-import com.markettwits.starts.presentation.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

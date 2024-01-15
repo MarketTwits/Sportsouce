@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
@@ -34,58 +35,65 @@ import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.data.model.DistanceInfo
+import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.common.Animation
+import com.markettwits.start.presentation.common.OnClick
 
 @Composable
-fun StartDistances(modifier: Modifier = Modifier, distance: List<DistanceInfo>, startStatus: StartStatus) {
-    var panelState by rememberSaveable{
+fun StartDistances(
+    modifier: Modifier = Modifier,
+    distance: List<DistanceInfo>,
+    startStatus: StartStatus,
+    onClick: OnClick,
+) {
+    var panelState by rememberSaveable {
         mutableStateOf(true)
     }
     if (distance.isNotEmpty() && startStatus.code == 3) {
         HorizontalDivider()
-
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        panelState = !panelState
-                    },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = "Дистанции",
-                    fontSize = 16.sp,
-                    fontFamily = FontNunito.bold,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
-                )
-                Icon(
-                    imageVector = if (!panelState) Icons.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "",
-                    tint = SportSouceColor.SportSouceBlue
-                )
-            }
-            androidx.compose.animation.AnimatedVisibility(
-                visible = panelState,
-                enter = Animation.enterAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
-                exit = Animation.exitAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
-            ) {
-                LazyRow {
-                    items(distance) {
-                        Column(modifier.clip(Shapes.medium)) {
-                            DistanceItem(it)
-                        }
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable {
+                    panelState = !panelState
+                },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "Дистанции",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                color = SportSouceColor.SportSouceBlue
+            )
+            Icon(
+                imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
+                contentDescription = "",
+                tint = SportSouceColor.SportSouceBlue
+            )
+        }
+        androidx.compose.animation.AnimatedVisibility(
+            visible = panelState,
+            enter = Animation.enterAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
+            exit = Animation.exitAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
+        ) {
+            LazyRow {
+                items(distance) {
+                    Column(modifier.clip(Shapes.medium)) {
+                        DistanceItem(item = it, onClick = {
+                            onClick()
+                        })
                     }
                 }
             }
         }
+    }
 }
 
 @Composable
-fun DistanceItem(item: DistanceInfo) {
+fun DistanceItem(item: DistanceInfo, onClick: OnClick) {
 
     Box(
         modifier = Modifier
@@ -93,7 +101,6 @@ fun DistanceItem(item: DistanceInfo) {
             .fillMaxWidth()
             .border(width = 3.dp, color = SportSouceColor.SportSouceLighBlue, shape = Shapes.medium)
             .clip(Shapes.medium)
-
 
     ) {
         Column(
@@ -128,7 +135,7 @@ fun DistanceItem(item: DistanceInfo) {
             )
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceLighBlue),
-                onClick = { /* TODO: обработать нажатие на кнопку */ },
+                onClick = { onClick() },
             ) {
                 Text("Зарегистрироваться")
             }

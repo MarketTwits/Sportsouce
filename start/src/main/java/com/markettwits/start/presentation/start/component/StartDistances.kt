@@ -32,11 +32,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.common.Animation
 import com.markettwits.start.presentation.common.OnClick
 
@@ -50,11 +50,6 @@ fun StartDistances(
     var panelState by rememberSaveable {
         mutableStateOf(true)
     }
-//    distance.forEach {
-//        it.groups.forEach {
-//            Log.e("mt05", it.toString())
-//        }
-//    }
 
     if (distance.isNotEmpty() && startStatus.code == 3) {
         HorizontalDivider()

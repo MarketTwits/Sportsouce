@@ -3,8 +3,8 @@ package com.markettwits.start.presentation.start
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
+import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.start.data.start.StartDataSource
-import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class StartScreenComponent(

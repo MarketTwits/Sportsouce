@@ -59,29 +59,4 @@ val startModule = module {
             local = AuthCacheDataSource(RealmDatabaseProvider.Base())
         )
     }
-
-}
-val startRegistrationModule = module{
-    includes(sportSouceNetworkModule, timeApiNetworkModule)
-    single<StartRegistrationStoreFactory> {
-        StartRegistrationStoreFactory(
-            storeFactory = DefaultStoreFactory(),
-            repository = get()
-        )
-    }
-    single<RegistrationStartRepository>{
-        RegistrationStartRepositoryBase(
-            service = get(),
-            authService = get(),
-            statementMapper = get(),
-            registerMapper = get(),
-            registrationResponseMapper = get()
-        )
-    }
-    single<TimeMapper>{
-        BaseTimeMapper()
-    }
-    singleOf(::RegistrationRemoteToDomainMapperBase) bind RegistrationRemoteToDomainMapper::class
-    singleOf(::RegistrationMapperBase) bind RegistrationMapper::class
-    singleOf(::RegistrationResponseMapperBase) bind RegistrationResponseMapper::class
 }

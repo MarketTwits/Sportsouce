@@ -2,7 +2,7 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.start.data.start.model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent

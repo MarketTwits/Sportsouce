@@ -14,8 +14,9 @@ dependencies {
     implementation(project(":core-koin"))
     implementation(project(":auth"))
     implementation(libs.bundles.mviKotlin)
-    implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
+    implementation(libs.koin.core)
+    implementation (libs.calendar)
     implementation(libs.material3.html.text)
     implementation (libs.lazytable)
 }

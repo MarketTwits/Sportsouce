@@ -18,6 +18,9 @@ import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_registration.StartRegisterRequest
+import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
+import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
@@ -35,6 +38,9 @@ interface SportsouceApi {
     suspend fun fetchPasteStarts(): StartsRemote
     suspend fun fetchPreview(): StartsRemote
     suspend fun fetchStartMain(): StartsRemote
+    //Start registry
+    suspend fun registerOnStart(request: StartRegisterRequest,token : String) : StartRegistrationResponse
+    suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
 
     //Start
     suspend fun fetchStart(startId: Int): StartRemote

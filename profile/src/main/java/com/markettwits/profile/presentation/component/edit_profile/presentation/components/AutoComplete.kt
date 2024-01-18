@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,8 +29,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -134,11 +142,14 @@ fun AutoComplete(
                     elevation = CardDefaults.cardElevation(defaultElevation = 15.dp),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-
+                    val focusRequester = remember { FocusRequester() }
+                    LaunchedEffect(value) {
+                        if (value.isNotEmpty())
+                            focusRequester.requestFocus()
+                    }
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 150.dp),
                     ) {
-
                         if (value.isNotEmpty()) {
                             items(
                                 categories.filter {
@@ -147,7 +158,10 @@ fun AutoComplete(
                                         .contains("others")
                                 }.sorted()
                             ) {
-                                CategoryItems(title = it) { title ->
+                                CategoryItems(
+                                    modifier = Modifier.focusRequester(focusRequester),
+                                    title = it
+                                ) { title ->
                                     onValueChange(title)
                                     expanded = false
                                 }
@@ -156,7 +170,10 @@ fun AutoComplete(
                             items(
                                 categories.sorted()
                             ) {
-                                CategoryItems(title = it) { title ->
+                                CategoryItems(
+                                    title = it,
+                                    modifier = Modifier.focusRequester(focusRequester),
+                                ) { title ->
                                     onValueChange(title)
                                     expanded = false
                                 }
@@ -173,12 +190,12 @@ fun AutoComplete(
 
 @Composable
 fun CategoryItems(
+    modifier: Modifier = Modifier,
     title: String,
     onSelect: (String) -> Unit
 ) {
-
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable {
                 onSelect(title)
@@ -187,5 +204,4 @@ fun CategoryItems(
     ) {
         Text(text = title, fontSize = 16.sp, color = SportSouceColor.SportSouceBlue)
     }
-
 }

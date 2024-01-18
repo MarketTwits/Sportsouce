@@ -8,7 +8,7 @@ data class RemouteStartsUserItem(
     val distance: String,
     val email: String,
     val format: String,
-    val group: String,
+    val group: String?,
     val id: Int,
     val name: String,
     val payment: Int?,

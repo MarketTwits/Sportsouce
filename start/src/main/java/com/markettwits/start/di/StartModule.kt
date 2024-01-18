@@ -11,10 +11,14 @@ import com.markettwits.profile.data.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.SignInRemoteToUiMapper
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
-import com.markettwits.start.data.registration.RegistrationRemoteToDomainMapper
-import com.markettwits.start.data.registration.RegistrationRemoteToDomainMapperBase
+import com.markettwits.start.data.registration.mapper.RegistrationMapper
+import com.markettwits.start.data.registration.mapper.RegistrationMapperBase
+import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapper
+import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapperBase
 import com.markettwits.start.data.registration.RegistrationStartRepository
 import com.markettwits.start.data.registration.RegistrationStartRepositoryBase
+import com.markettwits.start.data.registration.mapper.RegistrationResponseMapper
+import com.markettwits.start.data.registration.mapper.RegistrationResponseMapperBase
 import com.markettwits.start.data.start.BaseStartDataSource
 import com.markettwits.start.data.start.StartDataSource
 import com.markettwits.start.data.start.StartMembersToUiMapper
@@ -69,11 +73,15 @@ val startRegistrationModule = module{
         RegistrationStartRepositoryBase(
             service = get(),
             authService = get(),
-            statementMapper = get()
+            statementMapper = get(),
+            registerMapper = get(),
+            registrationResponseMapper = get()
         )
     }
     single<TimeMapper>{
         BaseTimeMapper()
     }
     singleOf(::RegistrationRemoteToDomainMapperBase) bind RegistrationRemoteToDomainMapper::class
+    singleOf(::RegistrationMapperBase) bind RegistrationMapper::class
+    singleOf(::RegistrationResponseMapperBase) bind RegistrationResponseMapper::class
 }

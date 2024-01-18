@@ -17,6 +17,9 @@ import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_registration.StartRegisterRequest
+import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
+import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -63,7 +66,7 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body<String>())
     }
 
-    override suspend fun startWithFilter(request : Map<String, String>): StartsRemote {
+    override suspend fun startWithFilter(request: Map<String, String>): StartsRemote {
         val response = client.get("start") {
             url {
                 parameters.apply {
@@ -98,6 +101,34 @@ class StartsRemoteDataSourceImpl(
 
     override suspend fun fetchStartMain(): StartsRemote {
         val response = client.get("start?mainPage=true")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun registerOnStart(
+        request: StartRegisterRequest,
+        token: String
+    ): StartRegistrationResponse {
+        val response = client.post("member-start") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun registerOnStartWithoutPayment(
+        request: StartRegisterRequest,
+        token: String
+    ) : StartRegistrationResponseWithoutPayment {
+        val response = client.post("member-start") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
         return json.decodeFromString(response.body<String>())
     }
 

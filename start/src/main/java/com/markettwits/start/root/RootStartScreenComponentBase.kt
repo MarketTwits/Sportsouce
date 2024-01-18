@@ -33,7 +33,7 @@ class RootStartScreenComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(startModule,startRegistrationModule)
+        listOf(startModule, startRegistrationModule)
     )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
     override val childStack: Value<ChildStack<*, RootStartScreenComponent.Child>> =
@@ -56,14 +56,20 @@ class RootStartScreenComponentBase(
                     startId = config.startId,
                     service = scope.get(),
                     back = pop::invoke,
-                    register = {
-                        navigation.push(RootStartScreenComponent.Config.StartRegistration(startId))
+                    register = { distanceInfo ->
+                        navigation.push(
+                            RootStartScreenComponent.Config.StartRegistration(
+                                startId = startId,
+                                distanceInfo = distanceInfo
+                            )
+                        )
                     },
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())
                     }
                 )
             )
+
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
                     componentContext = componentContext,
@@ -89,15 +95,18 @@ class RootStartScreenComponentBase(
                     back = navigation::pop
                 )
             )
+
             is RootStartScreenComponent.Config.StartRegistration -> RootStartScreenComponent.Child.StartRegistration(
                 StartRegistrationComponentBase(
                     context = componentContext,
                     startId = config.startId,
+                    distanceInfo = config.distanceInfo,
                     storeFactory = scope.get(),
                     pop = navigation::pop
                 )
             )
         }
+
     fun openMembersScreen(
         startId: Int,
         items: List<StartMembersUi>,

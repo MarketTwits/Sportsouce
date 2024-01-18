@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.registration.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -9,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
@@ -19,11 +22,13 @@ fun RegistrationTextField(
     label: String,
     value: String,
     enabled : Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
         enabled = enabled,
         modifier = modifier.fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
         value = value,
         label = {
             Text(text = label, fontFamily = FontNunito.bold, fontSize = 14.sp)

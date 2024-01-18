@@ -1,6 +1,7 @@
 package com.markettwits.cloud.model.start_member
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
@@ -31,7 +32,7 @@ data class StartMemberItem(
     val email: String? = "",
     val format: String,
     val gender: String,
-    val group: String,
+    val group: String?,
     val id: Int,
     val instagram: String? = "",
     val name: String,
@@ -51,9 +52,6 @@ data class StartMemberItem(
     @Serializable
     data class Group(
         @SerialName("name") val name: String,
-       // @SerialName("sex") @Serializable(with = UserListSerializer::class) val sex: List<String> = emptyList(),
-       // @SerialName("ageFrom") val ageFrom: String,
-      //  @SerialName("ageTo") val ageTo: String
     )
 
 

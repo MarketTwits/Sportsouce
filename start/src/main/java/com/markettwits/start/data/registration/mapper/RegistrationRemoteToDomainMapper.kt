@@ -1,24 +1,23 @@
-package com.markettwits.start.data.registration
+package com.markettwits.start.data.registration.mapper
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.city.CityRemote
-import com.markettwits.cloud.model.start.City
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.start.domain.StartStatement
 
 interface RegistrationRemoteToDomainMapper {
-    fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User): StartStatement
+    fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User,price : String): StartStatement
 }
 
 class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
     RegistrationRemoteToDomainMapper {
-    override fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User): StartStatement {
+    override fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User, price : String): StartStatement {
         return StartStatement(
             name = user.name,
             surname = user.surname,
-            birthday = timeMapper.mapTime(TimePattern.ddMMMMyyyy, user.birthday),
+            birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
             age = user.age?.toInt() ?: 0,
             email = user.email,
             sex = user.sex,
@@ -28,7 +27,8 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             promocode = "",
             cities = mapCitiesToDomain(cities.rows),
             teams = mapTeamsToDomain(teamsRemote.rows),
-            sexList = mapSexToDomain()
+            sexList = mapSexToDomain(),
+            price = price
         )
     }
 

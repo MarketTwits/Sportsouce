@@ -13,7 +13,7 @@ data class Price(
 @Serializable
 data class Group(
     val name: String,
- //   val sex: String,
+  //  val sex: String,
     val ageFrom: String,
     val ageTo: String
 )

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.markettwits.start"
+    namespace = "com.markettwits.start_register"
 
 }
 
@@ -13,11 +13,9 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
     implementation(project(":auth"))
-    implementation(project(":start-register"))
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.koin.core)
     implementation (libs.calendar)
     implementation(libs.material3.html.text)
-    implementation (libs.lazytable)
 }

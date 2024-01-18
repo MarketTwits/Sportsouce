@@ -1,5 +1,6 @@
 package com.markettwits.start.presentation.start.component
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,11 +45,17 @@ fun StartDistances(
     modifier: Modifier = Modifier,
     distance: List<DistanceInfo>,
     startStatus: StartStatus,
-    onClick: OnClick,
+    onClick: (DistanceInfo) -> Unit,
 ) {
     var panelState by rememberSaveable {
         mutableStateOf(true)
     }
+//    distance.forEach {
+//        it.groups.forEach {
+//            Log.e("mt05", it.toString())
+//        }
+//    }
+
     if (distance.isNotEmpty() && startStatus.code == 3) {
         HorizontalDivider()
         Row(
@@ -83,7 +90,7 @@ fun StartDistances(
                 items(distance) {
                     Column(modifier.clip(Shapes.medium)) {
                         DistanceItem(item = it, onClick = {
-                            onClick()
+                            onClick(it)
                         })
                     }
                 }

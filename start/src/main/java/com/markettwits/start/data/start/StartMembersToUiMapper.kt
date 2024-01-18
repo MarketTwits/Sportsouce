@@ -13,17 +13,19 @@ interface StartMembersToUiMapper {
             val list = mutableListOf<StartMembersUi>()
             startMember.forEach {
                 if (it.payment != null) {
-                    list.add(
-                        StartMembersUi.Single(
-                            id = it.id,
-                            name = it.name,
-                            surname = it.surname,
-                            distance = it.distance,
-                            team = it.team,
-                            group = it.mapStartMember(it.group).name,
-                            city = it.city ?: ""
+                    if (it.group != null){
+                        list.add(
+                            StartMembersUi.Single(
+                                id = it.id,
+                                name = it.name,
+                                surname = it.surname,
+                                distance = it.distance,
+                                team = it.team,
+                                group = it.mapStartMember(it.group!!).name,
+                                city = it.city ?: ""
+                            )
                         )
-                    )
+                    }
                 }
             }
             return list
@@ -77,7 +79,7 @@ interface StartMembersToUiMapper {
                 members = teamMemberList,
                 distance = teamMembers[0].distance,
                 team = teamMembers[0].team,
-                group = teamMembers[0].mapStartMember(teamMembers[0].group).name,
+                group = teamMembers[0].mapStartMember(teamMembers[0].group ?: "").name,
                 city = teamMembers[0].city ?: ""
             )
         }
@@ -89,7 +91,7 @@ interface StartMembersToUiMapper {
                 surname = startMemberItem.surname,
                 distance = startMemberItem.distance,
                 team = startMemberItem.team,
-                group = startMemberItem.mapStartMember(startMemberItem.group).name,
+                group = startMemberItem.mapStartMember(startMemberItem.group?: "").name,
                 city = startMemberItem.city ?: ""
             )
         }

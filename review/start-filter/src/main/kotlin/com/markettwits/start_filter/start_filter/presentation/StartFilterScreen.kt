@@ -53,9 +53,9 @@ fun StartFilterScreen(component: StartFilterComponent) {
                 StartFilterList(startFilter = state.filter) { item, index, single ->
                     component.obtainEvent(
                         StartFilterStore.Intent.OnItemSelected(
-                            item,
-                            index,
-                            single
+                            startFilter = item,
+                            index = index,
+                            singleChoice = single
                         )
                     )
                 }

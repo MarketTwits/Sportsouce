@@ -22,4 +22,7 @@ interface TimePattern{
     object ddMMMMyyyy : TimePattern {
         override fun map() = "dd MMMM yyyy"
     }
+    object FullWithDots : TimePattern{
+        override fun map() = "dd.MM.yyyy"
+    }
 }

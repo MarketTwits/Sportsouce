@@ -2,6 +2,7 @@ package com.markettwits.start.presentation.start
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 class MockStartScreen : StartScreen {
@@ -31,7 +32,7 @@ class MockStartScreen : StartScreen {
 
     }
 
-    override fun onClickDistance() {
+    override fun onClickDistance(distanceInfo: DistanceInfo) {
 
     }
 

@@ -26,7 +26,7 @@ interface RemoteRegistrationsToUiMapper {
                         it.start.start_status.code,
                         it.start.start_status.name
                     ),
-                    ageGroup = mapStartGroup(it.group),
+                    ageGroup = mapStartGroup(it.group ?: ""),
                     distance = it.distance,
                     member = it.surname + " " + it.name,
                     cost = it.price.toString(),

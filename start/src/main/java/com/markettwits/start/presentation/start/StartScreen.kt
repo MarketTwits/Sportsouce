@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.start
 
 import com.arkivanov.decompose.value.Value
+import com.markettwits.start.data.start.model.DistanceInfo
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 interface StartScreen {
@@ -15,7 +16,7 @@ interface StartScreen {
     fun onClickReply(replier : String, id: Int)
     fun onClickCloseReply()
     fun retry()
-    fun onClickDistance()
+    fun onClickDistance(distanceInfo: DistanceInfo)
 }
 sealed class CommentUiState{
     data object Success : CommentUiState()

@@ -39,3 +39,5 @@ fun consumed() = StateEventWithContentConsumed
 fun <T> StateEventWithContent<T>.isTriggered() : Boolean{
     return this is StateEventWithContentTriggered
 }
+@Immutable
+data class EventContent(val success : Boolean, val message : String)

@@ -9,6 +9,7 @@ import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
@@ -129,6 +130,11 @@ class StartsRemoteDataSourceImpl(
             }
             setBody(request)
         }
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun promo(value: String, startId: Int): PromocodeRemote {
+        val response = client.get("start/$startId/promocode?code=$value")
         return json.decodeFromString(response.body<String>())
     }
 

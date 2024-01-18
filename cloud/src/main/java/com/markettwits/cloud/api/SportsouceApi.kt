@@ -10,6 +10,7 @@ import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
@@ -41,7 +42,7 @@ interface SportsouceApi {
     //Start registry
     suspend fun registerOnStart(request: StartRegisterRequest,token : String) : StartRegistrationResponse
     suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
-
+    suspend fun promo(value : String,startId: Int) : PromocodeRemote
     //Start
     suspend fun fetchStart(startId: Int): StartRemote
     suspend fun fetchStartMember(startId: Int): List<StartMemberItem>

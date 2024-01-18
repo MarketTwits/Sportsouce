@@ -35,7 +35,6 @@ class StartRegistrationComponentBase(
 
     override val value: StateFlow<StartRegistrationStore.State> = store.stateFlow
 
-
     init {
         Log.e("mt05", distanceInfo.toString())
         scope.launch {

@@ -9,6 +9,8 @@ import com.markettwits.start.data.registration.RegistrationStartRepository
 import com.markettwits.start.data.registration.RegistrationStartRepositoryBase
 import com.markettwits.start.data.registration.mapper.RegistrationMapper
 import com.markettwits.start.data.registration.mapper.RegistrationMapperBase
+import com.markettwits.start.data.registration.mapper.RegistrationPromoMapper
+import com.markettwits.start.data.registration.mapper.RegistrationPromoMapperBase
 import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapper
 import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapperBase
 import com.markettwits.start.data.registration.mapper.RegistrationResponseMapper
@@ -33,13 +35,13 @@ val startRegistrationModule = module{
             authService = get(),
             statementMapper = get(),
             registerMapper = get(),
-            registrationResponseMapper = get()
+            registrationResponseMapper = get(),
+            promoMapper = get()
         )
     }
-    single<TimeMapper>{
-        BaseTimeMapper()
-    }
+    singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::RegistrationRemoteToDomainMapperBase) bind RegistrationRemoteToDomainMapper::class
     singleOf(::RegistrationMapperBase) bind RegistrationMapper::class
     singleOf(::RegistrationResponseMapperBase) bind RegistrationResponseMapper::class
+    singleOf(::RegistrationPromoMapperBase) bind RegistrationPromoMapper::class
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +33,9 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
+    var snackBarColor by remember {
+        mutableStateOf(SportSouceColor.SportSouceLightRed)
+    }
 
     Scaffold(
         topBar = {
@@ -43,10 +47,15 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
             SnackbarHost(
                 hostState = snackBarHostState,
             ) {
+//                Snackbar(
+//                    contentColor = Color.White,
+//                    containerColor = if (state.registrationSucceededEvent.isTriggered()) SportSouceColor.SportSouceLighBlue
+//                    else SportSouceColor.SportSouceLightRed,
+//                    snackbarData = it
+//                )
                 Snackbar(
                     contentColor = Color.White,
-                    containerColor = if (state.registrationSucceededEvent.isTriggered()) SportSouceColor.SportSouceLighBlue
-                    else SportSouceColor.SportSouceLightRed,
+                    containerColor = snackBarColor,
                     snackbarData = it
                 )
             }
@@ -65,7 +74,20 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
                 },
                 onValueChanged = {
                     component.obtainEvent(StartRegistrationStore.Intent.ChangeFiled(it))
-                })
+                },
+                onPromoChanged = {
+                    component.obtainEvent(StartRegistrationStore.Intent.ChangePromo(it))
+                }
+            )
+        }
+        EventEffect(
+            event = state.testEvent,
+            onConsumed = {
+                component.obtainEvent(StartRegistrationStore.Intent.OnConsumedEvent)
+            },
+        ) {
+            snackBarColor = if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarHostState.showLongMessageWithDismiss(message = it.message)
         }
         EventEffect(
             event = state.registrationFailedEvent,
@@ -78,7 +100,7 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
             event = state.registrationSucceededEvent,
             onConsumed = {
                 component.obtainEvent(StartRegistrationStore.Intent.OnConsumedSucceededEvent)
-                if (state.message.isNotEmpty()){
+                if (state.message.isNotEmpty()) {
                     openWebPage(state.message, context)
                 }
             },

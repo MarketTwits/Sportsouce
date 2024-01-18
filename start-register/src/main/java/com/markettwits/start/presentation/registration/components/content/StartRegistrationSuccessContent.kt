@@ -35,7 +35,8 @@ fun StartRegistrationSuccessContent(
     modifier: Modifier = Modifier,
     statement: StartStatement,
     onValueChanged: (StartStatement) -> Unit,
-    onClickSave : () -> Unit, onClickPay : () -> Unit
+    onClickSave: () -> Unit, onClickPay: () -> Unit,
+    onPromoChanged: (String) -> Unit,
 ) {
 
     Column(
@@ -125,6 +126,7 @@ fun StartRegistrationSuccessContent(
             value = statement.promocode,
             onValueChange = {
                 onValueChanged(statement.copy(promocode = it))
+                onPromoChanged(it)
             }
         )
         StartRegistrationButtonPanel(

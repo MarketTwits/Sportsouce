@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.registration.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
@@ -12,9 +13,11 @@ interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartReg
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
+        val promoMessage : String = "",
         val startStatement: StartStatement? = null,
         val registrationSucceededEvent: StateEventWithContent<String> = consumed(),
         val registrationFailedEvent: StateEventWithContent<String> = consumed(),
+        val testEvent: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Label {
@@ -23,9 +26,11 @@ interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartReg
     sealed interface Intent {
         data object OnConsumedSucceededEvent : Intent
         data object OnConsumedFailedEvent : Intent
+        data object OnConsumedEvent : Intent
         data object OnClickSave : Intent
         data object OnClickPay : Intent
         data class ChangeFiled(val startStatement: StartStatement) : Intent
+        data class ChangePromo(val value: String) : Intent
         data object GoBack : Intent
     }
 }

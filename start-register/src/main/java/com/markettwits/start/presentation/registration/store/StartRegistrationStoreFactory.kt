@@ -1,11 +1,13 @@
 package com.markettwits.start.presentation.registration.store
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.data.registration.RegistrationStartRepository
@@ -61,9 +63,13 @@ class StartRegistrationStoreFactory(
         data class OnValueChanged(val startStatement: StartStatement) : Msg
         data class RegistryFailed(val message: String) : Msg
         data class RegistrySuccess(val paymentUrl: String, val message: String) : Msg
+        data class SnackbarMessage(val message: String, val value: String, val success: Boolean) :
+            Msg
+
         data object RegistryLoading : Msg
         data object OnConsumedSucceededEvent : Msg
         data object OnConsumedFailedEvent : Msg
+        data object OnConsumedEvent : Msg
     }
 
     private inner class ExecutorImpl(
@@ -91,6 +97,12 @@ class StartRegistrationStoreFactory(
 
                 is StartRegistrationStore.Intent.OnConsumedFailedEvent -> dispatch(Msg.OnConsumedFailedEvent)
                 is StartRegistrationStore.Intent.OnConsumedSucceededEvent -> dispatch(Msg.OnConsumedSucceededEvent)
+                is StartRegistrationStore.Intent.ChangePromo -> applyPromo(
+                    getState().startStatement!!,
+                    intent.value,
+                    starId
+                )
+                is StartRegistrationStore.Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
             }
         }
 
@@ -99,6 +111,28 @@ class StartRegistrationStoreFactory(
                 is Action.InfoFailed -> dispatch(Msg.InfoFailed(action.message))
                 is Action.InfoLoaded -> dispatch(Msg.InfoLoaded(action.startStatement))
                 is Action.Loading -> dispatch(Msg.Loading)
+            }
+        }
+
+        private fun calculatePrice(startStatement: StartStatement, percent: Int): StartStatement {
+            val price = startStatement.price.toInt()
+            val updatePrice = price.div(percent)
+            return startStatement.copy(price = updatePrice.toString())
+        }
+
+        private fun applyPromo(startStatement: StartStatement, value: String, startId: Int) {
+            scope.launch {
+                repository.promocode(value, startId).fold(
+                    onFailure = {
+                        dispatch(Msg.SnackbarMessage("Промокод не действителен", "", false))
+                    },
+                    onSuccess = {
+                        val newState = calculatePrice(startStatement, it.discountPercent)
+                        dispatch(Msg.OnValueChanged(newState))
+                        dispatch(Msg.SnackbarMessage("Промокод успешно применен", "", true))
+                        Log.e("mt05", "УСПЕХ")
+                    }
+                )
             }
         }
 
@@ -166,6 +200,15 @@ class StartRegistrationStoreFactory(
 
                 is Msg.OnConsumedFailedEvent -> copy(registrationFailedEvent = consumed())
                 is Msg.OnConsumedSucceededEvent -> copy(registrationSucceededEvent = consumed())
+                is Msg.SnackbarMessage -> copy(
+                    testEvent = triggered(
+                        EventContent(
+                            success = message.success,
+                            message = message.message
+                        )
+                    )
+                )
+                Msg.OnConsumedEvent -> copy(testEvent = consumed())
             }
     }
 }

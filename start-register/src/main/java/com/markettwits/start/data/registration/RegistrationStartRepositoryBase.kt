@@ -6,8 +6,10 @@ import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.data.registration.mapper.RegistrationMapper
+import com.markettwits.start.data.registration.mapper.RegistrationPromoMapper
 import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapper
 import com.markettwits.start.data.registration.mapper.RegistrationResponseMapper
+import com.markettwits.start.domain.StartPromo
 import com.markettwits.start.domain.StartRegistryResult
 import com.markettwits.start.domain.StartStatement
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,8 @@ class RegistrationStartRepositoryBase(
     private val authService: AuthDataSource,
     private val statementMapper: RegistrationRemoteToDomainMapper,
     private val registerMapper: RegistrationMapper,
-    private val registrationResponseMapper: RegistrationResponseMapper
+    private val registrationResponseMapper: RegistrationResponseMapper,
+    private val promoMapper: RegistrationPromoMapper,
 ) : RegistrationStartRepository {
     override suspend fun preload(price: String): Result<StartStatement> =
         retryRunCatchingAsync {
@@ -41,6 +44,11 @@ class RegistrationStartRepositoryBase(
             statementMapper.map(cities, teams, user, price)
         }
 
+    override suspend fun promocode(value: String, startId: Int): Result<StartPromo> =
+        retryRunCatchingAsync {
+            promoMapper.map(service.promo(value, startId))
+        }
+
     override suspend fun save(
         statement: StartStatement,
         distanceInfo: DistanceInfo,
@@ -58,7 +66,7 @@ class RegistrationStartRepositoryBase(
         val result = retryRunCatchingAsync {
             service.registerOnStartWithoutPayment(request, token)
         }
-        Log.e("mt05", "save " +  request.toString())
+        Log.e("mt05", "save " + request.toString())
         return registrationResponseMapper.flatMapWithoutPayment(result)
     }
 

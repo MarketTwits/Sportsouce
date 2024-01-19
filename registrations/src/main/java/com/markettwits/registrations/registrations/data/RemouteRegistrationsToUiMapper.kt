@@ -36,10 +36,9 @@ interface RemoteRegistrationsToUiMapper {
                     payment = mapPayment(it.payment, it.start.isOpen)
                 )
             }
-            val testBase = addUnPaymantStatrt(base)
             return RegistrationsStore.State(
-                info = testBase,
-                paymentState = mapPaymentList(testBase),
+                info = base,
+                paymentState = mapPaymentList(base),
             )
         }
 
@@ -69,30 +68,5 @@ interface RemoteRegistrationsToUiMapper {
                 ""
             }
         }
-
-        @SuppressWarnings("test method for add nonpayment start ")
-        private fun addUnPaymantStatrt(base: List<RegistrationsStore.StartsStateInfo>): List<RegistrationsStore.StartsStateInfo> {
-            val testItem = RegistrationsStore.StartsStateInfo(
-                id = 1,
-                name = "Sample Event",
-                image = "sample_image.jpg",
-                dateStart = "2022-01-01",
-                statusCode = StartStatus(2, "Регистрация открыта"),
-                team = "Sample Team",
-                payment = false,
-                ageGroup = "18-30",
-                distance = "5K",
-                member = "John Doe",
-                kindOfSport = "Running",
-                startTitle = "Sample Title",
-                startId = 0,
-                cost = "500"
-            )
-            val newList = base.toMutableList()
-            newList.add(0, testItem)
-            newList.add(1, testItem)
-            return newList
-        }
-
     }
 }

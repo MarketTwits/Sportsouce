@@ -125,7 +125,7 @@ class RegistrationsDataStoreFactory(
                     message = msg.message
                 )
                 is Msg.InfoLoaded -> State(info = msg.pokemonInfo, paymentState = msg.paymentState)
-                is Msg.Loading -> State(info = emptyList(), isLoading = true)
+                is Msg.Loading -> copy(isLoading = true)
             }
         }
     }

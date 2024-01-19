@@ -4,4 +4,5 @@ import com.markettwits.registrations.registrations.presentation.RegistrationsSto
 
 interface RegistrationsDataSource {
     suspend fun registrations() : Result<RegistrationsStore.State>
+    suspend fun pay(id : Int) : Result<String>
 }

@@ -16,30 +16,38 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base.OnEvent
+import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.components.Shapes
+import com.markettwits.core_ui.components.openWebPage
+import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsCardImageCard
 
 
 @Composable
-fun RegistrationsPaymentCard(state: RegistrationsStore.StartPaymentState) {
+fun RegistrationsPaymentCard(
+    state: RegistrationsPaymentStore.State,
+    onClickPayment: (Int) -> Unit
+) {
     LazyColumn() {
-        items(state.paymentList) {
+        items(state.items.paymentList) {
             Box(
                 modifier = Modifier
                     .background(Color.White)
                     .fillMaxWidth()
                     .height(height = 200.dp)
                     .padding(10.dp)
-
             ) {
                 Row {
                     RegistrationsCardImageCard(
@@ -50,21 +58,35 @@ fun RegistrationsPaymentCard(state: RegistrationsStore.StartPaymentState) {
                         it.statusCode
                     )
                     RegistrationsCardInfoStatusInfo(
+                        id = it.id,
                         title = it.startTitle,
-                        cost = it.cost
+                        cost = it.cost,
+                        onClickPayment = {
+                            onClickPayment(it)
+                        }
                     )
                 }
             }
 
         }
     }
+    val context = LocalContext.current
+    EventEffect(
+        event = state.event,
+        onConsumed = {
+        },
+    ) {
+        openWebPage(it, context)
+    }
 }
 
 @Composable
 private fun RegistrationsCardInfoStatusInfo(
     modifier: Modifier = Modifier,
+    id: Int,
     title: String,
     cost: String,
+    onClickPayment: (Int) -> Unit
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
         Text(
@@ -93,7 +115,7 @@ private fun RegistrationsCardInfoStatusInfo(
         Button(
             shape = Shapes.large,
             colors = ButtonDefaults.elevatedButtonColors(containerColor = SportSouceColor.SportSouceRegistryOpenGreen),
-            onClick = { /*TODO*/ }
+            onClick = { onClickPayment(id) }
         ) {
             Text(
                 text = "Оплатить",

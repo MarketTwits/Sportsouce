@@ -66,7 +66,6 @@ class RegistrationStartRepositoryBase(
         val result = retryRunCatchingAsync {
             service.registerOnStartWithoutPayment(request, token)
         }
-        Log.e("mt05", "save " + request.toString())
         return registrationResponseMapper.flatMapWithoutPayment(result)
     }
 
@@ -87,7 +86,6 @@ class RegistrationStartRepositoryBase(
         val result = retryRunCatchingAsync {
             service.registerOnStart(request, token)
         }
-        Log.e("mt05", "pay " + request.toString())
         return registrationResponseMapper.flatMap(result)
     }
 }

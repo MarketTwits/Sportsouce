@@ -94,9 +94,6 @@ class StartRegistrationStoreFactory(
                     starId = starId,
                     withPayment = false
                 )
-
-                is StartRegistrationStore.Intent.OnConsumedFailedEvent -> dispatch(Msg.OnConsumedFailedEvent)
-                is StartRegistrationStore.Intent.OnConsumedSucceededEvent -> dispatch(Msg.OnConsumedSucceededEvent)
                 is StartRegistrationStore.Intent.ChangePromo -> applyPromo(
                     getState().startStatement!!,
                     intent.value,
@@ -187,19 +184,19 @@ class StartRegistrationStoreFactory(
                 is Msg.OnValueChanged -> State(startStatement = message.startStatement)
                 is Msg.RegistryFailed -> copy(
                     isLoading = false,
-                    registrationFailedEvent = triggered(message.message),
+                    testEvent = triggered(EventContent(success = false, message = message.message)),
                     message = message.message
                 )
 
                 is Msg.RegistryLoading -> copy(isLoading = true)
                 is Msg.RegistrySuccess -> copy(
                     isLoading = false,
-                    registrationSucceededEvent = triggered(message.message),
+                    testEvent = triggered(EventContent(success = true, message = message.message)),
                     message = message.paymentUrl
                 )
 
-                is Msg.OnConsumedFailedEvent -> copy(registrationFailedEvent = consumed())
-                is Msg.OnConsumedSucceededEvent -> copy(registrationSucceededEvent = consumed())
+                is Msg.OnConsumedFailedEvent -> copy(testEvent = consumed())
+                is Msg.OnConsumedSucceededEvent -> copy(testEvent = consumed())
                 is Msg.SnackbarMessage -> copy(
                     testEvent = triggered(
                         EventContent(

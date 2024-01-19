@@ -1,5 +1,6 @@
 package com.markettwits.profile.data
 
+import android.util.Log
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
@@ -9,6 +10,8 @@ import com.markettwits.profile.presentation.sign_in.SignInUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import com.markettwits.cloud.api.SportsouceApi
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 class BaseAuthDataSource(
     private val remoteService: SportsouceApi,
@@ -45,17 +48,28 @@ class BaseAuthDataSource(
         }
     }
 
-    override suspend fun updateToken() : String {
-        try {
-            val data = local.read()
-            val response =
-                remoteService.signIn(SignInRequest(email = data._email, password = data._password))
-            local.write(signInCacheMapper.map(response, data._password))
-            return response.accessToken
+    override suspend fun updateToken(): String {
+        return try {
+            validateToken()
         } catch (e: Exception) {
             throw e
         }
     }
+
+    private suspend fun validateToken(): String {
+        val data = local.read()
+        val token = TokenManager.Base().decode(data._accessToken)
+        val time = System.currentTimeMillis() / 1000
+        return if (token.expiration > time) {
+            data._accessToken
+        } else {
+            val response =
+                remoteService.signIn(SignInRequest(email = data._email, password = data._password))
+            local.write(signInCacheMapper.map(response, data._password))
+            response.accessToken
+        }
+    }
+
 
     override suspend fun show(): String = local.read()._accessToken
     override suspend fun clear() {
@@ -65,7 +79,7 @@ class BaseAuthDataSource(
     override suspend fun currentToken(): String {
         return try {
             local.read()._accessToken
-        }catch (e : Exception){
+        } catch (e: Exception) {
             throw AuthException("Для продолжения аворизуйтесь в приложении")
         }
     }

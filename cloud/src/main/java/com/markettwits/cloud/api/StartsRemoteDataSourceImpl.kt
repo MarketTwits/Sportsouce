@@ -105,6 +105,16 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body<String>())
     }
 
+    override suspend fun repay(id: Int, token: String): StartRegistrationResponse {
+        val response = client.put("member-start/$id/repayment") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun registerOnStart(
         request: StartRegisterRequest,
         token: String

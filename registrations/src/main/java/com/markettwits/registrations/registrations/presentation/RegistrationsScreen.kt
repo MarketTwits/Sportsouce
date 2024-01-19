@@ -23,11 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.failed_screen.FailedScreen
-import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsPayButton
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsStart
@@ -36,7 +32,7 @@ import com.markettwits.registrations.registrations.presentation.components.Regis
 @Composable
 fun MyRegistrationsScreen(component: RegistrationsComponent) {
     val state by component.value.collectAsState()
-    if (!state.isLoading && !state.isError) {
+    if (state.info.isNotEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -46,9 +42,11 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
                 RegistrationsTopBar(title = "Регистрации других участников") {
                     component.obtainEvent(RegistrationsStore.Intent.Pop)
                 }
-                RegistrationsStart(state.info) {
+                RegistrationsStart(state.info, isRefreshing = state.isLoading, onRefresh = {
+                    component.obtainEvent(RegistrationsStore.Intent.LoadData)
+                }, onClick = {
                     component.obtainEvent(RegistrationsStore.Intent.OnCLickItem(it))
-                }
+                })
             }
             if (state.paymentState.paymentList.isNotEmpty()) {
                 RegistrationsPayButton(
@@ -61,7 +59,7 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
 
         }
     }
-    if (state.isLoading) {
+    if (state.info.isEmpty() && state.isLoading) {
         Box(modifier = Modifier.fillMaxSize()) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),

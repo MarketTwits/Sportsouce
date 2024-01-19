@@ -9,6 +9,7 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
+import com.markettwits.start.data.start.test.SelectKindsSportItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.serialization.json.Json
@@ -242,13 +243,27 @@ interface StartRemoteToUiMapper {
         }
 
         private fun mapDistanceInfo(text: String): List<DistanceInfo> {
+            val data = mapDistanceInfoTest(text)
+            Log.e("mt05", "size " + data.size.toString())
             val json = Json {
                 ignoreUnknownKeys = true
             }
             return try {
                 json.decodeFromString<List<DistanceInfo>>(text)
             } catch (e: Exception) {
-                Log.e("mt05", "StartRemoteToUiMapper#mapDistanceInfo $e")
+                //Log.e("mt05", "StartRemoteToUiMapper#mapDistanceInfo $e")
+                emptyList()
+            }
+        }
+        @Deprecated("test method")
+        private fun mapDistanceInfoTest(text: String): List<SelectKindsSportItem> {
+            val json = Json {
+                ignoreUnknownKeys = true
+            }
+            return try {
+                json.decodeFromString<List<SelectKindsSportItem>>(text)
+            } catch (e: Exception) {
+                Log.e("mt05", "StartRemoteToUiMapper#test $e")
                 emptyList()
             }
         }

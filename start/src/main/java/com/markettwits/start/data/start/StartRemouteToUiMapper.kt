@@ -1,5 +1,6 @@
 package com.markettwits.start.data.start
 
+import android.util.Log
 import com.markettwits.cloud.ext_model.Distance
 import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.cloud.model.start.StartRemote
@@ -143,7 +144,7 @@ interface StartRemoteToUiMapper {
 
         override fun map(e: Exception): StartItemUi = StartItemUi.Error(e.message.toString())
 
-        fun updateDistanceInfoList(
+        private fun updateDistanceInfoList(
             distances: List<DistanceInfo>,
             date: String
         ): List<DistanceInfo> {
@@ -247,6 +248,7 @@ interface StartRemoteToUiMapper {
             return try {
                 json.decodeFromString<List<DistanceInfo>>(text)
             } catch (e: Exception) {
+                Log.e("mt05", "StartRemoteToUiMapper#mapDistanceInfo $e")
                 emptyList()
             }
         }

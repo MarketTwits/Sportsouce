@@ -158,7 +158,7 @@ private fun HeaderCell(column: Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(SportSouceColor.SportSouceLighBlue)
+            .background(SportSouceColor.SportSouceLighBlueParent)
     ) {
         StartMembersItemText(content)
     }

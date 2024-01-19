@@ -75,18 +75,17 @@ class RegistrationMapperBase : RegistrationMapper {
 
         val listOfGroups = startDistanceInfo.groups
 
-        for (group in listOfGroups) {
-            val ageFrom = group.ageFrom.toIntOrNull()
-            val ageTo = group.ageTo.toIntOrNull()
-
-            if (ageFrom != null && ageTo != null && age in ageFrom..ageTo) {
-                return StartRegisterRequest.Group(
-                    ageFrom = group.ageFrom,
-                    ageTo = group.ageTo,
-                    name = group.name,
-                    sex = mapGender(startStatement.sex)
-                )
-            }
+            for (group in listOfGroups) {
+                val ageFrom = group.ageFrom.toIntOrNull()
+                val ageTo = group.ageTo.toIntOrNull()
+                if (ageFrom != null && ageTo != null && age in ageFrom..ageTo) {
+                    return StartRegisterRequest.Group(
+                        ageFrom = group.ageFrom,
+                        ageTo = group.ageTo,
+                        name = group.name,
+                        sex = mapGender(startStatement.sex)
+                    )
+                }
         }
 
         // Handle the case when no matching group is found

@@ -14,4 +14,5 @@ dependencies {
     implementation (libs.material3.html.text)
     implementation(libs.kotlinx.datetime)
     implementation(libs.realm)
+    implementation ("com.auth0.android:jwtdecode:2.0.2")
 }

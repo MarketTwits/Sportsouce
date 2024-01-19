@@ -7,6 +7,7 @@ import com.markettwits.registrations.registrations.presentation.RegistrationsSto
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 
 class RegistrationsDataSourceBase(
     private val service: SportsouceApi,
@@ -26,6 +27,14 @@ class RegistrationsDataSourceBase(
                 else -> e.message
             }
             Result.failure(Exception(message))
+        }
+    }
+
+    override suspend fun pay(id: Int): Result<String> {
+        return retryRunCatchingAsync {
+            val token = auth.updateToken()
+            val response = service.repay(id, token)
+            response.payment?.formUrl ?: ""
         }
     }
 }

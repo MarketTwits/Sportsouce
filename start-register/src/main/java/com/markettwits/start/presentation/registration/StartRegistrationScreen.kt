@@ -47,19 +47,14 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
             SnackbarHost(
                 hostState = snackBarHostState,
             ) {
-//                Snackbar(
-//                    contentColor = Color.White,
-//                    containerColor = if (state.registrationSucceededEvent.isTriggered()) SportSouceColor.SportSouceLighBlue
-//                    else SportSouceColor.SportSouceLightRed,
-//                    snackbarData = it
-//                )
                 Snackbar(
                     contentColor = Color.White,
                     containerColor = snackBarColor,
                     snackbarData = it
                 )
             }
-        }
+        },
+        containerColor = Color.White
     ) {
         val statement = state.startStatement
         if (statement != null) {
@@ -80,6 +75,7 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
                 }
             )
         }
+        val context = LocalContext.current
         EventEffect(
             event = state.testEvent,
             onConsumed = {
@@ -88,24 +84,9 @@ fun StartRegistrationScreen(component: StartRegistrationComponent) {
         ) {
             snackBarColor = if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
             snackBarHostState.showLongMessageWithDismiss(message = it.message)
-        }
-        EventEffect(
-            event = state.registrationFailedEvent,
-            onConsumed = { component.obtainEvent(StartRegistrationStore.Intent.OnConsumedFailedEvent) },
-        ) {
-            snackBarHostState.showLongMessageWithDismiss(message = it)
-        }
-        val context = LocalContext.current
-        EventEffect(
-            event = state.registrationSucceededEvent,
-            onConsumed = {
-                component.obtainEvent(StartRegistrationStore.Intent.OnConsumedSucceededEvent)
-                if (state.message.isNotEmpty()) {
-                    openWebPage(state.message, context)
-                }
-            },
-        ) {
-            snackBarHostState.showLongMessageWithDismiss(message = it)
+//            if (state.message.isNotEmpty()) {
+//                openWebPage(state.message, context)
+//            }
         }
         if (state.isLoading) {
             LoadingScreen()

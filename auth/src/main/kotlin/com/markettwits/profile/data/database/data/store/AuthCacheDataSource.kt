@@ -21,32 +21,18 @@ class AuthCacheDataSource(
         }
     }
 
-
     fun read(): UserSettingsRealmCache {
         val result = realm.query(UserSettingsRealmCache::class).find()
-        if (result.isEmpty()) {
+        if (result.isEmpty())
             throw AuthException("Для продолжения авторизуйтесь в приложении")
-        } else {
+        else
             return result.last()
-        }
     }
-
 
     fun clearAll() {
         realm.writeBlocking {
             val writeTransactionItems = query<UserSettingsRealmCache>().find()
             delete(writeTransactionItems)
-        }
-    }
-
-    fun delete(id: Long) {
-        realm.writeBlocking {
-            val item = query<UserSettingsRealmCache>(query = "_id == $0", id).first().find()
-            try {
-                item?.let { delete(it) }
-            } catch (e: Exception) {
-                throw RuntimeException("ImagesCacheDataSource#delete" + e.localizedMessage)
-            }
         }
     }
 }

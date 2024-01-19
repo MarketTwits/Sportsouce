@@ -40,6 +40,7 @@ interface SportsouceApi {
     suspend fun fetchPreview(): StartsRemote
     suspend fun fetchStartMain(): StartsRemote
     //Start registry
+    suspend fun repay(id : Int, token: String) : StartRegistrationResponse
     suspend fun registerOnStart(request: StartRegisterRequest,token : String) : StartRegistrationResponse
     suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
     suspend fun promo(value : String,startId: Int) : PromocodeRemote

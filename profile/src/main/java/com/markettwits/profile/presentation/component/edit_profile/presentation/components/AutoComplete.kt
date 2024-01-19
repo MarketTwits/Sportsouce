@@ -144,8 +144,8 @@ fun AutoComplete(
                 ) {
                     val focusRequester = remember { FocusRequester() }
                     LaunchedEffect(value) {
-                        if (value.isNotEmpty())
-                            focusRequester.requestFocus()
+//                        if (value.isNotEmpty())
+//                            focusRequester.requestFocus()
                     }
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 150.dp),

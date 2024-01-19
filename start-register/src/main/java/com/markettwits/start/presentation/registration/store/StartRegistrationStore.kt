@@ -15,8 +15,6 @@ interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartReg
         val message: String = "",
         val promoMessage : String = "",
         val startStatement: StartStatement? = null,
-        val registrationSucceededEvent: StateEventWithContent<String> = consumed(),
-        val registrationFailedEvent: StateEventWithContent<String> = consumed(),
         val testEvent: StateEventWithContent<EventContent> = consumed(),
     )
 
@@ -24,8 +22,6 @@ interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartReg
         data object GoBack : Label
     }
     sealed interface Intent {
-        data object OnConsumedSucceededEvent : Intent
-        data object OnConsumedFailedEvent : Intent
         data object OnConsumedEvent : Intent
         data object OnClickSave : Intent
         data object OnClickPay : Intent

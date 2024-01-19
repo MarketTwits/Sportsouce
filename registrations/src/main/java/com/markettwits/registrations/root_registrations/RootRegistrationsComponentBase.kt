@@ -12,7 +12,9 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.ComponentKoinContext
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.SignInRemoteToCacheMapper
@@ -27,12 +29,21 @@ import com.markettwits.registrations.registrations.presentation.RegistrationsDat
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
 import com.markettwits.cloud.provider.HttpClientProvider
+import com.markettwits.registrations.root_registrations.di.userStartRegistrationModule
+import com.markettwits.start.di.startModule
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootRegistrationsComponentBase(
     context: ComponentContext,
     private val pop: () -> Unit
 ) : RootRegistrationsComponent, ComponentContext by context {
+    private val koinContext = instanceKeeper.getOrCreate {
+        ComponentKoinContext()
+    }
+
+    private val scope = koinContext.getOrCreateKoinScope(
+        listOf(userStartRegistrationModule)
+    )
 
     private val stackNavigation = StackNavigation<RootRegistrationsComponent.ConfigStack>()
     private val slotNavigation = SlotNavigation<RootRegistrationsComponent.ConfigChild>()
@@ -64,7 +75,9 @@ class RootRegistrationsComponentBase(
             is RootRegistrationsComponent.ConfigChild.PaymentDialog ->
                 RootRegistrationsComponent.ChildSlot.PaymentDialog(
                     component = (RegistrationsPaymentComponentBase(
-                        paymentItems = configStack.paymentState
+                        paymentItems = configStack.paymentState,
+                        context = componentContext,
+                        storeFactory = scope.get()
                     ))
                 )
         }
@@ -89,27 +102,7 @@ class RootRegistrationsComponentBase(
                     component = componentContext,
                     storeFactory = RegistrationsDataStoreFactory(
                         storeFactory = DefaultStoreFactory(),
-                        dataSource = RegistrationsDataSourceBase(
-                            service = StartsRemoteDataSourceImpl(
-                                HttpClientProvider(
-                                    JsonProvider().get(),
-                                    "https://sport-73zoq.ondigitalocean.app"
-                                )
-                            ),
-                            auth = BaseAuthDataSource(
-                                remoteService =
-                                StartsRemoteDataSourceImpl(
-                                    HttpClientProvider(
-                                        JsonProvider().get(),
-                                        "https://sport-73zoq.ondigitalocean.app"
-                                    )
-                                ),
-                                local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-                                signInMapper = SignInRemoteToUiMapper.Base(),
-                                signInCacheMapper = SignInRemoteToCacheMapper.Base()
-                            ),
-                            mapper = RemoteRegistrationsToUiMapper.Base(BaseTimeMapper())
-                        ),
+                        dataSource = scope.get()
                     ),
                     pop = pop::invoke,
                     onItemClick = {

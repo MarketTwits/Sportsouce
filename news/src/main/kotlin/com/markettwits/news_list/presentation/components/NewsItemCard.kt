@@ -22,7 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -84,7 +89,7 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (Ne
         SubcomposeAsyncImage(
             model = newsInfo.imageUrl,
             contentDescription = "",
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxSize(),
             error = {
                 Box(
@@ -125,6 +130,7 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (Ne
         }
     }
 }
+
 @Preview
 @Composable
 fun NewsItemCardPreview() {
@@ -138,5 +144,5 @@ fun NewsItemCardPreview() {
             createData = "18 marth 2023 year",
             emptyList()
         )
-    ){}
+    ) {}
 }

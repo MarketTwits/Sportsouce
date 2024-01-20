@@ -8,9 +8,18 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.di.ComponentKoinContext
 import com.markettwits.di.newsModule
+import com.markettwits.news_event.NewsEventComponentBase
+import com.markettwits.news_event.store.NewsEventStoreFactory
+import com.markettwits.news_list.data.NewsDataSource
+import com.markettwits.news_list.data.NewsDataSourceBase
+import com.markettwits.news_list.data.NewsRemoteToDomainMapper
+import com.markettwits.news_list.presentation.NewsComponentBase
+import com.markettwits.news_list.presentation.store.NewsStoreFactory
 import com.markettwits.popular.popular.presentation.PopularStartsComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
@@ -57,7 +66,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                         navigation.push(handleMenu(it))
                     }
                 ),
-                newsComponent = newsComponent(componentContext)
+                newsComponent = NewsComponentBase(
+                    context = componentContext,
+                    storeFactory = scope.get(),
+                    onItemClick = {
+                        navigation.push(RootReviewComponent.Config.NewsEvent(it))
+                    }
+                )
             )
 
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
@@ -96,10 +111,16 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
                 PopularStartsComponentBase(context = componentContext)
             )
-        }
 
-    private fun newsComponent(componentContext: ComponentContext): RootNewsComponent =
-        RootNewsComponentBase(context = componentContext)
+            is RootReviewComponent.Config.NewsEvent -> RootReviewComponent.Child.NewsEvent(
+                NewsEventComponentBase(
+                    context = componentContext,
+                    item = config.news,
+                    storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
+                    pop = navigation::pop
+                )
+            )
+        }
 
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {

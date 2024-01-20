@@ -18,11 +18,12 @@ import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.news_list.presentation.components.NewsItemCard
 import com.markettwits.news_event.store.NewsEventStore
+import com.markettwits.news_list.domain.NewsInfo
 import com.markettwits.news_list.presentation.store.NewsStore
 
 
 @Composable
-fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent) {
+fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent, onClickItem : (NewsInfo) -> Unit) {
     val state by component.value.collectAsState()
     Box(
         modifier = Modifier
@@ -44,6 +45,39 @@ fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent) {
             modifier = Modifier
             .fillMaxWidth()
             .width(500.dp),
+        ) {
+            val itemsCount = state.news.take(10)
+            items(itemsCount) {
+                NewsItemCard(newsInfo = it) {
+                    onClickItem(it)
+                }
+            }
+        }
+    }
+}
+@Composable
+fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent) {
+    val state by component.value.collectAsState()
+    Box(
+        modifier = Modifier
+    ) {
+        if (state.isError) {
+            FailedScreen(
+                message = state.message,
+                onClickRetry = {
+                    component.obtainEvent(NewsStore.Intent.Launch)
+                },
+                onClickHelp = {
+                }
+            )
+        }
+        if (state.isLoading) {
+            CircularProgressIndicator(color = SportSouceColor.SportSouceBlue)
+        }
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .width(500.dp),
         ) {
             val itemsCount = state.news.take(10)
             items(itemsCount) {

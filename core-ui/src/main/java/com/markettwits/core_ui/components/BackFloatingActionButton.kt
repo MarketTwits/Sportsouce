@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.core_ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size

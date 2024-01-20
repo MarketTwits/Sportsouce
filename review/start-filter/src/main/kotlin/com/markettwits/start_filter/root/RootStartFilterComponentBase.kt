@@ -12,7 +12,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
-import com.markettwits.start_filter.start_filter.di.createRocketsModules
+import com.markettwits.start_filter.start_filter.di.createStartFilterModules
 import com.markettwits.start_filter.start_filter.presentation.StartFilterComponentBase
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilerStoreFactory
 import com.markettwits.start_filter.starts.StartsFilteredComponentBase
@@ -32,7 +32,7 @@ class RootStartFilterComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        createRocketsModules(dependencies)
+        createStartFilterModules(dependencies)
     )
 
     override val childStack: Value<ChildStack<*, RootStartFilterComponent.Child>> = childStack(

@@ -23,13 +23,15 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/auth" />
             <option value="$PROJECT_DIR$/build-logic" />
-            <option value="$PROJECT_DIR$/change-password" />
             <option value="$PROJECT_DIR$/cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/news" />
             <option value="$PROJECT_DIR$/profile" />
-            <option value="$PROJECT_DIR$/registrations" />
+            <option value="$PROJECT_DIR$/profile/change-password" />
+            <option value="$PROJECT_DIR$/profile/edit-profile" />
+            <option value="$PROJECT_DIR$/profile/profile" />
+            <option value="$PROJECT_DIR$/profile/registrations" />
             <option value="$PROJECT_DIR$/review" />
             <option value="$PROJECT_DIR$/review/popular" />
             <option value="$PROJECT_DIR$/review/random" />

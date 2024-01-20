@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.news_list.presentation.NewsComponent
+import com.markettwits.news_list.presentation.NewsScreen
+import com.markettwits.news_list.presentation.store.NewsStore
 import com.markettwits.review.presentation.components.actual.ActualStarts
 import com.markettwits.review.presentation.components.archive.ArchiveStarts
 import com.markettwits.review.presentation.components.review_menu.ReviewMenu
@@ -27,7 +30,7 @@ import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsScreen
 
 @Composable
-fun ReviewScreen(component: ReviewComponent, newsComponent: RootNewsComponent) {
+fun ReviewScreen(component: ReviewComponent, newsComponent: NewsComponent) {
     val state by component.value.collectAsState()
     Column(
         modifier = Modifier
@@ -37,7 +40,9 @@ fun ReviewScreen(component: ReviewComponent, newsComponent: RootNewsComponent) {
             .padding(10.dp)
     ) {
         if (state.actualStarts.isNotEmpty()) {
-            RootNewsScreen(newsComponent)
+            NewsScreen(component = newsComponent, onClickItem = {
+                newsComponent.obtainEvent(NewsStore.Intent.OnClickItem(it))
+            })
         }
         ReviewMenu {
             component.obtainEvent(ReviewStore.Intent.OnClickMenu(it))

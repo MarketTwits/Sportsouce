@@ -16,22 +16,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.components.BackFloatingActionButton
+import com.markettwits.core_ui.components.FullImageContent
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.start.MockStartScreen
 import com.markettwits.start.presentation.start.StartItemUi
 import com.markettwits.start.presentation.start.StartScreen
-import com.markettwits.start.presentation.start.component.BackFloatingActionButton
 import com.markettwits.start.presentation.start.component.CommentTextField
-import com.markettwits.start.presentation.start.component.CustomScreen
 import com.markettwits.start.presentation.start.component.StartCommentsPanel
 import com.markettwits.start.presentation.start.component.StartConditionPanel
 import com.markettwits.start.presentation.start.component.StartDescription
@@ -59,7 +58,7 @@ fun StartScreen(component: StartScreen) {
                     .background(Color.White)
             ) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    CustomScreen(imageUrl = data.image)
+                    FullImageContent(imageUrl = data.image)
                     val modifier = Modifier.padding(5.dp)
                     Column(modifier = modifier) {
                         StartTitle(

@@ -47,6 +47,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -103,6 +105,7 @@ fun AuthScreen(component: SignInScreen) {
                 modifier = modifier,
                 label = "Пароль",
                 value = fieldState.password,
+                visualTransformation = PasswordVisualTransformation(),
                 isError = state is SignInUiState.Error
             ) {
                 component.handlePassword(it)
@@ -197,6 +200,7 @@ fun AuthTextField(
     label: String,
     value: String,
     isError: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -205,6 +209,7 @@ fun AuthTextField(
         label = {
             Text(text = label, fontFamily = FontNunito.bold, fontSize = 14.sp)
         },
+        visualTransformation = visualTransformation,
         isError = isError,
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,

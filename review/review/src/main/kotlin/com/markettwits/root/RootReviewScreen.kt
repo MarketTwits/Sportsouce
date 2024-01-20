@@ -27,6 +27,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)
             is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
             is RootReviewComponent.Child.Popular -> PopularStartsScreen(component = child.component)
+            is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
         }
     }
 }

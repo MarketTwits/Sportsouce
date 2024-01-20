@@ -2,6 +2,9 @@ package com.markettwits.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.news_event.NewsEventComponent
+import com.markettwits.news_list.domain.NewsInfo
+import com.markettwits.news_list.presentation.NewsComponent
 import com.markettwits.popular.popular.presentation.PopularStartsComponent
 import com.markettwits.random.root.presentation.RootStartRandomComponent
 import com.markettwits.review.presentation.ReviewComponent
@@ -27,14 +30,17 @@ interface RootReviewComponent {
         data object Schedule : Config
         @Serializable
         data object Popular : Config
+        @Serializable
+        data class NewsEvent(val news : NewsInfo) : Config
     }
 
     sealed interface Child {
-        data class Review(val component: ReviewComponent, val newsComponent : RootNewsComponent) : Child
+        data class Review(val component: ReviewComponent, val newsComponent : NewsComponent) : Child
         data class Start(val component: RootStartScreenComponent) : Child
         data class Filter(val component : RootStartFilterComponent) : Child
         data class Random(val component : RootStartRandomComponent) : Child
         data class Schedule(val component : RootStartsScheduleComponent) : Child
         data class Popular(val component : PopularStartsComponent) : Child
+        data class NewsEvent(val component : NewsEventComponent) : Child
     }
 }

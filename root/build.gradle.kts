@@ -14,7 +14,7 @@ dependencies {
     api(project(":cloud"))
     implementation(project(":start"))
     implementation(project(":starts"))
-    implementation(project(":profile"))
+    implementation(project(":profile:profile"))
     implementation(project(":news"))
     implementation(project(":review:review"))
     implementation(project(":core-ui"))

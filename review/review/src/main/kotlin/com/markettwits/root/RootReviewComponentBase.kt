@@ -20,7 +20,7 @@ import com.markettwits.news_list.data.NewsDataSourceBase
 import com.markettwits.news_list.data.NewsRemoteToDomainMapper
 import com.markettwits.news_list.presentation.NewsComponentBase
 import com.markettwits.news_list.presentation.store.NewsStoreFactory
-import com.markettwits.popular.popular.presentation.PopularStartsComponentBase
+import com.markettwits.popular.presentation.PopularStartsComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase

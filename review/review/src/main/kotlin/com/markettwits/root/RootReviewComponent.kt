@@ -5,7 +5,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.news_event.NewsEventComponent
 import com.markettwits.news_list.domain.NewsInfo
 import com.markettwits.news_list.presentation.NewsComponent
-import com.markettwits.popular.popular.presentation.PopularStartsComponent
+import com.markettwits.popular.presentation.PopularStartsComponent
 import com.markettwits.random.root.presentation.RootStartRandomComponent
 import com.markettwits.review.presentation.ReviewComponent
 import com.markettwits.schedule.root.RootStartsScheduleComponent

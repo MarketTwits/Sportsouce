@@ -9,7 +9,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-internal val rocketsModule = module {
+internal val startFilterModule = module {
     factoryOf(::StartFilterRepositoryBase) bind StartFilterRepository::class
     single<StartFilterRemoteToDomainMapper> {
         StartFilterRemoteToDomainMapper.Base()
@@ -19,9 +19,9 @@ internal val rocketsModule = module {
     }
 }
 
-internal fun createRocketsModules(dependencies: StartsFilterDependencies): List<Module> {
+internal fun createStartFilterModules(dependencies: StartsFilterDependencies): List<Module> {
     return listOf(
-        rocketsModule,
+        startFilterModule,
         module {
             factory { dependencies.startsCloudToUiMapper }
             factory { dependencies.sportsouceApi }

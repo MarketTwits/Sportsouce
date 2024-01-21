@@ -16,8 +16,6 @@ interface RootComponent {
         @Serializable
         object Starts : Configuration()
         @Serializable
-        object News : Configuration()
-        @Serializable
         object Review : Configuration()
         @Serializable
         object Profile : Configuration()
@@ -26,7 +24,6 @@ interface RootComponent {
     sealed class Child {
         data class Starts(val component: RootStartsComponentBase) : Child()
         data class Profile(val component: DefaultProfileComponent) : Child()
-        data class News(val component : RootNewsComponent) : Child()
         data class Review(val component : RootReviewComponent) : Child()
     }
 }

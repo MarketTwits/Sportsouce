@@ -19,12 +19,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":starts"))
     implementation(project(":root"))
-    implementation(project(":news"))
-    implementation(project(":core-ui"))
     implementation(libs.bundles.decompose.compose)
     implementation(libs.decompose.android)
     implementation(libs.koin.android)
-
 }

@@ -24,6 +24,7 @@ class BaseRootComponent(
         initialStack = { listOf(RootComponent.Configuration.Starts) },
         childFactory = ::createChild,
     )
+
     override fun navigate(configuration: RootComponent.Configuration) {
         navigation.bringToFront(configuration)
     }
@@ -37,12 +38,6 @@ class BaseRootComponent(
                 RootStartsComponentBase(
                     componentContext = componentContext,
                     launchPolicy = RootStartsComponent.LaunchPolicy.Main,
-                    )
-            )
-
-            is RootComponent.Configuration.News -> RootComponent.Child.News(
-                newsComponent(
-                    componentContext
                 )
             )
 
@@ -52,9 +47,8 @@ class BaseRootComponent(
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 component = RootReviewComponentBase(
-                    context = componentContext,
-
-                ),
+                    context = componentContext
+                )
             )
         }
 

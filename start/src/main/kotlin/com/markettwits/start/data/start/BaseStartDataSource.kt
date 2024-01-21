@@ -1,11 +1,13 @@
 package com.markettwits.start.data.start
 
+import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.core_ui.base.Fourth
+import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState
@@ -16,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import com.markettwits.cloud.api.SportsouceApi
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
@@ -25,14 +26,26 @@ class BaseStartDataSource(
     private val mapper: StartRemoteToUiMapper,
     private val cache: StartMemoryCache
 ) : StartDataSource {
-    override suspend fun start(startId: Int, relaunch: Boolean): StartItemUi {
+
+    override suspend fun start(
+        startId: Int,
+        relaunch: Boolean
+    ): Result<StartItemUi.StartItemUiSuccess> {
         return if (relaunch)
             return launch(startId)
-        else cache[startId] ?: launch(startId)
+        else retryRunCatchingAsync(times = 2) {
+            cache[startId]
+        }.getOrNull() ?: launch(startId)
     }
 
-    private suspend fun launch(startId: Int): StartItemUi {
-        return try {
+    override suspend fun startComments(startId: Int): Result<StartItemUi.StartItemUiSuccess.Comments> =
+        retryRunCatchingAsync {
+            val value = service.fetchStartComments(startId)
+            mapper.map(value)
+        }
+
+    private suspend fun launch(startId: Int): Result<StartItemUi.StartItemUiSuccess> =
+        retryRunCatchingAsync {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {
                     val deferredTime = async { timeService.currentTime() }
@@ -48,13 +61,9 @@ class BaseStartDataSource(
                 }
             }
             val result = mapper.map(data, withFilter, comments, time)
-            cache.set(value = result, key = startId)
+            cache.set(value = Result.success(result), key = startId)
             result
-        } catch (e: Exception) {
-            mapper.map(e)
         }
-    }
-
 
     override suspend fun startMember(startId: Int): List<StartMembersUi> {
         val startMember = service.fetchStartMember(startId)

@@ -15,7 +15,10 @@ fun RootStartScreen(component: RootStartScreenComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootStartScreenComponent.Child.Start -> StartScreen(component = child.component)
+            is RootStartScreenComponent.Child.Start -> StartScreen(
+                component = child.component,
+                commentsComponent = child.commentsComponent
+            )
             is RootStartScreenComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
             is RootStartScreenComponent.Child.StartRegistration -> StartRegistrationScreen(component = child.component)
             is RootStartScreenComponent.Child.StartMembersFilter -> StartMembersFilterScreen(

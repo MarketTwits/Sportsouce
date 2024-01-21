@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
@@ -15,10 +16,11 @@ import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilt
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
-import com.markettwits.start.presentation.start.StartScreenComponent
+import com.markettwits.start.presentation.start.StartScreenComponentComponentBase
 import com.markettwits.start.di.startModule
 import com.markettwits.start.di.startRegistrationModule
-import com.markettwits.start.presentation.registration.StartRegistrationComponent
+import com.markettwits.start.presentation.comments.StartCommentsComponentBase
+import com.markettwits.start.presentation.comments.StartCommentsStoreFactory
 import com.markettwits.start.presentation.registration.StartRegistrationComponentBase
 
 class RootStartScreenComponentBase(
@@ -51,10 +53,10 @@ class RootStartScreenComponentBase(
     ): RootStartScreenComponent.Child =
         when (config) {
             is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
-                StartScreenComponent(
+                StartScreenComponentComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
-                    service = scope.get(),
+                  //  service = scope.get(),
                     back = pop::invoke,
                     register = { distanceInfo ->
                         navigation.push(
@@ -64,9 +66,18 @@ class RootStartScreenComponentBase(
                             )
                         )
                     },
+                    storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())
                     }
+                ),
+                StartCommentsComponentBase(
+                    context = componentContext,
+                    startId = config.startId,
+                    storeFactory = StartCommentsStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        service = scope.get(),
+                    )
                 )
             )
 

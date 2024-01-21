@@ -25,6 +25,7 @@ import com.markettwits.start.data.start.StartMembersToUiMapper
 import com.markettwits.start.data.start.StartMemoryCache
 import com.markettwits.start.data.start.StartRemoteToUiMapper
 import com.markettwits.start.presentation.registration.store.StartRegistrationStoreFactory
+import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -32,6 +33,14 @@ import org.koin.dsl.module
 val startModule = module {
 
     includes(sportSouceNetworkModule, timeApiNetworkModule)
+
+
+    single<StartScreenStoreFactory>{
+        StartScreenStoreFactory(
+            storeFactory = DefaultStoreFactory(),
+            service = get()
+        )
+    }
 
     single<StartDataSource> {
         BaseStartDataSource(

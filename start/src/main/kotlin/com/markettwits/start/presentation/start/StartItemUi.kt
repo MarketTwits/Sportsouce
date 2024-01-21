@@ -44,7 +44,6 @@ sealed class StartItemUi {
                 val id: Int,
                 val personId: String,
                 val replies: List<Reply>,
-            //    val startId: Int,
                 val updatedAt: String,
                 val user: User
             )

@@ -1,7 +1,6 @@
 package com.markettwits.start.presentation.start.component
 
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,12 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -37,13 +33,13 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.openWebPage
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.Animation
-import com.markettwits.start.presentation.start.StartItemUi
 
 @Composable
 fun StartResult(
     modifier: Modifier = Modifier,
-    results: List<StartItemUi.StartItemUiSuccess.Result>,
+    results: List<StartItem.Result>,
     title : String
 ) {
     var panelState by rememberSaveable {
@@ -85,7 +81,7 @@ fun StartResult(
 @Composable
 fun StartResultContent(
     modifier: Modifier = Modifier,
-    results: List<StartItemUi.StartItemUiSuccess.Result>
+    results: List<StartItem.Result>
 ) {
     val context = LocalContext.current
     Log.d("mt05","size " +  results.size.toString())

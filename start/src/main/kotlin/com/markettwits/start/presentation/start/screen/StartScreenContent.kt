@@ -15,8 +15,8 @@ import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.components.FullImageContent
 import com.markettwits.core_ui.refresh.PullToRefreshScreen
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import com.markettwits.start.presentation.start.StartItemUi
 import com.markettwits.start.presentation.start.component.StartConditionPanel
 import com.markettwits.start.presentation.start.component.StartDescription
 import com.markettwits.start.presentation.start.component.StartDistances
@@ -28,7 +28,7 @@ import com.markettwits.start.presentation.start.component.StartTitle
 
 @Composable
 fun StartScreenContent(
-    data: StartItemUi.StartItemUiSuccess,
+    data: StartItem,
     isLoading : Boolean,
     onClickRetry : () -> Unit,
     onClickBack : () -> Unit,

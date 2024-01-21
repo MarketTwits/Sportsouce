@@ -13,5 +13,5 @@ repositories {
 dependencies {
     implementation(libs.android.gradle)
     implementation(libs.kotlin.gradle)
-    implementation(libs.org.jetbrains.compose.gradle.plugin)
+   // implementation(libs.org.jetbrains.compose.gradle.plugin)
 }

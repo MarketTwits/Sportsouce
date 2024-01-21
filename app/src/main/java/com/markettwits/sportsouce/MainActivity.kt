@@ -10,11 +10,9 @@ import com.markettwits.root.root.RootContent
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val root = BaseRootComponent(componentContext = defaultComponentContext())
         setContent {
-          //  SportSouceTheme{
-                val root = BaseRootComponent(componentContext = defaultComponentContext())
-                RootContent(component = root)
-          //  }
+            RootContent(component = root)
         }
     }
 }

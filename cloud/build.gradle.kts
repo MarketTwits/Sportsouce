@@ -1,10 +1,6 @@
 plugins {
-    alias(libs.plugins.android.library.convention)
+    alias(libs.plugins.kotlin.jvm.convention)
     alias(libs.plugins.kotlin.serialization)
-}
-
-android {
-    namespace = "com.markettwits.cloud"
 }
 
 dependencies {
@@ -16,5 +12,4 @@ dependencies {
     api(libs.ktor.client.okhttp)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.core)
-  //  api(libs.kotlinx.serialization.json)
 }

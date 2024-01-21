@@ -173,13 +173,14 @@ ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 
 #Convention Plugins
+kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 android-library-convention = {id = "android-library-convention", version = "unspecified"}
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
 
 #Test Plugins
-kotlin-multiplatform-android-convention = {id = "kotlin-multiplatform-android-convention", version = "unspecified"}
-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
-compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
+#kotlin-multiplatform-android-convention = {id = "kotlin-multiplatform-android-convention", version = "unspecified"}
+#multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
+#compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
 
 
 [bundles]

@@ -48,7 +48,6 @@ private fun Children(component: BaseRootComponent, modifier: Modifier = Modifier
         when (val child = it.instance) {
             is RootComponent.Child.Starts -> RootStartsScreen(child.component)
             is RootComponent.Child.Profile ->  DefaultProfileScreen(child.component)
-            is RootComponent.Child.News -> RootNewsScreen(child.component)
             is RootComponent.Child.Review -> RootReviewScreen(component = child.component)
         }
     }

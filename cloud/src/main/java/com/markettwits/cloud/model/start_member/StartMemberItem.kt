@@ -59,7 +59,7 @@ data class StartMemberItem(
         val json = Json {
             ignoreUnknownKeys = true
             isLenient = true
-            explicitNulls = false
+            //explicitNulls = false
         }
         return json.decodeFromString<Group>(text)
     }

@@ -79,38 +79,6 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
         }
     }
 
-
-//    Column {
-//        HorizontalDivider()
-//        NavigationBar(
-//            containerColor = Color.White
-//        ) {
-//            items.forEach { item ->
-//                NavigationBarItem(
-//                    colors = NavigationBarItemDefaults.colors(
-//                        indicatorColor = SportSouceColor.SportSouceLighBlue.copy(alpha = 0.3f)
-//                    ),
-//                    selected = activeComponent == item.configuration,
-//                    onClick = {
-//                        component.navigate(item.configuration)
-//                    },
-//                    label = {
-//                        Text(text = item.title, color = SportSouceColor.SportSouceBlue)
-//                    },
-//                    alwaysShowLabel = true,
-//                    icon = {
-//                        Icon(
-//                            imageVector = if (activeComponent == item.configuration) {
-//                                item.selectedIcon
-//                            } else item.unselectedIcon,
-//                            contentDescription = item.title,
-//                            tint = SportSouceColor.SportSouceBlue
-//                        )
-//                    }
-//                )
-//            }
-//        }
-//    }
 }
 
 private fun menuItems(): List<BottomNavigationItem> {
@@ -128,13 +96,6 @@ private fun menuItems(): List<BottomNavigationItem> {
             unselectedIcon = Icons.Outlined.Newspaper,
             hasNews = false,
             configuration = RootComponent.Configuration.Review,
-        ),
-        BottomNavigationItem(
-            title = "Новости",
-            selectedIcon = Icons.Filled.Newspaper,
-            unselectedIcon = Icons.Outlined.Newspaper,
-            hasNews = false,
-            configuration = RootComponent.Configuration.News,
         ),
         BottomNavigationItem(
             title = "Профиль",

@@ -18,6 +18,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PullToRefreshScreen(
+    modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     content: @Composable (Modifier) -> Unit
@@ -25,7 +26,7 @@ fun PullToRefreshScreen(
     val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
         onRefresh()
     })
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize()) {
         content(Modifier.pullRefresh(state))
         PullRefreshIndicator(
             refreshing = isRefreshing, state = state,

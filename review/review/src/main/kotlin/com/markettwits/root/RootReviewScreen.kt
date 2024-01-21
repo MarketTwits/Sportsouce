@@ -9,10 +9,8 @@ import com.markettwits.popular.presentation.PopularStartsScreen
 import com.markettwits.random.root.presentation.RootRandomStartScreen
 import com.markettwits.review.presentation.ReviewScreen
 import com.markettwits.schedule.root.RootStartsScheduleScreen
-import com.markettwits.start.presentation.start.screen.StartScreen
 import com.markettwits.start.root.RootStartScreen
 import com.markettwits.start_filter.root.RootStartFilterScreen
-import com.markettwits.start_filter.start_filter.presentation.StartFilterScreen
 
 @Composable
 fun RootReviewScreen(component: RootReviewComponent) {

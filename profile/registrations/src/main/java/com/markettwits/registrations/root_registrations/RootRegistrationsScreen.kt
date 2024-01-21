@@ -27,7 +27,6 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentComponent
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentScreen
 import com.markettwits.registrations.registrations.presentation.MyRegistrationsScreen
-import com.markettwits.registrations.root_registrations.component.rememberSlotModalBottomSheetState
 import com.markettwits.start.root.RootStartScreen
 
 @OptIn(FaultyDecomposeApi::class)

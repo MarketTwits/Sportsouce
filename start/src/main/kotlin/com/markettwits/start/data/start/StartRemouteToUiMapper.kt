@@ -31,8 +31,9 @@ interface StartRemoteToUiMapper {
         startMember: List<StartMemberItem>,
         commentsRemote: StartCommentsRemote,
         timeRemote: TimeRemote
-    ): StartItemUi
-    fun map(e : Exception) : StartItemUi
+    ): StartItemUi.StartItemUiSuccess
+    fun map(e : Exception) : String
+    fun map(commentsRemote: StartCommentsRemote) : StartItemUi.StartItemUiSuccess.Comments
 
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
     class Base(
@@ -93,7 +94,7 @@ interface StartRemoteToUiMapper {
             startMember: List<StartMemberItem>,
             commentsRemote: StartCommentsRemote,
             timeRemote: TimeRemote
-        ): StartItemUi {
+        ): StartItemUi.StartItemUiSuccess {
 
             return StartItemUi.StartItemUiSuccess(
                 id = startRemote.start_data.id,
@@ -143,7 +144,10 @@ interface StartRemoteToUiMapper {
             )
         }
 
-        override fun map(e: Exception): StartItemUi = StartItemUi.Error(e.message.toString())
+        override fun map(e: Exception): String = e.message.toString()
+        override fun map(commentsRemote: StartCommentsRemote): StartItemUi.StartItemUiSuccess.Comments =
+            mapComments(commentsRemote)
+
 
         private fun updateDistanceInfoList(
             distances: List<DistanceInfo>,

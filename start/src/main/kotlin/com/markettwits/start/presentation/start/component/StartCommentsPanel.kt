@@ -234,30 +234,13 @@ private fun StartCommentCard(
 @Composable
 fun CommentTextField(
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState,
-    messageHasBeenShowed: () -> Unit,
-    state: CommentUiState,
+    isLoading : Boolean,
     mode: CommentMode,
     onClickCloseReply: () -> Unit,
     sendComment: (String) -> Unit
 ) {
     var comment by rememberSaveable {
         mutableStateOf("")
-    }
-    val scope = rememberCoroutineScope()
-    if ((state is CommentUiState.Error)) {
-        if (state.show) {
-            LaunchedEffect(snackbarHostState) {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = state.message,
-                        duration = SnackbarDuration.Long,
-                        withDismissAction = true
-                    )
-                    messageHasBeenShowed()
-                }
-            }
-        }
     }
 
     Box(
@@ -266,8 +249,6 @@ fun CommentTextField(
             .shadow(elevation = 20.dp)
             .background(SportSouceColor.VeryLighBlue)
             .padding(3.dp),
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         if (mode is CommentMode.Reply) {
             Row(
@@ -338,14 +319,14 @@ fun CommentTextField(
             )
         },
         trailingIcon = {
-            if (state is CommentUiState.Loading) {
+            if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(30.dp),
                     color = SportSouceColor.SportSouceBlue,
                 )
             } else {
                 IconButton(
-                    enabled = state != CommentUiState.Loading,
+                    enabled = !isLoading,
                     onClick = {
                         sendComment(comment)
                     }) {
@@ -369,10 +350,8 @@ private fun StartCommentsPanelPreview() {
     SportSouceTheme {
         CommentTextField(
             sendComment = {},
-            state = CommentUiState.Success,
-            snackbarHostState = SnackbarHostState(),
-            messageHasBeenShowed = {},
             mode = CommentMode.Reply("Daniel", 0),
+            isLoading = false,
             onClickCloseReply = {}
         )
     }

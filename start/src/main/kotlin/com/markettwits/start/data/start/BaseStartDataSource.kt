@@ -25,8 +25,14 @@ class BaseStartDataSource(
     private val mapper: StartRemoteToUiMapper,
     private val cache: StartMemoryCache
 ) : StartDataSource {
-    override suspend fun start(startId: Int): StartItemUi {
-        return cache[startId] ?: try {
+    override suspend fun start(startId: Int, relaunch: Boolean): StartItemUi {
+        return if (relaunch)
+            return launch(startId)
+        else cache[startId] ?: launch(startId)
+    }
+
+    private suspend fun launch(startId: Int): StartItemUi {
+        return try {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {
                     val deferredTime = async { timeService.currentTime() }
@@ -47,8 +53,8 @@ class BaseStartDataSource(
         } catch (e: Exception) {
             mapper.map(e)
         }
-
     }
+
 
     override suspend fun startMember(startId: Int): List<StartMembersUi> {
         val startMember = service.fetchStartMember(startId)

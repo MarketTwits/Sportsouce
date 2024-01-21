@@ -32,14 +32,14 @@ class StartScreenInstanceKeeper(
                 commentsState.value = service.writeComment(value, id)
             }
             if (commentsState.value is CommentUiState.Success)
-                start.value = service.start(startId)
+                start.value = service.start(startId, true)
         }
     }
 
     fun launch() {
         scope.launch {
             start.value = StartItemUi.Loading
-            start.value = service.start(startId)
+            start.value = service.start(startId, false)
         }
     }
 

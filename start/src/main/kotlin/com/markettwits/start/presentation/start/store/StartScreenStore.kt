@@ -6,10 +6,9 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.ext_model.DistanceInfo
-import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.start.data.start.StartDataSource
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import com.markettwits.start.presentation.start.StartItemUi
 import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
 import com.markettwits.start.presentation.start.store.StartScreenStore.Label
 import com.markettwits.start.presentation.start.store.StartScreenStore.State
@@ -28,7 +27,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val data: StartItemUi.StartItemUiSuccess? = null
+        val data: StartItem? = null
     )
 
     sealed interface Label {
@@ -53,7 +52,7 @@ class StartScreenStoreFactory(
 
     private sealed interface Msg {
         data object Loading : Msg
-        data class InfoLoaded(val data: StartItemUi.StartItemUiSuccess) : Msg
+        data class InfoLoaded(val data: StartItem) : Msg
         data class InfoFailed(val message: String) : Msg
     }
 

@@ -10,12 +10,12 @@ import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.data.start.StartDataSource
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.comments.StartCommentsStore.Intent
 import com.markettwits.start.presentation.comments.StartCommentsStore.Label
 import com.markettwits.start.presentation.comments.StartCommentsStore.State
 import com.markettwits.start.presentation.start.CommentMode
 import com.markettwits.start.presentation.start.CommentUiState
-import com.markettwits.start.presentation.start.StartItemUi
 import kotlinx.coroutines.launch
 
 interface StartCommentsStore : Store<Intent, State, Label> {
@@ -28,7 +28,7 @@ interface StartCommentsStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val comments: StartItemUi.StartItemUiSuccess.Comments = StartItemUi.StartItemUiSuccess.Comments(
+        val comments: StartItem.Comments = StartItem.Comments(
             0,
             emptyList()
         ),
@@ -62,7 +62,7 @@ class StartCommentsStoreFactory(
         data class ShowEvent(val success: Boolean, val message: String) : Msg
         data object OnConsumedEvent : Msg
         data object Loading : Msg
-        data class Loaded(val state: StartItemUi.StartItemUiSuccess.Comments) : Msg
+        data class Loaded(val state: StartItem.Comments) : Msg
     }
 
     private inner class ExecutorImpl(private val startId: Int) :

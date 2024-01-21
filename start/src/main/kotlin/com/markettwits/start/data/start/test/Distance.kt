@@ -13,13 +13,14 @@ data class SelectKindsSportItem(
     val distances: List<DistanceItem>? = null,
     val sale: String? = null,
     //val prices: List<Price>? = null
-){
+) {
     @kotlinx.serialization.Serializable
     data class Price(
         val c_to: String,
         val c_from: String,
         val value: Int
     )
+
     @Serializable
     data class Distance(
         val description: String,
@@ -34,7 +35,7 @@ data class SelectKindsSportItem(
         val name: String,
         val ageFrom: String,
         val ageTo: String,
-     //   val sex: String
+        //   val sex: String
     )
 
     @Serializable

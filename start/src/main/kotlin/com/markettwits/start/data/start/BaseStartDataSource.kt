@@ -9,9 +9,9 @@ import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState
-import com.markettwits.start.presentation.start.StartItemUi
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class BaseStartDataSource(
     override suspend fun start(
         startId: Int,
         relaunch: Boolean
-    ): Result<StartItemUi.StartItemUiSuccess> {
+    ): Result<StartItem> {
         return if (relaunch)
             return launch(startId)
         else retryRunCatchingAsync(times = 2) {
@@ -38,13 +38,13 @@ class BaseStartDataSource(
         }.getOrNull() ?: launch(startId)
     }
 
-    override suspend fun startComments(startId: Int): Result<StartItemUi.StartItemUiSuccess.Comments> =
+    override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
         retryRunCatchingAsync {
             val value = service.fetchStartComments(startId)
             mapper.map(value)
         }
 
-    private suspend fun launch(startId: Int): Result<StartItemUi.StartItemUiSuccess> =
+    private suspend fun launch(startId: Int): Result<StartItem> =
         retryRunCatchingAsync {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {

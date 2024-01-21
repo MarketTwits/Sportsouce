@@ -56,7 +56,6 @@ class RootStartScreenComponentBase(
                 StartScreenComponentComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
-                  //  service = scope.get(),
                     back = pop::invoke,
                     register = { distanceInfo ->
                         navigation.push(

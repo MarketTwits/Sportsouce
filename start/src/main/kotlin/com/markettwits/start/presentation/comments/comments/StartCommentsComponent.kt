@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.comments
+package com.markettwits.start.presentation.comments.comments
 
 import kotlinx.coroutines.flow.StateFlow
 

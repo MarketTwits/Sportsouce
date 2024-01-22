@@ -30,8 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.cloud.ext_model.Distance
 import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
@@ -45,7 +47,8 @@ fun StartDistances(
     modifier: Modifier = Modifier,
     distance: List<DistanceInfo>,
     startStatus: StartStatus,
-    onClick: (DistanceInfo) -> Unit,
+    paymentDisabled : Boolean,
+    onClick: (DistanceInfo, Boolean) -> Unit,
 ) {
     var panelState by rememberSaveable {
         mutableStateOf(true)
@@ -84,8 +87,8 @@ fun StartDistances(
             LazyRow {
                 items(distance) {
                     Column(modifier.clip(Shapes.medium)) {
-                        DistanceItem(item = it, onClick = {
-                            onClick(it)
+                        DistanceItem(item = it, paymentDisabled = paymentDisabled,onClick = {
+                            onClick(it, paymentDisabled)
                         })
                     }
                 }
@@ -95,7 +98,7 @@ fun StartDistances(
 }
 
 @Composable
-fun DistanceItem(item: DistanceInfo, onClick: OnClick) {
+fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick) {
 
     Box(
         modifier = Modifier
@@ -103,7 +106,6 @@ fun DistanceItem(item: DistanceInfo, onClick: OnClick) {
             .fillMaxWidth()
             .border(width = 3.dp, color = SportSouceColor.SportSouceLighBlue, shape = Shapes.medium)
             .clip(Shapes.medium)
-
     ) {
         Column(
             modifier = Modifier
@@ -127,20 +129,48 @@ fun DistanceItem(item: DistanceInfo, onClick: OnClick) {
                 overflow = TextOverflow.Ellipsis,
                 color = SportSouceColor.SportSouceBlue
             )
-            Text(
-                text = "Цена : " + item.distance.price + " р.",
-                fontSize = 12.sp,
-                fontFamily = FontNunito.bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
-            )
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceLighBlue),
-                onClick = { onClick() },
-            ) {
-                Text("Зарегистрироваться")
+            if (paymentDisabled){
+                Text(
+                    text = "Участие бесплатно",
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = SportSouceColor.SportSouceBlue
+                )
+            }else{
+                Text(
+                    text = "Цена : " + item.distance.price + " р.",
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = SportSouceColor.SportSouceBlue
+                )
             }
+            val enabled = item.distance.slots.toInt() > 0
+            if (enabled){
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SportSouceColor.SportSouceLighBlue,
+                    ),
+                    onClick = { onClick() },
+                ) {
+                    Text("Зарегистрироваться")
+                }
+            }else{
+                Button(
+                    enabled = false,
+                    colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = SportSouceColor.VeryLighBlue,
+                    ),
+                    onClick = { onClick() },
+                ) {
+
+                    Text("Слоты закончились")
+                }
+            }
+
         }
     }
 }

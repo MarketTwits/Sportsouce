@@ -34,5 +34,5 @@ data class DistanceInfo(
     val prompt: Boolean,
     val groups: List<Group>,
     val format: String,
-    val distance: Distance
+    val distance: Distance,
 )

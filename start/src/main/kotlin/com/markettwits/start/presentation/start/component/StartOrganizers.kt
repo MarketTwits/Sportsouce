@@ -10,12 +10,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.HomeRepairService
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,16 +29,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.openWebPage
+import com.markettwits.core_ui.image.icons.IconTelegram
+import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.R
 import com.markettwits.start.presentation.common.Animation
 
 @Composable
@@ -66,7 +63,7 @@ fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Organizer>) {
                 fontSize = 16.sp
             )
             Icon(
-                imageVector = if (!panelState) Icons.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
+                imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                 contentDescription = "",
                 tint = SportSouceColor.SportSouceBlue
             )
@@ -134,13 +131,13 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                                 }
                         ) {
                             val icon = when(it.code){
-                                "vk" -> painterResource(id = R.drawable.vk_org_icon)
-                                "telegram" -> painterResource(id = R.drawable.telegram_org_icon)
-                                else -> painterResource(id = R.drawable.vk_org_icon)
+                                "vk" -> IconVk
+                                "telegram" -> IconTelegram
+                                else -> IconTelegram
                             }
                             Icon(
                                 modifier = Modifier.size(15.dp).align(Alignment.Center),
-                                painter = icon,
+                                imageVector = icon,
                                 contentDescription = "icon",
                                 tint = Color.White
                             )

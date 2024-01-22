@@ -33,7 +33,7 @@ interface RemoteRegistrationsToUiMapper {
                     team = it.team,
                     kindOfSport = it.format,
                     startTitle = it.start.name,
-                    payment = mapPayment(it.payment, it.start.isOpen)
+                    payment = mapPayment(it.payment, it.start.isOpen, it.start.payment_disabled ?: false)
                 )
             }
             return RegistrationsStore.State(
@@ -42,12 +42,13 @@ interface RemoteRegistrationsToUiMapper {
             )
         }
 
-        private fun mapPayment(payment: Int?, isOpen: Boolean): Boolean {
-            return !(payment == null && isOpen)
+        private fun mapPayment(payment: Int?, isOpen: Boolean, paymentDisabled : Boolean): Boolean {
+            return !(payment == null && isOpen && !paymentDisabled)
         }
 
         private fun mapPaymentList(base: List<RegistrationsStore.StartsStateInfo>): RegistrationsStore.StartPaymentState {
-            val list = base.filter { !it.payment }
+            val list = base
+                .filter { !it.payment }
             val count = list.size
             val cost = list.sumOf { it.cost.toDoubleOrNull() ?: 0.0 }
             return RegistrationsStore.StartPaymentState(

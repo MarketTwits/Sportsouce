@@ -14,4 +14,5 @@ data class RemoteStartUser(
     val start_date : String,
     val select_kinds_sport: String,
     val start_status: StartStatus,
+    val payment_disabled : Boolean?
 )

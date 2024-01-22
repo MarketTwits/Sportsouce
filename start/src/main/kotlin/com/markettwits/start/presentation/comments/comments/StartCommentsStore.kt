@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.comments
+package com.markettwits.start.presentation.comments.comments
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
@@ -11,9 +11,9 @@ import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.data.start.StartDataSource
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.comments.StartCommentsStore.Intent
-import com.markettwits.start.presentation.comments.StartCommentsStore.Label
-import com.markettwits.start.presentation.comments.StartCommentsStore.State
+import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Intent
+import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Label
+import com.markettwits.start.presentation.comments.comments.StartCommentsStore.State
 import com.markettwits.start.presentation.start.CommentMode
 import com.markettwits.start.presentation.start.CommentUiState
 import kotlinx.coroutines.launch

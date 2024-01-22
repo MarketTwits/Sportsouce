@@ -65,11 +65,6 @@ class BaseStartDataSource(
             result
         }
 
-    override suspend fun startMember(startId: Int): List<StartMembersUi> {
-        val startMember = service.fetchStartMember(startId)
-        return mapper.map(startMember)
-    }
-
     override suspend fun writeComment(comment: String, startId: Int): CommentUiState {
         return try {
             val token = authService.updateToken()

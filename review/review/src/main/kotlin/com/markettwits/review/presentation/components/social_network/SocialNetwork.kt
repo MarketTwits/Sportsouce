@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.openWebPage
+import com.markettwits.core_ui.image.icons.IconTelegram
+import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
@@ -38,22 +38,20 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
     ) {
         val context = LocalContext.current
         SocialNetworkButton(
-            modifier = Modifier
-                .clickable { onClickVk(context) }
-                .weight(1f),
+            modifier = Modifier.weight(1f),
             title = "Мы ВКонтакте",
             textColor = SportSouceColor.VkIcon,
-            icon = VkIcon,
-            backgroundColor = SportSouceColor.VeryLighBlue
+            icon = IconVk,
+            backgroundColor = SportSouceColor.VeryLighBlue,
+            onClick = {onClickVk(context)}
         )
         SocialNetworkButton(
-            modifier = Modifier
-                .clickable { onClickTelegram(context) }
-                .weight(1f),
+            modifier = Modifier.weight(1f),
             title = "Мы в Telegram",
             textColor = SportSouceColor.TelegramIcon,
             icon = IconTelegram,
-            backgroundColor = SportSouceColor.VeryLighBlue
+            backgroundColor = SportSouceColor.VeryLighBlue,
+            onClick = {onClickTelegram(context) }
         )
     }
 }
@@ -65,11 +63,13 @@ private fun SocialNetworkButton(
     title: String,
     textColor: Color,
     backgroundColor: Color,
+    onClick : () -> Unit
 ) {
     Row(
         modifier = modifier
             .padding(5.dp)
             .clip(Shapes.large)
+            .clickable { onClick() }
             .background(backgroundColor)
             .padding(15.dp)
         ,

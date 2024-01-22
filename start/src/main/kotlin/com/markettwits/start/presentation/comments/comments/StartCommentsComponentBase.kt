@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.comments
+package com.markettwits.start.presentation.comments.comments
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore

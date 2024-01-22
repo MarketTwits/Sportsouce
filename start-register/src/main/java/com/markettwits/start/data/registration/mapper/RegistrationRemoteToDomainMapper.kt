@@ -8,12 +8,24 @@ import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.start.domain.StartStatement
 
 interface RegistrationRemoteToDomainMapper {
-    fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User,price : String): StartStatement
+    fun map(
+        cities: CityRemote,
+        teamsRemote: TeamsRemote,
+        user: User,
+        price: String,
+        paymentDisabled: Boolean
+    ): StartStatement
 }
 
 class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
     RegistrationRemoteToDomainMapper {
-    override fun map(cities: CityRemote, teamsRemote: TeamsRemote, user: User, price : String): StartStatement {
+    override fun map(
+        cities: CityRemote,
+        teamsRemote: TeamsRemote,
+        user: User,
+        price: String,
+        paymentDisabled: Boolean
+    ): StartStatement {
         return StartStatement(
             name = user.name,
             surname = user.surname,
@@ -28,7 +40,8 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             cities = mapCitiesToDomain(cities.rows),
             teams = mapTeamsToDomain(teamsRemote.rows),
             sexList = mapSexToDomain(),
-            price = price
+            price = price,
+            paymentDisabled = paymentDisabled
         )
     }
 

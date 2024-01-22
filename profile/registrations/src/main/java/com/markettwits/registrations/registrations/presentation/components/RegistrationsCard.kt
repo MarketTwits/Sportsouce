@@ -93,7 +93,7 @@ fun RegistrationsCardImageCard(
             error = {
                 SubcomposeAsyncImageContent(
                     modifier = modifier,
-                    painter = painterResource(id = com.markettwits.start.R.drawable.default_start_image)
+                    painter = painterResource(id = com.markettwits.core_ui.R.drawable.default_start_image)
                 )
             },
             success = {

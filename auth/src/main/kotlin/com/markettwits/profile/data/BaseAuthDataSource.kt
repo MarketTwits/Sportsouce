@@ -7,11 +7,9 @@ import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.sign_in.SignInUiState
+import com.markettwits.cloud.api.SportsouceApi
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
-import com.markettwits.cloud.api.SportsouceApi
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 
 class BaseAuthDataSource(
     private val remoteService: SportsouceApi,

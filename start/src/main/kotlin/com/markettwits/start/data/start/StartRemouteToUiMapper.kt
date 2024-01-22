@@ -12,6 +12,7 @@ import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.start.data.start.test.SelectKindsSportItem
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
+import io.ktor.http.ContentType.Application.Json
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -29,8 +30,7 @@ interface StartRemoteToUiMapper {
     ): StartItem
     fun map(e : Exception) : String
     fun map(commentsRemote: StartCommentsRemote) : StartItem.Comments
-
-    fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
+    fun map(startMember: List<StartMemberItem>,paymentDisabled : Boolean): List<StartMembersUi>
     class Base(
         private val mapper: TimeMapper,
         private val membersToUiMapper: StartMembersToUiMapper,
@@ -55,6 +55,7 @@ interface StartRemoteToUiMapper {
                 ),
                 startData = startRemote.start_data.start_date,
                 description = startRemote.start_data.description ?: "",
+                paymentDisabled = startRemote.start_data.payment_disabled ?: false,
                 distanceInfo =
                 updateDistanceInfoList(
                     calculateRemainingSlots(
@@ -64,7 +65,7 @@ interface StartRemoteToUiMapper {
                     mapCurrentTime(timeRemote.dateTime)
                 ),
                 organizers = startRemote.start_data.organizers,
-                membersUi = map(startMember),
+                membersUi = map(startMember, startRemote.start_data.payment_disabled ?: false),
                 commentsRemote = mapComments(commentsRemote),
                 conditionFile = if (startRemote.start_data.conditionFile != null) {
                     StartItem.ConditionFile.Base(startRemote.start_data.conditionFile!!.fullPath)
@@ -144,8 +145,8 @@ interface StartRemoteToUiMapper {
             return distance.price.toInt() // or whatever default value you want to return when no interval matches
         }
 
-        override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
-            return membersToUiMapper.maps(startMember)
+        override fun map(startMember: List<StartMemberItem>, paymentDisabled : Boolean): List<StartMembersUi> {
+            return membersToUiMapper.maps(startMember,paymentDisabled)
         }
 
         private fun mapComments(commentsRemote: StartCommentsRemote): StartItem.Comments {
@@ -229,7 +230,5 @@ interface StartRemoteToUiMapper {
                 distanceInfo.copy(distance = distanceInfo.distance.copy(slots = remainingSlots.toString()))
             }
         }
-
     }
-
 }

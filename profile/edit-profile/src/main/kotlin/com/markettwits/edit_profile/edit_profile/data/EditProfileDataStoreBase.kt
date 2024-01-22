@@ -3,7 +3,7 @@ package com.markettwits.edit_profile.edit_profile.data
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
-import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -44,20 +44,6 @@ class EditProfileDataStoreBase(
             mapper.map(e)
         }
 
-
-//        val city = cloud.cities()
-//        val team = cloud.teams()
-//        val token = authDataSource.updateToken()
-//        val profile = cloud.auth(token)
-//        return mapper.map(city, team, profile)
     }
 
-    @Deprecated("don't use")
-    override suspend fun pages(): List<EditProfileUiPage> {
-        val city = cloud.cities()
-        val team = cloud.teams()
-        val token = authDataSource.updateToken()
-        val profile = cloud.auth(token)
-        return mapper.mapAll(city, team, profile)
-    }
 }

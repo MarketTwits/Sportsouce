@@ -12,6 +12,8 @@ import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
+import com.markettwits.cloud.model.sign_up.SignUpRequest
+import com.markettwits.cloud.model.sign_up.SignUpResponse
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
@@ -54,6 +56,7 @@ interface SportsouceApi {
         token: String
     ): Reply
     //Auth
+    suspend fun register(signUpRequest: SignUpRequest) : SignUpResponse
     suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess
     suspend fun auth(token: String): User
     //Profile

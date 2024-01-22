@@ -1,4 +1,4 @@
-package com.markettwits.profile.data
+package com.markettwits.profile.data.mapper
 
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.profile.presentation.sign_in.SignInUiState

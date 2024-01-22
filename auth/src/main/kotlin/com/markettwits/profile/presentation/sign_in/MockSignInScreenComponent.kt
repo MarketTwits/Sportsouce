@@ -6,6 +6,9 @@ import com.arkivanov.decompose.value.Value
 class MockSignInScreenComponent : SignInScreen {
     override val state: Value<SignInUiState> = MutableValue(SignInUiState.Loading)
     override val fieldState: Value<SignInFieldUiState> = MutableValue(SignInFieldUiState("","",false))
+    override fun signUp() {
+
+    }
 
     override fun logIn() {
 

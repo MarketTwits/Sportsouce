@@ -1,6 +1,5 @@
 package com.markettwits.profile.data
 
-import android.util.Log
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
@@ -8,6 +7,11 @@ import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
+import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
+import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
+import com.markettwits.profile.data.mapper.SignUpMapper
+import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 
@@ -15,8 +19,16 @@ class BaseAuthDataSource(
     private val remoteService: SportsouceApi,
     private val signInMapper: SignInRemoteToUiMapper,
     private val signInCacheMapper: SignInRemoteToCacheMapper,
+    private val signUpMapper : SignUpMapper,
     private val local: AuthCacheDataSource
 ) : AuthDataSource {
+    override suspend fun register(signUpStatement: SignUpStatement) : Result<String> =
+       retryRunCatchingAsync {
+            remoteService.register(signUpMapper.mapToRemote(signUpStatement)).message
+       }.onSuccess {
+           logIn(signUpStatement.email, signUpStatement.password)
+       }
+
     override suspend fun logIn(email: String, password: String): SignInUiState {
         return try {
             val response = remoteService.signIn(SignInRequest(email = email, password = password))

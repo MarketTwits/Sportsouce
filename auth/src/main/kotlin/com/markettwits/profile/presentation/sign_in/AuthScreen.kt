@@ -57,6 +57,10 @@ import com.markettwits.auth.R
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.profile.presentation.component.AuthButton
+import com.markettwits.profile.presentation.component.AuthTextField
+import com.markettwits.profile.presentation.component.WelcomeContent
+import com.markettwits.profile.presentation.sign_in.components.SignUpLabel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -82,16 +86,7 @@ fun AuthScreen(component: SignInScreen) {
                 .padding(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.im_welcom_image),
-                contentDescription = "welcom image"
-            )
-            Text(
-                text = "Добро пожаловать на SportSouce !",
-                fontFamily = FontNunito.bold,
-                fontSize = 24.sp,
-                color = SportSouceColor.SportSouceBlue
-            )
+            WelcomeContent()
             val modifier = Modifier.padding(10.dp)
             AuthTextField(
                 modifier = modifier,
@@ -119,6 +114,10 @@ fun AuthScreen(component: SignInScreen) {
             ) {
                 component.logIn()
             }
+            SignUpLabel(modifier = modifier.padding(top = 10.dp)){
+                component.signUp()
+            }
+
         }
         SnackbarHost(
             hostState = snackbarHostState,
@@ -162,118 +161,6 @@ fun ForgotPasswordText(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun AuthButton(
-    modifier: Modifier = Modifier,
-    title: String,
-    enabled: Boolean,
-    loading: Boolean,
-    onClick: () -> Unit
-) {
-    Button(
-        modifier = modifier
-            .fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = SportSouceColor.SportSouceBlue,
-            disabledContainerColor = SportSouceColor.SportSouceBlue.copy(alpha = 0.3f),
-        ),
-        enabled = enabled,
-        shape = Shapes.medium,
-        onClick = { onClick() }
-    ) {
-        if (loading) {
-            CircularProgressIndicator(color = Color.White)
-        } else {
-            Text(
-                text = title,
-                fontFamily = FontNunito.bold,
-                fontSize = 24.sp,
-                color = Color.White
-            )
-        }
-    }
-}
-
-@Composable
-fun AuthTextField(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: String,
-    isError: Boolean = false,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    onValueChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        modifier = modifier.fillMaxWidth(),
-        value = value,
-        label = {
-            Text(text = label, fontFamily = FontNunito.bold, fontSize = 14.sp)
-        },
-        visualTransformation = visualTransformation,
-        isError = isError,
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White,
-            cursorColor = SportSouceColor.SportSouceBlue,
-            focusedIndicatorColor = SportSouceColor.SportSouceBlue,
-            unfocusedIndicatorColor = SportSouceColor.SportSouceBlue,
-            errorIndicatorColor = SportSouceColor.SportSouceLightRed,
-            errorContainerColor = Color.White,
-            errorTextColor = SportSouceColor.SportSouceLightRed,
-            focusedLabelColor = SportSouceColor.SportSouceBlue,
-            unfocusedTextColor = SportSouceColor.SportSouceBlue
-        ),
-        textStyle = TextStyle(fontFamily = FontNunito.medium),
-        maxLines = 1,
-        onValueChange = onValueChange,
-    )
-}
-
-@Composable
-private fun AuthSnackBar(
-    modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState,
-    message: String,
-    close: () -> Unit,
-) {
-    val scope = rememberCoroutineScope()
-    ExtendedFloatingActionButton(
-        modifier = modifier.fillMaxWidth(),
-        text = { Text("Show snackbar") },
-        icon = {
-            Icon(
-                modifier = Modifier.clickable {
-                    close()
-                },
-                imageVector = Icons.Filled.Image,
-                contentDescription = ""
-            )
-        },
-        onClick = {
-
-            val job = scope.launch {
-                val result = snackbarHostState
-                    .showSnackbar(
-                        message = message,
-                        actionLabel = "Action",
-                        // Defaults to SnackbarDuration.Short
-                        duration = SnackbarDuration.Short
-                    )
-                when (result) {
-                    SnackbarResult.ActionPerformed -> {
-                        close()
-                    }
-
-                    SnackbarResult.Dismissed -> {
-                        close()
-                    }
-                }
-                delay(500)
-            }
-            job.cancel()
-        }
-    )
-}
 
 @Preview()
 @Composable

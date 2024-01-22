@@ -1,5 +1,6 @@
 package com.markettwits.start.data.registration.mapper
 
+import android.util.Patterns
 import com.markettwits.cloud.ext_model.DistanceInfo
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
@@ -11,6 +12,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import java.util.regex.Pattern
+
 
 class RegistrationMapperBase : RegistrationMapper {
     override fun map(
@@ -25,7 +28,7 @@ class RegistrationMapperBase : RegistrationMapper {
             day = 1,
             distance = startDistanceInfo.value,
             format = startDistanceInfo.format,
-            member = listOf(mapStartMember(user, startStatement, startDistanceInfo)),
+            member = listOf(mapStartMember(user, validateFields(startStatement), startDistanceInfo)),
             payment_disabled = false,
             payment_type = "",
             price = startDistanceInfo.distance.price.toInt(),
@@ -33,6 +36,28 @@ class RegistrationMapperBase : RegistrationMapper {
             registration_without_payment = withoutPayment,
             start_id = startId
         )
+    }
+
+    private fun validateFields(startStatement: StartStatement) : StartStatement {
+        if (startStatement.city.isEmpty() || startStatement.city.length < 5) throw IllegalStateException(
+            "Введите корректное название города (не менее 5 символов)"
+        )
+        if (startStatement.team.isEmpty()) throw IllegalArgumentException(
+            "Введите корректное название команды (не менее 5 символов)"
+        )
+        if (startStatement.name.isEmpty()) throw IllegalArgumentException(
+            "Имя не должно быть пустым"
+        )
+        if (startStatement.surname.isEmpty()) throw IllegalArgumentException(
+            "Фамилия не должно быть пустой"
+        )
+        if (!Patterns.EMAIL_ADDRESS.matcher(startStatement.email).matches()) throw IllegalArgumentException(
+            "Введите корректую почту"
+        )
+        if (startStatement.phone.isEmpty()) throw IllegalArgumentException(
+            "Введите корректый номер телефона"
+        )
+        return startStatement
     }
 
     private fun mapStartMember(
@@ -75,17 +100,17 @@ class RegistrationMapperBase : RegistrationMapper {
 
         val listOfGroups = startDistanceInfo.groups
 
-            for (group in listOfGroups) {
-                val ageFrom = group.ageFrom.toIntOrNull()
-                val ageTo = group.ageTo.toIntOrNull()
-                if (ageFrom != null && ageTo != null && age in ageFrom..ageTo) {
-                    return StartRegisterRequest.Group(
-                        ageFrom = group.ageFrom,
-                        ageTo = group.ageTo,
-                        name = group.name,
-                        sex = mapGender(startStatement.sex)
-                    )
-                }
+        for (group in listOfGroups) {
+            val ageFrom = group.ageFrom.toIntOrNull()
+            val ageTo = group.ageTo.toIntOrNull()
+            if (ageFrom != null && ageTo != null && age in ageFrom..ageTo) {
+                return StartRegisterRequest.Group(
+                    ageFrom = group.ageFrom,
+                    ageTo = group.ageTo,
+                    name = group.name,
+                    sex = mapGender(startStatement.sex)
+                )
+            }
         }
         // Handle the case when no matching group is found
         // You can throw an exception or return a default group, depending on your requirements.

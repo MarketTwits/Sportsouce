@@ -225,7 +225,7 @@ private fun StartCommentCard(
 @Composable
 fun CommentTextField(
     modifier: Modifier = Modifier,
-    isLoading : Boolean,
+    isLoading: Boolean,
     mode: CommentMode,
     onClickCloseReply: () -> Unit,
     sendComment: (String) -> Unit
@@ -272,7 +272,12 @@ fun CommentTextField(
             }
 
         }
-        Row(modifier.align(Alignment.CenterEnd), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 modifier = Modifier.size(12.dp),
                 imageVector = Icons.Default.Book,

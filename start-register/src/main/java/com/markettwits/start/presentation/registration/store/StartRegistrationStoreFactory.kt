@@ -21,12 +21,17 @@ class StartRegistrationStoreFactory(
     private val repository: RegistrationStartRepository
 ) {
 
-    fun create(price: String, distanceInfo: DistanceInfo, starId: Int): StartRegistrationStore =
+    fun create(
+        price: String,
+        distanceInfo: DistanceInfo,
+        starId: Int,
+        paymentDisabled: Boolean
+    ): StartRegistrationStore =
         object : StartRegistrationStore,
             Store<StartRegistrationStore.Intent, StartRegistrationStore.State, StartRegistrationStore.Label> by storeFactory.create(
                 name = "RegistrationStore",
                 initialState = StartRegistrationStore.State(),
-                bootstrapper = BootstrapperImpl(price),
+                bootstrapper = BootstrapperImpl(price, paymentDisabled),
                 executorFactory = { ExecutorImpl(distanceInfo, starId) },
                 reducer = ReducerImpl
             ) {}
@@ -39,16 +44,17 @@ class StartRegistrationStoreFactory(
 
     private inner class BootstrapperImpl(
         private val price: String,
+        private val paymentDisabled: Boolean
     ) :
         CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            launch(price)
+            launch(price, paymentDisabled)
         }
 
-        private fun launch(price: String) {
+        private fun launch(price: String, paymentDisabled: Boolean) {
             dispatch(Action.Loading)
             scope.launch {
-                repository.preload(price).fold(
+                repository.preload(price, paymentDisabled).fold(
                     onSuccess = { dispatch(Action.InfoLoaded(it)) },
                     onFailure = { dispatch(Action.InfoFailed(it.message.toString())) }
                 )
@@ -94,11 +100,13 @@ class StartRegistrationStoreFactory(
                     starId = starId,
                     withPayment = false
                 )
+
                 is StartRegistrationStore.Intent.ChangePromo -> applyPromo(
                     getState().startStatement!!,
                     intent.value,
                     starId
                 )
+
                 is StartRegistrationStore.Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
             }
         }
@@ -155,17 +163,16 @@ class StartRegistrationStoreFactory(
                             distanceInfo = distanceInfo,
                             startId = starId
                         )
-                if (result.isError) {
-                    dispatch(Msg.RegistryFailed(result.message))
-                }
-                if (result.isSuccess) {
+                result.fold(onSuccess = {
                     dispatch(
                         Msg.RegistrySuccess(
-                            paymentUrl = result.paymentUrl,
-                            message = result.message
+                            paymentUrl = it.paymentUrl,
+                            message = it.message
                         )
                     )
-                }
+                }, onFailure = {
+                    dispatch(Msg.RegistryFailed(it.message.toString()))
+                })
             }
         }
     }
@@ -205,6 +212,7 @@ class StartRegistrationStoreFactory(
                         )
                     )
                 )
+
                 Msg.OnConsumedEvent -> copy(testEvent = consumed())
             }
     }

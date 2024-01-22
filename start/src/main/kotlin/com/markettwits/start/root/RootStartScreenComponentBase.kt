@@ -19,8 +19,8 @@ import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.StartScreenComponentComponentBase
 import com.markettwits.start.di.startModule
 import com.markettwits.start.di.startRegistrationModule
-import com.markettwits.start.presentation.comments.StartCommentsComponentBase
-import com.markettwits.start.presentation.comments.StartCommentsStoreFactory
+import com.markettwits.start.presentation.comments.comments.StartCommentsComponentBase
+import com.markettwits.start.presentation.comments.comments.StartCommentsStoreFactory
 import com.markettwits.start.presentation.registration.StartRegistrationComponentBase
 
 class RootStartScreenComponentBase(
@@ -57,11 +57,12 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
                     back = pop::invoke,
-                    register = { distanceInfo ->
+                    register = { distanceInfo, paymentDisabled ->
                         navigation.push(
                             RootStartScreenComponent.Config.StartRegistration(
                                 startId = startId,
-                                distanceInfo = distanceInfo
+                                distanceInfo = distanceInfo,
+                                paymentDisabled = paymentDisabled
                             )
                         )
                     },
@@ -110,6 +111,7 @@ class RootStartScreenComponentBase(
                 StartRegistrationComponentBase(
                     context = componentContext,
                     startId = config.startId,
+                    paymentDisabled = config.paymentDisabled,
                     distanceInfo = config.distanceInfo,
                     storeFactory = scope.get(),
                     pop = navigation::pop

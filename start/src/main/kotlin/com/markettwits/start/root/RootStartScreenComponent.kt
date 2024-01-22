@@ -3,7 +3,7 @@ package com.markettwits.start.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.ext_model.DistanceInfo
-import com.markettwits.start.presentation.comments.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
@@ -32,7 +32,7 @@ interface RootStartScreenComponent{
         @Serializable
         data class StartMembersFilter(val items: List<MembersFilterGroup>) : Config()
         @Serializable
-        data class StartRegistration(val startId: Int, val distanceInfo: DistanceInfo) : Config()
+        data class StartRegistration(val startId: Int, val distanceInfo: DistanceInfo, val paymentDisabled : Boolean) : Config()
     }
     sealed class Child {
         data class Start(val component: StartScreenComponent, val commentsComponent: StartCommentsComponent) : Child()

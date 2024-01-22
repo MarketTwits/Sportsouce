@@ -32,7 +32,7 @@ fun StartScreenContent(
     isLoading : Boolean,
     onClickRetry : () -> Unit,
     onClickBack : () -> Unit,
-    onClickDistance : (DistanceInfo) -> Unit,
+    onClickDistance : (DistanceInfo, Boolean) -> Unit,
     onClickMembers : ( List<StartMembersUi>) -> Unit,
     comments : @Composable (Modifier) -> Unit
 ) {
@@ -62,8 +62,9 @@ fun StartScreenContent(
                         modifier = modifier,
                         distance = data.distanceInfo,
                         startStatus = data.startStatus,
-                        onClick = {
-                            onClickDistance(it)
+                        paymentDisabled = data.paymentDisabled,
+                        onClick = { distance, paymentDisabled ->
+                            onClickDistance(distance, paymentDisabled)
                         }
                     )
                     StartOrganizers(modifier = modifier, organizer = data.organizers)

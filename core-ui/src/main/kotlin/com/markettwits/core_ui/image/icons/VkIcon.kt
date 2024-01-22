@@ -1,4 +1,4 @@
-package com.markettwits.review.presentation.components.social_network
+package com.markettwits.core_ui.image.icons
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
@@ -16,12 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview
 @Composable
 private fun VectorPreview() {
-    Image(VkIcon, null)
+    Image(IconVk, null)
 }
 
 private var _Vk: ImageVector? = null
 
-public val VkIcon: ImageVector
+public val IconVk: ImageVector
     get() {
         if (_Vk != null) {
             return _Vk!!

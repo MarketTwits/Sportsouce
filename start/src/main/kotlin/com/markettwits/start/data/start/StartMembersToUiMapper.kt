@@ -1,19 +1,20 @@
 package com.markettwits.start.data.start
 
+import androidx.compose.ui.util.fastFilter
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 
 
 interface StartMembersToUiMapper {
     fun map(startMember: List<StartMemberItem>): List<StartMembersUi>
-    fun maps(startMember: List<StartMemberItem>): List<StartMembersUi>
+    fun maps(startMember: List<StartMemberItem>, paymentDisabled: Boolean): List<StartMembersUi>
 
     class Base : StartMembersToUiMapper {
         override fun map(startMember: List<StartMemberItem>): List<StartMembersUi> {
             val list = mutableListOf<StartMembersUi>()
             startMember.forEach {
                 if (it.payment != null) {
-                    if (it.group != null){
+                    if (it.group != null) {
                         list.add(
                             StartMembersUi.Single(
                                 id = it.id,
@@ -31,12 +32,18 @@ interface StartMembersToUiMapper {
             return list
         }
 
-        override fun maps(startMember: List<StartMemberItem>): List<StartMembersUi> {
-            return convertToStartMembersUiNew(startMember)
+        override fun maps(
+            startMember: List<StartMemberItem>,
+            paymentDisabled: Boolean
+        ): List<StartMembersUi> {
+            return convertToStartMembersUiNew(startMember, paymentDisabled)
         }
 
 
-        private fun convertToStartMembersUiNew(startMember: List<StartMemberItem>): List<StartMembersUi> {
+        private fun convertToStartMembersUiNew(
+            startMember: List<StartMemberItem>,
+            paymentDisabled: Boolean
+        ): List<StartMembersUi> {
 
             val teamMap = mutableMapOf<String, MutableList<StartMemberItem>>()
 
@@ -47,11 +54,15 @@ interface StartMembersToUiMapper {
                     teamMap.computeIfAbsent(safeRegCode) { mutableListOf() }.add(item)
                 }
             }
-
             return if (teamMap.isEmpty()) {
-                startMember
-                    .filter { it.payment != null }
-                    .map { convertToSingle(it) }
+                val mapSingleMembers = if (paymentDisabled){
+                    startMember.map { convertToSingle(it) }
+                }else{
+                    startMember
+                        .filter { it.payment != null }
+                        .map { convertToSingle(it) }
+                }
+                mapSingleMembers
             } else {
                 val teams = teamMap
                     .values
@@ -91,7 +102,7 @@ interface StartMembersToUiMapper {
                 surname = startMemberItem.surname,
                 distance = startMemberItem.distance,
                 team = startMemberItem.team,
-                group = startMemberItem.mapStartMember(startMemberItem.group?: "").name,
+                group = startMemberItem.mapStartMember(startMemberItem.group ?: "").name,
                 city = startMemberItem.city ?: ""
             )
         }

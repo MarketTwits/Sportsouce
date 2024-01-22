@@ -28,7 +28,7 @@ class RegistrationResponseMapperBase : RegistrationResponseMapper {
                 StartRegistryResult(
                     isSuccess = true,
                     isError = false,
-                    message = "Вы успешо зарегестрировались, оплатите в личном кабинете",
+                    message = "Вы успешо зарегестрировались на старт",
                     paymentUrl = ""
                 )
             },

@@ -87,10 +87,9 @@ class RegistrationMapperBase : RegistrationMapper {
                     )
                 }
         }
-
         // Handle the case when no matching group is found
         // You can throw an exception or return a default group, depending on your requirements.
-        throw NoSuchElementException("No matching group found for age $age")
+        throw NoSuchElementException("Нет подходящей возрастной группы для участников $age лет")
     }
 
     private fun calculateAge(birthday: String): Int {

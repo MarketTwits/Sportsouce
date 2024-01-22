@@ -35,7 +35,6 @@ class MembersFilterBase : MembersFilter {
                     is StartMembersUi.Team -> filterByKeyWordTeam(value, listOf(member))
                 }
             }
-
             filteredList
         }
     }
@@ -69,10 +68,10 @@ class MembersFilterBase : MembersFilter {
                         when (filterItem) {
                             is MembersFilterItem.Selected -> {
                                 when (filterGroup.title) {
-                                    "Distance" -> member.distance == filterItem.title
-                                    "Team" -> member.team == filterItem.title
-                                    "Group" -> member.group == filterItem.title
-                                    "City" -> member.city == filterItem.title
+                                    "Дистанция" -> member.distance == filterItem.title
+                                    "Команда" -> member.team == filterItem.title
+                                    "Группа" -> member.group == filterItem.title
+                                    "Город" -> member.city == filterItem.title
                                     else -> false
                                 }
                             }
@@ -86,20 +85,17 @@ class MembersFilterBase : MembersFilter {
 
     override fun generateFilterGroups(membersList: List<StartMembersUi>): List<MembersFilterGroup> {
         val filterGroups = mutableListOf<MembersFilterGroup>()
-
-        val propertyNames = listOf("Distance", "Team", "Group", "City")
-
+        val propertyNames = listOf("Дистанция", "Команда", "Группа", "Город")
         for (propertyName in propertyNames) {
             val distinctValues = membersList.mapNotNull {
                 when (propertyName) {
-                    "Distance" -> it.distance
-                    "Team" -> it.team
-                    "Group" -> it.group
-                    "City" -> it.city
+                    "Дистанция" -> it.distance
+                    "Команда" -> it.team
+                    "Группа" -> it.group
+                    "Город" -> it.city
                     else -> null
                 }
             }.distinct()
-
             if (distinctValues.isNotEmpty()) {
                 val filterGroup = MembersFilterGroup(
                     title = propertyName,

@@ -17,6 +17,7 @@ class StartRegistrationComponentBase(
     context: ComponentContext,
     private val startId: Int,
     private val distanceInfo: DistanceInfo,
+    private val paymentDisabled : Boolean,
     private val storeFactory: StartRegistrationStoreFactory,
     private val pop : () -> Unit,
 ) : StartRegistrationComponent, ComponentContext by context {
@@ -25,7 +26,8 @@ class StartRegistrationComponentBase(
         storeFactory.create(
             price = distanceInfo.distance.price,
             distanceInfo = distanceInfo,
-            starId = startId
+            starId = startId,
+            paymentDisabled = paymentDisabled
         )
     }
 

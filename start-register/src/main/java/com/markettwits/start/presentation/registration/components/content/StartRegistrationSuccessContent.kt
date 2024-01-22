@@ -18,6 +18,7 @@ import com.markettwits.core_ui.base_extensions.date.mapToString
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.registration.components.RegistrationTextField
 import com.markettwits.start.presentation.registration.components.StartRegistrationButtonPanel
+import com.markettwits.start.presentation.registration.components.StartRegistrationButtonPanelWithoutPayment
 import com.markettwits.start.presentation.registration.components.fileds.CityFiled
 import com.markettwits.start.presentation.registration.components.fileds.RegistrationFiled
 import com.markettwits.start.presentation.registration.components.fileds.TeamFiled
@@ -129,11 +130,18 @@ fun StartRegistrationSuccessContent(
                 onPromoChanged(it)
             }
         )
-        StartRegistrationButtonPanel(
-            onClickSave = {
-                onClickSave()
-            }, onClickPay = {
-                onClickPay()
-            })
+        if (statement.paymentDisabled) {
+            StartRegistrationButtonPanelWithoutPayment(
+                onClickSave = {
+                    onClickSave()
+                })
+        } else {
+            StartRegistrationButtonPanel(
+                onClickSave = {
+                    onClickSave()
+                }, onClickPay = {
+                    onClickPay()
+                })
+        }
     }
 }

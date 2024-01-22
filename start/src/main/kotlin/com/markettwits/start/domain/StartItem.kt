@@ -14,6 +14,7 @@ data class StartItem(
     val startData: String,
     val startTime: String,
     val description: String,
+    val paymentDisabled : Boolean,
     val distanceInfo: List<DistanceInfo>,
     val organizers: List<Organizer>,
     val membersUi: List<StartMembersUi>,

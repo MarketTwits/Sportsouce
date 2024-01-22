@@ -26,7 +26,7 @@ class RegistrationStartRepositoryBase(
     private val registrationResponseMapper: RegistrationResponseMapper,
     private val promoMapper: RegistrationPromoMapper,
 ) : RegistrationStartRepository {
-    override suspend fun preload(price: String): Result<StartStatement> =
+    override suspend fun preload(price: String, paymentDisabled : Boolean): Result<StartStatement> =
         retryRunCatchingAsync {
             val (teams, cities, user) = coroutineScope {
                 withContext(Dispatchers.IO) {
@@ -41,7 +41,7 @@ class RegistrationStartRepositoryBase(
                     )
                 }
             }
-            statementMapper.map(cities, teams, user, price)
+            statementMapper.map(cities, teams, user, price,paymentDisabled)
         }
 
     override suspend fun promocode(value: String, startId: Int): Result<StartPromo> =
@@ -53,40 +53,44 @@ class RegistrationStartRepositoryBase(
         statement: StartStatement,
         distanceInfo: DistanceInfo,
         startId: Int
-    ): StartRegistryResult {
-        val user = authService.auth()
-        val token = authService.updateToken()
-        val request = registerMapper.map(
-            withoutPayment = true,
-            user = user,
-            startStatement = statement,
-            startDistanceInfo = distanceInfo,
-            startId = startId
-        )
-        val result = retryRunCatchingAsync {
-            service.registerOnStartWithoutPayment(request, token)
+    ): Result<StartRegistryResult> {
+        return retryRunCatchingAsync{
+            val user = authService.auth()
+            val token = authService.updateToken()
+            val request = registerMapper.map(
+                withoutPayment = true,
+                user = user,
+                startStatement = statement,
+                startDistanceInfo = distanceInfo,
+                startId = startId
+            )
+            val result = retryRunCatchingAsync {
+                service.registerOnStartWithoutPayment(request, token)
+            }
+            registrationResponseMapper.flatMapWithoutPayment(result)
         }
-        return registrationResponseMapper.flatMapWithoutPayment(result)
     }
 
     override suspend fun pay(
         statement: StartStatement,
         distanceInfo: DistanceInfo,
         startId: Int
-    ): StartRegistryResult {
-        val user = authService.auth()
-        val token = authService.updateToken()
-        val request = registerMapper.map(
-            withoutPayment = false,
-            user = user,
-            startStatement = statement,
-            startDistanceInfo = distanceInfo,
-            startId = startId
-        )
-        val result = retryRunCatchingAsync {
-            service.registerOnStart(request, token)
+    ): Result<StartRegistryResult> {
+        return retryRunCatchingAsync{
+            val user = authService.auth()
+            val token = authService.updateToken()
+            val request = registerMapper.map(
+                withoutPayment = false,
+                user = user,
+                startStatement = statement,
+                startDistanceInfo = distanceInfo,
+                startId = startId
+            )
+            val result = retryRunCatchingAsync {
+                service.registerOnStart(request, token)
+            }
+            registrationResponseMapper.flatMap(result)
         }
-        return registrationResponseMapper.flatMap(result)
     }
 }
 

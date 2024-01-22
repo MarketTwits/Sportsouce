@@ -18,7 +18,9 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
-        data class OnClickDistance(val distanceInfo: DistanceInfo) : Intent
+        data class OnClickDistance(val distanceInfo: DistanceInfo, val paymentDisabled: Boolean) :
+            Intent
+
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
     }
@@ -32,7 +34,9 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OnClickMembers(val members: List<StartMembersUi>) : Label
-        data class OnClickDistance(val distanceInfo: DistanceInfo) : Label
+        data class OnClickDistance(val distanceInfo: DistanceInfo, val paymentDisabled: Boolean) :
+            Label
+
         data object OnClickBack : Label
     }
 }
@@ -61,7 +65,12 @@ class StartScreenStoreFactory(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.OnClickBack -> publish(StartScreenStore.Label.OnClickBack)
-                is Intent.OnClickDistance -> publish(StartScreenStore.Label.OnClickDistance(intent.distanceInfo))
+                is Intent.OnClickDistance -> publish(
+                    StartScreenStore.Label.OnClickDistance(
+                        intent.distanceInfo,
+                        intent.paymentDisabled
+                    )
+                )
                 is Intent.OnClickMembers -> publish(StartScreenStore.Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
             }
@@ -88,7 +97,7 @@ class StartScreenStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State =
-            when(message){
+            when (message) {
                 is Msg.InfoFailed -> State(message = message.message, isError = true)
                 is Msg.InfoLoaded -> State(data = message.data)
                 is Msg.Loading -> copy(isLoading = true)

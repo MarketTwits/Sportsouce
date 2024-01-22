@@ -1,5 +1,6 @@
 package com.markettwits.cloud.model.start_user
 
+import com.markettwits.cloud.model.start.StartRemote
 import kotlinx.serialization.Serializable
 
 @Serializable

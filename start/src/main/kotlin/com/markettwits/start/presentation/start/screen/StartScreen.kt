@@ -7,8 +7,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.markettwits.core_ui.failed_screen.FailedScreen
-import com.markettwits.start.presentation.comments.StartCommentsComponent
-import com.markettwits.start.presentation.comments.components.StartCommentsContent
+import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.components.StartCommentsContent
 import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start.presentation.start.StartScreenComponent
 import com.markettwits.start.presentation.start.store.StartScreenStore
@@ -27,8 +27,8 @@ fun StartScreen(component: StartScreenComponent, commentsComponent: StartComment
             onClickBack = {
                 component.obtainEvent(StartScreenStore.Intent.OnClickBack)
             },
-            onClickDistance = {
-                component.obtainEvent(StartScreenStore.Intent.OnClickDistance(it))
+            onClickDistance = { distance, paymentDisabled ->
+                component.obtainEvent(StartScreenStore.Intent.OnClickDistance(distance, paymentDisabled))
             },
             onClickMembers = {
                 component.obtainEvent(StartScreenStore.Intent.OnClickMembers(it))

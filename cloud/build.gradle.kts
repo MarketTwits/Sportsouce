@@ -5,11 +5,11 @@ plugins {
 
 dependencies {
     implementation(project(":core-koin"))
-    api(libs.ktor.core)
     api(libs.ktor.client.json)
-    api(libs.ktor.client.logging)
-    api(libs.ktor.client.content.negotiation)
     api(libs.ktor.client.okhttp)
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.core)
 }

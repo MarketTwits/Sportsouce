@@ -22,7 +22,7 @@ class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
     private val back: () -> Unit,
-    private val register: (DistanceInfo) -> Unit,
+    private val register: (DistanceInfo, Boolean) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
@@ -35,12 +35,16 @@ class StartScreenComponentComponentBase(
     override fun obtainEvent(intent: StartScreenStore.Intent) {
         store.accept(intent)
     }
+
     init {
         scope.launch {
             store.labels.collect {
                 when (it) {
                     is StartScreenStore.Label.OnClickBack -> back()
-                    is StartScreenStore.Label.OnClickDistance -> register(it.distanceInfo)
+                    is StartScreenStore.Label.OnClickDistance -> register(
+                        it.distanceInfo,
+                        it.paymentDisabled
+                    )
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
                 }
             }

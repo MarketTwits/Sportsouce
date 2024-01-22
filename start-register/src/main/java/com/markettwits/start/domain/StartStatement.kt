@@ -14,7 +14,8 @@ data class StartStatement(
     val price : String,
     val cities : List<City>,
     val teams : List<Team>,
-    val sexList : List<Sex>
+    val sexList : List<Sex>,
+    val paymentDisabled : Boolean
 ){
     data class City(val id : Int, val name : String)
     data class Team(val id : Int, val name : String)

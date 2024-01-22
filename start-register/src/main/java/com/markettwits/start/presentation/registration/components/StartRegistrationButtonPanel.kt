@@ -60,3 +60,25 @@ fun StartRegistrationButtonPanel(modifier: Modifier = Modifier, onClickSave : ()
         }
     }
 }
+@Composable
+fun StartRegistrationButtonPanelWithoutPayment(modifier: Modifier = Modifier, onClickSave : () -> Unit) {
+    Row(modifier = modifier.padding(10.dp)) {
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceLighBlue),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 10.dp
+            ),
+            onClick = { onClickSave() }
+        ) {
+            Text(
+                text = "Сохранить",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.White
+            )
+        }
+    }
+}

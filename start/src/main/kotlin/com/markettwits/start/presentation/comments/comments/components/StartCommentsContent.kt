@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.comments.components
+package com.markettwits.start.presentation.comments.comments.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.presentation.comments.StartCommentsComponent
-import com.markettwits.start.presentation.comments.StartCommentsStore
+import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.StartCommentsStore
 import com.markettwits.start.presentation.start.component.CommentTextField
 import com.markettwits.start.presentation.start.component.StartCommentsPanel
 

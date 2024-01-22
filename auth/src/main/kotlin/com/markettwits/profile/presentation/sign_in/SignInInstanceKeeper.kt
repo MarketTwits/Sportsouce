@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 
 class SignInInstanceKeeper(
     private val service: AuthDataSource,
+    private val toSignUp : () -> Unit,
     private val toProfile : () -> Unit
 ) : InstanceKeeper.Instance {
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -36,4 +37,5 @@ class SignInInstanceKeeper(
             fieldState.value = fieldState.value.copy(enabled = false)
         }
     }
+    fun signUp(){ toSignUp() }
 }

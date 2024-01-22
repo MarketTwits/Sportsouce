@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.bundles.decompose.compose)
     implementation (libs.material3.html.text)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.bundles.mviKotlin)
     implementation(libs.realm)
     implementation (libs.jwtdecode)
 }

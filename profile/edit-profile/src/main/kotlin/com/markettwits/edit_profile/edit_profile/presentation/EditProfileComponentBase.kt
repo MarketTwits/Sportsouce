@@ -5,7 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
 import com.markettwits.edit_profile.edit_profile.data.EditProfileDataStore
-import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +38,7 @@ class EditProfileComponentBase(
         if (state.value.data.isEmpty()) {
             Log.d("mt05", "startdata " + state.value.data.toString())
             state.value = EditProfileUiState.Loading()
-            fetchProfile()
+            launch()
         }
     }
 
@@ -77,13 +77,6 @@ class EditProfileComponentBase(
         }
     }
 
-    private fun fetchProfile() {
-        scope.launch {
-            state.value = EditProfileUiState.Loading()
-            state.value = service.profile()
-        }
-    }
-
     override fun obtainTextFiled(value: EditProfileUiPage) {
         updatePage(value)
     }
@@ -100,6 +93,13 @@ class EditProfileComponentBase(
 
     private val _event = Channel<EditProfileEvent>()
     override val events = _event.receiveAsFlow().shareIn(scope, SharingStarted.Lazily)
+    override fun launch() {
+        scope.launch {
+            state.value = EditProfileUiState.Loading()
+            state.value = service.profile()
+        }
+    }
+
     protected fun sendEventSync(event: EditProfileEvent) = scope.launch { _event.send(event) }
 
     private companion object {

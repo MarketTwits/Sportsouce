@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.component.edit_profile.presentation.mapper
+package com.markettwits.edit_profile.edit_profile.presentation.mapper
 
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 interface RemoteUserToEditProfileMapper {
-    // fun map(user: User): List<EditProfileUiPage>
     fun map(list: List<EditProfileUiPage>): ChangeProfileInfoRequest
     fun map(e: Exception): EditProfileUiState
     fun map(cityRemote: CityRemote, teamsRemote: TeamsRemote, user: User): EditProfileUiState

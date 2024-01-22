@@ -15,23 +15,11 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.profile.data.BaseAuthDataSource
-import com.markettwits.profile.data.SignInRemoteToCacheMapper
-import com.markettwits.profile.data.SignInRemoteToUiMapper
-import com.markettwits.profile.data.database.core.RealmDatabaseProvider
-import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentComponentBase
-import com.markettwits.registrations.registrations.data.RegistrationsDataSourceBase
-import com.markettwits.registrations.registrations.data.RemoteRegistrationsToUiMapper
 import com.markettwits.registrations.registrations.presentation.RegistrationsComponentBase
 import com.markettwits.registrations.registrations.presentation.RegistrationsDataStoreFactory
 import com.markettwits.start.root.RootStartScreenComponentBase
-import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
-import com.markettwits.cloud.provider.HttpClientProvider
 import com.markettwits.registrations.root_registrations.di.userStartRegistrationModule
-import com.markettwits.start.di.startModule
-import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootRegistrationsComponentBase(
     context: ComponentContext,

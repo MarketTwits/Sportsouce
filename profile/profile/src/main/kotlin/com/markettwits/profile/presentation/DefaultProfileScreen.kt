@@ -9,6 +9,7 @@ import com.markettwits.edit_profile.edit_profile.presentation.EditProfileScreen
 import com.markettwits.profile.presentation.component.my_members.MyMembersScreen
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileScreen
 import com.markettwits.profile.presentation.sign_in.AuthScreen
+import com.markettwits.profile.presentation.sign_up.presentation.content.SignUpScreen
 import com.markettwits.registrations.root_registrations.RootRegistrationsScreen
 
 @Composable
@@ -25,6 +26,7 @@ fun DefaultProfileScreen(component: DefaultProfileComponent) {
             is DefaultProfileComponent.Child.MyRegistries -> RootRegistrationsScreen(component = child.component)
             is DefaultProfileComponent.Child.MyMembers -> MyMembersScreen(component = child.component)
             is DefaultProfileComponent.Child.ChangePassword -> ChangePasswordScreen(component = child.component)
+            is DefaultProfileComponent.Child.SignUp -> SignUpScreen(component = child.component)
         }
     }
 

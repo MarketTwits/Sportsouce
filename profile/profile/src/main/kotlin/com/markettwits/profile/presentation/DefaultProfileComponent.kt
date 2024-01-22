@@ -18,20 +18,20 @@ import com.markettwits.profile.presentation.component.authorized.AuthorizedProfi
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
-import com.markettwits.profile.presentation.component.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.profile.presentation.component.my_members.MyMembersComponent
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
+import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponent
+import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponentBase
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponent
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
 import kotlinx.serialization.Serializable
 
 class DefaultProfileComponent(componentContext: ComponentContext) :
     ComponentContext by componentContext {
-
-    private val navigation = StackNavigation<Config>()
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
@@ -40,7 +40,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(rootProfileModule)
     )
-
+    private val navigation = StackNavigation<Config>()
     private val _configStack =
         childStack(
             source = navigation,
@@ -62,9 +62,8 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     context = componentContext,
                     signInInstanceKeeper = SignInInstanceKeeper(
                         service = scope.get(),
-                        toProfile = {
-                            navigation.replaceAll(Config.AuthProfile)
-                        }
+                        toProfile = { navigation.replaceAll(Config.AuthProfile) },
+                        toSignUp = { navigation.push(Config.SignUp) }
                     ),
                 )
             )
@@ -91,6 +90,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     }
                 )
             )
+
             is Config.EditProfile -> Child.EditProfile(
                 EditProfileComponentBase(
                     componentContext,
@@ -112,8 +112,18 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     storeFactory = scope.get()
                 )
             )
+
             is Config.MyRegistries -> Child.MyRegistries(
                 RootRegistrationsComponentBase(componentContext, pop = ::onBackClicked)
+            )
+
+            is Config.SignUp -> Child.SignUp(
+                SignUpComponentBase(
+                    context = componentContext,
+                    storeFactory = scope.get(),
+                    pop = ::onBackClicked,
+                    profile = { navigation.replaceAll(Config.AuthProfile) }
+                )
             )
         }
 
@@ -157,6 +167,9 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         @Serializable
         data object MyRegistries : Config()
 
+        @Serializable
+        data object SignUp : Config()
+
     }
 
     sealed class Child {
@@ -174,5 +187,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         data class MyRegistries(val component: RootRegistrationsComponent) :
             Child()
+
+        data class SignUp(val component: SignUpComponent) : Child()
     }
 }

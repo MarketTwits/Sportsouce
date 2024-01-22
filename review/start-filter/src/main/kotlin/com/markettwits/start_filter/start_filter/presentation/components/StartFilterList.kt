@@ -74,41 +74,7 @@ fun StartFilterList(
                     )
                 }
 
-                is StartFilterUi.FilterStartType.Calendar -> {
-//                    val calendarState = rememberUseCaseState()
-//                    val selectedDateRange = remember {
-//                        val value = Range(
-//                            java.time.LocalDate.now().minusDays(10),
-//                            java.time.LocalDate.now()
-//                        )
-//                        mutableStateOf(value)
-//                    }
-//
-//                    CalendarDialog(
-//                        state = calendarState,
-//                        config = CalendarConfig(
-//                            style = CalendarStyle.MONTH,
-//                        ),
-//                        selection = CalendarSelection.Period(
-//                            selectedRange = selectedDateRange.value
-//                        ) { startDate, endDate ->
-//                            val data = startDate.mapToStroke() + " " + endDate.mapToStroke()
-//                            onEvent(data, index, true)
-//                            selectedDateRange.value = Range(startDate, endDate)
-//                        },
-//                    )
-//                    MenuTextField(
-//                        enabled = false,
-//                        modifier = modifier
-//                            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
-//                            .clickable {
-//                                calendarState.show()
-//                            },
-//                        label = item.label,
-//                        value = item.selected.joinToString(", "),
-//                        onValueChange = {}
-//                    )
-                }
+                is StartFilterUi.FilterStartType.Calendar -> {}
             }
 
 

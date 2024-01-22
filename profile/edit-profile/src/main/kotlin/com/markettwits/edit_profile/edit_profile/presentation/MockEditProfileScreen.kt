@@ -36,6 +36,9 @@ class MockEditProfileScreen :
     )
     override val state: Value<EditProfileUiState> = MutableValue(EditProfileUiState.Loading())
     override val events: SharedFlow<EditProfileEvent> = MutableSharedFlow()
+    override fun launch() {
+
+    }
 
     override fun pop() {
 

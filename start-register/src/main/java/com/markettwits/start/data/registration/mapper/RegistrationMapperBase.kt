@@ -112,8 +112,6 @@ class RegistrationMapperBase : RegistrationMapper {
                 )
             }
         }
-        // Handle the case when no matching group is found
-        // You can throw an exception or return a default group, depending on your requirements.
         throw NoSuchElementException("Нет подходящей возрастной группы для участников $age лет")
     }
 

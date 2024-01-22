@@ -9,7 +9,6 @@ import com.markettwits.profile.presentation.common.ProfileScreenContent
 import com.markettwits.profile.presentation.common.menu.ExitButton
 import com.markettwits.profile.presentation.common.menu.profileMenu
 import com.markettwits.profile.presentation.common.top_bar.ProfileTopBar
-import com.markettwits.profile.presentation.sign_in.AuthButton
 
 
 @Composable

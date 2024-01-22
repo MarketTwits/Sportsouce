@@ -7,5 +7,4 @@ import com.markettwits.profile.presentation.component.edit_profile.presentation.
 interface EditProfileDataStore {
     suspend fun changeProfileInfo(current : List<EditProfileUiPage>) : EditProfileUiState
     suspend fun profile() : EditProfileUiState
-    suspend fun pages() : List<EditProfileUiPage>
 }

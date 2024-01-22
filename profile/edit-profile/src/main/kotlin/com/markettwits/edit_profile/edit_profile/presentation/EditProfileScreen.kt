@@ -1,6 +1,7 @@
 package com.markettwits.edit_profile.edit_profile.presentation
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.base.OnEvent
 import com.markettwits.core_ui.components.TopBarBase
+import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileEvent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
@@ -54,7 +56,7 @@ fun EditProfileScreen(component: EditProfileComponent) {
                 .background(Color.White)
 
         ) {
-            if (!state.isLoading) {
+            if (!state.isLoading && state.data.isNotEmpty()) {
                 TopBarBase(title = "Мой профиль") {
                     component.pop()
                 }
@@ -71,6 +73,7 @@ fun EditProfileScreen(component: EditProfileComponent) {
                                     component.obtainTextFiled(updatedUser)
                                 }
                             )
+
                             1 ->
                                 UserDataPage(
                                     page = state.data[1] as EditProfileUiPage.UserData,
@@ -78,6 +81,7 @@ fun EditProfileScreen(component: EditProfileComponent) {
                                         component.obtainTextFiled(updatedUser)
                                     }
                                 )
+
                             2 -> MyInfoPage(
                                 page = state.data[2] as EditProfileUiPage.MyInfo,
                                 onUserChange = { updatedUser ->
@@ -94,6 +98,13 @@ fun EditProfileScreen(component: EditProfileComponent) {
                 }
             }
         }
+        if (state is EditProfileUiState.Error) {
+            FailedScreen(
+                message = state.message,
+                onClickHelp = { }) {
+                component.launch()
+            }
+        }
         if (state is EditProfileUiState.Loading) {
             CircularProgressIndicator(
                 modifier =
@@ -104,7 +115,7 @@ fun EditProfileScreen(component: EditProfileComponent) {
         }
         SnackbarHost(
             hostState = snackBarHostState,
-              modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             Snackbar(
                 contentColor = Color.White,
@@ -123,6 +134,7 @@ fun EditProfileScreen(component: EditProfileComponent) {
                         )
                     }
                 }
+
                 is EditProfileEvent.ShowSuccess -> {
                     scope.launch {
                         snackBarHostState.showSnackbar(

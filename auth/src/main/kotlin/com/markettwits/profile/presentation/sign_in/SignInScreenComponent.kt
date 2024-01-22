@@ -12,6 +12,9 @@ class SignInScreenComponent(
     private val keeper = instanceKeeper.getOrCreateSimple { signInInstanceKeeper }
     override val state: Value<SignInUiState> = keeper.authUiState
     override val fieldState: Value<SignInFieldUiState> = keeper.fieldState
+    override fun signUp() {
+        keeper.signUp()
+    }
 
     override fun logIn() {
         keeper.login()

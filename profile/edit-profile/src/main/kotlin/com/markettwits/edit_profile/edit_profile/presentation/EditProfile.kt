@@ -11,6 +11,7 @@ interface EditProfileComponent {
    // val page : Value<List<EditProfileUiPage>>
     val state : Value<EditProfileUiState>
     val events: SharedFlow<EditProfileEvent>
+    fun launch()
     fun pop()
     fun saveChanges()
     fun messageHasBeenShowed()

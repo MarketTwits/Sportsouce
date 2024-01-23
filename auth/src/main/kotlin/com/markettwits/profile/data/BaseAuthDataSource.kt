@@ -8,6 +8,7 @@ import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
+import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
 import com.markettwits.profile.data.mapper.SignUpMapper
@@ -50,11 +51,7 @@ class BaseAuthDataSource(
         return try {
             remoteService.auth(currentToken())
         } catch (e: Exception) {
-            when (e) {
-                is ClientRequestException -> signInMapper.map(e.response.body<AuthErrorResponse>().message)
-                else -> signInMapper.map(e)
-            }
-            throw RuntimeException(e.message)
+            throw e
         }
     }
 

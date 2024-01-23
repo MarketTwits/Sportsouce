@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
@@ -33,7 +34,7 @@ class BaseStartDataSource(
     ): Result<StartItem> {
         return if (relaunch)
             return launch(startId)
-        else retryRunCatchingAsync(times = 2) {
+        else retryRunCatchingAsync(times = 2, interval = Duration.parse("2s")) {
             cache[startId]
         }.getOrNull() ?: launch(startId)
     }
@@ -74,7 +75,7 @@ class BaseStartDataSource(
                 token = token
             )
             CommentUiState.Success
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             when (e) {
                 is AuthException -> CommentUiState.Error(e.exception)
                 is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
@@ -96,7 +97,7 @@ class BaseStartDataSource(
                 token = token
             )
             CommentUiState.Success
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             when (e) {
                 is AuthException -> CommentUiState.Error(e.exception)
                 is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)

@@ -12,7 +12,7 @@ import kotlin.time.Duration
  */
 suspend inline fun <reified T> retryRunCatchingAsync(
     times: Int = 1,
-    interval: Duration = Duration.ZERO,
+    interval: Long = 0L,
     block: () -> T
 ): Result<T> {
     var count = 0

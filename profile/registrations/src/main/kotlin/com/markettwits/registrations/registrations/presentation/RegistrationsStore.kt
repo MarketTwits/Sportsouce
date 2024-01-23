@@ -30,10 +30,11 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val isError: Boolean = false,
         val message: String = ""
     )
+
     @Serializable
     data class StartsStateInfo(
         val id: Int,
-        val startId : Int,
+        val startId: Int,
         val name: String,
         val image: String,
         val dateStart: String,
@@ -47,6 +48,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val startTitle: String,
         val cost: String,
     )
+
     @Serializable
     data class StartPaymentState(
         val paymentList: List<StartsStateInfo> = emptyList(),
@@ -56,7 +58,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object GoBack : Label
-        data class ShowPaymentDialog(val startPaymentState : StartPaymentState) : Label
+        data class ShowPaymentDialog(val startPaymentState: StartPaymentState) : Label
         data class OnItemClick(val itemId: Int) : Label
     }
 }
@@ -101,11 +103,10 @@ class RegistrationsDataStoreFactory(
             launch()
         }
 
-        fun launch() {
+        private fun launch() {
             scope.launch {
                 dispatch(Msg.Loading)
-                val state = dataSource.registrations()
-                state
+                dataSource.registrations()
                     .onFailure {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }

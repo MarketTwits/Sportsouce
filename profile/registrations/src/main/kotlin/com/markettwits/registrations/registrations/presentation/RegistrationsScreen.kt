@@ -15,6 +15,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.registrations.registrations.presentation.components.RegistrationsEmpty
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsPayButton
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsStart
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsTopBar
@@ -32,48 +34,50 @@ import com.markettwits.registrations.registrations.presentation.components.Regis
 @Composable
 fun MyRegistrationsScreen(component: RegistrationsComponent) {
     val state by component.value.collectAsState()
-    if (state.info.isNotEmpty()) {
-        Box(
-            modifier = Modifier
+
+    Scaffold(containerColor = Color.White, topBar = {
+        RegistrationsTopBar(title = "Регистрации других участников") {
+            component.obtainEvent(RegistrationsStore.Intent.Pop)
+        }
+    }) {
+        if (state.info.isNotEmpty()) {
+            Box(modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                RegistrationsTopBar(title = "Регистрации других участников") {
-                    component.obtainEvent(RegistrationsStore.Intent.Pop)
-                }
+                .padding(top = it.calculateTopPadding())) {
                 RegistrationsStart(state.info, isRefreshing = state.isLoading, onRefresh = {
                     component.obtainEvent(RegistrationsStore.Intent.LoadData)
                 }, onClick = {
                     component.obtainEvent(RegistrationsStore.Intent.OnCLickItem(it))
                 })
-            }
-            if (state.paymentState.paymentList.isNotEmpty()) {
-                RegistrationsPayButton(
-                    count = state.paymentState.count,
-                    cost = state.paymentState.totalCost
-                ) {
-                    component.obtainEvent(RegistrationsStore.Intent.ShowPaymentDialog(state.paymentState))
+                if (state.paymentState.paymentList.isNotEmpty()) {
+                    RegistrationsPayButton(
+                        count = state.paymentState.count,
+                        cost = state.paymentState.totalCost
+                    ) {
+                        component.obtainEvent(RegistrationsStore.Intent.ShowPaymentDialog(state.paymentState))
+                    }
                 }
             }
-
         }
-    }
-    if (state.info.isEmpty() && state.isLoading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = SportSouceColor.SportSouceBlue
-            )
+        if (state.info.isEmpty() && state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = SportSouceColor.SportSouceBlue
+                )
+            }
         }
-    }
-    if (state.isError) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            FailedScreen(
-                modifier = Modifier.align(Alignment.Center),
-                message = state.message,
-                onClickHelp = { /*TODO*/ }) {
-                component.obtainEvent(RegistrationsStore.Intent.LoadData)
+        if (state.info.isEmpty() && !state.isLoading && !state.isError) {
+            RegistrationsEmpty()
+        }
+        if (state.isError) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                FailedScreen(
+                    modifier = Modifier.align(Alignment.Center),
+                    message = state.message,
+                    onClickHelp = { /*TODO*/ }) {
+                    component.obtainEvent(RegistrationsStore.Intent.LoadData)
+                }
             }
         }
     }

@@ -34,7 +34,7 @@ class BaseStartDataSource(
     ): Result<StartItem> {
         return if (relaunch)
             return launch(startId)
-        else retryRunCatchingAsync(times = 2, interval = Duration.parse("2s")) {
+        else retryRunCatchingAsync(times = 2, interval = 2000L) {
             cache[startId]
         }.getOrNull() ?: launch(startId)
     }

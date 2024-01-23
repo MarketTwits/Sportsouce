@@ -10,6 +10,6 @@ fun profileMenu() = listOf<MenuItem>(
     MenuItem.Base("Сменить пароль"),
     MenuItem.Header("Старты"),
     MenuItem.Base("Мои регистрации"),
-    MenuItem.Base("Другие регистрации"),
-    MenuItem.Base("Участники"),
+  //  MenuItem.Base("Другие регистрации"),
+  //  MenuItem.Base("Участники"),
 )

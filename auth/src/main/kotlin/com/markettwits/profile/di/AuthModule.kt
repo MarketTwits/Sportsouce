@@ -2,6 +2,8 @@ package com.markettwits.profile.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.core_ui.time.BaseTimeMapper
+import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
@@ -10,6 +12,8 @@ import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
 import com.markettwits.profile.data.mapper.SignUpMapper
 import com.markettwits.profile.data.mapper.SignUpMapperBase
+import com.markettwits.profile.presentation.sign_up.domain.SignUpValidation
+import com.markettwits.profile.presentation.sign_up.domain.SignUpValidationBase
 import com.markettwits.profile.presentation.sign_up.presentation.store.SignUpStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -34,12 +38,16 @@ val authDataSourceModule = module(createdAtStart = true){
     }
     //SignUp
     single<SignUpMapper> {
-        SignUpMapperBase()
+        SignUpMapperBase(BaseTimeMapper())
+    }
+    single<SignUpValidation> {
+        SignUpValidationBase()
     }
     single<SignUpStoreFactory> {
         SignUpStoreFactory(
             storeFactory = DefaultStoreFactory(),
-            registerRepository = get()
+            registerRepository = get(),
+            signUpValidation = get()
         )
     }
 }

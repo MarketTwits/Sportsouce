@@ -11,13 +11,15 @@ import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
+import com.markettwits.profile.presentation.sign_up.domain.SignUpValidation
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
-    private val registerRepository: AuthDataSource
+    private val registerRepository: AuthDataSource,
+    private val signUpValidation: SignUpValidation
 ) {
     fun create(): SignUpStore =
         object : SignUpStore,
@@ -49,6 +51,17 @@ class SignUpStoreFactory(
 
         override fun executeAction(action: Unit, getState: () -> SignUpStore.State) = Unit
         private fun launch(statement: SignUpStatement) {
+            scope.launch {
+                dispatch(Msg.Loading)
+                signUpValidation.validate(statement).fold(onSuccess = {
+                    launchInner(it)
+                }, onFailure = {
+                    dispatch(Msg.LoadFailed(it.message.toString()))
+                })
+            }
+        }
+
+        private fun launchInner(statement: SignUpStatement) {
             scope.launch {
                 dispatch(Msg.Loading)
                 registerRepository.register(statement).fold(

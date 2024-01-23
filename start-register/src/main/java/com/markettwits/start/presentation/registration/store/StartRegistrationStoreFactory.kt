@@ -7,12 +7,15 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.data.registration.RegistrationStartRepository
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.registration.store.StartRegistrationStore.State
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 
@@ -56,7 +59,13 @@ class StartRegistrationStoreFactory(
             scope.launch {
                 repository.preload(price, paymentDisabled).fold(
                     onSuccess = { dispatch(Action.InfoLoaded(it)) },
-                    onFailure = { dispatch(Action.InfoFailed(it.message.toString())) }
+                    onFailure = {
+                        val message = when (it) {
+                            is ClientRequestException -> it.response.body<AuthErrorResponse>().message
+                            else -> it.message.toString()
+                        }
+                        dispatch(Action.InfoFailed(message))
+                    }
                 )
             }
         }

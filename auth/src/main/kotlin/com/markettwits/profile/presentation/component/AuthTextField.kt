@@ -55,6 +55,7 @@ fun AuthTextField(
         ),
         textStyle = TextStyle(fontFamily = FontNunito.medium),
         maxLines = 1,
+        singleLine = true,
         onValueChange = onValueChange,
     )
 }

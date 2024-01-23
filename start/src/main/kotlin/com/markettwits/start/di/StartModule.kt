@@ -11,6 +11,7 @@ import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.data.mapper.SignUpMapperBase
+import com.markettwits.profile.di.authDataSourceModule
 import com.markettwits.start.data.start.BaseStartDataSource
 import com.markettwits.start.data.start.StartDataSource
 import com.markettwits.start.data.start.StartMembersToUiMapper
@@ -21,7 +22,7 @@ import org.koin.dsl.module
 
 val startModule = module {
 
-    includes(sportSouceNetworkModule, timeApiNetworkModule)
+    includes(sportSouceNetworkModule, timeApiNetworkModule, authDataSourceModule)
 
 
     single<StartScreenStoreFactory>{
@@ -47,15 +48,6 @@ val startModule = module {
         StartRemoteToUiMapper.Base(
             mapper = BaseTimeMapper(),
             membersToUiMapper = StartMembersToUiMapper.Base()
-        )
-    }
-    single<AuthDataSource> {
-        BaseAuthDataSource(
-            remoteService = get(),
-            signInMapper = SignInRemoteToUiMapper.Base(),
-            signInCacheMapper = SignInRemoteToCacheMapper.Base(),
-            local = AuthCacheDataSource(RealmDatabaseProvider.Base()),
-            signUpMapper = SignUpMapperBase()
         )
     }
 }

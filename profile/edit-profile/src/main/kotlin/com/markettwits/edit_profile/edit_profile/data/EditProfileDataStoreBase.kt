@@ -19,9 +19,8 @@ class EditProfileDataStoreBase(
         current: List<EditProfileUiPage>,
     ): EditProfileUiState {
         return try {
-            val request = mapper.map(current)
             val token = authDataSource.updateToken()
-            cloud.changeProfileInfo(request, token)
+            cloud.changeProfileInfo(mapper.map(current), token)
             profile()
         } catch (e: Exception) {
             EditProfileUiState.Error(message = e.message.toString())

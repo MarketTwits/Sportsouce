@@ -25,47 +25,29 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun SignUpLabel(modifier: Modifier = Modifier, onClick : () -> Unit) {
+fun SignUpLabel(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Row(
-        modifier = modifier.clickable {
-            onClick()
-        },
+        modifier = modifier
+            .clip(Shapes.large)
+            .clickable {
+                onClick()
+            },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val colorStopsEnd = arrayOf(
-            0.0f to SportSouceColor.SportSouceBlue,
-            1f to Color.Transparent
-        )
-        val colorStopsStart = arrayOf(
-            0.0f to Color.Transparent,
-            1f to SportSouceColor.SportSouceBlue
-        )
-//        Box(
-//            modifier = Modifier
-//                .height(10.dp)
-//                .background(Brush.horizontalGradient(colorStops = colorStopsStart))
-//                .weight(1f)
-//        )
         Text(
             text = "Зарегистрироваться",
             fontFamily = FontNunito.medium,
             fontSize = 14.sp,
             color = Color.Gray,
             modifier = Modifier
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 20.dp, vertical = 4.dp)
         )
-//        Box(
-//            modifier = Modifier
-//                .height(10.dp)
-//                .weight(1f)
-//                .background(Brush.horizontalGradient(colorStops = colorStopsEnd))
-//        )
     }
 }
 
 @Preview
 @Composable
 fun SignUpLabelPreview() {
-    SignUpLabel{}
+    SignUpLabel {}
 }

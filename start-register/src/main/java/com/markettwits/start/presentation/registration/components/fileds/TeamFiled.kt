@@ -40,7 +40,7 @@ fun TeamFiled(
                 })
         }
         FilterPosition(
-            item = "Я учавствую лично, нет команды",
+            item = "Я участвую лично, нет команды",
             checked = teamChecked,
             onClick = {
                 onValueChanged(statement.copy(team = "Лично"))

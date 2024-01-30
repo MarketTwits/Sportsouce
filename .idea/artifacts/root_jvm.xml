@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="root-jvm">
+    <output-path>$PROJECT_DIR$/root/build/libs</output-path>
+    <root id="archive" name="root-jvm.jar">
+      <element id="module-output" name="Shift.root.jvmMain" />
+    </root>
+  </artifact>
+</component>

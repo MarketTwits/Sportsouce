@@ -1,22 +1,17 @@
 [versions]
 #plugins
-calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
-datastorePreferences = "1.0.0"
-jwtdecode = "2.0.2"
-kotlin = "1.9.10"
-gradle = "8.2.1"
+kotlin = "1.9.21"
+agp = "8.2.2"
 
 #SDK
 
 compileSdk = "34"
-lazytable = "1.6.0"
-material3HtmlText = "2.0.0-beta01"
 minSdk = "26"
 mvikotlin = "3.3.0"
 orgJetbrainsComposeGradlePlugin = "1.5.11"
 targetSdk = "34"
-namespace = "com.markettwits.sportsouce"
+namespace = "com.markettwits.shift"
 jvm = "8"
 jvm-dot = "1.8"
 
@@ -24,7 +19,8 @@ jvm-dot = "1.8"
 koin = "3.4.0"
 
 # Compose
-compose = "1.5.3"
+compose = "1.5.7"
+compose-multiplatform = "1.5.11"
 compose-ui = "1.5.3"
 compose-bom = "2023.03.00"
 compose-activity = "1.8.1"
@@ -37,7 +33,7 @@ accompanist = "0.32.0"
 onebone-toolbar = "2.3.5"
 realm-gradle-plugin = "10.2.0"
 zoomable = "1.5.1"
-pullRefresh = "1.0.1"
+pullRefresh = "1.2.0"
 # Android
 android-lifecycle-ktx = "2.6.1"
 exifinterface = "1.3.6"
@@ -51,34 +47,38 @@ espresso-core = "3.5.1"
 leakcanary = "2.12"
 
 #Network
-retrofit = "2.9.0"
-okkhttp = "4.11.0"
 core-ktx = "1.9.0"
 ktor = "2.2.4"
 #UI
 appcompat = "1.6.1"
 material = "1.9.0"
-nabla-gallery = "1.4.5"
+
 
 #Database
 realm = "1.11.0"
+sqldelight = "2.0.1"
+kstore = "0.7.1"
+harawata-appdirs = "1.2.1"
 #Codegen
-ksp = "1.9.10-1.0.13"
+ksp = "1.9.22-1.0.16"
 
 #Serialization
 kotlinx-serialization = "1.6.2"
 jakewharton = "0.8.0"
 
 #Decompose
-decompose = "3.0.0-alpha01"
+decompose = "3.0.0-alpha04"
 org-jetbrains-kotlin-jvm = "1.9.21"
 
-kotlinx-datetime = "0.4.0"
+androidx-appcompat = "1.6.1"
+androidx-activityCompose = "1.8.1"
+compose-uitooling = "1.5.4"
+composeImageLoader = "1.7.1"
+kotlinx-coroutines = "1.7.3"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "calendar" }
+
 compose-ui = { group = "androidx.compose", name = "ui:ui", version.ref = "compose" }
 compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-ui" }
@@ -89,23 +89,29 @@ compose-material3-window-size = { group = "androidx.compose.material3", name = "
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-ui" }
 compose-accomponist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 compose-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 compose-preview = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-preview" }
 compose-coil = {group = "io.coil-kt", name = "coil-compose", version.ref = "compose-coil"}
 compose-icons = {group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-ui"}
-jwtdecode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtdecode" }
-lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
-material3-html-text = { module = "de.charlex.compose.material3:material3-html-text", version.ref = "material3HtmlText" }
-pullrefresh = { module = "eu.bambooapps:compose-material3-pullrefresh", version.ref = "pullRefresh" }
+pullrefresh = { module = "dev.materii.pullrefresh:pullrefresh", version.ref = "pullRefresh" }
+
+#KMM Compose
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+compose-uitooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-uitooling" }
+composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
 #MVI KOTLIN
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
 mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
 mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", version.ref = "mvikotlin" }
 mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
-onebone-toolbar = {group = "me.onebone", name = "toolbar-compose", version.ref = "onebone-toolbar"}
 android-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle-ktx" }
-org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "orgJetbrainsComposeGradlePlugin" }
+jetbrains-compose-gradle = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "orgJetbrainsComposeGradlePlugin" }
 realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realm-gradle-plugin" }
 zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zoomable" }
 #androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
@@ -114,21 +120,19 @@ zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zooma
 junit = {group = "junit", name = "junit",version.ref = "junit"}
 junit-ext-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit-ext-ktx" }
 testing = { group = "org.testng", name = "testing", version.ref = "testing" }
-leakcanary = {group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary"}
 
 #Serialization
 kotlinx-serialization-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization"}
-kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 jakewharton = {group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "jakewharton"}
 
 #Data
-retrofit = {group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
-retrofit-converter = {group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit"}
-okkhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okkhttp"}
-okkhttp-interceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref ="okkhttp"}
+kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
+kstore-file = { module = "io.github.xxfast:kstore-file", version.ref = "kstore" }
+kstore-storage = { module = "io.github.xxfast:kstore-storage", version.ref = "kstore" }
+harawata-appdirs = { module = "net.harawata:appdirs", version.ref = "harawata-appdirs" }
+
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
-kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 realm = {group =  "io.realm.kotlin", name = "library-base", version.ref = "realm"}
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
@@ -144,33 +148,27 @@ ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-compose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version = "v2.2.0-alpha01" }
 decompose-compose-extension = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
-
 decompose-compose-jetpack = { module = "com.arkivanov.decompose:extensions-compose-jetpack", version.ref = "decompose" }
 decompose-android = { module = "com.arkivanov.decompose:extensions-android", version.ref = "decompose"}
 
 #DI
-
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 
-#UI
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-nabla-gallery = {group = "run.nabla", name = "gallery-picker", version.ref = "nabla-gallery"}
-
-android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
+android-gradle = {module = "com.android.tools.build:gradle", version.ref = "agp"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
 
 [plugins]
 #kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version = "1.9.10"}
-android-library = { id = "com.android.library", version.ref = "gradle" }
-android-application = {id = "com.android.application", version.ref = "gradle"}
+kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version = "1.9.21"}
+android-library = { id = "com.android.library", version.ref = "agp" }
+android-application = {id = "com.android.application", version.ref = "agp"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlin"}
 realm = {id = "io.realm.kotlin", version.ref = "realm"}
 ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+sqldelight = {id = "app.cash.sqldelight", version.ref = "sqldelight"}
 
 #Convention Plugins
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
@@ -178,10 +176,9 @@ android-library-convention = {id = "android-library-convention", version = "unsp
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
 
 #Test Plugins
-#kotlin-multiplatform-android-convention = {id = "kotlin-multiplatform-android-convention", version = "unspecified"}
-#multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
-#compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
-
+multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 composeUiBundle = [

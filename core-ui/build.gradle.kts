@@ -1,15 +1,8 @@
 
 plugins {
-    alias(libs.plugins.android.library.compose.convention)
+    alias(libs.plugins.kotlin.jvm.convention)
 }
-
-android {
-    namespace = "com.markettwits.core_ui"
-}
-
 dependencies {
-    implementation (libs.calendar)
-    api(libs.bundles.composeUiBundle)
-    api(libs.junit.ext.ktx)
-    debugApi(libs.bundles.composeUiBundleDebug)
+    implementation(libs.decompose)
+    implementation(libs.kotlinx.coroutines.core)
 }

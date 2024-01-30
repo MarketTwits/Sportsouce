@@ -20,7 +20,10 @@ android {
 
 dependencies {
     implementation(project(":root"))
+    implementation(libs.bundles.composeUiBundle)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.decompose.android)
     implementation(libs.koin.android)
+    implementation(project(":list"))
+    implementation(project(":detail"))
 }

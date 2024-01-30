@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="cache-jvm">
+    <output-path>$PROJECT_DIR$/cache/build/libs</output-path>
+    <root id="archive" name="cache-jvm.jar" />
+  </artifact>
+</component>

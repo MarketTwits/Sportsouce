@@ -2,19 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MyProfileTopBarPreview">
-        <State />
-      </entry>
-      <entry key="StartCommentsPanelPreview">
-        <State />
-      </entry>
-      <entry key="StartDistancesPreview">
-        <State />
-      </entry>
-      <entry key="StartScreenPreview">
-        <State />
-      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="list">
         <State />
       </entry>
     </value>

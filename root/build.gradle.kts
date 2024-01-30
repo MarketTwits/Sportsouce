@@ -1,32 +1,65 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.android.library.compose.convention)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.multiplatform)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlinx.serialization)
+}
+kotlin {
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+
+    jvm()
+
+    sourceSets {
+        all {
+            languageSettings {
+                optIn("org.jetbrains.compose.resources.ExperimentalResourceApi")
+            }
+        }
+        commonMain.dependencies {
+            implementation(project(":list"))
+            implementation(project(":detail"))
+            implementation(project(":core-koin"))
+            implementation(project(":random-user"))
+            implementation(project(":core-ui"))
+            implementation(libs.bundles.mviKotlin)
+            implementation(libs.bundles.decompose.compose)
+            implementation(compose.runtime)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.components.resources)
+            implementation(libs.composeImageLoader)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.koin.core)
+            implementation(compose.preview)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
+
+        jvmMain.dependencies {
+            implementation(compose.desktop.common)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
+
+    }
 }
 
 android {
-    namespace = "com.markettwits.root"
+    namespace = "org.markettwits.shift"
+    compileSdk = 34
 
-}
-
-dependencies {
-
-    api(project(":cloud"))
-    implementation(project(":start"))
-    implementation(project(":starts"))
-    implementation(project(":profile:profile"))
-    implementation(project(":news"))
-    implementation(project(":review:review"))
-    implementation(project(":core-ui"))
-    implementation(project(":auth"))
-    implementation(libs.bundles.mviKotlin)
-    api(libs.bundles.composeUiBundle)
-    api(libs.junit.ext.ktx)
-    debugApi(libs.bundles.composeUiBundleDebug)
-    implementation(libs.decompose)
-    //implementation(libs.decompose.compose.jetbrains)
-    implementation(libs.decompose.compose.extension)
-    implementation ("de.charlex.compose.material3:material3-html-text:2.0.0-beta01")
-    implementation(libs.decompose.android)
-    implementation(libs.kotlinx.datetime)
+    defaultConfig {
+        minSdk = 24
+        targetSdk = 34
+    }
 }

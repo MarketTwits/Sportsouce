@@ -21,27 +21,15 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/auth" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
-            <option value="$PROJECT_DIR$/news" />
-            <option value="$PROJECT_DIR$/profile" />
-            <option value="$PROJECT_DIR$/profile/change-password" />
-            <option value="$PROJECT_DIR$/profile/edit-profile" />
-            <option value="$PROJECT_DIR$/profile/profile" />
-            <option value="$PROJECT_DIR$/profile/registrations" />
-            <option value="$PROJECT_DIR$/review" />
-            <option value="$PROJECT_DIR$/review/popular" />
-            <option value="$PROJECT_DIR$/review/random" />
-            <option value="$PROJECT_DIR$/review/review" />
-            <option value="$PROJECT_DIR$/review/schedule" />
-            <option value="$PROJECT_DIR$/review/start-filter" />
+            <option value="$PROJECT_DIR$/desktop" />
+            <option value="$PROJECT_DIR$/detail" />
+            <option value="$PROJECT_DIR$/list" />
+            <option value="$PROJECT_DIR$/random-user" />
             <option value="$PROJECT_DIR$/root" />
-            <option value="$PROJECT_DIR$/start" />
-            <option value="$PROJECT_DIR$/start-register" />
-            <option value="$PROJECT_DIR$/starts" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

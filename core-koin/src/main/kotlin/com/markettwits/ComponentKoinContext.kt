@@ -20,6 +20,6 @@ class ComponentKoinContext : InstanceKeeper.Instance {
 
     override fun onDestroy() {
         //TODO reuse cache
-       // koinApp?.close()
+       //koinApp?.close()
     }
 }

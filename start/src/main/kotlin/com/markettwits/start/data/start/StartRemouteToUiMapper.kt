@@ -1,23 +1,17 @@
 package com.markettwits.start.data.start
 
 import android.util.Log
-import com.markettwits.cloud.ext_model.Distance
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
-import com.markettwits.start.data.start.test.SelectKindsSportItem
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import io.ktor.http.ContentType.Application.Json
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 interface StartRemoteToUiMapper {
@@ -28,9 +22,11 @@ interface StartRemoteToUiMapper {
         commentsRemote: StartCommentsRemote,
         timeRemote: TimeRemote
     ): StartItem
-    fun map(e : Exception) : String
-    fun map(commentsRemote: StartCommentsRemote) : StartItem.Comments
-    fun map(startMember: List<StartMemberItem>,paymentDisabled : Boolean): List<StartMembersUi>
+
+    fun map(e: Exception): String
+    fun map(commentsRemote: StartCommentsRemote): StartItem.Comments
+    fun map(startMember: List<StartMemberItem>, paymentDisabled: Boolean): List<StartMembersUi>
+
     class Base(
         private val mapper: TimeMapper,
         private val membersToUiMapper: StartMembersToUiMapper,
@@ -58,11 +54,9 @@ interface StartRemoteToUiMapper {
                 paymentDisabled = startRemote.start_data.payment_disabled ?: false,
                 distanceInfo =
                 updateDistanceInfoList(
-                    calculateRemainingSlots(
-                        mapDistanceInfo(startRemote.start_data.select_kinds_sport),
-                        startMember
-                    ),
-                    mapCurrentTime(timeRemote.dateTime)
+                    startMember,
+                    mapDistanceInfoTest2(startRemote.start_data.select_kinds_sport),
+                    mapCurrentTime(timeRemote.date)
                 ),
                 organizers = startRemote.start_data.organizers,
                 membersUi = map(startMember, startRemote.start_data.payment_disabled ?: false),
@@ -72,6 +66,7 @@ interface StartRemoteToUiMapper {
                 } else {
                     StartItem.ConditionFile.Empty
                 },
+                paymentType = startRemote.start_data.payment_type ?: "",
                 result = startRemote.start_data.results.filter {
                     it.file != null
                 }.map {
@@ -91,42 +86,112 @@ interface StartRemoteToUiMapper {
             )
         }
 
+
         override fun map(e: Exception): String = e.message.toString()
         override fun map(commentsRemote: StartCommentsRemote): StartItem.Comments =
             mapComments(commentsRemote)
 
 
+        //        private fun updateDistanceInfoList(
+//                    distances: List<DistanceInfo>,
+//                    date: String
+//        ): List<DistanceInfo> {
+//            return distances.map { distanceInfo ->
+//                val newPriceValue = getPriceForDate(distanceInfo.distance, date)
+//                val updatedDistance = distanceInfo.distance.copy(price = newPriceValue.toString())
+//                val updatedDistanceInfo = distanceInfo.copy(distance = updatedDistance)
+//                updatedDistanceInfo
+//            }
+//        }
+//        private fun updateDistanceInfoList(
+//            distances: List<SelectKindsSportItem>,
+//            date: String
+//        ): List<SelectKindsSportItem> {
+//            return distances.map { distanceInfo ->
+//                val newPriceValue = getPriceForDate(distanceInfo.distance, date)
+//                val updatedDistance = distanceInfo.distance?.copy(price = newPriceValue.toString())
+//                val updatedDistanceInfo = distanceInfo.copy(distance = updatedDistance)
+//                updatedDistanceInfo
+//            }
+//        }
         private fun updateDistanceInfoList(
-            distances: List<DistanceInfo>,
+            startMember: List<StartMemberItem>,
+            distances: List<DistanceItem>,
             date: String
-        ): List<DistanceInfo> {
+        ): List<DistanceItem> {
             return distances.map { distanceInfo ->
-                val newPriceValue = getPriceForDate(distanceInfo.distance, date)
-                val updatedDistance = distanceInfo.distance.copy(price = newPriceValue.toString())
-                val updatedDistanceInfo = distanceInfo.copy(distance = updatedDistance)
-                updatedDistanceInfo
+                when (distanceInfo) {
+                    is DistanceItem.DistanceInfo -> distanceInfo.copy(
+                        distance = mapDistanceInfo(
+                            startMember,
+                            distanceInfo,
+                            date
+                        ),
+                    )
+
+                    is DistanceItem.DistanceCombo -> distanceInfo.copy(
+                        distances = distanceInfo.distances,
+                        price = mapDistanceComboPrice(
+                            sale = distanceInfo.sale?.toInt() ?: 0,
+                            distances = distanceInfo.distances,
+                            date = date,
+                        ),
+                        value = comboTitle(
+                            comboTitle = distanceInfo.value,
+                            distances = distanceInfo.distances
+                        )
+                    )
+                }
             }
         }
 
-        fun mapCurrentTime(time: String): String {
-            val inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
-            val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
-
-            // Parse the input date string
-
-            //FIXME fix 6 or 7 elements in time
-          //
-            val inputDate = LocalDateTime.parse(time, inputFormat)
-           // val inputDate = LocalDateTime.parse("2023-12-25T22:46:48.5554295", inputFormat)
-
-            // Format the output date string
-            val outputDate = inputDate.atOffset(ZoneOffset.UTC).format(outputFormat)
-            return outputDate
-
+        private fun mapDistanceInfo(
+            startMember: List<StartMemberItem>,
+            distanceInfo: DistanceItem.DistanceInfo,
+            date: String
+        ): DistanceItem.Distance {
+            val newPriceValue = getPriceForDate(distanceInfo.distance, date)
+            return distanceInfo.distance.copy(
+                price = newPriceValue.toString(),
+                slots = calculateRemainingSlotsBase(distanceInfo, startMember).slots
+            )
         }
 
-        fun getPriceForDate(distance: Distance, date: String): Int {
+        private fun comboTitle(
+            comboTitle: String,
+            distances: List<DistanceItem.DistanceInfo>
+        ): String {
+            val distanceTitles = distances.map { it.value }
+            return "$comboTitle (${distanceTitles.joinToString(" + ")})"
+        }
 
+        private fun mapDistanceComboPrice(
+            sale: Int,
+            distances: List<DistanceItem.DistanceInfo>,
+            date: String
+        ): Int {
+            val totalPrices = distances
+                .map { getPriceForDate(it.distance, date) }
+            val sum = totalPrices.sum()
+            return calculateDiscountedCost(sum, sale)
+        }
+
+        private fun calculateDiscountedCost(originalCost: Int, discountPercentage: Int): Int {
+            val discountMultiplier = 1.0 - (discountPercentage.toDouble() / 100.0)
+            return (originalCost * discountMultiplier).toInt()
+        }
+
+        private fun mapCurrentTime(time: String): String {
+            val inputDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val date = inputDateFormat.parse(time)
+            val outputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+            return outputDateFormat.format(date)
+        }
+
+        private fun getPriceForDate(
+            distance: DistanceItem.Distance,
+            date: String
+        ): Int {
             if (distance.prices.isEmpty()) {
                 return distance.price.toInt()
             }
@@ -145,8 +210,11 @@ interface StartRemoteToUiMapper {
             return distance.price.toInt() // or whatever default value you want to return when no interval matches
         }
 
-        override fun map(startMember: List<StartMemberItem>, paymentDisabled : Boolean): List<StartMembersUi> {
-            return membersToUiMapper.maps(startMember,paymentDisabled)
+        override fun map(
+            startMember: List<StartMemberItem>,
+            paymentDisabled: Boolean
+        ): List<StartMembersUi> {
+            return membersToUiMapper.maps(startMember, paymentDisabled)
         }
 
         private fun mapComments(commentsRemote: StartCommentsRemote): StartItem.Comments {
@@ -193,42 +261,30 @@ interface StartRemoteToUiMapper {
             )
         }
 
-        private fun mapDistanceInfo(text: String): List<DistanceInfo> {
-            val data = mapDistanceInfoTest(text)
-            Log.e("mt05", "size " + data.size.toString())
-            val json = Json {
-                ignoreUnknownKeys = true
-            }
-            return try {
-                json.decodeFromString<List<DistanceInfo>>(text)
-            } catch (e: Exception) {
-                //Log.e("mt05", "StartRemoteToUiMapper#mapDistanceInfo $e")
-                emptyList()
-            }
-        }
         @Deprecated("test method")
-        private fun mapDistanceInfoTest(text: String): List<SelectKindsSportItem> {
+        private fun mapDistanceInfoTest2(text: String): List<DistanceItem> {
             val json = Json {
                 ignoreUnknownKeys = true
             }
             return try {
-                json.decodeFromString<List<SelectKindsSportItem>>(text)
+                json.decodeFromString<List<DistanceItem>>(text)
             } catch (e: Exception) {
-                Log.e("mt05", "StartRemoteToUiMapper#test $e")
+                Log.e("mt05", "DistanceItemTest")
+                Log.e("mt05", "DistanceItemTest#test $e")
                 emptyList()
             }
         }
 
-        private fun calculateRemainingSlots(
-            distanceInfos: List<DistanceInfo>,
+        private fun calculateRemainingSlotsBase(
+            distanceInfo: DistanceItem.DistanceInfo,
             startMembers: List<StartMemberItem>
-        ): List<DistanceInfo> {
-            return distanceInfos.map { distanceInfo ->
-                val matchingStartMembers = startMembers.filter { it.distance == distanceInfo.value }
-                    .filter { it.payment != null }
-                val remainingSlots = distanceInfo.distance.slots.toInt() - matchingStartMembers.size
-                distanceInfo.copy(distance = distanceInfo.distance.copy(slots = remainingSlots.toString()))
-            }
+        ): DistanceItem.Distance {
+            val matchingStartMembers = startMembers.filter { it.distance == distanceInfo.value }
+                .filter { it.payment != null }
+            val remainingSlots =
+                distanceInfo.distance.slots.toInt().minus(matchingStartMembers.size)
+            return distanceInfo.distance.copy(slots = remainingSlots.toString())
         }
     }
+
 }

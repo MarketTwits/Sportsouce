@@ -11,7 +11,7 @@ class MemoryCache<T> : Cache<T> {
         data[key] = value
     }
 
-    fun clear() {
+    override fun clear() {
         data.clear()
     }
 }
@@ -19,4 +19,5 @@ class MemoryCache<T> : Cache<T> {
 interface Cache<T> {
     operator fun get(key: Any = Unit): T?
     operator fun set(key: Any = Unit, value: T)
+    fun clear()
 }

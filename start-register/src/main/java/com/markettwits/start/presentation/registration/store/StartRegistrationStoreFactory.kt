@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.consumed
@@ -25,16 +25,15 @@ class StartRegistrationStoreFactory(
 ) {
 
     fun create(
-        price: String,
-        distanceInfo: DistanceInfo,
+        distanceInfo: DistanceItem,
         starId: Int,
         paymentDisabled: Boolean
     ): StartRegistrationStore =
         object : StartRegistrationStore,
-            Store<StartRegistrationStore.Intent, StartRegistrationStore.State, StartRegistrationStore.Label> by storeFactory.create(
+            Store<StartRegistrationStore.Intent, State, StartRegistrationStore.Label> by storeFactory.create(
                 name = "RegistrationStore",
-                initialState = StartRegistrationStore.State(),
-                bootstrapper = BootstrapperImpl(price, paymentDisabled),
+                initialState = State(),
+                bootstrapper = BootstrapperImpl(distanceInfo, paymentDisabled),
                 executorFactory = { ExecutorImpl(distanceInfo, starId) },
                 reducer = ReducerImpl
             ) {}
@@ -46,18 +45,19 @@ class StartRegistrationStoreFactory(
     }
 
     private inner class BootstrapperImpl(
-        private val price: String,
+        private val distanceInfo: DistanceItem,
         private val paymentDisabled: Boolean
     ) :
         CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            launch(price, paymentDisabled)
+            launch(distanceInfo, paymentDisabled)
         }
 
-        private fun launch(price: String, paymentDisabled: Boolean) {
+        private fun launch(distanceInfo: DistanceItem, paymentDisabled: Boolean) {
             dispatch(Action.Loading)
             scope.launch {
-                repository.preload(price, paymentDisabled).fold(
+
+                repository.preload(distanceInfo, paymentDisabled).fold(
                     onSuccess = { dispatch(Action.InfoLoaded(it)) },
                     onFailure = {
                         val message = when (it) {
@@ -88,24 +88,24 @@ class StartRegistrationStoreFactory(
     }
 
     private inner class ExecutorImpl(
-        private val distanceInfo: DistanceInfo,
+        private val distanceItem: DistanceItem,
         private val starId: Int
     ) :
-        CoroutineExecutor<StartRegistrationStore.Intent, Action, StartRegistrationStore.State, Msg, StartRegistrationStore.Label>() {
+        CoroutineExecutor<StartRegistrationStore.Intent, Action, State, Msg, StartRegistrationStore.Label>() {
         override fun executeIntent(intent: StartRegistrationStore.Intent, getState: () -> State) {
             when (intent) {
                 is StartRegistrationStore.Intent.ChangeFiled -> dispatch(Msg.OnValueChanged(intent.startStatement))
                 is StartRegistrationStore.Intent.GoBack -> publish(StartRegistrationStore.Label.GoBack)
                 is StartRegistrationStore.Intent.OnClickPay -> save(
                     statement = getState().startStatement!!,
-                    distanceInfo = distanceInfo,
+                    distanceItem = distanceItem,
                     starId = starId,
                     withPayment = true
                 )
 
                 is StartRegistrationStore.Intent.OnClickSave -> save(
                     statement = getState().startStatement!!,
-                    distanceInfo = distanceInfo,
+                    distanceItem = distanceItem,
                     starId = starId,
                     withPayment = false
                 )
@@ -136,7 +136,7 @@ class StartRegistrationStoreFactory(
 
         private fun applyPromo(startStatement: StartStatement, value: String, startId: Int) {
             scope.launch {
-                repository.promocode(value, startId).fold(
+                repository.promo(value, startId).fold(
                     onFailure = {
                         dispatch(Msg.SnackbarMessage("Промокод не действителен", "", false))
                     },
@@ -154,24 +154,18 @@ class StartRegistrationStoreFactory(
         private fun save(
             withPayment: Boolean,
             statement: StartStatement,
-            distanceInfo: DistanceInfo,
+            distanceItem: DistanceItem,
             starId: Int
         ) {
             scope.launch {
                 dispatch(Msg.RegistryLoading)
                 val result =
-                    if (withPayment)
-                        repository.pay(
-                            statement = statement,
-                            distanceInfo = distanceInfo,
-                            startId = starId
-                        )
-                    else
-                        repository.save(
-                            statement = statement,
-                            distanceInfo = distanceInfo,
-                            startId = starId
-                        )
+                    repository.registry(
+                        withoutPayment = !withPayment,
+                        statement = statement,
+                        distanceInfo = distanceItem,
+                        startId = starId
+                    )
                 result.fold(onSuccess = {
                     dispatch(
                         Msg.RegistrySuccess(
@@ -200,21 +194,21 @@ class StartRegistrationStoreFactory(
                 is Msg.OnValueChanged -> State(startStatement = message.startStatement)
                 is Msg.RegistryFailed -> copy(
                     isLoading = false,
-                    testEvent = triggered(EventContent(success = false, message = message.message)),
+                    event = triggered(EventContent(success = false, message = message.message)),
                     message = message.message
                 )
 
                 is Msg.RegistryLoading -> copy(isLoading = true)
                 is Msg.RegistrySuccess -> copy(
                     isLoading = false,
-                    testEvent = triggered(EventContent(success = true, message = message.message)),
+                    event = triggered(EventContent(success = true, message = message.message)),
                     message = message.paymentUrl
                 )
 
-                is Msg.OnConsumedFailedEvent -> copy(testEvent = consumed())
-                is Msg.OnConsumedSucceededEvent -> copy(testEvent = consumed())
+                is Msg.OnConsumedFailedEvent -> copy(event = consumed())
+                is Msg.OnConsumedSucceededEvent -> copy(event = consumed())
                 is Msg.SnackbarMessage -> copy(
-                    testEvent = triggered(
+                    event = triggered(
                         EventContent(
                             success = message.success,
                             message = message.message
@@ -222,7 +216,7 @@ class StartRegistrationStoreFactory(
                     )
                 )
 
-                Msg.OnConsumedEvent -> copy(testEvent = consumed())
+                Msg.OnConsumedEvent -> copy(event = consumed())
             }
     }
 }

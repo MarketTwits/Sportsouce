@@ -1,5 +1,3 @@
-import com.android.tools.r8.internal.js
-
 plugins {
     alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.serialization)

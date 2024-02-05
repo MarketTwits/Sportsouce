@@ -24,10 +24,11 @@ import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
-import io.ktor.client.call.body
-import io.ktor.client.request.get
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
+import com.markettwits.cloud.provider.HttpClientProvider
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -35,9 +36,6 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import com.markettwits.cloud.provider.HttpClientProvider
-import io.ktor.http.parametersOf
-import org.koin.core.parameter.parametersOf
 
 class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
@@ -114,10 +112,10 @@ class StartsRemoteDataSourceImpl(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
         }
-        return json.decodeFromString(response.body<String>())
+        return json.decodeFromString(response.body())
     }
 
-    override suspend fun registerOnStart(
+    override suspend fun registerOnStartBase(
         request: StartRegisterRequest,
         token: String
     ): StartRegistrationResponse {
@@ -128,9 +126,24 @@ class StartsRemoteDataSourceImpl(
             }
             setBody(request)
         }
+        return json.decodeFromString(StartRegistrationResponse.serializer(), response.body())
+    }
+
+    override suspend fun registerOnStartCombo(
+        request: StartRegisterRequest.Combo,
+        token: String
+    ): StartRegistrationResponse {
+        val response = client.post("member-start/combo") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
         return json.decodeFromString(response.body())
     }
 
+    @Deprecated("dont use")
     override suspend fun registerOnStartWithoutPayment(
         request: StartRegisterRequest,
         token: String

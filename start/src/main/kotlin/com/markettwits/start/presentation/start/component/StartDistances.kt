@@ -1,7 +1,5 @@
 package com.markettwits.start.presentation.start.component
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -30,11 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.cloud.ext_model.Distance
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
@@ -45,10 +40,11 @@ import com.markettwits.start.presentation.common.OnClick
 @Composable
 fun StartDistances(
     modifier: Modifier = Modifier,
-    distance: List<DistanceInfo>,
+    distance: List<DistanceItem>,
     startStatus: StartStatus,
-    paymentDisabled : Boolean,
-    onClick: (DistanceInfo, Boolean) -> Unit,
+    paymentDisabled: Boolean,
+    paymentType: String,
+    onClick: (DistanceItem, Boolean) -> Unit,
 ) {
     var panelState by rememberSaveable {
         mutableStateOf(true)
@@ -87,9 +83,28 @@ fun StartDistances(
             LazyRow {
                 items(distance) {
                     Column(modifier.clip(Shapes.medium)) {
-                        DistanceItem(item = it, paymentDisabled = paymentDisabled,onClick = {
-                            onClick(it, paymentDisabled)
-                        })
+                        when (it) {
+                            is DistanceItem.DistanceCombo -> {
+                                DistanceItemCombo(
+                                    item = it,
+                                    paymentDisabled = paymentDisabled,
+                                    paymentType = paymentType,
+                                    onClick = {
+                                        onClick(it, paymentDisabled)
+                                    })
+                            }
+
+                            is DistanceItem.DistanceInfo -> {
+                                DistanceItemBase(
+                                    item = it,
+                                    paymentDisabled = paymentDisabled,
+                                    paymentType = paymentType,
+                                    onClick = {
+                                        onClick(it, paymentDisabled)
+                                    })
+                            }
+                        }
+
                     }
                 }
             }
@@ -98,13 +113,21 @@ fun StartDistances(
 }
 
 @Composable
-fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick) {
-
+fun DistanceItemBase(
+    item: DistanceItem.DistanceInfo,
+    paymentDisabled: Boolean,
+    paymentType: String,
+    onClick: OnClick
+) {
     Box(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
-            .border(width = 3.dp, color = SportSouceColor.SportSouceLighBlue, shape = Shapes.medium)
+            .border(
+                width = 3.dp,
+                color = SportSouceColor.SportSouceLighBlue,
+                shape = Shapes.medium
+            )
             .clip(Shapes.medium)
     ) {
         Column(
@@ -129,18 +152,18 @@ fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick
                 overflow = TextOverflow.Ellipsis,
                 color = SportSouceColor.SportSouceBlue
             )
-            if (paymentDisabled){
+            if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
-                    text = "Участие бесплатно",
+                    text = paymentType,
                     fontSize = 12.sp,
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = SportSouceColor.SportSouceBlue
                 )
-            }else{
+            } else {
                 Text(
-                    text = "Цена : " + item.distance.price + " р.",
+                    text = "Цена : " + item.distance.price + " ₽",
                     fontSize = 12.sp,
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
@@ -148,8 +171,8 @@ fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick
                     color = SportSouceColor.SportSouceBlue
                 )
             }
-            val enabled = item.distance.slots.toInt() > 0
-            if (enabled){
+            val enabled = (item.distance.slots.toInt()) > 0
+            if (enabled) {
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = SportSouceColor.SportSouceLighBlue,
@@ -158,7 +181,7 @@ fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick
                 ) {
                     Text("Зарегистрироваться")
                 }
-            }else{
+            } else {
                 Button(
                     enabled = false,
                     colors = ButtonDefaults.buttonColors(
@@ -171,6 +194,84 @@ fun DistanceItem(item: DistanceInfo, paymentDisabled : Boolean, onClick: OnClick
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+fun DistanceItemCombo(
+    item: DistanceItem.DistanceCombo,
+    paymentDisabled: Boolean,
+    paymentType: String,
+    onClick: OnClick
+) {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth()
+//            .width(210.dp)
+//            .height(150.dp)
+            .border(
+                width = 3.dp,
+                color = SportSouceColor.SportSouceLighBlue,
+                shape = Shapes.medium
+            )
+            .clip(Shapes.medium)
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(10.dp)
+        ) {
+            Text(
+                text = item.value,
+                fontSize = 12.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 3,
+                overflow = TextOverflow.Visible,
+                color = SportSouceColor.SportSouceBlue
+            )
+            Text(
+                text = "",
+                fontSize = 12.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = SportSouceColor.SportSouceBlue
+            )
+            if (paymentDisabled && paymentType.isNotEmpty()) {
+                Text(
+                    text = paymentType,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = SportSouceColor.SportSouceBlue
+                )
+            } else {
+                Text(
+                    text = "Цена : " + item.price + " ₽",
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = SportSouceColor.SportSouceBlue
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = SportSouceColor.SportSouceLighBlue,
+                    ),
+                    onClick = { onClick() },
+                ) {
+                    Text("Зарегистрироваться")
+                }
+            }
         }
     }
 }

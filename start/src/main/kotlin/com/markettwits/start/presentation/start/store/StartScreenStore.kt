@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.data.start.StartDataSource
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
@@ -18,7 +18,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
-        data class OnClickDistance(val distanceInfo: DistanceInfo, val paymentDisabled: Boolean) :
+        data class OnClickDistance(val distanceInfo: DistanceItem, val paymentDisabled: Boolean) :
             Intent
 
         data object OnClickBack : Intent
@@ -34,7 +34,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OnClickMembers(val members: List<StartMembersUi>) : Label
-        data class OnClickDistance(val distanceInfo: DistanceInfo, val paymentDisabled: Boolean) :
+        data class OnClickDistance(val distanceInfo: DistanceItem, val paymentDisabled: Boolean) :
             Label
 
         data object OnClickBack : Label
@@ -64,14 +64,14 @@ class StartScreenStoreFactory(
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.OnClickBack -> publish(StartScreenStore.Label.OnClickBack)
+                is Intent.OnClickBack -> publish(Label.OnClickBack)
                 is Intent.OnClickDistance -> publish(
-                    StartScreenStore.Label.OnClickDistance(
+                    Label.OnClickDistance(
                         intent.distanceInfo,
                         intent.paymentDisabled
                     )
                 )
-                is Intent.OnClickMembers -> publish(StartScreenStore.Label.OnClickMembers(intent.members))
+                is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
             }
         }

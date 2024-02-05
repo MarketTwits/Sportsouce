@@ -1,5 +1,6 @@
 package com.markettwits.start.data.registration.mapper
 
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.team.TeamsRemote
@@ -12,7 +13,7 @@ interface RegistrationRemoteToDomainMapper {
         cities: CityRemote,
         teamsRemote: TeamsRemote,
         user: User,
-        price: String,
+        distanceItem: DistanceItem,
         paymentDisabled: Boolean
     ): StartStatement
 }
@@ -23,9 +24,13 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         cities: CityRemote,
         teamsRemote: TeamsRemote,
         user: User,
-        price: String,
+        distanceItem: DistanceItem,
         paymentDisabled: Boolean
     ): StartStatement {
+        val price = when (distanceItem) {
+            is DistanceItem.DistanceCombo -> distanceItem.price.toString()
+            is DistanceItem.DistanceInfo -> distanceItem.distance.price
+        }
         return StartStatement(
             name = user.name,
             surname = user.surname,

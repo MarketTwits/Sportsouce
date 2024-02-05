@@ -1,11 +1,11 @@
 package com.markettwits.registrations.paymant_dialog.store
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
@@ -44,8 +44,7 @@ class RegistrationsPaymentStoreFactory(
             reducer = ReducerImpl
         ) {}
 
-    private sealed interface Action {
-    }
+    private sealed interface Action
 
     private sealed interface Msg {
         data class Loaded(val url: String) : Msg
@@ -71,7 +70,9 @@ class RegistrationsPaymentStoreFactory(
                     onSuccess = {
                        dispatch(Msg.Loaded(it))
                     },
-                    onFailure = {}
+                    onFailure = {
+                        Log.e("mt05", "RegistrationsPaymentStore#repay ${it.message}")
+                    }
                 )
             }
         }

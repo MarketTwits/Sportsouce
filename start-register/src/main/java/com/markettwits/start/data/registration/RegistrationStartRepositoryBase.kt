@@ -1,8 +1,7 @@
 package com.markettwits.start.data.registration
 
-import android.util.Log
 import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.data.registration.mapper.RegistrationMapper
@@ -26,7 +25,10 @@ class RegistrationStartRepositoryBase(
     private val registrationResponseMapper: RegistrationResponseMapper,
     private val promoMapper: RegistrationPromoMapper,
 ) : RegistrationStartRepository {
-    override suspend fun preload(price: String, paymentDisabled : Boolean): Result<StartStatement> =
+    override suspend fun preload(
+        distanceInfo: DistanceItem,
+        paymentDisabled: Boolean
+    ): Result<StartStatement> =
         retryRunCatchingAsync {
             val (teams, cities, user) = coroutineScope {
                 withContext(Dispatchers.IO) {
@@ -41,55 +43,53 @@ class RegistrationStartRepositoryBase(
                     )
                 }
             }
-            statementMapper.map(cities, teams, user, price,paymentDisabled)
+            statementMapper.map(cities, teams, user, distanceInfo, paymentDisabled)
         }
 
-    override suspend fun promocode(value: String, startId: Int): Result<StartPromo> =
+    override suspend fun promo(value: String, startId: Int): Result<StartPromo> =
         retryRunCatchingAsync {
             promoMapper.map(service.promo(value, startId))
         }
 
-    override suspend fun save(
+    override suspend fun registry(
+        withoutPayment: Boolean,
         statement: StartStatement,
-        distanceInfo: DistanceInfo,
+        distanceInfo: DistanceItem,
         startId: Int
     ): Result<StartRegistryResult> {
-        return retryRunCatchingAsync{
+        return retryRunCatchingAsync {
             val user = authService.auth()
             val token = authService.updateToken()
-            val request = registerMapper.map(
-                withoutPayment = true,
-                user = user,
-                startStatement = statement,
-                startDistanceInfo = distanceInfo,
-                startId = startId
-            )
-            val result = retryRunCatchingAsync {
-                service.registerOnStartWithoutPayment(request, token)
-            }
-            registrationResponseMapper.flatMapWithoutPayment(result)
-        }
-    }
+            val result = when (distanceInfo) {
+                is DistanceItem.DistanceCombo -> {
+                    val request = registerMapper.mapCombo(
+                        withoutPayment = withoutPayment,
+                        user = user,
+                        startStatement = statement,
+                        startDistanceItem = distanceInfo,
+                        startId = startId
+                    )
+                    val result = retryRunCatchingAsync {
+                        service.registerOnStartCombo(request, token)
+                    }
+                    registrationResponseMapper.flatMap(result)
+                }
 
-    override suspend fun pay(
-        statement: StartStatement,
-        distanceInfo: DistanceInfo,
-        startId: Int
-    ): Result<StartRegistryResult> {
-        return retryRunCatchingAsync{
-            val user = authService.auth()
-            val token = authService.updateToken()
-            val request = registerMapper.map(
-                withoutPayment = false,
-                user = user,
-                startStatement = statement,
-                startDistanceInfo = distanceInfo,
-                startId = startId
-            )
-            val result = retryRunCatchingAsync {
-                service.registerOnStart(request, token)
+                is DistanceItem.DistanceInfo -> {
+                    val request = registerMapper.mapBase(
+                        withoutPayment = withoutPayment,
+                        user = user,
+                        startStatement = statement,
+                        startDistanceItem = distanceInfo,
+                        startId = startId
+                    )
+                    val result = retryRunCatchingAsync {
+                        service.registerOnStartBase(request, token)
+                    }
+                    registrationResponseMapper.flatMap(result)
+                }
             }
-            registrationResponseMapper.flatMap(result)
+            result
         }
     }
 }

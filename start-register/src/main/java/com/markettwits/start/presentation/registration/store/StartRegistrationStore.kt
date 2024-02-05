@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
-import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.domain.StartStatement
 
 interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartRegistrationStore.State, StartRegistrationStore.Label> {
@@ -15,7 +14,7 @@ interface StartRegistrationStore : Store<StartRegistrationStore.Intent, StartReg
         val message: String = "",
         val promoMessage : String = "",
         val startStatement: StartStatement? = null,
-        val testEvent: StateEventWithContent<EventContent> = consumed(),
+        val event: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Label {

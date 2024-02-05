@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="MainActivity">
+        <State />
+      </entry>
       <entry key="MyProfileTopBarPreview">
         <State />
       </entry>
@@ -11,7 +14,7 @@
       <entry key="StartDistancesPreview">
         <State />
       </entry>
-      <entry key="StartScreenPreview">
+      <entry key="StartOrderScreenPreview">
         <State />
       </entry>
       <entry key="app">

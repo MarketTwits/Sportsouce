@@ -8,5 +8,9 @@ import com.markettwits.core_ui.theme.SportSouceColor.DirtyWhite
 
 @Composable
 fun BaseDivider(modifier: Modifier = Modifier) {
-    HorizontalDivider(thickness = 0.2.dp, color = DirtyWhite.copy(alpha = 0.2f))
+    HorizontalDivider(
+        modifier = modifier,
+        thickness = 0.2.dp,
+        color = DirtyWhite.copy(alpha = 0.2f)
+    )
 }

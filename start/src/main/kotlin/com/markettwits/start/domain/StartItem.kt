@@ -1,6 +1,6 @@
 package com.markettwits.start.domain
 
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.start.presentation.membres.list.StartMembersUi
@@ -15,7 +15,8 @@ data class StartItem(
     val startTime: String,
     val description: String,
     val paymentDisabled : Boolean,
-    val distanceInfo: List<DistanceInfo>,
+    val distanceInfo: List<DistanceItem>,
+    val paymentType: String,
     val organizers: List<Organizer>,
     val membersUi: List<StartMembersUi>,
     val conditionFile: ConditionFile,

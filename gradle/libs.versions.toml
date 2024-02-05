@@ -183,6 +183,10 @@ android-library-compose-convention = {id = "android-library-compose-convention",
 #compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
 
 
+jetbrainsCompose = { id = "org.jetbrains.compose", version = "1.5.1" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
+
+
 [bundles]
 composeUiBundle = [
     "compose-graphics",

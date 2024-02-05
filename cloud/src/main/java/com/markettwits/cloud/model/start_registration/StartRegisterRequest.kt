@@ -1,6 +1,9 @@
 package com.markettwits.cloud.model.start_registration
 
+
+import com.markettwits.cloud.ext_model.DistanceItem
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class StartRegisterRequest(
@@ -15,7 +18,30 @@ data class StartRegisterRequest(
     val promocode: String?,
     val registration_without_payment: Boolean,
     val start_id: Int
-){
+) {
+    @Serializable
+    data class Combo(
+        val alone: Boolean,
+        val day: Int,
+        val distance: String,
+        val format: String,
+        val distances: List<Distance>,
+        val payment_disabled: Boolean?,
+        val payment_type: String,
+        val price: Int,
+        val promocode: String?,
+        val registration_without_payment: Boolean,
+        val start_id: Int
+    ) {
+        @Serializable
+        data class Distance(
+            val alone: Boolean,
+            val distance: String,
+            val format: String,
+            val member: List<Member>
+        )
+    }
+
     @Serializable
     data class Member(
         val age: Int,
@@ -32,7 +58,7 @@ data class StartRegisterRequest(
         val phone: String,
         val price: Int,
         val promo: String?,
-        val stage: String,
+        val stage: DistanceItem.Stage,
         val surname: String,
         val team: String,
         val teamNumber: Int,
@@ -42,11 +68,14 @@ data class StartRegisterRequest(
         val vk: String?,
         val whatsapp: String?
     )
+
     @Serializable
     data class Group(
         val ageFrom: String,
         val ageTo: String,
         val name: String,
-        val sex: String
+        val sex: String,
+        val stages: List<DistanceItem.Stage>?
     )
 }
+

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud.ext_model.DistanceInfo
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.components.FullImageContent
 import com.markettwits.core_ui.refresh.PullToRefreshScreen
@@ -32,7 +32,7 @@ fun StartScreenContent(
     isLoading : Boolean,
     onClickRetry : () -> Unit,
     onClickBack : () -> Unit,
-    onClickDistance : (DistanceInfo, Boolean) -> Unit,
+    onClickDistance: (DistanceItem, Boolean) -> Unit,
     onClickMembers : ( List<StartMembersUi>) -> Unit,
     comments : @Composable (Modifier) -> Unit
 ) {
@@ -63,6 +63,7 @@ fun StartScreenContent(
                         distance = data.distanceInfo,
                         startStatus = data.startStatus,
                         paymentDisabled = data.paymentDisabled,
+                        paymentType = data.paymentType,
                         onClick = { distance, paymentDisabled ->
                             onClickDistance(distance, paymentDisabled)
                         }

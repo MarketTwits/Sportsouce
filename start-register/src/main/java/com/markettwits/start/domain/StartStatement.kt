@@ -12,6 +12,7 @@ data class StartStatement(
     val phone : String,
     val promocode : String,
     val price : String,
+    val contactPerson: Boolean = true,
     val cities : List<City>,
     val teams : List<Team>,
     val sexList : List<Sex>,

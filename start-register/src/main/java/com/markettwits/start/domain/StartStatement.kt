@@ -1,5 +1,8 @@
 package com.markettwits.start.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class StartStatement(
     val name : String,
     val surname : String,
@@ -18,7 +21,12 @@ data class StartStatement(
     val sexList : List<Sex>,
     val paymentDisabled : Boolean
 ){
+    @Serializable
     data class City(val id : Int, val name : String)
+
+    @Serializable
     data class Team(val id : Int, val name : String)
+
+    @Serializable
     data class Sex(val id : Int, val name : String)
 }

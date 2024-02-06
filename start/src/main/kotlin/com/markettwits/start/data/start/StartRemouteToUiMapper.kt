@@ -195,7 +195,7 @@ interface StartRemoteToUiMapper {
             if (distance.prices.isEmpty()) {
                 return distance.price.toInt()
             }
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
             val targetDate = dateFormat.parse(date) ?: return 0 // handle date parsing failure
 
             for (price in distance.prices) {
@@ -264,6 +264,7 @@ interface StartRemoteToUiMapper {
         @Deprecated("test method")
         private fun mapDistanceInfoTest2(text: String): List<DistanceItem> {
             val json = Json {
+                isLenient = true
                 ignoreUnknownKeys = true
             }
             return try {

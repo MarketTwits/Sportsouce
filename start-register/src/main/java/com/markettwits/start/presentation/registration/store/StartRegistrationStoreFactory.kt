@@ -80,7 +80,6 @@ class StartRegistrationStoreFactory(
         data class RegistrySuccess(val paymentUrl: String, val message: String) : Msg
         data class SnackbarMessage(val message: String, val value: String, val success: Boolean) :
             Msg
-
         data object RegistryLoading : Msg
         data object OnConsumedSucceededEvent : Msg
         data object OnConsumedFailedEvent : Msg

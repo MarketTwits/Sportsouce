@@ -12,7 +12,12 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun OrderPriceInfo(modifier: Modifier = Modifier) {
+fun OrderPriceInfo(
+    modifier: Modifier = Modifier,
+    membersCount: Int,
+    discountInCache: Int,
+    total: String,
+) {
     Text(
         modifier = modifier,
         text = "Ваш заказ",
@@ -24,7 +29,7 @@ fun OrderPriceInfo(modifier: Modifier = Modifier) {
     )
     Text(
         modifier = modifier,
-        text = "Участников : 3",
+        text = "Участников : $membersCount",
         fontSize = 14.sp,
         fontFamily = FontNunito.bold,
         maxLines = 1,
@@ -43,7 +48,7 @@ fun OrderPriceInfo(modifier: Modifier = Modifier) {
         )
         Text(
             modifier = modifier,
-            text = "-54 р",
+            text = " - $discountInCache ₽",
             fontSize = 14.sp,
             fontFamily = FontNunito.bold,
             maxLines = 1,
@@ -53,7 +58,7 @@ fun OrderPriceInfo(modifier: Modifier = Modifier) {
     }
     Text(
         modifier = modifier,
-        text = "Итого : 800 руб",
+        text = "Итого : $total ₽",
         fontSize = 18.sp,
         fontFamily = FontNunito.bold,
         maxLines = 1,

@@ -1,5 +1,6 @@
-package com.markettwits.start.presentation.order.components
+package com.markettwits.start.presentation.order.components.distance_info
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -42,7 +43,7 @@ fun StartDistanceInfoBox(
             text = "Формат : $format",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
-            maxLines = 1,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             color = Color.LightGray
         )
@@ -57,7 +58,10 @@ fun StartDistanceInfoBox(
         )
         LazyRow(modifier = modifier) {
             items(distances) {
-                DistanceBox(value = it)
+                DistanceBox(
+                    value = it
+                )
+                Spacer(modifier = Modifier.padding(horizontal = 5.dp))
             }
         }
     }

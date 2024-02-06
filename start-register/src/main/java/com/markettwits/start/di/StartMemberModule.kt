@@ -1,5 +1,6 @@
 package com.markettwits.start.di
 
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.cloud.di.timeApiNetworkModule
@@ -15,6 +16,10 @@ import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomain
 import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapperBase
 import com.markettwits.start.data.registration.mapper.RegistrationResponseMapper
 import com.markettwits.start.data.registration.mapper.RegistrationResponseMapperBase
+import com.markettwits.start.presentation.member.domain.RegistrationMemberValidator
+import com.markettwits.start.presentation.member.domain.RegistrationMemberValidatorBase
+import com.markettwits.start.presentation.member.store.RegistrationMemberStoreFactory
+import com.markettwits.start.presentation.promo.store.RegistrationPromoStoreFactory
 import com.markettwits.start.presentation.registration.store.StartRegistrationStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -23,22 +28,15 @@ import org.koin.dsl.module
 
 val startRegistrationModule = module{
     includes(sportSouceNetworkModule, timeApiNetworkModule)
-    single<StartRegistrationStoreFactory> {
-        StartRegistrationStoreFactory(
-            storeFactory = DefaultStoreFactory(),
-            repository = get()
-        )
-    }
-    single<RegistrationStartRepository>{
-        RegistrationStartRepositoryBase(
-            service = get(),
-            authService = get(),
-            statementMapper = get(),
-            registerMapper = get(),
-            registrationResponseMapper = get(),
-            promoMapper = get()
-        )
-    }
+    //StoreFactory
+    singleOf(::StartRegistrationStoreFactory)
+    singleOf(::RegistrationPromoStoreFactory)
+    singleOf(::RegistrationMemberStoreFactory)
+    //Extra
+    //Repository
+    singleOf(::RegistrationStartRepositoryBase) bind RegistrationStartRepository::class
+    singleOf(::DefaultStoreFactory) bind StoreFactory::class
+    singleOf(::RegistrationMemberValidatorBase) bind RegistrationMemberValidator::class
     singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::RegistrationRemoteToDomainMapperBase) bind RegistrationRemoteToDomainMapper::class
     singleOf(::RegistrationMapperBase) bind RegistrationMapper::class

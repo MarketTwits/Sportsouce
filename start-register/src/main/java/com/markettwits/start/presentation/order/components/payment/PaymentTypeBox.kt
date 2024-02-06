@@ -49,7 +49,7 @@ fun PaymentTypeBox(modifier: Modifier = Modifier) {
         Row {
             PaymentTypeChosen(
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                value = "Сразу", selected = selectedNow
+                value = "Сейчас", selected = selectedNow
             ) {
                 selectedNow = true
                 selectedLater = false

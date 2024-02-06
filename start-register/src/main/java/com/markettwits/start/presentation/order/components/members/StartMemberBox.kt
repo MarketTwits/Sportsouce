@@ -29,7 +29,8 @@ fun StartMemberBox(
     memberName: String,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         shape = Shapes.medium,
         colors = CardDefaults.elevatedCardColors(containerColor = SportSouceColor.VeryLighBlue),
         border = BorderStroke(2.dp, SportSouceColor.SportSouceBlue)

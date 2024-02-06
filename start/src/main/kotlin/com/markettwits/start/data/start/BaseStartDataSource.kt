@@ -10,7 +10,6 @@ import com.markettwits.core_ui.base.Fourth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.CommentUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -18,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration
 
 class BaseStartDataSource(
     private val service: SportsouceApi,
@@ -45,8 +43,8 @@ class BaseStartDataSource(
             mapper.map(value)
         }
 
-    private suspend fun launch(startId: Int): Result<StartItem> =
-        retryRunCatchingAsync {
+    private suspend fun launch(startId: Int): Result<StartItem> {
+        // retryRunCatchingAsync {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {
                     val deferredTime = async { timeService.currentTime() }
@@ -64,7 +62,10 @@ class BaseStartDataSource(
             val result = mapper.map(data, withFilter, comments, time)
             cache.set(value = Result.success(result), key = startId)
             result
-        }
+        return Result.success(result)
+        //  }
+    }
+
 
     override suspend fun writeComment(comment: String, startId: Int): CommentUiState {
         return try {

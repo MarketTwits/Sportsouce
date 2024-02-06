@@ -11,6 +11,7 @@ import com.markettwits.start.data.registration.mapper.RegistrationResponseMapper
 import com.markettwits.start.domain.StartPromo
 import com.markettwits.start.domain.StartRegistryResult
 import com.markettwits.start.domain.StartStatement
+import com.markettwits.start.presentation.order.domain.OrderStatement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -45,6 +46,28 @@ class RegistrationStartRepositoryBase(
             }
             statementMapper.map(cities, teams, user, distanceInfo, paymentDisabled)
         }
+
+    override suspend fun loadOrder(
+        distanceInfo: DistanceItem,
+        paymentDisabled: Boolean
+    ): Result<OrderStatement> {
+        return retryRunCatchingAsync {
+            val (teams, cities, user) = coroutineScope {
+                withContext(Dispatchers.IO) {
+                    authService.updateToken()
+                    val deferredWithTeams = async { service.teams() }
+                    val deferredWithCities = async { service.cities() }
+                    val deferredWithUser = async { authService.auth() }
+                    Triple(
+                        deferredWithTeams.await(),
+                        deferredWithCities.await(),
+                        deferredWithUser.await(),
+                    )
+                }
+            }
+            statementMapper.mapOrder(cities, teams, user, distanceInfo, paymentDisabled)
+        }
+    }
 
     override suspend fun promo(value: String, startId: Int): Result<StartPromo> =
         retryRunCatchingAsync {

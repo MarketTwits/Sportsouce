@@ -34,6 +34,7 @@ import java.util.Locale.getDefault
 @Composable
 fun MemberScreenContent(
     modifier: Modifier = Modifier,
+    userNumber: Int,
     statement: StartStatement,
     onValueChanged: (StartStatement) -> Unit,
     onClickContinue: () -> Unit,
@@ -43,15 +44,12 @@ fun MemberScreenContent(
             .padding(15.dp)
             .verticalScroll(rememberScrollState())
     ) {
-//        var contactFace by remember {
-//            mutableStateOf(statement.contactPerson)
-//        }
         MemberContactFace(checked = statement.contactPerson, onValueChanged = {
             onValueChanged(statement.copy(contactPerson = it))
         }
         )
         Text(
-            text = "3 этап",
+            text = "Участник ${userNumber + 1}",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
             maxLines = 1,

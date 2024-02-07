@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.start.presentation.start.components
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility

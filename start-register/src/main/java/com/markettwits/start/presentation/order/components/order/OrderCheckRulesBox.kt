@@ -18,21 +18,18 @@ import com.markettwits.core_ui.components.openWebPage
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun OrderCheckRulesBox() {
-    var checked by remember {
-        mutableStateOf(false)
-    }
+fun OrderCheckRulesBox(isChecked: Boolean, onClickRulesCheck: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
-            checked = checked,
+            checked = isChecked,
             colors = CheckboxDefaults.colors(
                 checkedColor = SportSouceColor.SportSouceLighBlue,
                 checkmarkColor = Color.White,
             ),
             onCheckedChange = {
-                checked = !checked
+                onClickRulesCheck()
             })
         PrivacyPolicyText()
     }
@@ -41,7 +38,6 @@ fun OrderCheckRulesBox() {
 @Composable
 private fun PrivacyPolicyText() {
     val context = LocalContext.current
-    // AnnotatedString with a clickable span
     val consentText = buildAnnotatedString {
         withStyle(style = androidx.compose.ui.text.SpanStyle(color = Color.LightGray)) {
             append("Я согласен с условиями проведения старта и ")

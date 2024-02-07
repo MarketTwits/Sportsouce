@@ -4,23 +4,27 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.start.data.registration.RegistrationStartRepository
+import com.markettwits.start.presentation.order.domain.interactor.OrderInteractor
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 class OrderBootstrapper(
-    private val repository: RegistrationStartRepository,
+    private val firstRun: Boolean,
+    private val interactor: OrderInteractor,
     private val distanceInfo: DistanceItem,
-    private val paymentDisabled: Boolean
+    private val paymentDisabled: Boolean,
+    private val paymentType: String,
 ) : CoroutineBootstrapper<OrderStore.Action>() {
     override fun invoke() {
-        launch(distanceInfo, paymentDisabled)
+        if (firstRun)
+            launch(distanceInfo, paymentDisabled, paymentType)
     }
 
-    private fun launch(distanceInfo: DistanceItem, paymentDisabled: Boolean) {
+    private fun launch(distanceInfo: DistanceItem, paymentDisabled: Boolean, paymentType: String) {
         dispatch(OrderStore.Action.Loading)
         scope.launch {
-            repository.loadOrder(distanceInfo, paymentDisabled).fold(
+            interactor.order(distanceInfo, paymentDisabled, paymentType).fold(
                 onSuccess = { dispatch(OrderStore.Action.InfoLoaded(it)) },
                 onFailure = {
                     val message = when (it) {

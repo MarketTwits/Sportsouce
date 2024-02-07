@@ -27,7 +27,8 @@ interface RegistrationRemoteToDomainMapper {
         teamsRemote: TeamsRemote,
         user: User,
         distanceItem: DistanceItem,
-        paymentDisabled: Boolean
+        paymentDisabled: Boolean,
+        paymentType: String
     ): OrderStatement
 }
 
@@ -68,20 +69,21 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         teamsRemote: TeamsRemote,
         user: User,
         distanceItem: DistanceItem,
-        paymentDisabled: Boolean
+        paymentDisabled: Boolean,
+        paymentType: String
     ): OrderStatement {
         return OrderStatement(
             distanceInfo = mapOrderDistance(distanceItem),
             members = mapMembers(cities, teamsRemote, user, distanceItem, paymentDisabled),
             promo = "",
-            withPayment = paymentDisabled,
-            orderPrice = mapOrderPrice(distanceItem, paymentDisabled)
+            paymentDisabled = paymentDisabled,
+            paymentType = paymentType,
+            orderPrice = mapOrderPrice(distanceItem)
         )
     }
 
     private fun mapOrderPrice(
-        distanceItem: DistanceItem,
-        paymentDisabled: Boolean
+        distanceItem: DistanceItem
     ): OrderPrice {
         val price = when (distanceItem) {
             is DistanceItem.DistanceCombo -> distanceItem.price.toString()

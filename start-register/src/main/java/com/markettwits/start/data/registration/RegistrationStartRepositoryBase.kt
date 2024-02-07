@@ -49,7 +49,8 @@ class RegistrationStartRepositoryBase(
 
     override suspend fun loadOrder(
         distanceInfo: DistanceItem,
-        paymentDisabled: Boolean
+        paymentDisabled: Boolean,
+        paymentType: String
     ): Result<OrderStatement> {
         return retryRunCatchingAsync {
             val (teams, cities, user) = coroutineScope {
@@ -65,7 +66,14 @@ class RegistrationStartRepositoryBase(
                     )
                 }
             }
-            statementMapper.mapOrder(cities, teams, user, distanceInfo, paymentDisabled)
+            statementMapper.mapOrder(
+                cities,
+                teams,
+                user,
+                distanceInfo,
+                paymentDisabled,
+                paymentType
+            )
         }
     }
 
@@ -115,11 +123,4 @@ class RegistrationStartRepositoryBase(
             result
         }
     }
-}
-
-inline fun <R, T> Result<R>.flatMap(transform: (R) -> Result<T>) {
-    fold(
-        onSuccess = { transform(it) },
-        onFailure = { Result.failure(it) }
-    )
 }

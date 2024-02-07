@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.order.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -13,25 +14,39 @@ import com.markettwits.start.presentation.order.store.OrderStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.serialization.builtins.ListSerializer
 
 class OrderComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
+    private val paymentType: String,
     private val distanceInfo: DistanceItem,
     private val paymentDisabled: Boolean,
-    private val repository: RegistrationStartRepository,
+    private val storeFactory: OrderStoreFactory,
     private val pop: () -> Unit,
     private val onClickMember: (StartStatement, Int) -> Unit,
     private val onClickPromo: (Int, String) -> Unit
 ) : OrderComponentComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    private val members: MutableValue<OrderStore.State> = MutableValue(
+        stateKeeper.consume(
+            key = ORDER_STORE_STATE_KEY,
+            OrderStore.State.serializer()
+        ) ?: OrderStore.State()
+    )
+
     private val store = instanceKeeper.getStore {
-        OrderStoreFactory(DefaultStoreFactory(), repository).create(
+        storeFactory.create(
+            state = members.value,
             distanceInfo = distanceInfo,
             starId = startId,
+            paymentType = paymentType,
             paymentDisabled = paymentDisabled
         )
     }
@@ -42,6 +57,17 @@ class OrderComponentComponentBase(
     }
 
     init {
+        stateKeeper.register(
+            key = ORDER_STORE_STATE_KEY,
+            strategy = OrderStore.State.serializer()
+        ) {
+            members.value
+        }
+        scope.launch {
+            store.stateFlow.collect {
+                members.value = it
+            }
+        }
         scope.launch {
             store.labels.collect {
                 when (it) {
@@ -51,5 +77,9 @@ class OrderComponentComponentBase(
                 }
             }
         }
+    }
+
+    private companion object {
+        const val ORDER_STORE_STATE_KEY = "ORDER_STORE_STATE_KEY"
     }
 }

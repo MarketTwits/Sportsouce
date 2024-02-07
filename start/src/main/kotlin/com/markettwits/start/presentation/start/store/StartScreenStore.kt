@@ -18,7 +18,11 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
-        data class OnClickDistance(val distanceInfo: DistanceItem, val paymentDisabled: Boolean) :
+        data class OnClickDistance(
+            val distanceInfo: DistanceItem,
+            val paymentDisabled: Boolean,
+            val paymentType: String
+        ) :
             Intent
 
         data object OnClickBack : Intent
@@ -34,7 +38,11 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OnClickMembers(val members: List<StartMembersUi>) : Label
-        data class OnClickDistance(val distanceInfo: DistanceItem, val paymentDisabled: Boolean) :
+        data class OnClickDistance(
+            val distanceInfo: DistanceItem,
+            val paymentDisabled: Boolean,
+            val paymentType: String
+        ) :
             Label
 
         data object OnClickBack : Label
@@ -68,9 +76,11 @@ class StartScreenStoreFactory(
                 is Intent.OnClickDistance -> publish(
                     Label.OnClickDistance(
                         intent.distanceInfo,
-                        intent.paymentDisabled
+                        intent.paymentDisabled,
+                        intent.paymentType
                     )
                 )
+
                 is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
             }

@@ -21,8 +21,8 @@ import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore
-import com.markettwits.start.presentation.start.component.CommentTextField
-import com.markettwits.start.presentation.start.component.StartCommentsPanel
+import com.markettwits.start.presentation.start.components.CommentTextField
+import com.markettwits.start.presentation.start.components.StartCommentsPanel
 
 @Composable
 fun StartCommentsContent(modifier: Modifier = Modifier, component: StartCommentsComponent) {

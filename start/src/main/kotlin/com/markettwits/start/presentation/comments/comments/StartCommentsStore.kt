@@ -15,8 +15,8 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Intent
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Label
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.State
-import com.markettwits.start.presentation.start.CommentMode
-import com.markettwits.start.presentation.start.CommentUiState
+import com.markettwits.start.presentation.start.component.CommentMode
+import com.markettwits.start.presentation.start.component.CommentUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch

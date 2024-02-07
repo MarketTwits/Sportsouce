@@ -48,6 +48,7 @@ fun MemberScreen(component: RegistrationMemberComponent) {
     ) {
         MemberScreenContent(
             modifier = Modifier.padding(it),
+            userNumber = state.userNumber,
             statement = state.value,
             onValueChanged = {
                 component.obtainEvent(RegistrationMemberStore.Intent.ChangeFiled(it))

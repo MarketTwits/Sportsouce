@@ -14,17 +14,18 @@ class RegistrationMemberStoreFactory(
     private val startValidator: RegistrationMemberValidator
 ) {
 
-    fun create(startStatement: StartStatement): RegistrationMemberStore =
-        RegistrationMemberStoreImpl(startStatement, startValidator)
+    fun create(userNumber: Int, startStatement: StartStatement): RegistrationMemberStore =
+        RegistrationMemberStoreImpl(userNumber, startStatement, startValidator)
 
     private inner class RegistrationMemberStoreImpl(
+        private val userNumber: Int,
         private val startStatement: StartStatement,
         private val validator: RegistrationMemberValidator
     ) :
         RegistrationMemberStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "RegistrationMemberStore",
-            initialState = State(startStatement),
+            initialState = State(userNumber, startStatement),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { RegistrationMemberExecutor(validator) },
             reducer = RegistrationMemberReducer

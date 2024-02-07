@@ -17,14 +17,14 @@ import com.markettwits.core_ui.components.FullImageContent
 import com.markettwits.core_ui.refresh.PullToRefreshScreen
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import com.markettwits.start.presentation.start.component.StartConditionPanel
-import com.markettwits.start.presentation.start.component.StartDescription
-import com.markettwits.start.presentation.start.component.StartDistances
-import com.markettwits.start.presentation.start.component.StartMembersPanel
-import com.markettwits.start.presentation.start.component.StartOrganizers
-import com.markettwits.start.presentation.start.component.StartResult
-import com.markettwits.start.presentation.start.component.StartStatus
-import com.markettwits.start.presentation.start.component.StartTitle
+import com.markettwits.start.presentation.start.components.StartConditionPanel
+import com.markettwits.start.presentation.start.components.StartDescription
+import com.markettwits.start.presentation.start.components.StartDistances
+import com.markettwits.start.presentation.start.components.StartMembersPanel
+import com.markettwits.start.presentation.start.components.StartOrganizers
+import com.markettwits.start.presentation.start.components.StartResult
+import com.markettwits.start.presentation.start.components.StartStatus
+import com.markettwits.start.presentation.start.components.StartTitle
 
 @Composable
 fun StartScreenContent(
@@ -32,7 +32,7 @@ fun StartScreenContent(
     isLoading : Boolean,
     onClickRetry : () -> Unit,
     onClickBack : () -> Unit,
-    onClickDistance: (DistanceItem, Boolean) -> Unit,
+    onClickDistance: (DistanceItem, Boolean, String) -> Unit,
     onClickMembers : ( List<StartMembersUi>) -> Unit,
     comments : @Composable (Modifier) -> Unit
 ) {
@@ -64,8 +64,8 @@ fun StartScreenContent(
                         startStatus = data.startStatus,
                         paymentDisabled = data.paymentDisabled,
                         paymentType = data.paymentType,
-                        onClick = { distance, paymentDisabled ->
-                            onClickDistance(distance, paymentDisabled)
+                        onClick = { distance, paymentDisabled, paymentType ->
+                            onClickDistance(distance, paymentDisabled, paymentType)
                         }
                     )
                     StartOrganizers(modifier = modifier, organizer = data.organizers)

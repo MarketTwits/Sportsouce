@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start
+package com.markettwits.start.presentation.start.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
@@ -17,7 +17,7 @@ class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
     private val back: () -> Unit,
-    private val register: (DistanceItem, Boolean) -> Unit,
+    private val register: (DistanceItem, Boolean, String) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
@@ -38,7 +38,8 @@ class StartScreenComponentComponentBase(
                     is StartScreenStore.Label.OnClickBack -> back()
                     is StartScreenStore.Label.OnClickDistance -> register(
                         it.distanceInfo,
-                        it.paymentDisabled
+                        it.paymentDisabled,
+                        it.paymentType
                     )
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
                 }

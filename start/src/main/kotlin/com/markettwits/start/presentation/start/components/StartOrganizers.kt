@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.start.presentation.start.components
 
 import android.content.Intent
 import android.net.Uri
@@ -136,7 +136,9 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                                 else -> IconTelegram
                             }
                             Icon(
-                                modifier = Modifier.size(15.dp).align(Alignment.Center),
+                                modifier = Modifier
+                                    .size(15.dp)
+                                    .align(Alignment.Center),
                                 imageVector = icon,
                                 contentDescription = "icon",
                                 tint = Color.White

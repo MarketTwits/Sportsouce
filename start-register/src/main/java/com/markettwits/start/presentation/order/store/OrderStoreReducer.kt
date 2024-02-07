@@ -9,8 +9,8 @@ object OrderStoreReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.PreloadFailed -> State(isError = true, message = msg.message)
             is Message.PreloadLoading -> State(isLoading = true)
-            is Message.PreloadSuccess -> State(startStatement = msg.startStatement)
-            is Message.UpdateState -> copy(startStatement = msg.statement)
+            is Message.PreloadSuccess -> State(orderStatement = msg.startStatement)
+            is Message.UpdateState -> msg.state
         }
     }
 }

@@ -29,7 +29,7 @@ import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.order.component.OrderComponentComponentBase
 import com.markettwits.start.presentation.order.store.OrderStore
 import com.markettwits.start.presentation.promo.component.RegistrationPromoComponentBase
-import com.markettwits.start.presentation.start.StartScreenComponentComponentBase
+import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
@@ -95,12 +95,13 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
                     back = pop::invoke,
-                    register = { distanceInfo, paymentDisabled ->
+                    register = { distanceInfo, paymentDisabled, paymentType ->
                         navigation.push(
                             RootStartScreenComponent.Config.StartRegistration(
                                 startId = startId,
                                 distanceInfo = distanceInfo,
-                                paymentDisabled = paymentDisabled
+                                paymentDisabled = paymentDisabled,
+                                paymentType = paymentType
                             )
                         )
                     },
@@ -152,7 +153,8 @@ class RootStartScreenComponentBase(
                         startId = config.startId,
                         paymentDisabled = config.paymentDisabled,
                         distanceInfo = config.distanceInfo,
-                        repository = scope.get(),
+                        paymentType = config.paymentType,
+                        storeFactory = scope.get(),
                         pop = navigation::pop,
                         onClickPromo = { startId, promo ->
                             slotNavigation.activate(

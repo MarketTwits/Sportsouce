@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start
+package com.markettwits.start.presentation.start.component
 
 import com.markettwits.start.presentation.start.store.StartScreenStore
 import kotlinx.coroutines.flow.MutableStateFlow

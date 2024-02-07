@@ -15,7 +15,8 @@ interface RegistrationStartRepository {
 
     suspend fun loadOrder(
         distanceInfo: DistanceItem,
-        paymentDisabled: Boolean
+        paymentDisabled: Boolean,
+        paymentType: String,
     ): Result<OrderStatement>
 
     suspend fun promo(value: String, startId: Int): Result<StartPromo>

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,7 +44,7 @@ fun StartDistances(
     startStatus: StartStatus,
     paymentDisabled: Boolean,
     paymentType: String,
-    onClick: (DistanceItem, Boolean) -> Unit,
+    onClick: (DistanceItem, Boolean, String) -> Unit,
 ) {
     var panelState by rememberSaveable {
         mutableStateOf(true)
@@ -92,7 +92,7 @@ fun StartDistances(
                                     paymentDisabled = paymentDisabled,
                                     paymentType = paymentType,
                                     onClick = {
-                                        onClick(it, paymentDisabled)
+                                        onClick(it, paymentDisabled, paymentType)
                                     })
                             }
 
@@ -102,7 +102,7 @@ fun StartDistances(
                                     paymentDisabled = paymentDisabled,
                                     paymentType = paymentType,
                                     onClick = {
-                                        onClick(it, paymentDisabled)
+                                        onClick(it, paymentDisabled, paymentType)
                                     })
                             }
                         }

@@ -11,6 +11,7 @@ import com.markettwits.start.presentation.member.store.RegistrationMemberStore.S
 
 interface RegistrationMemberStore : Store<Intent, State, Label> {
     data class State(
+        val userNumber: Int,
         val value: StartStatement,
         val event: StateEventWithContent<EventContent> = consumed(),
     )

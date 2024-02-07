@@ -1,6 +1,5 @@
 package com.markettwits.start.root
 
-import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.domain.StartStatement
@@ -13,7 +12,7 @@ import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.order.component.OrderComponentComponent
 import com.markettwits.start.presentation.promo.component.RegistrationPromoComponent
 import com.markettwits.start.presentation.registration.StartRegistrationComponent
-import com.markettwits.start.presentation.start.StartScreenComponent
+import com.markettwits.start.presentation.start.component.StartScreenComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartScreenComponent{
@@ -40,7 +39,8 @@ interface RootStartScreenComponent{
         data class StartRegistration(
             val startId: Int,
             val distanceInfo: com.markettwits.cloud.ext_model.DistanceItem,
-            val paymentDisabled: Boolean
+            val paymentDisabled: Boolean,
+            val paymentType: String
         ) : Config()
 
         @Serializable

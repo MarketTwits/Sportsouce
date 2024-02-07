@@ -21,13 +21,22 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.domain.StartStatement
 
 @Composable
-fun PaymentTypeBox(modifier: Modifier = Modifier) {
+fun PaymentTypeBox(
+    modifier: Modifier = Modifier,
+    paymentDisabled: Boolean,
+    paymentType: String,
+    members: List<StartStatement>
+) {
     var selectedNow by remember {
         mutableStateOf(true)
     }
     var selectedLater by remember {
+        mutableStateOf(false)
+    }
+    var selectedWithoutPayment by remember {
         mutableStateOf(false)
     }
     Card(
@@ -47,23 +56,33 @@ fun PaymentTypeBox(modifier: Modifier = Modifier) {
             color = Color.Black
         )
         Row {
-            PaymentTypeChosen(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                value = "Сейчас", selected = selectedNow
-            ) {
-                selectedNow = true
-                selectedLater = false
-            }
-            PaymentTypeChosen(
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                value = "В личном кабинете",
-                selected = selectedLater
-            ) {
-                selectedNow = false
-                selectedLater = true
+            if (paymentDisabled) {
+                PaymentTypeChosen(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    value = paymentType, selected = selectedNow
+                ) {
+                    selectedWithoutPayment = true
+                }
+            } else {
+                PaymentTypeChosen(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    value = "Сейчас", selected = selectedNow
+                ) {
+                    selectedNow = true
+                    selectedLater = false
+                }
+                if (members.size < 2) {
+                    PaymentTypeChosen(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        value = "В личном кабинете",
+                        selected = selectedLater
+                    ) {
+                        selectedNow = false
+                        selectedLater = true
+                    }
+                }
             }
         }
-
     }
 }
 

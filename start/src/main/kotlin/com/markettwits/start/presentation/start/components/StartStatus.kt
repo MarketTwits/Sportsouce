@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,7 +34,9 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date : Strin
                 .clip(Shapes.medium)
         ) {
             Text(
-                modifier = Modifier.align(Alignment.Center).padding(8.dp),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(8.dp),
                 text = status.name,
                 fontSize = 14.sp,
                 fontFamily = FontNunito.bold,
@@ -52,7 +54,9 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date : Strin
                 .background(SportSouceColor.SportSouceLighBlue)
         ) {
             Text(
-                modifier = Modifier.align(Alignment.Center).padding(8.dp),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(8.dp),
                 text = date,
                 fontSize = 14.sp,
                 fontFamily = FontNunito.bold,

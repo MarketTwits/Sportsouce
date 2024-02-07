@@ -23,7 +23,7 @@ class RegistrationMemberComponentBase(
     RegistrationMemberComponent, ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main)
     private val store = instanceKeeper.getStore {
-        storeFactory.create(startStatement)
+        storeFactory.create(memberId, startStatement)
     }
     override val model: StateFlow<RegistrationMemberStore.State> = store.stateFlow
     override fun obtainEvent(event: RegistrationMemberStore.Intent) {
@@ -38,7 +38,6 @@ class RegistrationMemberComponentBase(
                         it.startStatement,
                         memberId
                     )
-
                     is RegistrationMemberStore.Label.OnClickPop -> pop()
                 }
             }

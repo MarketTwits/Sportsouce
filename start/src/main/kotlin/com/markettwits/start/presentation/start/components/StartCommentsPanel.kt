@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.component
+package com.markettwits.start.presentation.start.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -44,7 +44,7 @@ import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.Animation
-import com.markettwits.start.presentation.start.CommentMode
+import com.markettwits.start.presentation.start.component.CommentMode
 
 
 @Composable

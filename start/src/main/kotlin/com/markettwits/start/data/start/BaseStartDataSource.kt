@@ -10,7 +10,7 @@ import com.markettwits.core_ui.base.Fourth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.start.CommentUiState
+import com.markettwits.start.presentation.start.component.CommentUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.Dispatchers

@@ -8,22 +8,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.start.presentation.order.domain.OrderPrice
+import com.markettwits.start.presentation.order.domain.OrderStatement
 
 @Composable
-fun OrderComponentBox(modifier: Modifier = Modifier, price: OrderPrice) {
+fun OrderComponentBox(
+    modifier: Modifier = Modifier,
+    price: OrderPrice,
+    rulesIsChecked: Boolean,
+    paymentDisabled: Boolean,
+    onClickCheckRules: () -> Unit,
+    onClickRegistry: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
     ) {
-        OrderPriceInfo(
+        if (!paymentDisabled) {
+            OrderPriceInfo(
+                modifier = modifier,
+                membersCount = price.membersCount,
+                discountInCache = price.discountInCache,
+                total = price.total
+            )
+        }
+        OrderCheckRulesBox(isChecked = rulesIsChecked, onClickRulesCheck = {
+            onClickCheckRules()
+        })
+        OrderRegisterButton(
             modifier = modifier,
-            membersCount = price.membersCount,
-            discountInCache = price.discountInCache,
-            total = price.total
-        )
-        OrderCheckRulesBox()
-        OrderRegisterButton(modifier = modifier, isEnabled = true, isLoading = false, onClick = {})
+            isEnabled = rulesIsChecked,
+            isLoading = false,
+            onClick = {
+                onClickRegistry()
+            })
     }
 }

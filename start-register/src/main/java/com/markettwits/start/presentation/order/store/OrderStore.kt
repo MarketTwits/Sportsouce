@@ -9,13 +9,15 @@ import com.markettwits.start.presentation.order.domain.OrderStatement
 import com.markettwits.start.presentation.order.store.OrderStore.Intent
 import com.markettwits.start.presentation.order.store.OrderStore.Label
 import com.markettwits.start.presentation.order.store.OrderStore.State
+import kotlinx.serialization.Serializable
 
 interface OrderStore : Store<Intent, State, Label> {
+    @Serializable
     data class State(
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val startStatement: OrderStatement? = null,
+        val orderStatement: OrderStatement? = null,
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
@@ -29,7 +31,7 @@ interface OrderStore : Store<Intent, State, Label> {
         data class OnClickPromo(val promo: String) : Intent
         data class OnClickMember(val member: StartStatement, val id: Int) : Intent
         data object OnConsumedEvent : Intent
-        data object OnClickSave : Intent
+        data object OnClickCheckedRules : Intent
         data object OnClickRegistry : Intent
         data object ChangePaymentType : Intent
         data class UpdateMember(val member: StartStatement, val id: Int) : Intent
@@ -38,7 +40,7 @@ interface OrderStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message {
-        data class UpdateState(val statement: OrderStatement) : Message
+        data class UpdateState(val state: State) : Message
         data object PreloadLoading : Message
         data class PreloadSuccess(val startStatement: OrderStatement) : Message
         data class PreloadFailed(val message: String) : Message

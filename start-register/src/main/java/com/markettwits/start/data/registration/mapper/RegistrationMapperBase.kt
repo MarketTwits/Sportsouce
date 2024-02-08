@@ -6,6 +6,7 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.start.domain.StartStatement
+import com.markettwits.start.presentation.order.domain.OrderStatement
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -72,6 +73,88 @@ class RegistrationMapperBase : RegistrationMapper {
             registration_without_payment = withoutPayment,
             start_id = startId
         )
+    }
+
+    override fun mapNewBase(
+        withoutPayment: Boolean,
+        user: User,
+        startStatement: OrderStatement,
+        startDistanceItem: DistanceItem.DistanceInfo,
+        startId: Int
+    ): StartRegisterRequest {
+        return StartRegisterRequest(
+            alone = false,
+            day = 1,
+            distance = startDistanceItem.value,
+            format = startDistanceItem.format,
+            member = startStatement.members.mapIndexed { index, member ->
+                mapStartMember(
+                    user = user,
+                    teamNumber = index + 1,
+                    contactPerson = member.contactPerson,
+                    startStatement = member,
+                    startDistanceInfo = startDistanceItem
+
+                )
+            },
+            payment_disabled = startStatement.paymentDisabled,
+            payment_type = startStatement.paymentType,
+            price = startStatement.orderPrice.total.toInt(),
+            promocode = startStatement.promo,
+            registration_without_payment = withoutPayment,
+            start_id = startId
+        )
+    }
+
+    override fun mapNewCombo(
+        withoutPayment: Boolean,
+        user: User,
+        startStatement: OrderStatement,
+        startDistanceItem: DistanceItem.DistanceCombo,
+        startId: Int
+    ): StartRegisterRequest.Combo {
+        return StartRegisterRequest.Combo(
+            alone = false,
+            day = 1,
+            distance = startDistanceItem.value,
+            format = "Лично",
+            distances = mapNewStartComboDistances(
+                user = user,
+                startStatement = startStatement.members,
+                items = startDistanceItem.distances
+            ),
+            payment_disabled = startStatement.paymentDisabled,
+            payment_type = startStatement.paymentType,
+            price = startStatement.orderPrice.total.toInt(),
+            promocode = startStatement.promo,
+            registration_without_payment = withoutPayment,
+            start_id = startId
+        )
+    }
+
+    private fun mapNewStartComboDistances(
+        user: User,
+        startStatement: List<StartStatement>,
+        items: List<DistanceItem.DistanceInfo>
+    ): List<StartRegisterRequest.Combo.Distance> {
+        Log.e("mt05", "#mapStartComboDistances " + items.toString())
+        val values = items.map { distance ->
+            StartRegisterRequest.Combo.Distance(
+                alone = false,
+                distance = distance.value,
+                format = distance.format,
+                member = startStatement.mapIndexed { index, member ->
+                    mapStartMember(
+                        user = user,
+                        teamNumber = index + 1,
+                        contactPerson = member.contactPerson,
+                        startStatement = member,
+                        startDistanceInfo = distance
+                    )
+                }
+            )
+        }
+        return values
     }
 
     private fun mapStartComboDistances(
@@ -146,7 +229,7 @@ class RegistrationMapperBase : RegistrationMapper {
             instagram = "",
             name = startStatement.name,
             phone = startStatement.phone,
-            price = startStatement.price.toInt(),
+            price = startStatement.price,
             promo = startStatement.promocode,
             stage = mapStage(teamNumber, startStatement.sex),
             surname = startStatement.surname,

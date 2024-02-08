@@ -42,8 +42,8 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         paymentDisabled: Boolean
     ): StartStatement {
         val price = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.price.toString()
-            is DistanceItem.DistanceInfo -> distanceItem.distance.price
+            is DistanceItem.DistanceCombo -> distanceItem.price ?: 0
+            is DistanceItem.DistanceInfo -> distanceItem.distance.price.toIntOrNull() ?: 0
         }
         return StartStatement(
             name = user.name,
@@ -86,13 +86,13 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         distanceItem: DistanceItem
     ): OrderPrice {
         val price = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.price.toString()
-            is DistanceItem.DistanceInfo -> distanceItem.distance.price
+            is DistanceItem.DistanceCombo -> distanceItem.price?.toDouble() ?: 0.0
+            is DistanceItem.DistanceInfo -> distanceItem.distance.price.toDouble()
         }
         return OrderPrice(
             total = price,
             membersCount = 0,
-            discountInCache = 0,
+            discountInCache = 0.0,
             discountInPercent = 0
         )
     }
@@ -172,7 +172,7 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
                     team = "",
                     phone = "",
                     promocode = "",
-                    price = "",
+                    price = 0,
                     contactPerson = false,
                     cities = mapCitiesToDomain(cities.rows),
                     teams = mapTeamsToDomain(teamsRemote.rows),

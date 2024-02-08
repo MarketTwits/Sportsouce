@@ -1,6 +1,5 @@
-package com.markettwits.start.presentation.registration.components.fileds
+package com.markettwits.start.presentation.order.components.extra.fileds
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,8 +7,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.markettwits.start.domain.StartStatement
-import com.markettwits.start.presentation.registration.components.FilterPosition
-import com.markettwits.start.presentation.registration.components.RegistrationTextField
+import com.markettwits.start.presentation.order.components.extra.FilterPosition
+import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
 
 @Composable
 fun CityFiled(

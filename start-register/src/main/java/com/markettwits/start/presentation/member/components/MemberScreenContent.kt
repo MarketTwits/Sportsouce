@@ -18,10 +18,10 @@ import com.markettwits.core_ui.base_extensions.date.mapToString
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.domain.StartStatement
-import com.markettwits.start.presentation.registration.components.RegistrationTextField
-import com.markettwits.start.presentation.registration.components.fileds.CityFiled
-import com.markettwits.start.presentation.registration.components.fileds.RegistrationFiled
-import com.markettwits.start.presentation.registration.components.fileds.TeamFiled
+import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
+import com.markettwits.start.presentation.order.components.extra.fileds.CityFiled
+import com.markettwits.start.presentation.order.components.extra.fileds.RegistrationFiled
+import com.markettwits.start.presentation.order.components.extra.fileds.TeamFiled
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig

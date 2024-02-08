@@ -28,7 +28,9 @@ fun PaymentTypeBox(
     modifier: Modifier = Modifier,
     paymentDisabled: Boolean,
     paymentType: String,
-    members: List<StartStatement>
+    payNow: Boolean,
+    members: List<StartStatement>,
+    onClickChangePayment: (Boolean) -> Unit,
 ) {
     var selectedNow by remember {
         mutableStateOf(true)
@@ -59,26 +61,29 @@ fun PaymentTypeBox(
             if (paymentDisabled) {
                 PaymentTypeChosen(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                    value = paymentType, selected = selectedNow
+                    value = paymentType, selected = true
                 ) {
-                    selectedWithoutPayment = true
+                    //  onClickChangePayment()
+                    //  selectedWithoutPayment = true
                 }
             } else {
                 PaymentTypeChosen(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                    value = "Сейчас", selected = selectedNow
+                    value = "Сейчас", selected = payNow
                 ) {
-                    selectedNow = true
-                    selectedLater = false
+                    onClickChangePayment(true)
+//                    selectedNow = true
+//                    selectedLater = false
                 }
                 if (members.size < 2) {
                     PaymentTypeChosen(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                         value = "В личном кабинете",
-                        selected = selectedLater
+                        selected = !payNow
                     ) {
-                        selectedNow = false
-                        selectedLater = true
+                        onClickChangePayment(false)
+//                        selectedNow = false
+//                        selectedLater = true
                     }
                 }
             }

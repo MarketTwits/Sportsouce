@@ -8,6 +8,7 @@ data class OrderStatement(
     val distanceInfo: OrderDistance,
     val members: List<StartStatement>,
     val promo: String,
+    val payNow: Boolean = true,
     val paymentDisabled: Boolean,
     val paymentType: String,
     val checkPolitics: Boolean = false,
@@ -22,8 +23,8 @@ data class OrderDistance(
 
 @Serializable
 data class OrderPrice(
-    val total: String,
+    val total: Double,
     val membersCount: Int,
-    val discountInCache: Int,
+    val discountInCache: Double,
     val discountInPercent: Int
 )

@@ -25,7 +25,6 @@ import com.markettwits.start.presentation.order.domain.validation.OrderValidatio
 import com.markettwits.start.presentation.order.domain.validation.OrderValidationBase
 import com.markettwits.start.presentation.order.store.OrderStoreFactory
 import com.markettwits.start.presentation.promo.store.RegistrationPromoStoreFactory
-import com.markettwits.start.presentation.registration.store.StartRegistrationStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -34,7 +33,6 @@ import org.koin.dsl.module
 val startRegistrationModule = module{
     includes(sportSouceNetworkModule, timeApiNetworkModule)
     //StoreFactory
-    singleOf(::StartRegistrationStoreFactory)
     singleOf(::RegistrationPromoStoreFactory)
     singleOf(::RegistrationMemberStoreFactory)
     singleOf(::OrderStoreFactory)

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.registration.components
+package com.markettwits.start.presentation.order.components.extra
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -16,23 +16,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.components.openWebPage
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.start.presentation.member.store.RegistrationMemberStore
 import com.markettwits.start.presentation.order.component.OrderComponentComponent
 import com.markettwits.start.presentation.order.components.distance_info.StartDistanceInfoBox
+import com.markettwits.start.presentation.order.components.extra.LoadingScreen
+import com.markettwits.start.presentation.order.components.extra.StartRegistrationTopBar
 import com.markettwits.start.presentation.order.components.members.StartMembers
 import com.markettwits.start.presentation.order.components.order.OrderComponentBox
 import com.markettwits.start.presentation.order.components.payment.PaymentTypeBox
 import com.markettwits.start.presentation.order.components.promo.PromoBox
 import com.markettwits.start.presentation.order.store.OrderStore
-import com.markettwits.start.presentation.registration.components.LoadingScreen
-import com.markettwits.start.presentation.registration.components.StartRegistrationTopBar
 
 @Composable
 fun StartOrderScreen(component: OrderComponentComponent) {
@@ -95,7 +94,12 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                     PaymentTypeBox(
                         paymentDisabled = order.paymentDisabled,
                         paymentType = order.paymentType,
-                        members = order.members
+                        members = order.members,
+                        payNow = order.payNow,
+                        onClickChangePayment = {
+                            component.obtainEvent(OrderStore.Intent.ChangePaymentType(it))
+                        }
+
                     )
                     if (!order.paymentDisabled) {
                         PromoBox(onClick = {
@@ -117,21 +121,29 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                 }
             }
         }
+        val context = LocalContext.current
         EventEffect(
             event = state.event,
             onConsumed = {
                 component.obtainEvent(OrderStore.Intent.OnConsumedEvent)
             },
         ) {
-            snackBarColor = if (it.success)
-                SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-            snackBarHostState.showLongMessageWithDismiss(message = it.message)
+            processLink(it.message, linkBlock = {
+                openWebPage(it.message, context)
+            }, notLinkBlock = {
+                snackBarColor = if (it.success)
+                    SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+                snackBarHostState.showLongMessageWithDismiss(message = it.message)
+            })
         }
     }
 }
 
-@Preview(device = Devices.DEFAULT)
-@Composable
-private fun StartOrderScreenPreview() {
-    //  StartOrderScreen()
+suspend fun processLink(link: String, linkBlock: () -> Unit, notLinkBlock: suspend () -> Unit) {
+    val regex = Regex("^(https?|ftp)://[a-zA-Z0-9+&@#/%?=~_|!:,.;-]*[a-zA-Z0-9+&@#/%=~_|]")
+    if (link.matches(regex)) {
+        linkBlock()
+    } else {
+        notLinkBlock()
+    }
 }

@@ -15,8 +15,8 @@ import com.markettwits.core_ui.theme.SportSouceColor
 fun OrderPriceInfo(
     modifier: Modifier = Modifier,
     membersCount: Int,
-    discountInCache: Int,
-    total: String,
+    discountInCache: Double,
+    total: Double,
 ) {
     Text(
         modifier = modifier,

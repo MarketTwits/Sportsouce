@@ -11,7 +11,6 @@ import com.markettwits.start.presentation.membres.list.StartMembersScreenCompone
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.order.component.OrderComponentComponent
 import com.markettwits.start.presentation.promo.component.RegistrationPromoComponent
-import com.markettwits.start.presentation.registration.StartRegistrationComponent
 import com.markettwits.start.presentation.start.component.StartScreenComponent
 import kotlinx.serialization.Serializable
 
@@ -52,7 +51,6 @@ interface RootStartScreenComponent{
     }
     sealed class Child {
         data class Start(val component: StartScreenComponent, val commentsComponent: StartCommentsComponent) : Child()
-        data class StartRegistration(val component: StartRegistrationComponent) : Child()
         data class StartOrder(val component: OrderComponentComponent) : Child()
         data class StartRegistrationMember(val component: RegistrationMemberComponent) : Child()
         data class StartMembers(val component: StartMembersScreenComponent) : Child()

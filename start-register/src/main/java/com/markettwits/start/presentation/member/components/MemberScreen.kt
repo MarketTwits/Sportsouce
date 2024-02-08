@@ -19,7 +19,7 @@ import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.presentation.member.store.RegistrationMemberStore
-import com.markettwits.start.presentation.registration.components.StartRegistrationTopBar
+import com.markettwits.start.presentation.order.components.extra.StartRegistrationTopBar
 
 @Composable
 fun MemberScreen(component: RegistrationMemberComponent) {
@@ -85,7 +85,7 @@ private val fakeStartStatement = StartStatement(
     team = "TeamX",
     phone = "+1234567890",
     promocode = "ABC123",
-    price = "$100",
+    price = 100,
     contactPerson = true,
     cities = listOf(
         StartStatement.City(id = 1, name = "CityA"),

@@ -37,11 +37,6 @@ fun RootStartScreen(component: RootStartScreenComponent) {
             is RootStartScreenComponent.Child.StartMembersFilter -> StartMembersFilterScreen(
                 component = child.component
             )
-
-            is RootStartScreenComponent.Child.StartRegistration -> {
-
-            }
-
             is RootStartScreenComponent.Child.StartRegistrationMember -> MemberScreen(component = child.component)
         }
     }

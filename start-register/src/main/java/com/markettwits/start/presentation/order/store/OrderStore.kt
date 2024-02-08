@@ -33,7 +33,7 @@ interface OrderStore : Store<Intent, State, Label> {
         data object OnConsumedEvent : Intent
         data object OnClickCheckedRules : Intent
         data object OnClickRegistry : Intent
-        data object ChangePaymentType : Intent
+        data class ChangePaymentType(val payNow: Boolean) : Intent
         data class UpdateMember(val member: StartStatement, val id: Int) : Intent
         data class ApplyPromo(val promo: String, val percent: Int) : Intent
         data object GoBack : Intent

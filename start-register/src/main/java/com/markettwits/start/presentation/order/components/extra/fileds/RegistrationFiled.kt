@@ -1,12 +1,12 @@
-package com.markettwits.start.presentation.registration.components.fileds
+package com.markettwits.start.presentation.order.components.extra.fileds
 
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.markettwits.start.presentation.registration.components.RegistrationDialog
-import com.markettwits.start.presentation.registration.components.RegistrationTextField
+import com.markettwits.start.presentation.order.components.extra.RegistrationDialog
+import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
 
 @Composable
 fun RegistrationFiled(

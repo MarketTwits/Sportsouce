@@ -5,20 +5,15 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.start.data.registration.RegistrationStartRepository
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.store.OrderStore
 import com.markettwits.start.presentation.order.store.OrderStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.serialization.builtins.ListSerializer
 
 class OrderComponentComponentBase(
     componentContext: ComponentContext,
@@ -34,7 +29,7 @@ class OrderComponentComponentBase(
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    private val members: MutableValue<OrderStore.State> = MutableValue(
+    private val restoreState: MutableValue<OrderStore.State> = MutableValue(
         stateKeeper.consume(
             key = ORDER_STORE_STATE_KEY,
             OrderStore.State.serializer()
@@ -43,7 +38,7 @@ class OrderComponentComponentBase(
 
     private val store = instanceKeeper.getStore {
         storeFactory.create(
-            state = members.value,
+            state = restoreState.value,
             distanceInfo = distanceInfo,
             starId = startId,
             paymentType = paymentType,
@@ -61,12 +56,7 @@ class OrderComponentComponentBase(
             key = ORDER_STORE_STATE_KEY,
             strategy = OrderStore.State.serializer()
         ) {
-            members.value
-        }
-        scope.launch {
-            store.stateFlow.collect {
-                members.value = it
-            }
+            store.stateFlow.value
         }
         scope.launch {
             store.labels.collect {

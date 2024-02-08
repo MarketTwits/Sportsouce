@@ -23,6 +23,8 @@ import com.markettwits.start.presentation.order.domain.interactor.OrderInteracto
 import com.markettwits.start.presentation.order.domain.interactor.OrderInteractorBase
 import com.markettwits.start.presentation.order.domain.validation.OrderValidation
 import com.markettwits.start.presentation.order.domain.validation.OrderValidationBase
+import com.markettwits.start.presentation.order.store.OrderStoreExecutorHandle
+import com.markettwits.start.presentation.order.store.OrderStoreExecutorHandleBase
 import com.markettwits.start.presentation.order.store.OrderStoreFactory
 import com.markettwits.start.presentation.promo.store.RegistrationPromoStoreFactory
 import org.koin.core.module.dsl.singleOf
@@ -36,6 +38,7 @@ val startRegistrationModule = module{
     singleOf(::RegistrationPromoStoreFactory)
     singleOf(::RegistrationMemberStoreFactory)
     singleOf(::OrderStoreFactory)
+    singleOf(::OrderStoreExecutorHandleBase) bind OrderStoreExecutorHandle::class
     //Interactor
     singleOf(::OrderInteractorBase) bind OrderInteractor::class
     singleOf(::OrderValidationBase) bind OrderValidation::class

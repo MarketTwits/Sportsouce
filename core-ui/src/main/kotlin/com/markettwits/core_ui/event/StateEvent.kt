@@ -1,23 +1,21 @@
 package com.markettwits.core_ui.event
 
 import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
 
-/**
- *  This [StateEvent] can only have two primitive states.
- */
+/** This [StateEvent] can only have two primitive states. */
+@Serializable
 @Immutable
 sealed interface StateEvent {
-    /**
-     *  The event is currently in its triggered state
-     */
+    /** The event is currently in its triggered state */
+    @Serializable
     @Immutable
     object Triggered : StateEvent {
         override fun toString(): String = "triggered"
     }
 
-    /**
-     *  The event is currently in its consumed state
-     */
+    /** The event is currently in its consumed state */
+    @Serializable
     @Immutable
     object Consumed : StateEvent {
         override fun toString(): String = "consumed"

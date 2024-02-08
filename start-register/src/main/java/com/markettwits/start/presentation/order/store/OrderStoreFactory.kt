@@ -10,7 +10,8 @@ import com.markettwits.start.presentation.order.store.OrderStore.State
 
 class OrderStoreFactory(
     private val storeFactory: StoreFactory,
-    private val interactor: OrderInteractor
+    private val interactor: OrderInteractor,
+    private val handle: OrderStoreExecutorHandle
 ) {
     fun create(
         state: State,
@@ -28,7 +29,7 @@ class OrderStoreFactory(
             paymentDisabled,
             paymentType
         ),
-        executorFactory = { OrderStoreExecutor(interactor, distanceInfo, starId) },
+        executorFactory = { OrderStoreExecutor(handle, distanceInfo, starId) },
         reducer = OrderStoreReducer
     ) {}
 

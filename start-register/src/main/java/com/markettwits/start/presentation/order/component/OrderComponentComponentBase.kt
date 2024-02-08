@@ -11,7 +11,6 @@ import com.markettwits.start.presentation.order.store.OrderStore
 import com.markettwits.start.presentation.order.store.OrderStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -45,7 +44,6 @@ class OrderComponentComponentBase(
             paymentDisabled = paymentDisabled
         )
     }
-    override val labels: Flow<OrderStore.Label> = store.labels
     override val model: StateFlow<OrderStore.State> = store.stateFlow
     override fun obtainEvent(event: OrderStore.Intent) {
         store.accept(event)

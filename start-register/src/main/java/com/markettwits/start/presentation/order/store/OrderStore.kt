@@ -1,10 +1,9 @@
 package com.markettwits.start.presentation.order.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.StateEventWithContent
-import com.markettwits.core_ui.event.consumed
 import com.markettwits.start.domain.StartStatement
+import com.markettwits.start.presentation.common.StateEventWithContentTest
+import com.markettwits.start.presentation.common.consumed
 import com.markettwits.start.presentation.order.domain.OrderStatement
 import com.markettwits.start.presentation.order.store.OrderStore.Intent
 import com.markettwits.start.presentation.order.store.OrderStore.Label
@@ -18,8 +17,15 @@ interface OrderStore : Store<Intent, State, Label> {
         val isError: Boolean = false,
         val message: String = "",
         val orderStatement: OrderStatement? = null,
-        val event: StateEventWithContent<EventContent> = consumed(),
-    )
+        val button: Button = Button(),
+        val event: StateEventWithContentTest = consumed(),
+    ) {
+        @Serializable
+        data class Button(
+            val isEnabled: Boolean = false,
+            val isLoading: Boolean = false
+        )
+    }
 
     sealed interface Action {
         data object Loading : Action

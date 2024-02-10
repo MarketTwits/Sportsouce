@@ -8,16 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.start.presentation.order.domain.OrderPrice
-import com.markettwits.start.presentation.order.domain.OrderStatement
+import com.markettwits.start.presentation.order.store.OrderStore
+import com.markettwits.start.presentation.promo.components.RegistrationButton
 
 @Composable
 fun OrderComponentBox(
     modifier: Modifier = Modifier,
     price: OrderPrice,
-    rulesIsChecked: Boolean,
     paymentDisabled: Boolean,
+    politics: Boolean,
+    button: OrderStore.State.Button,
     onClickCheckRules: () -> Unit,
     onClickRegistry: () -> Unit
 ) {
@@ -34,13 +35,14 @@ fun OrderComponentBox(
                 total = price.total
             )
         }
-        OrderCheckRulesBox(isChecked = rulesIsChecked, onClickRulesCheck = {
+        OrderCheckRulesBox(isChecked = politics, onClickRulesCheck = {
             onClickCheckRules()
         })
-        OrderRegisterButton(
+        RegistrationButton(
             modifier = modifier,
-            isEnabled = rulesIsChecked,
-            isLoading = false,
+            isEnabled = button.isEnabled,
+            isLoading = button.isLoading,
+            title = "Зарегестрироваться",
             onClick = {
                 onClickRegistry()
             })

@@ -49,9 +49,8 @@ fun StartDistances(
     var panelState by rememberSaveable {
         mutableStateOf(true)
     }
-    //TODO(return check status code)
     if (distance.isNotEmpty()
-    //   && startStatus.code == 3
+        && startStatus.code == 3
     ) {
         HorizontalDivider()
         Row(
@@ -174,8 +173,7 @@ fun DistanceItemBase(
                 )
             }
             val enabled = (item.distance.slots.toInt()) > 0
-            //TODO(return check status code)
-            // if (enabled) {
+            if (enabled) {
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = SportSouceColor.SportSouceLighBlue,
@@ -184,18 +182,18 @@ fun DistanceItemBase(
                 ) {
                     Text("Зарегистрироваться")
                 }
-//            } else {
-//                Button(
-//                    enabled = false,
-//                    colors = ButtonDefaults.buttonColors(
-//                        disabledContainerColor = SportSouceColor.VeryLighBlue,
-//                    ),
-//                    onClick = { onClick() },
-//                ) {
-//
-//                    Text("Слоты закончились")
-//                }
-//            }
+            } else {
+                Button(
+                    enabled = false,
+                    colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = SportSouceColor.VeryLighBlue,
+                    ),
+                    onClick = { onClick() },
+                ) {
+
+                    Text("Слоты закончились")
+                }
+            }
 
         }
     }

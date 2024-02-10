@@ -21,5 +21,4 @@ interface RegistrationStartRepository {
         distanceInfo: DistanceItem,
         startId: Int
     ): StartRegistryResult
-
 }

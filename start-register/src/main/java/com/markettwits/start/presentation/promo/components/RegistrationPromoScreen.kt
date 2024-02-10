@@ -76,8 +76,9 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
                     component.obtainEvent(RegistrationPromoStore.Intent.OnPromoChanged(it))
                 }
             )
-            RegistrationPromoButton(
+            RegistrationButton(
                 modifier = Modifier.padding(10.dp),
+                title = "Прмиенить",
                 isEnabled = !state.isLoading,
                 isLoading = state.isLoading,
                 onClick = {

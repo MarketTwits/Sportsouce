@@ -2,7 +2,7 @@ package com.markettwits.start.presentation.order.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.core_ui.event.consumed
+import com.markettwits.start.presentation.common.consumed
 import com.markettwits.start.presentation.order.store.OrderStore.Intent
 import com.markettwits.start.presentation.order.store.OrderStore.Label
 import com.markettwits.start.presentation.order.store.OrderStore.Message
@@ -19,16 +19,23 @@ class OrderStoreExecutor(
             is Intent.ChangePaymentType -> dispatch(
                 Message.UpdateState(
                     handle.changePaymentType(
-                        getState(),
-                        intent.payNow
+                        state = getState(),
+                        payNow = intent.payNow
                     )
                 )
             )
 
             is Intent.GoBack -> publish(Label.GoBack)
-            is Intent.OnClickRegistry -> handle.onClickRegistry(getState(), distanceItem, startId) {
-                dispatch(Message.UpdateState(it))
+            is Intent.OnClickRegistry -> {
+                handle.onClickRegistry(
+                    state = getState(),
+                    distanceItem = distanceItem,
+                    startId = startId,
+                    newState = {
+                        dispatch(Message.UpdateState(it))
+                    })
             }
+
             is Intent.OnClickMember -> publish(Label.OnClickMember(intent.member, intent.id))
             is Intent.UpdateMember -> dispatch(
                 Message.UpdateState(
@@ -45,22 +52,16 @@ class OrderStoreExecutor(
             is Intent.OnClickPromo -> publish(Label.OnClickPromo(intent.promo))
             is Intent.ApplyPromo -> dispatch(
                 Message.UpdateState(
-                    getState().copy(
-                        orderStatement = handle.applyPromo(
-                            getState().orderStatement!!,
-                            intent.promo,
-                            intent.percent
-                        )
+                    handle.applyPromo(
+                        state = getState(),
+                        promo = intent.promo,
+                        percent = intent.percent
                     )
                 )
             )
 
             is Intent.OnClickCheckedRules -> dispatch(
-                Message.UpdateState(
-                    getState().copy(
-                        orderStatement = handle.onClickCheckRules(getState().orderStatement!!)
-                    )
-                )
+                Message.UpdateState(handle.onClickCheckRules(getState()))
             )
 
             is Intent.OnConsumedEvent -> dispatch(Message.UpdateState(getState().copy(event = consumed())))

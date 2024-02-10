@@ -18,8 +18,9 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
-fun RegistrationPromoButton(
+fun RegistrationButton(
     modifier: Modifier = Modifier,
+    title: String,
     isEnabled: Boolean,
     isLoading: Boolean,
     onClick: () -> Unit
@@ -36,15 +37,14 @@ fun RegistrationPromoButton(
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .padding(2.dp)
-                    .size(20.dp),
+                    .size(24.dp),
                 color = Color.White,
                 strokeCap = StrokeCap.Round
             )
         } else {
             Text(
                 modifier = Modifier.padding(2.dp),
-                text = "Применить",
+                text = title,
                 fontSize = 16.sp,
                 fontFamily = FontNunito.bold,
                 overflow = TextOverflow.Ellipsis,

@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.components.openWebPage
-import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.start.presentation.common.EventEffectTest
 import com.markettwits.start.presentation.order.component.OrderComponentComponent
 import com.markettwits.start.presentation.order.components.distance_info.StartDistanceInfoBox
 import com.markettwits.start.presentation.order.components.extra.LoadingScreen
@@ -95,11 +95,11 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                         paymentDisabled = order.paymentDisabled,
                         paymentType = order.paymentType,
                         members = order.members,
+                        distances = order.distanceInfo.distances,
                         payNow = order.payNow,
                         onClickChangePayment = {
                             component.obtainEvent(OrderStore.Intent.ChangePaymentType(it))
                         }
-
                     )
                     if (!order.paymentDisabled) {
                         PromoBox(onClick = {
@@ -110,7 +110,8 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                         modifier = Modifier.padding(10.dp),
                         price = order.orderPrice,
                         paymentDisabled = order.paymentDisabled,
-                        rulesIsChecked = order.checkPolitics,
+                        button = state.button,
+                        politics = order.checkPolitics,
                         onClickCheckRules = {
                             component.obtainEvent(OrderStore.Intent.OnClickCheckedRules)
                         },
@@ -122,7 +123,7 @@ fun StartOrderScreen(component: OrderComponentComponent) {
             }
         }
         val context = LocalContext.current
-        EventEffect(
+        EventEffectTest(
             event = state.event,
             onConsumed = {
                 component.obtainEvent(OrderStore.Intent.OnConsumedEvent)

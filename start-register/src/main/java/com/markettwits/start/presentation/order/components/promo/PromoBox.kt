@@ -60,7 +60,6 @@ fun PromoBox(modifier: Modifier = Modifier, onClick: () -> Unit) {
                     color = Color.Black
                 )
             }
-
             Icon(
                 modifier = Modifier
                     .clickable {},

@@ -1,13 +1,15 @@
-package com.markettwits.core_ui.event
+package com.markettwits.start.presentation.common
 
 import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
 
 /**
  * This [StateEventWithContent] can have exactly 2 states like the
  * [StateEvent] but the triggered state holds a value of type [T].
  */
+@Serializable
 @Immutable
-sealed interface StateEventWithContent<out T>
+sealed interface StateEventWithContentTest
 
 /**
  * The event in its triggered state holding a value of [T]. See [triggered]
@@ -15,8 +17,9 @@ sealed interface StateEventWithContent<out T>
  *
  * @param content A value that is needed on the event consumer side.
  */
-@Immutable
-data class StateEventWithContentTriggered<T>(val content: T) : StateEventWithContent<T> {
+@Serializable
+data class StateEventWithContentTriggered(val content: EventContentTest) :
+    StateEventWithContentTest {
     override fun toString(): String = "triggered($content)"
 }
 
@@ -24,24 +27,24 @@ data class StateEventWithContentTriggered<T>(val content: T) : StateEventWithCon
  * The event in its consumed state not holding any value. See [consumed] to
  * create an instance of this.
  */
-@Immutable
-object StateEventWithContentConsumed : StateEventWithContent<Nothing> {
+@Serializable
+object StateEventWithContentConsumed : StateEventWithContentTest {
     override fun toString(): String = "consumed"
 }
 
 /**
- * A shorter and more readable way to create an [StateEventWithContent] in its triggered state holding a value of [T].
+ * A shorter and more readable way to create an [StateEventWithContent] in
+ * its triggered state holding a value of [T].
+ *
  * @param content A value that is needed on the event consumer side.
  */
-fun <T> triggered(content: T) = StateEventWithContentTriggered(content)
+fun triggered(content: EventContentTest) = StateEventWithContentTriggered(content)
 
 /**
- * A shorter and more readable way to create an [StateEventWithContent] in its consumed state.
+ * A shorter and more readable way to create an [StateEventWithContent] in
+ * its consumed state.
  */
 fun consumed() = StateEventWithContentConsumed
 
-fun <T> StateEventWithContent<T>.isTriggered() : Boolean{
-    return this is StateEventWithContentTriggered
-}
-@Immutable
-data class EventContent(val success : Boolean, val message : String)
+@Serializable
+data class EventContentTest(val success: Boolean, val message: String)

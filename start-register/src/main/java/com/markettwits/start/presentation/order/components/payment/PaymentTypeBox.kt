@@ -9,10 +9,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,17 +26,9 @@ fun PaymentTypeBox(
     paymentType: String,
     payNow: Boolean,
     members: List<StartStatement>,
+    distances: List<String>,
     onClickChangePayment: (Boolean) -> Unit,
 ) {
-    var selectedNow by remember {
-        mutableStateOf(true)
-    }
-    var selectedLater by remember {
-        mutableStateOf(false)
-    }
-    var selectedWithoutPayment by remember {
-        mutableStateOf(false)
-    }
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -62,28 +50,21 @@ fun PaymentTypeBox(
                 PaymentTypeChosen(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                     value = paymentType, selected = true
-                ) {
-                    //  onClickChangePayment()
-                    //  selectedWithoutPayment = true
-                }
+                ) {}
             } else {
                 PaymentTypeChosen(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                     value = "Сейчас", selected = payNow
                 ) {
                     onClickChangePayment(true)
-//                    selectedNow = true
-//                    selectedLater = false
                 }
-                if (members.size < 2) {
+                if (members.size <= 1 && distances.size <= 1) {
                     PaymentTypeChosen(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                         value = "В личном кабинете",
                         selected = !payNow
                     ) {
                         onClickChangePayment(false)
-//                        selectedNow = false
-//                        selectedLater = true
                     }
                 }
             }

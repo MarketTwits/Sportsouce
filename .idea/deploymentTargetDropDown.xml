@@ -5,16 +5,16 @@
       <entry key="MainActivity">
         <State />
       </entry>
-      <entry key="MyProfileTopBarPreview">
-        <State />
-      </entry>
-      <entry key="StartCommentsPanelPreview">
-        <State />
-      </entry>
-      <entry key="StartDistancesPreview">
-        <State />
-      </entry>
       <entry key="StartOrderScreenPreview">
+        <State />
+      </entry>
+      <entry key="StartsSearchScreenPreview">
+        <State />
+      </entry>
+      <entry key="StartsSearchScreenPreview (1)">
+        <State />
+      </entry>
+      <entry key="StartsSearchScreenPreview (2)">
         <State />
       </entry>
       <entry key="app">

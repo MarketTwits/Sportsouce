@@ -1,12 +1,8 @@
 package com.markettwits.schedule.schedule.presentation.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts.components.StartCard
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 fun ScheduleStartsRow(
@@ -43,12 +39,6 @@ fun ScheduleStartsRow(
                 onItemClick = onClick::invoke
             )
 
-            //TODO add LazyRow for starts
-//            LazyRow(modifier = modifier.fillMaxSize()) {
-//                items(starts) {
-//                    StartCard(modifier = Modifier.fillMaxSize(), start = it, onItemClick = onClick::invoke)
-//                }
-//            }
         } else {
             Text(
                 modifier = modifier.padding(horizontal = 10.dp),

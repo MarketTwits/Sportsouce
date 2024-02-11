@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import kotlinx.coroutines.launch
 
@@ -71,6 +72,7 @@ fun TabBar(content: @Composable (Int) -> Unit) {
                     Text(
                         text = item,
                         fontSize = 16.sp,
+                        fontFamily = FontNunito.bold
                     )
                 },
                 onClick = {

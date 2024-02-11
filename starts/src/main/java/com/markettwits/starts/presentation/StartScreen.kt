@@ -1,11 +1,10 @@
 package com.markettwits.starts.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,7 +14,9 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.common.LoadingScreen
+import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
 import com.markettwits.starts.components.TabBar
+import com.markettwits.starts_common.presentation.StartsScreenContent
 
 
 @Preview
@@ -38,6 +39,9 @@ fun StartsScreen(component: StartsScreen) {
         when (starts) {
             is StartsUiState.Success -> {
                 Column {
+                    StartsSearchBarPublic(modifier = Modifier.clickable {
+                        component.onSearchClick()
+                    })
                     TabBar(content = { page ->
                         val items = (starts as StartsUiState.Success).items[page]
                         StartsScreenContent(

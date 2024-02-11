@@ -44,7 +44,7 @@ class BaseStartDataSource(
         }
 
     private suspend fun launch(startId: Int): Result<StartItem> {
-        // retryRunCatchingAsync {
+        return retryRunCatchingAsync {
             val (data, withFilter, comments, time) = coroutineScope {
                 withContext(Dispatchers.IO) {
                     val deferredTime = async { timeService.currentTime() }
@@ -62,8 +62,7 @@ class BaseStartDataSource(
             val result = mapper.map(data, withFilter, comments, time)
             cache.set(value = Result.success(result), key = startId)
             result
-        return Result.success(result)
-        //  }
+        }
     }
 
 

@@ -10,11 +10,12 @@ import com.markettwits.cloud.provider.HttpClientProvider
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.root.api.RootStartsComponent
 import com.markettwits.start.root.RootStartScreenComponentBase
-import com.markettwits.starts.presentation.StartsScreenComponent
+import com.markettwits.start_search.root.RootStartsSearchComponentBase
 import com.markettwits.starts.data.StartsCloudToUiMapper
 import com.markettwits.starts.data.StartsRepository
 import com.markettwits.starts.data.base.StartsRepositoryBase
 import com.markettwits.starts.data.withFilter.StartsRepositoryWithFilter
+import com.markettwits.starts.presentation.StartsScreenComponent
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootStartsComponentBase(
@@ -54,9 +55,15 @@ class RootStartsComponentBase(
                     launchPolicy = launchPolicy,
                     toDetail = {
                         onItemClick(it)
+                    },
+                    toSearch = {
+                        navigation.push(RootStartsComponent.Config.Search)
                     }
                 ))
 
+            RootStartsComponent.Config.Search -> RootStartsComponent.Child.Search(
+                RootStartsSearchComponentBase(context = componentContext)
+            )
         }
 
     private fun repository(launchPolicy: RootStartsComponent.LaunchPolicy): StartsRepository {

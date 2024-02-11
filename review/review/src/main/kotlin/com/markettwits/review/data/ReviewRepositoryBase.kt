@@ -1,12 +1,12 @@
 package com.markettwits.review.data
 
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.starts.data.StartsCloudToUiMapper
+import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import com.markettwits.cloud.api.SportsouceApi
 
 class ReviewRepositoryBase(
     private val service : SportsouceApi,

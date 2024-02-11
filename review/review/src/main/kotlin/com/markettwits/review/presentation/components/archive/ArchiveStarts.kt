@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.review.presentation.components.actual.StartCardSimple
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 fun ArchiveStarts(

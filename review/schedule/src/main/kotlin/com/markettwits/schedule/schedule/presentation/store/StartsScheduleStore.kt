@@ -2,7 +2,6 @@ package com.markettwits.schedule.schedule.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.schedule.schedule.domain.StartsSchedule
-import com.markettwits.starts.presentation.StartsListItem
 
 interface StartsScheduleStore : Store<StartsScheduleStore.Intent, StartsScheduleStore.State, StartsScheduleStore.Label> {
 

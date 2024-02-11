@@ -2,12 +2,14 @@ package com.markettwits.starts.presentation
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.markettwits.starts.presentation.StartsListItem
-import com.markettwits.starts.presentation.StartsScreen
-import com.markettwits.starts.presentation.StartsUiState
+import com.markettwits.starts_common.domain.StartsListItem
 
-class MockStartsScreenComponent() : StartsScreen {
+class MockStartsScreenComponent : StartsScreen {
     override fun onItemClick(startId: Int) = Unit
+    override fun onSearchClick() {
+
+    }
+
     override fun retry() = Unit
 
     override val starts: Value<StartsUiState> = MutableValue(

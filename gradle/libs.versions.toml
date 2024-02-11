@@ -68,6 +68,7 @@ decompose = "3.0.0-alpha01"
 org-jetbrains-kotlin-jvm = "1.9.21"
 
 kotlinx-datetime = "0.4.0"
+kotlinGradlePlugin = "1.9.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -145,6 +146,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 
 [plugins]
 #kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}

@@ -10,7 +10,8 @@ class StartsScreenComponent(
     componentContext: ComponentContext,
     private val dataSource: StartsRepository,
     private val launchPolicy: RootStartsComponent.LaunchPolicy,
-    private val toDetail: (Int) -> Unit
+    private val toDetail: (Int) -> Unit,
+    private val toSearch: () -> Unit,
 ) : ComponentContext by componentContext, StartsScreen {
 
     private val someLogic =
@@ -18,6 +19,10 @@ class StartsScreenComponent(
 
     override fun onItemClick(startId: Int) {
         toDetail(startId)
+    }
+
+    override fun onSearchClick() {
+        toSearch()
     }
 
     override fun retry() {

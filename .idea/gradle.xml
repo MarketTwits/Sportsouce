@@ -41,7 +41,9 @@
             <option value="$PROJECT_DIR$/root" />
             <option value="$PROJECT_DIR$/start" />
             <option value="$PROJECT_DIR$/start-register" />
+            <option value="$PROJECT_DIR$/start-search" />
             <option value="$PROJECT_DIR$/starts" />
+            <option value="$PROJECT_DIR$/starts-common" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

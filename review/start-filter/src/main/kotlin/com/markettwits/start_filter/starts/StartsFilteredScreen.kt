@@ -39,7 +39,6 @@ fun StartsFilteredScreen(component: StartsFilteredComponent) {
                     strokeCap = StrokeCap.Round
                 )
             }
-
         }
         if (state.isError){
             FailedScreen(

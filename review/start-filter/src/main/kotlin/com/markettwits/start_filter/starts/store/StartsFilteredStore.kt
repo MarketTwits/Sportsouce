@@ -10,7 +10,7 @@ import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Intent
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Label
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.State
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.launch
 
 interface StartsFilteredStore : Store<Intent, State, Label> {
@@ -59,8 +59,8 @@ internal class StartsFilteredStoreFactory(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.OnClickBack -> publish(StartsFilteredStore.Label.OnClickBack)
-                is Intent.OnItemClick -> publish(StartsFilteredStore.Label.OnItemClick(intent.itemId))
+                is Intent.OnClickBack -> publish(Label.OnClickBack)
+                is Intent.OnItemClick -> publish(Label.OnItemClick(intent.itemId))
                 is Intent.Launch -> launch(intent.request)
             }
         }

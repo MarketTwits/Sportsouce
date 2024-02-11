@@ -19,7 +19,6 @@ internal val rootModule = module {
 
 private class DefaultLaunchesDependencies(
     override val sportsouceApi: SportsouceApi,
-    override val startsCloudToUiMapper: StartsCloudToUiMapper
 ) : StartsFilterDependencies
 
 private class DefaultStartRandomComponentDependencies(

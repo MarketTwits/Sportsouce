@@ -11,7 +11,6 @@ import com.markettwits.schedule.schedule.domain.StartsSchedule
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Intent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Label
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.State
-import com.markettwits.starts.presentation.StartsListItem
 import kotlinx.coroutines.launch
 
 
@@ -57,7 +56,7 @@ internal class StartsScheduleStoreFactory(
                     }
                     .onSuccess {
                         dispatch(Msg.InfoLoaded(data = it))
-                        Log.e("mt05", "#StartsScheduleStore SUCCESS :${it.toString()}")
+                        Log.e("mt05", "#StartsScheduleStore SUCCESS :$it")
                     }
             }
         }
@@ -66,9 +65,9 @@ internal class StartsScheduleStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State =
             when (message) {
-                is Msg.InfoFailed -> StartsScheduleStore.State(isError = true, message = message.message)
-                is Msg.Loading -> StartsScheduleStore.State(isLoading = true)
-                is Msg.InfoLoaded -> StartsScheduleStore.State(
+                is Msg.InfoFailed -> State(isError = true, message = message.message)
+                is Msg.Loading -> State(isLoading = true)
+                is Msg.InfoLoaded -> State(
                     starts = message.data,
                 )
             }

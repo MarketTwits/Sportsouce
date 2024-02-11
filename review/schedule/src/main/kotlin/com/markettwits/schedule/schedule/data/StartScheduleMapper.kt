@@ -1,12 +1,9 @@
 package com.markettwits.schedule.schedule.data
 
-import android.util.Log
 import com.markettwits.schedule.schedule.domain.StartsSchedule
-import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 import java.time.DayOfWeek
 import java.time.LocalDate
-
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -16,6 +13,7 @@ interface StartScheduleMapper {
 }
 
 class StartScheduleMapperBase : StartScheduleMapper {
+    @OptIn(ExperimentalStdlibApi::class)
     override fun map(items: List<StartsListItem>): List<StartsSchedule> {
         val currentDate = LocalDate.now()
         val startOfWeek =

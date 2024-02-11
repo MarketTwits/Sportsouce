@@ -33,7 +33,7 @@ import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.startStatusBackground
 import com.markettwits.starts.R
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 import de.charlex.compose.material3.HtmlText
 
 @Composable

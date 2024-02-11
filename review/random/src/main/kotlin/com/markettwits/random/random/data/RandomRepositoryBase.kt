@@ -9,11 +9,14 @@ class RandomRepositoryBase(
     private val startsRemoteToUiMapper: StartsCloudToUiMapper
 ) : RandomRepository {
     override suspend fun randomStart(): Result<Int> {
-        return runCatching {
+        val b = runCatching {
             val result = service.startWithFilter(randomRequest())
             startsRemoteToUiMapper.mapSingle(result.rows).map { it.id }.first()
         }
+        return b
+
     }
-    private fun randomRequest() : Map<String,String> =
-         mapOf("skipCount" to Random.nextInt(from = 1, until = 173).toString())
+
+    private fun randomRequest(): Map<String, String> =
+        mapOf("skipCount" to Random.nextInt(from = 1, until = 173).toString())
 }

@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.R
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.starts.R
-import com.markettwits.starts.presentation.StartsListItem
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 fun StartCardSimple(
@@ -56,7 +56,7 @@ private fun ImageCard(
             modifier = modifier
                 .size(width = 115.dp, height = 150.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .clickable{onCLick()}
+                .clickable { onCLick() }
 
         ) {
             SubcomposeAsyncImage(

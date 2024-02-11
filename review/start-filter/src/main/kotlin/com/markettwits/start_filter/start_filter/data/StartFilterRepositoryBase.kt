@@ -3,8 +3,8 @@ package com.markettwits.start_filter.start_filter.data
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
-import com.markettwits.starts.presentation.StartsListItem
 import com.markettwits.starts.data.StartsCloudToUiMapper
+import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

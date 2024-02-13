@@ -1,4 +1,4 @@
-package com.markettwits.starts.presentation
+package com.markettwits.starts.starts.presentation.component
 
 import androidx.compose.runtime.Immutable
 import com.markettwits.starts_common.domain.StartsListItem

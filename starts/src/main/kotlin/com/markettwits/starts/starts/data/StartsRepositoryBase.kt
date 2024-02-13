@@ -1,9 +1,10 @@
-package com.markettwits.starts.data
+package com.markettwits.starts.starts.data
 
 import com.arkivanov.decompose.value.MutableValue
+import com.markettwits.cahce.domain.execute.ExecuteWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.base.Fourth
-import com.markettwits.starts.presentation.StartsUiState
+import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -13,24 +14,17 @@ import kotlinx.coroutines.withContext
 class StartsRepositoryBase(
     private val service: SportsouceApi,
     private val cache: StartsMainCache,
+    private val execute: ExecuteWithCache,
     private val mapper: StartsCloudToUiMapper,
 ) : StartsRepository {
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
     override suspend fun starts() {
         try {
-            val cached = cache.get()
-            val b = if (cached.isNullOrEmpty()) {
-                val data = launch()
-                cache.set(value = data)
-                data
-            } else {
-                cached
-            }
-            starts.value = mapper.mapSuccess(b)
-            val data = launch()
-            if (data != cached) {
-                cache.set(value = data)
-                starts.value = mapper.mapSuccess(data)
+            execute.executeListWithCache(
+                cache,
+                ::launch
+            ) {
+                starts.value = mapper.mapSuccess(it)
             }
         } catch (e: Exception) {
             starts.value = mapper.map(e)
@@ -56,6 +50,4 @@ class StartsRepositoryBase(
             mapper.mapAll(actual.rows, paste.rows, preview.rows, main.rows) as StartsUiState.Success
         return data.items
     }
-
-
 }

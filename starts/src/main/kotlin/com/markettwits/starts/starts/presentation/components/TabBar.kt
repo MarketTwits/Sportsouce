@@ -1,4 +1,4 @@
-package com.markettwits.starts.components
+package com.markettwits.starts.starts.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

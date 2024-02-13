@@ -1,4 +1,4 @@
-package com.markettwits.starts.presentation
+package com.markettwits.starts.starts.presentation.component
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value

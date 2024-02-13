@@ -1,7 +1,7 @@
-package com.markettwits.starts.data
+package com.markettwits.starts.starts.data
 
 import com.markettwits.sportsourcedemo.all.Row
-import com.markettwits.starts.presentation.StartsUiState
+import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.data.StartsCloudToListMapper
 import com.markettwits.starts_common.domain.StartsListItem
 

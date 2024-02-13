@@ -10,7 +10,7 @@ import com.markettwits.profile.presentation.DefaultProfileComponent
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsComponentBase
 import com.markettwits.root.RootReviewComponentBase
-import com.markettwits.root.internal.RootStartsComponentBase
+import com.markettwits.starts.root.internal.RootStartsComponentBase
 
 class BaseRootComponent(
     componentContext: ComponentContext,

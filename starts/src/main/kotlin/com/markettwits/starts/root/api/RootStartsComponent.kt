@@ -1,10 +1,10 @@
-package com.markettwits.root.api
+package com.markettwits.starts.root.api
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.root.RootStartScreenComponent
 import com.markettwits.start_search.root.RootStartsSearchComponent
-import com.markettwits.starts.presentation.StartsScreenComponent
+import com.markettwits.starts.starts.presentation.component.StartsScreenComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartsComponent {

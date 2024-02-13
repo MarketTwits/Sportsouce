@@ -14,5 +14,4 @@ interface RealmDatabaseProvider{
     class Base : Abstract() {
         override fun realm(schema: Set<KClass<out TypedRealmObject>>) = Realm.open(schema(schema))
     }
-
 }

@@ -10,11 +10,15 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.start.root.RootStartScreenComponentBase
+import com.markettwits.start_filter.root.RootStartFilterComponentBase
 import com.markettwits.start_search.root.di.rootStartsSearchModule
 import com.markettwits.start_search.search.presentation.component.StartsSearchComponentBase
 
 
-class RootStartsSearchComponentBase(context: ComponentContext) : RootStartsSearchComponent,
+class RootStartsSearchComponentBase(
+    context: ComponentContext,
+    private val pop: () -> Unit,
+) : RootStartsSearchComponent,
     ComponentContext by context {
     private val navigation = StackNavigation<RootStartsSearchComponent.Config>()
 
@@ -47,20 +51,22 @@ class RootStartsSearchComponentBase(context: ComponentContext) : RootStartsSearc
                     pop = navigation::pop
                 )
             )
-//            is RootStartsSearchComponent.Config.Filter -> RootStartsSearchComponent.Child.Filter(
-//                RootStartFilterComponentBase(
-//                    context = componentContext,
-//                    dependencies = scope.get(),
-//                    pop = navigation::pop
-//                )
-//            )
+
+            is RootStartsSearchComponent.Config.Filter -> RootStartsSearchComponent.Child.Filter(
+                RootStartFilterComponentBase(
+                    context = componentContext,
+                    dependencies = scope.get(),
+                    pop = navigation::pop
+                )
+            )
+
             is RootStartsSearchComponent.Config.Search -> RootStartsSearchComponent.Child.Search(
                 StartsSearchComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    back = navigation::pop,
+                    back = pop::invoke,
                     filter = {
-                        //  navigation.push(RootStartsSearchComponent.Config.Filter)
+                        navigation.push(RootStartsSearchComponent.Config.Filter)
                     },
                     start = {
                         navigation.push(RootStartsSearchComponent.Config.Start(it))

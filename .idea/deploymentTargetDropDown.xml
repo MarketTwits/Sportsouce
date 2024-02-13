@@ -2,10 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity">
+      <entry key="StartOrderScreenPreview">
         <State />
       </entry>
-      <entry key="StartOrderScreenPreview">
+      <entry key="StartsSearchBarPreview">
         <State />
       </entry>
       <entry key="StartsSearchScreenPreview">

@@ -1,6 +1,7 @@
 package com.markettwits.start_search.search.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.start_search.search.domain.StartsSearch
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Intent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Label
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.State
@@ -16,7 +17,8 @@ interface StartsSearchStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
-        data class ChangeTextFiled(val value: String) : Intent
+        data class ChangeTextFiled(val value: String, val done: Boolean) : Intent
+        data class OnClickHistoryItem(val value: String) : Intent
         data class OnClickStart(val id: Int) : Intent
         data object OnClickBack : Intent
         data object OnClickFilter : Intent
@@ -25,7 +27,7 @@ interface StartsSearchStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data class ChangeTextFiled(val value: String) : Message
-        data class InfoLoaded(val starts: List<StartsListItem>) : Message
+        data class InfoLoaded(val starts: StartsSearch) : Message
         data class InfoFailed(val message: String) : Message
         data object Brush : Message
     }

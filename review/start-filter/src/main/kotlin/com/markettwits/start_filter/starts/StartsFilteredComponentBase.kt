@@ -5,14 +5,12 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
-import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore
 import com.markettwits.start_filter.starts.store.StartsFilteredStore
 import com.markettwits.start_filter.starts.store.StartsFilteredStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.KoinApplication.Companion.init
 
 internal class StartsFilteredComponentBase(
     context: ComponentContext,
@@ -24,7 +22,7 @@ internal class StartsFilteredComponentBase(
     StartsFilteredComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create()
+        storeFactory.create(request)
     }
     private val scope = CoroutineScope(Dispatchers.Main)
     override val value: StateFlow<StartsFilteredStore.State> = store.stateFlow
@@ -33,11 +31,9 @@ internal class StartsFilteredComponentBase(
     }
 
     init {
-        obtainEvent(StartsFilteredStore.Intent.Launch(request))
         scope.launch {
             store.labels.collect {
                 when(it){
-                    is StartsFilteredStore.Label.Launch -> {}
                     is StartsFilteredStore.Label.OnClickBack -> pop()
                     is StartsFilteredStore.Label.OnItemClick -> onItemClick(it.id)
                 }

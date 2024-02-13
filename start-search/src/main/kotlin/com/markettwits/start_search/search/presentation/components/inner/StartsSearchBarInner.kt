@@ -18,6 +18,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,9 @@ fun StartsSearchBarInner(
     query: String = "",
     onQueryChanged: (String) -> Unit,
     onBrushClicked: () -> Unit,
+    onFilterClicked: () -> Unit,
+    onClickBack: () -> Unit,
+    onDoneClicked: (String) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -43,7 +47,10 @@ fun StartsSearchBarInner(
         Icon(
             modifier = Modifier
                 .clip(Shapes.extraLarge)
-                .padding(5.dp),
+                .padding(5.dp)
+                .clickable {
+                    onClickBack()
+                },
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = null,
             tint = Color.Gray
@@ -55,6 +62,10 @@ fun StartsSearchBarInner(
             height = 50.dp,
             onValueChange = {
                 onQueryChanged(it)
+            },
+            textStyle = TextStyle(),
+            onDone = {
+                onDoneClicked(query)
             },
             value = query,
             keyboardType = KeyboardType.Text,
@@ -95,7 +106,10 @@ fun StartsSearchBarInner(
         Icon(
             modifier = Modifier
                 .clip(Shapes.extraLarge)
-                .padding(5.dp),
+                .padding(5.dp)
+                .clickable {
+                    onFilterClicked()
+                },
             imageVector = Icons.Default.Settings,
             contentDescription = null,
             tint = Color.Gray
@@ -106,5 +120,11 @@ fun StartsSearchBarInner(
 @Preview
 @Composable
 private fun StartsSearchScreenPreview() {
-    StartsSearchBarInner(onQueryChanged = {}, onBrushClicked = {})
+    StartsSearchBarInner(
+        onQueryChanged = {},
+        onBrushClicked = {},
+        onFilterClicked = {},
+        onClickBack = {},
+        onDoneClicked = {}
+    )
 }

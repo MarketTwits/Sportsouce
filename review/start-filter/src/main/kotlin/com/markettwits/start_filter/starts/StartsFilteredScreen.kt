@@ -18,7 +18,7 @@ import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start_filter.start_filter.presentation.components.StartFilterTopBar
 import com.markettwits.start_filter.starts.store.StartsFilteredStore
-import com.markettwits.starts.components.StartCard
+import com.markettwits.starts_common.presentation.StartCard
 
 @Composable
 fun StartsFilteredScreen(component: StartsFilteredComponent) {

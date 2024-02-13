@@ -10,7 +10,6 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
     implementation(project(":start"))
-    implementation(project(":starts"))
     implementation(projects.startsCommon)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)

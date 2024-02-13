@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.realm)
 }
 
 android {
@@ -8,11 +9,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":cloud"))
-    implementation(project(":core-ui"))
-    implementation(project(":core-koin"))
+    compileOnly(libs.kstore.file)
+    compileOnly(libs.kstore)
+    implementation(libs.realm)
+    implementation(projects.cache)
+    implementation(projects.cloud)
+    implementation(projects.coreUi)
+    implementation(projects.coreKoin)
     implementation(projects.start)
-    //implementation(projects.review.startFilter)
+    implementation(projects.review.startFilter)
     implementation(projects.startsCommon)
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)

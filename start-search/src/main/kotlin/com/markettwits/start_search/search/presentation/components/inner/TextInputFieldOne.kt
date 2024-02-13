@@ -27,13 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.theme.SportSouceColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -49,12 +50,13 @@ fun TextInputFieldOne(
     singleLine: Boolean = true,
     imeAction: ImeAction? = null,
     keyboardActions: KeyboardActions? = null,
-    fontSize: TextUnit = 16.sp,
+    textStyle: TextStyle = TextStyle.Default,
     height: Dp = 48.dp,
     isError: Boolean = false,
     colors: Color,
     placeholder: @Composable () -> Unit,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
+    onDone: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -80,14 +82,19 @@ fun TextInputFieldOne(
             onValueChange(it)
         },
         keyboardActions = keyboardActions ?: KeyboardActions(
-            onDone = { focusManager.clearFocus() },
+            onDone = {
+                focusManager.clearFocus()
+                onDone()
+            },
             onNext = { focusManager.moveFocus(FocusDirection.Down) },
             onSearch = { focusManager.clearFocus() }
         ),
+        textStyle = textStyle,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = imeAction ?: if (singleLine) ImeAction.Done else ImeAction.Default
         ),
+        cursorBrush = SolidColor(SportSouceColor.SportSouceBlue),
         interactionSource = interactionSource,
         modifier = modifier
             .bringIntoViewRequester(bringIntoViewRequester)
@@ -107,10 +114,10 @@ fun TextInputFieldOne(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .padding(
-                            top = if (singleLine) 0.dp else 12.5.dp,
-                            bottom = if (singleLine) 2.5.dp else 12.5.dp
-                        )
+//                        .padding(
+//                            top = if (singleLine) 0.dp else 12.5.dp,
+//                            bottom = if (singleLine) 2.5.dp else 12.5.dp
+//                        )
                 ) {
                     innerTextField()
                     if (value.isEmpty()) {

@@ -1,4 +1,4 @@
-package com.markettwits.start_filter.start_filter.data
+package com.markettwits.start_filter.start_filter.data.mapper
 
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 

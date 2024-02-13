@@ -1,6 +1,7 @@
 package com.markettwits.start_search.search.presentation.components.inner
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,30 +29,40 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     val state by component.model.collectAsState()
     CollapsingToolbarScaffold(
         modifier = Modifier,
-        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        scrollStrategy = ScrollStrategy.EnterAlways,
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             StartsSearchBarInner(
                 modifier = Modifier.padding(10.dp),
                 query = state.query,
                 onQueryChanged = {
-                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it))
+                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, false))
                 },
                 onBrushClicked = {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickBrushText)
+                },
+                onFilterClicked = {
+                    component.obtainEvent(StartsSearchStore.Intent.OnClickFilter)
+                },
+                onClickBack = {
+                    component.obtainEvent(StartsSearchStore.Intent.OnClickBack)
+                },
+                onDoneClicked = {
+                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, true))
                 }
             )
         },
     ) {
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
             if (state.query.isEmpty()) {
                 SearchHistoryColumn(
                     items = state.searchHistory
                 ) {
-
+                    component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
                 }
             } else {
                 state.starts.let { starts ->

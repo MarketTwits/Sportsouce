@@ -6,9 +6,9 @@ android {
     namespace = "com.markettwits.popular"
 }
 dependencies {
-    implementation(project(":cloud"))
-    implementation(project(":core-ui"))
-    implementation(project(":core-koin"))
+    implementation(projects.cloud)
+    implementation(projects.coreUi)
+    implementation(projects.coreKoin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.kotlinx.datetime)

@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.starts.components.StartCard
 import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.starts_common.presentation.StartCard
 
 @Composable
 fun ActualStarts(

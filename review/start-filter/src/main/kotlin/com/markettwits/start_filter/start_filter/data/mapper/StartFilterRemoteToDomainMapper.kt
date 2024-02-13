@@ -40,7 +40,3 @@ internal interface StartFilterRemoteToDomainMapper {
         }
     }
 }
-interface ABCD{
-    class Aplpha : ABCD
-}
-

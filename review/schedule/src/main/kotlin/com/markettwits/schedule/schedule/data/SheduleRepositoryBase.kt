@@ -2,7 +2,7 @@ package com.markettwits.schedule.schedule.data
 
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.schedule.schedule.domain.StartsSchedule
-import com.markettwits.starts.data.StartsCloudToUiMapper
+import com.markettwits.starts_common.data.StartsCloudToListMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 internal class ScheduleRepositoryBase(
     private val service: SportsouceApi,
-    private val startRemoteToUiMapper: StartsCloudToUiMapper,
+    private val startRemoteToUiMapper: StartsCloudToListMapper,
     private val startScheduleMapper : StartScheduleMapper
 ) : ScheduleRepository {
 

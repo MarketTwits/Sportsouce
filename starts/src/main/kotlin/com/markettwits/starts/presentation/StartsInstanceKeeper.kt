@@ -2,7 +2,6 @@ package com.markettwits.starts.presentation
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.root.api.RootStartsComponent
 import com.markettwits.starts.data.StartsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,18 +9,14 @@ import kotlinx.coroutines.launch
 
 class StartsInstanceKeeper(
     private val dataSource: StartsRepository,
-    private val launchPolicy: RootStartsComponent.LaunchPolicy
+    //  private val launchPolicy: RootStartsComponent.LaunchPolicy
 ) : InstanceKeeper.Instance {
     val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
     private val scope = CoroutineScope(Dispatchers.Main)
 
     init {
         scope.launch {
-            if (launchPolicy is RootStartsComponent.LaunchPolicy.WithFilter){
-                dataSource.startsFilter(launchPolicy.request)
-            }else{
-                dataSource.starts()
-            }
+            dataSource.starts()
         }
         dataSource.starts.subscribe {
             starts.value = it

@@ -5,28 +5,30 @@ import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.random.root.di.StartRandomComponentDependencies
 import com.markettwits.schedule.schedule.di.StartScheduleComponentDependencies
 import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
-import com.markettwits.starts.data.StartsCloudToUiMapper
+import com.markettwits.starts_common.data.StartsCloudToListMapper
+import com.markettwits.starts_common.data.StartsCloudToListMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val rootModule = module {
-    singleOf(::DefaultLaunchesDependencies) bind StartsFilterDependencies::class
+    singleOf(::DefaultStartsFilterDependencies) bind StartsFilterDependencies::class
     singleOf(::DefaultStartRandomComponentDependencies) bind StartRandomComponentDependencies::class
     singleOf(::DefaultStartsScheduleComponentDependencies) bind StartScheduleComponentDependencies::class
-    single<StartsCloudToUiMapper> { StartsCloudToUiMapper.Base(BaseTimeMapper()) }
+    single<StartsCloudToListMapper> { StartsCloudToListMapperBase(BaseTimeMapper()) }
 }
 
-private class DefaultLaunchesDependencies(
+private class DefaultStartsFilterDependencies(
     override val sportsouceApi: SportsouceApi,
+    override val startsCloudToListMapper: StartsCloudToListMapper,
 ) : StartsFilterDependencies
 
 private class DefaultStartRandomComponentDependencies(
     override val sportsouceApi: SportsouceApi,
-    override val startsCloudToUiMapper: StartsCloudToUiMapper
+    override val startsCloudToUiMapper: StartsCloudToListMapper
 ) : StartRandomComponentDependencies
 
 private class DefaultStartsScheduleComponentDependencies(
     override val sportsouceApi: SportsouceApi,
-    override val startsCloudToUiMapper: StartsCloudToUiMapper
+    override val startsCloudToUiMapper: StartsCloudToListMapper
 ) : StartScheduleComponentDependencies

@@ -12,15 +12,15 @@ import com.markettwits.root.api.RootStartsComponent
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
 import com.markettwits.starts.data.StartsCloudToUiMapper
-import com.markettwits.starts.data.StartsRepository
-import com.markettwits.starts.data.base.StartsRepositoryBase
-import com.markettwits.starts.data.withFilter.StartsRepositoryWithFilter
+import com.markettwits.starts.data.StartsMainCache
+import com.markettwits.starts.data.StartsRepositoryBase
 import com.markettwits.starts.presentation.StartsScreenComponent
+import com.markettwits.starts_common.data.StartsCloudToListMapperBase
 import ru.alexpanov.core_network.provider.JsonProvider
 
 class RootStartsComponentBase(
     componentContext: ComponentContext,
-    private val launchPolicy: RootStartsComponent.LaunchPolicy = RootStartsComponent.LaunchPolicy.Main
+    //   private val launchPolicy: RootStartsComponent.LaunchPolicy = RootStartsComponent.LaunchPolicy.Main
 ) : RootStartsComponent,
     ComponentContext by componentContext {
 
@@ -51,8 +51,19 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Starts ->
                 RootStartsComponent.Child.Starts(StartsScreenComponent(
                     componentContext = componentContext,
-                    dataSource = repository(launchPolicy),
-                    launchPolicy = launchPolicy,
+                    dataSource = StartsRepositoryBase(
+                        service = StartsRemoteDataSourceImpl(
+                            HttpClientProvider(
+                                JsonProvider().get(),
+                                "https://sport-73zoq.ondigitalocean.app"
+                            )
+                        ),
+                        cache = StartsMainCache(),
+                        mapper = StartsCloudToUiMapper.Base(
+                            StartsCloudToListMapperBase(BaseTimeMapper())
+                        )
+                    ),
+                    //   launchPolicy = launchPolicy,
                     toDetail = {
                         onItemClick(it)
                     },
@@ -68,33 +79,34 @@ class RootStartsComponentBase(
             )
         }
 
-    private fun repository(launchPolicy: RootStartsComponent.LaunchPolicy): StartsRepository {
-        return when (launchPolicy) {
-            is RootStartsComponent.LaunchPolicy.Main -> StartsRepositoryBase(
-                StartsRemoteDataSourceImpl(
-                    HttpClientProvider(
-                        JsonProvider().get(),
-                        "https://sport-73zoq.ondigitalocean.app"
-                    )
-                ),
-                StartsCloudToUiMapper.Base(
-                    BaseTimeMapper()
-                )
-            )
-
-            is RootStartsComponent.LaunchPolicy.WithFilter -> StartsRepositoryWithFilter(
-                StartsRemoteDataSourceImpl(
-                    HttpClientProvider(
-                        JsonProvider().get(),
-                        "https://sport-73zoq.ondigitalocean.app"
-                    )
-                ),
-                StartsCloudToUiMapper.Base(
-                    BaseTimeMapper()
-                )
-            )
-        }
-    }
+//    private fun repository(launchPolicy: RootStartsComponent.LaunchPolicy): StartsRepository {
+//
+//        return when (launchPolicy) {
+//            is RootStartsComponent.LaunchPolicy.Main -> StartsRepositoryBase(
+//                StartsRemoteDataSourceImpl(
+//                    HttpClientProvider(
+//                        JsonProvider().get(),
+//                        "https://sport-73zoq.ondigitalocean.app"
+//                    )
+//                ),
+//                StartsCloudToUiMapper.Base(
+//                    StartsCloudToListMapperBase( BaseTimeMapper())
+//                )
+//            )
+//
+//            is RootStartsComponent.LaunchPolicy.WithFilter -> StartsRepositoryWithFilter(
+//                StartsRemoteDataSourceImpl(
+//                    HttpClientProvider(
+//                        JsonProvider().get(),
+//                        "https://sport-73zoq.ondigitalocean.app"
+//                    )
+//                ),
+//                StartsCloudToUiMapper.Base(
+//                    StartsCloudToListMapperBase( BaseTimeMapper())
+//                )
+//            )
+//        }
+    //   }
 
     fun onItemClick(startdId: Int) {
         navigation.push(RootStartsComponent.Config.Start(startdId))

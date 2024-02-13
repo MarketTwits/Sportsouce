@@ -1,16 +1,23 @@
 package com.markettwits.starts_common.presentation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
+import androidx.compose.ui.Modifier
 import com.markettwits.starts_common.domain.StartsListItem
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StartsScreenContent(items: List<StartsListItem>, onClick: (Int) -> Unit) {
     LazyColumn {
         items(items, key = { it -> it.id }) {
-            StartCard(start = it, onItemClick = onClick::invoke)
+            StartCard(
+                modifier = Modifier.animateItemPlacement(animationSpec = tween(600)),
+                start = it,
+                onItemClick = onClick::invoke
+            )
         }
     }
 }

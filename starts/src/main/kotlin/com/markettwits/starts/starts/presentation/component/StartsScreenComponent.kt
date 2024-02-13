@@ -1,14 +1,13 @@
-package com.markettwits.starts.presentation
+package com.markettwits.starts.starts.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
-import com.markettwits.starts.data.StartsRepository
+import com.markettwits.starts.starts.data.StartsRepository
 
 class StartsScreenComponent(
     componentContext: ComponentContext,
     private val dataSource: StartsRepository,
-    //  private val launchPolicy: RootStartsComponent.LaunchPolicy,
     private val toDetail: (Int) -> Unit,
     private val toSearch: () -> Unit,
 ) : ComponentContext by componentContext, StartsScreen {

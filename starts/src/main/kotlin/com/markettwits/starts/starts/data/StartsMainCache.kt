@@ -1,4 +1,4 @@
-package com.markettwits.starts.data
+package com.markettwits.starts.starts.data
 
 import com.markettwits.cahce.domain.InStorageCache
 import com.markettwits.cahce.domain.InStorageSingleCache

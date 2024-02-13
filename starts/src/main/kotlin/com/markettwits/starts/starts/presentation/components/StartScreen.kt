@@ -1,4 +1,4 @@
-package com.markettwits.starts.presentation
+package com.markettwits.starts.starts.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +15,9 @@ import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
-import com.markettwits.starts.components.TabBar
+import com.markettwits.starts.starts.presentation.component.MockStartsScreenComponent
+import com.markettwits.starts.starts.presentation.component.StartsScreen
+import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.presentation.StartsScreenContent
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy

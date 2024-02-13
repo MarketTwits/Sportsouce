@@ -29,7 +29,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":root"))
+    implementation(projects.root)
+    implementation(projects.cache)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.decompose.android)
     implementation(libs.koin.android)

@@ -1,4 +1,4 @@
-package com.markettwits.start.data.start
+package com.markettwits.start.data.start.mapper
 
 import android.util.Log
 import com.markettwits.cloud.ext_model.DistanceItem
@@ -91,29 +91,6 @@ interface StartRemoteToUiMapper {
         override fun map(commentsRemote: StartCommentsRemote): StartItem.Comments =
             mapComments(commentsRemote)
 
-
-        //        private fun updateDistanceInfoList(
-//                    distances: List<DistanceInfo>,
-//                    date: String
-//        ): List<DistanceInfo> {
-//            return distances.map { distanceInfo ->
-//                val newPriceValue = getPriceForDate(distanceInfo.distance, date)
-//                val updatedDistance = distanceInfo.distance.copy(price = newPriceValue.toString())
-//                val updatedDistanceInfo = distanceInfo.copy(distance = updatedDistance)
-//                updatedDistanceInfo
-//            }
-//        }
-//        private fun updateDistanceInfoList(
-//            distances: List<SelectKindsSportItem>,
-//            date: String
-//        ): List<SelectKindsSportItem> {
-//            return distances.map { distanceInfo ->
-//                val newPriceValue = getPriceForDate(distanceInfo.distance, date)
-//                val updatedDistance = distanceInfo.distance?.copy(price = newPriceValue.toString())
-//                val updatedDistanceInfo = distanceInfo.copy(distance = updatedDistance)
-//                updatedDistanceInfo
-//            }
-//        }
         private fun updateDistanceInfoList(
             startMember: List<StartMemberItem>,
             distances: List<DistanceItem>,

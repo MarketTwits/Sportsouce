@@ -1,9 +1,11 @@
 package com.markettwits.start_filter.start_filter.data
 
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.start_filter.start_filter.data.mapper.StartFilterDomainToRemoteMapper
+import com.markettwits.start_filter.start_filter.data.mapper.StartFilterRemoteToDomainMapper
+import com.markettwits.start_filter.start_filter.data.mapper.StartsCloudToFilterMapper
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
-import com.markettwits.starts.data.StartsCloudToUiMapper
 import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -14,7 +16,7 @@ internal class StartFilterRepositoryBase(
     private val service: SportsouceApi,
     private val fetchMapper: StartFilterRemoteToDomainMapper,
     private val sendMapper: StartFilterDomainToRemoteMapper,
-    private val startsCloudToUiMapper: StartsCloudToUiMapper
+    private val startsCloudToUiMapper: StartsCloudToFilterMapper
 ) : StartFilterRepository {
 
     override suspend fun filter(): Result<StartFilter> {
@@ -39,7 +41,7 @@ internal class StartFilterRepositoryBase(
     override suspend fun starts(state: StartFilterUi): Result<List<StartsListItem>> =
         runCatching {
             val starts = service.startWithFilter(sendMapper.map(state))
-            startsCloudToUiMapper.mapSingle(starts.rows)
+            startsCloudToUiMapper.map(starts)
         }
 
 

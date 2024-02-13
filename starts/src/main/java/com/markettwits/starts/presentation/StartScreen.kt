@@ -17,6 +17,9 @@ import com.markettwits.start.presentation.common.LoadingScreen
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
 import com.markettwits.starts.components.TabBar
 import com.markettwits.starts_common.presentation.StartsScreenContent
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
 @Preview
@@ -38,17 +41,25 @@ fun StartsScreen(component: StartsScreen) {
     {
         when (starts) {
             is StartsUiState.Success -> {
-                Column {
-                    StartsSearchBarPublic(modifier = Modifier.clickable {
-                        component.onSearchClick()
-                    })
-                    TabBar(content = { page ->
-                        val items = (starts as StartsUiState.Success).items[page]
-                        StartsScreenContent(
-                            items = items,
-                            onClick = component::onItemClick
-                        )
-                    })
+                CollapsingToolbarScaffold(
+                    modifier = Modifier,
+                    scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+                    state = rememberCollapsingToolbarScaffoldState(),
+                    toolbar = {
+                        StartsSearchBarPublic(modifier = Modifier.clickable {
+                            component.onSearchClick()
+                        })
+                    }
+                ) {
+                    Column {
+                        TabBar(content = { page ->
+                            val items = (starts as StartsUiState.Success).items[page]
+                            StartsScreenContent(
+                                items = items,
+                                onClick = component::onItemClick
+                            )
+                        })
+                    }
                 }
             }
 

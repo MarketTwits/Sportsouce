@@ -1,6 +1,5 @@
-package com.markettwits.start.data.start
+package com.markettwits.start.data.start.mapper
 
-import androidx.compose.ui.util.fastFilter
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 

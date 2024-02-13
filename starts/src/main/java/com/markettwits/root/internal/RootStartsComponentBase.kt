@@ -60,9 +60,11 @@ class RootStartsComponentBase(
                         navigation.push(RootStartsComponent.Config.Search)
                     }
                 ))
-
             RootStartsComponent.Config.Search -> RootStartsComponent.Child.Search(
-                RootStartsSearchComponentBase(context = componentContext)
+                RootStartsSearchComponentBase(
+                    context = componentContext,
+                    pop = navigation::pop
+                )
             )
         }
 

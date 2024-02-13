@@ -9,7 +9,11 @@ object StartsSearchReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.Brush -> copy(query = "")
             is Message.InfoFailed -> copy(isError = true, message = msg.message)
-            is Message.InfoLoaded -> copy(isError = false, starts = msg.starts)
+            is Message.InfoLoaded -> copy(
+                isError = false,
+                starts = msg.starts.items,
+                searchHistory = msg.starts.searches
+            )
             is Message.ChangeTextFiled -> copy(query = msg.value)
         }
     }

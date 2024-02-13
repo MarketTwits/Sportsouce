@@ -3,8 +3,6 @@ package com.markettwits.start_search.search.presentation.components.inner
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start_search.search.presentation.component.StartsSearchComponent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore
-import com.markettwits.starts_common.presentation.StartCard
+import com.markettwits.starts_common.presentation.StartsScreenContent
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -56,7 +54,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+            //    .verticalScroll(rememberScrollState())
         ) {
             if (state.query.isEmpty()) {
                 SearchHistoryColumn(
@@ -76,10 +74,10 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                             fontSize = 12.sp,
                             overflow = TextOverflow.Visible
                         )
-                        starts.forEach {
-                            StartCard(start = it) {
-                                component.obtainEvent(StartsSearchStore.Intent.OnClickStart(it))
-                            }
+                        StartsScreenContent(
+                            items = starts
+                        ) {
+                            component.obtainEvent(StartsSearchStore.Intent.OnClickStart(it))
                         }
                     } else {
                         Text(

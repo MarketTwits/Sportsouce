@@ -49,13 +49,14 @@ class ReviewStoreFactory(
         private fun launch() {
             scope.launch {
                 dispatch(Msg.Loading)
-                repository.launch()
-                    .onFailure {
+                repository.launch().collect { result ->
+                    result.onFailure {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
-                    .onSuccess {
+                    result.onSuccess {
                         dispatch(Msg.InfoLoaded(archive = it[1], actual = it[0]))
                     }
+                }
             }
         }
     }

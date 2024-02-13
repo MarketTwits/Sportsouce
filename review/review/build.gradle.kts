@@ -6,6 +6,9 @@ android {
     namespace = "com.markettwits.review"
 }
 dependencies {
+    compileOnly(libs.kstore)
+    compileOnly(libs.kstore.file)
+    implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.news)
     implementation(projects.start)

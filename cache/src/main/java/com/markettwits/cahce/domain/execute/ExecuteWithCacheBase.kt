@@ -23,4 +23,29 @@ class ExecuteWithCacheBase : ExecuteWithCache {
             callback(latestData)
         }
     }
+
+    override suspend fun <T> executeListWithCacheApply(
+        cache: Cache<List<T>>,
+        launch: suspend () -> List<T>,
+    ): List<T> {
+        val cachedData = cache.get()
+        val newData = if (cachedData.isNullOrEmpty()) {
+            val data = launch()
+            cache.set(value = data)
+            data
+        } else {
+            cachedData
+        }
+        return newData
+    }
+
+    override suspend fun <T> executeAfterApply(
+        cache: Cache<List<T>>,
+        launch: suspend () -> List<T>,
+    ) {
+        val latestData = launch()
+        if (latestData != cache.get()) {
+            cache.set(value = latestData)
+        }
+    }
 }

@@ -6,7 +6,7 @@ import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.data.ReviewRepositoryBase
 import com.markettwits.review.presentation.store.ReviewStoreFactory
-import com.markettwits.starts.data.StartsCloudToUiMapper
+import com.markettwits.starts_common.data.StartsCloudToListMapperBase
 import org.koin.dsl.module
 
 val reviewModule = module(createdAtStart = true) {
@@ -19,7 +19,7 @@ val reviewModule = module(createdAtStart = true) {
     single<ReviewRepository> {
         ReviewRepositoryBase(
             service = get(SportsouceApi::class),
-            StartsCloudToUiMapper.Base(
+            StartsCloudToListMapperBase(
                 BaseTimeMapper()
             )
         )

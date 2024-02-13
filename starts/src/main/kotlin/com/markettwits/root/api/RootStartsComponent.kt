@@ -29,8 +29,8 @@ interface RootStartsComponent {
         data class Starts(val component: StartsScreenComponent) : Child()
         data class Search(val component: RootStartsSearchComponent) : Child()
     }
-    sealed interface LaunchPolicy{
-        data object Main : LaunchPolicy
-        data class WithFilter(val request : Map<String,String>) : LaunchPolicy
-    }
+//    sealed interface LaunchPolicy{
+//        data object Main : LaunchPolicy
+//        data class WithFilter(val request : Map<String,String>) : LaunchPolicy
+//    }
 }

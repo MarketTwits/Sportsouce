@@ -3,19 +3,18 @@ package com.markettwits.starts.presentation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
-import com.markettwits.root.api.RootStartsComponent
 import com.markettwits.starts.data.StartsRepository
 
 class StartsScreenComponent(
     componentContext: ComponentContext,
     private val dataSource: StartsRepository,
-    private val launchPolicy: RootStartsComponent.LaunchPolicy,
+    //  private val launchPolicy: RootStartsComponent.LaunchPolicy,
     private val toDetail: (Int) -> Unit,
     private val toSearch: () -> Unit,
 ) : ComponentContext by componentContext, StartsScreen {
 
     private val someLogic =
-        instanceKeeper.getOrCreateSimple { StartsInstanceKeeper(dataSource, launchPolicy) }
+        instanceKeeper.getOrCreateSimple { StartsInstanceKeeper(dataSource) }
 
     override fun onItemClick(startId: Int) {
         toDetail(startId)

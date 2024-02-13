@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
@@ -87,7 +88,6 @@ fun StartResultContent(
     Log.d("mt05","size " +  results.size.toString())
     Column(modifier = Modifier.wrapContentSize()) {
         results.forEach{
-
                 Box(
                     modifier = modifier
                         .clip(Shapes.medium)
@@ -101,6 +101,7 @@ fun StartResultContent(
                         modifier = Modifier
                             .padding(5.dp)
                             .align(Alignment.Center),
+                        textAlign = TextAlign.Center,
                         text = it.name,
                         color = Color.White,
                         fontFamily = FontNunito.bold,

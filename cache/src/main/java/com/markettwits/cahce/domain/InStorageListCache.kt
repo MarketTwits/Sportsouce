@@ -10,7 +10,7 @@ abstract class InStorageListCache<T : @Serializable Any>(
     private val cache: KStore<List<T>>
 ) : Cache<T> {
     override suspend fun get(key: Any): T? =
-        cache.get()?.get(key as Int)
+        (cache.get() ?: emptyList<T>()) as T?
 
     override suspend fun getList(key: Any): List<T> =
         cache.getOrEmpty()

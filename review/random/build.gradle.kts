@@ -6,11 +6,10 @@ android {
     namespace = "com.markettwits.random"
 }
 dependencies {
-    implementation(project(":cloud"))
-    implementation(project(":core-ui"))
-    implementation(project(":core-koin"))
-    implementation(project(":starts"))
-    implementation(project(":start"))
+    implementation(projects.cloud)
+    implementation(projects.coreUi)
+    implementation(projects.coreKoin)
+    implementation(projects.start)
     implementation(projects.startsCommon)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)

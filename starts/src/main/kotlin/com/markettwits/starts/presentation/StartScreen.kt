@@ -78,39 +78,3 @@ fun StartsScreen(component: StartsScreen) {
         }
     }
 }
-
-@Composable
-fun StartsScreenSingle(component: StartsScreen) {
-    val starts by component.starts.subscribeAsState()
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    )
-    {
-        when (starts) {
-            is StartsUiState.Success -> {
-                Column {
-                    val items = (starts as StartsUiState.Success).items[0]
-                    StartsScreenContent(
-                        items = items,
-                        onClick = component::onItemClick
-                    )
-                }
-            }
-
-            is StartsUiState.Failed -> {
-                FailedScreen(
-                    message = (starts as StartsUiState.Failed).message,
-                    onClickRetry = {
-                        component.retry()
-                    },
-                    onClickHelp = {})
-            }
-
-            is StartsUiState.Loading -> {
-                LoadingScreen()
-            }
-        }
-    }
-}

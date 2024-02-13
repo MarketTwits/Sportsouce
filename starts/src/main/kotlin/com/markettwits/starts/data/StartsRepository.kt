@@ -5,6 +5,5 @@ import com.markettwits.starts.presentation.StartsUiState
 
 interface StartsRepository {
     suspend fun starts() = Unit
-    suspend fun startsFilter(request : Map<String,String>) = Unit
     val starts : Value<StartsUiState>
 }

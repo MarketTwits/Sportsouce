@@ -10,7 +10,6 @@ import com.markettwits.profile.presentation.DefaultProfileComponent
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsComponentBase
 import com.markettwits.root.RootReviewComponentBase
-import com.markettwits.root.api.RootStartsComponent
 import com.markettwits.root.internal.RootStartsComponentBase
 
 class BaseRootComponent(
@@ -37,7 +36,6 @@ class BaseRootComponent(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
-                    launchPolicy = RootStartsComponent.LaunchPolicy.Main,
                 )
             )
 

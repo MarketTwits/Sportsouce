@@ -1,6 +1,7 @@
 package com.markettwits.review.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,8 +27,7 @@ import com.markettwits.review.presentation.components.archive.ArchiveStarts
 import com.markettwits.review.presentation.components.review_menu.ReviewMenu
 import com.markettwits.review.presentation.components.social_network.SocialNetwork
 import com.markettwits.review.presentation.store.ReviewStore
-import com.markettwits.root.RootNewsComponent
-import com.markettwits.root.RootNewsScreen
+import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
 
 @Composable
 fun ReviewScreen(component: ReviewComponent, newsComponent: NewsComponent) {
@@ -37,8 +37,10 @@ fun ReviewScreen(component: ReviewComponent, newsComponent: NewsComponent) {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(10.dp)
     ) {
+        StartsSearchBarPublic(modifier = Modifier.clickable {
+            component.obtainEvent(ReviewStore.Intent.OnClickSearch)
+        })
         if (state.actualStarts.isNotEmpty()) {
             NewsScreen(component = newsComponent, onClickItem = {
                 newsComponent.obtainEvent(NewsStore.Intent.OnClickItem(it))

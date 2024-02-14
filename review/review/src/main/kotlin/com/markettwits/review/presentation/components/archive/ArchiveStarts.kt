@@ -1,5 +1,6 @@
 package com.markettwits.review.presentation.components.archive
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -13,6 +14,7 @@ import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.review.presentation.components.actual.StartCardSimple
 import com.markettwits.starts_common.domain.StartsListItem
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArchiveStarts(
     modifier: Modifier = Modifier, starts: List<StartsListItem>,
@@ -26,10 +28,11 @@ fun ArchiveStarts(
         fontSize = 18.sp
     )
     LazyRow(modifier = modifier) {
-        items(starts) {
-            StartCardSimple(start = it, onItemClick = {
-                onClick(it)
-            })
+        items(starts, key = { it.id }) {
+            StartCardSimple(
+                start = it, onItemClick = {
+                    onClick(it)
+                })
         }
     }
 }

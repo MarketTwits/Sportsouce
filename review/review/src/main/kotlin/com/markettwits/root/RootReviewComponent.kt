@@ -11,7 +11,7 @@ import com.markettwits.review.presentation.ReviewComponent
 import com.markettwits.schedule.root.RootStartsScheduleComponent
 import com.markettwits.start.root.RootStartScreenComponent
 import com.markettwits.start_filter.root.RootStartFilterComponent
-import com.markettwits.start_filter.start_filter.presentation.StartFilterComponent
+import com.markettwits.start_search.root.RootStartsSearchComponent
 import kotlinx.serialization.Serializable
 
 interface RootReviewComponent {
@@ -30,6 +30,9 @@ interface RootReviewComponent {
         data object Schedule : Config
         @Serializable
         data object Popular : Config
+
+        @Serializable
+        data object Search : Config
         @Serializable
         data class NewsEvent(val news : NewsInfo) : Config
     }
@@ -42,5 +45,6 @@ interface RootReviewComponent {
         data class Schedule(val component : RootStartsScheduleComponent) : Child
         data class Popular(val component : PopularStartsComponent) : Child
         data class NewsEvent(val component : NewsEventComponent) : Child
+        data class Search(val component: RootStartsSearchComponent) : Child
     }
 }

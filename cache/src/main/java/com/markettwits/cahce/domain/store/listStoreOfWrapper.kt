@@ -16,3 +16,14 @@ inline fun <reified T : @Serializable Any> listStoreOfWrapper(
     val fullPath = "$path/$fileName".toPath()
     return storeOf(fullPath, default, enableCache, json)
 }
+
+inline fun <reified T : @Serializable Any> storeOfWrapper(
+    path: String,
+    fileName: String,
+    default: T? = null,
+    enableCache: Boolean = true,
+    json: Json = Json { ignoreUnknownKeys = true; encodeDefaults = true },
+): KStore<T> {
+    val fullPath = "$path/$fileName".toPath()
+    return storeOf(fullPath, default, enableCache, json)
+}

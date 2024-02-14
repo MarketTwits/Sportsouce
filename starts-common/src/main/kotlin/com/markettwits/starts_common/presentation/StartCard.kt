@@ -1,6 +1,7 @@
 package com.markettwits.starts_common.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.R
 import com.markettwits.core_ui.components.Shapes
+import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
@@ -76,27 +78,32 @@ private fun ImageCard(
     date: String,
     status: StartsListItem.StatusCode
 ) {
-
     Box(
         modifier = modifier
             .size(width = 120.dp, height = 170.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .clip(Shapes.medium)
+            .border(1.dp, Color.LightGray.copy(alpha = 0.5f), Shapes.medium)
     ) {
-        SubcomposeAsyncImage(
-            model = image,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            error = {
-                SubcomposeAsyncImageContent(modifier = modifier, painter = painterResource(id = R.drawable.default_start_image))
-            },
-            success = {
-                SubcomposeAsyncImageContent(modifier = modifier)
+        Box(modifier = modifier.fillMaxSize()) {
+            SubcomposeAsyncImage(
+                model = imageRequestCrossfade(image),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                error = {
+                    SubcomposeAsyncImageContent(
+                        modifier = modifier,
+                        painter = painterResource(id = R.drawable.default_start_image)
+                    )
+                },
+                success = {
+                    SubcomposeAsyncImageContent(modifier = modifier)
+                }
+            )
+            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+                ImageCardInfoStroke(date)
+                ImageCardInfoStatus(status)
             }
-        )
-        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            ImageCardInfoStroke(date)
-            ImageCardInfoStatus(status)
         }
     }
 }

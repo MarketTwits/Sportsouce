@@ -19,15 +19,16 @@ class StartsRepositoryBase(
 ) : StartsRepository {
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
     override suspend fun starts() {
-        try {
+        runCatching {
             execute.executeListWithCache(
-                cache,
-                ::launch
-            ) {
-                starts.value = mapper.mapSuccess(it)
-            }
-        } catch (e: Exception) {
-            starts.value = mapper.map(e)
+                cache = cache,
+                launch = ::launch,
+                callback = {
+                    starts.value = mapper.mapSuccess(it)
+                },
+            )
+        }.onFailure {
+            starts.value = mapper.map(it)
         }
     }
 

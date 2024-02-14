@@ -51,6 +51,7 @@ internal class StartFilerStoreFactory(
                         )
                     )
                 )
+
                 StartFilterStore.Intent.Apply -> publish(StartFilterStore.Label.Apply(getState().filter))
                 StartFilterStore.Intent.Reset -> dispatch(
                     Msg.ChangeFilter(reset(getState().filter))
@@ -96,13 +97,15 @@ internal class StartFilerStoreFactory(
         private fun launch() {
             scope.launch {
                 dispatch(Msg.Loading)
-                repository.filter()
-                    .onFailure {
+                repository.filter().collect {
+                    it.onFailure {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
-                    .onSuccess {
+                    it.onSuccess {
                         dispatch(Msg.InfoLoaded(it))
                     }
+                }
+
             }
         }
     }

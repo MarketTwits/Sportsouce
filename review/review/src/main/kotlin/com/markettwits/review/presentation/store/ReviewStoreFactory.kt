@@ -39,6 +39,7 @@ class ReviewStoreFactory(
                 is ReviewStore.Intent.Launch -> launch()
                 is ReviewStore.Intent.OnClickItem -> publish(ReviewStore.Label.OnClickItem(intent.item))
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
+                is ReviewStore.Intent.OnClickSearch -> publish(ReviewStore.Label.OnClickSearch)
             }
         }
 

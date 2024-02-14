@@ -10,6 +10,7 @@ import com.markettwits.starts_common.domain.StartsListItem
 interface ReviewStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
+        data object OnClickSearch : Intent
         data class OnClickItem(val item : Int) : Intent
         data class OnClickMenu(val item : Int) : Intent
         data object Launch : Intent
@@ -24,6 +25,7 @@ interface ReviewStore : Store<Intent, State, Label> {
     )
 
     sealed interface Label {
+        data object OnClickSearch : Label
         data class OnClickItem(val item : Int) : Label
         data class OnClickMenu(val item : Int) : Label
     }

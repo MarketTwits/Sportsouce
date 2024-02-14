@@ -18,11 +18,11 @@ data class StartFilterUi(
     @Serializable
     sealed interface FilterStartType {
         @Serializable
-        object Calendar : FilterStartType
+        data object Calendar : FilterStartType
         @Serializable
-        object DropDown : FilterStartType
+        data object DropDown : FilterStartType
         @Serializable
-        object Dialog : FilterStartType
+        data object Dialog : FilterStartType
     }
 
 }

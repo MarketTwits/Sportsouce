@@ -15,7 +15,7 @@ class StartsInstanceKeeper(
 
     init {
         scope.launch {
-            dataSource.starts()
+            dataSource.starts(false)
         }
         dataSource.starts.subscribe {
             starts.value = it
@@ -25,8 +25,12 @@ class StartsInstanceKeeper(
     fun retry() {
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
-            starts.value = StartsUiState.Loading
-            dataSource.starts()
+            if (starts.value is StartsUiState.Success) {
+                dataSource.starts(true)
+            } else {
+                starts.value = StartsUiState.Loading
+                dataSource.starts(true)
+            }
         }
     }
 }

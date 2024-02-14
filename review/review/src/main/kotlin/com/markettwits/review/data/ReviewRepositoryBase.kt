@@ -1,10 +1,10 @@
 package com.markettwits.review.data
 
-import com.markettwits.cahce.domain.execute.ExecuteWithCache
+import com.markettwits.cahce.domain.execute.base.ExecuteWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.review.data.cache.ReviewCache
-import com.markettwits.starts_common.data.StartsCloudToListMapper
-import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.review.data.mapper.ReviewMapper
+import com.markettwits.review.domain.Review
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -18,15 +18,16 @@ import kotlinx.coroutines.withContext
 class ReviewRepositoryBase(
     private val service: SportsouceApi,
     private val cache: ReviewCache,
-    private val mapper: StartsCloudToListMapper,
+    private val reviewMapper: ReviewMapper,
     private val executor: ExecuteWithCache,
 ) : ReviewRepository {
     private val scope = CoroutineScope(Dispatchers.Main)
-    override suspend fun launch(): Flow<Result<List<List<StartsListItem>>>> = channelFlow {
+    override suspend fun launch(forced: Boolean): Flow<Result<Review>> = channelFlow {
         runCatching {
-            executor.executeListWithCache(
-                cache,
-                ::launchs,
+            executor.executeWithCache(
+                forced = forced,
+                cache = cache,
+                launch = ::launchs,
                 callback = {
                     scope.launch { send(Result.success(it)) }
                 },
@@ -37,16 +38,15 @@ class ReviewRepositoryBase(
         awaitClose()
     }
 
-    private suspend fun launchs(): List<List<StartsListItem>> {
-        val (actual, archive) = coroutineScope {
+    private suspend fun launchs(): Review {
+        val (actual, archive, news) = coroutineScope {
             withContext(Dispatchers.IO) {
                 val deferredActual = async { service.fetchActualStarts() }
                 val deferredPaste = async { service.fetchPasteStarts() }
-                Pair(deferredActual.await(), deferredPaste.await())
+                val deferredNews = async { service.news() }
+                Triple(deferredActual.await(), deferredPaste.await(), deferredNews.await())
             }
         }
-        val actualList = mapper.mapSingle(actual.rows)
-        val archiveList = mapper.mapSingle(archive.rows)
-        return listOf(actualList, archiveList)
+        return reviewMapper.map(actual, archive, news)
     }
 }

@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.review.data.ReviewRepository
-import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.review.domain.Review
 import kotlinx.coroutines.launch
 
 class ReviewStoreFactory(
@@ -26,9 +26,7 @@ class ReviewStoreFactory(
 
     private sealed interface Msg {
         data object Loading : Msg
-        data class InfoLoaded(val archive: List<StartsListItem>, val actual: List<StartsListItem>) :
-            Msg
-
+        data class InfoLoaded(val review: Review) : Msg
         data class InfoFailed(val message: String) : Msg
     }
 
@@ -36,26 +34,27 @@ class ReviewStoreFactory(
         CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>() {
         override fun executeIntent(intent: ReviewStore.Intent, getState: () -> ReviewStore.State) {
             when (intent) {
-                is ReviewStore.Intent.Launch -> launch()
+                is ReviewStore.Intent.Launch -> launch(intent.forced)
                 is ReviewStore.Intent.OnClickItem -> publish(ReviewStore.Label.OnClickItem(intent.item))
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
+                is ReviewStore.Intent.OnClickNews -> publish(ReviewStore.Label.OnClickNews(intent.news))
                 is ReviewStore.Intent.OnClickSearch -> publish(ReviewStore.Label.OnClickSearch)
             }
         }
 
         override fun executeAction(action: Unit, getState: () -> ReviewStore.State) {
-            launch()
+            launch(false)
         }
 
-        private fun launch() {
+        private fun launch(forced: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
-                repository.launch().collect { result ->
+                repository.launch(forced).collect { result ->
                     result.onFailure {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
                     result.onSuccess {
-                        dispatch(Msg.InfoLoaded(archive = it[1], actual = it[0]))
+                        dispatch(Msg.InfoLoaded(it))
                     }
                 }
             }
@@ -65,11 +64,17 @@ class ReviewStoreFactory(
     private object ReducerImpl : Reducer<ReviewStore.State, Msg> {
         override fun ReviewStore.State.reduce(message: Msg): ReviewStore.State =
             when (message) {
-                is Msg.InfoFailed -> ReviewStore.State(isError = true, message = message.message)
-                is Msg.Loading -> ReviewStore.State(isLoading = true)
-                is Msg.InfoLoaded -> ReviewStore.State(
-                    archiveStarts = message.archive,
-                    actualStarts = message.actual
+                is Msg.InfoFailed -> copy(
+                    isError = true,
+                    isLoading = false,
+                    message = message.message
+                )
+
+                is Msg.Loading -> copy(isLoading = true, isError = false)
+                is Msg.InfoLoaded -> copy(
+                    isLoading = false,
+                    isError = false,
+                    review = message.review
                 )
             }
     }

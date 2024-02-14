@@ -161,7 +161,7 @@ internal class StartFilerStoreFactory(
                         label = "Актуальность",
                         type = StartFilterUi.FilterStartType.DropDown,
                         list = startFilter.startStatus.map { it.title }
-                    ),
+                    )
                 )
             )
         }

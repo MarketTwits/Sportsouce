@@ -19,7 +19,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootReviewComponent.Child.Review -> ReviewScreen(component = child.component, newsComponent = child.newsComponent)
+            is RootReviewComponent.Child.Review -> ReviewScreen(component = child.component)
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
             is RootReviewComponent.Child.Filter -> RootStartFilterScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)

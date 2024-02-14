@@ -62,7 +62,10 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                         navigation.push(handleMenu(it))
                     },
                     onClickSearch = {
-
+                        navigation.push(RootReviewComponent.Config.Search)
+                    },
+                    onClickNews = {
+                        navigation.push(RootReviewComponent.Config.NewsEvent(it))
                     }
                 ),
                 newsComponent = NewsComponentBase(

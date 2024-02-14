@@ -1,7 +1,7 @@
 package com.markettwits.starts.starts.data
 
 import com.arkivanov.decompose.value.MutableValue
-import com.markettwits.cahce.domain.execute.ExecuteWithCache
+import com.markettwits.cahce.domain.execute.list.ExecuteListWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.starts.starts.presentation.component.StartsUiState
@@ -14,13 +14,14 @@ import kotlinx.coroutines.withContext
 class StartsRepositoryBase(
     private val service: SportsouceApi,
     private val cache: StartsMainCache,
-    private val execute: ExecuteWithCache,
+    private val execute: ExecuteListWithCache,
     private val mapper: StartsCloudToUiMapper,
 ) : StartsRepository {
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
-    override suspend fun starts() {
+    override suspend fun starts(forced: Boolean) {
         runCatching {
             execute.executeListWithCache(
+                forced = forced,
                 cache = cache,
                 launch = ::launch,
                 callback = {

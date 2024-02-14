@@ -1,15 +1,10 @@
-package com.markettwits.cahce.domain.execute
+package com.markettwits.cahce.domain.execute.base
 
 import com.markettwits.cahce.domain.Cache
 
 interface ExecuteWithCache {
-    suspend fun <T> executeListWithCache(
-        cache: Cache<List<T>>,
-        launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
-    )
-
     suspend fun <T> executeWithCache(
+        forced: Boolean = false,
         cache: Cache<T>,
         launch: suspend () -> T,
         callback: (T) -> Unit

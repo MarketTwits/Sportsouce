@@ -1,9 +1,9 @@
 package com.markettwits.review.data
 
-import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.review.domain.Review
 import kotlinx.coroutines.flow.Flow
 
 
 interface ReviewRepository {
-    suspend fun launch(): Flow<Result<List<List<StartsListItem>>>>
+    suspend fun launch(forced: Boolean = false): Flow<Result<Review>>
 }

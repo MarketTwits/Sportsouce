@@ -1,7 +1,7 @@
 package com.markettwits.starts.starts.di
 
-import com.markettwits.cahce.domain.execute.ExecuteWithCache
-import com.markettwits.cahce.domain.execute.ExecuteWithCacheBase
+import com.markettwits.cahce.domain.execute.list.ExecuteListWithCache
+import com.markettwits.cahce.domain.execute.list.ExecuteListWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.starts.starts.data.StartsCloudToUiMapper
@@ -16,7 +16,7 @@ import org.koin.dsl.module
 internal val startsModule = module {
     includes(sportSouceNetworkModule)
     singleOf(::StartsRepositoryBase) bind StartsRepository::class
-    singleOf(::ExecuteWithCacheBase) bind ExecuteWithCache::class
+    singleOf(::ExecuteListWithCacheBase) bind ExecuteListWithCache::class
     singleOf(::StartsMainCache)
     single<StartsCloudToUiMapper> {
         StartsCloudToUiMapper.Base(

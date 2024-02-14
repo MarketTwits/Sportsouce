@@ -1,6 +1,7 @@
 package com.markettwits.review.presentation.components.actual
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.R
+import com.markettwits.core_ui.components.Shapes
+import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
@@ -36,7 +39,7 @@ fun StartCardSimple(
     onItemClick: (Int) -> Unit
 ) {
     Column(modifier = modifier.padding(10.dp)) {
-        ImageCard(modifier = modifier, start.name,start.image, start.date){
+        ImageCard(modifier = modifier, start.name, start.image, start.date) {
             onItemClick(start.id)
         }
     }
@@ -46,44 +49,49 @@ fun StartCardSimple(
 @Composable
 private fun ImageCard(
     modifier: Modifier = Modifier,
-    name : String,
+    name: String,
     image: String,
     date: String,
-    onCLick : () -> Unit,
+    onCLick: () -> Unit,
 ) {
     Column(modifier = modifier.size(width = 115.dp, height = 190.dp)) {
         Box(
             modifier = modifier
                 .size(width = 115.dp, height = 150.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(Shapes.medium)
+                .border(1.dp, Color.LightGray.copy(alpha = 0.5f), Shapes.medium)
                 .clickable { onCLick() }
-
         ) {
-            SubcomposeAsyncImage(
-                model = image,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-                error = {
-                    SubcomposeAsyncImageContent(
-                        modifier = modifier,
-                        painter = painterResource(id = R.drawable.default_start_image)
-                    )
-                },
-                success = {
-                    SubcomposeAsyncImageContent(modifier = modifier)
-                }
-            )
-            Column(modifier = modifier.align(Alignment.BottomCenter)) {
-                ImageCardInfoStroke(
-                    modifier = modifier.clip(
-                        RoundedCornerShape(
-                            bottomStart = 10.dp,
-                            bottomEnd = 10.dp
+            Box(modifier = modifier.fillMaxSize()) {
+                SubcomposeAsyncImage(
+                    model = imageRequestCrossfade(model = image),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center),
+                    error = {
+                        SubcomposeAsyncImageContent(
+                            modifier = modifier,
+                            painter = painterResource(id = R.drawable.default_start_image)
                         )
-                    ), date
+                    },
+                    success = {
+                        SubcomposeAsyncImageContent(modifier = modifier)
+                    }
                 )
+                Column(modifier = modifier.align(Alignment.BottomCenter)) {
+                    ImageCardInfoStroke(
+                        modifier = modifier.clip(
+                            RoundedCornerShape(
+                                bottomStart = 10.dp,
+                                bottomEnd = 10.dp
+                            )
+                        ), date
+                    )
+                }
             }
+
         }
         Text(
             text = name,

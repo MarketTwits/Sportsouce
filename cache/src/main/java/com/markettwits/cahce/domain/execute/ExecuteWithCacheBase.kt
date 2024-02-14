@@ -6,7 +6,7 @@ class ExecuteWithCacheBase : ExecuteWithCache {
     override suspend fun <T> executeListWithCache(
         cache: Cache<List<T>>,
         launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
+        callback: (List<T>) -> Unit,
     ) {
         val cachedData = cache.get()
         val newData = if (cachedData.isNullOrEmpty()) {
@@ -17,35 +17,39 @@ class ExecuteWithCacheBase : ExecuteWithCache {
             cachedData
         }
         callback(newData)
-        val latestData = launch()
-        if (latestData != cachedData) {
-            cache.set(value = latestData)
-            callback(latestData)
+        val latestData = runCatching {
+            launch()
+        }
+        latestData.onSuccess {
+            if (it != cachedData) {
+                cache.set(value = it)
+                callback(it)
+            }
         }
     }
 
-    override suspend fun <T> executeListWithCacheApply(
-        cache: Cache<List<T>>,
-        launch: suspend () -> List<T>,
-    ): List<T> {
+    override suspend fun <T> executeWithCache(
+        cache: Cache<T>,
+        launch: suspend () -> T,
+        callback: (T) -> Unit
+    ) {
         val cachedData = cache.get()
-        val newData = if (cachedData.isNullOrEmpty()) {
+        val newData = if (cachedData == null) {
             val data = launch()
             cache.set(value = data)
             data
         } else {
             cachedData
         }
-        return newData
-    }
-
-    override suspend fun <T> executeAfterApply(
-        cache: Cache<List<T>>,
-        launch: suspend () -> List<T>,
-    ) {
-        val latestData = launch()
-        if (latestData != cache.get()) {
-            cache.set(value = latestData)
+        callback(newData)
+        val latestData = runCatching {
+            launch()
+        }
+        latestData.onSuccess {
+            if (it != cachedData) {
+                cache.set(value = it)
+                callback(it)
+            }
         }
     }
 }

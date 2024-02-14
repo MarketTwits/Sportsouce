@@ -27,9 +27,10 @@ class ReviewRepositoryBase(
             executor.executeListWithCache(
                 cache,
                 ::launchs,
-            ) {
-                scope.launch { send(Result.success(it)) }
-            }
+                callback = {
+                    scope.launch { send(Result.success(it)) }
+                },
+            )
         }.onFailure {
             scope.launch { send(Result.failure(it)) }
         }

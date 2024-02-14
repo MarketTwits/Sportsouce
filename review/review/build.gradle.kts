@@ -8,6 +8,7 @@ android {
 dependencies {
     compileOnly(libs.kstore)
     compileOnly(libs.kstore.file)
+    implementation(projects.startSearch)
     implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.news)

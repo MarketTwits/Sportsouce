@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.news_event.NewsEventScreen
-import com.markettwits.news_list.presentation.NewsScreen
 import com.markettwits.popular.presentation.PopularStartsScreen
 import com.markettwits.random.root.presentation.RootRandomStartScreen
 import com.markettwits.review.presentation.ReviewScreen
 import com.markettwits.schedule.root.RootStartsScheduleScreen
 import com.markettwits.start.root.RootStartScreen
 import com.markettwits.start_filter.root.RootStartFilterScreen
+import com.markettwits.start_search.root.RootStartsSearchScreen
 
 @Composable
 fun RootReviewScreen(component: RootReviewComponent) {
@@ -26,6 +26,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
             is RootReviewComponent.Child.Popular -> PopularStartsScreen(component = child.component)
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
+            is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
         }
     }
 }

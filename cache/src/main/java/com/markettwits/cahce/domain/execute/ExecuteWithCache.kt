@@ -9,13 +9,9 @@ interface ExecuteWithCache {
         callback: (List<T>) -> Unit
     )
 
-    suspend fun <T> executeListWithCacheApply(
-        cache: Cache<List<T>>,
-        launch: suspend () -> List<T>
-    ): List<T>
-
-    suspend fun <T> executeAfterApply(
-        cache: Cache<List<T>>,
-        launch: suspend () -> List<T>,
+    suspend fun <T> executeWithCache(
+        cache: Cache<T>,
+        launch: suspend () -> T,
+        callback: (T) -> Unit
     )
 }

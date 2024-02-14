@@ -10,16 +10,11 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.di.ComponentKoinContext
 import com.markettwits.di.newsModule
 import com.markettwits.news_event.NewsEventComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory
-import com.markettwits.news_list.data.NewsDataSource
-import com.markettwits.news_list.data.NewsDataSourceBase
-import com.markettwits.news_list.data.NewsRemoteToDomainMapper
 import com.markettwits.news_list.presentation.NewsComponentBase
-import com.markettwits.news_list.presentation.store.NewsStoreFactory
 import com.markettwits.popular.presentation.PopularStartsComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
@@ -28,6 +23,7 @@ import com.markettwits.root.di.rootModule
 import com.markettwits.schedule.root.RootStartsScheduleComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.root.RootStartFilterComponentBase
+import com.markettwits.start_search.root.RootStartsSearchComponentBase
 
 
 class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
@@ -64,6 +60,9 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     },
                     onClickMenu = {
                         navigation.push(handleMenu(it))
+                    },
+                    onClickSearch = {
+
                     }
                 ),
                 newsComponent = NewsComponentBase(
@@ -117,6 +116,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     context = componentContext,
                     item = config.news,
                     storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
+                    pop = navigation::pop
+                )
+            )
+
+            is RootReviewComponent.Config.Search -> RootReviewComponent.Child.Search(
+                RootStartsSearchComponentBase(
+                    context = componentContext,
                     pop = navigation::pop
                 )
             )

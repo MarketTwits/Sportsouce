@@ -3,7 +3,7 @@ package com.markettwits.cahce.domain.execute.base
 import com.markettwits.cahce.domain.Cache
 
 abstract class ExecuteWithCacheAbstract : ExecuteWithCache {
-    protected suspend fun <T> executeWithOutCacheWithForced(
+    protected suspend fun <T> executeWithCacheWithoutForced(
         cache: Cache<T>,
         launch: suspend () -> T,
         callback: (T) -> Unit
@@ -33,11 +33,20 @@ abstract class ExecuteWithCacheAbstract : ExecuteWithCache {
         launch: suspend () -> T,
         callback: (T) -> Unit
     ) {
-        launch().also {
-            if (it != cache.get()) {
-                cache.set(value = it)
-            }
-            callback(it)
-        }
+        runCatching { launch() }
+            .fold(onSuccess = {
+                if (it != cache.get()) {
+                    cache.set(value = it)
+                    callback(it)
+                }
+                callback(it)
+            }, onFailure = {
+                val local = cache.get()
+                if (local == null) {
+                    throw it
+                } else {
+                    callback(local)
+                }
+            })
     }
 }

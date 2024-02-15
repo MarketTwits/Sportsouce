@@ -8,13 +8,21 @@ abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
         launch: suspend () -> List<T>,
         callback: (List<T>) -> Unit
     ) {
-        launch().also {
-            if (it != cache.get()) {
-                cache.set(value = it)
+        runCatching { launch() }
+            .fold(onSuccess = {
+                if (it != cache.get()) {
+                    cache.set(value = it)
+                    callback(it)
+                }
                 callback(it)
-            }
-            callback(it)
-        }
+            }, onFailure = {
+                val local = cache.get()
+                if (local.isNullOrEmpty()) {
+                    throw it
+                } else {
+                    callback(local)
+                }
+            })
     }
 
     protected suspend fun <T> executeListWithCacheWithoutForced(

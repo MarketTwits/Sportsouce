@@ -1,7 +1,6 @@
 package com.markettwits.registrations.paymant_dialog.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,15 +22,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base.OnEvent
-import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.components.openWebPage
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore
-import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import com.markettwits.registrations.registrations.presentation.components.RegistrationsCardImageCard
 
 
@@ -40,7 +36,7 @@ fun RegistrationsPaymentCard(
     state: RegistrationsPaymentStore.State,
     onClickPayment: (Int) -> Unit
 ) {
-    LazyColumn() {
+    LazyColumn {
         items(state.items.paymentList) {
             Box(
                 modifier = Modifier

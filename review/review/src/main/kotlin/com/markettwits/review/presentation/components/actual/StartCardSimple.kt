@@ -43,7 +43,6 @@ fun StartCardSimple(
             onItemClick(start.id)
         }
     }
-
 }
 
 @Composable

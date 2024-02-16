@@ -14,6 +14,8 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.component.CommentUiState
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -76,10 +78,12 @@ class BaseStartDataSource(
                 token = token
             )
             CommentUiState.Success
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             when (e) {
                 is AuthException -> CommentUiState.Error(e.exception)
-                is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
+                is java.net.UnknownHostException -> CommentUiState.Error("Нет интернета")
+                is HttpRequestTimeoutException -> CommentUiState.Error("Неустойчевое интернет соединение")
+                is ResponseException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
                 else -> CommentUiState.Error(e.message.toString())
             }
         }
@@ -98,7 +102,7 @@ class BaseStartDataSource(
                 token = token
             )
             CommentUiState.Success
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             when (e) {
                 is AuthException -> CommentUiState.Error(e.exception)
                 is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)

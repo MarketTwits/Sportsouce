@@ -13,12 +13,12 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
-import com.markettwits.profile.di.rootProfileModule
-import com.markettwits.profile.presentation.component.authorized.AuthorizedProfile
-import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileComponent
-import com.markettwits.profile.presentation.component.authorized.AuthorizedProfileEvent
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.profile.di.rootProfileModule
+import com.markettwits.profile.presentation.component.authorized.profile.AuthorizedProfile
+import com.markettwits.profile.presentation.component.authorized.profile.AuthorizedProfileComponent
+import com.markettwits.profile.presentation.component.authorized.profile.AuthorizedProfileEvent
+import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
 import com.markettwits.profile.presentation.component.my_members.MyMembersComponent
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent

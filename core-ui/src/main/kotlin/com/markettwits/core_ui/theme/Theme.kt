@@ -1,45 +1,19 @@
 package com.markettwits.core_ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-//private val DarkColorScheme = darkColorScheme(
-//    primary = Color.Black,
-//    secondary = DarkGrey,
-//    surfaceTint = Color.White,
-//    tertiary = Color.Black,
-//    primaryContainer = Color.DarkGray,
-//    surface = Color.Black,
-//    inversePrimary = Color.White,
-//    onPrimary = DirtyWhite,
-//    onSecondary = Color.Black,
-//    onTertiary = Color.Black,
-//    onBackground = Color.White,
-//    background = Color.Black,
-//)
 
-private val LightColorScheme = lightColorScheme(
-    primary = Color.White,
-    secondary = SportSouceColor.DirtyWhite,
-    surfaceTint = SportSouceColor.DirtyWhite,
-    tertiary = SportSouceColor.SportSouceBlue,
-    background = Color.White,
-)
 
 @Composable
 fun SportSouceTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val systemUiController = rememberSystemUiController()
@@ -52,11 +26,7 @@ fun SportSouceTheme(
         )
     }
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-     //   darkTheme -> DarkColorScheme
+        darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 
@@ -67,3 +37,29 @@ fun SportSouceTheme(
     )
 }
 
+private val LightColorScheme = lightColorScheme(
+    primary = Color.White,
+    secondary = Color.White,
+    secondaryContainer = SportSouceColor.DirtyWhite,
+    onSecondaryContainer = SportSouceColor.VeryLighBlue,
+    surfaceTint = SportSouceColor.DirtyWhite,
+    tertiary = SportSouceColor.SportSouceBlue,
+    background = SportSouceColor.DirtyWhite,
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = Color.Black,
+    secondary = SportSouceColor.DarkSecondary,
+    secondaryContainer = Color.Black,
+    onSecondaryContainer = SportSouceColor.DarkSecondaryContainer,
+    tertiary = Color.White,
+    surfaceTint = Color.White,
+    primaryContainer = Color.DarkGray,
+    surface = Color.Black,
+    inversePrimary = Color.White,
+    onPrimary = SportSouceColor.DirtyWhite,
+    onSecondary = Color.Black,
+    onTertiary = Color.Black,
+    onBackground = Color.White,
+    background = Color.Black,
+)

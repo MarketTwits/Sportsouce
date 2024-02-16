@@ -71,6 +71,5 @@ fun FullImageContent(modifier: Modifier = Modifier, imageUrl: String) {
                 }
             )
         }
-
     }
 }

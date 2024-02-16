@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.SharedFlow
 
 
 interface EditProfileComponent {
-   // val page : Value<List<EditProfileUiPage>>
     val state : Value<EditProfileUiState>
     val events: SharedFlow<EditProfileEvent>
     fun launch()

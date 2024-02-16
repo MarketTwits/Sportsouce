@@ -53,6 +53,8 @@ ktor = "2.2.4"
 #UI
 appcompat = "1.6.1"
 material = "1.9.0"
+lottie = "6.3.0"
+
 
 #Database
 realm = "1.11.0"
@@ -147,6 +149,7 @@ koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "
 #UI
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}

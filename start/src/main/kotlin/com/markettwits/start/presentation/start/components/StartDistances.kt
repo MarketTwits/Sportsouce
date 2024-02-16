@@ -94,7 +94,6 @@ fun StartDistances(
                                         onClick(it, paymentDisabled, paymentType)
                                     })
                             }
-
                             is DistanceItem.DistanceInfo -> {
                                 DistanceItemBase(
                                     item = it,
@@ -173,28 +172,33 @@ fun DistanceItemBase(
                 )
             }
             val enabled = (item.distance.slots.toInt()) > 0
-            if (enabled) {
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = SportSouceColor.SportSouceLighBlue,
-                    ),
-                    onClick = { onClick() },
-                ) {
-                    Text("Зарегистрироваться")
-                }
-            } else {
-                Button(
-                    enabled = false,
-                    colors = ButtonDefaults.buttonColors(
-                        disabledContainerColor = SportSouceColor.VeryLighBlue,
-                    ),
-                    onClick = { onClick() },
-                ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+            ) {
+                if (enabled) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SportSouceColor.SportSouceLighBlue,
+                        ),
+                        onClick = { onClick() },
+                    ) {
+                        Text("Зарегистрироваться")
+                    }
+                } else {
+                    Button(
+                        enabled = false,
+                        colors = ButtonDefaults.buttonColors(
+                            disabledContainerColor = SportSouceColor.VeryLighBlue,
+                        ),
+                        onClick = { onClick() },
+                    ) {
 
-                    Text("Слоты закончились")
+                        Text("Слоты закончились")
+                    }
                 }
             }
-
         }
     }
 }
@@ -260,11 +264,12 @@ fun DistanceItemCombo(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
             ) {
                 Button(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = SportSouceColor.SportSouceLighBlue,
                     ),

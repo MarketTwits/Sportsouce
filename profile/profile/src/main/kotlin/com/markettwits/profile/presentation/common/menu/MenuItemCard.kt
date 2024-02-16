@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,11 +28,9 @@ fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem, onCLick : (Strin
                     text = item.title,
                     color = Color.Gray,
                     fontFamily = FontNunito.medium,
-                  //  modifier = Modifier.padding(10.dp)
                 )
             }
         }
-
         is MenuItem.Header -> {
             Row(
                 modifier = Modifier
@@ -45,7 +42,6 @@ fun MenuItemCard(modifier: Modifier = Modifier, item: MenuItem, onCLick : (Strin
                     text = item.title,
                     color = SportSouceColor.SportSouceBlue,
                     fontFamily = FontNunito.bold,
-                  //  modifier = Modifier.padding(10.dp)
                 )
             }
         }

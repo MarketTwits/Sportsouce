@@ -17,3 +17,4 @@ sealed class CommentMode{
     class Reply(val replier : String, val messageId : Int) : CommentMode()
     data object Base : CommentMode()
 }
+

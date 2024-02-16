@@ -17,6 +17,5 @@ class MainActivity : ComponentActivity() {
         setContent {
             RootContent(component = root)
         }
-
     }
 }

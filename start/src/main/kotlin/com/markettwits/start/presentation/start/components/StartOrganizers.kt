@@ -32,8 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.model.start.Organizer
+import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.components.openWebPage
 import com.markettwits.core_ui.image.icons.IconTelegram
 import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.FontNunito

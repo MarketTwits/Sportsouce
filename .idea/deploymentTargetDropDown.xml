@@ -2,16 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="StartOrderScreenPreview">
+      <entry key="NewAuthorizedProfileScreenPreview">
+        <State />
+      </entry>
+      <entry key="NewUnAuthorizedProfileScreenPreview">
+        <State />
+      </entry>
+      <entry key="ProfileSocialNetworkScreenPreview">
         <State />
       </entry>
       <entry key="StartsSearchBarPreview">
-        <State />
-      </entry>
-      <entry key="StartsSearchScreenPreview">
-        <State />
-      </entry>
-      <entry key="StartsSearchScreenPreview (1)">
         <State />
       </entry>
       <entry key="StartsSearchScreenPreview (2)">

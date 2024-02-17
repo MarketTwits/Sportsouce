@@ -1,14 +1,14 @@
 package com.markettwits.edit_profile.edit_profile.data
 
-import com.markettwits.profile.data.AuthDataSource
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
+import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import com.markettwits.cloud.api.SportsouceApi
 
 class EditProfileDataStoreBase(
     private val mapper: RemoteUserToEditProfileMapper,
@@ -44,5 +44,6 @@ class EditProfileDataStoreBase(
         }
 
     }
+
 
 }

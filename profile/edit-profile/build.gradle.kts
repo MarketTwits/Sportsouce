@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":auth"))
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
+    implementation(projects.profile.changePassword)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.kotlinx.datetime)

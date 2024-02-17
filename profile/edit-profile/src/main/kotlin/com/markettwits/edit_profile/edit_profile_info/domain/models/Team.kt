@@ -1,0 +1,6 @@
+package com.markettwits.edit_profile.edit_profile_info.domain.models
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Team(val id: Int, val name: String)

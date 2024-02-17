@@ -14,6 +14,8 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.edit_profile.root.RootEditProfileComponent
+import com.markettwits.edit_profile.root.RootEditProfileComponentBase
 import com.markettwits.profile.di.rootProfileModule
 import com.markettwits.profile.presentation.component.authorized.profile.AuthorizedProfile
 import com.markettwits.profile.presentation.component.authorized.profile.AuthorizedProfileComponent
@@ -125,6 +127,13 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     profile = { navigation.replaceAll(Config.AuthProfile) }
                 )
             )
+
+            Config.EditProfileMenu -> Child.EditProfileMenu(
+                RootEditProfileComponentBase(
+                    componentContext = componentContext,
+                    pop = navigation::pop
+                )
+            )
         }
 
 
@@ -135,7 +144,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     private fun handleAuthorizedProfileEvent(event: AuthorizedProfileEvent) {
         when (event) {
             is AuthorizedProfileEvent.SignOut -> navigation.replaceAll(Config.UnAuthProfile)
-            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfile(event.user.id))
+            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfileMenu)
             is AuthorizedProfileEvent.MyRegistries -> navigation.push(Config.MyRegistries)
             is AuthorizedProfileEvent.ChangePasswordProfile -> navigation.push(Config.ChangePassword)
             is AuthorizedProfileEvent.MyMembers -> navigation.push(Config.MyMembers)
@@ -144,6 +153,8 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
     @Serializable
     sealed class Config {
+        @Serializable
+        data object EditProfileMenu : Config()
 
         @Serializable
         data class EditProfile(val userId: Int) :
@@ -189,5 +200,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             Child()
 
         data class SignUp(val component: SignUpComponent) : Child()
+        data class EditProfileMenu(val component: RootEditProfileComponent) : Child()
     }
 }

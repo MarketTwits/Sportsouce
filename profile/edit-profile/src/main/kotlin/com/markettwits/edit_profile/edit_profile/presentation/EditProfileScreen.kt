@@ -1,7 +1,6 @@
 package com.markettwits.edit_profile.edit_profile.presentation
 
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,18 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.base.OnEvent
-import com.markettwits.core_ui.components.TopBarBase
+import com.markettwits.core_ui.components.top_bar.TopBarBase
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.edit_profile.edit_profile.presentation.components.UserDataPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileEvent
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 import com.markettwits.profile.presentation.component.edit_profile.presentation.MockEditProfileScreen
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.MyInfoPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.MySocialNetworkPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.SaveChangesButton
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.TabBar
-import com.markettwits.edit_profile.edit_profile.presentation.components.UserDataPage
 import kotlinx.coroutines.launch
 
 @Composable

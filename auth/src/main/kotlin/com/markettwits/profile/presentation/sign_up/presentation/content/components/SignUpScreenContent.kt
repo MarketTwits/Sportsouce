@@ -1,12 +1,10 @@
 package com.markettwits.profile.presentation.sign_up.presentation.content.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -25,8 +23,6 @@ import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.presentation.component.AuthButton
 import com.markettwits.profile.presentation.component.WelcomeContent
-import com.markettwits.profile.presentation.sign_in.ForgotPasswordText
-import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
 import com.markettwits.profile.presentation.sign_up.presentation.store.SignUpStore
 
@@ -56,7 +52,7 @@ fun SignUpScreenContent(
                 )
             }
         },
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
         Column(
             modifier = modifier

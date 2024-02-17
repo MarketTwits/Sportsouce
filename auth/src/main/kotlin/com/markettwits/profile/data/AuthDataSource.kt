@@ -12,5 +12,7 @@ interface AuthDataSource {
     suspend fun auth() : User
     suspend fun show() : String
     suspend fun clear()
+
+    @Deprecated("use update token with validation")
     suspend fun currentToken() : String
 }

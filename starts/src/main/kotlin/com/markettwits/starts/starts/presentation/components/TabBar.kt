@@ -77,7 +77,9 @@ fun TabBar(content: @Composable (Int) -> Unit) {
                 },
                 onClick = {
                     scope.launch {
-                        pagerState.animateScrollToPage(index)
+                        pagerState.animateScrollToPage(
+                            page = index,
+                        )
                     }
                 })
         }

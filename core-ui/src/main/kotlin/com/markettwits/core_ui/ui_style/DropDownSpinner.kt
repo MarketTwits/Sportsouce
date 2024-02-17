@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,15 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
 fun <E> DropDownSpinner(
     modifier: Modifier = Modifier,
     defaultText: String = "Select...",
-    label : String = "Label",
     selectedItem: E,
     onItemSelected: (Int, E) -> Unit,
     itemList: List<E>?,
@@ -40,8 +38,7 @@ fun <E> DropDownSpinner(
 
     Box(
         modifier
-            .fillMaxWidth()
-            .background(Color.White),
+            .fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {
         if (selectedItem == null || selectedItem.toString().isEmpty()) {
@@ -50,14 +47,14 @@ fun <E> DropDownSpinner(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 3.dp),
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.primary
             )
         }
         textFiled()
         DropdownMenu(
             modifier = Modifier
                 .fillMaxWidth(.85f)
-                .background(Color.White),
+                .background(MaterialTheme.colorScheme.onSecondaryContainer),
             expanded = isOpen,
             onDismissRequest = {
                 isOpen = false
@@ -66,7 +63,7 @@ fun <E> DropDownSpinner(
             itemList?.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     colors = MenuDefaults.itemColors(
-                        textColor = SportSouceColor.SportSouceBlue,
+                        textColor = MaterialTheme.colorScheme.tertiary,
                     ),
                     text = {
                         Text(item.toString())
@@ -81,9 +78,9 @@ fun <E> DropDownSpinner(
         androidx.compose.material3.Icon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .padding(end = 8.dp)
+                .padding(end = 10.dp)
                 .size(24.dp),
-            tint = SportSouceColor.SportSouceBlue,
+            tint = MaterialTheme.colorScheme.tertiary,
             imageVector = if (!isOpen) Icons.Default.ArrowDropDown else Icons.Default.ArrowDropUp,
             contentDescription = null
         )

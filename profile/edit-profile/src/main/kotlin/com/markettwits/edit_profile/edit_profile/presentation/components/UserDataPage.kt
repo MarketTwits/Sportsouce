@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.AutoComplete
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.mapToString
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState

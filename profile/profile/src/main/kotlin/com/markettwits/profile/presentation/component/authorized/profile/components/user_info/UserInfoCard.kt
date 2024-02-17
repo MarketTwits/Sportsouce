@@ -20,9 +20,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.profile.presentation.component.authorized.profile.components.social_network.UserSocialNetwork
 
 @Composable
-fun UserInfoCard(modifier: Modifier = Modifier) {
+fun UserInfoCard(modifier: Modifier = Modifier, onClickEdit: () -> Unit) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = Shapes.medium,
@@ -67,7 +68,7 @@ fun UserInfoCard(modifier: Modifier = Modifier) {
             shape = Shapes.large,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
             onClick = {
-
+                onClickEdit()
             }) {
             Text(
                 modifier = Modifier

@@ -7,7 +7,7 @@ import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.edit_profile.edit_profile.models.CityUi
 import com.markettwits.edit_profile.edit_profile.models.TeamUi
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 import java.text.SimpleDateFormat
 import java.time.LocalDate

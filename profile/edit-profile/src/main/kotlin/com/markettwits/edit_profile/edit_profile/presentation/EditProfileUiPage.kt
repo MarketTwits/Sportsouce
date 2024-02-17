@@ -1,4 +1,4 @@
-package com.markettwits.profile.presentation.component.edit_profile.presentation
+package com.markettwits.edit_profile.edit_profile.presentation
 
 import com.markettwits.edit_profile.edit_profile.models.CityUi
 import com.markettwits.edit_profile.edit_profile.models.TeamUi

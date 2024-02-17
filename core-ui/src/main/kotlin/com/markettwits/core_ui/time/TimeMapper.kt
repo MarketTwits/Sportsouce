@@ -45,6 +45,5 @@ interface TimePattern {
 
     object Remote : TimePattern {
         override fun map() = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-
     }
 }

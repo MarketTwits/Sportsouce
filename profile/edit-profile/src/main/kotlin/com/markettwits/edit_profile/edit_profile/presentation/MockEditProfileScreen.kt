@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 

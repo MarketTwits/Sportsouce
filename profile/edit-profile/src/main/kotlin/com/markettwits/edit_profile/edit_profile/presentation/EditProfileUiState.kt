@@ -1,5 +1,6 @@
 package com.markettwits.profile.presentation.component.edit_profile.presentation
 
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import kotlinx.serialization.Serializable
 
 @Serializable

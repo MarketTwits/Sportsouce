@@ -1,7 +1,6 @@
 package com.markettwits.edit_profile.edit_profile.data
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiPage
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 
 interface EditProfileDataStore {

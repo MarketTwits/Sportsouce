@@ -1,17 +1,16 @@
 package com.markettwits.profile.data
 
+import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
-import com.markettwits.profile.presentation.sign_in.SignInUiState
-import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
-import com.markettwits.core_ui.time.TimeMapper
+import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
 import com.markettwits.profile.data.mapper.SignUpMapper
+import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -49,7 +48,7 @@ class BaseAuthDataSource(
 
     override suspend fun auth(): User {
         return try {
-            remoteService.auth(currentToken())
+            remoteService.auth(updateToken())
         } catch (e: Exception) {
             throw e
         }
@@ -77,8 +76,6 @@ class BaseAuthDataSource(
         }
     }
 
-
-    override suspend fun show(): String = local.read()._accessToken
     override suspend fun clear() {
         local.clearAll()
     }

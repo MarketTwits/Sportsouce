@@ -107,13 +107,17 @@ fun EditProfileInfoFieldsContent(
             modifier = modifier,
             label = "Город",
             value = user.city,
-            items = cities.map { it.name },
+            items = cities
+                .sortedBy { it.name }
+                .map { it.name },
         ) { newValue -> onUserChange(user.copy(city = newValue)) }
         ItemsTextFiledDialog(
             modifier = modifier,
             label = "Команда",
             value = user.team,
-            items = teams.map { it.name },
+            items = teams
+                .sortedBy { it.name }
+                .map { it.name },
         ) { newValue -> onUserChange(user.copy(team = newValue)) }
     }
 

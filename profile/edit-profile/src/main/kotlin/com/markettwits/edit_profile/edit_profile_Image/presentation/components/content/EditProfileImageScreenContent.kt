@@ -52,7 +52,7 @@ internal fun EditProfileImageScreenContent(
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.tertiary
         )
-        Column(modifier = Modifier.padding(40.dp)) {
+        Column(modifier = Modifier.padding(20.dp)) {
             val stroke = Stroke(
                 width = 4f,
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)

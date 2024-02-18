@@ -31,7 +31,7 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
             dispatch(Message.IsLoading)
             repository.send(userData).fold(
                 onSuccess = {
-                    dispatch(Message.UpdateSuccess(it))
+                    dispatch(Message.UpdateSuccess("Данные профиля успешно обновлены"))
                 },
                 onFailure = {
                     dispatch(Message.UpdateFailed(it.message.toString()))

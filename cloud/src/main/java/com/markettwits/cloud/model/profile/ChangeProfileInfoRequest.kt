@@ -13,7 +13,7 @@ data class ChangeProfileInfoRequest(
     val instagram: String?,
     val name: String,
     val number: String,
-    val photo_id: String?,
+    val photo_id: Int?,
     val sex: String,
     val surname: String,
     val team: String?,

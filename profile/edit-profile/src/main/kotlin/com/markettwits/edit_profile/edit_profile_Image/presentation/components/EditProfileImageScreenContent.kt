@@ -3,22 +3,18 @@ package com.markettwits.edit_profile.edit_profile_Image.presentation.components
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,11 +27,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceTheme
+import com.markettwits.edit_profile.edit_profile_Image.presentation.components.content.InBoxImageContent
+import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore
+import kotlinx.coroutines.delay
 
 @Composable
-fun EditProfileImageScreenContent(dismiss: () -> Unit, onClickImageBox: () -> Unit) {
+internal fun EditProfileImageScreenContent(
+    state: EditProfileImageStore.State,
+    dismiss: () -> Unit,
+    onClickImageBox: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -58,6 +62,7 @@ fun EditProfileImageScreenContent(dismiss: () -> Unit, onClickImageBox: () -> Un
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(140.dp)
                     .drawBehind {
                         drawRoundRect(
                             color = color,
@@ -70,37 +75,36 @@ fun EditProfileImageScreenContent(dismiss: () -> Unit, onClickImageBox: () -> Un
                         onClickImageBox()
                     },
             ) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .size(40.dp),
-                        imageVector = Icons.Default.Image,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.tertiaryContainer
-                    )
-                    Text(
-                        modifier = Modifier.padding(10.dp),
-                        text = "Изображение",
-                        fontFamily = FontNunito.bold,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.tertiaryContainer
-                    )
-                }
+                if (state.isLoading)
+                    CircularProgressIndicatorBase(modifier = Modifier.align(Alignment.Center))
+                else
+                    InBoxImageContent()
             }
-            Spacer(modifier = Modifier.padding(10.dp))
+            if (state.message.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+                        .align(Alignment.Start),
+                    text = state.message,
+                    fontFamily = FontNunito.bold,
+                    fontSize = 12.sp,
+                    color = if (state.isFailed) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.tertiary
+                )
+            } else {
+                Spacer(modifier = Modifier.padding(20.dp))
+            }
             ButtonContentBase(
                 modifier = Modifier.height(35.dp),
                 title = "Отмена",
                 borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
                 onClick = { dismiss() }
             )
+        }
+    }
+    LaunchedEffect(key1 = state) {
+        if (state.isSuccess) {
+            delay(800)
+            dismiss()
         }
     }
 }
@@ -110,6 +114,10 @@ fun EditProfileImageScreenContent(dismiss: () -> Unit, onClickImageBox: () -> Un
 @Composable
 private fun EditProfileAboutScreenContentPreview() {
     SportSouceTheme {
-        EditProfileImageScreenContent(onClickImageBox = {}, dismiss = {})
+        EditProfileImageScreenContent(
+            onClickImageBox = {},
+            dismiss = {},
+            state = EditProfileImageStore.State(isSuccess = true, message = "ssafwfawfawfawfawfaw")
+        )
     }
 }

@@ -5,6 +5,7 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
+import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
@@ -26,6 +27,7 @@ import com.markettwits.cloud.model.start_registration.StartRegistrationResponseW
 import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
+import java.io.File
 
 
 interface SportsouceApi {
@@ -58,15 +60,13 @@ interface SportsouceApi {
     suspend fun fetchStartMember(startId: Int): List<StartMemberItem>
     suspend fun fetchStartComments(startId: Int): StartCommentsRemote
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): CommentRow
-    suspend fun writeSubComment(
-        startSubCommentRequest: StartSubCommentRequest,
-        token: String
-    ): Reply
+    suspend fun writeSubComment(subComment: StartSubCommentRequest, token: String): Reply
     //Auth
     suspend fun register(signUpRequest: SignUpRequest) : SignUpResponse
     suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess
     suspend fun auth(token: String): User
     //Profile
+    suspend fun uploadFile(file: File): UploadFileResponse
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
     suspend fun userRegistries(userId : Int, token : String) : List<RemouteStartsUserItem>

@@ -16,7 +16,8 @@ data class User(
     val name: String,
     val number: String,
     val patronymic: String?,
-    val photo_id: String?,
+    val photo_id: Int?,
+    val photo: Photo? = null,
     val role: String,
     val sex: String,
     val surname: String,
@@ -27,4 +28,10 @@ data class User(
     val verified: Boolean,
     val vk: String?,
     val whatsapp: String?
-)
+) {
+    @Serializable
+    data class Photo(val id: Int, val name: String, val path: String) {
+        fun imageUrl() = "$path/$name"
+    }
+
+}

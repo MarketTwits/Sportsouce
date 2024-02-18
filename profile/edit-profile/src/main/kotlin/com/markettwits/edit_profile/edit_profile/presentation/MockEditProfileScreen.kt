@@ -23,7 +23,7 @@ class MockEditProfileScreen :
         name = "John",
         number = "+1234567890",
         patronymic = "Middle",
-        photo_id = "photo123",
+        photo_id = 0,
         role = "user",
         sex = "male",
         surname = "Doe",

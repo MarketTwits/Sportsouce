@@ -117,7 +117,7 @@ interface RemoteUserToEditProfileMapper {
             )
             val userCustomInfo = EditProfileUiPage.MyInfo(
                 description = user.comment_for_address ?: "",
-                imageUrl = user.photo_id ?: ""
+                imageUrl = user.photo?.imageUrl() ?: ""
             )
             return listOf(mySocialNetworkPage, userData, userCustomInfo)
         }

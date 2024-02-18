@@ -1,4 +1,4 @@
-package com.markettwits.edit_profile.edit_profile_Image.presentation.components.image_picker
+package com.markettwits.edit_profile.edit_profile_Image.presentation.components.image_picker.utils
 
 import android.content.Context
 import android.net.Uri

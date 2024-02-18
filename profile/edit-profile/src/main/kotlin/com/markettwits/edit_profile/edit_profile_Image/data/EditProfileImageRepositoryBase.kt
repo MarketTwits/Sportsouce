@@ -26,7 +26,8 @@ internal class EditProfileImageRepositoryBase(
                     return Result.failure(it)
                 })
         }
-
     private suspend fun uploadFile(file: File): Result<UploadFileResponse> =
         runCatching { cloud.uploadFile(file) }
+
+    private fun fake(file: File) = Result.failure<UploadFileResponse>(Exception(""))
 }

@@ -1,4 +1,4 @@
-package com.markettwits.edit_profile.edit_profile_Image.presentation.components
+package com.markettwits.edit_profile.edit_profile_Image.presentation.components.content
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -30,7 +30,6 @@ import com.markettwits.core_ui.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceTheme
-import com.markettwits.edit_profile.edit_profile_Image.presentation.components.content.InBoxImageContent
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore
 import kotlinx.coroutines.delay
 

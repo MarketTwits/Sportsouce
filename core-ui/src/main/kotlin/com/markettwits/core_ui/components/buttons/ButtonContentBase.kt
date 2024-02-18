@@ -1,6 +1,7 @@
 package com.markettwits.core_ui.components.buttons
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,27 +21,35 @@ fun ButtonContentBase(
     modifier: Modifier = Modifier,
     title: String,
     onClick: () -> Unit,
+    isEnabled: Boolean = true,
     shape: Shape = Shapes.large,
     containerColor: Color = Color.Transparent,
     textColor: Color = MaterialTheme.colorScheme.tertiary,
-    borderStroke: BorderStroke? = null
+    borderStroke: BorderStroke? = null,
+    content: @Composable() (RowScope.() -> Unit)? = null,
+    showContent: Boolean = false
 ) {
     Button(
         modifier = modifier,
+        enabled = isEnabled,
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         shape = shape,
         border = borderStroke,
         onClick = {
             onClick()
         }) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            text = title,
-            fontSize = 14.sp,
-            fontFamily = FontNunito.medium,
-            color = textColor
-        )
+        if (content == null || !showContent) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = title,
+                fontSize = 14.sp,
+                fontFamily = FontNunito.bold,
+                color = textColor
+            )
+        } else {
+            content()
+        }
     }
 }

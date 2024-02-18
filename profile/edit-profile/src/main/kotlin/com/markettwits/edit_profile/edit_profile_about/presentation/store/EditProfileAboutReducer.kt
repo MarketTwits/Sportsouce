@@ -7,7 +7,23 @@ import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditPr
 object EditProfileAboutReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            else -> TODO()
+            is Message.Loading -> copy(isLoading = true)
+            is Message.UpdateFailed -> copy(
+                isLoading = false,
+                isSuccess = false,
+                isError = true,
+                message = msg.message
+            )
+
+            is Message.UpdateSuccess -> copy(
+                isLoading = false,
+                isError = false,
+                isSuccess = true,
+                message = "Данные профиля успешно обновлены"
+            )
+
+            is Message.UpdateTexField -> copy(fieldStat = msg.filedState)
+            is Message.LoadedAbout -> copy(isLoading = false, fieldStat = msg.fieldState)
         }
     }
 }

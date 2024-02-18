@@ -16,8 +16,8 @@ class EditProfileInfoCloudMapperBase(
 ) : EditProfileInfoCloudMapper {
     override fun send(user: User, userData: UserData): ChangeProfileInfoRequest =
         ChangeProfileInfoRequest(
-            address = user.address ?: "",
-            birthday = timeMapper.mapTimeToCloud(TimePattern.ddMMMMyyyy, userData.birthday),
+            address = userData.city,
+            birthday = timeMapper.mapTimeToCloud(TimePattern.FullWithDots, userData.birthday),
             comment_for_address = user.comment_for_address,
             email = user.email,
             favor = null, // You need to provide the correct value

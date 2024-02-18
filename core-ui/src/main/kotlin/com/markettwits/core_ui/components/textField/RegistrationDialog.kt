@@ -93,7 +93,10 @@ fun ItemsDialogFilterPosition(
     )
     {
         Checkbox(
-            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.tertiary),
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.tertiary,
+                checkmarkColor = MaterialTheme.colorScheme.primary
+            ),
             checked = checked,
             onCheckedChange = { onClick(item) })
         Text(

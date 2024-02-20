@@ -52,9 +52,9 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
     primary = Color.Black,
-    secondary = SportSouceColor.DarkSecondary,
+    secondary = SportSouceColor.DarkSecondaryNew,
     secondaryContainer = Color.Black,
-    onSecondaryContainer = SportSouceColor.DarkSecondaryContainer,
+    onSecondaryContainer = SportSouceColor.DarkSecondaryContainerNew,
     tertiary = Color.White,
     tertiaryContainer = Color.White,
     onErrorContainer = SportSouceColor.SportSouceLightRed,

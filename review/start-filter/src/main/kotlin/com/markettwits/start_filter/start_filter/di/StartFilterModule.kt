@@ -1,7 +1,7 @@
 package com.markettwits.start_filter.start_filter.di
 
-import com.markettwits.cahce.domain.execute.base.ExecuteWithCache
-import com.markettwits.cahce.domain.execute.base.ExecuteWithCacheBase
+import com.markettwits.cahce.execute.base.ExecuteWithCache
+import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.start_filter.start_filter.data.StartFilterRepository
 import com.markettwits.start_filter.start_filter.data.StartFilterRepositoryBase
 import com.markettwits.start_filter.start_filter.data.cache.FilterCache

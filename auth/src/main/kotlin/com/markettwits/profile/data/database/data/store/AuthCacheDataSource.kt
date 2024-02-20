@@ -2,14 +2,14 @@ package com.markettwits.profile.data.database.data.store
 
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
-import com.markettwits.profile.data.database.data.entities.UserSettingsRealmCache
+import com.markettwits.profile.data.database.data.entities.CredentialRealmCache
 import io.realm.kotlin.ext.query
 
 class AuthCacheDataSource(
     private val realmProvider: RealmDatabaseProvider,
 ) {
-    private val realm = realmProvider.realm(setOf(UserSettingsRealmCache::class))
-    fun write(data: UserSettingsRealmCache) {
+    private val realm = realmProvider.realm(setOf(CredentialRealmCache::class))
+    fun write(data: CredentialRealmCache) {
         realm.writeBlocking {
             copyToRealm(data)
         }
@@ -21,8 +21,8 @@ class AuthCacheDataSource(
         }
     }
 
-    fun read(): UserSettingsRealmCache {
-        val result = realm.query(UserSettingsRealmCache::class).find()
+    fun read(): CredentialRealmCache {
+        val result = realm.query(CredentialRealmCache::class).find()
         if (result.isEmpty())
             throw AuthException("Для продолжения авторизуйтесь в приложении")
         else
@@ -31,7 +31,7 @@ class AuthCacheDataSource(
 
     fun clearAll() {
         realm.writeBlocking {
-            val writeTransactionItems = query<UserSettingsRealmCache>().find()
+            val writeTransactionItems = query<CredentialRealmCache>().find()
             delete(writeTransactionItems)
         }
     }

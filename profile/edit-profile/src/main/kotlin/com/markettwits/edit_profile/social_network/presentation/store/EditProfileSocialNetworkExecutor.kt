@@ -29,7 +29,7 @@ class EditProfileSocialNetworkExecutor(private val repository: ProfileSocialNetw
             dispatch(Message.IsLoading)
             repository.send(userSocialNetwork).fold(
                 onSuccess = {
-                    dispatch(Message.UpdateSuccess(it))
+                    dispatch(Message.UpdateSuccess("Данные успешно обновлены"))
                 },
                 onFailure = {
                     dispatch(Message.UpdateFailed(it.message.toString()))

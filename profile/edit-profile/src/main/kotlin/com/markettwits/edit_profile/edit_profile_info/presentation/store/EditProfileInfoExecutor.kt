@@ -53,5 +53,4 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
             )
         }
     }
-
 }

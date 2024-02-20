@@ -1,7 +1,7 @@
 package com.markettwits.starts.starts.di
 
-import com.markettwits.cahce.domain.execute.list.ExecuteListWithCache
-import com.markettwits.cahce.domain.execute.list.ExecuteListWithCacheBase
+import com.markettwits.cahce.execute.list.ExecuteListWithCache
+import com.markettwits.cahce.execute.list.ExecuteListWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.starts.starts.data.StartsCloudToUiMapper

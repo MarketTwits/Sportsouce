@@ -12,6 +12,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
+import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.edit_profile.root.RootEditProfileComponent
@@ -73,7 +74,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             is Config.AuthProfile -> Child.AuthProfile(
                 AuthorizedProfileComponent(
                     context = componentContext,
-                    service = scope.get(),
+                    useCase = scope.get(),
                     event = {
                         handleAuthorizedProfileEvent(it)
                     }
@@ -128,10 +129,11 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                 )
             )
 
-            Config.EditProfileMenu -> Child.EditProfileMenu(
+            is Config.EditProfileMenu -> Child.EditProfileMenu(
                 RootEditProfileComponentBase(
                     componentContext = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    user = config.user
                 )
             )
         }
@@ -144,7 +146,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     private fun handleAuthorizedProfileEvent(event: AuthorizedProfileEvent) {
         when (event) {
             is AuthorizedProfileEvent.SignOut -> navigation.replaceAll(Config.UnAuthProfile)
-            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfileMenu)
+            is AuthorizedProfileEvent.EditProfile -> navigation.push(Config.EditProfileMenu(event.user))
             is AuthorizedProfileEvent.MyRegistries -> navigation.push(Config.MyRegistries)
             is AuthorizedProfileEvent.ChangePasswordProfile -> navigation.push(Config.ChangePassword)
             is AuthorizedProfileEvent.MyMembers -> navigation.push(Config.MyMembers)
@@ -154,11 +156,10 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     @Serializable
     sealed class Config {
         @Serializable
-        data object EditProfileMenu : Config()
+        data class EditProfileMenu(val user: User) : Config()
 
         @Serializable
-        data class EditProfile(val userId: Int) :
-            Config()
+        data class EditProfile(val userId: Int) : Config()
 
         @Serializable
         data object AuthProfile : Config()

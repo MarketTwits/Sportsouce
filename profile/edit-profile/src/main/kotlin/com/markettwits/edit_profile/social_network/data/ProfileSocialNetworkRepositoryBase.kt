@@ -1,6 +1,7 @@
 package com.markettwits.edit_profile.social_network.data
 
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.core_ui.result.flatMapCallback
 import com.markettwits.edit_profile.social_network.domain.ProfileSocialNetworkCloudMapper
 import com.markettwits.edit_profile.social_network.domain.ProfileSocialNetworkRepository
 import com.markettwits.edit_profile.social_network.domain.UserSocialNetwork
@@ -11,20 +12,11 @@ class ProfileSocialNetworkRepositoryBase(
     private val auth: AuthDataSource,
     private val cloud: SportsouceApi
 ) : ProfileSocialNetworkRepository {
-    override suspend fun send(userSocialNetwork: UserSocialNetwork): Result<String> {
-        runCatching {
-            val user = auth.auth()
-            val token = auth.updateToken()
-            val request = mapper.send(user, userSocialNetwork)
-            cloud.changeProfileInfo(request, token)
-        }.fold(onSuccess = {
-            return Result.success("Данные успешно обновлены")
-        }, onFailure = {
-            return Result.failure(it)
-        })
-    }
+    override suspend fun send(userSocialNetwork: UserSocialNetwork): Result<Unit> =
+        auth.user().flatMapCallback {
+            val value = mapper.send(it, userSocialNetwork)
+            auth.updateUser(value)
+        }
 
-    override suspend fun fetch(): Result<UserSocialNetwork> = runCatching {
-        mapper.fetch(auth.auth())
-    }
+    override suspend fun fetch(): Result<UserSocialNetwork> = auth.user().map { mapper.fetch(it) }
 }

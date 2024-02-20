@@ -1,8 +1,7 @@
 package com.markettwits.edit_profile.root
 
-import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.value.Value
-import com.markettwits.edit_profile.edit_menu.component.EditProfileMenuComponentComponent
+import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
 import com.markettwits.edit_profile.edit_profile_Image.presentation.component.EditProfileImageComponent
 import com.markettwits.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponent
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponent

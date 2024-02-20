@@ -4,13 +4,15 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import kotlin.random.Random
 
-class UserSettingsRealmCache : RealmObject {
+
+class CredentialRealmCache : RealmObject {
     @PrimaryKey
     var _id: Long = Random.nextLong()
-    var _userId : Int = 0
+    var _userId: Long = 0
     var _email: String = ""
     var _password: String = ""
     var _accessToken : String = ""
     var _refreshToken : String = ""
-    var _accesExp : Long = 0L
 }
+
+

@@ -1,10 +1,12 @@
 package com.markettwits.profile.data
 
+import com.markettwits.cahce.ObservableCache
+import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
-import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
@@ -14,20 +16,29 @@ import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 
 class BaseAuthDataSource(
     private val remoteService: SportsouceApi,
     private val signInMapper: SignInRemoteToUiMapper,
     private val signInCacheMapper: SignInRemoteToCacheMapper,
-    private val signUpMapper : SignUpMapper,
+    private val signUpMapper: SignUpMapper,
+    private val cache: ObservableCache<User>,
+    private val executeWithCache: ExecuteWithCache,
     private val local: AuthCacheDataSource
 ) : AuthDataSource {
-    override suspend fun register(signUpStatement: SignUpStatement) : Result<String> =
-       retryRunCatchingAsync {
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    override suspend fun register(signUpStatement: SignUpStatement): Result<String> =
+        retryRunCatchingAsync {
             remoteService.register(signUpMapper.mapToRemote(signUpStatement)).message
-       }.onSuccess {
-           logIn(signUpStatement.email, signUpStatement.password)
-       }
+        }.onSuccess {
+            logIn(signUpStatement.email, signUpStatement.password)
+        }
 
     override suspend fun logIn(email: String, password: String): SignInUiState {
         return try {
@@ -48,7 +59,9 @@ class BaseAuthDataSource(
 
     override suspend fun auth(): User {
         return try {
-            remoteService.auth(updateToken())
+            val user = remoteService.auth(updateToken())
+            cache.set(value = user)
+            user
         } catch (e: Exception) {
             throw e
         }
@@ -60,6 +73,30 @@ class BaseAuthDataSource(
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    override suspend fun observeUser(): Flow<Result<User>> = channelFlow {
+        runCatching {
+            executeWithCache.executeWithCache(
+                cache = cache,
+                launch = { remoteService.auth(updateToken()) },
+                callback = {
+                    scope.launch { send(Result.success(it)) }
+                }
+            )
+        }.onFailure {
+            send(Result.failure(it))
+        }
+        awaitClose()
+    }
+
+    override suspend fun user(): Result<User> = runCatching {
+        cache.get() ?: auth()
+    }
+
+    override suspend fun updateUser(request: ChangeProfileInfoRequest): Result<Unit> = runCatching {
+        remoteService.changeProfileInfo(request, updateToken())
+        auth()
     }
 
     private suspend fun validateToken(): String {
@@ -78,14 +115,7 @@ class BaseAuthDataSource(
 
     override suspend fun clear() {
         local.clearAll()
-    }
-
-    override suspend fun currentToken(): String {
-        return try {
-            local.read()._accessToken
-        } catch (e: Exception) {
-            throw AuthException("Для продолжения аворизуйтесь в приложении")
-        }
+        cache.clear()
     }
 
 }

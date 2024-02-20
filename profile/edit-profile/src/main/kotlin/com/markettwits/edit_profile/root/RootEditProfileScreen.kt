@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.change_password.presentation.screen.ChangePasswordScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
-import com.markettwits.edit_profile.edit_menu.EditProfileScreen
+import com.markettwits.edit_profile.edit_menu.presentation.EditProfileScreen
 import com.markettwits.edit_profile.edit_profile_Image.presentation.components.EditProfileImageScreen
 import com.markettwits.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
 import com.markettwits.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen

@@ -1,9 +1,9 @@
 package com.markettwits.start_search.search.data.local
 
 
-import com.markettwits.cahce.domain.InStorageCache
-import com.markettwits.cahce.domain.InStorageListCache
-import com.markettwits.cahce.domain.store.listStoreOfWrapper
+import com.markettwits.cahce.InStorageCache
+import com.markettwits.cahce.InStorageListCache
+import com.markettwits.cahce.store.listStoreOfWrapper
 import com.markettwits.start_search.search.domain.SearchHistory
 
 class SearchHistoryCache : InStorageListCache<SearchHistory>(

@@ -20,9 +20,9 @@ class ProfileSocialNetworkCloudMapperBase : ProfileSocialNetworkCloudMapper {
             sex = user.sex,
             surname = user.surname,
             team = user.team,
-            telegram = user.telegram,
-            vk = user.vk,
-            whatsapp = user.whatsapp,
+            telegram = socialNetwork.telegram,
+            vk = socialNetwork.vk,
+            whatsapp = socialNetwork.whatsApp,
             id = user.id
         )
 

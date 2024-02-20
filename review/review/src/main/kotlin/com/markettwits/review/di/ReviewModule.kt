@@ -1,7 +1,7 @@
 package com.markettwits.review.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cahce.domain.execute.base.ExecuteWithCacheBase
+import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.news_list.data.NewsRemoteToDomainMapper

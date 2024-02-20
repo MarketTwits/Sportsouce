@@ -8,7 +8,9 @@ import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditPr
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStore.State
 import kotlinx.coroutines.launch
 
-class EditProfileAboutExecutor(private val repository: EditProfileAboutRepository) :
+class EditProfileAboutExecutor(
+    private val repository: EditProfileAboutRepository,
+) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {

@@ -1,6 +1,6 @@
 package com.markettwits.review.data
 
-import com.markettwits.cahce.domain.execute.base.ExecuteWithCache
+import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.review.data.cache.ReviewCache
 import com.markettwits.review.data.mapper.ReviewMapper

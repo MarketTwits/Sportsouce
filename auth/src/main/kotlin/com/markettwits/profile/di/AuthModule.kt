@@ -1,13 +1,17 @@
 package com.markettwits.profile.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.cahce.ObservableCache
+import com.markettwits.cahce.execute.base.ExecuteWithCache
+import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.profile.data.AuthDataSource
 import com.markettwits.profile.data.BaseAuthDataSource
 import com.markettwits.profile.data.database.core.RealmDatabaseProvider
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
+import com.markettwits.profile.data.database.data.store.UserCache
 import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper
 import com.markettwits.profile.data.mapper.SignInRemoteToUiMapper
 import com.markettwits.profile.data.mapper.SignUpMapper
@@ -22,6 +26,12 @@ import org.koin.dsl.module
 val authDataSourceModule = module(createdAtStart = true){
     includes(sportSouceNetworkModule)
     singleOf(::BaseAuthDataSource) bind AuthDataSource::class
+    single<ExecuteWithCache> {
+        ExecuteWithCacheBase()
+    }
+    single<ObservableCache<User>> {
+        UserCache()
+    }
     single<SignInRemoteToUiMapper>{
         SignInRemoteToUiMapper.Base()
     }

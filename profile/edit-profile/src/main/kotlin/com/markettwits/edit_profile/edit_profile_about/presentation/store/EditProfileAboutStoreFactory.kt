@@ -14,7 +14,9 @@ class EditProfileAboutStoreFactory(
 ) {
     fun create(): EditProfileAboutStore = EditProfileAboutStoreImpl(repository)
 
-    private inner class EditProfileAboutStoreImpl(repository: EditProfileAboutRepository) :
+    private inner class EditProfileAboutStoreImpl(
+        repository: EditProfileAboutRepository,
+    ) :
         EditProfileAboutStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "EditProfileAboutStore",

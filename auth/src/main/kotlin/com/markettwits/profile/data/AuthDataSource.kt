@@ -1,7 +1,7 @@
 package com.markettwits.profile.data
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.profile.presentation.sign_in.SignInUiState
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
 import kotlinx.coroutines.flow.Flow

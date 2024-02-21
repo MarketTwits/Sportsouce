@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.presentation.DefaultProfileComponent
+import com.markettwits.profile.presentation.deprecated.DefaultProfileComponent
 import com.markettwits.root.RootNewsComponent
 import com.markettwits.root.RootNewsComponentBase
 import com.markettwits.root.RootReviewComponentBase

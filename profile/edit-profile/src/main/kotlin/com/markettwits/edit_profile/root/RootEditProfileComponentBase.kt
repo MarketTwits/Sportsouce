@@ -18,7 +18,6 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.di.changePasswordModule
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponentBase
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuOutputProvide
@@ -35,7 +34,6 @@ import com.markettwits.edit_profile.social_network.presentation.component.EditPr
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-    private val user: User,
 ) : RootEditProfileComponent,
     EditProfileMenuOutputProvide, ComponentContext by componentContext {
     private val koinContext = instanceKeeper.getOrCreate {

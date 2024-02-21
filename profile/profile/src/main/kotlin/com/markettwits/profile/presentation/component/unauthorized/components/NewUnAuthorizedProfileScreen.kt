@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceTheme
-import com.markettwits.profile.presentation.ProfileUiState
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
+import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 @Composable
 fun NewUnAuthorizedProfileScreen(component: UnAuthorizedProfile) {

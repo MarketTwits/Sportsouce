@@ -6,7 +6,7 @@ import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.data.mapper.SignInRemoteToCacheMapper

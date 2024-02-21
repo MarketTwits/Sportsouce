@@ -1,20 +1,15 @@
 package com.markettwits.profile.data
 
-import com.markettwits.profile.presentation.ProfileUiState
+import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 class BaseProfileDataSource(
     private val authDataSource: AuthDataSource
 ) : ProfileDataSource {
-    override suspend fun profile(): ProfileUiState {
-        return try {
-            val user = authDataSource.auth()
-            ProfileUiState.Base(user)
-        } catch (e: Exception) {
-            when (e) {
-                else -> ProfileUiState.Error(e.toString())
-            }
-        }
-    }
+    override suspend fun profile(): ProfileUiState =
+        authDataSource.user().fold(
+            onSuccess = { ProfileUiState.Base(it) },
+            onFailure = { ProfileUiState.Error(it.toString()) }
+        )
 
     override suspend fun exit() {
         authDataSource.clear()

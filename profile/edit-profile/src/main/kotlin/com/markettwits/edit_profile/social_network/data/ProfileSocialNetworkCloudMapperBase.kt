@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.social_network.data
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.edit_profile.social_network.domain.ProfileSocialNetworkCloudMapper
 import com.markettwits.edit_profile.social_network.domain.UserSocialNetwork
 

@@ -40,21 +40,23 @@ fun SportSouceTheme(
 private val LightColorScheme = lightColorScheme(
     primary = Color.White,
     secondary = Color.White,
-    secondaryContainer = SportSouceColor.DirtyWhite,
-    onSecondaryContainer = SportSouceColor.VeryLighBlue,
+    secondaryContainer = Color.White,
+
     surfaceTint = SportSouceColor.DirtyWhite,
     tertiary = SportSouceColor.SportSouceBlue,
     tertiaryContainer = Color.Gray,
-    background = SportSouceColor.DirtyWhite,
+    // background = SportSouceColor.DirtyWhite,
+    background = Color.White,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
     onPrimaryContainer = SportSouceColor.SportSouceLighBlue
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color.Black,
+    // primary = Color.Black,
+    primary = SportSouceColor.DarkSecondaryNew,
     secondary = SportSouceColor.DarkSecondaryNew,
-    secondaryContainer = Color.Black,
-    onSecondaryContainer = SportSouceColor.DarkSecondaryContainerNew,
+    secondaryContainer = SportSouceColor.DarkSecondaryContainerNew,
+
     tertiary = Color.White,
     tertiaryContainer = Color.White,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
@@ -67,5 +69,5 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = Color.Black,
     onTertiary = Color.Black,
     onBackground = Color.White,
-    background = Color.Black,
+    background = SportSouceColor.DarkSecondaryNew,
 )

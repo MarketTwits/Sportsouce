@@ -14,7 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
@@ -23,8 +23,8 @@ import com.markettwits.core_ui.theme.FontNunito
 fun TopBarWithClip(modifier: Modifier = Modifier, title: String, goBack: () -> Unit) {
     Box(
         modifier
-            .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
-            .background(MaterialTheme.colorScheme.secondary)
+            .shadow(4.dp, RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 10.dp)
             .fillMaxWidth()

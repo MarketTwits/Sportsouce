@@ -5,19 +5,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.theme.SportSouceColor
 
 @Composable
 fun BackFloatingActionButton(back : () -> Unit) {
     SmallFloatingActionButton(
         modifier = Modifier.padding(10.dp),
-        containerColor = Color.White,
-        contentColor = SportSouceColor.SportSouceBlue,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.tertiary,
         onClick = {
             back()
         },

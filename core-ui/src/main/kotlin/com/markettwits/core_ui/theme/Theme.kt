@@ -19,10 +19,10 @@ fun SportSouceTheme(
     val systemUiController = rememberSystemUiController()
     SideEffect {
         systemUiController.setNavigationBarColor(
-            color = if (darkTheme) Color.Black else Color.White
+            color = if (darkTheme) SportSouceColor.DarkSecondaryNew else Color.White
         )
         systemUiController.setStatusBarColor(
-            color = if (darkTheme) Color.Transparent else Color.White
+            color = if (darkTheme) SportSouceColor.DarkSecondaryNew else Color.White
         )
     }
     val colorScheme = when {

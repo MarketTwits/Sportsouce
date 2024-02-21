@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -15,11 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.root.root.MockRootComponent
 import com.markettwits.root.root.RootComponent
 
@@ -34,19 +33,18 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
     val childStack by component.childStack.subscribeAsState()
     val activeComponent = childStack.active.configuration
     val items = menuItems()
-   // HorizontalDivider()
-    NavigationBar(containerColor = Color.White) {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
         items.forEach { item ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = SportSouceColor.SportSouceLighBlue.copy(alpha = 0.3f)
+                    indicatorColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),
                 selected = activeComponent == item.configuration,
                 onClick = {
                     component.navigate(item.configuration)
                 },
                 label = {
-                    Text(text = item.title, color = SportSouceColor.SportSouceBlue)
+                    Text(text = item.title, color = MaterialTheme.colorScheme.tertiary)
                 },
                 alwaysShowLabel = true,
                 icon = {
@@ -55,7 +53,7 @@ fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {
                             item.selectedIcon
                         } else item.unselectedIcon,
                         contentDescription = item.title,
-                        tint = SportSouceColor.SportSouceBlue
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             )

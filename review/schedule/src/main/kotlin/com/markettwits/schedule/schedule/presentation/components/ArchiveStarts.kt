@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.starts_common.presentation.StartCard
 
@@ -28,7 +28,7 @@ fun ScheduleStartsRow(
         Text(
             modifier = modifier.padding(horizontal = 10.dp),
             text = day,
-            color = SportSouceColor.SportSouceBlue,
+            color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.bold,
             fontSize = 18.sp
         )
@@ -38,12 +38,11 @@ fun ScheduleStartsRow(
                 start = starts[0],
                 onItemClick = onClick::invoke
             )
-
         } else {
             Text(
                 modifier = modifier.padding(horizontal = 10.dp),
                 text = "Информация о стартах отсутствует",
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 fontFamily = FontNunito.medium,
                 fontSize = 14.sp
             )

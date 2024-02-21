@@ -1,27 +1,22 @@
 package com.markettwits.start_filter.start_filter.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.magnifier
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.start_filter.start_filter.presentation.components.FilterButtonSelectionPanel
 import com.markettwits.start_filter.start_filter.presentation.components.StartFilterList
-import com.markettwits.start_filter.start_filter.presentation.components.StartFilterTopBar
-import com.markettwits.start_filter.start_filter.presentation.components.dialog.BottomScreenContent
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore
 
 @Composable
@@ -30,12 +25,12 @@ fun StartFilterScreen(component: StartFilterComponent) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         if (state.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 strokeCap = StrokeCap.Round
             )
         }
@@ -44,26 +39,25 @@ fun StartFilterScreen(component: StartFilterComponent) {
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxSize()
-                    .background(Color.White)
-                    .padding(10.dp)
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
-                StartFilterTopBar(title = "Фильтр") {
+                TopBarWithClip(title = "Фильтр") {
                     component.obtainEvent(StartFilterStore.Intent.GoBack)
                 }
-                StartFilterList(startFilter = state.filter) { item, index, single ->
-                    component.obtainEvent(
-                        StartFilterStore.Intent.OnItemSelected(
-                            startFilter = item,
-                            index = index,
-                            singleChoice = single
+                Column(modifier = Modifier.padding(10.dp)) {
+                    StartFilterList(startFilter = state.filter) { item, index, single ->
+                        component.obtainEvent(
+                            StartFilterStore.Intent.OnItemSelected(
+                                startFilter = item,
+                                index = index,
+                                singleChoice = single
+                            )
                         )
-                    )
+                    }
                 }
             }
             Box(
-                modifier = Modifier
-                    .background(Color.White)
-                    .align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter)
             ) {
                 FilterButtonSelectionPanel(
                     onClickReset = {
@@ -77,11 +71,8 @@ fun StartFilterScreen(component: StartFilterComponent) {
             Column(modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxSize()
-                .background(Color.White)
                 .padding(10.dp)) {
-                StartFilterTopBar(
-                    title = "Фильтр"
-                ) {
+                TopBarWithClip(title = "Фильтр") {
                     component.obtainEvent(StartFilterStore.Intent.GoBack)
                 }
             }

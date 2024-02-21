@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.profile.presentation.deprecated.DefaultProfileScreen
@@ -22,7 +21,7 @@ import com.markettwits.starts.root.api.RootStartsScreen
 @Composable
 fun RootContent(component: BaseRootComponent, modifier: Modifier = Modifier) {
     MaterialTheme {
-        Surface(modifier = modifier, color = Color.White) {
+        Surface(modifier = modifier, color = MaterialTheme.colorScheme.primary) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

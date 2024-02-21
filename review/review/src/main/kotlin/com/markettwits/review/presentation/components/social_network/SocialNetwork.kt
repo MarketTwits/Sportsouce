@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
             title = "Мы ВКонтакте",
             textColor = SportSouceColor.VkIcon,
             icon = IconVk,
-            backgroundColor = SportSouceColor.VeryLighBlue,
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
             onClick = {onClickVk(context)}
         )
         SocialNetworkButton(
@@ -50,7 +51,7 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
             title = "Мы в Telegram",
             textColor = SportSouceColor.TelegramIcon,
             icon = IconTelegram,
-            backgroundColor = SportSouceColor.VeryLighBlue,
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
             onClick = {onClickTelegram(context) }
         )
     }

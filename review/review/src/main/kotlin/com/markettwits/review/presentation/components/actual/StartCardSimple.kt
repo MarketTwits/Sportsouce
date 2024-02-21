@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +30,6 @@ import com.markettwits.core_ui.R
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
@@ -94,7 +94,7 @@ private fun ImageCard(
         }
         Text(
             text = name,
-            color = SportSouceColor.SportSouceBlue,
+            color = MaterialTheme.colorScheme.tertiary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
             lineHeight = 10.sp,
@@ -110,12 +110,12 @@ private fun ImageCard(
 private fun ImageCardInfoStroke(modifier: Modifier = Modifier, title: String) {
     Row(
         modifier = Modifier
-            .background(SportSouceColor.SportSouceLighBlue)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
         Text(
             modifier = modifier.fillMaxWidth(),
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSecondary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             fontFamily = FontNunito.bold,

@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +35,6 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.Animation
 import com.markettwits.start.presentation.common.OnClick
 
@@ -68,12 +69,12 @@ fun StartDistances(
                 fontFamily = FontNunito.bold,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             Icon(
                 imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                 contentDescription = "",
-                tint = SportSouceColor.SportSouceBlue
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
         androidx.compose.animation.AnimatedVisibility(
@@ -125,7 +126,7 @@ fun DistanceItemBase(
             .fillMaxWidth()
             .border(
                 width = 3.dp,
-                color = SportSouceColor.SportSouceLighBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 shape = Shapes.medium
             )
             .clip(Shapes.medium)
@@ -141,7 +142,7 @@ fun DistanceItemBase(
                 fontFamily = FontNunito.bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             HorizontalDivider()
             Text(
@@ -150,7 +151,7 @@ fun DistanceItemBase(
                 fontFamily = FontNunito.bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
@@ -159,7 +160,7 @@ fun DistanceItemBase(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             } else {
                 Text(
@@ -168,7 +169,7 @@ fun DistanceItemBase(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             val enabled = (item.distance.slots.toInt()) > 0
@@ -180,22 +181,22 @@ fun DistanceItemBase(
                 if (enabled) {
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SportSouceColor.SportSouceLighBlue,
+                            containerColor = MaterialTheme.colorScheme.tertiary,
                         ),
                         onClick = { onClick() },
                     ) {
-                        Text("Зарегистрироваться")
+                        Text("Зарегистрироваться", color = MaterialTheme.colorScheme.onTertiary)
                     }
                 } else {
                     Button(
                         enabled = false,
                         colors = ButtonDefaults.buttonColors(
-                            disabledContainerColor = SportSouceColor.VeryLighBlue,
+                            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
                         ),
                         onClick = { onClick() },
                     ) {
 
-                        Text("Слоты закончились")
+                        Text("Слоты закончились", color = Color.LightGray)
                     }
                 }
             }
@@ -218,7 +219,7 @@ fun DistanceItemCombo(
 //            .height(150.dp)
             .border(
                 width = 3.dp,
-                color = SportSouceColor.SportSouceLighBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 shape = Shapes.medium
             )
             .clip(Shapes.medium)
@@ -234,7 +235,7 @@ fun DistanceItemCombo(
                 fontFamily = FontNunito.bold,
                 maxLines = 3,
                 overflow = TextOverflow.Visible,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             Text(
                 text = "",
@@ -242,7 +243,7 @@ fun DistanceItemCombo(
                 fontFamily = FontNunito.bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
@@ -251,7 +252,7 @@ fun DistanceItemCombo(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             } else {
                 Text(
@@ -260,7 +261,7 @@ fun DistanceItemCombo(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
@@ -271,7 +272,7 @@ fun DistanceItemCombo(
                 Button(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = SportSouceColor.SportSouceLighBlue,
+                        containerColor = MaterialTheme.colorScheme.tertiary,
                     ),
                     onClick = { onClick() },
                 ) {

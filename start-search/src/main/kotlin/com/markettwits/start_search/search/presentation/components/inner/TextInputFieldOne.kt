@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.theme.SportSouceColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -44,7 +43,7 @@ import kotlinx.coroutines.launch
 fun TextInputFieldOne(
     modifier: Modifier = Modifier,
     value: String,
-    background: Color = Color.White,
+    background: Color = MaterialTheme.colorScheme.primary,
     keyboardType: KeyboardType = KeyboardType.Text,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
@@ -94,7 +93,7 @@ fun TextInputFieldOne(
             keyboardType = keyboardType,
             imeAction = imeAction ?: if (singleLine) ImeAction.Done else ImeAction.Default
         ),
-        cursorBrush = SolidColor(SportSouceColor.SportSouceBlue),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiary),
         interactionSource = interactionSource,
         modifier = modifier
             .bringIntoViewRequester(bringIntoViewRequester)
@@ -114,10 +113,6 @@ fun TextInputFieldOne(
                 Box(
                     Modifier
                         .fillMaxWidth()
-//                        .padding(
-//                            top = if (singleLine) 0.dp else 12.5.dp,
-//                            bottom = if (singleLine) 2.5.dp else 12.5.dp
-//                        )
                 ) {
                     innerTextField()
                     if (value.isEmpty()) {

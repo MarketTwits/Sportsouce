@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.markettwits.core_ui.components.textField.TextFieldBase
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 
 @Composable
 fun ChangePasswordTextField(
@@ -25,7 +25,7 @@ fun ChangePasswordTextField(
     onValueChange: (String) -> Unit
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = label,
         value = value,

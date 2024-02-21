@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.list.compoent
+package com.markettwits.start.presentation.membres.list.compoents
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -6,23 +6,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
 import eu.wewox.lazytable.LazyTableScrollDirection
 import eu.wewox.lazytable.lazyTableDimensions
-import kotlinx.serialization.json.JsonNull.content
 
 
 @Composable
@@ -31,7 +31,8 @@ fun StartMembersItemText(text: String) {
         modifier = Modifier.padding(5.dp),
         style = LocalTextStyle.current.copy(lineBreak = LineBreak.Paragraph),
         text = text,
-        color = SportSouceColor.SportSouceBlue,
+        color = MaterialTheme.colorScheme.tertiary,
+        textAlign = TextAlign.Center,
         fontFamily = FontNunito.bold,
         fontSize = 12.sp,
         overflow = TextOverflow.Ellipsis
@@ -102,7 +103,7 @@ private fun Cell(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .background(SportSouceColor.VeryLighBlue)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             if (content.isNotEmpty()) {
                 StartMembersItemText(content)
@@ -130,7 +131,7 @@ private fun TeamCell(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(SportSouceColor.VeryLighBlue)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         if (content.isNotEmpty()) {
             StartMembersItemText(content)
@@ -158,7 +159,7 @@ private fun HeaderCell(column: Int) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .background(SportSouceColor.SportSouceLighBlueParent)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         StartMembersItemText(content)
     }

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.list.compoent
+package com.markettwits.start.presentation.membres.list.compoents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -59,6 +59,6 @@ fun StartMembersTopBar(goBack: OnClick) {
 @Preview
 @Composable
 private fun StartMembersTopBarPreview(){
-    StartMembersTopBar(){}
+    StartMembersTopBar {}
 
 }

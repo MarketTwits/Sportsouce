@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.coreUi)
     implementation(projects.root)
     implementation(projects.cache)
     implementation(libs.bundles.decompose.compose)

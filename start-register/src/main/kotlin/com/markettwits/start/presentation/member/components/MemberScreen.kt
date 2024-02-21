@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.member.components
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -14,12 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.presentation.member.store.RegistrationMemberStore
-import com.markettwits.start.presentation.order.components.extra.StartRegistrationTopBar
 
 @Composable
 fun MemberScreen(component: RegistrationMemberComponent) {
@@ -28,11 +29,11 @@ fun MemberScreen(component: RegistrationMemberComponent) {
         mutableStateOf(SnackbarHostState())
     }
     Scaffold(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.primary,
         topBar = {
-            StartRegistrationTopBar(goBack = {
+            TopBarWithClip(title = "Регистрация") {
                 component.obtainEvent(RegistrationMemberStore.Intent.Pop)
-            })
+            }
         },
         snackbarHost = {
             SnackbarHost(

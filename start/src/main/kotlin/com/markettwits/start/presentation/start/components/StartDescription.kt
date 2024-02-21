@@ -3,6 +3,7 @@ package com.markettwits.start.presentation.start.components
 import android.widget.TextView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 
 
 @Composable
@@ -25,13 +25,13 @@ fun StartDescription(modifier: Modifier, description: String) {
         mutableIntStateOf(5)
     }
     Column(modifier) {
-
+        val textColor = MaterialTheme.colorScheme.tertiary
         AndroidView(
             modifier = modifier,
             factory = { context -> TextView(context) },
             update = {
                 it.text = HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                it.setTextColor(SportSouceColor.SportSouceBlue.toArgb())
+                it.setTextColor(textColor.toArgb())
                 it.maxLines = lines
                 it.textSize = 12f
             }
@@ -46,7 +46,7 @@ fun StartDescription(modifier: Modifier, description: String) {
                 text = "Подробнее",
                 fontFamily = FontNunito.bold,
                 fontSize = 12.sp,
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
             )
         }
 

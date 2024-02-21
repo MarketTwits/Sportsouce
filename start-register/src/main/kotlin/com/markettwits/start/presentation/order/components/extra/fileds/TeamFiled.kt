@@ -7,9 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.components.extra.FilterPosition
-import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
 
 @Composable
 fun TeamFiled(
@@ -22,16 +23,16 @@ fun TeamFiled(
             mutableStateOf(false)
         }
         if (teamChecked) {
-            RegistrationTextField(
+            OutlinedTextFieldBase(
                 label = "Команда",
                 value = "Лично",
-                enabled = false,
+                isEnabled = false,
                 onValueChange = {
                     onValueChanged(statement.copy(team = it))
                 }
             )
         } else {
-            RegistrationFiled(
+            ItemsTextFiledDialog(
                 label = "Команда",
                 value = statement.team,
                 items = statement.teams.map { it.name },

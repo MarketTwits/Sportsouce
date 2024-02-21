@@ -192,15 +192,6 @@ class RootStartScreenComponentBase(
                     }
                 )
             )
-//                RootStartScreenComponent.Child.StartRegistration(
-//                StartRegistrationComponentBase(
-//                    context = componentContext,
-//                    startId = config.startId,
-//                    paymentDisabled = config.paymentDisabled,
-//                    distanceInfo = config.distanceInfo,
-//                    storeFactory = scope.get(),
-//                    pop = navigation::pop
-//                )
         }
 
     fun openMembersScreen(

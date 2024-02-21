@@ -25,7 +25,7 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     val state by component.state.collectAsState()
     state.user?.let { user ->
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.primary,
             topBar = {
                 ProfileTopBar(goSettings = {
                     component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)

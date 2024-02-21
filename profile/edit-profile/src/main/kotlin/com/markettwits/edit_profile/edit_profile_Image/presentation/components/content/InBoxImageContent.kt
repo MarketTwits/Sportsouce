@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
@@ -32,14 +32,14 @@ fun BoxScope.InBoxImageContent() {
                 .size(40.dp),
             imageVector = Icons.Default.Image,
             contentDescription = "",
-            tint = MaterialTheme.colorScheme.tertiaryContainer
+            tint = Color.LightGray
         )
         Text(
             modifier = Modifier.padding(10.dp),
             text = "Изображение",
             fontFamily = FontNunito.bold,
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.tertiaryContainer
+            color = Color.LightGray
         )
     }
 }

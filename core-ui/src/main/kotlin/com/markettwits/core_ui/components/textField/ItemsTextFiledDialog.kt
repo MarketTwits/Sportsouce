@@ -29,7 +29,7 @@ fun ItemsTextFiledDialog(
             }
         )
     }
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier.clickable {
             openAlertDialog.value = true
         },

@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import com.markettwits.core_ui.components.textField.TextFieldBase
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.ui_style.CalendarTextFiled
 import com.markettwits.core_ui.ui_style.DropDownSpinner
 import com.markettwits.profile.presentation.sign_up.domain.SignUpStatement
@@ -17,7 +17,7 @@ fun SignUpScreenFields(
     statement: SignUpStatement,
     onValueChanged: (SignUpStatement) -> Unit
 ) {
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Телефон",
         value = statement.phone,
@@ -28,7 +28,7 @@ fun SignUpScreenFields(
     ) {
         onValueChanged(statement.copy(phone = it))
     }
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Почта",
         value = statement.email,
@@ -37,14 +37,14 @@ fun SignUpScreenFields(
         onValueChanged(statement.copy(email = it))
     }
 
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Полное имя",
         value = statement.name,
     ) {
         onValueChanged(statement.copy(name = it))
     }
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Фамилия",
         value = statement.surname,
@@ -59,7 +59,7 @@ fun SignUpScreenFields(
             onValueChanged(statement.copy(sex = item))
         },
         textFiled = {
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = modifier,
                 label = "Пол",
                 value = statement.sex,
@@ -71,7 +71,7 @@ fun SignUpScreenFields(
     CalendarTextFiled(
         modifier = modifier,
         textFiled = {
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = it,
                 label = "Дата рождения",
                 value = statement.birthday,
@@ -83,7 +83,7 @@ fun SignUpScreenFields(
         }
     )
 
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Пароль",
         value = statement.password,
@@ -91,7 +91,7 @@ fun SignUpScreenFields(
     ) {
         onValueChanged(statement.copy(password = it))
     }
-    TextFieldBase(
+    OutlinedTextFieldBase(
         modifier = modifier,
         label = "Подтвердите пароль",
         value = statement.repeatPassword,

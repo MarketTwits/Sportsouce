@@ -30,7 +30,7 @@ fun TopBarClipWithLabel(
     Box(
         modifier
             .shadow(4.dp, RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
-            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 10.dp)
             .fillMaxWidth()

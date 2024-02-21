@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
-import com.markettwits.core_ui.components.textField.TextFieldBase
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.image.icons.IconTelegram
 import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.FontNunito
@@ -38,7 +38,7 @@ fun ProfileSocialNetworkContent(
                 icon = IconTelegram,
                 color = SportSouceColor.TelegramIcon
             )
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = localModifier,
                 value = user.telegram,
                 onValueChange = { newValue -> onUserChange(user.copy(telegram = newValue)) },
@@ -50,7 +50,7 @@ fun ProfileSocialNetworkContent(
                 icon = WhatsappIcon,
                 SportSouceColor.WhatsappIcon
             )
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = localModifier,
                 value = user.whatsApp,
                 onValueChange = { newValue -> onUserChange(user.copy(whatsApp = newValue)) },
@@ -62,7 +62,7 @@ fun ProfileSocialNetworkContent(
                 icon = IconVk,
                 color = SportSouceColor.VkIcon
             )
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = localModifier,
                 value = user.vk,
                 onValueChange = { newValue -> onUserChange(user.copy(vk = newValue)) },
@@ -74,7 +74,7 @@ fun ProfileSocialNetworkContent(
                 icon = InstagramIcon,
                 color = SportSouceColor.InstagramIcon
             )
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = localModifier,
                 value = user.instagram,
                 onValueChange = { newValue -> onUserChange(user.copy(instagram = newValue)) },

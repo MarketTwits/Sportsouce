@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -94,12 +95,15 @@ fun FilterPosition(
     )
     {
         Checkbox(
-            colors = CheckboxDefaults.colors(checkedColor = SportSouceColor.SportSouceBlue),
+            colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.tertiary,
+                checkmarkColor = MaterialTheme.colorScheme.onTertiary
+            ),
             checked = checked,
             onCheckedChange = { onClick(item) })
         Text(
             text = item,
-            color = SportSouceColor.SportSouceBlue,
+            color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.medium,
             fontSize = 14.sp
         )

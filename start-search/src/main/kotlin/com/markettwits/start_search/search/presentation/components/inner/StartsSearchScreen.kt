@@ -1,15 +1,16 @@
 package com.markettwits.start_search.search.presentation.components.inner
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,6 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             StartsSearchBarInner(
-                modifier = Modifier.padding(10.dp),
                 query = state.query,
                 onQueryChanged = {
                     component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, false))
@@ -53,6 +53,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     ) {
         Column(
             modifier = Modifier
+                .background(MaterialTheme.colorScheme.primary)
                 .fillMaxSize()
             //    .verticalScroll(rememberScrollState())
         ) {
@@ -69,7 +70,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                             modifier = Modifier
                                 .padding(10.dp),
                             text = "РЕЗУЛЬТАТЫ ПОИСКА",
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.outline,
                             fontFamily = FontNunito.bold,
                             fontSize = 12.sp,
                             overflow = TextOverflow.Visible
@@ -85,7 +86,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                                 .padding(20.dp)
                                 .align(Alignment.CenterHorizontally),
                             text = "По вашему запросу ничего не найдено",
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.outline,
                             fontFamily = FontNunito.medium,
                             fontSize = 14.sp,
                             overflow = TextOverflow.Visible

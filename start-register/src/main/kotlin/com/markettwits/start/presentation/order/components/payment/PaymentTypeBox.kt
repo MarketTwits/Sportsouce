@@ -3,20 +3,19 @@ package com.markettwits.start.presentation.order.components.payment
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.domain.StartStatement
 
 @Composable
@@ -29,13 +28,7 @@ fun PaymentTypeBox(
     distances: List<String>,
     onClickChangePayment: (Boolean) -> Unit,
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        shape = Shapes.medium,
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
-    ) {
+    OnBackgroundCard(modifier = modifier.padding(top = 10.dp)) {
         Text(
             modifier = modifier.padding(10.dp),
             text = "Как оплатить ?",
@@ -43,7 +36,7 @@ fun PaymentTypeBox(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Row {
             if (paymentDisabled) {
@@ -84,8 +77,8 @@ private fun PaymentTypeChosen(
             onClick()
         },
         shape = Shapes.medium,
-        colors = CardDefaults.elevatedCardColors(containerColor = SportSouceColor.VeryLighBlue),
-        border = if (selected) BorderStroke(2.dp, SportSouceColor.SportSouceBlue) else null
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary) else null
     ) {
         Text(
             modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp),
@@ -94,7 +87,7 @@ private fun PaymentTypeChosen(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = SportSouceColor.SportSouceLighBlue
+            color = MaterialTheme.colorScheme.onTertiaryContainer
         )
     }
 }

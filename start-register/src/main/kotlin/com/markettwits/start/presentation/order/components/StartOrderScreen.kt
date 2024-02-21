@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -20,13 +21,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.EventEffectTest
 import com.markettwits.start.presentation.order.component.OrderComponentComponent
 import com.markettwits.start.presentation.order.components.distance_info.StartDistanceInfoBox
-import com.markettwits.start.presentation.order.components.extra.LoadingScreen
-import com.markettwits.start.presentation.order.components.extra.StartRegistrationTopBar
 import com.markettwits.start.presentation.order.components.members.StartMembers
 import com.markettwits.start.presentation.order.components.order.OrderComponentBox
 import com.markettwits.start.presentation.order.components.payment.PaymentTypeBox
@@ -44,9 +45,9 @@ fun StartOrderScreen(component: OrderComponentComponent) {
     }
     Scaffold(
         topBar = {
-            StartRegistrationTopBar(goBack = {
+            TopBarWithClip(title = "Регистрация") {
                 component.obtainEvent(OrderStore.Intent.GoBack)
-            })
+            }
         },
         snackbarHost = {
             SnackbarHost(
@@ -59,11 +60,11 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                 )
             }
         },
-        containerColor = SportSouceColor.DirtyWhite
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
         it.calculateTopPadding()
         if (state.isLoading) {
-            LoadingScreen()
+            LoadingFullScreen()
         }
         if (state.isError) {
             FailedScreen(

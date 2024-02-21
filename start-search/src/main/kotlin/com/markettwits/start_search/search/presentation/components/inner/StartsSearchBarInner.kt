@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ fun StartsSearchBarInner(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.primary),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -53,7 +54,7 @@ fun StartsSearchBarInner(
                 },
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = null,
-            tint = Color.Gray
+            tint = MaterialTheme.colorScheme.outline
         )
         TextInputFieldOne(
             modifier = Modifier
@@ -63,7 +64,7 @@ fun StartsSearchBarInner(
             onValueChange = {
                 onQueryChanged(it)
             },
-            textStyle = TextStyle(),
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.outline),
             onDone = {
                 onDoneClicked(query)
             },
@@ -73,7 +74,7 @@ fun StartsSearchBarInner(
             placeholder = {
                 Text(
                     text = "Поиск старта",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.outline,
                     fontFamily = FontNunito.bold,
                     fontSize = 16.sp,
                     maxLines = 1,
@@ -88,7 +89,7 @@ fun StartsSearchBarInner(
                     .padding(5.dp),
                 imageVector = Icons.Default.Mic,
                 contentDescription = null,
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.outline
             )
         } else {
             Icon(
@@ -112,7 +113,7 @@ fun StartsSearchBarInner(
                 },
             imageVector = Icons.Default.Settings,
             contentDescription = null,
-            tint = Color.Gray
+            tint = MaterialTheme.colorScheme.outline
         )
     }
 }

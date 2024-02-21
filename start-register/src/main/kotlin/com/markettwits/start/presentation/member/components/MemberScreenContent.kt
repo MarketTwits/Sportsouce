@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +16,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.date.mapToString
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.domain.StartStatement
-import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
 import com.markettwits.start.presentation.order.components.extra.fileds.CityFiled
 import com.markettwits.start.presentation.order.components.extra.fileds.RegistrationFiled
 import com.markettwits.start.presentation.order.components.extra.fileds.TeamFiled
@@ -54,9 +54,9 @@ fun MemberScreenContent(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = SportSouceColor.SportSouceBlue
+            color = MaterialTheme.colorScheme.primary
         )
-        RegistrationTextField(
+        OutlinedTextFieldBase(
             modifier = Modifier.padding(vertical = 5.dp),
             label = "Имя",
             value = statement.name,
@@ -64,7 +64,7 @@ fun MemberScreenContent(
                 onValueChanged(statement.copy(name = it))
             }
         )
-        RegistrationTextField(
+        OutlinedTextFieldBase(
             modifier = Modifier.padding(vertical = 5.dp),
             label = "Фамилия",
             value = statement.surname,
@@ -92,13 +92,13 @@ fun MemberScreenContent(
                 onValueChanged(statement.copy(birthday = newDate.mapToString()))
             },
         )
-        RegistrationTextField(
+        OutlinedTextFieldBase(
             modifier = Modifier
                 .padding(vertical = 5.dp)
                 .clickable {
                     calendarState.show()
                 },
-            enabled = false,
+            isEnabled = false,
             label = "День рождения",
             value = statement.birthday,
             onValueChange = {
@@ -106,7 +106,7 @@ fun MemberScreenContent(
             }
         )
         if (statement.contactPerson) {
-            RegistrationTextField(
+            OutlinedTextFieldBase(
                 modifier = Modifier.padding(vertical = 5.dp),
                 label = "Почта",
                 value = statement.email,
@@ -115,7 +115,7 @@ fun MemberScreenContent(
                     onValueChanged(statement.copy(email = it))
                 }
             )
-            RegistrationTextField(
+            OutlinedTextFieldBase(
                 modifier = Modifier.padding(vertical = 5.dp),
                 label = "Номер телефона",
                 value = statement.phone,

@@ -6,9 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.components.extra.FilterPosition
-import com.markettwits.start.presentation.order.components.extra.RegistrationTextField
 
 @Composable
 fun CityFiled(
@@ -21,7 +22,7 @@ fun CityFiled(
         mutableStateOf(false)
     }
     if (cityChecked) {
-        RegistrationTextField(
+        OutlinedTextFieldBase(
             label = "Город",
             value = statement.city,
             onValueChange = {
@@ -29,7 +30,7 @@ fun CityFiled(
             }
         )
     } else {
-        RegistrationFiled(
+        ItemsTextFiledDialog(
             label = "Город",
             value = statement.city,
             items = statement.cities.map { it.name },

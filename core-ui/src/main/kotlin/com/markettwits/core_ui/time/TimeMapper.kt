@@ -35,6 +35,10 @@ class BaseTimeMapper : TimeMapper {
 interface TimePattern {
     fun map(): String
 
+    object Full : TimePattern {
+        override fun map() = "MMMM dd, yyyy 'в' hh:mm a"
+
+    }
     object ddMMMMyyyy : TimePattern {
         override fun map() = "dd MMMM yyyy"
     }
@@ -42,7 +46,6 @@ interface TimePattern {
     object FullWithDots : TimePattern {
         override fun map() = "dd.MM.yyyy"
     }
-
     object Remote : TimePattern {
         override fun map() = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
     }

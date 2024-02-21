@@ -1,6 +1,8 @@
 package com.markettwits.registrations.registrations.presentation
 
 import com.markettwits.cloud.model.common.StartStatus
+import com.markettwits.registrations.registrations.domain.StartPaymentState
+import com.markettwits.registrations.registrations.domain.StartsStateInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -9,7 +11,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
     override val value: StateFlow<RegistrationsStore.State> = MutableStateFlow(
         RegistrationsStore.State(
             info = testList,
-            paymentState = RegistrationsStore.StartPaymentState(
+            paymentState = StartPaymentState(
                 paymentList = testPaymant
             )
         )
@@ -22,7 +24,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
     companion object {
         private val testPaymant =
             listOf(
-                RegistrationsStore.StartsStateInfo(
+                StartsStateInfo(
                     id = 1,
                     name = "Sample Event",
                     image = "sample_image.jpg",
@@ -40,7 +42,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 )
             )
         private val testList = listOf(
-            RegistrationsStore.StartsStateInfo(
+            StartsStateInfo(
                 id = 1,
                 name = "Sample Event",
                 image = "sample_image.jpg",
@@ -56,7 +58,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 startId = 0,
                 cost = "500"
             ),
-            RegistrationsStore.StartsStateInfo(
+            StartsStateInfo(
                 id = 1,
                 name = "Sample Event",
                 image = "sample_image.jpg",

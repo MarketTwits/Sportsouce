@@ -8,8 +8,9 @@ import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.profile.members.ProfileMembers
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
@@ -24,7 +25,7 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
-import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
+import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import java.io.File
@@ -69,7 +70,8 @@ interface SportsouceApi {
     suspend fun uploadFile(file: File): UploadFileResponse
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
-    suspend fun userRegistries(userId : Int, token : String) : List<RemouteStartsUserItem>
+    suspend fun userRegistries(userId: Int, token: String): List<RemoteStartsUserItem>
+    suspend fun memberTemplate(userId: Int, token: String): ProfileMembers
     //News
     suspend fun news() : NewsRemote
 }

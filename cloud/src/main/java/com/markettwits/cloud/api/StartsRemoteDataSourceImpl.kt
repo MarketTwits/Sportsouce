@@ -8,8 +8,9 @@ import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.profile.ChangeProfileInfoResponse
+import com.markettwits.cloud.model.profile.members.ProfileMembers
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
@@ -24,7 +25,7 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
-import com.markettwits.cloud.model.start_user.RemouteStartsUserItem
+import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.cloud.provider.HttpClientProvider
@@ -261,8 +262,18 @@ class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun userRegistries(userId: Int, token: String): List<RemouteStartsUserItem> {
+    override suspend fun userRegistries(userId: Int, token: String): List<RemoteStartsUserItem> {
         val response = client.get("user/startsByUserId/$userId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun memberTemplate(userId: Int, token: String): ProfileMembers {
+        val response = client.get("member-template?user_id=$userId") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")

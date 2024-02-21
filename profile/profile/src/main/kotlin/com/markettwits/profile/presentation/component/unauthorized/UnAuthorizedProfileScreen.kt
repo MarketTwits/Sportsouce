@@ -11,10 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.profile.presentation.ProfileUiState
 import com.markettwits.profile.presentation.common.menu.MenuItem
 import com.markettwits.profile.presentation.common.menu.SignInOrRegistryButton
 import com.markettwits.profile.presentation.common.top_bar.ProfileTopBar
+import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 
 @Composable

@@ -33,5 +33,4 @@ data class User(
     data class Photo(val id: Int, val name: String, val path: String) {
         fun imageUrl() = "$path/$name"
     }
-
 }

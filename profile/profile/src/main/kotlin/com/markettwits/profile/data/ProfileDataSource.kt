@@ -1,6 +1,6 @@
 package com.markettwits.profile.data
 
-import com.markettwits.profile.presentation.ProfileUiState
+import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 
 interface ProfileDataSource {

@@ -31,12 +31,11 @@ import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.R
-import com.markettwits.registrations.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.domain.StartsStateInfo
 
 @Composable
 fun RegistrationsCard(
-    start: RegistrationsStore.StartsStateInfo,
+    start: StartsStateInfo,
     onItemClick: (Int) -> Unit
 ) {
     Box(

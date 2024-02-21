@@ -2,7 +2,7 @@ package com.markettwits.root.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.presentation.DefaultProfileComponent
+import com.markettwits.profile.presentation.deprecated.DefaultProfileComponent
 import com.markettwits.root.RootReviewComponent
 import com.markettwits.starts.root.internal.RootStartsComponentBase
 import kotlinx.serialization.Serializable

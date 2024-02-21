@@ -3,7 +3,7 @@ package com.markettwits.edit_profile.edit_profile.presentation.mapper
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.city.CityRemote
-import com.markettwits.cloud.model.profile.ChangeProfileInfoRequest
+import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.edit_profile.edit_profile.models.CityUi
 import com.markettwits.edit_profile.edit_profile.models.TeamUi

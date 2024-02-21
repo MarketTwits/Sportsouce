@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.markettwits.profile.presentation.DefaultProfileScreen
+import com.markettwits.profile.presentation.deprecated.DefaultProfileScreen
 import com.markettwits.root.RootReviewScreen
 import com.markettwits.root.bottom_bar.BottomBar
 import com.markettwits.starts.root.api.RootStartsScreen

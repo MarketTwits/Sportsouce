@@ -1,0 +1,15 @@
+package com.markettwits.profile.presentation.component.authorized.presentation.store
+
+import com.arkivanov.mvikotlin.core.store.Reducer
+import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.Message
+import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.State
+
+object AuthorizedProfileReducer : Reducer<State, Message> {
+    override fun State.reduce(msg: Message): State {
+        return when (msg) {
+            is Message.Loading -> State(isLoading = true)
+            is Message.LoadingFailed -> State(isError = true, message = msg.message)
+            is Message.LoadingSuccess -> State(user = msg.user)
+        }
+    }
+}

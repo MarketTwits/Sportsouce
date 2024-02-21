@@ -13,7 +13,7 @@ import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentSt
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore.Label
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore.State
 import com.markettwits.registrations.registrations.data.RegistrationsDataSource
-import com.markettwits.registrations.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.domain.StartPaymentState
 import kotlinx.coroutines.launch
 
 interface RegistrationsPaymentStore : Store<Intent, State, Label> {
@@ -23,7 +23,7 @@ interface RegistrationsPaymentStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val items: RegistrationsStore.StartPaymentState,
+        val items: StartPaymentState,
         val event: StateEventWithContent<String> = consumed()
     )
 
@@ -35,7 +35,7 @@ class RegistrationsPaymentStoreFactory(
     private val repository: RegistrationsDataSource
 ) {
 
-    fun create(items: RegistrationsStore.StartPaymentState): RegistrationsPaymentStore =
+    fun create(items: StartPaymentState): RegistrationsPaymentStore =
         object : RegistrationsPaymentStore, Store<Intent, State, Label> by storeFactory.create(
             name = "RegistrationsPaymentStore",
             initialState = State(items),

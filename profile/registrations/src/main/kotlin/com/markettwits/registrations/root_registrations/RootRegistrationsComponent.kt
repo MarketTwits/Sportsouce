@@ -2,8 +2,8 @@ package com.markettwits.registrations.root_registrations
 
 import com.arkivanov.decompose.value.Value
 import com.markettwits.registrations.paymant_dialog.RegistrationsPaymentComponent
+import com.markettwits.registrations.registrations.domain.StartPaymentState
 import com.markettwits.registrations.registrations.presentation.RegistrationsComponent
-import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 import com.markettwits.start.root.RootStartScreenComponent
 import kotlinx.serialization.Serializable
 
@@ -25,7 +25,7 @@ interface RootRegistrationsComponent {
     @Serializable
     sealed class ConfigChild {
         @Serializable
-        data class PaymentDialog(val paymentState: RegistrationsStore.StartPaymentState) :
+        data class PaymentDialog(val paymentState: StartPaymentState) :
             ConfigChild()
     }
 

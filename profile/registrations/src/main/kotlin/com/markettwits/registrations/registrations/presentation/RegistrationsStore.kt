@@ -4,15 +4,14 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.registrations.registrations.data.RegistrationsDataSource
+import com.markettwits.registrations.registrations.domain.StartPaymentState
+import com.markettwits.registrations.registrations.domain.StartsStateInfo
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Intent
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Label
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.State
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 
 interface RegistrationsStore : Store<Intent, State, Label> {
 
@@ -29,31 +28,6 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = ""
-    )
-
-    @Serializable
-    data class StartsStateInfo(
-        val id: Int,
-        val startId: Int,
-        val name: String,
-        val image: String,
-        val dateStart: String,
-        val statusCode: StartStatus,
-        val team: String,
-        val payment: Boolean,
-        val ageGroup: String,
-        val distance: String,
-        val member: String,
-        val kindOfSport: String,
-        val startTitle: String,
-        val cost: String,
-    )
-
-    @Serializable
-    data class StartPaymentState(
-        val paymentList: List<StartsStateInfo> = emptyList(),
-        val totalCost: Int = 0,
-        val count: Int = 0
     )
 
     sealed interface Label {
@@ -80,8 +54,8 @@ class RegistrationsDataStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(
-            val pokemonInfo: List<RegistrationsStore.StartsStateInfo>,
-            val paymentState: RegistrationsStore.StartPaymentState
+            val pokemonInfo: List<StartsStateInfo>,
+            val paymentState: StartPaymentState
         ) : Msg
 
         data class InfoFailed(val message: String) : Msg

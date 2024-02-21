@@ -39,35 +39,34 @@ fun SportSouceTheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Color.White,
-    secondary = Color.White,
-    secondaryContainer = Color.White,
-
-    surfaceTint = SportSouceColor.DirtyWhite,
+    onPrimary = SportSouceColor.DarkSecondaryNew,
+    onPrimaryContainer = Color.White,
+    secondary = SportSouceColor.SportSouceLighBlue,
+    onSecondary = Color.White,
     tertiary = SportSouceColor.SportSouceBlue,
-    tertiaryContainer = Color.Gray,
-    // background = SportSouceColor.DirtyWhite,
+    onTertiary = SportSouceColor.DirtyWhite,
+    tertiaryContainer = SportSouceColor.VeryLighBlue,
+    onTertiaryContainer = SportSouceColor.SportSouceBlue,
     background = Color.White,
+    onBackground = Color.White,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
-    onPrimaryContainer = SportSouceColor.SportSouceLighBlue
+    outline = Color.Gray
 )
 
 private val DarkColorScheme = darkColorScheme(
-    // primary = Color.Black,
     primary = SportSouceColor.DarkSecondaryNew,
-    secondary = SportSouceColor.DarkSecondaryNew,
-    secondaryContainer = SportSouceColor.DarkSecondaryContainerNew,
-
-    tertiary = Color.White,
-    tertiaryContainer = Color.White,
-    onErrorContainer = SportSouceColor.SportSouceLightRed,
-    onPrimaryContainer = Color.White,
-    surfaceTint = Color.White,
-    primaryContainer = Color.DarkGray,
-    surface = Color.Black,
-    inversePrimary = Color.White,
     onPrimary = SportSouceColor.DirtyWhite,
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
+    onPrimaryContainer = SportSouceColor.DarkSecondaryContainerNew,
+    secondary = SportSouceColor.OnSecondaryContainer,
+    onSecondary = SportSouceColor.DirtyWhite,
+    tertiary = SportSouceColor.DirtyWhite,
+    onTertiary = SportSouceColor.DarkSecondaryContainerNew,
+    tertiaryContainer = SportSouceColor.DarkSecondaryContainerNew,
+    onTertiaryContainer = SportSouceColor.DirtyWhite,
+    onErrorContainer = SportSouceColor.SportSouceLightRed,
+    outline = Color.LightGray,
+
+
     onBackground = Color.White,
-    background = SportSouceColor.DarkSecondaryNew,
+    background = Color.Black
 )

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +52,7 @@ internal fun EditProfileImageScreenContent(
                 width = 4f,
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
             )
-            val color = MaterialTheme.colorScheme.tertiaryContainer
+            val color = Color.LightGray
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

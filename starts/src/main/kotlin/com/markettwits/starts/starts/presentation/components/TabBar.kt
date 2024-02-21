@@ -1,7 +1,6 @@
 package com.markettwits.starts.starts.presentation.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import kotlinx.coroutines.launch
 
 
@@ -44,34 +43,34 @@ fun TabBar(content: @Composable (Int) -> Unit) {
         TabRowDefaults.PrimaryIndicator(
             width = 120.dp,
             shape = RoundedCornerShape(10.dp),
-            color = SportSouceColor.SportSouceBlue,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier
                 .tabIndicatorOffset(tabPositions[pagerState.currentPage])
                 .fillMaxWidth()
         )
     }
     ScrollableTabRow(
-        modifier = Modifier
-            .height(50.dp)
-            .background(Color.White),
+        modifier = Modifier.height(50.dp),
         selectedTabIndex = pagerState.currentPage,
         divider = {},
-        indicator = indicator
+        indicator = indicator,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.primary
     ) {
         pages.forEachIndexed { index, item ->
             Tab(
                 modifier = Modifier
                     .wrapContentSize()
-                    .background(Color.White)
                     .clip(RoundedCornerShape(10.dp))
                 ,
-                selectedContentColor = SportSouceColor.SportSouceBlue,
+                selectedContentColor = MaterialTheme.colorScheme.tertiary,
                 unselectedContentColor = Color.Gray,
                 selected = pagerState.currentPage == index,
                 text = {
                     Text(
                         text = item,
                         fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.outline,
                         fontFamily = FontNunito.bold
                     )
                 },

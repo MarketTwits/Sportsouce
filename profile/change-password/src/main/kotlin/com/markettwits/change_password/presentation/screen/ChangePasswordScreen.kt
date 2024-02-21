@@ -2,12 +2,8 @@
 
 package com.markettwits.change_password.presentation.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -24,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.change_password.presentation.component.ChangePasswordTextField
 import com.markettwits.change_password.presentation.component.SaveChangesButton
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.event.EventEffect
@@ -56,20 +53,15 @@ fun ChangePasswordScreen(component: ChangePassword) {
             }
         }
     ) {
-        Column(
+        OnBackgroundCard(
             modifier = Modifier
-                .padding(10.dp)
-                .verticalScroll(rememberScrollState())
                 .padding(top = it.calculateTopPadding())
-                .padding(10.dp)
-                .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.secondary)
-        ) {
+                .padding(20.dp)
+        ) { innerModifier ->
             Column(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(20.dp)
                     .clip(Shapes.medium)
-                    .background(MaterialTheme.colorScheme.secondary)
             ) {
                 val modifier = Modifier.padding(5.dp)
                 ChangePasswordTextField(

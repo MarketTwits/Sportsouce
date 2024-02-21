@@ -2,6 +2,7 @@ package com.markettwits.start.presentation.order.components.order
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +26,7 @@ fun OrderPriceInfo(
         fontFamily = FontNunito.bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = Color.Black
+        color = MaterialTheme.colorScheme.onPrimary
     )
     Text(
         modifier = modifier,
@@ -63,6 +64,6 @@ fun OrderPriceInfo(
         fontFamily = FontNunito.bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = Color.Black
+        color = MaterialTheme.colorScheme.onPrimary
     )
 }

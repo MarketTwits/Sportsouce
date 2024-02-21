@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +38,6 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.icons.IconTelegram
 import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.Animation
 
 @Composable
@@ -58,14 +58,14 @@ fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Organizer>) {
         ) {
             Text(
                 text = "Организаторы",
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 fontFamily = FontNunito.bold,
                 fontSize = 16.sp
             )
             Icon(
                 imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                 contentDescription = "",
-                tint = SportSouceColor.SportSouceBlue
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
             AnimatedVisibility(
@@ -86,11 +86,11 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                 Icon(
                     imageVector = Icons.Default.HomeRepairService,
                     contentDescription = "icon",
-                    tint = SportSouceColor.SportSouceLighBlue
+                    tint = MaterialTheme.colorScheme.secondary
                 )
                 Text(
                     text = it.name,
-                    color = SportSouceColor.SportSouceBlue,
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontFamily = FontNunito.regular,
                     fontSize = 14.sp
                 )
@@ -101,7 +101,7 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                     Icon(
                         imageVector = Icons.Default.Phone,
                         contentDescription = "icon",
-                        tint = SportSouceColor.SportSouceLighBlue
+                        tint = MaterialTheme.colorScheme.secondary
                     )
                     Text(
                         modifier = modifier.clickable {
@@ -110,7 +110,7 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                             context.startActivity(intent)
                         },
                         text = it.phone,
-                        color = SportSouceColor.SportSouceBlue,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontFamily = FontNunito.regular,
                         fontSize = 14.sp
                     )
@@ -124,7 +124,7 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                         Box(
                             modifier = modifier
                                 .clip(Shapes.medium)
-                                .background(SportSouceColor.SportSouceLighBlue)
+                                .background(MaterialTheme.colorScheme.secondary)
                                 .size(30.dp)
                                 .clickable {
                                     openWebPage(it.url ?: "", context)

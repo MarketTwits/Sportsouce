@@ -4,17 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.components.top_bar.TopBarBase
 import com.markettwits.start.presentation.membres.list.MockStartMembersScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreen
-import com.markettwits.start.presentation.membres.list.compoent.StartMembers
-import com.markettwits.start.presentation.membres.list.compoent.StartMembersTopBar
-import com.markettwits.start.presentation.membres.list.compoent.StartSearchMember
+import com.markettwits.start.presentation.membres.list.compoents.StartMembers
+import com.markettwits.start.presentation.membres.list.compoents.StartSearchMember
 
 @Composable
 fun StartMembersScreen(component: StartMembersScreen) {
@@ -22,10 +22,10 @@ fun StartMembersScreen(component: StartMembersScreen) {
     Box(
         Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Column {
-            StartMembersTopBar {
+            TopBarBase(title = "Список участников") {
                 component.back()
             }
             StartSearchMember(component = component)

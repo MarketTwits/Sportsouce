@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.OnClick
 
 
@@ -42,20 +41,19 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Список участников",
-                    color = SportSouceColor.SportSouceBlue,
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontFamily = FontNunito.bold,
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.padding(start = 5.dp))
                 Box(modifier = Modifier
                     .clip(Shapes.small)
-                    .background(SportSouceColor.VeryLighBlue)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
                     .padding(5.dp)
-
                 ) {
                     Text(
                         text = membersCount.toString(),
-                        color = SportSouceColor.SportSouceBlue,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontFamily = FontNunito.regular,
                         fontSize = 12.sp
                     )
@@ -63,9 +61,9 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
             }
 
             Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "",
-                tint = SportSouceColor.SportSouceBlue
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
     }

@@ -12,15 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +30,6 @@ import com.markettwits.core_ui.R
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
 import de.charlex.compose.material3.HtmlText
 
@@ -45,7 +41,6 @@ fun StartCard(
 ) {
     Box(
         modifier = modifier
-            .background(Color.White)
             .fillMaxWidth()
             .height(height = 180.dp)
             .padding(10.dp)
@@ -66,7 +61,6 @@ fun StartCard(
                 place = start.place,
                 distance = start.distance
             )
-            ImageInfoButton()
         }
     }
 }
@@ -82,7 +76,7 @@ private fun ImageCard(
         modifier = modifier
             .size(width = 120.dp, height = 170.dp)
             .clip(Shapes.medium)
-            .border(1.dp, Color.LightGray.copy(alpha = 0.5f), Shapes.medium)
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), Shapes.medium)
     ) {
         Box(modifier = modifier.fillMaxSize()) {
             SubcomposeAsyncImage(
@@ -112,12 +106,12 @@ private fun ImageCard(
 private fun ImageCardInfoStroke(title: String) {
     Row(
         modifier = Modifier
-            .background(SportSouceColor.SportSouceLighBlue)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSecondary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             fontFamily = FontNunito.bold,
@@ -137,7 +131,7 @@ private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = status.message,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSecondary,
             fontFamily = FontNunito.bold,
             fontSize = 10.sp,
             maxLines = 1,
@@ -161,10 +155,10 @@ private fun ImageCardInfo(
             fontFamily = FontNunito.bold,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            color = SportSouceColor.SportSouceBlue
+            color = MaterialTheme.colorScheme.tertiary
         )
         Text(
-            color = SportSouceColor.SportSouceBlue,
+            color = MaterialTheme.colorScheme.outline,
             text = place,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
@@ -176,17 +170,7 @@ private fun ImageCardInfo(
             fontSize = 12.sp,
             overflow = TextOverflow.Ellipsis,
             fontFamily = FontNunito.medium,
-            color = SportSouceColor.SportSouceBlue
+            color = MaterialTheme.colorScheme.outline
         )
     }
-}
-
-@Composable
-private fun ImageInfoButton(modifier: Modifier = Modifier) {
-    Icon(
-        imageVector = Icons.Default.MoreVert,
-        contentDescription = null,
-        tint = SportSouceColor.SportSouceBlue,
-        modifier = modifier.size(20.dp)
-    )
 }

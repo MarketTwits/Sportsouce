@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.components.progress.CircularProgressIndicatorBase
-import com.markettwits.core_ui.components.textField.TextFieldBase
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStore
@@ -44,7 +44,7 @@ fun EditProfileAboutContent(
         )
         Column(modifier = Modifier.padding(20.dp)) {
             Column {
-                TextFieldBase(
+                OutlinedTextFieldBase(
                     modifier = Modifier,
                     label = "Обо мне",
                     isError = state.fieldStat.isError,
@@ -85,7 +85,7 @@ fun EditProfileAboutContent(
                         .height(35.dp),
                     title = "Сохранить",
                     containerColor = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.secondary,
+                    textColor = MaterialTheme.colorScheme.onTertiary,
                     onClick = { apply() },
                     isEnabled = !state.fieldStat.isError,
                     showContent = state.isLoading,
@@ -94,7 +94,7 @@ fun EditProfileAboutContent(
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)
                                 .size(20.dp),
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.onTertiary
                         )
                     },
                 )

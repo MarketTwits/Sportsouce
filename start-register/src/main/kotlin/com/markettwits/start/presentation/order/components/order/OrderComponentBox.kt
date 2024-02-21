@@ -1,13 +1,10 @@
 package com.markettwits.start.presentation.order.components.order
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.start.presentation.order.domain.OrderPrice
 import com.markettwits.start.presentation.order.store.OrderStore
 import com.markettwits.start.presentation.promo.components.RegistrationButton
@@ -22,10 +19,8 @@ fun OrderComponentBox(
     onClickCheckRules: () -> Unit,
     onClickRegistry: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
+    OnBackgroundCard(
+        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
     ) {
         if (!paymentDisabled) {
             OrderPriceInfo(

@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.textField.TextFieldBase
+import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.presentation.component.AuthButton
 import com.markettwits.profile.presentation.component.WelcomeContent
@@ -52,7 +52,7 @@ fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState, componen
         ) {
             WelcomeContent()
             val modifier = Modifier.padding(10.dp)
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = modifier,
                 label = "Почта",
                 value = fieldState.email,
@@ -60,7 +60,7 @@ fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState, componen
             ) {
                 component.handleEmail(it)
             }
-            TextFieldBase(
+            OutlinedTextFieldBase(
                 modifier = modifier,
                 label = "Пароль",
                 value = fieldState.password,

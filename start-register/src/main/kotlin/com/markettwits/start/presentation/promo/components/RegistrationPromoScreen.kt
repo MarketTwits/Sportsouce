@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,11 +19,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.promo.component.RegistrationPromoComponent
 import com.markettwits.start.presentation.promo.store.RegistrationPromoStore
 
@@ -34,7 +33,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
     val labels by component.labels.collectAsState(RegistrationPromoStore.Label.Empty)
 
     ModalBottomSheet(
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {
             component.obtainEvent(RegistrationPromoStore.Intent.Dismiss)
         }
@@ -42,7 +41,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
         Column(
             modifier = Modifier
                 .padding(10.dp)
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(10.dp)
         ) {
             Row(
@@ -56,7 +55,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
                     text = "Промокод",
                     fontFamily = FontNunito.bold,
                     fontSize = 18.sp,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
                 Icon(
                     modifier = Modifier.clickable {
@@ -64,7 +63,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
                     },
                     imageVector = Icons.Default.Close,
                     contentDescription = "close",
-                    tint = SportSouceColor.SportSouceBlue
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
             RegistrationPromoTextField(

@@ -1,15 +1,12 @@
 package com.markettwits.core_ui.failed_screen
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 
 
 @Composable
@@ -43,7 +38,7 @@ fun FailedScreen(
             Text(
                 modifier = modifier,
                 text = title,
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiaryContainer,
                 textAlign = TextAlign.Center,
                 fontFamily = FontNunito.bold,
                 fontSize = 16.sp
@@ -52,7 +47,7 @@ fun FailedScreen(
                 modifier = modifier,
                 text = message,
                 textAlign = TextAlign.Center,
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 fontFamily = FontNunito.regular,
                 fontSize = 12.sp
             )
@@ -80,7 +75,7 @@ fun FailedScreen(
                 ) {
                     Text(
                         text = "Повторить",
-                        color = SportSouceColor.SportSouceBlue,
+                        color = MaterialTheme.colorScheme.tertiary,
                         fontFamily = FontNunito.bold,
                         fontSize = 12.sp
                     )

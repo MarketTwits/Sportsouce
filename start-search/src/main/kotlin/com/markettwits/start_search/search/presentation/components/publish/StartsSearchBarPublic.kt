@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +39,7 @@ fun StartsSearchBarPublic(modifier: Modifier = Modifier) {
             )
             .clip(Shapes.large),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ),
     ) {
         Row(
@@ -50,14 +51,14 @@ fun StartsSearchBarPublic(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Поиск старта",
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.outline
             )
             Spacer(modifier = Modifier.padding(horizontal = 5.dp))
             Text(
                 text = "Поиск старта",
                 fontSize = 16.sp,
                 fontFamily = FontNunito.bold,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.outline
             )
         }
     }

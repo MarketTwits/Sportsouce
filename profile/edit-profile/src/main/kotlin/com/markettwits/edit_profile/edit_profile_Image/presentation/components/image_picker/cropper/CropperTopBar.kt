@@ -21,7 +21,7 @@ import com.mr0xf00.easycrop.CropState
 internal fun CropperTopBar(state: CropState) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.primary,
             actionIconContentColor = MaterialTheme.colorScheme.tertiary,
             navigationIconContentColor = MaterialTheme.colorScheme.tertiary
         ),

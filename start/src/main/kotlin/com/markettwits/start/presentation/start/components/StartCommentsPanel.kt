@@ -21,6 +21,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -40,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.Animation
@@ -73,12 +73,12 @@ fun StartCommentsPanel(
                 fontFamily = FontNunito.bold,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             Icon(
                 imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                 contentDescription = "",
-                tint = SportSouceColor.SportSouceBlue
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
         AnimatedVisibility(
@@ -107,7 +107,7 @@ fun StartCommentsPanel(
                         fontSize = 15.sp,
                         fontFamily = FontNunito.medium,
                         overflow = TextOverflow.Ellipsis,
-                        color = SportSouceColor.SportSouceBlue
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
@@ -144,7 +144,7 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.semiBoldBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 5.dp))
                 Text(
@@ -153,7 +153,7 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Text(
@@ -162,7 +162,7 @@ private fun StartCommentCard(
                 fontFamily = FontNunito.medium,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
             if (!isReply) {
                 Text(
@@ -174,7 +174,7 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = SportSouceColor.SportSouceLighBlue
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
 
@@ -191,7 +191,7 @@ private fun StartCommentCard(
                         fontFamily = FontNunito.bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = SportSouceColor.SportSouceBlue
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
                 if (showReply) {
@@ -214,7 +214,7 @@ private fun StartCommentCard(
                         fontFamily = FontNunito.bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = SportSouceColor.SportSouceBlue
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }
@@ -238,7 +238,7 @@ fun CommentTextField(
         Modifier
             .fillMaxWidth()
             .shadow(elevation = 20.dp)
-            .background(SportSouceColor.VeryLighBlue)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
             .padding(3.dp),
     ) {
         if (mode is CommentMode.Reply) {
@@ -254,7 +254,7 @@ fun CommentTextField(
                         fontFamily = FontNunito.bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = SportSouceColor.SportSouceBlue
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                     Icon(
                         modifier = Modifier
@@ -264,7 +264,7 @@ fun CommentTextField(
                             },
                         imageVector = Icons.Default.Clear,
                         contentDescription = "rule",
-                        tint = SportSouceColor.SportSouceBlue
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
 
@@ -282,7 +282,7 @@ fun CommentTextField(
                 modifier = Modifier.size(12.dp),
                 imageVector = Icons.Default.Book,
                 contentDescription = "rule",
-                tint = SportSouceColor.SportSouceBlue
+                tint = MaterialTheme.colorScheme.tertiary
             )
             Text(
                 text = "Правила",
@@ -290,7 +290,7 @@ fun CommentTextField(
                 fontFamily = FontNunito.bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceBlue
+                color = MaterialTheme.colorScheme.tertiary
             )
         }
 
@@ -300,9 +300,9 @@ fun CommentTextField(
         value = comment,
         maxLines = 3,
         colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White,
-            cursorColor = SportSouceColor.SportSouceBlue
+            unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.tertiary
         ),
         placeholder = {
             Text(
@@ -318,7 +318,7 @@ fun CommentTextField(
             if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(30.dp),
-                    color = SportSouceColor.SportSouceBlue,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             } else {
                 IconButton(
@@ -329,7 +329,7 @@ fun CommentTextField(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Send,
                         contentDescription = "send comment",
-                        tint = SportSouceColor.SportSouceBlue
+                        tint = MaterialTheme.colorScheme.tertiary
                     )
                 }
             }

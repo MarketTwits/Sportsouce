@@ -54,7 +54,7 @@ fun <E> DropDownSpinner(
         DropdownMenu(
             modifier = Modifier
                 .fillMaxWidth(.85f)
-                .background(MaterialTheme.colorScheme.onSecondaryContainer),
+                .background(MaterialTheme.colorScheme.onPrimaryContainer),
             expanded = isOpen,
             onDismissRequest = {
                 isOpen = false

@@ -7,6 +7,6 @@ interface ExecuteWithCache {
         forced: Boolean = false,
         cache: Cache<T>,
         launch: suspend () -> T,
-        callback: (T) -> Unit
+        callback: suspend (T) -> Unit
     )
 }

@@ -19,7 +19,7 @@ class RegistrationsDataSourceBase(
         return try {
             val token = auth.updateToken()
             val user = auth.auth()
-            val result = service.userRegistries(user.id, token)
+            val result = service.userRegistries(user.getOrThrow().id, token.getOrThrow())
             Result.success(mapper.map(result))
         } catch (e: Exception) {
             val message = when (e) {
@@ -34,7 +34,7 @@ class RegistrationsDataSourceBase(
     override suspend fun pay(id: Int): Result<String> {
         return retryRunCatchingAsync {
             val token = auth.updateToken()
-            val response = service.repay(id, token)
+            val response = service.repay(id, token.getOrThrow())
             when (response.payment) {
                 is StartRegistrationResponse.Payment.PaymentBase -> (response.payment as StartRegistrationResponse.Payment.PaymentBase).formUrl
                 is StartRegistrationResponse.Payment.PaymentString -> ""

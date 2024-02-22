@@ -12,9 +12,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.failed_screen.FailedScreen
-import com.markettwits.core_ui.refresh.PullToRefreshScreen
+import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.review.presentation.components.content.ReviewContent
 import com.markettwits.review.presentation.store.ReviewStore
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic

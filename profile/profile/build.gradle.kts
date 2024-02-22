@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":profile:edit-profile"))
     implementation(project(":profile:change-password"))
     implementation(project(":profile:registrations"))
+    implementation(projects.cache)
     implementation(projects.startsCommon)
     implementation(libs.lottie)
     implementation(libs.koin.core)

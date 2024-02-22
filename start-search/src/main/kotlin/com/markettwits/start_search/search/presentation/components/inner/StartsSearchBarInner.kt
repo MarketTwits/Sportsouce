@@ -47,8 +47,8 @@ fun StartsSearchBarInner(
     ) {
         Icon(
             modifier = Modifier
-                .clip(Shapes.extraLarge)
                 .padding(5.dp)
+                .clip(Shapes.medium)
                 .clickable {
                     onClickBack()
                 },
@@ -85,8 +85,8 @@ fun StartsSearchBarInner(
         if (query.isEmpty()) {
             Icon(
                 modifier = Modifier
-                    .clip(Shapes.extraLarge)
-                    .padding(5.dp),
+                    .padding(5.dp)
+                    .clip(Shapes.extraLarge),
                 imageVector = Icons.Default.Mic,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.outline
@@ -94,8 +94,8 @@ fun StartsSearchBarInner(
         } else {
             Icon(
                 modifier = Modifier
-                    .clip(Shapes.extraLarge)
                     .padding(5.dp)
+                    .clip(Shapes.extraLarge)
                     .clickable {
                         onBrushClicked()
                     },
@@ -106,8 +106,8 @@ fun StartsSearchBarInner(
         }
         Icon(
             modifier = Modifier
-                .clip(Shapes.extraLarge)
                 .padding(5.dp)
+                .clip(Shapes.extraLarge)
                 .clickable {
                     onFilterClicked()
                 },

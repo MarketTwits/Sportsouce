@@ -37,7 +37,7 @@ fun ItemsDialog(
             modifier = modifier
                 .padding(10.dp)
                 .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 modifier = modifier.padding(10.dp),
@@ -95,7 +95,7 @@ fun ItemsDialogFilterPosition(
         Checkbox(
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colorScheme.tertiary,
-                checkmarkColor = MaterialTheme.colorScheme.primary
+                checkmarkColor = MaterialTheme.colorScheme.onTertiary
             ),
             checked = checked,
             onCheckedChange = { onClick(item) })

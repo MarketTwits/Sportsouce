@@ -74,8 +74,12 @@ class BaseStartDataSource(
             val token = authService.updateToken()
             val user = authService.auth()
             service.writeComment(
-                startCommentRequest = StartCommentRequest(comment, startId, user.id.toString()),
-                token = token
+                startCommentRequest = StartCommentRequest(
+                    comment,
+                    startId,
+                    user.getOrThrow().id.toString()
+                ),
+                token = token.getOrThrow()
             )
             CommentUiState.Success
         } catch (e: Exception) {
@@ -97,9 +101,9 @@ class BaseStartDataSource(
                 subComment = StartSubCommentRequest(
                     comment,
                     parentCommentId,
-                    user.id.toString()
+                    user.getOrThrow().id.toString()
                 ),
-                token = token
+                token = token.getOrThrow()
             )
             CommentUiState.Success
         } catch (e: Exception) {

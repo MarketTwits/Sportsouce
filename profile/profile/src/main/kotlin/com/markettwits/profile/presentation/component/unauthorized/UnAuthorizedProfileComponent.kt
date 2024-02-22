@@ -14,7 +14,7 @@ class UnAuthorizedProfileComponent(
     private val goAuthProfile: () -> Unit,
     private val goSignIn: () -> Unit
 ) : UnAuthorizedProfile, ComponentContext by context {
-    val scope = CoroutineScope(Dispatchers.Main)
+    val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     override val state: MutableValue<ProfileUiState> = MutableValue(
         stateKeeper.consume(
@@ -35,11 +35,14 @@ class UnAuthorizedProfileComponent(
     fun check() {
         state.value = ProfileUiState.Loading
         scope.launch {
-            when(service.profile()){
-                is ProfileUiState.Base ->  goAuthProfile()
-                is ProfileUiState.Error -> state.value = ProfileUiState.Error("")
-                is ProfileUiState.Loading -> state.value = ProfileUiState.Loading
-            }
+            service.profile().fold(
+                onSuccess = {
+                    goAuthProfile()
+                },
+                onFailure = {
+                    state.value = ProfileUiState.Error(it.message.toString())
+                }
+            )
         }
     }
 

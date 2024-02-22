@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core-koin"))
     api(libs.ktor.client.json)
     api(libs.ktor.client.okhttp)
+    implementation(projects.coreKoin)
     implementation(libs.ktor.core)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)

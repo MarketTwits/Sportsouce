@@ -6,12 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.comments.comments.components.StartCommentsContent
 import com.markettwits.start.presentation.start.component.StartScreenComponent
+import com.markettwits.start.presentation.start.components.StartScreenContent
 import com.markettwits.start.presentation.start.store.StartScreenStore
 
 @Composable

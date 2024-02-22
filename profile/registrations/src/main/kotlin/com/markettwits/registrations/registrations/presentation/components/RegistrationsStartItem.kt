@@ -3,7 +3,7 @@ package com.markettwits.registrations.registrations.presentation.components
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import com.markettwits.core_ui.refresh.PullToRefreshScreen
+import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.registrations.registrations.domain.StartsStateInfo
 
 

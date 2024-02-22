@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.failed_screen.FailedScreen
-import com.markettwits.core_ui.refresh.PullToRefreshScreen
+import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
 import com.markettwits.starts.starts.presentation.component.MockStartsScreenComponent

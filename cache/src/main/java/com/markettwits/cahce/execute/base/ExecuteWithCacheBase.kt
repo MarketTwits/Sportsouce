@@ -7,7 +7,7 @@ class ExecuteWithCacheBase : ExecuteWithCacheAbstract() {
         forced: Boolean,
         cache: Cache<T>,
         launch: suspend () -> T,
-        callback: (T) -> Unit
+        callback: suspend (T) -> Unit
     ) {
         if (forced)
             executeWithCacheWithForced(cache, launch, callback)

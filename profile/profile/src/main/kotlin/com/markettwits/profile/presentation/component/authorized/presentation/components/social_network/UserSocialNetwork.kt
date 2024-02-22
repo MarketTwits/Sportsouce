@@ -131,7 +131,7 @@ fun AddSocialNetworkButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
         modifier = modifier
             .size(width = 50.dp, height = 30.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
     ) {
         Icon(
             modifier = Modifier
@@ -139,7 +139,7 @@ fun AddSocialNetworkButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 .fillMaxSize(),
             imageVector = Icons.Default.Add,
             contentDescription = "",
-            tint = MaterialTheme.colorScheme.tertiary
+            tint = MaterialTheme.colorScheme.onTertiaryContainer
         )
     }
 }

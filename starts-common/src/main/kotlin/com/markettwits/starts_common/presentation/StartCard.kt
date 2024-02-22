@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -85,10 +86,16 @@ private fun ImageCard(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
                 error = {
-                    SubcomposeAsyncImageContent(
-                        modifier = modifier,
-                        painter = painterResource(id = R.drawable.default_start_image)
-                    )
+                    if (image.isEmpty())
+                        SubcomposeAsyncImageContent(
+                            modifier = modifier,
+                            painter = painterResource(id = R.drawable.default_start_image)
+                        )
+                    else
+                        Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
+                },
+                loading = {
+                    Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
                 },
                 success = {
                     SubcomposeAsyncImageContent(modifier = modifier)
@@ -157,17 +164,21 @@ private fun ImageCardInfo(
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
+        Spacer(modifier = Modifier.padding(2.dp))
         Text(
             color = MaterialTheme.colorScheme.outline,
             text = place,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
+            lineHeight = 14.sp,
             fontFamily = FontNunito.medium,
             fontSize = 12.sp
         )
+        Spacer(modifier = Modifier.padding(4.dp))
         HtmlText(
             text = distance,
             fontSize = 12.sp,
+            lineHeight = 14.sp,
             overflow = TextOverflow.Ellipsis,
             fontFamily = FontNunito.medium,
             color = MaterialTheme.colorScheme.outline

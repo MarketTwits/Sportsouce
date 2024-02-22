@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.refresh
+package com.markettwits.core_ui.base_screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +29,7 @@ fun PullToRefreshScreen(
         PullRefreshIndicator(
             refreshing = isRefreshing, state = state,
             colors = PullRefreshIndicatorDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.background,
                 contentColor = MaterialTheme.colorScheme.tertiary
             ),
             shadowElevation = 5.dp,

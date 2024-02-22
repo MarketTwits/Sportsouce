@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -42,13 +43,14 @@ import com.markettwits.start.presentation.common.Animation
 
 @Composable
 fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Organizer>) {
+    val innerPadding = modifier.padding(5.dp)
     var panelState by rememberSaveable{
         mutableStateOf(true)
     }
     if (organizer.isNotEmpty()) {
         HorizontalDivider()
         Row(
-            modifier = modifier
+            modifier = innerPadding
                 .fillMaxWidth()
                 .clickable {
                     panelState = !panelState
@@ -56,6 +58,7 @@ fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Organizer>) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
+
             Text(
                 text = "Организаторы",
                 color = MaterialTheme.colorScheme.tertiary,
@@ -73,7 +76,7 @@ fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Organizer>) {
                 enter = Animation.enterAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
                 exit = Animation.exitAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
             ) {
-                StartOrganizersContent(modifier, organizer)
+                StartOrganizersContent(innerPadding, organizer)
             }
     }
 }

@@ -2,13 +2,16 @@ package com.markettwits.profile.presentation.component.authorized.domain
 
 import com.markettwits.cloud.model.start.SocialNetwork
 import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserProfile(
     val id: Int,
     val socialNetwork: SocialNetwork,
     val activity: Activity,
     val userInfo: UserInfo
 ) {
+    @Serializable
     data class UserInfo(
         val name: String,
         val surname: String,
@@ -19,6 +22,7 @@ data class UserProfile(
         fun fullName() = "$surname $name"
     }
 
+    @Serializable
     data class SocialNetwork(
         val instagram: String,
         val telegram: String,
@@ -26,6 +30,7 @@ data class UserProfile(
         val vk: String
     )
 
+    @Serializable
     data class Activity(
         val userRegistry: List<StartsStateInfo>,
         val userMemberCount: Int

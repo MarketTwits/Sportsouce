@@ -16,7 +16,10 @@ class ChangePasswordDataSourceBase(
     override suspend fun changePassword(password: String, newPassword: String): Result<String> {
         return try {
             val token = auth.updateToken()
-            val it = service.changePassword(ChangePasswordRequest(password, newPassword), token)
+            val it = service.changePassword(
+                ChangePasswordRequest(password, newPassword),
+                token.getOrThrow()
+            )
             auth.updatePassword(newPassword)
             Result.success(it.message)
         } catch (e: Exception) {

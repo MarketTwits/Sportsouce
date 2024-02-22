@@ -14,7 +14,9 @@ interface AuthorizedProfileStore : Store<Intent, State, Label> {
         val user: UserProfile? = null
     )
 
-    sealed interface Intent
+    sealed interface Intent {
+        data object Retry : Intent
+    }
 
     sealed interface Message {
         data object Loading : Message

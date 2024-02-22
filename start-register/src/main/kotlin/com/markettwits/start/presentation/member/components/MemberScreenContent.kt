@@ -16,11 +16,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.date.mapToString
+import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.components.extra.fileds.CityFiled
-import com.markettwits.start.presentation.order.components.extra.fileds.RegistrationFiled
 import com.markettwits.start.presentation.order.components.extra.fileds.TeamFiled
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -125,7 +125,7 @@ fun MemberScreenContent(
                 }
             )
         }
-        RegistrationFiled(
+        ItemsTextFiledDialog(
             modifier = Modifier.padding(vertical = 5.dp),
             label = "Пол",
             value = statement.sex,

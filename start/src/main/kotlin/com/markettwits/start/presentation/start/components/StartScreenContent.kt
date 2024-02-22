@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.screen
+package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,19 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.components.FullImageContent
-import com.markettwits.core_ui.refresh.PullToRefreshScreen
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import com.markettwits.start.presentation.start.components.StartConditionPanel
-import com.markettwits.start.presentation.start.components.StartDescription
-import com.markettwits.start.presentation.start.components.StartDistances
-import com.markettwits.start.presentation.start.components.StartMembersPanel
-import com.markettwits.start.presentation.start.components.StartOrganizers
-import com.markettwits.start.presentation.start.components.StartResult
-import com.markettwits.start.presentation.start.components.StartStatus
-import com.markettwits.start.presentation.start.components.StartTitle
 
 @Composable
 fun StartScreenContent(
@@ -68,7 +60,7 @@ fun StartScreenContent(
                             onClickDistance(distance, paymentDisabled, paymentType)
                         }
                     )
-                    StartOrganizers(modifier = modifier, organizer = data.organizers)
+                    StartOrganizers(organizer = data.organizers)
                     StartResult(
                         modifier = modifier,
                         results = data.result,

@@ -11,11 +11,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.asProvider().get()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+//    packaging {
+//        resources {
+//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//        }
+//    }
 //    buildTypes {
 //        debug {
 //            isMinifyEnabled = true

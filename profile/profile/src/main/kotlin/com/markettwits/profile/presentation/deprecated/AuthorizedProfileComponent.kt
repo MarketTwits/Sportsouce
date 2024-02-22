@@ -24,13 +24,11 @@ class AuthorizedProfileComponent(
     init {
         scope.launch {
             profileName.value = ProfileUiState.Loading
-            useCase.user().collect {
-                it.fold(onSuccess = {
+            useCase.user().fold(onSuccess = {
                     profileName.value = ProfileUiState.Base(it)
                 }, onFailure = {
                     event(AuthorizedProfileEvent.SignOut)
                 })
-            }
             //  profileName.value = service.profile()
         }
         stateKeeper.register(

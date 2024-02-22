@@ -7,9 +7,14 @@ import com.markettwits.profile.presentation.component.authorized.presentation.st
 object AuthorizedProfileReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Loading -> State(isLoading = true)
-            is Message.LoadingFailed -> State(isError = true, message = msg.message)
-            is Message.LoadingSuccess -> State(user = msg.user)
+            is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.LoadingFailed -> copy(
+                isLoading = false,
+                isError = true,
+                message = msg.message
+            )
+
+            is Message.LoadingSuccess -> copy(user = msg.user, isLoading = false, isError = false)
         }
     }
 }

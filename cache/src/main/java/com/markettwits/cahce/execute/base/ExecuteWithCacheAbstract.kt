@@ -6,7 +6,7 @@ abstract class ExecuteWithCacheAbstract : ExecuteWithCache {
     protected suspend fun <T> executeWithCacheWithoutForced(
         cache: Cache<T>,
         launch: suspend () -> T,
-        callback: (T) -> Unit
+        callback: suspend (T) -> Unit
     ) {
         val cachedData = cache.get()
         val newData = if (cachedData == null) {
@@ -31,7 +31,7 @@ abstract class ExecuteWithCacheAbstract : ExecuteWithCache {
     protected suspend fun <T> executeWithCacheWithForced(
         cache: Cache<T>,
         launch: suspend () -> T,
-        callback: (T) -> Unit
+        callback: suspend (T) -> Unit
     ) {
         runCatching { launch() }
             .fold(onSuccess = {

@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
-import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.start.presentation.common.EventEffectTest
 import com.markettwits.start.presentation.order.component.OrderComponentComponent

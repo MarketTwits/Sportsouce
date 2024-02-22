@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -181,22 +180,22 @@ fun DistanceItemBase(
                 if (enabled) {
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            containerColor = MaterialTheme.colorScheme.secondary,
                         ),
                         onClick = { onClick() },
                     ) {
-                        Text("Зарегистрироваться", color = MaterialTheme.colorScheme.onTertiary)
+                        Text("Зарегистрироваться", color = MaterialTheme.colorScheme.onSecondary)
                     }
                 } else {
                     Button(
                         enabled = false,
                         colors = ButtonDefaults.buttonColors(
-                            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
+                            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
                         ),
                         onClick = { onClick() },
                     ) {
 
-                        Text("Слоты закончились", color = Color.LightGray)
+                        Text("Слоты закончились", color = MaterialTheme.colorScheme.outline)
                     }
                 }
             }

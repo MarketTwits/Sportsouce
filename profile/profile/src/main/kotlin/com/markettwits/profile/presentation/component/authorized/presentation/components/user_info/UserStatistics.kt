@@ -53,7 +53,7 @@ private fun UserStatisticCard(modifier: Modifier = Modifier, title: String, valu
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = Shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSecondaryContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         Text(
             modifier = Modifier

@@ -4,6 +4,6 @@ import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 
 interface ProfileDataSource {
-    suspend fun profile() : ProfileUiState
+    suspend fun profile(): Result<ProfileUiState>
     suspend fun exit()
 }

@@ -11,66 +11,67 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.failed_screen.FailedScreen
+import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.components.top_bar.ProfileTopBar
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.UserInfoCard
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.UserStatistics
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.starts.UserStarts
+import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore
 
 
 @Composable
 fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     val state by component.state.collectAsState()
     state.user?.let { user ->
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.primary,
-            topBar = {
-                ProfileTopBar(goSettings = {
-                    component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
-                })
-            }) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(top = it.calculateTopPadding())
-                    .padding(10.dp)
-            ) {
-                UserInfoCard(
-                    user = user,
-                    onClickAddSocialNetwork = {
-                        component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
-                    },
-                    onClickEdit = {
+        PullToRefreshScreen(isRefreshing = state.isLoading, onRefresh = {
+            component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
+        }) { modifier ->
+            Scaffold(
+                containerColor = MaterialTheme.colorScheme.primary,
+                topBar = {
+                    ProfileTopBar(goSettings = {
                         component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
                     })
-                UserStatistics(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    membersCount = user.activity.userMemberCount,
-                    registryCount = user.activity.userRegistry.size
-                )
-                UserStarts(
-                    starts = user.activity.userRegistry,
-                    onClick = {
-                        component.obtainOutput(AuthorizedProfileComponent.Output.Start(it))
-                    })
+                }) {
+                Column(
+                    modifier = modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(top = it.calculateTopPadding())
+                        .padding(10.dp)
+                ) {
+                    UserInfoCard(
+                        user = user,
+                        onClickAddSocialNetwork = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
+                        },
+                        onClickEdit = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
+                        })
+                    UserStatistics(
+                        modifier = Modifier.padding(vertical = 10.dp),
+                        membersCount = user.activity.userMemberCount,
+                        registryCount = user.activity.userRegistry.size
+                    )
+                    UserStarts(
+                        starts = user.activity.userRegistry,
+                        onClick = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.Start(it))
+                        })
+                }
             }
         }
     }
-    if (state.isLoading) {
+    if (state.isLoading && state.user == null) {
         LoadingFullScreen()
     }
     if (state.isError) {
-        FailedScreen(onClickHelp = { }) {
-            //TODO add retry
+        FailedScreen(
+            message = state.message,
+            onClickHelp = { }) {
+            component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
         }
     }
 }
-
-//@Preview
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//private fun NewAuthorizedProfileScreenPreview() {
-//     NewAuthorizedProfileScreen(AuthorizedProfileComponentMock)
-//}

@@ -1,6 +1,5 @@
 package com.markettwits.start_search.search.presentation.components.publish
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,14 +30,14 @@ fun StartsSearchBarPublic(modifier: Modifier = Modifier) {
         modifier = Modifier
             .padding(10.dp)
             .shadow(elevation = 2.dp, shape = Shapes.large)
-            .border(
-                width = 1.dp,
-                color = Color.LightGray,
-                shape = Shapes.large,
-            )
+//            .border(
+//                width = 1.dp,
+//                color = Color.LightGray,
+//                shape = Shapes.large,
+//            )
             .clip(Shapes.large),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
     ) {
         Row(

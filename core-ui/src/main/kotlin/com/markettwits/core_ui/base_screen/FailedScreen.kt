@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.failed_screen
+package com.markettwits.core_ui.base_screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

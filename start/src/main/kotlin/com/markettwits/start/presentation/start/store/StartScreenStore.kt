@@ -110,7 +110,7 @@ class StartScreenStoreFactory(
             when (message) {
                 is Msg.InfoFailed -> State(message = message.message, isError = true)
                 is Msg.InfoLoaded -> State(data = message.data)
-                is Msg.Loading -> copy(isLoading = true)
+                is Msg.Loading -> copy(isLoading = true, isError = false)
             }
     }
 }

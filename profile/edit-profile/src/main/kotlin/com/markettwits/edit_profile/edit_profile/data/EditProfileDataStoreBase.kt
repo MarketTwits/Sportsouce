@@ -20,7 +20,7 @@ class EditProfileDataStoreBase(
     ): EditProfileUiState {
         return try {
             val token = authDataSource.updateToken()
-            cloud.changeProfileInfo(mapper.map(current), token)
+            cloud.changeProfileInfo(mapper.map(current), token.getOrThrow())
             profile()
         } catch (e: Exception) {
             EditProfileUiState.Error(message = e.message.toString())
@@ -34,7 +34,7 @@ class EditProfileDataStoreBase(
                     val deferredCity = async { cloud.cities() }
                     val deferredTeam = async { cloud.teams() }
                     val deferredToken = async { authDataSource.updateToken() }
-                    val deferredProfile = async { cloud.auth(deferredToken.await()) }
+                    val deferredProfile = async { cloud.auth(deferredToken.await().getOrThrow()) }
                     Triple(deferredCity.await(), deferredTeam.await(), deferredProfile.await())
                 }
             }

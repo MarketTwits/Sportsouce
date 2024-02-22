@@ -49,7 +49,7 @@ class RegistrationStartRepositoryBase(
             statementMapper.mapOrder(
                 cities,
                 teams,
-                user,
+                user.getOrThrow(),
                 distanceInfo,
                 paymentDisabled,
                 paymentType
@@ -75,22 +75,22 @@ class RegistrationStartRepositoryBase(
                 is DistanceItem.DistanceCombo -> {
                     val request = registerMapper.mapNewCombo(
                         withoutPayment = withoutPayment,
-                        user = user,
+                        user = user.getOrThrow(),
                         startStatement = statement,
                         startDistanceItem = distanceInfo,
                         startId = startId
                     )
-                    service.registerOnStartCombo(request, token)
+                    service.registerOnStartCombo(request, token.getOrThrow())
                 }
                 is DistanceItem.DistanceInfo -> {
                     val request = registerMapper.mapNewBase(
                         withoutPayment = withoutPayment,
-                        user = user,
+                        user = user.getOrThrow(),
                         startStatement = statement,
                         startDistanceItem = distanceInfo,
                         startId = startId
                     )
-                    service.registerOnStartBase(request, token)
+                    service.registerOnStartBase(request, token.getOrThrow())
                 }
             }
             result

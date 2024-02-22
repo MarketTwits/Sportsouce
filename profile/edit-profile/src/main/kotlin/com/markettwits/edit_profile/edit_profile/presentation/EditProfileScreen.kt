@@ -23,8 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.base.OnEvent
+import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.components.top_bar.TopBarBase
-import com.markettwits.core_ui.failed_screen.FailedScreen
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.edit_profile.edit_profile.presentation.components.UserDataPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileEvent

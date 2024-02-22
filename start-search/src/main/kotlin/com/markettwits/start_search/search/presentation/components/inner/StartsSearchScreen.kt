@@ -32,6 +32,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             StartsSearchBarInner(
+                modifier = Modifier.padding(10.dp),
                 query = state.query,
                 onQueryChanged = {
                     component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, false))

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,14 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 
 @Composable
 fun RegistrationsCard(
-    start: StartsStateInfo,
+    start: StartOrderInfo,
     onItemClick: (Int) -> Unit
 ) {
     Box(
@@ -51,10 +49,7 @@ fun RegistrationsCard(
         Row {
             RegistrationsCardImageCard(
                 modifier = Modifier,
-                start.image,
-                start.dateStart,
-                start.payment,
-                start.statusCode
+                image = start.image,
             )
             RegistrationsCardInfoStatusInfo(
                 title = start.startTitle,
@@ -74,9 +69,6 @@ fun RegistrationsCard(
 fun RegistrationsCardImageCard(
     modifier: Modifier = Modifier,
     image: String,
-    date: String,
-    payment: Boolean,
-    status: StartStatus
 ) {
 
     Box(
@@ -99,10 +91,6 @@ fun RegistrationsCardImageCard(
                 SubcomposeAsyncImageContent(modifier = modifier)
             }
         )
-        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-            RegistrationsCardInfoStroke(date)
-            RegistrationsCardInfoStatus(status, payment)
-        }
     }
 }
 
@@ -122,46 +110,6 @@ private fun RegistrationsCardInfoStroke(title: String) {
         )
     }
 }
-
-@Composable
-private fun RegistrationsCardInfoStatus(status: StartStatus, payment: Boolean) {
-    if (payment) {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-                .background(startStatusBackground(status.code))
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = status.name,
-                color = Color.White,
-                fontFamily = FontNunito.bold,
-                fontSize = 10.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center
-            )
-        }
-    } else {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-                .background(SportSouceColor.SportSouceLightRed)
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Слот не оплачен",
-                color = Color.White,
-                fontFamily = FontNunito.bold,
-                fontSize = 10.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
 @Composable
 private fun RegistrationsCardInfoStatusInfo(
     modifier: Modifier = Modifier,

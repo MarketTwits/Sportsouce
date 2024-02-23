@@ -1,6 +1,7 @@
 package com.markettwits.profile.presentation.component.authorized.presentation.component
 
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthorizedProfileComponent {
@@ -10,6 +11,7 @@ interface AuthorizedProfileComponent {
     sealed interface Output {
         data object EditProfile : Output
         data object MyRegistries : Output
+        data class StartOrder(val startOrderInfo: StartOrderInfo) : Output
         data object MyMembers : Output
         data object SocialNetwork : Output
         data class Start(val startId: Int) : Output

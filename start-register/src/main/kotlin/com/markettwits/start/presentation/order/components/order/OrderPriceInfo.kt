@@ -26,7 +26,7 @@ fun OrderPriceInfo(
         fontFamily = FontNunito.bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = MaterialTheme.colorScheme.onPrimary
+        color = MaterialTheme.colorScheme.tertiary
     )
     Text(
         modifier = modifier,
@@ -64,6 +64,6 @@ fun OrderPriceInfo(
         fontFamily = FontNunito.bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = MaterialTheme.colorScheme.onPrimary
+        color = MaterialTheme.colorScheme.tertiary
     )
 }

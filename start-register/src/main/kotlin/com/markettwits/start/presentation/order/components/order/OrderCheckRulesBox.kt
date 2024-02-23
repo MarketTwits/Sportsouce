@@ -22,7 +22,7 @@ fun OrderCheckRulesBox(isChecked: Boolean, onClickRulesCheck: () -> Unit) {
             checked = isChecked,
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colorScheme.secondary,
-                checkmarkColor = MaterialTheme.colorScheme.tertiary,
+                checkmarkColor = MaterialTheme.colorScheme.onSecondary,
             ),
             onCheckedChange = {
                 onClickRulesCheck()

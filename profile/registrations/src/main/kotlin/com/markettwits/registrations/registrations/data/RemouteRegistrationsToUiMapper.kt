@@ -2,8 +2,8 @@ package com.markettwits.registrations.registrations.data
 
 import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapper
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import com.markettwits.registrations.registrations.domain.StartPaymentState
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore
 
 interface RemoteRegistrationsToUiMapper {
@@ -20,7 +20,7 @@ interface RemoteRegistrationsToUiMapper {
             )
         }
 
-        private fun mapPaymentList(base: List<StartsStateInfo>): StartPaymentState {
+        private fun mapPaymentList(base: List<StartOrderInfo>): StartPaymentState {
             val list = base
                 .filter { !it.payment }
             val count = list.size

@@ -5,18 +5,19 @@ import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.di.authDataSourceModule
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStoreFactory
-import com.markettwits.registrations.registrations.data.RegistrationsDataSource
-import com.markettwits.registrations.registrations.data.RegistrationsDataSourceBase
 import com.markettwits.registrations.registrations.data.RemoteRegistrationsToUiMapper
+import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepository
+import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepositoryBase
 import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapper
 import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapperBase
+import com.markettwits.registrations.start_order_profile.store.store.StartOrderStoreFactory
 import org.koin.dsl.module
 
 val userStartRegistrationModule = module {
     includes(sportSouceNetworkModule, authDataSourceModule)
 
-    single<RegistrationsDataSource>{
-        RegistrationsDataSourceBase(
+    single<StartOrderRegistrationRepository> {
+        StartOrderRegistrationRepositoryBase(
             service = get(),
             auth = get(),
             mapper = RemoteRegistrationsToUiMapper.Base(get())
@@ -27,6 +28,12 @@ val userStartRegistrationModule = module {
     }
     single<RegistrationsPaymentStoreFactory>{
         RegistrationsPaymentStoreFactory(
+            storeFactory = DefaultStoreFactory(),
+            repository = get()
+        )
+    }
+    single<StartOrderStoreFactory> {
+        StartOrderStoreFactory(
             storeFactory = DefaultStoreFactory(),
             repository = get()
         )

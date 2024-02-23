@@ -36,7 +36,7 @@ fun PaymentTypeBox(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.tertiary
         )
         Row {
             if (paymentDisabled) {
@@ -77,8 +77,8 @@ private fun PaymentTypeChosen(
             onClick()
         },
         shape = Shapes.medium,
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary) else null
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primary),
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else null
     ) {
         Text(
             modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp),
@@ -87,7 +87,7 @@ private fun PaymentTypeChosen(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onTertiaryContainer
+            color = MaterialTheme.colorScheme.tertiary
         )
     }
 }

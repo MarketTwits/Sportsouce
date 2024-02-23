@@ -5,13 +5,13 @@ import com.markettwits.cloud.model.start_user.RemoteGroup
 import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import kotlinx.serialization.json.Json
 
 class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegistrationsMapper {
-    override fun map(starts: List<RemoteStartsUserItem>): List<StartsStateInfo> {
+    override fun map(starts: List<RemoteStartsUserItem>): List<StartOrderInfo> {
         val base = starts.map {
-            StartsStateInfo(
+            StartOrderInfo(
                 id = it.id,
                 startId = it.start_id,
                 name = it.name,

@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +31,7 @@ fun StartDistanceInfoBox(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = Color.LightGray
+            color = MaterialTheme.colorScheme.tertiary
         )
         Text(
             modifier = modifier,
@@ -41,7 +40,7 @@ fun StartDistanceInfoBox(
             fontFamily = FontNunito.bold,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            color = Color.LightGray
+            color = MaterialTheme.colorScheme.tertiary
         )
         Text(
             modifier = modifier,
@@ -50,7 +49,7 @@ fun StartDistanceInfoBox(
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = Color.LightGray
+            color = MaterialTheme.colorScheme.tertiary
         )
         LazyRow(modifier = modifier) {
             items(distances) {

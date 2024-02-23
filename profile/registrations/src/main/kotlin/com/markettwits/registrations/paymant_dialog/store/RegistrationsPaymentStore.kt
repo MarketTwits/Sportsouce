@@ -12,7 +12,7 @@ import com.markettwits.core_ui.event.triggered
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore.Intent
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore.Label
 import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStore.State
-import com.markettwits.registrations.registrations.data.RegistrationsDataSource
+import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.registrations.domain.StartPaymentState
 import kotlinx.coroutines.launch
 
@@ -32,7 +32,7 @@ interface RegistrationsPaymentStore : Store<Intent, State, Label> {
 
 class RegistrationsPaymentStoreFactory(
     private val storeFactory: StoreFactory,
-    private val repository: RegistrationsDataSource
+    private val repository: StartOrderRegistrationRepository
 ) {
 
     fun create(items: StartPaymentState): RegistrationsPaymentStore =

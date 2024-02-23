@@ -49,9 +49,9 @@ fun RegistrationsPaymentCard(
                     RegistrationsCardImageCard(
                         modifier = Modifier,
                         it.image,
-                        it.dateStart,
-                        it.payment,
-                        it.statusCode
+//                        it.dateStart,
+//                        it.payment,
+//                        it.statusCode
                     )
                     RegistrationsCardInfoStatusInfo(
                         id = it.id,

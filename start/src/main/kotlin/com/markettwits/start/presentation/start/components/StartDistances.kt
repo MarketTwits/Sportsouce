@@ -125,7 +125,7 @@ fun DistanceItemBase(
             .fillMaxWidth()
             .border(
                 width = 3.dp,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.secondary,
                 shape = Shapes.medium
             )
             .clip(Shapes.medium)
@@ -177,26 +177,19 @@ fun DistanceItemBase(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
             ) {
-                if (enabled) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                        ),
-                        onClick = { onClick() },
-                    ) {
-                        Text("Зарегистрироваться", color = MaterialTheme.colorScheme.onSecondary)
-                    }
-                } else {
-                    Button(
-                        enabled = false,
-                        colors = ButtonDefaults.buttonColors(
-                            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
-                        ),
-                        onClick = { onClick() },
-                    ) {
 
-                        Text("Слоты закончились", color = MaterialTheme.colorScheme.outline)
-                    }
+                val title = if (enabled) "Зарегистрироваться" else "Слоты закончились"
+                val titleColor =
+                    if (enabled) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.outline
+                Button(
+                    enabled = enabled,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                    ),
+                    onClick = { onClick() },
+                ) {
+                    Text(title, color = titleColor)
                 }
             }
         }
@@ -214,11 +207,9 @@ fun DistanceItemCombo(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth()
-//            .width(210.dp)
-//            .height(150.dp)
             .border(
                 width = 3.dp,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.secondary,
                 shape = Shapes.medium
             )
             .clip(Shapes.medium)

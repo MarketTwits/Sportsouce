@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
@@ -17,7 +16,6 @@ import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.components.top_bar.ProfileTopBar
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.UserInfoCard
-import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.UserStatistics
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.starts.UserStarts
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore
 
@@ -50,16 +48,18 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                         onClickEdit = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
                         })
-                    UserStatistics(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        membersCount = user.activity.userMemberCount,
-                        registryCount = user.activity.userRegistry.size
-                    )
+//                    StartOrderCardColumnList(starts = user.activity.userRegistry){
+//                        component.obtainOutput(AuthorizedProfileComponent.Output.StartOrder(it))
+//                    }
                     UserStarts(
                         starts = user.activity.userRegistry,
                         onClick = {
-                            component.obtainOutput(AuthorizedProfileComponent.Output.Start(it))
-                        })
+                            //  component.obtainOutput(AuthorizedProfileComponent.Output.Start(it))
+                        },
+                        onClickStart = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.StartOrder(it))
+                        }
+                    )
                 }
             }
         }

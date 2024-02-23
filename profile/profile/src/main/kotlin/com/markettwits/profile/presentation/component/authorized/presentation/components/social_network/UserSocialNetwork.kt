@@ -5,6 +5,7 @@ import WhatsappIcon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,10 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_extensions.openWebPage
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.icons.IconTelegram
 import com.markettwits.core_ui.image.icons.IconVk
 import com.markettwits.core_ui.theme.SportSouceColor
@@ -107,16 +109,20 @@ fun SocialNetworkButton(
     color: Color,
     onClick: () -> Unit
 ) {
-    Card(
+
+    OutlinedButton(
         modifier = modifier
-            .size(width = 50.dp, height = 30.dp)
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(2.dp, color)
+            .size(width = 55.dp, height = 35.dp),
+        shape = Shapes.medium,
+        colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
+        border = BorderStroke(2.dp, color),
+        contentPadding = PaddingValues(7.dp),
+        onClick = {
+            onClick()
+        }
     ) {
         Icon(
             modifier = Modifier
-                .padding(5.dp)
                 .fillMaxSize(),
             imageVector = icon,
             tint = color,
@@ -127,19 +133,24 @@ fun SocialNetworkButton(
 
 @Composable
 fun AddSocialNetworkButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Card(
+    OutlinedButton(
         modifier = modifier
-            .size(width = 50.dp, height = 30.dp)
+            .size(width = 55.dp, height = 35.dp)
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+        shape = Shapes.medium,
+        contentPadding = PaddingValues(7.dp),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant),
+        colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outlineVariant),
+        onClick = {
+
+        }
     ) {
         Icon(
             modifier = Modifier
-                .padding(5.dp)
                 .fillMaxSize(),
             imageVector = Icons.Default.Add,
             contentDescription = "",
-            tint = MaterialTheme.colorScheme.onTertiaryContainer
+            tint = MaterialTheme.colorScheme.outline
         )
     }
 }

@@ -5,9 +5,9 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.registrations.registrations.data.RegistrationsDataSource
+import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepository
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import com.markettwits.registrations.registrations.domain.StartPaymentState
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Intent
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.Label
 import com.markettwits.registrations.registrations.presentation.RegistrationsStore.State
@@ -23,7 +23,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val info: List<StartsStateInfo>,
+        val info: List<StartOrderInfo>,
         val paymentState: StartPaymentState = StartPaymentState(),
         val isLoading: Boolean = false,
         val isError: Boolean = false,
@@ -39,7 +39,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
 
 class RegistrationsDataStoreFactory(
     private val storeFactory: StoreFactory,
-    private val dataSource: RegistrationsDataSource
+    private val dataSource: StartOrderRegistrationRepository
 ) {
 
     fun create(): RegistrationsStore =
@@ -54,7 +54,7 @@ class RegistrationsDataStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(
-            val pokemonInfo: List<StartsStateInfo>,
+            val pokemonInfo: List<StartOrderInfo>,
             val paymentState: StartPaymentState
         ) : Msg
 

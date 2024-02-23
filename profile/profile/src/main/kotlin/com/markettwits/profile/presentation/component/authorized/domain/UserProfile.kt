@@ -1,7 +1,6 @@
 package com.markettwits.profile.presentation.component.authorized.domain
 
-import com.markettwits.cloud.model.start.SocialNetwork
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -32,7 +31,7 @@ data class UserProfile(
 
     @Serializable
     data class Activity(
-        val userRegistry: List<StartsStateInfo>,
+        val userRegistry: List<StartOrderInfo>,
         val userMemberCount: Int
     )
 }

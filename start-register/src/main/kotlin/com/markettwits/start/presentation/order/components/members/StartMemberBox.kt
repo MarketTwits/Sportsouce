@@ -32,8 +32,8 @@ fun StartMemberBox(
         modifier = modifier
             .fillMaxWidth(),
         shape = Shapes.medium,
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary)
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primary),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary)
     ) {
         Row(
             modifier = Modifier
@@ -49,7 +49,7 @@ fun StartMemberBox(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    color = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
                     text = memberName,
@@ -57,13 +57,13 @@ fun StartMemberBox(
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Icon(
                 imageVector = Icons.Default.ContactPage,
                 contentDescription = memberName,
-                tint = MaterialTheme.colorScheme.onTertiaryContainer
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
     }

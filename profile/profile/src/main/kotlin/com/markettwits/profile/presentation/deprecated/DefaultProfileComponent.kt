@@ -1,6 +1,11 @@
 package com.markettwits.profile.presentation.deprecated
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -29,8 +34,11 @@ import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponentBase
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponent
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
+import com.markettwits.registrations.start_order_profile.component.StartOrderComponent
+import com.markettwits.registrations.start_order_profile.component.StartOrderComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import kotlinx.serialization.Serializable
 
@@ -45,6 +53,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         listOf(rootProfileModule)
     )
     private val navigation = StackNavigation<Config>()
+    private val slotNavigation = SlotNavigation<SlotConfig>()
     private val _configStack =
         childStack(
             source = navigation,
@@ -54,7 +63,30 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             childFactory = ::child,
         )
 
+    val childSlot: Value<ChildSlot<*, SlotChild>> = childSlot(
+        source = slotNavigation,
+        serializer = SlotConfig.serializer(),
+        handleBackButton = true,
+        childFactory = ::childSlot
+    )
+
     val childStack: Value<ChildStack<*, Child>> get() = _configStack
+
+    private fun childSlot(
+        config: SlotConfig,
+        componentContext: ComponentContext,
+    ): SlotChild =
+        when (config) {
+            is SlotConfig.StartOrder -> SlotChild.StartOrder(
+                StartOrderComponentBase(
+                    componentContext = componentContext,
+                    start = config.startOrderInfo,
+                    storeFactory = scope.get(),
+                    dismiss = slotNavigation::dismiss
+                )
+            )
+        }
+
 
     private fun child(
         config: Config,
@@ -164,6 +196,11 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             is AuthorizedProfileComponent.Output.MyRegistries -> navigation.push(Config.MyRegistries)
             is AuthorizedProfileComponent.Output.SocialNetwork -> navigation.push(Config.SocialNetwork)
             is AuthorizedProfileComponent.Output.Start -> navigation.push(Config.Start(outPut.startId))
+            is AuthorizedProfileComponent.Output.StartOrder -> slotNavigation.activate(
+                SlotConfig.StartOrder(
+                    outPut.startOrderInfo
+                )
+            )
         }
     }
 
@@ -200,6 +237,13 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object SignUp : Config()
+
+    }
+
+    @Serializable
+    sealed interface SlotConfig {
+        @Serializable
+        data class StartOrder(val startOrderInfo: StartOrderInfo) : SlotConfig
     }
 
     sealed class Child {
@@ -222,5 +266,10 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         data class SignUp(val component: SignUpComponent) : Child()
         data class EditProfileMenu(val component: RootEditProfileComponent) : Child()
+    }
+
+    @Serializable
+    sealed interface SlotChild {
+        data class StartOrder(val component: StartOrderComponent) : SlotChild
     }
 }

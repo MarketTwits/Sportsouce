@@ -31,12 +31,12 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 
 @Composable
 fun StartCardSimpleAuth(
     modifier: Modifier = Modifier,
-    start: StartsStateInfo,
+    start: StartOrderInfo,
     onItemClick: (Int) -> Unit
 ) {
     Column(modifier = modifier.padding(10.dp)) {

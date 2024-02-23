@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start.domain.StartStatement
 
@@ -19,27 +20,31 @@ fun StartMembers(
     members: List<StartStatement>,
     onClickMember: (StartStatement, Int) -> Unit
 ) {
-    Column(modifier = modifier) {
-        Text(
-            modifier = modifier.padding(5.dp),
-            text = "Ваш заказ :",
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Column {
-            members.forEachIndexed { index, member ->
-                StartMemberBox(
-                    modifier = modifier
-                        .clickable {
-                            onClickMember(member, index)
-                        },
-                    stage = "Участник ${index + 1}",
-                    memberName = "${member.surname} ${member.name}"
-                )
+    OnBackgroundCard(modifier = modifier.padding(top = 10.dp)) {
+        Column(modifier = it.padding(10.dp)) {
+            Text(
+                modifier = modifier,
+                text = "Участники :",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            Column {
+                members.forEachIndexed { index, member ->
+                    StartMemberBox(
+                        modifier = modifier
+                            .padding(top = 10.dp, bottom = 10.dp)
+                            .clickable {
+                                onClickMember(member, index)
+                            },
+                        stage = "Участник ${index + 1}",
+                        memberName = "${member.surname} ${member.name}"
+                    )
+                }
             }
         }
     }
+
 }

@@ -1,10 +1,11 @@
 package com.markettwits.profile.presentation.deprecated
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.change_password.presentation.screen.ChangePasswordScreen
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileScreen
 import com.markettwits.edit_profile.root.RootEditProfileScreen
 import com.markettwits.edit_profile.social_network.presentation.components.ProfileSocialNetworkScreen
@@ -14,19 +15,30 @@ import com.markettwits.profile.presentation.component.unauthorized.components.Ne
 import com.markettwits.profile.presentation.sign_in.AuthScreen
 import com.markettwits.profile.presentation.sign_up.presentation.content.SignUpScreen
 import com.markettwits.registrations.root_registrations.RootRegistrationsScreen
+import com.markettwits.registrations.start_order_profile.components.StartOrderProfileDialogScreen
 import com.markettwits.start.root.RootStartScreen
 
 @Composable
 fun DefaultProfileScreen(component: DefaultProfileComponent) {
+
+    val childStack by component.childStack.subscribeAsState()
+    val childSlot by component.childSlot.subscribeAsState()
+
+    childSlot.child?.instance?.also {
+        when (it) {
+            is DefaultProfileComponent.SlotChild.StartOrder -> StartOrderProfileDialogScreen(
+                component = it.component
+            )
+        }
+    }
+
     com.arkivanov.decompose.extensions.compose.stack.Children(
-        stack = component.childStack,
+        stack = childStack,
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
             is DefaultProfileComponent.Child.Login -> AuthScreen(component = child.component)
-            is DefaultProfileComponent.Child.AuthProfile -> SportSouceTheme {
-                NewAuthorizedProfileScreen(component = child.component)
-            }
+            is DefaultProfileComponent.Child.AuthProfile -> NewAuthorizedProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.UnAuthProfile -> NewUnAuthorizedProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.EditProfile -> EditProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.MyRegistries -> RootRegistrationsScreen(component = child.component)

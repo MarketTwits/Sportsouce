@@ -29,7 +29,7 @@ fun RegistrationButton(
         enabled = isEnabled,
         colors = ButtonDefaults.textButtonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
         ),
         onClick = { onClick() }
     ) {

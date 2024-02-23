@@ -4,12 +4,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import com.markettwits.core_ui.base_screen.PullToRefreshScreen
-import com.markettwits.registrations.registrations.domain.StartsStateInfo
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 
 
 @Composable
 fun RegistrationsStart(
-    starts: List<StartsStateInfo>,
+    starts: List<StartOrderInfo>,
     isRefreshing: Boolean,
     onClick: (Int) -> Unit,
     onRefresh: () -> Unit

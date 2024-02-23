@@ -40,7 +40,7 @@ fun PromoBox(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.WifiProtectedSetup,
                     contentDescription = "Промокод",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.padding(end = 5.dp))
                 Text(
@@ -49,7 +49,7 @@ fun PromoBox(modifier: Modifier = Modifier, onClick: () -> Unit) {
                     fontFamily = FontNunito.bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Icon(

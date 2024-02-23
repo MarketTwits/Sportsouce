@@ -21,7 +21,7 @@ fun OnBackgroundCard(
 ) {
     Card(
         modifier = modifier
-            .shadow(4.dp, shape = shape)
+            .shadow(1.dp, shape = shape)
             .fillMaxWidth(),
         shape = shape,
         colors = colors

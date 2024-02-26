@@ -142,7 +142,7 @@ fun AddSocialNetworkButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant),
         colors = ButtonDefaults.outlinedButtonColors(containerColor = MaterialTheme.colorScheme.outlineVariant),
         onClick = {
-
+            onClick()
         }
     ) {
         Icon(

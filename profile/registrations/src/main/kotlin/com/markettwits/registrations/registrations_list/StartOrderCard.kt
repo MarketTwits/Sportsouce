@@ -1,7 +1,6 @@
-package com.markettwits.registrations.registrations_list.profile
+package com.markettwits.registrations.registrations_list
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -29,26 +27,11 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.R
-import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.registrations.registrations.domain.StartOrderInfo
-import com.markettwits.registrations.registrations.presentation.components.startStatusBackground
-
-@Composable
-fun StartOrderCardColumnList(
-    modifier: Modifier = Modifier,
-    starts: List<StartOrderInfo>,
-    onItemClick: (StartOrderInfo) -> Unit
-) {
-    OnBackgroundCard(modifier = modifier.padding(top = 10.dp)) {
-        starts.forEach {
-            StartOrderCard(start = it, onItemClick = { onItemClick(it) })
-        }
-    }
-}
 
 
 @Composable
@@ -92,7 +75,6 @@ private fun ImageCard(
         modifier = modifier
             .size(width = 70.dp, height = 90.dp)
             .clip(Shapes.medium)
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), Shapes.medium)
     ) {
         Box(modifier = modifier.fillMaxSize()) {
             SubcomposeAsyncImage(
@@ -125,7 +107,7 @@ private fun ImageCardInfo(
     modifier: Modifier = Modifier,
     title: String,
     status: StartStatus,
-    payment: Boolean,
+    payment: StartOrderInfo.PaymentStatus,
     cost: String,
     date: String,
     onClick: () -> Unit,
@@ -139,17 +121,17 @@ private fun ImageCardInfo(
             color = MaterialTheme.colorScheme.tertiary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
-            lineHeight = 14.sp,
+            lineHeight = 16.sp,
             fontFamily = FontNunito.bold,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             textAlign = TextAlign.Start
         )
-        if (payment) {
+        if (payment.payment) {
             Text(
                 modifier = modifier,
                 text = status.name,
-                lineHeight = 14.sp,
-                color = startStatusBackground(status.code),
+                lineHeight = 16.sp,
+                color = MaterialTheme.colorScheme.outline,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 fontFamily = FontNunito.medium,
@@ -159,7 +141,7 @@ private fun ImageCardInfo(
         } else {
             Text(
                 modifier = modifier,
-                text = "Старт не оплачен",
+                text = "Слот не оплачен",
                 lineHeight = 14.sp,
                 color = SportSouceColor.SportSouceLightRed,
                 overflow = TextOverflow.Ellipsis,
@@ -170,7 +152,7 @@ private fun ImageCardInfo(
             )
             Button(
                 shape = Shapes.medium,
-                modifier = modifier.height(25.dp),
+                modifier = modifier,
                 onClick = { onClick() },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 contentPadding = PaddingValues(4.dp)
@@ -187,16 +169,16 @@ private fun ImageCardInfo(
             }
         }
 
-        Text(
-            modifier = modifier,
-            text = date,
-            lineHeight = 14.sp,
-            color = MaterialTheme.colorScheme.outline,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            fontFamily = FontNunito.medium,
-            fontSize = 12.sp,
-            textAlign = TextAlign.Start
-        )
+//        Text(
+//            modifier = modifier,
+//            text = date,
+//            lineHeight = 14.sp,
+//            color = MaterialTheme.colorScheme.outline,
+//            overflow = TextOverflow.Ellipsis,
+//            maxLines = 1,
+//            fontFamily = FontNunito.medium,
+//            fontSize = 12.sp,
+//            textAlign = TextAlign.Start
+//        )
     }
 }

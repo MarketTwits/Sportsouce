@@ -15,6 +15,7 @@ class StartOrderStoreExecutor(
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnClickPay -> repay(intent.orderId)
+            is Intent.OnClickStart -> publish(Label.OnClickStart(intent.startId))
         }
     }
 

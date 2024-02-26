@@ -9,7 +9,6 @@ class HandleMembersFilterBase : HandleMembersFilter {
         val currentFilterGroups = currentValue.toMutableList()
         val category = currentFilterGroups[categoryIndex]
 
-        // Toggle the state of the specified item
         val toggledItems = category.items.mapIndexed { index, filterItem ->
             if (index == itemIndex) {
                 when (filterItem) {

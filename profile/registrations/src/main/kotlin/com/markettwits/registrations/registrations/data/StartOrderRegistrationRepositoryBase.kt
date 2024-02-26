@@ -6,16 +6,17 @@ import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.data.AuthDataSource
-import com.markettwits.registrations.registrations.presentation.RegistrationsStore
+import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapper
+import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 
 class StartOrderRegistrationRepositoryBase(
     private val service: SportsouceApi,
     private val auth: AuthDataSource,
-    private val mapper: RemoteRegistrationsToUiMapper
+    private val mapper: UserRegistrationsMapper
 ) : StartOrderRegistrationRepository {
-    override suspend fun registrations(): Result<RegistrationsStore.State> {
+    override suspend fun registrations(): Result<List<StartOrderInfo>> {
         return try {
             val token = auth.updateToken()
             val user = auth.auth()

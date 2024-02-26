@@ -9,6 +9,7 @@ interface AuthorizedProfileComponent {
     fun obtainEvent(intent: AuthorizedProfileStore.Intent)
     fun obtainOutput(outPut: Output)
     sealed interface Output {
+        data object AllRegistries : Output
         data object EditProfile : Output
         data object MyRegistries : Output
         data class StartOrder(val startOrderInfo: StartOrderInfo) : Output

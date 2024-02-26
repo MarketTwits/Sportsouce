@@ -49,9 +49,7 @@ fun StartDistances(
     var panelState by rememberSaveable {
         mutableStateOf(true)
     }
-    if (distance.isNotEmpty()
-        && startStatus.code == 3
-    ) {
+    if (distance.isNotEmpty() && startStatus.code == 3) {
         HorizontalDivider()
         Row(
             modifier = modifier

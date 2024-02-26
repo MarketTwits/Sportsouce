@@ -28,18 +28,53 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
                 team = it.team,
                 kindOfSport = it.format,
                 startTitle = it.start.name,
-                payment = mapPayment(
+                payment = mapPayments(
                     it.payment,
                     it.start.isOpen,
                     it.start.payment_disabled ?: false
-                )
+                ),
             )
         }
         return base
     }
 
     private fun mapPayment(payment: Int?, isOpen: Boolean, paymentDisabled: Boolean): Boolean {
-        return !(payment == null && isOpen && !paymentDisabled)
+        val pay = payment == null || payment == 0
+        return !(pay && isOpen && !paymentDisabled)
+    }
+
+    private fun mapPayments(
+        payment: Int?,
+        isOpen: Boolean,
+        paymentDisabled: Boolean
+    ): StartOrderInfo.PaymentStatus {
+        if (paymentDisabled || payment == 2)
+            return StartOrderInfo.PaymentStatus.Free()
+        if (payment == null)
+            return StartOrderInfo.PaymentStatus.Failure(
+                mapPayment(
+                    payment,
+                    isOpen,
+                    paymentDisabled
+                )
+            )
+        if (payment == 0)
+            return StartOrderInfo.PaymentStatus.PaymentCancelled(
+                mapPayment(
+                    payment,
+                    isOpen,
+                    paymentDisabled
+                )
+            )
+        if (payment == 1)
+            return StartOrderInfo.PaymentStatus.Success()
+        else return StartOrderInfo.PaymentStatus.Failure(
+            mapPayment(
+                payment,
+                isOpen,
+                paymentDisabled
+            )
+        )
     }
 
     private fun mapStartGroup(group: String): String {

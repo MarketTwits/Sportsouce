@@ -38,7 +38,7 @@ fun FailedScreen(
             Text(
                 modifier = modifier,
                 text = title,
-                color = MaterialTheme.colorScheme.tertiaryContainer,
+                color = MaterialTheme.colorScheme.tertiary,
                 textAlign = TextAlign.Center,
                 fontFamily = FontNunito.bold,
                 fontSize = 16.sp

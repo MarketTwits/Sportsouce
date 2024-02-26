@@ -69,9 +69,9 @@ fun StartConditionPanel(modifier: Modifier = Modifier, file: StartItem.Condition
                 StartConditionPanelContent(modifier, file)
             }
         }
-        is StartItem.ConditionFile.Empty ->{}
-    }
 
+        is StartItem.ConditionFile.Empty -> {}
+    }
 }
 
 @Composable
@@ -80,7 +80,7 @@ private fun StartConditionPanelContent(modifier: Modifier = Modifier, file: Star
     Box(
         modifier = modifier
             .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.tertiary)
+            .background(MaterialTheme.colorScheme.secondary)
             .clickable {
                 openWebPage(file.url, context)
             }
@@ -91,7 +91,7 @@ private fun StartConditionPanelContent(modifier: Modifier = Modifier, file: Star
                 .padding(5.dp)
                 .align(Alignment.Center),
             text = "Положение",
-            color = MaterialTheme.colorScheme.onTertiary,
+            color = MaterialTheme.colorScheme.onSecondary,
             fontFamily = FontNunito.bold,
             fontSize = 14.sp
         )

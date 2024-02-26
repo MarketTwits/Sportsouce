@@ -90,7 +90,7 @@ fun StartResultContent(
                 Box(
                     modifier = modifier
                         .clip(Shapes.medium)
-                        .background(MaterialTheme.colorScheme.tertiary)
+                        .background(MaterialTheme.colorScheme.secondary)
                         .clickable {
                             openWebPage(it.url, context)
                         }
@@ -102,7 +102,7 @@ fun StartResultContent(
                             .align(Alignment.Center),
                         textAlign = TextAlign.Center,
                         text = it.name,
-                        color = MaterialTheme.colorScheme.onTertiary,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         fontFamily = FontNunito.bold,
                         fontSize = 14.sp
                     )

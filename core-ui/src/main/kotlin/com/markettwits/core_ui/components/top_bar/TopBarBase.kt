@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 
 @Composable
@@ -27,17 +29,25 @@ fun TopBarBase(modifier: Modifier = Modifier, title: String, goBack: () -> Unit)
             .padding(vertical = 10.dp)
             .fillMaxWidth()
     ) {
-        Icon(
-            modifier = Modifier
+        Box(
+            modifier
                 .align(Alignment.CenterStart)
-                .padding(10.dp)
+                .clip(Shapes.medium)
                 .clickable {
                     goBack()
-                },
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = "back",
-            tint = MaterialTheme.colorScheme.tertiary,
+                }
         )
+        {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(10.dp),
+                imageVector = Icons.Default.ArrowBackIosNew,
+                contentDescription = "back",
+                tint = MaterialTheme.colorScheme.tertiary,
+            )
+        }
+
         Text(
             modifier = Modifier
                 .align(Alignment.Center)

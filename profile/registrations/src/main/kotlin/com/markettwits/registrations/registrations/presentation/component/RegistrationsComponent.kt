@@ -1,5 +1,6 @@
-package com.markettwits.registrations.registrations.presentation
+package com.markettwits.registrations.registrations.presentation.component
 
+import com.markettwits.registrations.registrations.presentation.store.RegistrationsStore
 import kotlinx.coroutines.flow.StateFlow
 
 interface RegistrationsComponent {

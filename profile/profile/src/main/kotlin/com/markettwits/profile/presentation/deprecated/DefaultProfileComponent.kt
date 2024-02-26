@@ -15,6 +15,7 @@ import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
@@ -35,6 +36,9 @@ import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponentBase
 import com.markettwits.registrations.registrations.domain.StartOrderInfo
+import com.markettwits.registrations.registrations.presentation.component.RegistrationsComponent
+import com.markettwits.registrations.registrations.presentation.component.RegistrationsComponentBase
+import com.markettwits.registrations.registrations.presentation.store.RegistrationsDataStoreFactory
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponent
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
 import com.markettwits.registrations.start_order_profile.component.StartOrderComponent
@@ -82,6 +86,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     componentContext = componentContext,
                     start = config.startOrderInfo,
                     storeFactory = scope.get(),
+                    openStart = { navigation.push(Config.Start(it)) },
                     dismiss = slotNavigation::dismiss
                 )
             )
@@ -182,6 +187,20 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     pop = navigation::pop
                 )
             )
+
+            is Config.UserStarts -> Child.UserStarts(
+                RegistrationsComponentBase(
+                    component = componentContext,
+                    storeFactory = RegistrationsDataStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        dataSource = scope.get()
+                    ),
+                    pop = navigation::pop,
+                    onItemClick = {
+                        slotNavigation.activate(SlotConfig.StartOrder(it))
+                    },
+                )
+            )
         }
 
 
@@ -201,6 +220,8 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     outPut.startOrderInfo
                 )
             )
+
+            is AuthorizedProfileComponent.Output.AllRegistries -> navigation.push(Config.UserStarts)
         }
     }
 
@@ -208,6 +229,9 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     sealed class Config {
         @Serializable
         data class Start(val startId: Int) : Config()
+
+        @Serializable
+        data object UserStarts : Config()
 
         @Serializable
         data object SocialNetwork : Config()
@@ -237,7 +261,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object SignUp : Config()
-
     }
 
     @Serializable
@@ -247,6 +270,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     }
 
     sealed class Child {
+        data class UserStarts(val component: RegistrationsComponent) : Child()
         data class Start(val component: RootStartScreenComponentBase) : Child()
         data class SocialNetwork(val component: EditProfileSocialNetworkComponent) : Child()
         data class Login(val component: SignInScreenComponent) : Child()

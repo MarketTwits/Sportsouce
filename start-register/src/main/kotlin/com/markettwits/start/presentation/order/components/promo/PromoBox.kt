@@ -24,11 +24,12 @@ import com.markettwits.core_ui.theme.FontNunito
 
 @Composable
 fun PromoBox(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    OnBackgroundCard(modifier = modifier
-        .padding(vertical = 10.dp)
-        .clickable {
+    OnBackgroundCard(
+        onClick = {
             onClick()
-        }) {
+        },
+        modifier = modifier.padding(vertical = 10.dp)
+    ) {
         Row(
             modifier = modifier
                 .fillMaxWidth()

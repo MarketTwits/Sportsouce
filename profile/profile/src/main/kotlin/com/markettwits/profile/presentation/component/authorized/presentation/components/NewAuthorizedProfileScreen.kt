@@ -48,13 +48,10 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                         onClickEdit = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
                         })
-//                    StartOrderCardColumnList(starts = user.activity.userRegistry){
-//                        component.obtainOutput(AuthorizedProfileComponent.Output.StartOrder(it))
-//                    }
                     UserStarts(
                         starts = user.activity.userRegistry,
-                        onClick = {
-                            //  component.obtainOutput(AuthorizedProfileComponent.Output.Start(it))
+                        onClickAll = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.AllRegistries)
                         },
                         onClickStart = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.StartOrder(it))

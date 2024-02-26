@@ -9,6 +9,7 @@ import com.markettwits.profile.di.authDataSourceModule
 import com.markettwits.profile.presentation.component.authorized.data.AuthorizedProfileRepositoryBase
 import com.markettwits.profile.presentation.component.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.presentation.component.authorized.data.mapper.AuthorizedProfileMapperBase
+import com.markettwits.profile.presentation.component.authorized.domain.UserProfileInteractorBase
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStoreFactory
 import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapperBase
 import org.koin.core.module.dsl.singleOf
@@ -20,16 +21,18 @@ val authorizedProfileModule = module {
     single<AuthorizedProfileStoreFactory> {
         AuthorizedProfileStoreFactory(
             storeFactory = get(),
-            repository = AuthorizedProfileRepositoryBase(
-                auth = get(),
-                remote = get(),
-                mapper = AuthorizedProfileMapperBase(
-                    UserRegistrationsMapperBase(BaseTimeMapper()),
-                    BaseTimeMapper()
-                ),
-                cache = UserProfileCache(),
-                executeWithCache = ExecuteWithCacheBase()
-            )
+            interactor = UserProfileInteractorBase(
+                repository = AuthorizedProfileRepositoryBase(
+                    auth = get(),
+                    remote = get(),
+                    mapper = AuthorizedProfileMapperBase(
+                        UserRegistrationsMapperBase(BaseTimeMapper()),
+                        BaseTimeMapper()
+                    ),
+                    cache = UserProfileCache(),
+                    executeWithCache = ExecuteWithCacheBase()
+                )
+            ),
         )
     }
     singleOf(::DefaultStoreFactory) bind StoreFactory::class

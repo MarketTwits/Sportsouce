@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -82,6 +83,7 @@ private fun ImageCard(
         Box(modifier = modifier.fillMaxSize()) {
             SubcomposeAsyncImage(
                 model = imageRequestCrossfade(image),
+                filterQuality = FilterQuality.Medium,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),

@@ -37,7 +37,7 @@ private fun TabBarPreview() {
 @Composable
 fun TabBar(content: @Composable (Int) -> Unit) {
     val scope = rememberCoroutineScope()
-    val pages = listOf("Главная","Ближайшие", "Прошедшие", "Анонсы")
+    val pages = listOf("Главная", "Ближайшие", "Прошедшие", "Анонсы")
     val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         TabRowDefaults.PrimaryIndicator(
@@ -58,19 +58,19 @@ fun TabBar(content: @Composable (Int) -> Unit) {
         contentColor = MaterialTheme.colorScheme.primary
     ) {
         pages.forEachIndexed { index, item ->
+            val selected = pagerState.currentPage == index
             Tab(
                 modifier = Modifier
                     .wrapContentSize()
-                    .clip(RoundedCornerShape(10.dp))
-                ,
+                    .clip(RoundedCornerShape(10.dp)),
                 selectedContentColor = MaterialTheme.colorScheme.tertiary,
                 unselectedContentColor = Color.Gray,
-                selected = pagerState.currentPage == index,
+                selected = selected,
                 text = {
                     Text(
                         text = item,
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.outline,
+                        color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
                         fontFamily = FontNunito.bold
                     )
                 },

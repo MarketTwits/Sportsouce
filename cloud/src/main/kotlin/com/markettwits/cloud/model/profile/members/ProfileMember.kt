@@ -10,7 +10,7 @@ data class ProfileMembers(
     @Serializable
     data class ProfileMember(
         val birthday: String,
-        val child: Boolean,
+        val child: Boolean?,
         val createdAt: String,
         val email: String,
         val gender: String,

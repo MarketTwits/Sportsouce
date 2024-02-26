@@ -28,8 +28,8 @@ import com.markettwits.edit_profile.edit_profile_about.di.editProfileAboutModule
 import com.markettwits.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponentBase
 import com.markettwits.edit_profile.edit_profile_info.di.editProfileInfoModule
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponentBase
-import com.markettwits.edit_profile.social_network.di.editProfileSocialNetworkModule
-import com.markettwits.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponentBase
+import com.markettwits.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
+import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,

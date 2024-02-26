@@ -29,15 +29,15 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
             component.obtainEvent(RegistrationsStore.Intent.Pop)
         }
     }) {
-        if (!state.isError && !state.isLoading) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = it.calculateTopPadding())
-            ) {
-                RegistrationsFilterList(items = state.filter) {
-                    component.obtainEvent(RegistrationsStore.Intent.OnClickFilter(it))
-                }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = it.calculateTopPadding())
+        ) {
+            RegistrationsFilterList(items = state.filter) {
+                component.obtainEvent(RegistrationsStore.Intent.OnClickFilter(it))
+            }
+            if (state.base.isNotEmpty()) {
                 RegistrationsStart(state.filtered, isRefreshing = state.isLoading, onRefresh = {
                     component.obtainEvent(RegistrationsStore.Intent.LoadData)
                 }, onClick = {

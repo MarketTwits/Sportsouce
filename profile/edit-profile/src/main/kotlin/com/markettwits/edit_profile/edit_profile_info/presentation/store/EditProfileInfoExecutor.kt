@@ -1,12 +1,15 @@
 package com.markettwits.edit_profile.edit_profile_info.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Intent
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Label
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Message
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.State
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository) :
@@ -34,7 +37,11 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
                     dispatch(Message.UpdateSuccess("Данные профиля успешно обновлены"))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(it.message.toString()))
+                    val message =
+                        if (it is ClientRequestException)
+                            it.response.body<AuthErrorResponse>().message
+                        else it.message.toString()
+                    dispatch(Message.UpdateFailed(message))
                 }
             )
         }

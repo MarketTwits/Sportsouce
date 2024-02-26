@@ -11,7 +11,7 @@ import com.markettwits.edit_profile.edit_menu.presentation.EditProfileScreen
 import com.markettwits.edit_profile.edit_profile_Image.presentation.components.EditProfileImageScreen
 import com.markettwits.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
 import com.markettwits.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen
-import com.markettwits.edit_profile.social_network.presentation.components.ProfileSocialNetworkScreen
+import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkScreen
 
 @Composable
 fun RootEditProfileScreen(component: RootEditProfileComponent) {

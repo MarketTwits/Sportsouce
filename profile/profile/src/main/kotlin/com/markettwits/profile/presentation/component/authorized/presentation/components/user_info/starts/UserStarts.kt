@@ -55,7 +55,7 @@ fun UserStarts(
             }
         }
         Column {
-            val visibleItems = 6
+            val visibleItems = 5
             val moreItems = starts.size - visibleItems
             starts.take(visibleItems).forEach {
                 StartOrderCard(start = it) {

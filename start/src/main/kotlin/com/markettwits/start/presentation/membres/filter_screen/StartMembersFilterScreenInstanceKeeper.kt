@@ -12,8 +12,4 @@ class StartMembersFilterInstanceKeeper(
     init {
         start.value = membersUi
     }
-
-    fun filter(value: String) {
-
-    }
 }

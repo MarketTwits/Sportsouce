@@ -4,8 +4,6 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.profile.di.authDataSourceModule
-import com.markettwits.registrations.paymant_dialog.store.RegistrationsPaymentStoreFactory
-import com.markettwits.registrations.registrations.data.RemoteRegistrationsToUiMapper
 import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.registrations.data.StartOrderRegistrationRepositoryBase
 import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapper
@@ -20,17 +18,11 @@ val userStartRegistrationModule = module {
         StartOrderRegistrationRepositoryBase(
             service = get(),
             auth = get(),
-            mapper = RemoteRegistrationsToUiMapper.Base(get())
+            mapper = get()
         )
     }
     single<UserRegistrationsMapper> {
         UserRegistrationsMapperBase(BaseTimeMapper())
-    }
-    single<RegistrationsPaymentStoreFactory>{
-        RegistrationsPaymentStoreFactory(
-            storeFactory = DefaultStoreFactory(),
-            repository = get()
-        )
     }
     single<StartOrderStoreFactory> {
         StartOrderStoreFactory(

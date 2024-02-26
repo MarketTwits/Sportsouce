@@ -14,6 +14,7 @@ import com.markettwits.profile.presentation.component.my_members.MyMembersScreen
 import com.markettwits.profile.presentation.component.unauthorized.components.NewUnAuthorizedProfileScreen
 import com.markettwits.profile.presentation.sign_in.AuthScreen
 import com.markettwits.profile.presentation.sign_up.presentation.content.SignUpScreen
+import com.markettwits.registrations.registrations.presentation.MyRegistrationsScreen
 import com.markettwits.registrations.root_registrations.RootRegistrationsScreen
 import com.markettwits.registrations.start_order_profile.components.StartOrderProfileDialogScreen
 import com.markettwits.start.root.RootStartScreen
@@ -48,6 +49,7 @@ fun DefaultProfileScreen(component: DefaultProfileComponent) {
             is DefaultProfileComponent.Child.EditProfileMenu -> RootEditProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.SocialNetwork -> ProfileSocialNetworkScreen(component = child.component)
             is DefaultProfileComponent.Child.Start -> RootStartScreen(component = child.component)
+            is DefaultProfileComponent.Child.UserStarts -> MyRegistrationsScreen(component = child.component)
         }
     }
 }

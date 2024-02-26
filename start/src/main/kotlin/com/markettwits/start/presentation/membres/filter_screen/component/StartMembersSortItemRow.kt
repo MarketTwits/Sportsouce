@@ -36,7 +36,7 @@ fun StartMemberFilterItemBase(modifier: Modifier = Modifier, item: String, onCli
             modifier = Modifier
                 .padding(10.dp),
             text = item,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.outline,
             maxLines = 1,
             fontFamily = FontNunito.regular,
             fontSize = 12.sp

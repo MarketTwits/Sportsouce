@@ -1,6 +1,5 @@
 package com.markettwits.start.presentation.order.components.members
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +19,9 @@ fun StartMembers(
     members: List<StartStatement>,
     onClickMember: (StartStatement, Int) -> Unit
 ) {
-    OnBackgroundCard(modifier = modifier.padding(top = 10.dp)) {
+    OnBackgroundCard(
+        modifier = modifier.padding(top = 10.dp)
+    ) {
         Column(modifier = it.padding(10.dp)) {
             Text(
                 modifier = modifier,
@@ -34,11 +35,8 @@ fun StartMembers(
             Column {
                 members.forEachIndexed { index, member ->
                     StartMemberBox(
-                        modifier = modifier
-                            .padding(top = 10.dp, bottom = 10.dp)
-                            .clickable {
-                                onClickMember(member, index)
-                            },
+                        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
+                        onClick = { onClickMember(member, index) },
                         stage = "Участник ${index + 1}",
                         memberName = "${member.surname} ${member.name}"
                     )

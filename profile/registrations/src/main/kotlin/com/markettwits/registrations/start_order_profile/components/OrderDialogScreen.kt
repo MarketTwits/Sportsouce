@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -17,13 +19,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
 import com.markettwits.registrations.start_order_profile.component.StartOrderComponent
-import com.markettwits.registrations.start_order_profile.components.start.OrderDialogStatus
+import com.markettwits.registrations.start_order_profile.components.start.OrderDialogPaymentStatus
+import com.markettwits.registrations.start_order_profile.components.start.OrderDialogStartStatus
 import com.markettwits.registrations.start_order_profile.components.start.OrderStartCard
 import com.markettwits.registrations.start_order_profile.components.start.RegistrationButton
 import com.markettwits.registrations.start_order_profile.store.store.StartOrderStore
@@ -43,25 +43,32 @@ fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .padding(
                     bottom = WindowInsets.navigationBars
                         .asPaddingValues()
                         .calculateBottomPadding()
                 )
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(20.dp),
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            OrderDialogStatus(
-                state.startOrderInfo.payment,
-                state.startOrderInfo.statusCode
-            )
             OrderStartCard(
-                modifier = Modifier.padding(vertical = 14.dp),
+                modifier = Modifier.padding(vertical = 4.dp),
                 item = state.startOrderInfo,
-                onClickPayment = {}
+                onClickStart = {
+                    component.obtainEvent(StartOrderStore.Intent.OnClickStart(it))
+                }
             )
-            if (!state.startOrderInfo.payment) {
+            OrderDialogStartStatus(
+                modifier = Modifier.padding(vertical = 4.dp),
+                startStatus = state.startOrderInfo.statusCode
+            )
+            OrderDialogPaymentStatus(
+                modifier = Modifier.padding(vertical = 4.dp),
+                paymentStatus = state.startOrderInfo.payment.title
+            )
+            if (!state.startOrderInfo.payment.payment) {
                 RegistrationButton(
                     title = "Оплатить ${state.startOrderInfo.cost} ₽",
                     isLoading = state.isLoading
@@ -76,28 +83,3 @@ fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
         }
     }
 }
-
-@Preview
-@Composable
-private fun OrderDialogScreenPreview() {
-//    SportSouceTheme {
-//        StartOrderProfileDialogScreen()
-//    }
-}
-
-val fakeOrder = StartOrderInfo(
-    id = 1,
-    startId = 123,
-    name = "John DoeJohn DoeJohn DoeJohn DoeJohn Doe",
-    image = "example.jpg",
-    dateStart = "2024-02-22",
-    statusCode = StartStatus(2, "Старт завершен"),
-    team = "Team A",
-    payment = true,
-    ageGroup = "Adult",
-    distance = "10 km",
-    member = "John DoeJohn DoeJohn DoeJohn DoeJohn DoeJohn Doe",
-    kindOfSport = "Running",
-    startTitle = "Marathon MarathonMarathonMarathonMarathonMarathonMarathonMarathon",
-    cost = "$10.00"
-)

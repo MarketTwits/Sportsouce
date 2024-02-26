@@ -1,11 +1,10 @@
 package com.markettwits.start.presentation.order.components.payment
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,19 +40,19 @@ fun PaymentTypeBox(
         Row {
             if (paymentDisabled) {
                 PaymentTypeChosen(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(),
                     value = paymentType, selected = true
                 ) {}
             } else {
                 PaymentTypeChosen(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(),
                     value = "Сейчас", selected = payNow
                 ) {
                     onClickChangePayment(true)
                 }
                 if (members.size <= 1 && distances.size <= 1) {
                     PaymentTypeChosen(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        modifier = Modifier.padding(),
                         value = "В личном кабинете",
                         selected = !payNow
                     ) {
@@ -72,16 +71,17 @@ private fun PaymentTypeChosen(
     value: String,
     onClick: () -> Unit
 ) {
-    Card(
-        modifier = modifier.clickable {
-            onClick()
-        },
+    Button(
+        modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
         shape = Shapes.medium,
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.primary),
-        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else null
+        colors = ButtonDefaults.elevatedButtonColors(containerColor = MaterialTheme.colorScheme.primary),
+        border = if (selected) BorderStroke(2.dp, MaterialTheme.colorScheme.secondary) else null,
+        onClick = {
+            onClick()
+        }
     ) {
         Text(
-            modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp),
+            modifier = modifier.padding(vertical = 1.dp, horizontal = 2.dp),
             text = value,
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,

@@ -1,8 +1,8 @@
-package com.markettwits.registrations.registrations.presentation
+package com.markettwits.registrations.registrations.presentation.component
 
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.registrations.registrations.domain.StartOrderInfo
-import com.markettwits.registrations.registrations.domain.StartPaymentState
+import com.markettwits.registrations.registrations.presentation.store.RegistrationsStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -10,10 +10,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
 
     override val value: StateFlow<RegistrationsStore.State> = MutableStateFlow(
         RegistrationsStore.State(
-            info = testList,
-            paymentState = StartPaymentState(
-                paymentList = testPaymant
-            )
+            base = testList,
         )
     )
 
@@ -31,7 +28,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                     dateStart = "2022-01-01",
                     statusCode = StartStatus(2, "Регистрация открыта"),
                     team = "Sample Team",
-                    payment = false,
+                    payment = StartOrderInfo.PaymentStatus.Failure(),
                     ageGroup = "18-30",
                     distance = "5K",
                     member = "John Doe",
@@ -49,7 +46,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 dateStart = "2022-01-01",
                 statusCode = StartStatus(2, "Регистрация открыта"),
                 team = "Sample Team",
-                payment = false,
+                payment = StartOrderInfo.PaymentStatus.Failure(),
                 ageGroup = "18-30",
                 distance = "5K",
                 member = "John Doe",
@@ -65,7 +62,7 @@ class RegistrationsComponentMock : RegistrationsComponent {
                 dateStart = "2022-01-01",
                 statusCode = StartStatus(2, "Регистрация открыта"),
                 team = "Sample Team",
-                payment = true,
+                payment = StartOrderInfo.PaymentStatus.Failure(),
                 ageGroup = "18-30",
                 distance = "5K",
                 member = "John Doe",

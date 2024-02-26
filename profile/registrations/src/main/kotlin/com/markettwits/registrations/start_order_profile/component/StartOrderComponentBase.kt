@@ -17,6 +17,7 @@ class StartOrderComponentBase(
     private val start: StartOrderInfo,
     private val storeFactory: StartOrderStoreFactory,
     private val dismiss: () -> Unit,
+    private val openStart: (Int) -> Unit
 ) : StartOrderComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -32,7 +33,11 @@ class StartOrderComponentBase(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    StartOrderStore.Label.Dismiss -> dismiss()
+                    is StartOrderStore.Label.Dismiss -> dismiss()
+                    is StartOrderStore.Label.OnClickStart -> {
+                        dismiss()
+                        openStart(it.startId)
+                    }
                 }
             }
         }

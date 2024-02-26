@@ -1,20 +1,45 @@
 package com.markettwits.core_ui.base_extensions
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.core.graphics.toColor
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import java.net.URI
 
 
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
 inline fun Modifier.noRippleClickable(
     crossinline onClick: () -> Unit,
 ): Modifier = composed {
     clickable(
         indication = null,
+        interactionSource = remember { MutableInteractionSource() }
+    ) {
+        onClick()
+    }
+}
+
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
+inline fun Modifier.customRippleClickable(
+    crossinline onClick: () -> Unit,
+    bounded: Boolean = true,
+    radius: Dp = 250.dp,
+    color: androidx.compose.ui.graphics.Color? = null,
+): Modifier = composed {
+    val currentColor = color ?: MaterialTheme.colorScheme.secondary.copy(0.2f)
+    val ripple = rememberRipple(
+        bounded = bounded,
+        radius = radius,
+        color = currentColor
+    )
+    clickable(
+        indication = ripple,
         interactionSource = remember { MutableInteractionSource() }
     ) {
         onClick()

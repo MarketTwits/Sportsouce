@@ -10,7 +10,7 @@ import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
-import com.markettwits.start.data.start.StartDataSource
+import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Intent
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Label
@@ -46,7 +46,7 @@ interface StartCommentsStore : Store<Intent, State, Label> {
 
 class StartCommentsStoreFactory(
     private val storeFactory: StoreFactory,
-    private val service: StartDataSource
+    private val service: StartRepository
 ) {
 
     fun create(startId: Int): StartCommentsStore =

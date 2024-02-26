@@ -20,10 +20,16 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
+import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
+import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.edit_profile.root.RootEditProfileComponent
 import com.markettwits.edit_profile.root.RootEditProfileComponentBase
-import com.markettwits.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponent
-import com.markettwits.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponentBase
+import com.markettwits.members.common.domain.ProfileMember
+import com.markettwits.members.member_detail.presentation.component.MemberDetailComponent
+import com.markettwits.members.member_detail.presentation.component.MemberDetailComponentBase
+import com.markettwits.members.member_detail.presentation.store.MemberDetailStoreFactory
+import com.markettwits.members.members_list.presentation.component.MembersListComponent
+import com.markettwits.members.members_list.presentation.component.MembersListComponentBase
 import com.markettwits.profile.di.rootProfileModule
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponentBase
@@ -87,6 +93,15 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     start = config.startOrderInfo,
                     storeFactory = scope.get(),
                     openStart = { navigation.push(Config.Start(it)) },
+                    dismiss = slotNavigation::dismiss
+                )
+            )
+
+            is SlotConfig.MemberDetail -> SlotChild.MemberDetail(
+                MemberDetailComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = MemberDetailStoreFactory(DefaultStoreFactory()),
+                    member = config.member,
                     dismiss = slotNavigation::dismiss
                 )
             )
@@ -201,6 +216,17 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     },
                 )
             )
+
+            Config.Members -> Child.Members(
+                MembersListComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    pop = navigation::pop,
+                    goDetail = {
+                        slotNavigation.activate(SlotConfig.MemberDetail(it))
+                    }
+                )
+            )
         }
 
 
@@ -222,11 +248,15 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             )
 
             is AuthorizedProfileComponent.Output.AllRegistries -> navigation.push(Config.UserStarts)
+            is AuthorizedProfileComponent.Output.Members -> navigation.push(Config.Members)
         }
     }
 
     @Serializable
     sealed class Config {
+        @Serializable
+        data object Members : Config()
+
         @Serializable
         data class Start(val startId: Int) : Config()
 
@@ -267,9 +297,13 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
     sealed interface SlotConfig {
         @Serializable
         data class StartOrder(val startOrderInfo: StartOrderInfo) : SlotConfig
+
+        @Serializable
+        data class MemberDetail(val member: ProfileMember) : SlotConfig
     }
 
     sealed class Child {
+        data class Members(val component: MembersListComponent) : Child()
         data class UserStarts(val component: RegistrationsComponent) : Child()
         data class Start(val component: RootStartScreenComponentBase) : Child()
         data class SocialNetwork(val component: EditProfileSocialNetworkComponent) : Child()
@@ -294,6 +328,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
     @Serializable
     sealed interface SlotChild {
+        data class MemberDetail(val component: MemberDetailComponent) : SlotChild
         data class StartOrder(val component: StartOrderComponent) : SlotChild
     }
 }

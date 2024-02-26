@@ -8,6 +8,7 @@ import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
+import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
 import com.markettwits.cloud.model.profile.members.ProfileMembers
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
@@ -30,6 +31,7 @@ import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.cloud.provider.HttpClientProvider
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
@@ -278,6 +280,38 @@ class StartsRemoteDataSourceImpl(
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun deleteMember(memberId: Int, token: String) {
+        val response = client.delete("member-template/$memberId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun updateMember(memberId: Int, request: ProfileMemberRequest, token: String) {
+        val response = client.put("member-template/$memberId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun addMember(request: ProfileMemberRequest, token: String) {
+        val response = client.post("member-template") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
         }
         return json.decodeFromString(response.body())
     }

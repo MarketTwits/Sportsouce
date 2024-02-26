@@ -10,8 +10,7 @@ import com.markettwits.registrations.registrations.data.mapper.UserRegistrations
 class AuthorizedProfileMapperBase(
     userRegistrationsMapper: UserRegistrationsMapper,
     timeMapper: TimeMapper
-) :
-    AuthorizedProfileMapperAbstract(userRegistrationsMapper, timeMapper) {
+) : AuthorizedProfileMapperAbstract(userRegistrationsMapper, timeMapper) {
     override fun map(
         user: User,
         userRegistries: List<RemoteStartsUserItem>,

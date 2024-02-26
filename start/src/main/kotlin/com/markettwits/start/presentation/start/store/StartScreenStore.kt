@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.start.data.start.StartDataSource
+import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
@@ -51,7 +51,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
 class StartScreenStoreFactory(
     private val storeFactory: StoreFactory,
-    private val service: StartDataSource,
+    private val service: StartRepository,
 ) {
     fun create(startID: Int): StartScreenStore =
         object : StartScreenStore, Store<Intent, State, Label> by storeFactory.create(

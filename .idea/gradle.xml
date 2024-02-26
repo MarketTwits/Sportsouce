@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/profile" />
             <option value="$PROJECT_DIR$/profile/change-password" />
             <option value="$PROJECT_DIR$/profile/edit-profile" />
+            <option value="$PROJECT_DIR$/profile/members" />
             <option value="$PROJECT_DIR$/profile/profile" />
             <option value="$PROJECT_DIR$/profile/registrations" />
             <option value="$PROJECT_DIR$/review" />

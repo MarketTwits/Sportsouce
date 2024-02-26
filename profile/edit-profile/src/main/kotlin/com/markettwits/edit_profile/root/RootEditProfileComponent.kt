@@ -5,7 +5,7 @@ import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfile
 import com.markettwits.edit_profile.edit_profile_Image.presentation.component.EditProfileImageComponent
 import com.markettwits.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponent
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponent
-import com.markettwits.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponent
+import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
 import kotlinx.serialization.Serializable
 
 interface RootEditProfileComponent {

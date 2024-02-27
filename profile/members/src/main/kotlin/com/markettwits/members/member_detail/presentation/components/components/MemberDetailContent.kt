@@ -9,7 +9,11 @@ import com.markettwits.members.common.domain.ProfileMember
 import com.markettwits.members.common.presentation.MemberItemCard
 
 @Composable
-fun MemberDetailContent(modifier: Modifier = Modifier, item: ProfileMember) {
+fun MemberDetailContent(
+    modifier: Modifier = Modifier, item: ProfileMember,
+    onClickEdit: () -> Unit,
+    onClickDelete: () -> Unit
+) {
     Column(modifier = modifier.padding(10.dp)) {
         MemberItemCard(
             full = true,
@@ -18,8 +22,8 @@ fun MemberDetailContent(modifier: Modifier = Modifier, item: ProfileMember) {
         )
         MemberDetailButtons(
             modifier = Modifier.padding(vertical = 10.dp),
-            onClickEdit = {},
-            onClickDelete = {}
+            onClickEdit = onClickEdit::invoke,
+            onClickDelete = onClickDelete::invoke
         )
     }
 }

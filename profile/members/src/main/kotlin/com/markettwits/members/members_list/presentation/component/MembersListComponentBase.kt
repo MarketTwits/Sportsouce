@@ -16,7 +16,8 @@ class MembersListComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: MembersListStoreFactory,
     private val pop: () -> Unit,
-    private val goDetail: (ProfileMember) -> Unit
+    private val goDetail: (ProfileMember) -> Unit,
+    private val addMember: () -> Unit
 ) : MembersListComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -33,7 +34,7 @@ class MembersListComponentBase(
             store.labels.collect {
                 when (it) {
                     is MembersListStore.Label.GoBack -> pop()
-                    is MembersListStore.Label.OnClickAddMember -> TODO()
+                    is MembersListStore.Label.OnClickAddMember -> addMember()
                     is MembersListStore.Label.OnClickMember -> goDetail(it.member)
                 }
             }

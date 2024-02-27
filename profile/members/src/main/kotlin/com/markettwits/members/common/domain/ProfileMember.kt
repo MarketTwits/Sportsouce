@@ -16,3 +16,17 @@ data class ProfileMember(
     val type: String,
     val child: Boolean
 )
+
+val emptyProfileMember = ProfileMember(
+    id = 0,
+    userId = 0,
+    name = "",
+    surname = "",
+    email = "",
+    phone = "",
+    gender = "",
+    team = "",
+    birthday = "",
+    type = "",
+    child = false
+)

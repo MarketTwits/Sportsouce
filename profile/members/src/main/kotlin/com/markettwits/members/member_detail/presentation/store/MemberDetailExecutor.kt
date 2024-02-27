@@ -11,7 +11,7 @@ class MemberDetailExecutor : CoroutineExecutor<Intent, Unit, State, Message, Lab
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnClickDelete -> TODO()
-            is Intent.OnClickEdit -> TODO()
+            is Intent.OnClickEdit -> publish(Label.OnClickEdit)
         }
     }
 

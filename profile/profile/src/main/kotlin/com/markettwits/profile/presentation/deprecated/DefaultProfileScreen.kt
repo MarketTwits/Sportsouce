@@ -10,6 +10,8 @@ import com.markettwits.edit_profile.edit_profile.presentation.EditProfileScreen
 import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkScreen
 import com.markettwits.edit_profile.root.RootEditProfileScreen
 import com.markettwits.members.member_detail.presentation.components.MemberDetailScreenDialog
+import com.markettwits.members.member_edit.presentation.components.MemberEditScreenDialog
+import com.markettwits.members.member_root.component.RootMembersScreen
 import com.markettwits.members.members_list.presentation.components.MembersScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.components.NewAuthorizedProfileScreen
 import com.markettwits.profile.presentation.component.my_members.MyMembersScreen
@@ -32,8 +34,6 @@ fun DefaultProfileScreen(component: DefaultProfileComponent) {
             is DefaultProfileComponent.SlotChild.StartOrder -> StartOrderProfileDialogScreen(
                 component = child.component
             )
-
-            is DefaultProfileComponent.SlotChild.MemberDetail -> MemberDetailScreenDialog(component = child.component)
         }
     }
 
@@ -54,7 +54,7 @@ fun DefaultProfileScreen(component: DefaultProfileComponent) {
             is DefaultProfileComponent.Child.SocialNetwork -> ProfileSocialNetworkScreen(component = child.component)
             is DefaultProfileComponent.Child.Start -> RootStartScreen(component = child.component)
             is DefaultProfileComponent.Child.UserStarts -> MyRegistrationsScreen(component = child.component)
-            is DefaultProfileComponent.Child.Members -> MembersScreen(component = child.component)
+            is DefaultProfileComponent.Child.Members -> RootMembersScreen(component = child.component)
         }
     }
 }

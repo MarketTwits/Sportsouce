@@ -16,7 +16,8 @@ class MemberDetailComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: MemberDetailStoreFactory,
     private val member: ProfileMember,
-    private val dismiss: () -> Unit
+    private val dismiss: () -> Unit,
+    private val onClickEdit: (ProfileMember) -> Unit
 ) : MemberDetailComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -33,7 +34,7 @@ class MemberDetailComponentBase(
             store.labels.collect {
                 when (it) {
                     is MemberDetailStore.Label.Dismiss -> dismiss()
-                    is MemberDetailStore.Label.OnClickEdit -> TODO()
+                    is MemberDetailStore.Label.OnClickEdit -> onClickEdit(member)
                 }
             }
         }

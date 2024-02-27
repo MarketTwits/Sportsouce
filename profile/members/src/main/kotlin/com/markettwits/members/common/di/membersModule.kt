@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.core_ui.time.TimeMapper
+import com.markettwits.members.common.data.ProfileMembersRepository
 import com.markettwits.members.common.data.ProfileMembersRepositoryBase
 import com.markettwits.members.common.data.mapper.MembersMapper
 import com.markettwits.members.common.data.mapper.MembersMapperBase
@@ -22,18 +23,12 @@ val membersModule = module {
     singleOf(::MembersMapperBase) bind MembersMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
 
+    singleOf(::ProfileMembersRepositoryBase) bind ProfileMembersRepository::class
+
     single<MembersListStoreFactory> {
         MembersListStoreFactory(
             storeFactory = get(),
-            useCase = MembersListUseCaseBase(
-                ProfileMembersRepositoryBase(
-                    service = get(),
-                    auth = get(),
-                    mapper = get()
-                )
-            )
+            useCase = MembersListUseCaseBase(get())
         )
     }
-
-
 }

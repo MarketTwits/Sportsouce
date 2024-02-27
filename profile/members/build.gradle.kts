@@ -12,7 +12,9 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.auth)
     implementation(projects.coreKoin)
+    implementation(projects.teamsCity)
     implementation(libs.koin.core)
+    implementation(libs.calendar)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.bundles.mviKotlin)
 }

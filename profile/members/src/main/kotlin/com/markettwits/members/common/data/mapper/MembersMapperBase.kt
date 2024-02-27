@@ -24,7 +24,11 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
             )
         }
 
-    override fun addOrUpdate(member: ProfileMember, update: Boolean): ProfileMemberRequest =
+    override fun addOrUpdate(
+        member: ProfileMember,
+        update: Boolean,
+        userId: Int
+    ): ProfileMemberRequest =
         ProfileMemberRequest(
             birthday = timeMapper.mapTimeToCloud(time = member.birthday),
             child = member.child,
@@ -36,6 +40,6 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
             surname = member.surname,
             team = member.team,
             type = member.type,
-            user_id = member.userId.toString()
+            user_id = userId.toString()
         )
 }

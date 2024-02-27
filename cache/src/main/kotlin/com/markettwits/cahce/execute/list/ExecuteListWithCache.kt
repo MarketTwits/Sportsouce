@@ -7,6 +7,6 @@ interface ExecuteListWithCache {
         forced: Boolean = false,
         cache: Cache<List<T>>,
         launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
+        callback: suspend (List<T>) -> Unit
     )
 }

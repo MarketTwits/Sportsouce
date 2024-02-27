@@ -46,6 +46,7 @@
             <option value="$PROJECT_DIR$/start-search" />
             <option value="$PROJECT_DIR$/starts" />
             <option value="$PROJECT_DIR$/starts-common" />
+            <option value="$PROJECT_DIR$/teams-city" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

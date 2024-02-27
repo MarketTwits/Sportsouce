@@ -13,7 +13,6 @@ interface AuthorizedProfileComponent {
         data object EditProfile : Output
         data object MyRegistries : Output
         data class StartOrder(val startOrderInfo: StartOrderInfo) : Output
-        data object MyMembers : Output
         data object SocialNetwork : Output
         data object Members : Output
         data class Start(val startId: Int) : Output

@@ -25,13 +25,15 @@ class ProfileMembersRepositoryBase(
 
     override suspend fun updateMember(profileMember: ProfileMember): Result<Unit> = runCatching {
         val token = auth.updateToken().getOrThrow()
-        val request = mapper.addOrUpdate(profileMember, true)
+        val user = auth.user().getOrThrow()
+        val request = mapper.addOrUpdate(profileMember, true, user.id)
         service.updateMember(profileMember.id, request, token)
     }
 
     override suspend fun addMember(profileMember: ProfileMember): Result<Unit> = runCatching {
         val token = auth.updateToken().getOrThrow()
-        val request = mapper.addOrUpdate(profileMember, false)
+        val user = auth.user().getOrThrow()
+        val request = mapper.addOrUpdate(profileMember, false, user.id)
         service.addMember(request, token)
     }
 }

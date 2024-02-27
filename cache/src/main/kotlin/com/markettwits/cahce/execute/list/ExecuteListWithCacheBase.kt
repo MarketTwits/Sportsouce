@@ -7,7 +7,7 @@ class ExecuteListWithCacheBase : ExecuteListWithCacheAbstract() {
         forced: Boolean,
         cache: Cache<List<T>>,
         launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
+        callback: suspend (List<T>) -> Unit
     ) {
         if (forced)
             executeListWithCacheWithForced(cache, launch, callback)

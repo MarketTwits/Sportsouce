@@ -6,7 +6,7 @@ abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
     protected suspend fun <T> executeListWithCacheWithForced(
         cache: Cache<List<T>>,
         launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
+        callback: suspend (List<T>) -> Unit
     ) {
         runCatching { launch() }
             .fold(onSuccess = {
@@ -28,7 +28,7 @@ abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
     protected suspend fun <T> executeListWithCacheWithoutForced(
         cache: Cache<List<T>>,
         launch: suspend () -> List<T>,
-        callback: (List<T>) -> Unit
+        callback: suspend (List<T>) -> Unit
     ) {
         val cachedData = cache.get()
         val newData = if (cachedData.isNullOrEmpty()) {

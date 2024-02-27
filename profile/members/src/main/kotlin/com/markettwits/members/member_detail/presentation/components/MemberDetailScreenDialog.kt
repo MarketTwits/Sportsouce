@@ -1,11 +1,16 @@
 package com.markettwits.members.member_detail.presentation.components
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import com.markettwits.members.member_detail.presentation.component.MemberDetailComponent
 import com.markettwits.members.member_detail.presentation.components.components.MemberDetailContent
 import com.markettwits.members.member_detail.presentation.store.MemberDetailStore
@@ -20,6 +25,18 @@ fun MemberDetailScreenDialog(component: MemberDetailComponent) {
         },
         containerColor = MaterialTheme.colorScheme.primary
     ) {
-        MemberDetailContent(item = state.member)
+        MemberDetailContent(
+            modifier = Modifier.padding(
+                bottom = WindowInsets.navigationBars
+                    .asPaddingValues()
+                    .calculateBottomPadding()
+            ),
+            item = state.member,
+            onClickEdit = {
+                component.obtainEvent(MemberDetailStore.Intent.OnClickEdit)
+            }, onClickDelete = {
+                component.obtainEvent(MemberDetailStore.Intent.OnClickDelete)
+            }
+        )
     }
 }

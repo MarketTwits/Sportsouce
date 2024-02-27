@@ -16,7 +16,6 @@ dependencyResolutionManagement {
     }
 }
 
-
 rootProject.name = "Sportsouce"
 includeBuild("build-logic")
 include(":app")
@@ -27,6 +26,7 @@ include(":core-ui")
 include(":root")
 include(":auth")
 include(":news")
+include(":teams-city")
 include(":start-register")
 include(":profile:profile")
 include(":profile:members")

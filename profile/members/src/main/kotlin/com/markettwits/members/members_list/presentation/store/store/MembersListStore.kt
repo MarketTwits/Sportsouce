@@ -19,6 +19,7 @@ interface MembersListStore : Store<Intent, State, Label> {
         data object Retry : Intent
         data object GoBack : Intent
         data object OnClickAddMember : Intent
+        data class UpdateMember(val member: ProfileMember) : Intent
         data class OnClickMember(val member: ProfileMember) : Intent
     }
 

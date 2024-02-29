@@ -12,7 +12,7 @@ android {
 dependencies {
 
     api(project(":cloud"))
-    implementation(project(":start"))
+    implementation(project(":start:start"))
     implementation(project(":starts"))
     implementation(project(":profile:profile"))
     implementation(project(":news"))
@@ -20,13 +20,11 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":auth"))
     implementation(libs.bundles.mviKotlin)
-    api(libs.bundles.composeUiBundle)
-    api(libs.junit.ext.ktx)
-    debugApi(libs.bundles.composeUiBundleDebug)
+    implementation(libs.bundles.composeUiBundle)
+    implementation(libs.junit.ext.ktx)
+    implementation(libs.bundles.composeUiBundleDebug)
     implementation(libs.decompose)
-    //implementation(libs.decompose.compose.jetbrains)
     implementation(libs.decompose.compose.extension)
-    implementation ("de.charlex.compose.material3:material3-html-text:2.0.0-beta01")
     implementation(libs.decompose.android)
     implementation(libs.kotlinx.datetime)
 }

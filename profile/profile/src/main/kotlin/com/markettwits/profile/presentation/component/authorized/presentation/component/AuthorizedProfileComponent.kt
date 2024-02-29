@@ -1,7 +1,7 @@
 package com.markettwits.profile.presentation.component.authorized.presentation.component
 
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
+import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthorizedProfileComponent {

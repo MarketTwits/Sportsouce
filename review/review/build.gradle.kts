@@ -6,14 +6,12 @@ android {
     namespace = "com.markettwits.review"
 }
 dependencies {
-    compileOnly(libs.kstore)
-    compileOnly(libs.kstore.file)
-    implementation(projects.startSearch)
     implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.news)
-    implementation(projects.start)
-    implementation(projects.review.startFilter)
+    implementation(projects.start.startSearch)
+    implementation(projects.start.start)
+    implementation(projects.start.startFilter)
     implementation(projects.review.random)
     implementation(projects.review.schedule)
     implementation(projects.review.popular)

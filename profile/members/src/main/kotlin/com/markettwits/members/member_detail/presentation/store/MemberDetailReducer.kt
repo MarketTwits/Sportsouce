@@ -7,7 +7,14 @@ import com.markettwits.members.member_detail.presentation.store.MemberDetailStor
 object MemberDetailReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            else -> TODO()
+            is Message.DeleteFailure -> copy(
+                isLoading = false,
+                isError = true,
+                message = msg.message
+            )
+
+            is Message.DeleteLoading -> copy(isLoading = true, isError = false)
+            is Message.DeleteSuccess -> copy(isLoading = false, isError = false)
         }
     }
 }

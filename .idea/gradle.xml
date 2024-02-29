@@ -39,11 +39,12 @@
             <option value="$PROJECT_DIR$/review/random" />
             <option value="$PROJECT_DIR$/review/review" />
             <option value="$PROJECT_DIR$/review/schedule" />
-            <option value="$PROJECT_DIR$/review/start-filter" />
             <option value="$PROJECT_DIR$/root" />
             <option value="$PROJECT_DIR$/start" />
-            <option value="$PROJECT_DIR$/start-register" />
-            <option value="$PROJECT_DIR$/start-search" />
+            <option value="$PROJECT_DIR$/start/start" />
+            <option value="$PROJECT_DIR$/start/start-filter" />
+            <option value="$PROJECT_DIR$/start/start-register" />
+            <option value="$PROJECT_DIR$/start/start-search" />
             <option value="$PROJECT_DIR$/starts" />
             <option value="$PROJECT_DIR$/starts-common" />
             <option value="$PROJECT_DIR$/teams-city" />

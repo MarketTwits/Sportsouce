@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
-import com.markettwits.registrations.registrations_list.StartOrderCard
+import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
+import com.markettwits.registrations.registrations_simple_list.StartOrderSimpleCard
 
 @Composable
 fun UserStarts(
@@ -58,7 +58,7 @@ fun UserStarts(
             val visibleItems = 5
             val moreItems = starts.size - visibleItems
             starts.take(visibleItems).forEach {
-                StartOrderCard(start = it) {
+                StartOrderSimpleCard(start = it) {
                     onClickStart(it)
                 }
             }

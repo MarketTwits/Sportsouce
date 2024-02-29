@@ -4,9 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.members.common.domain.ProfileMember
-import com.markettwits.members.common.domain.emptyProfileMember
+import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.members.member_common.domain.emptyProfileMember
 import com.markettwits.members.member_edit.presentation.store.MemberEditStore
 import com.markettwits.members.member_edit.presentation.store.MemberEditStoreFactory
 import kotlinx.coroutines.CoroutineScope

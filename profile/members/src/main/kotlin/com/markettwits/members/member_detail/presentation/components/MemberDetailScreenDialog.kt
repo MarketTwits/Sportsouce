@@ -32,6 +32,7 @@ fun MemberDetailScreenDialog(component: MemberDetailComponent) {
                     .calculateBottomPadding()
             ),
             item = state.member,
+            isDeleteLoading = state.isLoading,
             onClickEdit = {
                 component.obtainEvent(MemberDetailStore.Intent.OnClickEdit)
             }, onClickDelete = {

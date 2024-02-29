@@ -62,25 +62,8 @@ class BaseAuthDataSource(
             return Result.failure(it)
         })
 
-
-//        val b = updateToken().map {
-//
-//        }
-//        val user = remoteService.auth(updateToken())
-//        cache.set(value = user)
-//        user
-//    }
-
     override suspend fun updateToken(): Result<String> =
         validateToken()
-
-
-//        return try {
-//            validateToken()
-//        } catch (e: Exception) {
-//            throw e
-//        }
-//    }
 
     override suspend fun observeUser(): Flow<User> = cache.observe().mapNotNull { it }
 
@@ -109,18 +92,6 @@ class BaseAuthDataSource(
         }
         currentToken
     }
-//        val data = local.read()
-//        val token = TokenManager.Base().decode(data._accessToken)
-//        val time = System.currentTimeMillis() / 1000
-//        return if (token.expiration > time) {
-//            data._accessToken
-//        } else {
-//            val response =
-//                remoteService.signIn(SignInRequest(email = data._email, password = data._password))
-//            local.write(signInCacheMapper.map(response, data._password))
-//            response.accessToken
-//        }
-    //   }
 
     override suspend fun clear() {
         local.clearAll()

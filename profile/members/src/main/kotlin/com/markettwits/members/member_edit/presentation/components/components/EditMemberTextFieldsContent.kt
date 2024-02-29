@@ -3,23 +3,25 @@ package com.markettwits.members.member_edit.presentation.components.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.date.mapToString
 import com.markettwits.core_ui.components.OnBackgroundCard
+import com.markettwits.core_ui.components.checkbox.CheckBoxTertiaryBase
 import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
+import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.ui_style.CalendarTextFiled
 import com.markettwits.core_ui.ui_style.DropDownSpinner
-import com.markettwits.members.common.domain.ProfileMember
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.teams_city.domain.Team
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -52,7 +54,7 @@ fun EditMemberTextFieldsContent(
                 onValueChange = { newValue -> onMemberChange(member.copy(surname = newValue)) },
                 label = "Фамилия"
             )
-            OutlinedTextFieldBase(
+            OutlinePhoneTextFiled(
                 modifier = modifierInner,
                 value = member.phone,
                 onValueChange = { newValue -> onMemberChange(member.copy(phone = newValue)) },
@@ -134,20 +136,33 @@ fun EditMemberTextFieldsContent(
                     ) {}
                 }
             )
-            var isChild by remember {
-                mutableStateOf<Boolean>(member.child)
-            }
-            Row {
-                Checkbox(checked = isChild, onCheckedChange = {
-                    isChild = !isChild
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifierInner
+            ) {
+                CheckBoxTertiaryBase(checked = !member.child, onValueChanged = {
+                    onMemberChange(member.copy(child = !it))
                 })
-                Text(text = "Взрослый")
+                Text(
+                    text = "Взрослный",
+                    fontFamily = FontNunito.bold,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
-            Row {
-                Checkbox(checked = !isChild, onCheckedChange = {
-                    isChild = !isChild
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifierInner
+            ) {
+                CheckBoxTertiaryBase(checked = member.child, onValueChanged = {
+                    onMemberChange(member.copy(child = it))
                 })
-                Text(text = "Ребенок")
+                Text(
+                    text = "Ребенок",
+                    fontFamily = FontNunito.bold,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
         }
     }

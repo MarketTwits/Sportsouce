@@ -3,6 +3,10 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="Sportsouce.kotlinmultiplatformsharedmodule" target="17" />
+      <module name="Sportsouce.review.start-filter" target="17" />
+      <module name="Sportsouce.start-filter" target="17" />
+      <module name="Sportsouce.start-register" target="17" />
+      <module name="Sportsouce.start-search" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

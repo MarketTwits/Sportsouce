@@ -6,7 +6,7 @@ android {
     namespace = "com.markettwits.news"
 }
 dependencies {
-    api(project(":cloud"))
+    implementation(project(":cloud"))
     implementation(project(":auth"))
     implementation(project(":core-ui"))
     implementation ("de.charlex.compose.material3:material3-html-text:2.0.0-beta01")

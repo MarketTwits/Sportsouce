@@ -5,4 +5,4 @@ import com.markettwits.teams_city.domain.Team
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TeamsAndCities(val teams: List<Team>, val cities: List<City>)
+internal data class TeamsAndCities(val teams: List<Team>, val cities: List<City>)

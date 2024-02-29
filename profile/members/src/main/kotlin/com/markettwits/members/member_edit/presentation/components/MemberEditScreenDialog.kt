@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.components.top_bar.TopBarClipWithLabel
@@ -32,13 +33,17 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
         onDismissRequest = {
             component.obtainEvent(MemberEditStore.Intent.Dismiss)
         }) {
+        val focusManager = LocalFocusManager.current
         Scaffold(topBar = {
             val title =
                 if (state.mode is MemberEditComponent.Mode.Edit) "Редактировать участника" else "Добавить участника"
             TopBarClipWithLabel(title = title,
                 onClickLabel = {
+                    focusManager.clearFocus()
                     component.obtainEvent(MemberEditStore.Intent.Save)
+
                 }, goBack = {
+                    focusManager.clearFocus()
                     component.obtainEvent(MemberEditStore.Intent.Dismiss)
                 })
         }) {
@@ -50,10 +55,8 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
                     component.obtainEvent(MemberEditStore.Intent.OnValueChanged(it))
                 },
                 member = state.member,
-                teams = state.teams,
-                onClickSave = {
-
-                })
+                teams = state.teams
+            )
             if (state.isLoading) {
                 LoadingFullScreen()
             }

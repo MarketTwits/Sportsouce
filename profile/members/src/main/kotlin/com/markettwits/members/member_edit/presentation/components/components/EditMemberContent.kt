@@ -1,13 +1,11 @@
 package com.markettwits.members.member_edit.presentation.components.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.buttons.ButtonContentBase
-import com.markettwits.members.common.domain.ProfileMember
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.teams_city.domain.Team
 
 @Composable
@@ -16,7 +14,6 @@ fun EditMemberContent(
     onMemberChange: (ProfileMember) -> Unit,
     member: ProfileMember,
     teams: List<Team>,
-    onClickSave: () -> Unit,
 ) {
     Column(modifier = modifier) {
         EditMemberTextFieldsContent(

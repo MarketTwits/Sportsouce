@@ -9,7 +9,7 @@ dependencies {
     implementation(projects.cloud)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
-    implementation(projects.start)
+    implementation(projects.start.start)
     implementation(projects.startsCommon)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)

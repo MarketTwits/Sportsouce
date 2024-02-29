@@ -12,10 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BackFloatingActionButton(back : () -> Unit) {
+fun BackFloatingActionButton(
+    modifier: Modifier = Modifier,
+    back: () -> Unit
+) {
     SmallFloatingActionButton(
-        modifier = Modifier.padding(10.dp),
-        containerColor = MaterialTheme.colorScheme.background,
+        modifier = modifier.padding(10.dp),
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.tertiary,
         onClick = {
             back()

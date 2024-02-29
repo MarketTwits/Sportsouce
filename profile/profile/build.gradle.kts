@@ -8,13 +8,12 @@ android {
     namespace = "com.markettwits.profile"
 }
 dependencies {
-    implementation(projects.start)
+    implementation(projects.start.start)
     implementation(project(":cloud"))
     implementation(project(":auth"))
     implementation(project(":core-ui"))
     implementation(project(":core-koin"))
     implementation(project(":profile:edit-profile"))
-    implementation(project(":profile:change-password"))
     implementation(project(":profile:registrations"))
     implementation(project(":profile:members"))
     implementation(projects.cache)

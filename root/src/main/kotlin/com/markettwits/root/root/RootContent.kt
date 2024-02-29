@@ -19,7 +19,7 @@ import com.markettwits.root.bottom_bar.BottomBar
 import com.markettwits.starts.root.api.RootStartsScreen
 
 @Composable
-fun RootContent(component: BaseRootComponent, modifier: Modifier = Modifier) {
+fun RootContent(component: RootComponentBase, modifier: Modifier = Modifier) {
     MaterialTheme {
         Surface(modifier = modifier, color = MaterialTheme.colorScheme.primary) {
             Column(
@@ -34,7 +34,7 @@ fun RootContent(component: BaseRootComponent, modifier: Modifier = Modifier) {
     }
 }
 @Composable
-private fun Children(component: BaseRootComponent, modifier: Modifier = Modifier) {
+private fun Children(component: RootComponentBase, modifier: Modifier = Modifier) {
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = component.childStack,
         modifier = modifier,

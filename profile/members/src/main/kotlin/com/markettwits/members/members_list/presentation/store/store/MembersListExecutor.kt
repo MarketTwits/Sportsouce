@@ -1,7 +1,7 @@
 package com.markettwits.members.members_list.presentation.store.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.members.common.domain.ProfileMember
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.members_list.domain.MembersListUseCase
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.Intent
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.Label

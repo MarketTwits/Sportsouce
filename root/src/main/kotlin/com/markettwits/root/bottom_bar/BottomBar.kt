@@ -17,16 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.root.root.MockRootComponent
 import com.markettwits.root.root.RootComponent
-
-@Preview
-@Composable
-fun BottomBarPreview() {
-    BottomBar(MockRootComponent())
-}
 
 @Composable
 fun BottomBar(component: RootComponent, modifier: Modifier = Modifier) {

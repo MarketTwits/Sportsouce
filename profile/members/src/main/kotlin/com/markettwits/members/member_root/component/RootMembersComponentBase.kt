@@ -6,18 +6,13 @@ import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.slot.navigate
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.members.member_detail.presentation.component.MemberDetailComponentBase
-import com.markettwits.members.member_detail.presentation.store.MemberDetailStoreFactory
 import com.markettwits.members.member_edit.presentation.component.MemberEditComponentBase
 import com.markettwits.members.member_root.di.rootMembersModule
 import com.markettwits.members.members_list.presentation.component.MembersListComponentBase
@@ -81,12 +76,16 @@ class RootMembersComponentBase(
             is RootMembersComponent.ConfigSlot.MemberDetail -> RootMembersComponent.ChildSlot.MemberDetail(
                 MemberDetailComponentBase(
                     componentContext = componentContext,
-                    storeFactory = MemberDetailStoreFactory(DefaultStoreFactory()),
+                    storeFactory = scope.get(),
                     member = config.member,
                     dismiss = slotNavigation::dismiss,
                     onClickEdit = {
                         slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberEdit(it))
+                    },
+                    memberDeleted = {
+                        updateMembersList()
                     }
+
                 )
             )
 
@@ -96,22 +95,21 @@ class RootMembersComponentBase(
                     storeFactory = scope.get(),
                     profileMember = config.member,
                     pop = {
-                        config.member?.let {
-                            RootMembersComponent.ConfigSlot.MemberDetail(
-                                it
-                            )
-                        }?.let { slotNavigation.activate(it) }
+                        slotNavigation.dismiss()
                     },
                     apply = { member ->
-                        slotNavigation.dismiss {
-                            (childStack.value.active.instance
-                                    as? RootMembersComponent.ChildStack.MembersList)?.component?.obtainEvent(
-                                MembersListStore.Intent.Retry
-                            )
-                        }
+                        updateMembersList()
                         slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(member))
                     }
                 )
             )
         }
+
+    private fun updateMembersList(withDismiss: Boolean = true) {
+        if (withDismiss) slotNavigation.dismiss()
+        (childStack.value.active.instance
+                as? RootMembersComponent.ChildStack.MembersList)?.component?.obtainEvent(
+            MembersListStore.Intent.Retry
+        )
+    }
 }

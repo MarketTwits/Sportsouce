@@ -31,7 +31,7 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
+import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 
 @Composable
 fun StartCardSimpleAuth(

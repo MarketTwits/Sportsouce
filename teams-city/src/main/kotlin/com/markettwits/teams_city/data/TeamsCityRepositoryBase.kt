@@ -14,7 +14,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class TeamsCityRepositoryBase(
+internal class TeamsCityRepositoryBase(
     private val cloud: SportsouceApi,
     private val cache: TeamsAndCitiesCache,
     private val executeWithCache: ExecuteWithCache

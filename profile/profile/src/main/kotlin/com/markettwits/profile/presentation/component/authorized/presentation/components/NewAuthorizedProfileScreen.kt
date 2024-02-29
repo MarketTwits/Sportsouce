@@ -8,8 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_screen.FailedScreen
+import com.markettwits.core_ui.base_screen.FullImageScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
@@ -23,6 +27,7 @@ import com.markettwits.profile.presentation.component.authorized.presentation.st
 @Composable
 fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     val state by component.state.collectAsState()
+    var fullImage by rememberSaveable { mutableStateOf(false) }
     state.user?.let { user ->
         PullToRefreshScreen(isRefreshing = state.isLoading, onRefresh = {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
@@ -46,7 +51,11 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                         },
                         onClickEdit = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
-                        })
+                        },
+                        onClickImage = {
+                            fullImage = true
+                        }
+                    )
                     UserStarts(
                         starts = user.activity.userRegistry,
                         onClickAll = {
@@ -75,6 +84,11 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             message = state.message,
             onClickHelp = { }) {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
+        }
+    }
+    if (fullImage) {
+        FullImageScreen(image = state.user!!.userInfo.photo) {
+            fullImage = false
         }
     }
 }

@@ -11,7 +11,7 @@ import com.markettwits.profile.presentation.component.authorized.data.cache.User
 import com.markettwits.profile.presentation.component.authorized.data.mapper.AuthorizedProfileMapperBase
 import com.markettwits.profile.presentation.component.authorized.domain.UserProfileInteractorBase
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStoreFactory
-import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapperBase
+import com.markettwits.registrations.registrations_list.data.mapper.UserRegistrationsMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

@@ -1,14 +1,14 @@
 package com.markettwits.members.member_edit.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.members.common.domain.ProfileMember
-import com.markettwits.members.member_add.domain.MemberAddUseCase
+import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.members.member_edit.domain.MemberAddUseCase
 import com.markettwits.members.member_edit.domain.MemberEditUseCase
 import com.markettwits.members.member_edit.presentation.component.MemberEditComponent
 import com.markettwits.members.member_edit.presentation.store.MemberEditStore.Intent
 import com.markettwits.members.member_edit.presentation.store.MemberEditStore.Label
-import com.markettwits.members.member_edit.presentation.store.MemberEditStore.State
 import com.markettwits.members.member_edit.presentation.store.MemberEditStore.Message
+import com.markettwits.members.member_edit.presentation.store.MemberEditStore.State
 import kotlinx.coroutines.launch
 
 class MemberEditExecutor(

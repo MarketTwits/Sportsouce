@@ -17,43 +17,31 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.change_password.presentation.screen.ChangePasswordComponent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.edit_profile.root.RootEditProfileComponent
 import com.markettwits.edit_profile.root.RootEditProfileComponentBase
-import com.markettwits.members.common.domain.ProfileMember
-import com.markettwits.members.member_detail.presentation.component.MemberDetailComponent
-import com.markettwits.members.member_detail.presentation.component.MemberDetailComponentBase
-import com.markettwits.members.member_detail.presentation.store.MemberDetailStoreFactory
-import com.markettwits.members.member_edit.domain.MemberEditUseCaseBase
-import com.markettwits.members.member_edit.presentation.component.MemberEditComponent
-import com.markettwits.members.member_edit.presentation.component.MemberEditComponentBase
-import com.markettwits.members.member_edit.presentation.store.MemberEditStoreFactory
 import com.markettwits.members.member_root.component.RootMembersComponentBase
-import com.markettwits.members.members_list.presentation.component.MembersListComponent
-import com.markettwits.members.members_list.presentation.component.MembersListComponentBase
 import com.markettwits.profile.di.rootProfileModule
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponentBase
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
-import com.markettwits.profile.presentation.component.my_members.MyMembersComponent
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
 import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
 import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponent
 import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponentBase
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
-import com.markettwits.registrations.registrations.presentation.component.RegistrationsComponent
-import com.markettwits.registrations.registrations.presentation.component.RegistrationsComponentBase
-import com.markettwits.registrations.registrations.presentation.store.RegistrationsDataStoreFactory
+import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
+import com.markettwits.registrations.registrations_list.presentation.component.RegistrationsComponent
+import com.markettwits.registrations.registrations_list.presentation.component.RegistrationsComponentBase
+import com.markettwits.registrations.registrations_list.presentation.store.RegistrationsDataStoreFactory
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponent
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
-import com.markettwits.registrations.start_order_profile.component.StartOrderComponent
-import com.markettwits.registrations.start_order_profile.component.StartOrderComponentBase
+import com.markettwits.registrations.start_order_detail.component.StartOrderComponent
+import com.markettwits.registrations.start_order_detail.component.StartOrderComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import kotlinx.serialization.Serializable
 
@@ -148,14 +136,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     mapper = RemoteUserToEditProfileMapper.Base(),
                     goBack = ::onBackClicked,
                     service = scope.get()
-                )
-            )
-
-            is Config.ChangePassword -> Child.ChangePassword(
-                ChangePasswordComponent(
-                    context = componentContext,
-                    pop = navigation::pop,
-                    storeFactory = scope.get()
                 )
             )
 
@@ -267,9 +247,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data object Login : Config()
 
         @Serializable
-        data object ChangePassword : Config()
-
-        @Serializable
         data object MyRegistries : Config()
 
         @Serializable
@@ -292,12 +269,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             Child()
         data class UnAuthProfile(val component: UnAuthorizedProfile) : Child()
         data class EditProfile(val component: EditProfileComponent) : Child()
-
-        data class ChangePassword(val component: com.markettwits.change_password.presentation.screen.ChangePassword) :
-            Child()
-
-        data class MyMembers(val component: com.markettwits.profile.presentation.component.my_members.MyMembers) :
-            Child()
 
         data class MyRegistries(val component: RootRegistrationsComponent) :
             Child()

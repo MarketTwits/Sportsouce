@@ -6,7 +6,7 @@ import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.profile.presentation.component.authorized.domain.UserProfile
-import com.markettwits.registrations.registrations.data.mapper.UserRegistrationsMapper
+import com.markettwits.registrations.registrations_list.data.mapper.UserRegistrationsMapper
 
 abstract class AuthorizedProfileMapperAbstract(
     private val userRegistrationsMapper: UserRegistrationsMapper,

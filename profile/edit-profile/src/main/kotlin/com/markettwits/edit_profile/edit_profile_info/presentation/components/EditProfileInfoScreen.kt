@@ -26,9 +26,7 @@ import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditPro
 @Composable
 fun EditProfileInfoScreen(component: EditProfileInfoComponent) {
     val state by component.state.collectAsState()
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackBarHostState = remember { SnackbarHostState() }
     SportSouceTheme {
         var snackBarColor = remember {
             SportSouceColor.SportSouceLighBlue

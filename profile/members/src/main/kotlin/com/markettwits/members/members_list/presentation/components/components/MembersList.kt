@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.members.common.domain.ProfileMember
-import com.markettwits.members.common.presentation.MemberItemCard
+import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.members.member_common.presentation.MemberItemCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

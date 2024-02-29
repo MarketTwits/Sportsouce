@@ -1,7 +1,7 @@
 package com.markettwits.profile.presentation.component.authorized.domain
 
 import com.markettwits.profile.presentation.component.authorized.data.AuthorizedProfileRepository
-import com.markettwits.registrations.registrations.domain.StartOrderInfo
+import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

@@ -29,7 +29,7 @@ fun PullToRefreshScreen(
         PullRefreshIndicator(
             refreshing = isRefreshing, state = state,
             colors = PullRefreshIndicatorDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.tertiary
             ),
             shadowElevation = 5.dp,

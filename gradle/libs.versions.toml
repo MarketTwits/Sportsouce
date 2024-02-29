@@ -31,7 +31,7 @@ compose-lifecycle = "2.6.1"
 compose-material3 = "1.2.0-alpha11"
 compose-preview = "1.5.1"
 compose-coil = "2.5.0"
-accompanist = "0.32.0"
+accompanist = "0.34.0"
 onebone-toolbar = "2.3.5"
 realm-gradle-plugin = "10.2.0"
 zoomable = "1.5.1"
@@ -54,6 +54,8 @@ ktor = "2.2.4"
 appcompat = "1.6.1"
 material = "1.9.0"
 lottie = "6.3.0"
+orbital = "0.3.4"
+libphonenumber = "8.13.31"
 
 
 #Database
@@ -101,6 +103,8 @@ mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", vers
 mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
 #UI
 onebone-toolbar = {group = "me.onebone", name = "toolbar-compose", version.ref = "onebone-toolbar"}
+libphonenumber = { group = "com.googlecode.libphonenumber", name = "libphonenumber", version.ref = "libphonenumber" }
+orbital = { group = "com.github.skydoves", name = "orbital", version.ref = "orbital" }
 android-lifecycle-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle-ktx" }
 org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "orgJetbrainsComposeGradlePlugin" }
 realm-gradle-plugin = { module = "io.realm:realm-gradle-plugin", version.ref = "realm-gradle-plugin" }

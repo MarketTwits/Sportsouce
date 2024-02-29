@@ -2,6 +2,7 @@ package com.markettwits.profile.presentation.component.authorized.presentation.c
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.components.OnBackgroundCard
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.profile.presentation.component.authorized.domain.UserProfile
@@ -36,13 +38,15 @@ fun UserInfoCard(
     modifier: Modifier = Modifier,
     user: UserProfile,
     onClickEdit: () -> Unit,
-    onClickAddSocialNetwork: () -> Unit
+    onClickAddSocialNetwork: () -> Unit,
+    onClickImage: () -> Unit
 ) {
     OnBackgroundCard(modifier = modifier) {
-
         Box(
             modifier = Modifier
                 .padding(5.dp)
+                .clip(Shapes.small)
+                .clickable { onClickImage() }
                 .align(Alignment.CenterHorizontally)
         ) {
             SubcomposeAsyncImage(
@@ -95,7 +99,7 @@ fun UserInfoCard(
                 .padding(vertical = 10.dp, horizontal = 30.dp)
                 .height(35.dp),
             onClick = { onClickEdit() },
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
+            border = BorderStroke(0.1.dp, MaterialTheme.colorScheme.tertiary),
             contentPadding = PaddingValues(),
             content = {
                 Text(

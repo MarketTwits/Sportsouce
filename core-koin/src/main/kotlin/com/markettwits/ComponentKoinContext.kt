@@ -7,7 +7,7 @@ import org.koin.core.module.Module
 import org.koin.core.scope.Scope
 import org.koin.dsl.koinApplication
 
-class ComponentKoinContext : InstanceKeeper.Instance {
+class ComponentKoinContext(private val retain: Boolean = true) : InstanceKeeper.Instance {
     private var koinApp: KoinApplication? = null
 
     @OptIn(KoinInternalApi::class)
@@ -19,7 +19,7 @@ class ComponentKoinContext : InstanceKeeper.Instance {
     }
 
     override fun onDestroy() {
-        //TODO reuse cache
-       // koinApp?.close()
+        if (retain)
+            koinApp?.close()
     }
 }

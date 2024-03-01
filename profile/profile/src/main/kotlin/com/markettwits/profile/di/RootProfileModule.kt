@@ -2,7 +2,7 @@ package com.markettwits.profile.di
 
 import com.markettwits.edit_profile.edit_profile.di.editProfileModule
 import com.markettwits.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
-import com.markettwits.members.member_edit.di.memberEditModule
+import com.markettwits.members.member_add_edit.di.memberAddAndEditModule
 import com.markettwits.profile.data.BaseProfileDataSource
 import com.markettwits.profile.data.ProfileDataSource
 import com.markettwits.profile.domain.UserUseCase
@@ -20,7 +20,7 @@ internal val rootProfileModule = module {
         startModule,
         editProfileSocialNetworkModule,
         userStartRegistrationModule,
-        memberEditModule
+        memberAddAndEditModule
     )
     singleOf(::BaseProfileDataSource) bind ProfileDataSource::class
     singleOf(::UserUseCaseBase) bind UserUseCase::class

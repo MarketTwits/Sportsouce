@@ -1,6 +1,6 @@
 package com.markettwits.cahce
 
-class InMemoryCache<T> : Cache<T> {
+abstract class InMemoryCache<T> : Cache<T> {
     private val data = HashMap<Any, T>()
 
     override suspend fun get(key: Any): T? {

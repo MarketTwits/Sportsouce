@@ -4,7 +4,7 @@ data class FilterItem(val value: String, val checked: Boolean)
 
 val baseFilter = listOf(
     FilterItem("Оплачено", false),
-    FilterItem("Регистрация бесплатна", false),
+    FilterItem("Бесплатно", false),
     FilterItem("Оплата отменена", false),
     FilterItem("Не оплачено", false),
 )

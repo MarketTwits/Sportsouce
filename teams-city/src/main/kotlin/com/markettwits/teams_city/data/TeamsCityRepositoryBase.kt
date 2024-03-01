@@ -23,12 +23,16 @@ internal class TeamsCityRepositoryBase(
     override suspend fun city(): Result<List<City>> {
         return withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
+                var resumed = false
                 scope.launch {
                     executeWithCache.executeWithCache(
                         cache = cache,
                         launch = { combine().getOrThrow() },
                         callback = { result ->
-                            continuation.resume(Result.success(result.cities))
+                            if (!resumed) {
+                                continuation.resume(Result.success(result.cities))
+                                resumed = true
+                            }
                         }
                     )
                 }

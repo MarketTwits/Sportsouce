@@ -12,8 +12,8 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.members.member_add_edit.presentation.component.MemberEditComponentBase
 import com.markettwits.members.member_detail.presentation.component.MemberDetailComponentBase
-import com.markettwits.members.member_edit.presentation.component.MemberEditComponentBase
 import com.markettwits.members.member_root.di.rootMembersModule
 import com.markettwits.members.members_list.presentation.component.MembersListComponentBase
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore

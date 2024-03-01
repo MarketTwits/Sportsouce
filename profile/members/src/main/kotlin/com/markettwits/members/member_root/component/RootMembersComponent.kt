@@ -1,9 +1,9 @@
 package com.markettwits.members.member_root.component
 
 import com.arkivanov.decompose.value.Value
+import com.markettwits.members.member_add_edit.presentation.component.MemberEditComponent
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.member_detail.presentation.component.MemberDetailComponent
-import com.markettwits.members.member_edit.presentation.component.MemberEditComponent
 import com.markettwits.members.members_list.presentation.component.MembersListComponent
 import kotlinx.serialization.Serializable
 

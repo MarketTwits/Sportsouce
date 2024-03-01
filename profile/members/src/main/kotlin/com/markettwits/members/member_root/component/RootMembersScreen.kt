@@ -5,8 +5,8 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.markettwits.members.member_add_edit.presentation.components.MemberEditScreenDialog
 import com.markettwits.members.member_detail.presentation.components.MemberDetailScreenDialog
-import com.markettwits.members.member_edit.presentation.components.MemberEditScreenDialog
 import com.markettwits.members.members_list.presentation.components.MembersScreen
 
 @Composable

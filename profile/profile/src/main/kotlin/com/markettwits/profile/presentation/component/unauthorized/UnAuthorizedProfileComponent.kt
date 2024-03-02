@@ -2,6 +2,7 @@ package com.markettwits.profile.presentation.component.unauthorized
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.essenty.lifecycle.doOnStart
 import com.markettwits.profile.data.ProfileDataSource
 import com.markettwits.profile.presentation.deprecated.ProfileUiState
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +25,9 @@ class UnAuthorizedProfileComponent(
     )
 
     init {
-        check()
+        lifecycle.doOnStart {
+            check()
+        }
 
         stateKeeper.register(
             key = "PROFILE_STATE",
@@ -32,7 +35,7 @@ class UnAuthorizedProfileComponent(
         ) { state.value }
     }
 
-    fun check() {
+    private fun check() {
         state.value = ProfileUiState.Loading
         scope.launch {
             service.profile().fold(

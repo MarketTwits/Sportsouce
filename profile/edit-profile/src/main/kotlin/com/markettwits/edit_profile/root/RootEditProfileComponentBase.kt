@@ -28,12 +28,15 @@ import com.markettwits.edit_profile.edit_profile_about.di.editProfileAboutModule
 import com.markettwits.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponentBase
 import com.markettwits.edit_profile.edit_profile_info.di.editProfileInfoModule
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponentBase
+import com.markettwits.edit_profile.edit_profile_sign_out.di.editProfileSignOutModule
+import com.markettwits.edit_profile.edit_profile_sign_out.presentation.component.EditProfileSignOutComponentBase
 import com.markettwits.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
+    private val signOut: () -> Unit
 ) : RootEditProfileComponent,
     EditProfileMenuOutputProvide, ComponentContext by componentContext {
     private val koinContext = instanceKeeper.getOrCreate {
@@ -47,7 +50,8 @@ class RootEditProfileComponentBase(
             editProfileSocialNetworkModule,
             editProfileInfoModule,
             editProfileImageModule,
-            editProfileAboutModule
+            editProfileAboutModule,
+            editProfileSignOutModule
         )
     )
     private val navigation = StackNavigation<RootEditProfileComponent.ConfigStack>()
@@ -85,6 +89,19 @@ class RootEditProfileComponentBase(
                 pop = slotNavigation::dismiss
             )
         )
+
+        RootEditProfileComponent.ConfigSlot.EditProfileSignOut -> RootEditProfileComponent.ChildSlot.EditProfileSignOut(
+            EditProfileSignOutComponentBase(
+                componentContext = componentContext,
+                storeFactory = scope.get(),
+                dismiss = {
+                    slotNavigation.dismiss()
+                },
+                signOut = {
+                    slotNavigation.dismiss()
+                    signOut()
+                }
+            ))
     }
 
     private fun child(
@@ -146,6 +163,10 @@ class RootEditProfileComponentBase(
 
             is EditProfileMenuComponentComponent.OutPut.GoProfileImage -> slotNavigation.activate(
                 RootEditProfileComponent.ConfigSlot.EditProfileImage
+            )
+
+            is EditProfileMenuComponentComponent.OutPut.GoSignOut -> slotNavigation.activate(
+                RootEditProfileComponent.ConfigSlot.EditProfileSignOut
             )
         }
     }

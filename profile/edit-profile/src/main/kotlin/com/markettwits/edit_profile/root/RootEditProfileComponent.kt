@@ -5,6 +5,7 @@ import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfile
 import com.markettwits.edit_profile.edit_profile_Image.presentation.component.EditProfileImageComponent
 import com.markettwits.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponent
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponent
+import com.markettwits.edit_profile.edit_profile_sign_out.presentation.component.EditProfileSignOutComponent
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
 import kotlinx.serialization.Serializable
 
@@ -34,11 +35,15 @@ interface RootEditProfileComponent {
 
         @Serializable
         data object EditProfileImage : ConfigSlot
+
+        @Serializable
+        data object EditProfileSignOut : ConfigSlot
     }
 
     sealed interface ChildSlot {
         data class EditProfileAbout(val component: EditProfileAboutComponent) : ChildSlot
         data class EditProfileImage(val component: EditProfileImageComponent) : ChildSlot
+        data class EditProfileSignOut(val component: EditProfileSignOutComponent) : ChildSlot
     }
 
 

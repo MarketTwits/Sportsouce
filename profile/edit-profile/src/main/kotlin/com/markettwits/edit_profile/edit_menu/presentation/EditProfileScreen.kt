@@ -1,6 +1,5 @@
 package com.markettwits.edit_profile.edit_menu.presentation
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -10,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.theme.SportSouceTheme
@@ -61,17 +59,13 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
                             "Сменить пароль" -> component.obtainOutPut(
                                 EditProfileMenuComponentComponent.OutPut.GoChangePassword
                             )
+
+                            "Выйти из аккаунта" -> component.obtainOutPut(
+                                EditProfileMenuComponentComponent.OutPut.GoSignOut
+                            )
                         }
                     })
             }
         }
     }
-}
-
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun EditProfileScreenPreview() {
-    // EditProfileScreen()
 }

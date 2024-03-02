@@ -39,7 +39,6 @@ class RootStartScreenComponentBase(
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext(false)
     }
-
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(startModule, startRegistrationModule)
     )

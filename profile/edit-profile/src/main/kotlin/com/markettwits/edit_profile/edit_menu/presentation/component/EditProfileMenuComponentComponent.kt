@@ -14,6 +14,7 @@ interface EditProfileMenuComponentComponent {
         data object GoChangeProfileInfo : OutPut
         data object GoProfileAbout : OutPut
         data object GoProfileImage : OutPut
+        data object GoSignOut : OutPut
     }
 }
 

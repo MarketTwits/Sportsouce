@@ -129,7 +129,6 @@ private fun EditProfileAboutScreenContentPreview() {
             state = EditProfileAboutStore.State(
                 isError = true,
                 isLoading = true
-//                message = "aGgAwgiAWOgjAOOWg;AIgAWGIWGAWgIO:AWgWAgiojIWGoIWGiJOAWGoAWGIOIOAWjigIOAWGjioIOAWGO"
             ),
             apply = {})
     }

@@ -102,7 +102,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     context = componentContext,
                     signInInstanceKeeper = SignInInstanceKeeper(
                         service = scope.get(),
-                        toProfile = { navigation.replaceAll(Config.AuthProfile) },
+                        toProfile = { navigation.replaceAll(Config.UnAuthProfile) },
                         toSignUp = { navigation.push(Config.SignUp) }
                     ),
                 )
@@ -148,7 +148,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     context = componentContext,
                     storeFactory = scope.get(),
                     pop = ::onBackClicked,
-                    profile = { navigation.replaceAll(Config.AuthProfile) }
+                    profile = { navigation.replaceAll(Config.UnAuthProfile) }
                 )
             )
 
@@ -156,6 +156,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                 RootEditProfileComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
+                    signOut = { navigation.replaceAll(Config.UnAuthProfile) }
                 )
             )
 

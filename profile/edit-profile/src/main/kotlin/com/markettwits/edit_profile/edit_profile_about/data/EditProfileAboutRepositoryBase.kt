@@ -2,7 +2,7 @@ package com.markettwits.edit_profile.edit_profile_about.data
 
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.result.flatMapCallback
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 
 class EditProfileAboutRepositoryBase(
     private val cloud: SportsouceApi,

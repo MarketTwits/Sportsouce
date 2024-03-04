@@ -1,7 +1,7 @@
 package com.markettwits.profile.domain
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 
 class UserUseCaseBase(
     private val authDataSource: AuthDataSource

@@ -11,7 +11,7 @@ android {
 
 dependencies {
     implementation(project(":cloud"))
-    implementation(project(":auth"))
+    implementation(project(":auth:auth-service"))
     implementation(project(":core-ui"))
     implementation(project(":start:start"))
     implementation(project(":core-koin"))

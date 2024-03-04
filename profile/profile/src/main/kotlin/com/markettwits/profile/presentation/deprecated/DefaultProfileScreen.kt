@@ -9,10 +9,9 @@ import com.markettwits.edit_profile.edit_profile.presentation.EditProfileScreen
 import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkScreen
 import com.markettwits.edit_profile.root.RootEditProfileScreen
 import com.markettwits.members.member_root.component.RootMembersScreen
+import com.markettwits.profile.api.root.RootAuthFlowScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.components.NewAuthorizedProfileScreen
 import com.markettwits.profile.presentation.component.unauthorized.components.NewUnAuthorizedProfileScreen
-import com.markettwits.profile.presentation.sign_in.AuthScreen
-import com.markettwits.profile.presentation.sign_up.presentation.content.SignUpScreen
 import com.markettwits.registrations.registrations_list.presentation.MyRegistrationsScreen
 import com.markettwits.registrations.root_registrations.RootRegistrationsScreen
 import com.markettwits.registrations.start_order_detail.components.StartOrderProfileDialogScreen
@@ -37,12 +36,11 @@ fun DefaultProfileScreen(component: DefaultProfileComponent) {
         animation = stackAnimation(fade())
     ) {
         when (val child = it.instance) {
-            is DefaultProfileComponent.Child.Login -> AuthScreen(component = child.component)
+            is DefaultProfileComponent.Child.AuthFlow -> RootAuthFlowScreen(component = child.component)
             is DefaultProfileComponent.Child.AuthProfile -> NewAuthorizedProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.UnAuthProfile -> NewUnAuthorizedProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.EditProfile -> EditProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.MyRegistries -> RootRegistrationsScreen(component = child.component)
-            is DefaultProfileComponent.Child.SignUp -> SignUpScreen(component = child.component)
             is DefaultProfileComponent.Child.EditProfileMenu -> RootEditProfileScreen(component = child.component)
             is DefaultProfileComponent.Child.SocialNetwork -> ProfileSocialNetworkScreen(component = child.component)
             is DefaultProfileComponent.Child.Start -> RootStartScreen(component = child.component)

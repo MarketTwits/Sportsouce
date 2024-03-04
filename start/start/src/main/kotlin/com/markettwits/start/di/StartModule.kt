@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.cloud.di.timeApiNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.start.data.start.StartMemoryCache
 import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.data.start.StartRepositoryBase

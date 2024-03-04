@@ -5,7 +5,7 @@ import com.markettwits.core_ui.result.flatMapCallback
 import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 

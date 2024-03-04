@@ -1,5 +1,6 @@
 package com.markettwits.profile.presentation.component.unauthorized
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnStart
@@ -44,6 +45,7 @@ class UnAuthorizedProfileComponent(
                 },
                 onFailure = {
                     state.value = ProfileUiState.Error(it.message.toString())
+                    Log.e("mt05", it.stackTraceToString())
                 }
             )
         }

@@ -12,7 +12,7 @@ import com.markettwits.edit_profile.edit_social_network.domain.handle.ProfileSoc
 import com.markettwits.edit_profile.edit_social_network.domain.interactor.ProfileSocialNetworkInteractor
 import com.markettwits.edit_profile.edit_social_network.domain.interactor.ProfileSocialNetworkInteractorBase
 import com.markettwits.edit_profile.edit_social_network.presentation.store.EditProfileSocialNetworkStoreFactory
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

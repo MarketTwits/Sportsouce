@@ -2,8 +2,9 @@ package com.markettwits.edit_profile.edit_profile_info.domain
 
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent
+import kotlinx.coroutines.flow.Flow
 
 interface EditProfileInfoRepository {
     suspend fun send(userData: UserData): Result<Unit>
-    suspend fun fetch(): Result<UserDataContent>
+    suspend fun fetch(): Flow<UserDataContent>
 }

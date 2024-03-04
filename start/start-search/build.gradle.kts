@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.realm)
 }
 
 android {

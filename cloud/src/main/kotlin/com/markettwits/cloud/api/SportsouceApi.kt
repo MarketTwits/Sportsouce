@@ -1,5 +1,6 @@
 package com.markettwits.cloud.api
 
+import com.markettwits.cloud.model.auth.reset_password.ResetPasswordResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
@@ -64,6 +65,7 @@ interface SportsouceApi {
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): CommentRow
     suspend fun writeSubComment(subComment: StartSubCommentRequest, token: String): Reply
     //Auth
+    suspend fun resetPassword(email: String): ResetPasswordResponse
     suspend fun register(signUpRequest: SignUpRequest) : SignUpResponse
     suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess
     suspend fun auth(token: String): User

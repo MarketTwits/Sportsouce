@@ -3,7 +3,7 @@ package com.markettwits.start.data.registration
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.registration.mapper.RegistrationMapper
 import com.markettwits.start.data.registration.mapper.RegistrationPromoMapper
 import com.markettwits.start.data.registration.mapper.RegistrationRemoteToDomainMapper

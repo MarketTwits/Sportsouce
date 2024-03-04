@@ -8,6 +8,8 @@ import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
@@ -20,21 +22,43 @@ internal class TeamsCityRepositoryBase(
     private val executeWithCache: ExecuteWithCache
 ) : TeamsCityRepository {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    override suspend fun cityFlow(): Flow<List<City>> = flow {
+        executeWithCache.executeWithCache(
+            cache = cache,
+            launch = { combine().getOrThrow() },
+            callback = { result ->
+                emit(result.cities)
+            }
+        )
+    }
+
+    override suspend fun teamsFlow(): Flow<List<Team>> = flow {
+        executeWithCache.executeWithCache(
+            cache = cache,
+            launch = { combine().getOrThrow() },
+            callback = { result ->
+                emit(result.teams)
+            }
+        )
+    }
+
     override suspend fun city(): Result<List<City>> {
         return withContext(Dispatchers.IO) {
             suspendCoroutine { continuation ->
                 var resumed = false
                 scope.launch {
-                    executeWithCache.executeWithCache(
-                        cache = cache,
-                        launch = { combine().getOrThrow() },
-                        callback = { result ->
-                            if (!resumed) {
-                                continuation.resume(Result.success(result.cities))
-                                resumed = true
+                    runCatching {
+                        executeWithCache.executeWithCache(
+                            cache = cache,
+                            launch = { combine().getOrThrow() },
+                            callback = { result ->
+                                if (!resumed) {
+                                    continuation.resume(Result.success(result.cities))
+                                    resumed = true
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

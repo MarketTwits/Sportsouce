@@ -1,0 +1,3 @@
+package com.markettwits.profile.internal.forgot_password.domain
+
+internal interface ForgotPasswordUseCase

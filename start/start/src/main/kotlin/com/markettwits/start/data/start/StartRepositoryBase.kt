@@ -8,7 +8,7 @@ import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.StartRemoteToUiMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.component.CommentUiState

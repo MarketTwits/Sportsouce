@@ -8,7 +8,7 @@ import com.markettwits.edit_profile.edit_profile_about.data.EditProfileAboutClou
 import com.markettwits.edit_profile.edit_profile_about.data.EditProfileAboutRepository
 import com.markettwits.edit_profile.edit_profile_about.data.EditProfileAboutRepositoryBase
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStoreFactory
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

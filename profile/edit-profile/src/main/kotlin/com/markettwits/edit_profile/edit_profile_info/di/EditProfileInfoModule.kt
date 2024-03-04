@@ -10,7 +10,7 @@ import com.markettwits.edit_profile.edit_profile_info.data.EditProfileInfoCloudM
 import com.markettwits.edit_profile.edit_profile_info.data.EditProfileInfoRepositoryBase
 import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStoreFactory
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

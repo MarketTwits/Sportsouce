@@ -2,7 +2,7 @@ package com.markettwits.profile.presentation.component.authorized.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.profile.presentation.component.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.presentation.component.authorized.data.mapper.AuthorizedProfileMapper
 import com.markettwits.profile.presentation.component.authorized.domain.UserProfile

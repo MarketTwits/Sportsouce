@@ -5,7 +5,7 @@ import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.registrations.registrations_list.data.mapper.UserRegistrationsMapper
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import io.ktor.client.call.body

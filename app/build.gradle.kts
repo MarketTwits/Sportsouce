@@ -16,23 +16,24 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-//    buildTypes {
-//        debug {
-//            isMinifyEnabled = true
-//            isShrinkResources = true
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
-//    }
+    buildTypes {
+        debug {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
 }
 
 dependencies {
     implementation(projects.coreUi)
     implementation(projects.root)
     implementation(projects.cache)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.bundles.decompose.compose)
-    implementation(libs.decompose.android)
     implementation(libs.koin.android)
 }

@@ -7,7 +7,7 @@ import com.markettwits.change_password.data.ChangePasswordDataSourceBase
 import com.markettwits.change_password.domain.ChangePasswordValidation
 import com.markettwits.change_password.presentation.screen.ChangePasswordStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

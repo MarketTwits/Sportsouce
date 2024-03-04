@@ -1,5 +1,6 @@
 package com.markettwits.profile.data
 
+import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.profile.presentation.deprecated.ProfileUiState
 
 class BaseProfileDataSource(

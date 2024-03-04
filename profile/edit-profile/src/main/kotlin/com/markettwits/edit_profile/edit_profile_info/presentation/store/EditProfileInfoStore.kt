@@ -4,13 +4,13 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
-import com.markettwits.edit_profile.edit_profile_info.domain.models.City
-import com.markettwits.edit_profile.edit_profile_info.domain.models.Team
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Intent
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Label
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.State
+import com.markettwits.teams_city.domain.City
+import com.markettwits.teams_city.domain.Team
 
 interface EditProfileInfoStore : Store<Intent, State, Label> {
     data class State(
@@ -27,6 +27,7 @@ interface EditProfileInfoStore : Store<Intent, State, Label> {
         data object GoBack : Intent
         data class UpdateState(val userData: UserData) : Intent
         data object OnClickUpdate : Intent
+        data object Retry : Intent
         data object OnConsumedEvent : Intent
     }
 

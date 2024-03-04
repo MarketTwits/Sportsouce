@@ -4,7 +4,7 @@ import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.core_ui.result.flatMapCallback
 import com.markettwits.edit_profile.edit_social_network.data.mapper.ProfileSocialNetworkCloudMapper
 import com.markettwits.edit_profile.edit_social_network.domain.UserSocialNetwork
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 
 class ProfileSocialNetworkRepositoryBase(
     private val mapper: ProfileSocialNetworkCloudMapper,

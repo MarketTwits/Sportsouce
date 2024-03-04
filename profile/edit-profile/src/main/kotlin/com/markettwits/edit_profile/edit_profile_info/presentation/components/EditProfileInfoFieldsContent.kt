@@ -12,10 +12,10 @@ import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.ui_style.CalendarTextFiled
 import com.markettwits.core_ui.ui_style.DropDownSpinner
-import com.markettwits.edit_profile.edit_profile_info.domain.models.City
-import com.markettwits.edit_profile.edit_profile_info.domain.models.Team
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.mapToString
+import com.markettwits.teams_city.domain.City
+import com.markettwits.teams_city.domain.Team
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig

@@ -24,16 +24,14 @@ import com.markettwits.edit_profile.edit_social_network.presentation.component.E
 import com.markettwits.edit_profile.root.RootEditProfileComponent
 import com.markettwits.edit_profile.root.RootEditProfileComponentBase
 import com.markettwits.members.member_root.component.RootMembersComponentBase
+import com.markettwits.profile.api.root.RootAuthFlowComponent
+import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.profile.di.rootProfileModule
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponentBase
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfile
 import com.markettwits.profile.presentation.component.unauthorized.UnAuthorizedProfileComponent
-import com.markettwits.profile.presentation.sign_in.SignInInstanceKeeper
-import com.markettwits.profile.presentation.sign_in.SignInScreenComponent
-import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponent
-import com.markettwits.profile.presentation.sign_up.presentation.SignUpComponentBase
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import com.markettwits.registrations.registrations_list.presentation.component.RegistrationsComponent
 import com.markettwits.registrations.registrations_list.presentation.component.RegistrationsComponentBase
@@ -97,17 +95,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         componentContext: ComponentContext,
     ): Child =
         when (config) {
-            is Config.Login -> Child.Login(
-                SignInScreenComponent(
-                    context = componentContext,
-                    signInInstanceKeeper = SignInInstanceKeeper(
-                        service = scope.get(),
-                        toProfile = { navigation.replaceAll(Config.UnAuthProfile) },
-                        toSignUp = { navigation.push(Config.SignUp) }
-                    ),
-                )
-            )
-
             is Config.AuthProfile -> Child.AuthProfile(
                 AuthorizedProfileComponentBase(
                     componentContext = componentContext,
@@ -121,7 +108,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                     componentContext,
                     service = scope.get(),
                     goSignIn = {
-                        navigation.push(Config.Login)
+                        navigation.push(Config.AuthFlow)
                     },
                     goAuthProfile = {
                         navigation.replaceCurrent(Config.AuthProfile)
@@ -142,16 +129,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
             is Config.MyRegistries -> Child.MyRegistries(
                 RootRegistrationsComponentBase(componentContext, pop = ::onBackClicked)
             )
-
-            is Config.SignUp -> Child.SignUp(
-                SignUpComponentBase(
-                    context = componentContext,
-                    storeFactory = scope.get(),
-                    pop = ::onBackClicked,
-                    profile = { navigation.replaceAll(Config.UnAuthProfile) }
-                )
-            )
-
             is Config.EditProfileMenu -> Child.EditProfileMenu(
                 RootEditProfileComponentBase(
                     componentContext = componentContext,
@@ -194,6 +171,13 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
                 RootMembersComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop
+                )
+            )
+
+            is Config.AuthFlow -> Child.AuthFlow(
+                RootAuthFlowComponentBase(
+                    context = componentContext,
+                    goProfile = { navigation.replaceAll(Config.UnAuthProfile) }
                 )
             )
         }
@@ -243,15 +227,11 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
 
         @Serializable
         data object UnAuthProfile : Config()
-
-        @Serializable
-        data object Login : Config()
-
         @Serializable
         data object MyRegistries : Config()
 
         @Serializable
-        data object SignUp : Config()
+        data object AuthFlow : Config()
     }
 
     @Serializable
@@ -265,7 +245,7 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class UserStarts(val component: RegistrationsComponent) : Child()
         data class Start(val component: RootStartScreenComponentBase) : Child()
         data class SocialNetwork(val component: EditProfileSocialNetworkComponent) : Child()
-        data class Login(val component: SignInScreenComponent) : Child()
+        data class AuthFlow(val component: RootAuthFlowComponent) : Child()
         data class AuthProfile(val component: AuthorizedProfileComponent) :
             Child()
         data class UnAuthProfile(val component: UnAuthorizedProfile) : Child()
@@ -274,7 +254,6 @@ class DefaultProfileComponent(componentContext: ComponentContext) :
         data class MyRegistries(val component: RootRegistrationsComponent) :
             Child()
 
-        data class SignUp(val component: SignUpComponent) : Child()
         data class EditProfileMenu(val component: RootEditProfileComponent) : Child()
     }
 

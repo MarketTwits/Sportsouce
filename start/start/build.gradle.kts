@@ -11,7 +11,7 @@ dependencies {
     implementation(projects.cloud)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
-    implementation(projects.auth)
+    implementation(projects.auth.authService)
     implementation(projects.start.startRegister)
     implementation(projects.cache)
     implementation(libs.bundles.mviKotlin)

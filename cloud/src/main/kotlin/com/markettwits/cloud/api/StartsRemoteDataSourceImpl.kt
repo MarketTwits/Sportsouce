@@ -1,5 +1,6 @@
 package com.markettwits.cloud.api
 
+import com.markettwits.cloud.model.auth.reset_password.ResetPasswordResponse
 import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
 import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
@@ -331,6 +332,14 @@ class StartsRemoteDataSourceImpl(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
             setBody(subComment)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun resetPassword(email: String): ResetPasswordResponse {
+        val response = client.post("authentication/reset-password") {
+            contentType(ContentType.Application.Json)
+            setBody(mapOf("email" to email))
         }
         return json.decodeFromString(response.body())
     }

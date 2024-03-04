@@ -9,10 +9,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":cloud"))
-    implementation(project(":core-ui"))
-    implementation(project(":auth"))
-    implementation(project(":core-koin"))
+    implementation(projects.cloud)
+    implementation(projects.auth.authService)
+    implementation(projects.coreUi)
+    implementation(projects.coreKoin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.bundles.mviKotlin)

@@ -3,7 +3,7 @@ package com.markettwits.registrations.root_registrations.di
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.registrations.registrations_list.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.registrations_list.data.StartOrderRegistrationRepositoryBase
 import com.markettwits.registrations.registrations_list.data.mapper.UserRegistrationsMapper

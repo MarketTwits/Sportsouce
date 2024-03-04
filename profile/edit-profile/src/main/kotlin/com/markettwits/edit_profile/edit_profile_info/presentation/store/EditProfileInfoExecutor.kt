@@ -10,6 +10,7 @@ import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditPro
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.State
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository) :
@@ -19,9 +20,8 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
             is Intent.GoBack -> publish(Label.GoBack)
             is Intent.OnClickUpdate -> getState().userData?.let { update(it) }
             is Intent.UpdateState -> dispatch(Message.UpdateFiled(intent.userData))
-            is Intent.OnConsumedEvent -> dispatch(
-                Message.OnConsumedEvent
-            )
+            is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
+            is Intent.Retry -> launch()
         }
     }
 
@@ -50,14 +50,13 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
     private fun launch() {
         scope.launch {
             dispatch(Message.IsLoading)
-            repository.fetch().fold(
-                onFailure = {
+            repository.fetch()
+                .catch {
                     dispatch(Message.IsFailed(it.message.toString()))
-                },
-                onSuccess = {
+                }
+                .collect {
                     dispatch(Message.IsLoaded(it))
                 }
-            )
         }
     }
 }

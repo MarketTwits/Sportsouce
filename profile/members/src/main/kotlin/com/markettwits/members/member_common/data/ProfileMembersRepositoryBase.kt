@@ -3,7 +3,7 @@ package com.markettwits.members.member_common.data
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.members.member_common.data.mapper.MembersMapper
 import com.markettwits.members.member_common.domain.ProfileMember
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 
 class ProfileMembersRepositoryBase(
     private val service: SportsouceApi,

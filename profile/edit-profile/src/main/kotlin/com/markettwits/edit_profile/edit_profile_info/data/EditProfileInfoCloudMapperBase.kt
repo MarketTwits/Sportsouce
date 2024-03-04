@@ -1,13 +1,9 @@
 package com.markettwits.edit_profile.edit_profile_info.data
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
-import com.markettwits.edit_profile.edit_profile_info.domain.models.City
-import com.markettwits.edit_profile.edit_profile_info.domain.models.Team
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent
 
@@ -36,8 +32,8 @@ class EditProfileInfoCloudMapperBase(
 
     override fun fetch(
         user: User,
-        teamsRemote: TeamsRemote,
-        cityRemote: CityRemote
+        teams: List<com.markettwits.teams_city.domain.Team>,
+        cities: List<com.markettwits.teams_city.domain.City>
     ): UserDataContent =
         UserDataContent(
             user = UserData(
@@ -51,14 +47,8 @@ class EditProfileInfoCloudMapperBase(
                 city = user.address ?: "",
                 team = user.team ?: ""
             ),
-            teams = mapTeamCloudToUi(teamsRemote),
-            cities = mapCityCloudToUi(cityRemote)
+            teams = teams,
+            cities = cities
         )
-
-    private fun mapCityCloudToUi(cloud: CityRemote): List<City> =
-        cloud.rows.map { City(it.id, it.name) }
-
-    private fun mapTeamCloudToUi(cloud: TeamsRemote): List<Team> =
-        cloud.rows.map { Team(it.id, it.name) }
 
 }

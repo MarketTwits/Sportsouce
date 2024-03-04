@@ -4,7 +4,7 @@ import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
-import com.markettwits.profile.data.AuthDataSource
+import com.markettwits.profile.api.AuthDataSource
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 

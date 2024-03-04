@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.profile.di.authDataSourceModule
+import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.presentation.component.authorized.data.AuthorizedProfileRepositoryBase
 import com.markettwits.profile.presentation.component.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.presentation.component.authorized.data.mapper.AuthorizedProfileMapperBase

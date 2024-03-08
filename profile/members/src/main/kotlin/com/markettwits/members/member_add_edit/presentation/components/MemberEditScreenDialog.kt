@@ -90,11 +90,14 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
             }
             if (state.isError && state.teams.isEmpty()) {
                 FailedScreen(
-                    onClickHelp = { /*TODO*/ },
-                    message = state.message
-                ) {
-
-                }
+                    message = state.message,
+                    onClickBack = {
+                        component.obtainEvent(MemberEditStore.Intent.Dismiss)
+                    },
+                    onClickRetry = {
+                        component.obtainEvent(MemberEditStore.Intent.Retry)
+                    }
+                )
             }
         }
     }

@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.member.store.RegistrationMemberStore
 import com.markettwits.start.presentation.member.store.RegistrationMemberStoreFactory
@@ -16,6 +17,7 @@ class RegistrationMemberComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: RegistrationMemberStoreFactory,
     private val startStatement: StartStatement,
+    private val membersProfile: List<ProfileMember>,
     private val memberId: Int,
     private val pop: () -> Unit,
     private val apply: (StartStatement, Int) -> Unit
@@ -23,7 +25,7 @@ class RegistrationMemberComponentBase(
     RegistrationMemberComponent, ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main)
     private val store = instanceKeeper.getStore {
-        storeFactory.create(memberId, startStatement)
+        storeFactory.create(memberId, startStatement, membersProfile)
     }
     override val model: StateFlow<RegistrationMemberStore.State> = store.stateFlow
     override fun obtainEvent(event: RegistrationMemberStore.Intent) {
@@ -38,7 +40,6 @@ class RegistrationMemberComponentBase(
                         it.startStatement,
                         memberId
                     )
-
                     is RegistrationMemberStore.Label.OnClickPop -> pop()
                 }
             }

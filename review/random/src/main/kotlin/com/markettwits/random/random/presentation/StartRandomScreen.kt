@@ -13,21 +13,25 @@ import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.random.random.presentation.store.StartRandomStore
 
 @Composable
-fun StartRandomScreen(component : StartRandomComponent) {
+fun StartRandomScreen(component: StartRandomComponent) {
     val state by component.value.collectAsState()
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.primary)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         if (state.isLoading) {
             LoadingFullScreen()
         }
-        if (state.isError){
+        if (state.isError) {
             FailedScreen(
                 message = state.message,
-                onClickHelp = { /*TODO*/ }) {
-                component.obtainEvent(StartRandomStore.Intent.Retry)
-            }
+                onClickBack = {
+                    component.obtainEvent(StartRandomStore.Intent.GoBack)
+                },
+                onClickRetry = {
+                    component.obtainEvent(StartRandomStore.Intent.Retry)
+                })
         }
     }
 }

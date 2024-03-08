@@ -88,8 +88,7 @@ fun StartsScreen(component: StartsScreen) {
                     message = (starts as StartsUiState.Failed).message,
                     onClickRetry = {
                         component.retry()
-                    },
-                    onClickHelp = {})
+                    })
             }
 
             is StartsUiState.Loading -> {

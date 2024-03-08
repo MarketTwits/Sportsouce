@@ -41,9 +41,9 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickDistance(
             val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
-            val paymentType: String
-        ) :
-            Label
+            val paymentType: String,
+            val startTitle: String
+        ) : Label
 
         data object OnClickBack : Label
     }
@@ -77,7 +77,8 @@ class StartScreenStoreFactory(
                     Label.OnClickDistance(
                         intent.distanceInfo,
                         intent.paymentDisabled,
-                        intent.paymentType
+                        intent.paymentType,
+                        getState().data?.title ?: ""
                     )
                 )
 

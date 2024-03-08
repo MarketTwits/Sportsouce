@@ -1,6 +1,5 @@
 package com.markettwits.random.random.presentation
 
-import android.app.ProgressDialog.show
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -15,7 +14,8 @@ import kotlinx.coroutines.launch
 internal class StartRandomComponentBase(
     context: ComponentContext,
     private val storeFactory: StartRandomStoreFactory,
-    private val openStart : (Int) -> Unit
+    private val openStart: (Int) -> Unit,
+    private val pop: () -> Unit
 ) : StartRandomComponent, ComponentContext by context {
     private val store = instanceKeeper.getStore {
         storeFactory.create()
@@ -31,6 +31,7 @@ internal class StartRandomComponentBase(
             store.labels.collect {
                 when(it){
                     is StartRandomStore.Label.OpenStart -> openStart(it.startId)
+                    is StartRandomStore.Label.Pop -> pop()
                 }
             }
         }

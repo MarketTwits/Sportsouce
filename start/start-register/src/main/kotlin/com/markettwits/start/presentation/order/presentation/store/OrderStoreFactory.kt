@@ -16,6 +16,7 @@ class OrderStoreFactory(
     fun create(
         state: State,
         distanceInfo: DistanceItem,
+        startTitle: String,
         starId: Int,
         paymentType: String,
         paymentDisabled: Boolean
@@ -25,6 +26,7 @@ class OrderStoreFactory(
         bootstrapper = OrderBootstrapper(
             state.orderStatement == null,
             interactor,
+            startTitle,
             distanceInfo,
             paymentDisabled,
             paymentType

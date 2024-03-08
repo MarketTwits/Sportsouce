@@ -29,8 +29,8 @@ abstract class RegistrationMemberValidatorAbstract : RegistrationMemberValidator
         if (startStatement.sex.isEmpty()) throw IllegalArgumentException(
             "Пол не должен быть пустым"
         )
-        if (startStatement.city.isEmpty() || startStatement.city.length < 5) throw IllegalStateException(
-            "Введите корректное название города (не менее 5 символов)"
+        if (startStatement.city.isEmpty() || startStatement.city.length < 3) throw IllegalStateException(
+            "Введите корректное название города (не менее 3 символов)"
         )
         if (startStatement.team.isEmpty()) throw IllegalArgumentException(
             "Введите корректное название команды"

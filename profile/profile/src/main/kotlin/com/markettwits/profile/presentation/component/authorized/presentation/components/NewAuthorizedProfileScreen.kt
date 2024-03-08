@@ -27,7 +27,7 @@ import com.markettwits.profile.presentation.component.authorized.presentation.st
 @Composable
 fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     val state by component.state.collectAsState()
-    var fullImage by rememberSaveable { mutableStateOf(false) }
+    var fullImageState by rememberSaveable { mutableStateOf(false) }
     state.user?.let { user ->
         PullToRefreshScreen(isRefreshing = state.isLoading, onRefresh = {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
@@ -53,7 +53,7 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                             component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
                         },
                         onClickImage = {
-                            fullImage = true
+                            fullImageState = true
                         }
                     )
                     UserStarts(
@@ -86,9 +86,9 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
         }
     }
-    if (fullImage) {
-        FullImageScreen(image = state.user!!.userInfo.photo) {
-            fullImage = false
+    if (fullImageState) {
+        FullImageScreen(image = state.user?.userInfo?.photo ?: "") {
+            fullImageState = false
         }
     }
 }

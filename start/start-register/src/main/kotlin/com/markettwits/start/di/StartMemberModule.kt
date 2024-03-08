@@ -6,6 +6,7 @@ import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.cloud.di.timeApiNetworkModule
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.core_ui.time.TimeMapper
+import com.markettwits.members.member_root.di.rootMembersModule
 import com.markettwits.start.data.registration.RegistrationStartRepository
 import com.markettwits.start.data.registration.RegistrationStartRepositoryBase
 import com.markettwits.start.data.registration.mapper.RegistrationMapper
@@ -35,7 +36,7 @@ import org.koin.dsl.module
 
 
 val startRegistrationModule = module {
-    includes(sportSouceNetworkModule, timeApiNetworkModule, teamsCityModule)
+    includes(sportSouceNetworkModule, timeApiNetworkModule, teamsCityModule, rootMembersModule)
     //StoreFactory
     singleOf(::RegistrationPromoStoreFactory)
     singleOf(::RegistrationMemberStoreFactory)

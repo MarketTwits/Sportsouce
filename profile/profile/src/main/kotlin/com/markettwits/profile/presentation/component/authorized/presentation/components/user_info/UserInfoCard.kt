@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,14 +41,13 @@ fun UserInfoCard(
     user: UserProfile,
     onClickEdit: () -> Unit,
     onClickAddSocialNetwork: () -> Unit,
-    onClickImage: () -> Unit
+    onClickImage: (Painter) -> Unit
 ) {
     OnBackgroundCard(modifier = modifier) {
         Box(
             modifier = Modifier
                 .padding(5.dp)
                 .clip(Shapes.small)
-                .clickable { onClickImage() }
                 .align(Alignment.CenterHorizontally)
         ) {
             SubcomposeAsyncImage(
@@ -59,7 +59,10 @@ fun UserInfoCard(
                 contentDescription = "",
                 success = {
                     SubcomposeAsyncImageContent(
-                        modifier = modifier,
+                        modifier = modifier
+                            .clickable {
+                                onClickImage(it.painter)
+                            },
                         painter = it.painter
                     )
                 },

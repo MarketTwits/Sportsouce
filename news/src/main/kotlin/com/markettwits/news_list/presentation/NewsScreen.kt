@@ -30,8 +30,6 @@ fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent, onClickI
                 onClickRetry = {
                     component.obtainEvent(NewsStore.Intent.Launch)
                 },
-                onClickHelp = {
-                }
             )
         }
         if (state.isLoading) {
@@ -55,7 +53,7 @@ fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent, onClickI
 fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent) {
     val state by component.value.collectAsState()
     Box(
-        modifier = Modifier
+        modifier = modifier
     ) {
         if (state.isError) {
             FailedScreen(

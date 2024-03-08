@@ -12,7 +12,7 @@ sealed interface DistanceItem {
         val value: String,
         val distances: List<DistanceInfo>,
         val sale: String? = null,
-        val prices: List<String>? = null,
+        val prices: List<Price>? = null,
         val price: Int? = null,
     ) : DistanceItem
 
@@ -49,6 +49,7 @@ sealed interface DistanceItem {
         val prices: List<Price>,
         val slots: String,
         val infinitySlots: Boolean,
+        val infinitySlot: Boolean? = null,
         val track_link: Map<String, String>,
         val track_code: String,
     )

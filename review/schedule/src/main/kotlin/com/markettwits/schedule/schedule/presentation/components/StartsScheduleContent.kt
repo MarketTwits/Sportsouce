@@ -14,7 +14,7 @@ import com.markettwits.schedule.schedule.domain.StartsSchedule
 fun StartsScheduleSuccessContent(
     modifier: Modifier = Modifier,
     starts: List<StartsSchedule>,
-    onClick: (Int) -> Unit
+    onClick: (Int) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -39,11 +39,12 @@ fun StartsScheduleLoadingContent(
 @Composable
 fun StartsScheduleFailedContent(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onClickPop: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         content = {
-            FailedScreen(onClickHelp = { /*TODO*/ }, onClickRetry = onClick::invoke)
+            FailedScreen(onClickRetry = onClick::invoke, onClickBack = { onClickPop() })
         })
 }

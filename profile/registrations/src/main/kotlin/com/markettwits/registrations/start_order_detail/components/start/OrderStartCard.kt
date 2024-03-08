@@ -1,6 +1,5 @@
 package com.markettwits.registrations.start_order_detail.components.start
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.R
 import com.markettwits.core_ui.components.OnBackgroundCard
+import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 
@@ -38,11 +38,16 @@ fun OrderStartCard(
     item: StartOrderInfo,
     onClickStart: (Int) -> Unit,
 ) {
-    OnBackgroundCard(modifier = modifier.clickable {
-        onClickStart(item.startId)
-    }) {
+    OnBackgroundCard(
+        modifier = modifier,
+        onClick = {
+            onClickStart(item.startId)
+        }
+    ) {
         Row(
-            modifier = it.padding(10.dp),
+            modifier = it
+                .clip(Shapes.medium)
+                .padding(10.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {

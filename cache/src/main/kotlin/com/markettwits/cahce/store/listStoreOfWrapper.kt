@@ -1,6 +1,7 @@
 package com.markettwits.cahce.store
 
 import io.github.xxfast.kstore.KStore
+import io.github.xxfast.kstore.file.extensions.listStoreOf
 import io.github.xxfast.kstore.file.storeOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -14,7 +15,7 @@ inline fun <reified T : @Serializable Any> listStoreOfWrapper(
     json: Json = Json { ignoreUnknownKeys = true; encodeDefaults = true },
 ): KStore<List<T>> {
     val fullPath = "$path/$fileName".toPath()
-    return storeOf(fullPath, default, enableCache, json)
+    return listStoreOf(fullPath, default, enableCache, json)
 }
 
 inline fun <reified T : @Serializable Any> storeOfWrapper(

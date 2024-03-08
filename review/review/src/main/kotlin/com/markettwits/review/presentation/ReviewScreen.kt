@@ -65,12 +65,9 @@ fun ReviewScreen(component: ReviewComponent) {
                 if (state.isError) {
                     FailedScreen(
                         message = state.message,
-                        onClickHelp = {
-                        },
-                        onClickRetry = {
-                            component.obtainEvent(ReviewStore.Intent.Launch(true))
-                        }
-                    )
+                    ) {
+                        component.obtainEvent(ReviewStore.Intent.Launch(true))
+                    }
                 }
             }
         }

@@ -24,6 +24,7 @@ fun BoundlessTextFieldBase(
     singleLine: Boolean = true,
     maxLines: Int = 1,
     minLines: Int = 1,
+    label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -34,6 +35,7 @@ fun BoundlessTextFieldBase(
     TextField(
         enabled = isEnabled,
         isError = isError,
+        label = label,
         modifier = modifier.fillMaxWidth(),
         value = value,
         trailingIcon = {

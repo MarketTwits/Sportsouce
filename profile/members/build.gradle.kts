@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.coreUi)
     implementation(projects.auth.authService)

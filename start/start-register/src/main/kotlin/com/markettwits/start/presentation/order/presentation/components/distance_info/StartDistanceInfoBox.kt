@@ -1,9 +1,7 @@
 package com.markettwits.start.presentation.order.presentation.components.distance_info
 
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +19,7 @@ import com.markettwits.core_ui.theme.FontNunito
 fun StartDistanceInfoBox(
     modifier: Modifier = Modifier,
     format: String,
+    startTitle: String,
     distances: List<String>,
 ) {
     OnBackgroundCard {
@@ -33,30 +32,38 @@ fun StartDistanceInfoBox(
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
+        DistanceBox(
+            modifier = modifier,
+            value = startTitle
+        )
         Text(
             modifier = modifier,
-            text = "Формат : $format",
+            text = "Формат",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
+        DistanceBox(
+            modifier = modifier,
+            value = format
+        )
         Text(
             modifier = modifier,
-            text = "Дистанция :",
+            text = "Дистанция",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
-        LazyRow(modifier = modifier) {
-            items(distances) {
+        Row {
+            distances.forEach {
                 DistanceBox(
+                    modifier = modifier,
                     value = it
                 )
-                Spacer(modifier = Modifier.padding(horizontal = 5.dp))
             }
         }
     }

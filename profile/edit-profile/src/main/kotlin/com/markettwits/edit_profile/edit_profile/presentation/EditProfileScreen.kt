@@ -99,9 +99,12 @@ fun EditProfileScreen(component: EditProfileComponent) {
         if (state is EditProfileUiState.Error) {
             FailedScreen(
                 message = state.message,
-                onClickHelp = { }) {
-                component.launch()
-            }
+                onClickBack = {
+                    component.pop()
+                },
+                onClickRetry = {
+                    component.launch()
+                })
         }
         if (state is EditProfileUiState.Loading) {
             CircularProgressIndicator(

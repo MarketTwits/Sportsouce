@@ -14,6 +14,7 @@ interface OrderInteractor {
     suspend fun valid(orderStatement: OrderStatement): Result<OrderStatement>
 
     suspend fun order(
+        startTitle: String,
         distanceInfo: DistanceItem,
         paymentDisabled: Boolean,
         paymentType: String

@@ -105,7 +105,6 @@ interface StartRemoteToUiMapper {
                             date
                         ),
                     )
-
                     is DistanceItem.DistanceCombo -> distanceInfo.copy(
                         distances = distanceInfo.distances,
                         price = mapDistanceComboPrice(

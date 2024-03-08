@@ -26,10 +26,10 @@ class OrderInteractorBase(
         orderValidation.validate(orderStatement)
 
     override suspend fun order(
+        startTitle: String,
         distanceInfo: DistanceItem,
         paymentDisabled: Boolean,
         paymentType: String
     ): Result<OrderStatement> =
-        repository.loadOrder(distanceInfo, paymentDisabled, paymentType)
-
+        repository.loadOrder(startTitle, distanceInfo, paymentDisabled, paymentType)
 }

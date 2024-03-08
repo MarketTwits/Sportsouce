@@ -69,10 +69,13 @@ fun StartOrderScreen(component: com.markettwits.start.presentation.order.present
         if (state.isError) {
             FailedScreen(
                 message = state.message,
-                onClickHelp = { /*TODO*/ }
-            ) {
-
-            }
+                onClickBack = {
+                    component.obtainEvent(OrderStore.Intent.GoBack)
+                },
+                onClickRetry = {
+                    component.obtainEvent(OrderStore.Intent.Retry)
+                }
+            )
         }
         state.orderStatement?.let { order ->
             Column(
@@ -87,6 +90,7 @@ fun StartOrderScreen(component: com.markettwits.start.presentation.order.present
                     StartDistanceInfoBox(
                         modifier = Modifier.padding(5.dp),
                         format = order.distanceInfo.format,
+                        startTitle = order.orderTitle,
                         distances = order.distanceInfo.distances
                     )
                     StartMembers(members = order.members, onClickMember = { member, id ->

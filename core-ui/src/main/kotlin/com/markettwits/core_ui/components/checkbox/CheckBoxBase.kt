@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun CheckBoxTertiaryBase(
+fun CheckBoxBase(
     checked: Boolean,
     onValueChanged: ((Boolean) -> Unit)?,
     modifier: Modifier = Modifier,

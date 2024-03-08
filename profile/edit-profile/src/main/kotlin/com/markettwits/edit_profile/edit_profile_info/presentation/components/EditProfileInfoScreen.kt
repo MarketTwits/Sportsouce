@@ -73,10 +73,13 @@ fun EditProfileInfoScreen(component: EditProfileInfoComponent) {
         if (state.isError) {
             FailedScreen(
                 message = state.message,
-                onClickHelp = { /*TODO*/ }
-            ) {
-                component.obtainEvent(EditProfileInfoStore.Intent.Retry)
-            }
+                onClickBack = {
+                    component.obtainEvent(EditProfileInfoStore.Intent.GoBack)
+                },
+                onClickRetry = {
+                    component.obtainEvent(EditProfileInfoStore.Intent.Retry)
+                }
+            )
         }
     }
     EventEffect(

@@ -11,10 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.base_screen.AlertDialogScreen
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
@@ -28,11 +30,14 @@ fun MemberScreen(component: RegistrationMemberComponent) {
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
+    var alertDialog by remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primary,
         topBar = {
             TopBarWithClip(title = "Регистрация") {
-                component.obtainEvent(RegistrationMemberStore.Intent.Pop)
+                alertDialog = true
             }
         },
         snackbarHost = {
@@ -66,6 +71,15 @@ fun MemberScreen(component: RegistrationMemberComponent) {
             },
         ) {
             snackBarHostState.showLongMessageWithDismiss(message = it.message)
+        }
+        if (alertDialog) {
+            AlertDialogScreen(
+                onDismissRequest = {
+                    alertDialog = false
+                }, onClickOk = {
+                    alertDialog = false
+                    component.obtainEvent(RegistrationMemberStore.Intent.Pop)
+                })
         }
     }
 }

@@ -2,6 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AlertDialogScreenPreview">
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\danii\.android\avd\Resizable_Experimental_API_34.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-08T15:14:48.786430700Z" />
+        </State>
+      </entry>
       <entry key="NewAuthorizedProfileScreenPreview">
         <State />
       </entry>
@@ -12,9 +28,6 @@
         <State />
       </entry>
       <entry key="StartsSearchBarPreview">
-        <State />
-      </entry>
-      <entry key="StartsSearchScreenPreview (2)">
         <State />
       </entry>
       <entry key="app">

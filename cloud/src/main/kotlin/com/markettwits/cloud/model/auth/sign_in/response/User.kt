@@ -1,6 +1,10 @@
 package com.markettwits.cloud.model.auth.sign_in.response
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class User(
@@ -29,8 +33,27 @@ data class User(
     val vk: String?,
     val whatsapp: String?
 ) {
-    @Serializable
-    data class Photo(val id: Int, val name: String, val path: String) {
-        fun imageUrl() = "$path/$name"
+    @Serializable(with = PhotoSerializer::class)
+    sealed class Photo {
+        @Serializable
+        @SerialName("EmptyPhoto")
+        object EmptyPhoto : Photo()
+
+        @Serializable
+        data class WithPhoto(val id: Int, val name: String, val path: String) : Photo() {
+            fun imageUrl() = "$path/$name"
+        }
+
+    }
+
+    //    @Serializable
+//    data class Photo(val id: Int, val name: String, val path: String) {
+//        fun imageUrl() = "$path/$name"
+//    }
+    object PhotoSerializer : JsonContentPolymorphicSerializer<Photo>(Photo::class) {
+        override fun selectDeserializer(element: JsonElement) = when {
+            element is JsonObject && element.isEmpty() -> Photo.EmptyPhoto.serializer()
+            else -> Photo.WithPhoto.serializer()
+        }
     }
 }

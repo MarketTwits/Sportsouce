@@ -57,7 +57,7 @@ fun StartFilterList(
                 }
 
                 is StartFilterUi.FilterStartType.DropDown -> {
-                    com.markettwits.core_ui.ui_style.DropDownSpinner(
+                    com.markettwits.core_ui.components.textField.DropDownSpinner(
                         modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                         itemList = item.list,
                         selectedItem = item.selected.joinToString(", "),

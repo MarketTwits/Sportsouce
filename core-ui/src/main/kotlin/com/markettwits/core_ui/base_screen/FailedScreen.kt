@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.theme.FontNunito
 
 
@@ -25,10 +26,16 @@ fun FailedScreen(
     modifier: Modifier = Modifier.padding(5.dp),
     title: String = "Ой что-то пошло не так...",
     message: String = "Произошла ошибка при загрузке данных",
-    onClickHelp: () -> Unit,
+    onClickBack: (() -> Unit?)? = null,
+    onClickHelp: (() -> Unit?)? = null,
     onClickRetry: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
+        if (onClickBack != null) {
+            BackFloatingActionButton {
+                onClickBack()
+            }
+        }
         Column(
             modifier = modifier
                 .align(Alignment.Center)
@@ -55,7 +62,9 @@ fun FailedScreen(
                 OutlinedButton(
                     modifier = modifier,
                     onClick = {
-                        onClickHelp()
+                        if (onClickHelp != null) {
+                            onClickHelp()
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 ) {
@@ -89,9 +98,10 @@ fun FailedScreen(
 @Composable
 fun FailedScreenPreview() {
     FailedScreen(
+        onClickBack = {},
         onClickHelp = {
 
-    }, onClickRetry = {
+        }) {
 
-    })
+    }
 }

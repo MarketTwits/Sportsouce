@@ -32,6 +32,5 @@ internal fun ForgotPasswordLabel(modifier: Modifier = Modifier, onClick: () -> U
             fontSize = 16.sp,
             color = Color.Gray
         )
-
     }
 }

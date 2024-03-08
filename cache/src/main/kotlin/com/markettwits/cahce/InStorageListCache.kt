@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 abstract class InStorageListCache<T : @Serializable Any>(
     private val cache: KStore<List<T>>
-) : Cache<T> {
+) : ObservableListCache<T> {
     override suspend fun get(key: Any): T? =
         (cache.get() ?: emptyList<T>()) as T?
 
@@ -29,6 +29,7 @@ abstract class InStorageListCache<T : @Serializable Any>(
         cache.minus(value)
     }
 
-    fun observe(): Flow<List<T>?> =
+    override fun observe(): Flow<List<T>?> =
         cache.updates
 }
+

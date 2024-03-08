@@ -49,11 +49,16 @@ fun MembersScreen(component: MembersListComponent) {
                 }
             }
             if (state.isError) {
-                FailedScreen(onClickHelp = { }) {
-                    component.obtainEvent(MembersListStore.Intent.Retry)
-                }
+                FailedScreen(
+                    message = state.message,
+                    onClickRetry = {
+                        component.obtainEvent(MembersListStore.Intent.Retry)
+                    },
+                    onClickBack = {
+                        component.obtainEvent(MembersListStore.Intent.GoBack)
+                    }
+                )
             }
-
         }
     }
 }

@@ -4,10 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.core.utils.ExperimentalMviKotlinApi
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.arkivanov.mvikotlin.extensions.coroutines.coroutineBootstrapper
 import com.markettwits.random.random.data.RandomRepository
 import com.markettwits.random.random.presentation.store.StartRandomStore.Intent
 import com.markettwits.random.random.presentation.store.StartRandomStore.Label
@@ -18,6 +15,7 @@ interface StartRandomStore : Store<Intent, State, Label> {
 
     sealed interface Intent{
         data object Retry : Intent
+        data object GoBack : Intent
     }
 
 
@@ -30,6 +28,7 @@ interface StartRandomStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OpenStart(val startId : Int) : Label
+        data object Pop : Label
     }
 }
 internal class StartRandomStoreFactory(
@@ -57,6 +56,7 @@ internal class StartRandomStoreFactory(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when(intent){
                 Intent.Retry -> launch()
+                Intent.GoBack -> publish(Label.Pop)
             }
         }
         private fun launch(){
@@ -65,7 +65,7 @@ internal class StartRandomStoreFactory(
                 repository.randomStart().onFailure {
                     dispatch(Msg.InfoFailed(it.message.toString()))
                 }.onSuccess {
-                    publish(StartRandomStore.Label.OpenStart(it))
+                    publish(Label.OpenStart(it))
                     dispatch(Msg.InfoLoaded(it))
                 }
             }

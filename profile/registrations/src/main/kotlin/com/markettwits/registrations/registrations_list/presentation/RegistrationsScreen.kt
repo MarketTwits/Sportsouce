@@ -57,9 +57,12 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
         if (state.isError) {
             FailedScreen(
                 message = state.message,
-                onClickHelp = { /*TODO*/ }) {
-                component.obtainEvent(RegistrationsStore.Intent.LoadData)
-            }
+                onClickRetry = {
+                    component.obtainEvent(RegistrationsStore.Intent.LoadData)
+                },
+                onClickBack = {
+                    component.obtainEvent(RegistrationsStore.Intent.Pop)
+                })
         }
     }
 }

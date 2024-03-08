@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.order.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.common.StateEventWithContentTest
 import com.markettwits.start.presentation.common.consumed
@@ -40,6 +41,7 @@ interface OrderStore : Store<OrderStore.Intent, OrderStore.State, OrderStore.Lab
         data class UpdateMember(val member: StartStatement, val id: Int) : Intent
         data class ApplyPromo(val promo: String, val percent: Int) : Intent
         data object GoBack : Intent
+        data object Retry : Intent
     }
 
     sealed interface Message {
@@ -50,7 +52,11 @@ interface OrderStore : Store<OrderStore.Intent, OrderStore.State, OrderStore.Lab
     }
 
     sealed interface Label {
-        data class OnClickMember(val member: StartStatement, val memberId: Int) : Label
+        data class OnClickMember(
+            val member: StartStatement,
+            val memberId: Int,
+            val membersProfile: List<ProfileMember>
+        ) : Label
         data object GoBack : Label
         data class OnClickPromo(val promo: String) : Label
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 class OrderBootstrapper(
     private val firstRun: Boolean,
     private val interactor: OrderInteractor,
+    private val startTitle: String,
     private val distanceInfo: DistanceItem,
     private val paymentDisabled: Boolean,
     private val paymentType: String,
@@ -23,7 +24,7 @@ class OrderBootstrapper(
     private fun launch(distanceInfo: DistanceItem, paymentDisabled: Boolean, paymentType: String) {
         dispatch(OrderStore.Action.Loading)
         scope.launch {
-            interactor.order(distanceInfo, paymentDisabled, paymentType).fold(
+            interactor.order(startTitle, distanceInfo, paymentDisabled, paymentType).fold(
                 onSuccess = { dispatch(OrderStore.Action.InfoLoaded(it)) },
                 onFailure = {
                     val message = when (it) {

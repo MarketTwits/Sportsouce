@@ -1,12 +1,15 @@
 package com.markettwits.start.presentation.order.domain
 
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OrderStatement(
+    val orderTitle: String,
     val distanceInfo: OrderDistance,
     val members: List<StartStatement>,
+    val profileMembers: List<ProfileMember>,
     val promo: String,
     val payNow: Boolean = true,
     val paymentDisabled: Boolean,

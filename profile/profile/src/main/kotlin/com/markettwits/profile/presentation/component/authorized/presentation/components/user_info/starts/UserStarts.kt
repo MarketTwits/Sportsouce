@@ -1,6 +1,5 @@
 package com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.starts
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
@@ -43,7 +43,7 @@ fun UserStarts(
             )
             Box(modifier = modifier
                 .clip(Shapes.medium)
-                .clickable { onClickAll() }
+                .noRippleClickable { onClickAll() }
             ) {
                 Text(
                     modifier = modifier.padding(horizontal = 10.dp),
@@ -67,7 +67,7 @@ fun UserStarts(
                     .padding(10.dp)
                     .align(Alignment.CenterHorizontally)
                     .clip(Shapes.medium)
-                    .clickable { onClickAll() }
+                    .noRippleClickable { onClickAll() }
                 ) {
                     Text(
                         modifier = modifier.padding(horizontal = 10.dp),

@@ -8,6 +8,7 @@ import com.markettwits.start.presentation.order.domain.OrderStatement
 
 interface RegistrationStartRepository {
     suspend fun loadOrder(
+        startTitle: String,
         distanceInfo: DistanceItem,
         paymentDisabled: Boolean,
         paymentType: String,

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Dialog
@@ -22,7 +23,24 @@ import net.engawapg.lib.zoomable.zoomable
 
 @Composable
 fun FullImageScreen(
+    image: Painter,
+    onDismiss: () -> Unit
+) {
+    FullImageScreenInternal(painter = image, onDismiss = onDismiss)
+}
+
+@Composable
+fun FullImageScreen(
     image: String,
+    onDismiss: () -> Unit
+) {
+    FullImageScreenInternal(image = image, onDismiss = onDismiss)
+}
+
+@Composable
+internal fun FullImageScreenInternal(
+    image: String? = null,
+    painter: Painter? = null,
     onDismiss: () -> Unit
 ) {
     Dialog(
@@ -35,8 +53,9 @@ fun FullImageScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
         ) {
+            val currentModel = image ?: painter
             SubcomposeAsyncImage(
-                model = imageRequestCrossfade(image),
+                model = imageRequestCrossfade(currentModel),
                 filterQuality = FilterQuality.Medium,
                 contentDescription = "",
                 contentScale = ContentScale.Fit,
@@ -44,7 +63,7 @@ fun FullImageScreen(
                     .fillMaxSize()
                     .zoomable(zoomState = zoomState),
                 error = {
-                    if (image.isEmpty())
+                    if (image.isNullOrBlank())
                         SubcomposeAsyncImageContent(
                             modifier = Modifier,
                             painter = painterResource(id = R.drawable.default_start_image)

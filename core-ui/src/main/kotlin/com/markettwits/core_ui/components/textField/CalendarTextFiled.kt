@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.ui_style
+package com.markettwits.core_ui.components.textField
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.ExperimentalMaterial3Api

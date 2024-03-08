@@ -5,6 +5,7 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.core_ui.time.TimePattern
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.domain.OrderDistance
 import com.markettwits.start.presentation.order.domain.OrderPrice
@@ -23,8 +24,10 @@ interface RegistrationRemoteToDomainMapper {
     ): StartStatement
 
     fun mapOrder(
+        startTitle: String,
         cities: List<City>,
         teams: List<Team>,
+        members: List<ProfileMember>,
         user: User,
         distanceItem: DistanceItem,
         paymentDisabled: Boolean,
@@ -65,8 +68,10 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
     }
 
     override fun mapOrder(
+        startTitle: String,
         cities: List<City>,
         teams: List<Team>,
+        members: List<ProfileMember>,
         user: User,
         distanceItem: DistanceItem,
         paymentDisabled: Boolean,
@@ -78,6 +83,8 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             promo = "",
             paymentDisabled = paymentDisabled,
             paymentType = paymentType,
+            profileMembers = members,
+            orderTitle = startTitle,
             orderPrice = mapOrderPrice(distanceItem)
         )
     }

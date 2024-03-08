@@ -6,9 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.markettwits.core_ui.components.textField.CalendarTextFiled
+import com.markettwits.core_ui.components.textField.DropDownSpinner
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.ui_style.CalendarTextFiled
-import com.markettwits.core_ui.ui_style.DropDownSpinner
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 
 @Composable

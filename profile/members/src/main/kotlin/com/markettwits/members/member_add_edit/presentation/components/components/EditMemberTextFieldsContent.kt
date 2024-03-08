@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.date.mapToString
 import com.markettwits.core_ui.components.OnBackgroundCard
-import com.markettwits.core_ui.components.checkbox.CheckBoxTertiaryBase
+import com.markettwits.core_ui.components.checkbox.CheckBoxBase
+import com.markettwits.core_ui.components.textField.CalendarTextFiled
+import com.markettwits.core_ui.components.textField.DropDownSpinner
 import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.ui_style.CalendarTextFiled
-import com.markettwits.core_ui.ui_style.DropDownSpinner
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.teams_city.domain.Team
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -141,7 +141,7 @@ fun EditMemberTextFieldsContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                CheckBoxTertiaryBase(checked = !member.child, onValueChanged = {
+                CheckBoxBase(checked = !member.child, onValueChanged = {
                     onMemberChange(member.copy(child = !it))
                 })
                 Text(
@@ -155,7 +155,7 @@ fun EditMemberTextFieldsContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                CheckBoxTertiaryBase(checked = member.child, onValueChanged = {
+                CheckBoxBase(checked = member.child, onValueChanged = {
                     onMemberChange(member.copy(child = it))
                 })
                 Text(

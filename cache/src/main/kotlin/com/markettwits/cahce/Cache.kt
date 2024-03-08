@@ -12,3 +12,7 @@ interface Cache<T> {
 interface ObservableCache<T> : Cache<T> {
     fun observe(): Flow<T?>
 }
+
+interface ObservableListCache<T> : Cache<T> {
+    fun observe(): Flow<List<T>?>
+}

@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.FullImageScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
@@ -65,18 +64,11 @@ fun StartScreen(component: StartScreenComponent, commentsComponent: StartComment
             FailedScreen(
                 message = startData.message,
                 onClickHelp = {
-                },
-                onClickRetry = {
-                    component.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                })
+                }
+            ) {
+                component.obtainEvent(StartScreenStore.Intent.OnClickRetry)
+            }
         }
 
     }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StartScreenPreview() {
-    //StartScreen(MockStartScreenComponent())
 }

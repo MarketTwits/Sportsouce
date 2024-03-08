@@ -7,6 +7,7 @@ import com.markettwits.members.members_list.presentation.store.store.MembersList
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.Label
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.Message
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.State
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class MembersListExecutor(private val useCase: MembersListUseCase) :
@@ -28,14 +29,13 @@ class MembersListExecutor(private val useCase: MembersListUseCase) :
     private fun launch() {
         scope.launch {
             dispatch(Message.Loading)
-            useCase.members(false).fold(
-                onSuccess = {
-                    dispatch(Message.Loaded(it))
-                },
-                onFailure = {
+            useCase.members(false)
+                .catch {
                     dispatch(Message.Error(it.message.toString()))
                 }
-            )
+                .collect {
+                    dispatch(Message.Loaded(it))
+                }
         }
     }
 

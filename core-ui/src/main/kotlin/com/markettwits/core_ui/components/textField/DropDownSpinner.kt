@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.ui_style
+package com.markettwits.core_ui.components.textField
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.theme.FontNunito
 
 @Composable
 fun <E> DropDownSpinner(
@@ -66,7 +67,7 @@ fun <E> DropDownSpinner(
                         textColor = MaterialTheme.colorScheme.tertiary,
                     ),
                     text = {
-                        Text(item.toString())
+                        Text(item.toString(), fontFamily = FontNunito.medium)
                     },
                     onClick = {
                         isOpen = false

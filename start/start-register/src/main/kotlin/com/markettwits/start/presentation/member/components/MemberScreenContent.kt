@@ -16,9 +16,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.base_extensions.date.mapToString
-import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
+import com.markettwits.core_ui.components.textField.DropDownSpinner
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.presentation.components.extra.fileds.CityFiled
 import com.markettwits.start.presentation.order.presentation.components.extra.fileds.TeamFiled
@@ -36,6 +37,7 @@ fun MemberScreenContent(
     modifier: Modifier = Modifier,
     userNumber: Int,
     statement: StartStatement,
+    members: List<ProfileMember>,
     onValueChanged: (StartStatement) -> Unit,
     onClickContinue: () -> Unit,
 ) {
@@ -46,15 +48,21 @@ fun MemberScreenContent(
     ) {
         MemberContactFace(checked = statement.contactPerson, onValueChanged = {
             onValueChanged(statement.copy(contactPerson = it))
+        })
+        MemberSelectMember(
+            modifier = Modifier.padding(vertical = 5.dp),
+            members = members
+        ) {
+            onValueChanged(memberSelectApply(it, statement))
         }
-        )
         Text(
+            modifier = Modifier.padding(vertical = 5.dp),
             text = "Участник ${userNumber + 1}",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.tertiary
         )
         OutlinedTextFieldBase(
             modifier = Modifier.padding(vertical = 5.dp),
@@ -125,15 +133,17 @@ fun MemberScreenContent(
                 }
             )
         }
-        ItemsTextFiledDialog(
+        DropDownSpinner(
             modifier = Modifier.padding(vertical = 5.dp),
-            label = "Пол",
-            value = statement.sex,
-            items = statement.sexList.map { it.name },
-            onValueChanged = {
-                onValueChanged(statement.copy(sex = it))
-            }
-        )
+            selectedItem = statement.sex, onItemSelected = { id, value ->
+                onValueChanged(statement.copy(sex = value))
+            }, itemList = statement.sexList.map { it.name }) {
+            OutlinedTextFieldBase(
+                label = "Пол",
+                value = statement.sex,
+                isEnabled = false
+            ) {}
+        }
         CityFiled(
             modifier = Modifier.padding(vertical = 5.dp),
             statement = statement,

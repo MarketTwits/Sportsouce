@@ -35,10 +35,11 @@ fun StartsFilteredScreen(component: StartsFilteredComponent) {
             FailedScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 message = state.message,
-                onClickHelp = { /*TODO*/ }
-            ) {
-
-            }
+                onClickBack = {
+                    component.obtainEvent(StartsFilteredStore.Intent.OnClickBack)
+                },
+                onClickRetry = {}
+            )
         }
         LazyColumn {
             items(state.starts) {

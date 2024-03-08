@@ -2,21 +2,16 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
-import com.markettwits.start.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
-import com.markettwits.start.presentation.promo.component.RegistrationPromoComponent
 import com.markettwits.start.presentation.start.component.StartScreenComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartScreenComponent {
     val childStack: Value<ChildStack<*, Child>>
-    val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<*, ChildSlot>>
-
     @Serializable
     sealed class Config {
         @Serializable
@@ -38,17 +33,11 @@ interface RootStartScreenComponent {
         @Serializable
         data class StartRegistration(
             val startId: Int,
+            val startTitle: String,
             val distanceInfo: com.markettwits.cloud.ext_model.DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : Config()
-
-        @Serializable
-        data class StartRegistrationMember(
-            val memberId: Int,
-            val startStatement: StartStatement
-        ) : Config()
-
     }
 
     sealed class Child {
@@ -57,21 +46,8 @@ interface RootStartScreenComponent {
             val commentsComponent: StartCommentsComponent
         ) : Child()
 
-        data class StartOrder(val component: com.markettwits.start.presentation.order.presentation.component.OrderComponentComponent) :
-            Child()
-
-        data class StartRegistrationMember(val component: RegistrationMemberComponent) : Child()
+        data class StartRegistration(val component: RootStartRegister) : Child()
         data class StartMembers(val component: StartMembersScreenComponent) : Child()
         data class StartMembersFilter(val component: StartMembersFilterScreen) : Child()
-    }
-
-    @Serializable
-    sealed interface ConfigChild {
-        @Serializable
-        data class StartPromo(val startId: Int, val promo: String) : ConfigChild
-    }
-
-    sealed interface ChildSlot {
-        data class StartPromo(val component: RegistrationPromoComponent) : ChildSlot
     }
 }

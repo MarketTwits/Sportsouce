@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.presentation.store.OrderStore
 import com.markettwits.start.presentation.order.presentation.store.OrderStoreFactory
@@ -17,16 +18,17 @@ import kotlinx.coroutines.launch
 class OrderComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
+    private val startTitle: String,
     private val paymentType: String,
     private val distanceInfo: DistanceItem,
     private val paymentDisabled: Boolean,
     private val storeFactory: OrderStoreFactory,
     private val pop: () -> Unit,
-    private val onClickMember: (StartStatement, Int) -> Unit,
+    private val onClickMember: (StartStatement, Int, List<ProfileMember>) -> Unit,
     private val onClickPromo: (Int, String) -> Unit
 ) : OrderComponentComponent,
     ComponentContext by componentContext {
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val restoreState: MutableValue<OrderStore.State> = MutableValue(
         stateKeeper.consume(
@@ -41,7 +43,8 @@ class OrderComponentComponentBase(
             distanceInfo = distanceInfo,
             starId = startId,
             paymentType = paymentType,
-            paymentDisabled = paymentDisabled
+            paymentDisabled = paymentDisabled,
+            startTitle = startTitle,
         )
     }
 
@@ -60,7 +63,11 @@ class OrderComponentComponentBase(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    is OrderStore.Label.OnClickMember -> onClickMember(it.member, it.memberId)
+                    is OrderStore.Label.OnClickMember -> onClickMember(
+                        it.member,
+                        it.memberId,
+                        it.membersProfile
+                    )
                     is OrderStore.Label.GoBack -> pop()
                     is OrderStore.Label.OnClickPromo -> onClickPromo(startId, it.promo)
                 }

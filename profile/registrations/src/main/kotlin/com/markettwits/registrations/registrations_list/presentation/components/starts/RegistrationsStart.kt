@@ -33,7 +33,6 @@ fun RegistrationsStart(
         onRefresh = onRefresh::invoke,
     ) {
         LazyColumn(modifier = it) {
-
             item {
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                     filter.forEach { filterItem ->
@@ -47,9 +46,6 @@ fun RegistrationsStart(
                     }
                 }
             }
-
-
-
             items(items = starts, key = { it -> it.id }, contentType = { it }) {
                 OrderStartCard(
                     modifier = Modifier

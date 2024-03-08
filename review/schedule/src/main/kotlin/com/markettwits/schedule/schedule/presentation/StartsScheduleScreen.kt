@@ -33,7 +33,11 @@ fun StartsScheduleScreen(component: StartsScheduleComponent) {
             if (state.isError) {
                 StartsScheduleFailedContent(onClick = {
                     component.obtainEvent(StartsScheduleStore.Intent.Launch)
-                })
+                },
+                    onClickPop = {
+                        component.obtainEvent(StartsScheduleStore.Intent.Back)
+                    }
+                )
             }
             if (state.isLoading) {
                 StartsScheduleLoadingContent()

@@ -143,14 +143,17 @@ fun DistanceItemBase(
                 color = MaterialTheme.colorScheme.tertiary
             )
             HorizontalDivider()
-            Text(
-                text = "Осталось слотов : " + item.distance.slots,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
-            )
+            val infinity = item.distance.infinitySlot ?: false
+            if (!infinity) {
+                Text(
+                    text = "Осталось слотов : " + item.distance.slots,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
             if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
                     text = paymentType,
@@ -170,7 +173,7 @@ fun DistanceItemBase(
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
-            val enabled = (item.distance.slots.toInt()) > 0
+            val enabled = (item.distance.slots.toInt()) > 0 || infinity
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -259,9 +262,9 @@ fun DistanceItemCombo(
                     .align(Alignment.CenterHorizontally),
             ) {
                 Button(
-                    modifier = Modifier.align(Alignment.CenterVertically),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                     ),
                     onClick = { onClick() },
                 ) {

@@ -36,7 +36,14 @@ class OrderStoreExecutor(
                     })
             }
 
-            is Intent.OnClickMember -> publish(Label.OnClickMember(intent.member, intent.id))
+            is Intent.OnClickMember -> publish(
+                Label.OnClickMember(
+                    intent.member,
+                    intent.id,
+                    getState().orderStatement?.profileMembers ?: emptyList()
+                )
+            )
+
             is Intent.UpdateMember -> dispatch(
                 Message.UpdateState(
                     getState().copy(
@@ -65,6 +72,7 @@ class OrderStoreExecutor(
             )
 
             is Intent.OnConsumedEvent -> dispatch(Message.UpdateState(getState().copy(event = consumed())))
+            is Intent.Retry -> {}
         }
     }
 

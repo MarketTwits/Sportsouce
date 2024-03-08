@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -120,7 +121,7 @@ private fun ImageCardInfoStroke(title: String) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = title,
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = Color.White,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             fontFamily = FontNunito.bold,
@@ -140,7 +141,7 @@ private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = status.message,
-            color = MaterialTheme.colorScheme.onSecondary,
+            color = Color.White,
             fontFamily = FontNunito.bold,
             fontSize = 10.sp,
             maxLines = 1,

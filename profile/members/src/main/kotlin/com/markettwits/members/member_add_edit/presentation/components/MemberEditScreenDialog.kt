@@ -111,6 +111,4 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
             SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
         snackBarHostState.showLongMessageWithDismiss(message = it.message)
     }
-
-
 }

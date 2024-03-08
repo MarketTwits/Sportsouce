@@ -18,7 +18,11 @@ abstract class AuthorizedProfileMapperAbstract(
             surname = user.surname,
             createdAt = timeMapper.mapTime(TimePattern.Full, user.createdAt),
             status = user.comment_for_address ?: "",
-            photo = user.photo?.imageUrl() ?: ""
+            photo = when (val image = user.photo) {
+                is User.Photo.EmptyPhoto -> ""
+                is User.Photo.WithPhoto -> image.imageUrl()
+                null -> ""
+            }
         )
 
     protected fun mapUserSocialNetwork(user: User): UserProfile.SocialNetwork =

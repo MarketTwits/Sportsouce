@@ -10,8 +10,8 @@ internal class AuthCacheDataSourceBase(
 ) : AuthCacheDataSource {
     private val realm = realmProvider.realm(setOf(CredentialRealmCache::class))
 
-    override fun write(data: CredentialRealmCache) {
-        realm.writeBlocking {
+    override suspend fun write(data: CredentialRealmCache) {
+        realm.write {
             copyToRealm(data)
         }
     }

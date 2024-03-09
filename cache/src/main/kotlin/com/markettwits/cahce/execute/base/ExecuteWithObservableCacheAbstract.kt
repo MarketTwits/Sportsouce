@@ -11,23 +11,23 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
         launch: suspend () -> T,
     ): Flow<T> = flow {
         val cachedData = cache.observe()
-        cachedData.collect {
-            val newData = if (it == null) {
+        cachedData.collect { cached ->
+            val newData = if (cached == null) {
                 val data = launch()
                 cache.set(value = data)
                 data
             } else {
-                it
+                cached
             }
             emit(newData)
-        }
-        val latestData = runCatching {
-            launch()
-        }
-        latestData.onSuccess {
-            if (it != cachedData) {
-                cache.set(value = it)
-                emit(it)
+            val latestData = runCatching {
+                launch()
+            }
+            latestData.onSuccess {
+                if (it != cachedData) {
+                    cache.set(value = it)
+                    emit(it)
+                }
             }
         }
     }

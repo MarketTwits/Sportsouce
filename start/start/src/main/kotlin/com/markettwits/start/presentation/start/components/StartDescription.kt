@@ -42,7 +42,12 @@ fun StartDescription(modifier: Modifier, description: String) {
             fontSize = 12.sp,
             fontFamily = FontNunito.medium,
             lineHeight = 12.sp,
-            colorMapping = mapOf(Pair(Color.Black, textColor))
+            color = textColor,
+            colorMapping = mapOf(
+                Pair(Color.Black, textColor),
+                Pair(Color.Gray, textColor),
+                Pair(Color.LightGray, textColor)
+            )
         )
 
         AnimatedVisibility(

@@ -57,5 +57,4 @@ data class StartOrderInfo(
             override val title: String = "Оплата отменена"
         ) : PaymentStatus
     }
-
 }

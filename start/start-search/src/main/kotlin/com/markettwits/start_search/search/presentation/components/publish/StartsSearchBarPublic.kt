@@ -25,7 +25,6 @@ import com.markettwits.core_ui.theme.FontNunito
 
 @Composable
 fun StartsSearchBarPublic(modifier: Modifier = Modifier) {
-
     Card(
         modifier = Modifier
             .padding(10.dp)

@@ -13,11 +13,11 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
-            is Intent.ChangeTextFiled -> starts(intent.value, intent.done)
+            is Intent.ChangeTextFiled -> starts(intent.value)
             is Intent.OnClickBack -> publish(Label.OnClickBack)
             is Intent.OnClickBrushText -> dispatch(Message.Brush)
             is Intent.OnClickFilter -> publish(Label.OnClickFilter)
-            is Intent.OnClickStart -> publish(Label.OnClickStart(intent.id))
+            is Intent.OnClickStart -> onClickStart(intent.id, intent.startTitle)
             is Intent.OnClickHistoryItem -> starts(intent.value)
         }
     }
@@ -26,6 +26,13 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
         scope.launch {
             val searches = repository.history()
             dispatch(Message.InfoLoaded(StartsSearch(searches, emptyList())))
+        }
+    }
+
+    private fun onClickStart(startId: Int, startTitle: String) {
+        scope.launch {
+            publish(Label.OnClickStart(startId))
+            repository.search(startTitle, true)
         }
     }
 

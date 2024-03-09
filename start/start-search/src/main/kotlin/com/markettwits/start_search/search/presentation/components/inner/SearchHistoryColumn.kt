@@ -56,7 +56,7 @@ private fun SearchHistoryItem(
             fontFamily = FontNunito.bold,
             fontSize = 16.sp,
             maxLines = 1,
-            overflow = TextOverflow.Visible
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

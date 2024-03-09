@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
@@ -35,7 +34,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 modifier = Modifier.padding(10.dp),
                 query = state.query,
                 onQueryChanged = {
-                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, false))
+                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it))
                 },
                 onBrushClicked = {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickBrushText)
@@ -46,9 +45,6 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 onClickBack = {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickBack)
                 },
-                onDoneClicked = {
-                    component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it, true))
-                }
             )
         },
     ) {
@@ -56,7 +52,6 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primary)
                 .fillMaxSize()
-            //    .verticalScroll(rememberScrollState())
         ) {
             if (state.query.isEmpty()) {
                 SearchHistoryColumn(
@@ -78,8 +73,15 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                         )
                         StartsScreenContent(
                             items = starts
-                        ) {
-                            component.obtainEvent(StartsSearchStore.Intent.OnClickStart(it))
+                        ) { startId ->
+                            val startTitle = starts.find { it.id == startId }?.name
+                            if (startTitle != null)
+                                component.obtainEvent(
+                                    StartsSearchStore.Intent.OnClickStart(
+                                        startId,
+                                        startTitle
+                                    )
+                                )
                         }
                     } else {
                         Text(
@@ -98,10 +100,4 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         }
 
     }
-}
-
-@Preview
-@Composable
-private fun StartsSearchScreenPreview() {
-    //  StartsSearchScreen()
 }

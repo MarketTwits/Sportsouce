@@ -16,7 +16,9 @@ fun StartsScreenContent(items: List<StartsListItem>, onClick: (Int) -> Unit) {
             StartCard(
                 modifier = Modifier.animateItemPlacement(animationSpec = tween(600)),
                 start = it,
-                onItemClick = onClick::invoke
+                onItemClick = { startId ->
+                    onClick(startId)
+                }
             )
         }
     }

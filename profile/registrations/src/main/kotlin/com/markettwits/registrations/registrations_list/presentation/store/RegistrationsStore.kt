@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.registrations.registrations_list.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import com.markettwits.registrations.registrations_list.presentation.components.filter.FilterItem
-import com.markettwits.registrations.registrations_list.presentation.components.filter.baseFilter
 import com.markettwits.registrations.registrations_list.presentation.store.RegistrationsStore.Intent
 import com.markettwits.registrations.registrations_list.presentation.store.RegistrationsStore.Label
 import com.markettwits.registrations.registrations_list.presentation.store.RegistrationsStore.State
@@ -26,7 +25,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
     data class State(
         val base: List<StartOrderInfo>,
         val filtered: List<StartOrderInfo> = base,
-        val filter: List<FilterItem> = baseFilter,
+        val filter: List<FilterItem> = emptyList(),
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val isSuccess: Boolean = false,
@@ -66,7 +65,6 @@ class RegistrationsDataStoreFactory(
                 is Intent.LoadData -> {
                     launch(getState())
                 }
-
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
                 is Intent.OnClickFilter -> updateFilter(intent.item, getState())
@@ -82,8 +80,18 @@ class RegistrationsDataStoreFactory(
                 dispatch(Msg.Loading)
                 dataSource.registrations()
                     .onFailure { dispatch(Msg.InfoFailed(it.message.toString())) }
-                    .onSuccess { dispatch(Msg.InfoLoaded(starts = it, filter = state.filter)) }
+                    .onSuccess { dispatch(Msg.InfoLoaded(starts = it, filter = createFilter(it))) }
             }
+        }
+
+        private fun createFilter(starts: List<StartOrderInfo>): List<FilterItem> {
+            val paymentStatusSet = HashSet<StartOrderInfo.PaymentStatus>()
+            for (start in starts) {
+                paymentStatusSet.add(start.payment)
+            }
+            return paymentStatusSet.map { paymentStatus ->
+                FilterItem(paymentStatus.title, false)
+            }.distinctBy { it.value }
         }
 
         private fun updateFilter(item: FilterItem, state: State) {

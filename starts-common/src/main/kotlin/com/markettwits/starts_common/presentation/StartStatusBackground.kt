@@ -9,6 +9,7 @@ import com.markettwits.core_ui.theme.SportSouceColor
  * @param 2 - Registration will start soon
  * @param 3 - Registration is open
  * @param 4 - Registration is closed, wait for the start
+ * @param 5 - The start is taking place
  * @param 6 - Start ended
  */
 fun startStatusBackground(statusCode: Int): Color =
@@ -16,7 +17,7 @@ fun startStatusBackground(statusCode: Int): Color =
         1 -> SportSouceColor.SportSouceLightRed
         2 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
         3 -> SportSouceColor.SportSouceRegistryOpenGreen
-        5 -> SportSouceColor.SportSouceBlue
+        5 -> SportSouceColor.SportSouceRegistryOpenGreen
         4 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
         6 -> SportSouceColor.SportSouceStartEndedPink
         else -> SportSouceColor.SportSouceBlue

@@ -17,9 +17,9 @@ interface StartsSearchStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
-        data class ChangeTextFiled(val value: String, val done: Boolean) : Intent
+        data class ChangeTextFiled(val value: String) : Intent
         data class OnClickHistoryItem(val value: String) : Intent
-        data class OnClickStart(val id: Int) : Intent
+        data class OnClickStart(val id: Int, val startTitle: String) : Intent
         data object OnClickBack : Intent
         data object OnClickFilter : Intent
         data object OnClickBrushText : Intent

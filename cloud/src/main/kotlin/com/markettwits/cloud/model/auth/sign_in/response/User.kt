@@ -45,11 +45,6 @@ data class User(
         }
 
     }
-
-    //    @Serializable
-//    data class Photo(val id: Int, val name: String, val path: String) {
-//        fun imageUrl() = "$path/$name"
-//    }
     object PhotoSerializer : JsonContentPolymorphicSerializer<Photo>(Photo::class) {
         override fun selectDeserializer(element: JsonElement) = when {
             element is JsonObject && element.isEmpty() -> Photo.EmptyPhoto.serializer()

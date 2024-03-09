@@ -65,7 +65,6 @@ fun RegistrationsAbsolutelyEmpty(modifier: Modifier = Modifier) {
                 fontSize = 12.sp
             )
         }
-
     }
 }
 

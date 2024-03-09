@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface ReviewRepository {
-    suspend fun launch(forced: Boolean = false): Flow<Result<Review>>
+    suspend fun review(forced: Boolean = false): Flow<Review>
 }

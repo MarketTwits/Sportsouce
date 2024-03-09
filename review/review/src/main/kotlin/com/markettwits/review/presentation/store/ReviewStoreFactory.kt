@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.domain.Review
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class ReviewStoreFactory(
@@ -49,14 +50,13 @@ class ReviewStoreFactory(
         private fun launch(forced: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
-                repository.launch(forced).collect { result ->
-                    result.onFailure {
+                repository.review(forced)
+                    .catch {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
-                    result.onSuccess {
-                        dispatch(Msg.InfoLoaded(it))
+                    .collect { result ->
+                        dispatch(Msg.InfoLoaded(result))
                     }
-                }
             }
         }
     }
@@ -69,7 +69,6 @@ class ReviewStoreFactory(
                     isLoading = false,
                     message = message.message
                 )
-
                 is Msg.Loading -> copy(isLoading = true, isError = false)
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,

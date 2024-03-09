@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
@@ -50,7 +51,7 @@ fun StartResult(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
+                .noRippleClickable {
                     panelState = !panelState
                 },
             verticalAlignment = Alignment.CenterVertically,

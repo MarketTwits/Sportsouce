@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
@@ -43,7 +44,7 @@ fun StartConditionPanel(modifier: Modifier = Modifier, file: StartItem.Condition
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .noRippleClickable {
                         panelState = !panelState
                     },
                 verticalAlignment = Alignment.CenterVertically,

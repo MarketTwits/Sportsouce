@@ -35,7 +35,7 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
                 .fillMaxSize()
                 .padding(top = it.calculateTopPadding())
         ) {
-            if (state.base.isNotEmpty()) {
+            if (state.isSuccess) {
                 RegistrationsStart(
                     starts = state.filtered,
                     isRefreshing = state.isLoading,

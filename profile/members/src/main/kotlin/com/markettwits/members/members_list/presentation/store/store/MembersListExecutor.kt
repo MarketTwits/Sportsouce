@@ -17,19 +17,19 @@ class MembersListExecutor(private val useCase: MembersListUseCase) :
             is Intent.GoBack -> publish(Label.GoBack)
             is Intent.OnClickAddMember -> publish(Label.OnClickAddMember)
             is Intent.OnClickMember -> publish(Label.OnClickMember(intent.member))
-            is Intent.Retry -> launch()
+            is Intent.Retry -> launch(true)
             is Intent.UpdateMember -> updateMember(intent.member, getState().members)
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
-        launch()
+        launch(false)
     }
 
-    private fun launch() {
+    private fun launch(forced: Boolean) {
         scope.launch {
             dispatch(Message.Loading)
-            useCase.members(false)
+            useCase.members(forced)
                 .catch {
                     dispatch(Message.Error(it.message.toString()))
                 }

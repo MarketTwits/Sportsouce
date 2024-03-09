@@ -29,6 +29,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val filter: List<FilterItem> = baseFilter,
         val isLoading: Boolean = false,
         val isError: Boolean = false,
+        val isSuccess: Boolean = false,
         val message: String = ""
     )
 
@@ -118,15 +119,17 @@ class RegistrationsDataStoreFactory(
                 is Msg.InfoFailed -> State(
                     base = emptyList(),
                     isError = true,
+                    isLoading = false,
+                    isSuccess = false,
                     message = msg.message
                 )
-
                 is Msg.Loading -> copy(isLoading = true, isError = false)
                 is Msg.UpdateList -> copy(filtered = msg.starts, filter = msg.filter)
                 is Msg.InfoLoaded -> copy(
                     base = msg.starts,
                     filtered = msg.starts,
                     filter = msg.filter,
+                    isSuccess = true,
                     isLoading = false,
                     isError = false,
                 )

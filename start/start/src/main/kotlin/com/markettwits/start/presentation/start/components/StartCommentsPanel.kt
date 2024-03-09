@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceTheme
@@ -61,7 +62,7 @@ fun StartCommentsPanel(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
+                .noRippleClickable {
                     panelState = !panelState
                 },
             verticalAlignment = Alignment.CenterVertically,

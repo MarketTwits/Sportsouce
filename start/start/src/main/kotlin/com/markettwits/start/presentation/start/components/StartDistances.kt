@@ -1,7 +1,6 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start.presentation.common.Animation
@@ -54,7 +54,7 @@ fun StartDistances(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
+                .noRippleClickable {
                     panelState = !panelState
                 },
             verticalAlignment = Alignment.CenterVertically,

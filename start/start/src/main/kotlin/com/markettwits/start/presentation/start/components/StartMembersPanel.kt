@@ -1,7 +1,6 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
@@ -33,7 +33,7 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .clickable {
+                .noRippleClickable {
                     onClick()
                 },
             verticalAlignment = Alignment.CenterVertically,

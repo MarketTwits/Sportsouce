@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class ReviewRepositoryBase(
@@ -18,20 +17,14 @@ class ReviewRepositoryBase(
     private val reviewMapper: ReviewMapper,
     private val executor: ExecuteWithCache,
 ) : ReviewRepository {
-    override suspend fun launch(forced: Boolean): Flow<Result<Review>> = flow {
-        runCatching {
-            executor.executeWithCache(
-                forced = forced,
-                cache = cache,
-                launch = ::launchs,
-                callback = {
-                    emit(Result.success(it))
-                },
-            )
-        }
-    }
+    override suspend fun review(forced: Boolean): Flow<Review> =
+        executor.executeWithCache(
+            forced = forced,
+            cache = cache,
+            launch = this::launch,
+        )
 
-    private suspend fun launchs(): Review {
+    private suspend fun launch(): Review {
         val (actual, archive, news) = coroutineScope {
             withContext(Dispatchers.IO) {
                 val deferredActual = async { service.fetchActualStarts() }

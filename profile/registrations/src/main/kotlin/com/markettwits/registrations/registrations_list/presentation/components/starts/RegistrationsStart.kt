@@ -46,6 +46,11 @@ fun RegistrationsStart(
                     }
                 }
             }
+            item {
+                if (starts.isEmpty()) {
+                    RegistrationsAbsolutelyEmpty(modifier = Modifier.padding(10.dp))
+                }
+            }
             items(items = starts, key = { it -> it.id }, contentType = { it }) {
                 OrderStartCard(
                     modifier = Modifier
@@ -57,8 +62,6 @@ fun RegistrationsStart(
                     })
             }
         }
-        if (starts.isEmpty()) {
-            RegistrationsEmpty()
-        }
+
     }
 }

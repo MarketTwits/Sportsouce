@@ -10,16 +10,16 @@ abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMappe
     override fun mapSingle(items: List<Row>): List<StartsListItem> {
         val resultLists = items.map {
             StartsListItem(
-                it.id,
-                it.name,
-                it.posterLinkFile?.fullPath ?: "",
-                timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start_date),
+                id = it.id,
+                name = it.name,
+                image = it.posterLinkFile?.fullPath ?: "",
+                date = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start_date),
                 statusCode = StartsListItem.StatusCode(
                     it.start_status.code,
                     it.start_status.name
                 ),
-                it.coordinates,
-                it.condition_short ?: ""
+                place = it.coordinates,
+                distance = it.condition_short ?: ""
             )
         }
         return resultLists

@@ -26,7 +26,7 @@ data class StartItem(
 ) {
     sealed class ConditionFile {
         data class Base(val url: String) : ConditionFile()
-        object Empty : ConditionFile()
+        data object Empty : ConditionFile()
     }
 
     data class Result(

@@ -18,6 +18,8 @@ import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.profile.presentation.component.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.presentation.component.authorized.presentation.components.members.MyMembersCard
+import com.markettwits.profile.presentation.component.authorized.presentation.components.statistics.UserStartStatistic
+import com.markettwits.profile.presentation.component.authorized.presentation.components.statistics.userStatisticMapper
 import com.markettwits.profile.presentation.component.authorized.presentation.components.top_bar.ProfileTopBar
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.UserInfoCard
 import com.markettwits.profile.presentation.component.authorized.presentation.components.user_info.starts.UserStarts
@@ -69,6 +71,7 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                             )
                         }
                     )
+                    UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
                     MyMembersCard(onClick = {
                         component.obtainOutput(AuthorizedProfileComponent.Output.Members)
                     })

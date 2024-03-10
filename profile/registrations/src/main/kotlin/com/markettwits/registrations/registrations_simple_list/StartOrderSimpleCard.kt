@@ -57,7 +57,7 @@ fun StartOrderSimpleCard(
                 modifier = Modifier.padding(start = 10.dp),
                 title = start.startTitle,
                 status = start.statusCode,
-                date = start.dateStart,
+                date = start.dateStartPreview,
                 payment = start.payment,
                 cost = start.cost,
                 onClick = { onItemClick(start) }

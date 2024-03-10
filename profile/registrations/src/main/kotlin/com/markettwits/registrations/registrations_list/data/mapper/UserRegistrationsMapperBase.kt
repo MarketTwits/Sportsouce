@@ -16,7 +16,8 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
                 startId = it.start_id,
                 name = it.name,
                 image = it.start.posterLinkFile?.fullPath ?: "",
-                dateStart = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start.start_date),
+                dateStartPreview = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start.start_date),
+                dateStartCloud = it.start.start_date,
                 statusCode = StartStatus(
                     it.start.start_status.code,
                     it.start.start_status.name

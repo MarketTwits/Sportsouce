@@ -40,7 +40,7 @@ fun StartCardSimpleAuth(
     onItemClick: (Int) -> Unit
 ) {
     Column(modifier = modifier.padding(10.dp)) {
-        ImageCard(modifier = modifier, start.startTitle, start.image, start.dateStart) {
+        ImageCard(modifier = modifier, start.startTitle, start.image, start.dateStartPreview) {
             onItemClick(start.startId)
         }
     }

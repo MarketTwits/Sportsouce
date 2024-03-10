@@ -66,7 +66,7 @@ fun OrderStartCard(
             RegistrationsCardInfoStatusInfo(
                 title = item.startTitle,
                 cost = item.cost,
-                date = item.dateStart,
+                date = item.dateStartPreview,
                 fullName = item.member,
                 group = item.ageGroup,
                 kindOfSport = item.kindOfSport,

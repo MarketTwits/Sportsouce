@@ -5,7 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -29,9 +32,6 @@ import com.markettwits.start.presentation.promo.store.RegistrationPromoStore
 @Composable
 fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
     val state by component.state.collectAsState()
-    //TODO add close effect when close screen after apply promo
-    val labels by component.labels.collectAsState(RegistrationPromoStore.Label.Empty)
-
     ModalBottomSheet(
         containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {
@@ -40,6 +40,11 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
     ) {
         Column(
             modifier = Modifier
+                .padding(
+                    bottom = WindowInsets.navigationBars
+                        .asPaddingValues()
+                        .calculateBottomPadding()
+                )
                 .padding(10.dp)
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(10.dp)

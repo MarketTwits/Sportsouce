@@ -11,7 +11,7 @@ android {
 
 dependencies {
 
-    api(project(":cloud"))
+    implementation(project(":cloud"))
     implementation(project(":start:start"))
     implementation(project(":starts"))
     implementation(project(":profile:profile"))
@@ -20,7 +20,6 @@ dependencies {
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.composeUiBundle)
     implementation(libs.junit.ext.ktx)
-    implementation(libs.bundles.composeUiBundleDebug)
     implementation(libs.decompose)
     implementation(libs.decompose.compose.extension)
     implementation(libs.decompose.android)

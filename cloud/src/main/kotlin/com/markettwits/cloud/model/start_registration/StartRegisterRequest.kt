@@ -74,8 +74,8 @@ data class StartRegisterRequest(
         val ageFrom: String,
         val ageTo: String,
         val name: String,
-        val sex: String,
-        val stages: List<DistanceItem.Stage>?
+        val sex: String? = null,
+        val stages: List<DistanceItem.Stage>? = null
     )
 }
 

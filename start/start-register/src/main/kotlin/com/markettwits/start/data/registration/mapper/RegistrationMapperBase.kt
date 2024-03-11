@@ -1,7 +1,5 @@
 package com.markettwits.start.data.registration.mapper
 
-import android.util.Log
-import android.util.Patterns
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
@@ -17,63 +15,6 @@ import java.util.Locale
 
 
 class RegistrationMapperBase : RegistrationMapper {
-    override fun mapBase(
-        withoutPayment: Boolean,
-        user: User,
-        startStatement: StartStatement,
-        startDistanceItem: DistanceItem.DistanceInfo,
-        startId: Int,
-    ): StartRegisterRequest {
-        return StartRegisterRequest(
-            alone = false,
-            day = 1,
-            distance = startDistanceItem.value,
-            format = startDistanceItem.format,
-            member = listOf(
-                mapStartMember(
-                    user = user,
-                    teamNumber = 1,
-                    contactPerson = true,
-                    startStatement = validateFields(startStatement),
-                    startDistanceInfo = startDistanceItem
-                )
-            ),
-            payment_disabled = false,
-            payment_type = "",
-            price = startDistanceItem.distance.price.toInt(),
-            promocode = startStatement.promocode,
-            registration_without_payment = withoutPayment,
-            start_id = startId
-        )
-    }
-
-    override fun mapCombo(
-        withoutPayment: Boolean,
-        user: User,
-        startStatement: StartStatement,
-        startDistanceItem: DistanceItem.DistanceCombo,
-        startId: Int
-    ): StartRegisterRequest.Combo {
-        return StartRegisterRequest.Combo(
-            alone = false,
-            day = 1,
-            distance = startDistanceItem.value,
-            format = "Лично",
-            distances = mapStartComboDistances(
-                user = user,
-                1,
-                contactPerson = true,
-                startStatement = validateFields(startStatement),
-                items = startDistanceItem.distances
-            ),
-            payment_disabled = false,
-            payment_type = "",
-            price = startDistanceItem.price ?: 0,
-            promocode = startStatement.promocode,
-            registration_without_payment = withoutPayment,
-            start_id = startId
-        )
-    }
 
     override fun mapNewBase(
         withoutPayment: Boolean,
@@ -87,16 +28,12 @@ class RegistrationMapperBase : RegistrationMapper {
             day = 1,
             distance = startDistanceItem.value,
             format = startDistanceItem.format,
-            member = startStatement.members.mapIndexed { index, member ->
-                mapStartMember(
-                    user = user,
-                    teamNumber = index + 1,
-                    contactPerson = member.contactPerson,
-                    startStatement = member,
-                    startDistanceInfo = startDistanceItem
-
-                )
-            },
+            member =
+            mapStartMembersNew(
+                user = user,
+                startStatement = startStatement,
+                startDistanceInfo = startDistanceItem
+            ),
             payment_disabled = startStatement.paymentDisabled,
             payment_type = startStatement.paymentType,
             price = startStatement.orderPrice.total.toInt(),
@@ -137,7 +74,6 @@ class RegistrationMapperBase : RegistrationMapper {
         startStatement: List<StartStatement>,
         items: List<DistanceItem.DistanceInfo>
     ): List<StartRegisterRequest.Combo.Distance> {
-        Log.e("mt05", "#mapStartComboDistances " + items.toString())
         val values = items.map { distance ->
             StartRegisterRequest.Combo.Distance(
                 alone = false,
@@ -157,58 +93,6 @@ class RegistrationMapperBase : RegistrationMapper {
         return values
     }
 
-    private fun mapStartComboDistances(
-        user: User,
-        teamNumber: Int,
-        contactPerson: Boolean,
-        startStatement: StartStatement,
-        items: List<DistanceItem.DistanceInfo>
-    ): List<StartRegisterRequest.Combo.Distance> {
-        Log.e("mt05", "#mapStartComboDistances " + items.toString())
-        val values = items.map {
-            StartRegisterRequest.Combo.Distance(
-                alone = false,
-                distance = it.value,
-                format = it.format,
-                member = listOf(
-                    mapStartMember(
-                        user = user,
-                        teamNumber = teamNumber,
-                        contactPerson = contactPerson,
-                        startStatement = startStatement,
-                        startDistanceInfo = it
-                    )
-                )
-            )
-        }
-        return values
-    }
-
-
-    private fun validateFields(startStatement: StartStatement): StartStatement {
-        if (startStatement.city.isEmpty() || startStatement.city.length < 5) throw IllegalStateException(
-            "Введите корректное название города (не менее 5 символов)"
-        )
-        if (startStatement.team.isEmpty()) throw IllegalArgumentException(
-            "Введите корректное название команды (не менее 5 символов)"
-        )
-        if (startStatement.name.isEmpty()) throw IllegalArgumentException(
-            "Имя не должно быть пустым"
-        )
-        if (startStatement.surname.isEmpty()) throw IllegalArgumentException(
-            "Фамилия не должно быть пустой"
-        )
-        if (!Patterns.EMAIL_ADDRESS.matcher(startStatement.email)
-                .matches()
-        ) throw IllegalArgumentException(
-            "Введите корректую почту"
-        )
-        if (startStatement.phone.isEmpty()) throw IllegalArgumentException(
-            "Введите корректый номер телефона"
-        )
-        return startStatement
-    }
-
     private fun mapStartMember(
         user: User,
         teamNumber: Int,
@@ -224,7 +108,7 @@ class RegistrationMapperBase : RegistrationMapper {
             contactPerson = contactPerson,
             email = startStatement.email,
             fromContacts = true,
-            gender = mapGender(startStatement.sex),
+            gender = mapGenderUiToCloud(startStatement.sex),
             group = mapGroup(startStatement, startDistanceInfo),
             instagram = "",
             name = startStatement.name,
@@ -242,6 +126,41 @@ class RegistrationMapperBase : RegistrationMapper {
             whatsapp = user.whatsapp
         )
     }
+
+    private fun mapStartMembersNew(
+        user: User,
+        startStatement: OrderStatement,
+        startDistanceInfo: DistanceItem.DistanceInfo
+    ): List<StartRegisterRequest.Member> {
+        return startStatement.members.mapIndexed { index, member ->
+            StartRegisterRequest.Member(
+                age = calculateAge(member.birthday),
+                birthday = convertDateFormat(member.birthday),
+                cite = null,
+                city = member.city,
+                contactPerson = member.contactPerson,
+                email = member.email,
+                fromContacts = true,
+                gender = member.sex,
+                group = mapGroups(startStatement, startDistanceInfo),
+                instagram = "",
+                name = member.name,
+                phone = member.phone,
+                price = member.price,
+                promo = member.promocode,
+                stage = mapStage(index + 1, member.sex),
+                surname = member.surname,
+                team = member.team,
+                teamNumber = index + 1,
+                telegram = user.telegram,
+                type = startDistanceInfo.format,
+                user_id = user.id,
+                vk = user.vk,
+                whatsapp = user.whatsapp
+            )
+        }
+    }
+
 
     private fun mapStage(teamNumber: Int, sex: String): DistanceItem.Stage {
         return DistanceItem.Stage("$teamNumber этап", listOf(sex))
@@ -263,19 +182,91 @@ class RegistrationMapperBase : RegistrationMapper {
                     ageTo = group.ageTo,
                     name = group.name,
                     stages = group.stages ?: emptyList(),
-                    sex = mapGender(startStatement.sex)
+                    sex = group.sex
                 )
             }
         }
         throw NoSuchElementException("Нет подходящей возрастной группы для участников $age лет")
     }
 
+    private fun mapGroups(
+        orderStatement: OrderStatement,
+        startDistanceInfo: DistanceItem.DistanceInfo
+    ): StartRegisterRequest.Group {
+        val members = orderStatement.members
+        val ageSum = members.sumOf { calculateAge(it.birthday) }
+        val listOfGroups = startDistanceInfo.groups
+
+        // Filter groups based on age sum
+        val suitableGroups = listOfGroups.filter { group ->
+            val ageFrom = group.ageFrom.toIntOrNull()
+            val ageTo = group.ageTo.toIntOrNull()
+            ageFrom != null && ageTo != null && ageSum in ageFrom..ageTo
+        }
+
+        if (suitableGroups.isEmpty()) {
+            throw NoSuchElementException("Подходящая возрастная группа не найдена")
+        }
+
+        val participantNumbers = members.indices.toList()
+
+
+        for (group in suitableGroups) {
+            val findStages = findStagesForParticipantNumbersAndGender(
+                group.stages ?: emptyList(),
+                participantNumbers,
+                members
+            )
+
+            /** Registry command */
+
+            if (findStages != null && findStages == group.stages) {
+                return StartRegisterRequest.Group(
+                    ageFrom = group.ageFrom,
+                    ageTo = group.ageTo,
+                    name = group.name,
+                    stages = findStages,
+                    sex = group.sex
+                )
+            }
+            /** Registry single */
+
+
+            if (members.size <= 1 && group.sex == mapGenderUiToCloud(members[0].sex)) {
+                return StartRegisterRequest.Group(
+                    ageFrom = group.ageFrom,
+                    ageTo = group.ageTo,
+                    name = group.name,
+                    sex = group.sex
+                )
+            }
+        }
+
+        throw NoSuchElementException("Не найдено подходящих этапов для участников в возрастных группах")
+    }
+
+    private fun findStagesForParticipantNumbersAndGender(
+        stagesList: List<DistanceItem.Stage>,
+        participantNumbers: List<Int>,
+        members: List<StartStatement>,
+    ): List<DistanceItem.Stage>? {
+        val matchingStages = mutableListOf<DistanceItem.Stage>()
+        for (participantNumber in participantNumbers) {
+            if (participantNumber >= 0 && participantNumber < stagesList.size) {
+                val stage = stagesList[participantNumber]
+                if (stage.sex.contains(mapGenderUiToCloud(members[participantNumber].sex))) {
+                    matchingStages.add(stage)
+                }
+            }
+        }
+        return matchingStages.ifEmpty { null }
+    }
+
     private fun calculateAge(birthday: String): Int {
         val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val birthLocalDate = LocalDate.parse(birthday, dateFormatter)
         val currentDate = LocalDate.now()
-        val yearsPassed = ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
-        return yearsPassed
+        return ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
     }
 
     private fun convertDateFormat(inputDate: String): String {
@@ -287,11 +278,13 @@ class RegistrationMapperBase : RegistrationMapper {
         return outputFormat.format(zonedDateTime)
     }
 
-    private fun mapGender(sex: String): String {
+
+    private fun mapGenderUiToCloud(sex: String): String {
         return when (sex) {
-            "Мужской" -> "Мужской"
-            "Женский" -> "Женский"
-            else -> "male"
+            "Мужской" -> "male"
+            "Женский" -> "female"
+            else -> throw java.lang.IllegalArgumentException("Нет стартов для $sex пол")
         }
     }
 }
+

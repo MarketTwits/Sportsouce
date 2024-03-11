@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +24,7 @@ import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.theme.FontNunito
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FailedScreen(
     modifier: Modifier = Modifier.padding(5.dp),
@@ -36,6 +40,10 @@ fun FailedScreen(
                 onClickBack()
             }
         }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = 1685112333816, // epoch/unix timestamp
+            initialDisplayMode = DisplayMode.Picker,
+        )
         Column(
             modifier = modifier
                 .align(Alignment.Center)
@@ -96,7 +104,7 @@ fun FailedScreen(
 
 @Preview
 @Composable
-fun FailedScreenPreview() {
+private fun FailedScreenPreview() {
     FailedScreen(
         onClickBack = {},
         onClickHelp = {

@@ -21,7 +21,7 @@ sealed interface DistanceItem {
         val value: String,
         val prompt: Boolean,
         val groups: List<Group>,
-        val stages: List<Stage>? = null,
+        val distanceStages: List<Stage>? = null,
         val format: String,
         val distance: Distance,
     ) : DistanceItem

@@ -81,12 +81,9 @@ fun StartOrderScreen(component: com.markettwits.start.presentation.order.present
             Column(
                 modifier = Modifier
                     .padding(top = it.calculateTopPadding())
+                    .padding(10.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                ) {
                     StartDistanceInfoBox(
                         modifier = Modifier.padding(5.dp),
                         format = order.distanceInfo.format,
@@ -124,7 +121,6 @@ fun StartOrderScreen(component: com.markettwits.start.presentation.order.present
                             component.obtainEvent(OrderStore.Intent.OnClickRegistry)
                         }
                     )
-                }
             }
         }
         val context = LocalContext.current

@@ -5,6 +5,8 @@ import com.markettwits.cahce.InStorageCache
 import com.markettwits.cahce.InStorageListCache
 import com.markettwits.cahce.store.listStoreOfWrapper
 import com.markettwits.start_search.search.domain.SearchHistory
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SearchHistoryCache : InStorageListCache<SearchHistory>(
     listStoreOfWrapper<SearchHistory>(
@@ -12,12 +14,21 @@ class SearchHistoryCache : InStorageListCache<SearchHistory>(
         fileName = "searchHistory",
     )
 ) {
-    suspend fun add(value: String) {
+    override suspend fun set(key: Any, value: SearchHistory) {
         val list = getList()
-        set(value = SearchHistory(value))
-        if (list.size > 20) {
-            remove(value = list.last())
+        if (list.first().value != value.value) {
+            if (list.contains(value)) {
+                remove(value = value)
+            }
+            super.set(value = value, key = key)
+            if (list.size > 20) {
+                remove(value = list.last())
+            }
         }
+    }
+
+    override fun observe(): Flow<List<SearchHistory>?> {
+        return super.observe().map { it?.reversed() }
     }
 
     override suspend fun getList(key: Any): List<SearchHistory> =

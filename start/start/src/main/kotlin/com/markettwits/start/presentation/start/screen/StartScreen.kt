@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.FullImageScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.comments.comments.components.StartCommentsContent
 import com.markettwits.start.presentation.start.component.StartScreenComponent
@@ -24,8 +23,6 @@ fun StartScreen(component: StartScreenComponent, commentsComponent: StartComment
     var fullImage by rememberSaveable {
         mutableStateOf(false)
     }
-
-    SportSouceTheme {
         startData.data?.let { data ->
             StartScreenContent(
                 data = data,
@@ -49,6 +46,9 @@ fun StartScreen(component: StartScreenComponent, commentsComponent: StartComment
                     component.obtainEvent(StartScreenStore.Intent.OnClickMembers(it))
                 },
                 onClickImage = { fullImage = !fullImage },
+                onClickFullAlbum = {
+                    component.obtainEvent(StartScreenStore.Intent.OnClickFullAlbum)
+                },
                 comments = { modifier ->
                     StartCommentsContent(modifier = modifier, component = commentsComponent)
                 },
@@ -69,6 +69,4 @@ fun StartScreen(component: StartScreenComponent, commentsComponent: StartComment
                 component.obtainEvent(StartScreenStore.Intent.OnClickRetry)
             }
         }
-
-    }
 }

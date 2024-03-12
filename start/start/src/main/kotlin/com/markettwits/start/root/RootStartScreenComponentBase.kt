@@ -13,6 +13,8 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.core_ui.base.Fifth
 import com.markettwits.start.di.startModule
 import com.markettwits.start.di.startRegistrationModule
+import com.markettwits.start.presentation.album.di.startAlbumModule
+import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponentBase
 import com.markettwits.start.presentation.comments.comments.StartCommentsStoreFactory
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
@@ -33,7 +35,7 @@ class RootStartScreenComponentBase(
         ComponentKoinContext(false)
     }
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(startModule, startRegistrationModule)
+        listOf(startModule, startRegistrationModule, startAlbumModule)
     )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
 
@@ -71,6 +73,9 @@ class RootStartScreenComponentBase(
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())
+                    },
+                    album = {
+                        navigation.push(RootStartScreenComponent.Config.StartAlbum(it))
                     }
                 ),
                 StartCommentsComponentBase(
@@ -120,6 +125,15 @@ class RootStartScreenComponentBase(
                         config.paymentType,
                         config.startTitle
                     )
+                )
+            )
+
+            is RootStartScreenComponent.Config.StartAlbum -> RootStartScreenComponent.Child.StartAlbum(
+                StartAlbumComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    pop = navigation::pop,
+                    images = config.images
                 )
             )
         }

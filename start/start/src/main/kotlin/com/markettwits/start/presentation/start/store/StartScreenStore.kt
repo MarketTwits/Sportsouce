@@ -1,5 +1,6 @@
 package com.markettwits.start.presentation.start.store
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
@@ -13,6 +14,7 @@ import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
 import com.markettwits.start.presentation.start.store.StartScreenStore.Label
 import com.markettwits.start.presentation.start.store.StartScreenStore.State
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 interface StartScreenStore : Store<Intent, State, Label> {
 
@@ -27,6 +29,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
+        data object OnClickFullAlbum : Intent
     }
 
     data class State(
@@ -46,6 +49,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         ) : Label
 
         data object OnClickBack : Label
+        data class OnClickFullAlbum(val images: List<String>) : Label
     }
 }
 
@@ -84,6 +88,12 @@ class StartScreenStoreFactory(
 
                 is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
+                is Intent.OnClickFullAlbum -> {
+                    val images =
+                        getState().data?.startAlbum?.flatMap { it.photos.map { it.imageUrl } }
+                    if (!images.isNullOrEmpty())
+                        publish(Label.OnClickFullAlbum(images))
+                }
             }
         }
 
@@ -94,6 +104,13 @@ class StartScreenStoreFactory(
         private fun launch(startId: Int, relaunch: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
+
+                val totalExecutionTime = measureTimeMillis {
+                    service.start(startId, relaunch)
+                }
+                Log.e("mt05", totalExecutionTime.toString())
+
+
                 service.start(startId, relaunch).fold(
                     onFailure = {
                         dispatch(Msg.InfoFailed(it.message.toString()))

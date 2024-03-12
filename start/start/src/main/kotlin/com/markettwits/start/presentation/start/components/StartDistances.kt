@@ -179,11 +179,11 @@ fun DistanceItemBase(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
             ) {
-
                 val title = if (enabled) "Зарегистрироваться" else "Слоты закончились"
                 val titleColor =
                     if (enabled) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.outline
                 Button(
+                    modifier = Modifier.fillMaxWidth(),
                     enabled = enabled,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
@@ -262,6 +262,7 @@ fun DistanceItemCombo(
                     .align(Alignment.CenterHorizontally),
             ) {
                 Button(
+                    modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)

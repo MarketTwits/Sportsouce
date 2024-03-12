@@ -17,15 +17,15 @@ android {
         }
     }
     buildTypes {
-//        debug {
-//            isMinifyEnabled = false
-//            isShrinkResources = false
-//            isDebuggable = true
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true

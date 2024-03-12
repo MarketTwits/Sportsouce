@@ -20,6 +20,7 @@ class StartScreenComponentComponentBase(
     private val register: (DistanceItem, Boolean, String, String) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
+    private val album: (List<String>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
     private val store = instanceKeeper.getStore {
         storeFactory.create(startId)
@@ -42,8 +43,8 @@ class StartScreenComponentComponentBase(
                         it.paymentType,
                         it.startTitle
                     )
-
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
+                    is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
                 }
             }
         }

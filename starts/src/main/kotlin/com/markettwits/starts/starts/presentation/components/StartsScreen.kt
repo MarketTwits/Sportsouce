@@ -51,7 +51,6 @@ fun StartsScreen(component: StartsScreen) {
     {
         when (starts) {
             is StartsUiState.Success -> {
-                //TODO
                 loading = false
                 CollapsingToolbarScaffold(
                     modifier = Modifier,

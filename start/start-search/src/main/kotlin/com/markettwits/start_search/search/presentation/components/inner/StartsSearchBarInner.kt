@@ -1,7 +1,6 @@
 package com.markettwits.start_search.search.presentation.components.inner
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,18 +10,17 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.textField.BoundlessTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
 
@@ -42,18 +40,18 @@ fun StartsSearchBarInner(
             .background(MaterialTheme.colorScheme.primary),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
+        IconButton(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(5.dp)
-                .clip(Shapes.medium)
-                .clickable {
-                    onClickBack()
-                },
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline
-        )
+                .align(Alignment.CenterVertically),
+            onClick = { onClickBack() }
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline
+            )
+        }
+
         BoundlessTextFieldBase(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -75,38 +73,37 @@ fun StartsSearchBarInner(
                 onQueryChanged(it)
             })
         if (query.isEmpty()) {
+            IconButton(
+                onClick = { }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Mic,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.outline
+                )
+            }
+        } else {
+            IconButton(
+                onClick = { onBrushClicked() }
+            ) {
+                Icon(
+
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
+            }
+        }
+        IconButton(
+            onClick = { onFilterClicked() }
+        ) {
             Icon(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .clip(Shapes.extraLarge),
-                imageVector = Icons.Default.Mic,
+                imageVector = Icons.Default.Settings,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.outline
             )
-        } else {
-            Icon(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .clip(Shapes.extraLarge)
-                    .clickable {
-                        onBrushClicked()
-                    },
-                imageVector = Icons.Default.Close,
-                contentDescription = null,
-                tint = Color.Gray
-            )
         }
-        Icon(
-            modifier = Modifier
-                .padding(5.dp)
-                .clip(Shapes.extraLarge)
-                .clickable {
-                    onFilterClicked()
-                },
-            imageVector = Icons.Default.Settings,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline
-        )
+
     }
 }
 

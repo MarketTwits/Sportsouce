@@ -18,6 +18,7 @@ import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
 import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.cloud.model.start_comments.response.CommentRow
@@ -176,6 +177,15 @@ class StartsRemoteDataSourceImpl(
         val serializer = StartRemote.serializer()
         val response = client.get("start/$startId")
         return json.decodeFromString(serializer, response.body<String>())
+    }
+
+    override suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote {
+        val response = client.get("album") {
+            url {
+                parameters.append("start_id", startId.toString())
+            }
+        }
+        return json.decodeFromString(response.body<String>())
     }
 
     override suspend fun fetchStartMember(startId: Int): List<StartMemberItem> {

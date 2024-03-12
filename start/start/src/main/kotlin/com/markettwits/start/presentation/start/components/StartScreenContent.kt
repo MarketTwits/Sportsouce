@@ -28,6 +28,7 @@ fun StartScreenContent(
     onClickDistance: (DistanceItem, Boolean, String) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickImage: () -> Unit,
+    onClickFullAlbum: () -> Unit,
     comments: @Composable (Modifier) -> Unit
 ) {
     PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
@@ -55,6 +56,9 @@ fun StartScreenContent(
                         status = data.startStatus, date = data.startTime
                     )
                     StartDescription(modifier = modifier, description = data.description)
+                    StartAlbums(modifier = modifier, albums = data.startAlbum, onCLickFullAlbum = {
+                        onClickFullAlbum()
+                    })
                     StartDistances(
                         modifier = modifier,
                         distance = data.distanceInfo,

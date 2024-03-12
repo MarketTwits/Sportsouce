@@ -4,9 +4,14 @@ import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
+import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
-import com.markettwits.core_ui.base.Fourth
+import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
+import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.time.TimeRemote
+import com.markettwits.core_ui.base.fetchFifth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.StartRemoteToUiMapper
@@ -16,10 +21,6 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 
 class StartRepositoryBase(
     private val service: SportsouceApi,
@@ -34,10 +35,10 @@ class StartRepositoryBase(
         relaunch: Boolean
     ): Result<StartItem> {
         return if (relaunch)
-            return launch(startId)
+            return launches(startId)
         else retryRunCatchingAsync(times = 2, interval = 2000L) {
             cache.get(startId)
-        }.getOrNull() ?: launch(startId)
+        }.getOrNull() ?: launches(startId)
     }
 
     override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
@@ -46,26 +47,22 @@ class StartRepositoryBase(
             mapper.map(value)
         }
 
-    private suspend fun launch(startId: Int): Result<StartItem> {
-        return retryRunCatchingAsync {
-            val (data, withFilter, comments, time) = coroutineScope {
-                withContext(Dispatchers.IO) {
-                    val deferredTime = async { timeService.currentTime() }
-                    val deferredData = async { service.fetchStart(startId) }
-                    val deferredWithFilter = async { service.fetchStartMember(startId) }
-                    val deferredComments = async { service.fetchStartComments(startId) }
-                    Fourth(
-                        deferredData.await(),
-                        deferredWithFilter.await(),
-                        deferredComments.await(),
-                        deferredTime.await()
-                    )
-                }
-            }
-            val result = mapper.map(data, withFilter, comments, time)
+    private suspend fun launches(startId: Int): Result<StartItem> {
+        val result = retryRunCatchingAsync {
+            val cloud =
+                fetchFifth<StartRemote, List<StartMemberItem>, StartAlbumRemote, StartCommentsRemote, TimeRemote>(
+                    { service.fetchStart(startId) },
+                    { service.fetchStartMember(startId) },
+                    { service.fetchStartAlbum(startId) },
+                    { service.fetchStartComments(startId) },
+                    { timeService.currentTime() },
+                )
+            val result =
+                mapper.map(cloud.first, cloud.second, cloud.third, cloud.fourth, cloud.fifth)
             cache.set(value = Result.success(result), key = startId)
             result
         }
+        return result
     }
 
 

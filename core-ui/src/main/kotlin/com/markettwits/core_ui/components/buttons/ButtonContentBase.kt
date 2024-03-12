@@ -19,7 +19,7 @@ import com.markettwits.core_ui.theme.FontNunito
 @Composable
 fun ButtonContentBase(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String = "",
     onClick: () -> Unit,
     isEnabled: Boolean = true,
     shape: Shape = Shapes.large,

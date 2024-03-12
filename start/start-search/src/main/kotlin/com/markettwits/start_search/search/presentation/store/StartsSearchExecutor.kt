@@ -7,6 +7,7 @@ import com.markettwits.start_search.search.presentation.store.StartsSearchStore.
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Label
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Message
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.State
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class StartsSearchExecutor(private val repository: StartsSearchRepository) :
@@ -24,29 +25,29 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
 
     override fun executeAction(action: Unit, getState: () -> State) {
         scope.launch {
-            val searches = repository.history()
-            dispatch(Message.InfoLoaded(StartsSearch(searches, emptyList())))
+            repository.history().collect {
+                dispatch(Message.InfoLoaded(StartsSearch(it, emptyList())))
+            }
         }
     }
 
     private fun onClickStart(startId: Int, startTitle: String) {
         scope.launch {
+            repository.addToHistory(startTitle)
             publish(Label.OnClickStart(startId))
-            repository.search(startTitle, true)
         }
     }
 
     private fun starts(value: String, done: Boolean = false) {
         dispatch(Message.ChangeTextFiled(value))
         scope.launch {
-            repository.search(value, addToHistory = done).fold(
-                onSuccess = {
-                    dispatch(Message.InfoLoaded(it))
-                },
-                onFailure = {
+            repository.search(value, addToHistory = done)
+                .catch {
                     dispatch(Message.InfoFailed(it.message.toString()))
                 }
-            )
+                .collect {
+                    dispatch(Message.InfoLoaded(it))
+                }
         }
     }
 }

@@ -18,6 +18,7 @@ import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
 import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
 import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.cloud.model.start_comments.response.CommentRow
@@ -60,6 +61,7 @@ interface SportsouceApi {
     suspend fun promo(value : String,startId: Int) : PromocodeRemote
     //Start
     suspend fun fetchStart(startId: Int): StartRemote
+    suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote
     suspend fun fetchStartMember(startId: Int): List<StartMemberItem>
     suspend fun fetchStartComments(startId: Int): StartCommentsRemote
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): CommentRow

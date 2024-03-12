@@ -2,6 +2,7 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
@@ -38,6 +39,11 @@ interface RootStartScreenComponent {
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : Config()
+
+        @Serializable
+        data class StartAlbum(
+            val images: List<String>
+        ) : Config()
     }
 
     sealed class Child {
@@ -46,6 +52,7 @@ interface RootStartScreenComponent {
             val commentsComponent: StartCommentsComponent
         ) : Child()
 
+        data class StartAlbum(val component: StartAlbumComponent) : Child()
         data class StartRegistration(val component: RootStartRegister) : Child()
         data class StartMembers(val component: StartMembersScreenComponent) : Child()
         data class StartMembersFilter(val component: StartMembersFilterScreen) : Child()

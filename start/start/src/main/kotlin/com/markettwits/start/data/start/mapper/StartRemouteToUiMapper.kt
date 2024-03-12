@@ -3,6 +3,7 @@ package com.markettwits.start.data.start.mapper
 import android.util.Log
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.time.TimeRemote
@@ -19,6 +20,7 @@ interface StartRemoteToUiMapper {
     fun map(
         startRemote: StartRemote,
         startMember: List<StartMemberItem>,
+        startAlbumRemote: StartAlbumRemote,
         commentsRemote: StartCommentsRemote,
         timeRemote: TimeRemote
     ): StartItem
@@ -35,6 +37,7 @@ interface StartRemoteToUiMapper {
         override fun map(
             startRemote: StartRemote,
             startMember: List<StartMemberItem>,
+            startAlbumRemote: StartAlbumRemote,
             commentsRemote: StartCommentsRemote,
             timeRemote: TimeRemote
         ): StartItem {
@@ -82,10 +85,42 @@ interface StartRemoteToUiMapper {
                         name = it.text,
                         url = it.url,
                     )
-                } ?: emptyList()
+                } ?: emptyList(),
+                startAlbum = sortStartAlbum(mapStartAlbum(startAlbumRemote))
             )
         }
 
+        private fun mapStartAlbum(startAlbumRemote: StartAlbumRemote): List<StartItem.Album> {
+            val photos = startAlbumRemote.rows.flatMap { row ->
+                row.photos.map { photoRemote ->
+                    StartItem.Album.Photo(
+                        id = photoRemote.id,
+                        photoId = photoRemote.file_id,
+                        imageUrl = photoRemote.file.fullPath,
+                        tags = photoRemote.tags.associate { it.id to it.name }
+                    )
+                }
+            }
+            val albums = startAlbumRemote.rows.map {
+                StartItem.Album(
+                    id = it.id,
+                    startId = it.start_id,
+                    photos = photos,
+                    name = it.name,
+                    isBeforeStart = it.isBeforeStart
+                )
+            }
+            return albums
+        }
+
+        private fun sortStartAlbum(items: List<StartItem.Album>): List<StartItem.Album> {
+            return items.map { album ->
+                val sortedPhotos = album.photos.sortedByDescending { photo ->
+                    photo.tags.isNotEmpty()
+                }
+                album.copy(photos = sortedPhotos)
+            }
+        }
 
         override fun map(e: Exception): String = e.message.toString()
         override fun map(commentsRemote: StartCommentsRemote): StartItem.Comments =
@@ -105,6 +140,7 @@ interface StartRemoteToUiMapper {
                             date
                         ),
                     )
+
                     is DistanceItem.DistanceCombo -> distanceInfo.copy(
                         distances = distanceInfo.distances,
                         price = mapDistanceComboPrice(

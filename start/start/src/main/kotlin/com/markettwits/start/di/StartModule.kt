@@ -17,7 +17,6 @@ val startModule = module {
 
     includes(sportSouceNetworkModule, timeApiNetworkModule, authDataSourceModule)
 
-
     single<StartScreenStoreFactory> {
         StartScreenStoreFactory(
             storeFactory = DefaultStoreFactory(),

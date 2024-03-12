@@ -12,6 +12,7 @@ data class StartItem(
     val image: String,
     val startStatus: StartStatus,
     val startData: String,
+    val startAlbum: List<Album>,
     val startTime: String,
     val description: String,
     val paymentDisabled: Boolean,
@@ -27,6 +28,21 @@ data class StartItem(
     sealed class ConditionFile {
         data class Base(val url: String) : ConditionFile()
         data object Empty : ConditionFile()
+    }
+
+    data class Album(
+        val id: Int,
+        val startId: Int,
+        val photos: List<Photo>,
+        val name: String,
+        val isBeforeStart: Boolean,
+    ) {
+        data class Photo(
+            val id: Int,
+            val photoId: Int,
+            val imageUrl: String,
+            val tags: Map<Int, String>,
+        )
     }
 
     data class Result(
@@ -64,5 +80,4 @@ data class StartItem(
             val user: User
         )
     }
-
 }

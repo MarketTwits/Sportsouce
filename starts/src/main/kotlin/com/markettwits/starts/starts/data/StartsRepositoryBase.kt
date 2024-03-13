@@ -3,6 +3,7 @@ package com.markettwits.starts.starts.data
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.domain.StartsListItem
@@ -34,10 +35,11 @@ class StartsRepositoryBase(
     }
 
     private suspend fun launch(): List<List<StartsListItem>> {
+        StartSeasonsRemote
         val (actual, paste, preview, main) = coroutineScope {
             withContext(Dispatchers.IO) {
                 val deferredActual = async { service.fetchActualStarts() }
-                val deferredPaste = async { service.fetchPasteStarts() }
+                val deferredPaste = async { service.fetchPasteStarts().rows.reversed() }
                 val deferredPreview = async { service.fetchPreview() }
                 val deferredMain = async { service.fetchStartMain() }
                 Fourth(
@@ -49,7 +51,7 @@ class StartsRepositoryBase(
             }
         }
         val data =
-            mapper.mapAll(actual.rows, paste.rows, preview.rows, main.rows) as StartsUiState.Success
+            mapper.mapAll(actual.rows, paste.rows, preview, main.rows) as StartsUiState.Success
         return data.items
     }
 }

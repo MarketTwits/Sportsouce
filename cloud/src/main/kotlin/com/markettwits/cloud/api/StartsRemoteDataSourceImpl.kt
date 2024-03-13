@@ -92,21 +92,21 @@ class StartsRemoteDataSourceImpl(
 
     override suspend fun fetchActualStarts(): StartsRemote {
         val serializer = StartsRemote.serializer()
-        val response = client.get("start")
+        val response = client.get("start?maxResultCount=20&group=true&status=3,2")
         return json.decodeFromString(serializer, response.body<String>())
     }
 
     override suspend fun fetchPasteStarts(): StartsRemote {
         val serializer = StartsRemote.serializer()
         val response =
-            client.get("start?maxResultCount=40&group=true&name=Зима+2023-2024,Лето 2023&status=0,6")
+            client.get("start?maxResultCount=1000&group=true&status=6")
         return json.decodeFromString(serializer, response.body<String>())
     }
 
     override suspend fun fetchPreview(): StartsRemote {
         val serializer = StartsRemote.serializer()
         val response =
-            client.get("start?maxResultCount=40&group=true&name=Зима+2024-2025,Лето 2024")
+            client.get("start?maxResultCount=20&group=true&status=2")
         return json.decodeFromString(serializer, response.body<String>())
     }
 

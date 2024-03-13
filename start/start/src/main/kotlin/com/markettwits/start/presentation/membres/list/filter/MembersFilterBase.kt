@@ -75,7 +75,6 @@ class MembersFilterBase : MembersFilter {
                                     else -> false
                                 }
                             }
-
                             else -> false
                         }
                     }

@@ -45,7 +45,6 @@ fun TestTable(items: List<StartMembersUi>) {
     val rows = items.size
     if (items.isNotEmpty()) {
         val configuration = LocalConfiguration.current
-        //val dimensionPortrait = lazyTableDimensions(110.dp, 50.dp)
         val dimensionPortrait = lazyTableDimensions(150.dp, 100.dp)
         val screenWidth = configuration.screenWidthDp.dp
         val dimensionLandscape = lazyTableDimensions(screenWidth / 5, 60.dp)
@@ -55,7 +54,8 @@ fun TestTable(items: List<StartMembersUi>) {
             else -> dimensionLandscape
         }
         LazyTable(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             dimensions = dimension,
             scrollDirection = LazyTableScrollDirection.BOTH
         ) {

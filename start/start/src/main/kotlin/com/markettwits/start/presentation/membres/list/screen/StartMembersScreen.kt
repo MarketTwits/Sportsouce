@@ -1,10 +1,6 @@
 package com.markettwits.start.presentation.membres.list.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -15,24 +11,31 @@ import com.markettwits.start.presentation.membres.list.MockStartMembersScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreen
 import com.markettwits.start.presentation.membres.list.compoents.StartMembers
 import com.markettwits.start.presentation.membres.list.compoents.StartSearchMember
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
+import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun StartMembersScreen(component: StartMembersScreen) {
     val members by component.members.subscribeAsState()
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
-    ) {
-        Column {
-            TopBarBase(title = "Список участников") {
-                component.back()
+
+    CollapsingToolbarScaffold(
+        modifier = Modifier,
+        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        state = rememberCollapsingToolbarScaffoldState(),
+        toolbar = {
+            Column {
+                TopBarBase(title = "Список участников") {
+                    component.back()
+                }
+                StartSearchMember(component = component)
             }
-            StartSearchMember(component = component)
-            StartMembers(members = members)
         }
+    ) {
+        StartMembers(members = members)
     }
 }
+
 
 @Preview
 @Composable

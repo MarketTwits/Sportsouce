@@ -1,5 +1,4 @@
 import com.android.build.gradle.BaseExtension
-import org.gradle.kotlin.dsl.configure
 
 configure<BaseExtension> {
 
@@ -14,7 +13,7 @@ configure<BaseExtension> {
     buildTypes {
 
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"

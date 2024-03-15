@@ -1,7 +1,7 @@
 
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn com.fasterxml.jackson.core.type.TypeReference
-##---------------End: proguard configuration for Pusher Java Client  ----------
+#---------------End: proguard configuration for Pusher Java Client  ----------
  -keepattributes *Annotation*, InnerClasses
  -dontnote kotlinx.serialization.AnnotationsKt # core serialization annotations
 
@@ -19,6 +19,8 @@
  # Ignore JSR 305 annotations for embedding nullability information.
  -dontwarn javax.annotation.**
 
--keep class kotlin.Unit {
-    *;
-}
+
+#
+#-keep class kotlin.Unit {
+#    *;
+#}

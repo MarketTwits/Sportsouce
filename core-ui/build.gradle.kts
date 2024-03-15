@@ -12,10 +12,9 @@ dependencies {
     implementation (libs.calendar)
     implementation(libs.libphonenumber)
     implementation(libs.zoomable)
-    api(libs.bundles.composeUiBundle)
-    api(libs.junit.ext.ktx)
     api(libs.onebone.toolbar)
-
     api(libs.compose.ui.tooling.preview)
+    api(libs.bundles.composeUiBundle)
+    debugApi(libs.junit.ext.ktx)
     debugApi(libs.compose.ui.tooling)
 }

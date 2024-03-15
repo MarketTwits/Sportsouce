@@ -9,8 +9,7 @@ abstract class InStorageSingleCache<T : @Serializable Any>(
 ) : ObservableCache<T> {
     override suspend fun get(key: Any): T? = cache.get()
 
-    override suspend fun getList(key: Any): List<T> =
-        emptyList()
+    override suspend fun getList(key: Any): List<T> = emptyList()
 
     override suspend fun clear() {
         cache.delete()

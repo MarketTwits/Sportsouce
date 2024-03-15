@@ -31,9 +31,12 @@ internal class BaseAuthDataSource(
                 Result.failure(it)
             }
         )
-    override suspend fun logIn(email: String, password: String): Result<Unit> = runCatching {
-        val response = remoteService.signIn(SignInRequest(email = email, password = password))
-        local.write(signInCacheMapper.map(response, password))
+
+    override suspend fun logIn(email: String, password: String): Result<Unit> {
+        return runCatching {
+            val response = remoteService.signIn(SignInRequest(email = email, password = password))
+            local.write(signInCacheMapper.map(response, password))
+        }
     }
 
     override suspend fun updatePassword(password: String) {
@@ -71,18 +74,18 @@ internal class BaseAuthDataSource(
     private suspend fun validateToken(): Result<String> {
         return runCatching {
             val data = local.read()
-            val token = tokenManager.decode(data._accessToken)
+            val token = tokenManager.decode(data.accessToken)
             val currentToken = if (tokenManager.isExpired(token.exp)) {
-                data._accessToken
+                data.accessToken
             } else {
                 val response =
                     remoteService.signIn(
                         SignInRequest(
-                            email = data._email,
-                            password = data._password
+                            email = data.email,
+                            password = data.password
                         )
                     )
-                local.write(signInCacheMapper.map(response, data._password))
+                local.write(signInCacheMapper.map(response, data.password))
                 response.accessToken
             }
             currentToken

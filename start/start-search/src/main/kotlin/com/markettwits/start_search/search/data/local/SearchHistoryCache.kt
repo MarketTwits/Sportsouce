@@ -1,7 +1,7 @@
 package com.markettwits.start_search.search.data.local
 
 
-import com.markettwits.cahce.InStorageCache
+import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageListCache
 import com.markettwits.cahce.store.listStoreOfWrapper
 import com.markettwits.start_search.search.domain.SearchHistory
@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.map
 
 class SearchHistoryCache : InStorageListCache<SearchHistory>(
     listStoreOfWrapper<SearchHistory>(
-        path = InStorageCache.path,
+        path = InStorageCacheDirectory.path,
         fileName = "searchHistory",
     )
 ) {
     override suspend fun set(key: Any, value: SearchHistory) {
         val list = getList()
-        if (list.first().value != value.value) {
+        if ((list.firstOrNull() ?: "") != value.value) {
             if (list.contains(value)) {
                 remove(value = value)
             }

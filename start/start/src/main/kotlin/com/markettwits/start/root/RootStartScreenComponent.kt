@@ -9,6 +9,7 @@ import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilt
 import com.markettwits.start.presentation.membres.list.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.component.StartScreenComponent
+import com.markettwits.start_support.presentation.component.StartSupportComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartScreenComponent {
@@ -49,7 +50,8 @@ interface RootStartScreenComponent {
     sealed class Child {
         data class Start(
             val component: StartScreenComponent,
-            val commentsComponent: StartCommentsComponent
+            val commentsComponent: StartCommentsComponent,
+            val supportComponent: StartSupportComponent
         ) : Child()
 
         data class StartAlbum(val component: StartAlbumComponent) : Child()

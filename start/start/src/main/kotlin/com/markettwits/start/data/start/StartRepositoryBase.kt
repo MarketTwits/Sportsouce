@@ -2,8 +2,7 @@ package com.markettwits.start.data.start
 
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.api.TimeApi
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
-import com.markettwits.cloud.model.auth.common.AuthException
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.model.start.StartRemote
 import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
@@ -17,10 +16,6 @@ import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.StartRemoteToUiMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.component.CommentUiState
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.client.plugins.ResponseException
 
 class StartRepositoryBase(
     private val service: SportsouceApi,
@@ -80,13 +75,7 @@ class StartRepositoryBase(
             )
             CommentUiState.Success
         } catch (e: Exception) {
-            when (e) {
-                is AuthException -> CommentUiState.Error(e.exception)
-                is java.net.UnknownHostException -> CommentUiState.Error("Нет интернета")
-                is HttpRequestTimeoutException -> CommentUiState.Error("Неустойчевое интернет соединение")
-                is ResponseException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
-                else -> CommentUiState.Error(e.message.toString())
-            }
+            CommentUiState.Error(networkExceptionHandler(e).message.toString())
         }
     }
 
@@ -104,11 +93,7 @@ class StartRepositoryBase(
             )
             CommentUiState.Success
         } catch (e: Exception) {
-            when (e) {
-                is AuthException -> CommentUiState.Error(e.exception)
-                is ClientRequestException -> CommentUiState.Error(e.response.body<AuthErrorResponse>().message)
-                else -> CommentUiState.Error(e.message.toString())
-            }
+            CommentUiState.Error(networkExceptionHandler(e).message.toString())
         }
     }
 }

@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.start_filter.start_filter.data.StartFilterRepository
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
@@ -99,7 +100,7 @@ internal class StartFilerStoreFactory(
                 dispatch(Msg.Loading)
                 repository.filter().collect {
                     it.onFailure {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
+                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
                     it.onSuccess {
                         dispatch(Msg.InfoLoaded(it))

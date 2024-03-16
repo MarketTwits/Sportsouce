@@ -1,5 +1,7 @@
 package com.markettwits.starts.starts.presentation.components
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -78,6 +80,7 @@ fun TabBar(content: @Composable (Int) -> Unit) {
                     scope.launch {
                         pagerState.animateScrollToPage(
                             page = index,
+                            animationSpec = spring(stiffness = Spring.StiffnessVeryLow)
                         )
                     }
                 })

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.start.components
+package com.markettwits.start.presentation.start.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +18,15 @@ import com.markettwits.core_ui.components.BackFloatingActionButton
 import com.markettwits.core_ui.components.FullImageContent
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
+import com.markettwits.start.presentation.start.components.StartAlbums
+import com.markettwits.start.presentation.start.components.StartConditionPanel
+import com.markettwits.start.presentation.start.components.StartDescription
+import com.markettwits.start.presentation.start.components.StartDistances
+import com.markettwits.start.presentation.start.components.StartMembersPanel
+import com.markettwits.start.presentation.start.components.StartOrganizers
+import com.markettwits.start.presentation.start.components.StartResult
+import com.markettwits.start.presentation.start.components.StartStatus
+import com.markettwits.start.presentation.start.components.StartTitle
 
 @Composable
 fun StartScreenContent(
@@ -29,7 +38,8 @@ fun StartScreenContent(
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickImage: () -> Unit,
     onClickFullAlbum: () -> Unit,
-    comments: @Composable (Modifier) -> Unit
+    comments: @Composable (Modifier) -> Unit,
+    donations: @Composable (Modifier) -> Unit
 ) {
     PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
         onClickRetry()
@@ -69,7 +79,7 @@ fun StartScreenContent(
                             onClickDistance(distance, paymentDisabled, paymentType)
                         }
                     )
-                    StartOrganizers(organizer = data.organizers)
+                    StartOrganizers(modifier = modifier, organizer = data.organizers)
                     StartResult(
                         modifier = modifier,
                         results = data.result,
@@ -87,6 +97,7 @@ fun StartScreenContent(
                     ) {
                         onClickMembers(data.membersUi)
                     }
+                    donations(modifier)
                 }
                 comments(modifier)
             }

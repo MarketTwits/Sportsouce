@@ -1,9 +1,7 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,13 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,12 +34,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.noRippleClickable
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.common.Animation
+import com.markettwits.start.presentation.common.StartContentBasePanel
 import com.markettwits.start.presentation.start.component.CommentMode
 
 
@@ -54,63 +48,33 @@ fun StartCommentsPanel(
     commentsRemote: StartItem.Comments,
     onClickReply: (String, Int) -> Unit,
 ) {
-    var panelState by rememberSaveable {
-        mutableStateOf(true)
-    }
-    HorizontalDivider()
-    Column {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .noRippleClickable {
-                    panelState = !panelState
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = "Комментарии",
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-            Icon(
-                imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        }
-        AnimatedVisibility(
-            visible = panelState,
-            enter = Animation.enterAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
-            exit = Animation.exitAnimation(Animation.DEFAULT_TOP_BAR_ANIMATION_DURATION),
-        ) {
-            Column {
-                if (commentsRemote.rows.isNotEmpty()) {
-                    commentsRemote.rows.forEach {
-                        StartCommentCard(
-                            modifier = modifier,
-                            userName = "${it.user.surname} ${it.user.name}",
-                            commentCreateDate = it.createdAt,
-                            message = it.comment,
-                            onClickReply = {
-                                onClickReply(it.user.name, it.id)
-                            },
-                            replies = it.replies
-                        )
-                    }
-                } else {
-                    Text(
-                        modifier = modifier.align(Alignment.CenterHorizontally),
-                        text = "Комментариев пока нет",
-                        fontSize = 15.sp,
-                        fontFamily = FontNunito.medium,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.tertiary
+    StartContentBasePanel(
+        modifier = modifier,
+        label = "Комментарии"
+    ) {
+        Column {
+            if (commentsRemote.rows.isNotEmpty()) {
+                commentsRemote.rows.forEach {
+                    StartCommentCard(
+                        modifier = modifier,
+                        userName = "${it.user.surname} ${it.user.name}",
+                        commentCreateDate = it.createdAt,
+                        message = it.comment,
+                        onClickReply = {
+                            onClickReply(it.user.name, it.id)
+                        },
+                        replies = it.replies
                     )
                 }
+            } else {
+                Text(
+                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    text = "Комментариев пока нет",
+                    fontSize = 15.sp,
+                    fontFamily = FontNunito.medium,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.markettwits.start_search.search.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.start_search.search.data.StartsSearchRepository
 import com.markettwits.start_search.search.domain.StartsSearch
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Intent
@@ -43,7 +44,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
         scope.launch {
             repository.search(value, addToHistory = done)
                 .catch {
-                    dispatch(Message.InfoFailed(it.message.toString()))
+                    dispatch(Message.InfoFailed(networkExceptionHandler(it).message.toString()))
                 }
                 .collect {
                     dispatch(Message.InfoLoaded(it))

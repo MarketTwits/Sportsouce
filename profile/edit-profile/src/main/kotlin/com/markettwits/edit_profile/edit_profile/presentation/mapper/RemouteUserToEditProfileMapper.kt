@@ -2,13 +2,13 @@ package com.markettwits.edit_profile.edit_profile.presentation.mapper
 
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.city.CityRemote
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.edit_profile.edit_profile.models.CityUi
 import com.markettwits.edit_profile.edit_profile.models.TeamUi
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
+import com.markettwits.teams_city.domain.City
+import com.markettwits.teams_city.domain.Team
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
@@ -19,10 +19,10 @@ import java.util.Locale
 interface RemoteUserToEditProfileMapper {
     fun map(list: List<EditProfileUiPage>): ChangeProfileInfoRequest
     fun map(e: Exception): EditProfileUiState
-    fun map(cityRemote: CityRemote, teamsRemote: TeamsRemote, user: User): EditProfileUiState
+    fun map(cities: List<City>, teams: List<Team>, user: User): EditProfileUiState
     fun mapAll(
-        cityRemote: CityRemote,
-        teamsRemote: TeamsRemote,
+        cities: List<City>,
+        teams: List<Team>,
         user: User
     ): List<EditProfileUiPage>
 
@@ -77,23 +77,19 @@ interface RemoteUserToEditProfileMapper {
             return EditProfileUiState.Error(message = e.message.toString())
         }
 
-        override fun map(
-            cityRemote: CityRemote,
-            teamsRemote: TeamsRemote,
-            user: User
-        ): EditProfileUiState {
+        override fun map(cities: List<City>, teams: List<Team>, user: User): EditProfileUiState {
             return EditProfileUiState.Base(
                 mapAll(
                     user = user,
-                    teamsRemote = teamsRemote,
-                    cityRemote = cityRemote
+                    teams = teams,
+                    cities = cities
                 )
             )
         }
 
         override fun mapAll(
-            cityRemote: CityRemote,
-            teamsRemote: TeamsRemote,
+            cities: List<City>,
+            teams: List<Team>,
             user: User
         ): List<EditProfileUiPage> {
             val mySocialNetworkPage = EditProfileUiPage.MySocialNetwork(
@@ -112,8 +108,8 @@ interface RemoteUserToEditProfileMapper {
                 phoneNumber = user.number,
                 city = user.address ?: "",
                 team = user.team ?: "",
-                _teams = mapTeamCloudToUi(teamsRemote),
-                _cities = mapCityCloudToUi(cityRemote)
+                _teams = mapTeamCloudToUi(teams),
+                _cities = mapCityCloudToUi(cities)
             )
             val userCustomInfo = EditProfileUiPage.MyInfo(
                 description = user.comment_for_address ?: "",
@@ -126,11 +122,11 @@ interface RemoteUserToEditProfileMapper {
             return listOf(mySocialNetworkPage, userData, userCustomInfo)
         }
 
-        private fun mapCityCloudToUi(cloud: CityRemote): List<CityUi> =
-            cloud.rows.map { CityUi(it.id, it.name) }
+        private fun mapCityCloudToUi(cloud: List<City>): List<CityUi> =
+            cloud.map { CityUi(it.id, it.name) }
 
-        private fun mapTeamCloudToUi(cloud: TeamsRemote): List<TeamUi> =
-            cloud.rows.map { TeamUi(it.id, it.name) }
+        private fun mapTeamCloudToUi(cloud: List<Team>): List<TeamUi> =
+            cloud.map { TeamUi(it.id, it.name) }
 
         private fun mapBirthdayStringToCloud(date: String): String {
             val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())

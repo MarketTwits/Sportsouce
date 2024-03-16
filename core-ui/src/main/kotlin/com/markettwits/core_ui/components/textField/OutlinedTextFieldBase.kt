@@ -48,28 +48,7 @@ fun OutlinedTextFieldBase(
                 trailingIcon()
         },
         supportingText = supportingText,
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent,
-            cursorColor = MaterialTheme.colorScheme.tertiary,
-            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedIndicatorColor = Color.Gray,
-            selectionColors = TextSelectionColors(
-                handleColor = MaterialTheme.colorScheme.tertiary,
-                backgroundColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.05f)
-            ),
-            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedLabelColor = Color.Gray,
-            focusedTextColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
-            errorIndicatorColor = SportSouceColor.SportSouceLightRed,
-            errorContainerColor = Color.Transparent,
-            errorLabelColor = SportSouceColor.SportSouceLightRed,
-            disabledContainerColor = Color.Transparent,
-            disabledIndicatorColor = Color.Gray,
-            disabledLabelColor = Color.Gray,
-            disabledTextColor = MaterialTheme.colorScheme.tertiary
-        ),
+        colors = defaultOutlineTextFiledColors(),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         textStyle = TextStyle(fontFamily = FontNunito.medium),
@@ -79,6 +58,30 @@ fun OutlinedTextFieldBase(
         onValueChange = { newValue -> onValueChange(newValue) },
     )
 }
+
+@Composable
+fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
+    unfocusedContainerColor = Color.Transparent,
+    focusedContainerColor = Color.Transparent,
+    cursorColor = MaterialTheme.colorScheme.tertiary,
+    focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+    unfocusedIndicatorColor = Color.Gray,
+    selectionColors = TextSelectionColors(
+        handleColor = MaterialTheme.colorScheme.tertiary,
+        backgroundColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.05f)
+    ),
+    focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+    unfocusedLabelColor = Color.Gray,
+    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+    errorIndicatorColor = SportSouceColor.SportSouceLightRed,
+    errorContainerColor = Color.Transparent,
+    errorLabelColor = SportSouceColor.SportSouceLightRed,
+    disabledContainerColor = Color.Transparent,
+    disabledIndicatorColor = Color.Gray,
+    disabledLabelColor = Color.Gray,
+    disabledTextColor = MaterialTheme.colorScheme.tertiary
+)
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.coreKoin)
     implementation(projects.auth.authService)
     implementation(projects.start.startRegister)
+    implementation(projects.start.startSupport)
     implementation(projects.cache)
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)

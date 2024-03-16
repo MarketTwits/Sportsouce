@@ -29,8 +29,4 @@ val authDataSourceModule = module {
         UserCache()
     }
     singleOf(::UserCredentialCache)
-//    single<Cache<CredentialRealmCache>>{
-//        UserCredentialCache()
-//    }
-
 }

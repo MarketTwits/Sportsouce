@@ -3,6 +3,7 @@ package com.markettwits.starts.starts.data
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.core_ui.base.Fourth
 import com.markettwits.starts.starts.presentation.component.StartsUiState
@@ -30,7 +31,7 @@ class StartsRepositoryBase(
                 },
             )
         }.onFailure {
-            starts.value = mapper.map(it)
+            starts.value = mapper.map(networkExceptionHandler(it))
         }
     }
 

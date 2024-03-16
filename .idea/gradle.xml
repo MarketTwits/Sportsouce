@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/cache" />
             <option value="$PROJECT_DIR$/cloud" />
+            <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/news" />
@@ -47,6 +48,7 @@
             <option value="$PROJECT_DIR$/start/start-filter" />
             <option value="$PROJECT_DIR$/start/start-register" />
             <option value="$PROJECT_DIR$/start/start-search" />
+            <option value="$PROJECT_DIR$/start/start-support" />
             <option value="$PROJECT_DIR$/starts" />
             <option value="$PROJECT_DIR$/starts-common" />
             <option value="$PROJECT_DIR$/teams-city" />

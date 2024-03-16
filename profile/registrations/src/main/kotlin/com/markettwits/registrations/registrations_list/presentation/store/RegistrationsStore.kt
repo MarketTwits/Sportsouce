@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.registrations.registrations_list.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
 import com.markettwits.registrations.registrations_list.presentation.components.filter.FilterItem
@@ -79,7 +80,7 @@ class RegistrationsDataStoreFactory(
             scope.launch {
                 dispatch(Msg.Loading)
                 dataSource.registrations()
-                    .onFailure { dispatch(Msg.InfoFailed(it.message.toString())) }
+                    .onFailure { dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString())) }
                     .onSuccess { dispatch(Msg.InfoLoaded(starts = it, filter = createFilter(it))) }
             }
         }

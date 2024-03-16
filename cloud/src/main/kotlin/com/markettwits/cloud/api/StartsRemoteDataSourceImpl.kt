@@ -24,6 +24,8 @@ import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
+import com.markettwits.cloud.model.start_donation.StartDonationRequest
+import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
@@ -31,7 +33,7 @@ import com.markettwits.cloud.model.start_registration.StartRegistrationResponseW
 import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
-import com.markettwits.cloud.provider.HttpClientProvider
+import com.markettwits.core_cloud.provider.HttpClientProvider
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
@@ -51,8 +53,8 @@ class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
 ) : SportsouceApi {
 
-    private val json = httpClient.getJson()
-    private val client = httpClient.get()
+    private val json = httpClient.json()
+    private val client = httpClient.provide(true)
     override suspend fun teams(): TeamsRemote {
         val response = client.get("team")
         return json.decodeFromString(TeamsRemote.serializer(), response.body<String>())
@@ -342,6 +344,14 @@ class StartsRemoteDataSourceImpl(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
             setBody(subComment)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    override suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse {
+        val response = client.post("donations") {
+            contentType(ContentType.Application.Json)
+            setBody(startDonationRequest)
         }
         return json.decodeFromString(response.body())
     }

@@ -24,6 +24,8 @@ import com.markettwits.start.presentation.membres.list.StartMembersScreenCompone
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
+import com.markettwits.start_support.di.startSupportModule
+import com.markettwits.start_support.presentation.component.StartSupportComponentBase
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
@@ -35,7 +37,7 @@ class RootStartScreenComponentBase(
         ComponentKoinContext(false)
     }
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(startModule, startRegistrationModule, startAlbumModule)
+        listOf(startModule, startRegistrationModule, startAlbumModule, startSupportModule)
     )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
 
@@ -55,7 +57,7 @@ class RootStartScreenComponentBase(
     ): RootStartScreenComponent.Child =
         when (config) {
             is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
-                StartScreenComponentComponentBase(
+                component = StartScreenComponentComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
                     back = pop::invoke,
@@ -78,13 +80,18 @@ class RootStartScreenComponentBase(
                         navigation.push(RootStartScreenComponent.Config.StartAlbum(it))
                     }
                 ),
-                StartCommentsComponentBase(
+                commentsComponent = StartCommentsComponentBase(
                     context = componentContext,
                     startId = config.startId,
                     storeFactory = StartCommentsStoreFactory(
                         storeFactory = DefaultStoreFactory(),
                         service = scope.get(),
                     )
+                ),
+                supportComponent = StartSupportComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    startId = config.startId
                 )
             )
 

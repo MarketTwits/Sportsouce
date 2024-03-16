@@ -16,8 +16,9 @@ fun RootStartScreen(component: RootStartScreenComponent) {
     ) {
         when (val child = it.instance) {
             is RootStartScreenComponent.Child.Start -> StartScreen(
-                component = child.component,
-                commentsComponent = child.commentsComponent
+                startComponent = child.component,
+                startCommentsComponent = child.commentsComponent,
+                startSupportComponent = child.supportComponent,
             )
             is RootStartScreenComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
             is RootStartScreenComponent.Child.StartRegistration -> RootStartRegisterScreen(child.component)

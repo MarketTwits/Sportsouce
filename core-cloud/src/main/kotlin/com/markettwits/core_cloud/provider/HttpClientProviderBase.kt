@@ -1,7 +1,7 @@
-package com.markettwits.cloud.provider
+package com.markettwits.core_cloud.provider
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -16,22 +16,25 @@ import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class HttpClientProvider(
+class HttpClientProviderBase(
     private val json: Json,
+    private val clientEngine: HttpClientEngine,
     private val baseUrl: String
-) {
-    fun get() = HttpClient(OkHttp) {
+) : HttpClientProvider {
+    override fun provide(loggerEnabled: Boolean) = HttpClient(clientEngine) {
         expectSuccess = true
         install(ContentNegotiation) {
             json(json)
         }
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    println("HttpClient: $message")
+        if (loggerEnabled) {
+            install(Logging) {
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        println("HttpClient: $message")
+                    }
                 }
+                level = LogLevel.ALL
             }
-            level = LogLevel.ALL
         }
         defaultRequest {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
@@ -43,5 +46,6 @@ class HttpClientProvider(
         }
     }
 
-    fun getJson(): Json = json
+    override fun json(): Json = json
+
 }

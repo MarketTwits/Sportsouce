@@ -1,11 +1,9 @@
 package com.markettwits.start.presentation.order.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.start.presentation.order.domain.interactor.OrderInteractor
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 class OrderBootstrapper(
@@ -27,11 +25,7 @@ class OrderBootstrapper(
             interactor.order(startTitle, distanceInfo, paymentDisabled, paymentType).fold(
                 onSuccess = { dispatch(OrderStore.Action.InfoLoaded(it)) },
                 onFailure = {
-                    val message = when (it) {
-                        is ClientRequestException -> it.response.body<AuthErrorResponse>().message
-                        else -> it.message.toString()
-                    }
-                    dispatch(OrderStore.Action.InfoFailed(message))
+                    dispatch(OrderStore.Action.InfoFailed(networkExceptionHandler(it).message.toString()))
                 }
             )
         }

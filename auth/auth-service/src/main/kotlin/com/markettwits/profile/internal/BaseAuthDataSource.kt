@@ -36,6 +36,7 @@ internal class BaseAuthDataSource(
         return runCatching {
             val response = remoteService.signIn(SignInRequest(email = email, password = password))
             local.write(signInCacheMapper.map(response, password))
+            auth()
         }
     }
 

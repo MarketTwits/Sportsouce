@@ -1,6 +1,7 @@
 package com.markettwits.edit_profile.edit_profile_Image.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.edit_profile.edit_profile_Image.data.EditProfileImageRepository
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.Intent
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.Label
@@ -23,7 +24,7 @@ class EditProfileImageExecutor(private val repository: EditProfileImageRepositor
             dispatch(Message.ShowLoading)
             repository.send(file).fold(
                 onSuccess = { dispatch(Message.ShowSuccess) },
-                onFailure = { dispatch(Message.ShowError(it.message.toString())) }
+                onFailure = { dispatch(Message.ShowError(networkExceptionHandler(it).message.toString())) }
             )
         }
     }

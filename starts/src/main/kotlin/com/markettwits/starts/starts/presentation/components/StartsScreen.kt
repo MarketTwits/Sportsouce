@@ -1,11 +1,7 @@
 package com.markettwits.starts.starts.presentation.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,53 +34,24 @@ private fun StartsScreenPreview() {
 
 @Composable
 fun StartsScreen(component: StartsScreen) {
-    val starts by component.starts.subscribeAsState()
+    val state by component.starts.subscribeAsState()
     var loading by remember {
         mutableStateOf(false)
     }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
-    )
-    {
-        when (starts) {
-            is StartsUiState.Success -> {
-                loading = false
-                CollapsingToolbarScaffold(
-                    modifier = Modifier,
-                    scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-                    state = rememberCollapsingToolbarScaffoldState(),
-                    toolbar = {
-                        StartsSearchBarPublic(modifier = Modifier.clickable {
-                            component.onSearchClick()
-                        })
-                    }
-                ) {
-                    PullToRefreshScreen(
-                        isRefreshing = loading,
-                        onRefresh = {
-                            component.retry()
-                            loading = true
-                        }) {
-                        Column(modifier = it) {
-                            TabBar(content = { page ->
-                                val items = (starts as StartsUiState.Success).items[page]
-                                StartsScreenContent(
-                                    items = items,
-                                    onClick = component::onItemClick
-                                )
-                            })
-                        }
-                    }
-
-                }
-            }
-
+    CollapsingToolbarScaffold(
+        modifier = Modifier,
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+        state = rememberCollapsingToolbarScaffoldState(),
+        toolbar = {
+            StartsSearchBarPublic(modifier = Modifier.clickable {
+                component.onSearchClick()
+            })
+        }
+    ) {
+        when (val currentState = state) {
             is StartsUiState.Failed -> {
                 FailedScreen(
-                    message = (starts as StartsUiState.Failed).message,
+                    message = (currentState).message,
                     onClickRetry = {
                         component.retry()
                     })
@@ -93,6 +60,80 @@ fun StartsScreen(component: StartsScreen) {
             is StartsUiState.Loading -> {
                 LoadingFullScreen()
             }
+
+            is StartsUiState.Success -> {
+                PullToRefreshScreen(
+                    isRefreshing = loading,
+                    onRefresh = {
+                        component.retry()
+                        loading = true
+                    }) {
+                    Column(modifier = it) {
+                        TabBar(content = { page ->
+                            val items = currentState.items[page]
+                            StartsScreenContent(
+                                items = items,
+                                onClick = component::onItemClick
+                            )
+                        })
+                    }
+                }
+            }
         }
     }
+
+
+//
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(MaterialTheme.colorScheme.primary)
+//    )
+//    {
+//        when (starts) {
+//            is StartsUiState.Success -> {
+//                loading = false
+//                CollapsingToolbarScaffold(
+//                    modifier = Modifier,
+//                    scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
+//                    state = rememberCollapsingToolbarScaffoldState(),
+//                    toolbar = {
+//                        StartsSearchBarPublic(modifier = Modifier.clickable {
+//                            component.onSearchClick()
+//                        })
+//                    }
+//                ) {
+//                    PullToRefreshScreen(
+//                        isRefreshing = loading,
+//                        onRefresh = {
+//                            component.retry()
+//                            loading = true
+//                        }) {
+//                        Column(modifier = it) {
+//                            TabBar(content = { page ->
+//                                val items = (starts as StartsUiState.Success).items[page]
+//                                StartsScreenContent(
+//                                    items = items,
+//                                    onClick = component::onItemClick
+//                                )
+//                            })
+//                        }
+//                    }
+//
+//                }
+//            }
+//
+//            is StartsUiState.Failed -> {
+//                FailedScreen(
+//                    message = (starts as StartsUiState.Failed).message,
+//                    onClickRetry = {
+//                        component.retry()
+//                    })
+//            }
+//
+//            is StartsUiState.Loading -> {
+//                LoadingFullScreen()
+//            }
+//        }
 }
+

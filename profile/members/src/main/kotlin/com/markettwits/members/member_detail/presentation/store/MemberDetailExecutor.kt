@@ -1,6 +1,7 @@
 package com.markettwits.members.member_detail.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.members.member_detail.domain.MemberDetailUseCase
 import com.markettwits.members.member_detail.presentation.store.MemberDetailStore.Intent
 import com.markettwits.members.member_detail.presentation.store.MemberDetailStore.Label
@@ -25,7 +26,7 @@ class MemberDetailExecutor(private val useCase: MemberDetailUseCase) :
                 onSuccess = {
                     publish(Label.MemberDeleted)
                 }, onFailure = {
-                    dispatch(Message.DeleteFailure(it.message.toString()))
+                    dispatch(Message.DeleteFailure(networkExceptionHandler(it).message.toString()))
                 })
         }
     }

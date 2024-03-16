@@ -1,9 +1,13 @@
 package com.markettwits.core_ui.components.textField
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -14,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.markettwits.core_ui.base_extensions.date.mapDateToString
 import java.time.LocalDate
 
@@ -24,29 +29,12 @@ fun CalendarTextFiled(
     textFiled: @Composable (Modifier) -> Unit,
     onValueChanged: (String) -> Unit
 ) {
-//    val calendarState = rememberUseCaseState()
-//    val range = rememberCalendarCloseRange()
-//    CalendarDialog(
-//        state = calendarState,
-//        config = CalendarConfig(
-//            locale = Locale.getDefault(),
-//            boundary = range,
-//            yearSelection = true,
-//            monthSelection = true,
-//            style = CalendarStyle.MONTH,
-//        ),
-//        selection = CalendarSelection.Date { newDate ->
-//            onValueChanged(newDate.mapToString())
-//        },
-//    )
-//    textFiled(modifier.clickable {
-//        calendarState.show()
-//    })
-
     var openDialog by remember { mutableStateOf(false) }
 
     if (openDialog) {
-        val datePickerState = rememberDatePickerState()
+        val datePickerState = rememberDatePickerState(
+            yearRange = IntRange(1900, LocalDate.now().year)
+        )
         val confirmEnabled by remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
         }
@@ -59,9 +47,13 @@ fun CalendarTextFiled(
                     onClick = {
                         openDialog = false
                     },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    ),
                     enabled = confirmEnabled
                 ) {
-                    Text("OK")
+                    Text("ОК")
                     datePickerState.selectedDateMillis?.let { onValueChanged(it.mapDateToString()) }
                 }
             },
@@ -69,13 +61,21 @@ fun CalendarTextFiled(
                 TextButton(
                     onClick = {
                         openDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    )
                 ) {
-                    Text("Cancel")
+                    Text("Отменить")
                 }
-            }
+            },
+            colors = sportSouceCalendarColors()
         ) {
-            DatePicker(state = datePickerState)
+            DatePicker(
+                state = datePickerState,
+                colors = sportSouceCalendarColors()
+            )
         }
     }
     textFiled(modifier.clickable {
@@ -83,22 +83,33 @@ fun CalendarTextFiled(
     })
 }
 
-interface CalendarBoundary {
-    fun range(): ClosedRange<LocalDate>
-    class All : CalendarBoundary {
-        override fun range(): ClosedRange<LocalDate> {
-            val DEFAULT_RANGE_START_DATE = LocalDate.of(1920, 3, 15)
-            val DEFAULT_RANGE_END_YEAR_OFFSET = 20L
-            val DEFAULT_RANGE_END_DATE = LocalDate.now().plusYears(DEFAULT_RANGE_END_YEAR_OFFSET)
-                .withMonth(1)
-                .withDayOfMonth(15)
-            return DEFAULT_RANGE_START_DATE..DEFAULT_RANGE_END_DATE
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun rememberCalendarCloseRange(): ClosedRange<LocalDate> =
-    remember {
-        mutableStateOf(CalendarBoundary.All().range())
-    }.value
+private fun sportSouceCalendarColors(): DatePickerColors = DatePickerDefaults.colors(
+    containerColor = MaterialTheme.colorScheme.primary,
+    titleContentColor = MaterialTheme.colorScheme.onTertiary,
+    headlineContentColor = MaterialTheme.colorScheme.tertiary,
+    weekdayContentColor = MaterialTheme.colorScheme.tertiary,
+    subheadContentColor = MaterialTheme.colorScheme.tertiary,
+    navigationContentColor = MaterialTheme.colorScheme.tertiary,
+    yearContentColor = MaterialTheme.colorScheme.tertiary,
+    disabledYearContentColor = MaterialTheme.colorScheme.onBackground,
+    currentYearContentColor = MaterialTheme.colorScheme.tertiary,
+
+    selectedYearContentColor = MaterialTheme.colorScheme.onSecondary,
+    disabledSelectedYearContentColor = MaterialTheme.colorScheme.onBackground,
+    selectedYearContainerColor = MaterialTheme.colorScheme.secondary,
+    disabledSelectedYearContainerColor = MaterialTheme.colorScheme.primaryContainer,
+    dayContentColor = MaterialTheme.colorScheme.tertiary,
+    disabledDayContentColor = MaterialTheme.colorScheme.onBackground,
+    selectedDayContentColor = MaterialTheme.colorScheme.onSecondary,
+    disabledSelectedDayContentColor = MaterialTheme.colorScheme.onBackground,
+    selectedDayContainerColor = MaterialTheme.colorScheme.secondary,
+    disabledSelectedDayContainerColor = MaterialTheme.colorScheme.primaryContainer,
+    todayContentColor = MaterialTheme.colorScheme.tertiary,
+    todayDateBorderColor = MaterialTheme.colorScheme.outline,
+    dayInSelectionRangeContentColor = MaterialTheme.colorScheme.onBackground,
+    dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primaryContainer,
+    dividerColor = Color.Transparent,
+    dateTextFieldColors = defaultOutlineTextFiledColors()
+)

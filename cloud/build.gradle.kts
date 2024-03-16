@@ -12,4 +12,5 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.core)
+    implementation(projects.coreCloud)
 }

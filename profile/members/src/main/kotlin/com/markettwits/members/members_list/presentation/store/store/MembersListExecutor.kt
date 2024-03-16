@@ -1,6 +1,7 @@
 package com.markettwits.members.members_list.presentation.store.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.members_list.domain.MembersListUseCase
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore.Intent
@@ -31,7 +32,7 @@ class MembersListExecutor(private val useCase: MembersListUseCase) :
             dispatch(Message.Loading)
             useCase.members(forced)
                 .catch {
-                    dispatch(Message.Error(it.message.toString()))
+                    dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
                 }
                 .collect {
                     dispatch(Message.Loaded(it))

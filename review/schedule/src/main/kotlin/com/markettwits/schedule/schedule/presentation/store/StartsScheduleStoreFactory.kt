@@ -1,11 +1,11 @@
 package com.markettwits.schedule.schedule.presentation.store
 
-import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.schedule.schedule.data.ScheduleRepository
 import com.markettwits.schedule.schedule.domain.StartsSchedule
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Intent
@@ -51,12 +51,10 @@ internal class StartsScheduleStoreFactory(
                 dispatch(Msg.Loading)
                 repository.starts()
                     .onFailure {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
-                        Log.e("mt05", "#StartsScheduleStore FAILED :${it.message.toString()}")
+                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
                     .onSuccess {
                         dispatch(Msg.InfoLoaded(data = it))
-                        Log.e("mt05", "#StartsScheduleStore SUCCESS :$it")
                     }
             }
         }

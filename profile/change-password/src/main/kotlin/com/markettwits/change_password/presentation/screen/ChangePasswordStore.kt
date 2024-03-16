@@ -9,6 +9,7 @@ import com.markettwits.change_password.domain.ChangePasswordValidation
 import com.markettwits.change_password.presentation.screen.ChangePasswordStore.Intent
 import com.markettwits.change_password.presentation.screen.ChangePasswordStore.Label
 import com.markettwits.change_password.presentation.screen.ChangePasswordStore.State
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
@@ -111,7 +112,7 @@ class ChangePasswordStoreFactory(
                                     dispatch(Msg.UpdateSuccess("Данные успешно обновлены"))
                                 }
                                     .onFailure {
-                                        dispatch(Msg.UpdateFailed(it.message.toString()))
+                                        dispatch(Msg.UpdateFailed(networkExceptionHandler(it).message.toString()))
                                     }
                             }
                     }
@@ -135,10 +136,12 @@ class ChangePasswordStoreFactory(
                     isLoading = false,
                     downloadFailedEvent = triggered(message.message)
                 )
+
                 is Msg.UpdateSuccess -> copy(
                     isLoading = false,
                     downloadSucceededEvent = triggered(message.message)
                 )
+
                 is Msg.OnConsumedFailedEvent -> copy(downloadFailedEvent = consumed())
                 is Msg.OnConsumedSucceededEvent -> copy(downloadSucceededEvent = consumed())
             }

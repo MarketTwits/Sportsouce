@@ -24,6 +24,7 @@ fun ButtonContentBase(
     isEnabled: Boolean = true,
     shape: Shape = Shapes.large,
     containerColor: Color = Color.Transparent,
+    disabledContainerColor: Color = Color.Transparent,
     textColor: Color = MaterialTheme.colorScheme.tertiary,
     borderStroke: BorderStroke? = null,
     content: @Composable() (RowScope.() -> Unit)? = null,
@@ -32,7 +33,10 @@ fun ButtonContentBase(
     Button(
         modifier = modifier,
         enabled = isEnabled,
-        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            disabledContainerColor = disabledContainerColor
+        ),
         shape = shape,
         border = borderStroke,
         onClick = {

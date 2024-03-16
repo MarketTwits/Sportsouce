@@ -1,7 +1,7 @@
 package com.markettwits.members.member_add_edit.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.members.member_add_edit.domain.add.MemberAddUseCase
 import com.markettwits.members.member_add_edit.domain.edit.MemberEditUseCase
 import com.markettwits.members.member_add_edit.presentation.component.MemberEditComponent
@@ -10,8 +10,6 @@ import com.markettwits.members.member_add_edit.presentation.store.MemberEditStor
 import com.markettwits.members.member_add_edit.presentation.store.MemberEditStore.Message
 import com.markettwits.members.member_add_edit.presentation.store.MemberEditStore.State
 import com.markettwits.members.member_common.domain.ProfileMember
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ResponseException
 import kotlinx.coroutines.launch
 
 class MemberEditExecutor(
@@ -41,7 +39,7 @@ class MemberEditExecutor(
                     dispatch(Message.Loaded(it))
                 },
                 onFailure = {
-                    dispatch(Message.Error(it.message.toString()))
+                    dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
                 }
             )
         }
@@ -64,10 +62,7 @@ class MemberEditExecutor(
                     dispatch(Message.UpdateSuccess("Участник успешно обновлен"))
                 },
                 onFailure = {
-                    val message = if (it is ResponseException) {
-                        it.response.body<AuthErrorResponse>().message
-                    } else it.message.toString()
-                    dispatch(Message.Error(message))
+                    dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
                 }
             )
         }
@@ -80,10 +75,7 @@ class MemberEditExecutor(
                 publish(Label.UpdateSuccess(profileMember))
                 dispatch(Message.UpdateSuccess("Участник добавлен"))
             }, onFailure = {
-                val message = if (it is ResponseException) {
-                    it.response.body<AuthErrorResponse>().message
-                } else it.message.toString()
-                dispatch(Message.Error(message))
+                dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
             })
         }
 

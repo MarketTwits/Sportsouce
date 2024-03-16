@@ -9,7 +9,6 @@ android {
 
 dependencies {
     implementation(projects.cache)
-    implementation (libs.calendar)
     implementation(libs.libphonenumber)
     implementation(libs.zoomable)
     api(libs.onebone.toolbar)

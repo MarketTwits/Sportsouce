@@ -1,12 +1,16 @@
 package com.markettwits.start.presentation.start.store
 
-import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.core_ui.event.EventContent
+import com.markettwits.core_ui.event.StateEventWithContent
+import com.markettwits.core_ui.event.consumed
+import com.markettwits.core_ui.event.triggered
 import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
@@ -14,7 +18,6 @@ import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
 import com.markettwits.start.presentation.start.store.StartScreenStore.Label
 import com.markettwits.start.presentation.start.store.StartScreenStore.State
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
 
 interface StartScreenStore : Store<Intent, State, Label> {
 
@@ -24,19 +27,22 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String
-        ) :
-            Intent
+        ) : Intent
+
+        data class TriggerEvent(val message: String, val status: Boolean) : Intent
 
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
         data object OnClickFullAlbum : Intent
+        data object OnConsumedEvent : Intent
     }
 
     data class State(
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val data: StartItem? = null
+        val data: StartItem? = null,
+        val event: StateEventWithContent<EventContent> = consumed()
     )
 
     sealed interface Label {
@@ -68,6 +74,8 @@ class StartScreenStoreFactory(
 
     private sealed interface Msg {
         data object Loading : Msg
+        data object OnConsumedEvent : Msg
+        data class TriggerEvent(val message: String, val status: Boolean) : Msg
         data class InfoLoaded(val data: StartItem) : Msg
         data class InfoFailed(val message: String) : Msg
     }
@@ -94,6 +102,9 @@ class StartScreenStoreFactory(
                     if (!images.isNullOrEmpty())
                         publish(Label.OnClickFullAlbum(images))
                 }
+
+                is Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
+                is Intent.TriggerEvent -> dispatch(Msg.TriggerEvent(intent.message, intent.status))
             }
         }
 
@@ -104,16 +115,9 @@ class StartScreenStoreFactory(
         private fun launch(startId: Int, relaunch: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
-
-                val totalExecutionTime = measureTimeMillis {
-                    service.start(startId, relaunch)
-                }
-                Log.e("mt05", totalExecutionTime.toString())
-
-
                 service.start(startId, relaunch).fold(
                     onFailure = {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
+                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },
                     onSuccess = {
                         dispatch(Msg.InfoLoaded(it))
@@ -129,6 +133,15 @@ class StartScreenStoreFactory(
                 is Msg.InfoFailed -> State(message = message.message, isError = true)
                 is Msg.InfoLoaded -> State(data = message.data)
                 is Msg.Loading -> copy(isLoading = true, isError = false)
+                is Msg.OnConsumedEvent -> copy(event = consumed())
+                is Msg.TriggerEvent -> copy(
+                    event = triggered(
+                        EventContent(
+                            message.status,
+                            message.message
+                        )
+                    )
+                )
             }
     }
 }

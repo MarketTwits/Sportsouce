@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.domain.Review
 import kotlinx.coroutines.flow.catch
@@ -52,7 +53,7 @@ class ReviewStoreFactory(
                 dispatch(Msg.Loading)
                 repository.review(forced)
                     .catch {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
+                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
                     .collect { result ->
                         dispatch(Msg.InfoLoaded(result))

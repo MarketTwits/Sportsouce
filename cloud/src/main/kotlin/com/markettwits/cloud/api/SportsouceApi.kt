@@ -24,6 +24,8 @@ import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
 import com.markettwits.cloud.model.start_comments.response.CommentRow
 import com.markettwits.cloud.model.start_comments.response.Reply
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
+import com.markettwits.cloud.model.start_donation.StartDonationRequest
+import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
@@ -66,6 +68,7 @@ interface SportsouceApi {
     suspend fun fetchStartComments(startId: Int): StartCommentsRemote
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): CommentRow
     suspend fun writeSubComment(subComment: StartSubCommentRequest, token: String): Reply
+    suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
     //Auth
     suspend fun resetPassword(email: String): ResetPasswordResponse
     suspend fun register(signUpRequest: SignUpRequest) : SignUpResponse

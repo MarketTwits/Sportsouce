@@ -5,7 +5,6 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
@@ -17,8 +16,6 @@ import com.markettwits.start.presentation.comments.comments.StartCommentsStore.L
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.State
 import com.markettwits.start.presentation.start.component.CommentMode
 import com.markettwits.start.presentation.start.component.CommentUiState
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 interface StartCommentsStore : Store<Intent, State, Label> {
@@ -94,12 +91,6 @@ class StartCommentsStoreFactory(
             scope.launch {
                 service.startComments(startId).onSuccess {
                     dispatch(Msg.Loaded(it))
-                }.onFailure {
-                    val message = when (it) {
-                        is ClientRequestException -> it.response.body<AuthErrorResponse>().message
-                        else -> it.message.toString()
-                    }
-                    dispatch(Msg.ShowEvent(false, message))
                 }
             }
         }

@@ -26,10 +26,11 @@ import com.markettwits.core_ui.theme.FontNunito
 fun StartContentBasePanel(
     modifier: Modifier = Modifier,
     label: String,
+    openByDefault: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     var panelState by rememberSaveable {
-        mutableStateOf(true)
+        mutableStateOf(openByDefault)
     }
     HorizontalDivider()
     Row(
@@ -45,7 +46,7 @@ fun StartContentBasePanel(
             text = label,
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
-            maxLines = 3,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )

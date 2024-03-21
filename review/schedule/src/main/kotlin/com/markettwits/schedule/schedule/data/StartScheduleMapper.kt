@@ -13,7 +13,6 @@ interface StartScheduleMapper {
 }
 
 class StartScheduleMapperBase : StartScheduleMapper {
-    @OptIn(ExperimentalStdlibApi::class)
     override fun map(items: List<StartsListItem>): List<StartsSchedule> {
         val currentDate = LocalDate.now()
         val startOfWeek =

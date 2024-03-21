@@ -3,8 +3,8 @@
 calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
 jwtdecode = "3.18.2"
-kotlin = "1.9.21"
-gradle = "8.2.2"
+kotlin = "1.9.23"
+gradle = "8.3.0-rc02"
 
 #SDK
 
@@ -23,7 +23,7 @@ jvm-dot = "1.8"
 koin = "3.4.0"
 
 # Compose
-compose = "1.5.7"
+compose = "1.5.11"
 compose-ui = "1.6.3"
 compose-bom = "2024.02.02"
 compose-activity = "1.8.2"
@@ -70,7 +70,7 @@ kotlinx-coroutines = "1.7.3"
 
 #Decompose
 decompose = "3.0.0-alpha04"
-org-jetbrains-kotlin-jvm = "1.9.21"
+org-jetbrains-kotlin-jvm = "1.9.23"
 
 kotlinx-datetime = "0.5.0"
 kotlinGradlePlugin = "1.9.0"
@@ -157,7 +157,6 @@ lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = 
 
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 
 [plugins]
 #kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
@@ -175,13 +174,9 @@ kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 android-library-convention = {id = "android-library-convention", version = "unspecified"}
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
 
-#Test Plugins
-#kotlin-multiplatform-android-convention = {id = "kotlin-multiplatform-android-convention", version = "unspecified"}
-#multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
-#compose = { id = "org.jetbrains.compose", version = "1.6.0-alpha01" }
-
-jetbrainsCompose = { id = "org.jetbrains.compose", version = "1.5.1" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version = "1.9.10" }
+#KMM
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.compose", version = "1.6.1" }
 
 
 [bundles]
@@ -198,11 +193,6 @@ composeUiBundle = [
     "compose-coil",
     "compose-icons"
 ]
-composeUiTest = ["junit-ext-ktx", "testing"]
-#composeUiBundleDebug = [
-#    "compose-preview",
-#    "compose-tooling-preview",
-#]
 decompose-compose = ["decompose-compose-extension", "decompose"]
 mviKotlin = ["mvikotlin","mvikotlin-extensions-coroutines","mvikotlin-logging","mvikotlin-main"]
 

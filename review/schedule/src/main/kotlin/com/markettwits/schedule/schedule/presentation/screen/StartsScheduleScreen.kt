@@ -1,4 +1,4 @@
-package com.markettwits.schedule.schedule.presentation
+package com.markettwits.schedule.schedule.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
+import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
 import com.markettwits.schedule.schedule.presentation.components.StartsScheduleFailedContent
 import com.markettwits.schedule.schedule.presentation.components.StartsScheduleLoadingContent
-import com.markettwits.schedule.schedule.presentation.components.StartsScheduleSuccessContent
+import com.markettwits.schedule.schedule.presentation.components.list.calendar.MonthCalendarContent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 
 @Composable
@@ -42,10 +43,13 @@ fun StartsScheduleScreen(component: StartsScheduleComponent) {
             if (state.isLoading) {
                 StartsScheduleLoadingContent()
             }
-            if (state.starts.isNotEmpty()) {
-                StartsScheduleSuccessContent(starts = state.starts, onClick = {
+            if (state.actualStarts.isNotEmpty()) {
+                MonthCalendarContent(starts = state.actualStarts, onClickStart = {
                     component.obtainEvent(StartsScheduleStore.Intent.OnClickItem(it))
                 })
+//                StartsScheduleSuccessContent(starts = state.starts, onClick = {
+//                    component.obtainEvent(StartsScheduleStore.Intent.OnClickItem(it))
+//                })
             }
         }
     }

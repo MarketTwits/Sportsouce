@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.shop.shopCatalog)
     implementation(projects.cloud)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)

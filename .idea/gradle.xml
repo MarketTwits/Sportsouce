@@ -27,6 +27,8 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/cache" />
             <option value="$PROJECT_DIR$/cloud" />
+            <option value="$PROJECT_DIR$/cloud-clubs" />
+            <option value="$PROJECT_DIR$/cloud-shop" />
             <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
@@ -43,6 +45,8 @@
             <option value="$PROJECT_DIR$/review/review" />
             <option value="$PROJECT_DIR$/review/schedule" />
             <option value="$PROJECT_DIR$/root" />
+            <option value="$PROJECT_DIR$/shop" />
+            <option value="$PROJECT_DIR$/shop/shop-catalog" />
             <option value="$PROJECT_DIR$/start" />
             <option value="$PROJECT_DIR$/start/start" />
             <option value="$PROJECT_DIR$/start/start-filter" />

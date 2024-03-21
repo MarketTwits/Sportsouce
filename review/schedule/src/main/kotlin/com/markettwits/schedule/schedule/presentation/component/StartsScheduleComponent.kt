@@ -1,4 +1,4 @@
-package com.markettwits.schedule.schedule.presentation
+package com.markettwits.schedule.schedule.presentation.component
 
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 import kotlinx.coroutines.flow.StateFlow

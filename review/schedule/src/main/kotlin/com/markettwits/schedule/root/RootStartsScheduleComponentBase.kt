@@ -11,7 +11,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.schedule.schedule.di.StartScheduleComponentDependencies
 import com.markettwits.schedule.schedule.di.createStartRandomModule
-import com.markettwits.schedule.schedule.presentation.StartsScheduleComponentBase
+import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponentBase
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStoreFactory
 import com.markettwits.start.root.RootStartScreenComponentBase
 

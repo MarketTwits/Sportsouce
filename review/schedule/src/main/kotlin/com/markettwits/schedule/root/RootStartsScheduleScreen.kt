@@ -3,7 +3,7 @@ package com.markettwits.schedule.root
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.markettwits.schedule.schedule.presentation.StartsScheduleScreen
+import com.markettwits.schedule.schedule.presentation.screen.StartsScheduleScreen
 import com.markettwits.start.root.RootStartScreen
 
 @Composable

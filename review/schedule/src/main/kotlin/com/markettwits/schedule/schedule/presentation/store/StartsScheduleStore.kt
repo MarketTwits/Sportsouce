@@ -2,6 +2,7 @@ package com.markettwits.schedule.schedule.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.schedule.schedule.domain.StartsSchedule
+import com.markettwits.starts_common.domain.StartsListItem
 
 interface StartsScheduleStore : Store<StartsScheduleStore.Intent, StartsScheduleStore.State, StartsScheduleStore.Label> {
 
@@ -15,7 +16,8 @@ interface StartsScheduleStore : Store<StartsScheduleStore.Intent, StartsSchedule
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val starts : List<StartsSchedule> = emptyList()
+        val starts: List<StartsSchedule> = emptyList(),
+        val actualStarts: List<StartsListItem> = emptyList(),
     )
 
     sealed interface Label {

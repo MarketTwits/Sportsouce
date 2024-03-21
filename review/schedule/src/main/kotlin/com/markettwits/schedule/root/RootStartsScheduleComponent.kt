@@ -2,7 +2,7 @@ package com.markettwits.schedule.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.schedule.schedule.presentation.StartsScheduleComponent
+import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
 import com.markettwits.start.root.RootStartScreenComponent
 import kotlinx.serialization.Serializable
 

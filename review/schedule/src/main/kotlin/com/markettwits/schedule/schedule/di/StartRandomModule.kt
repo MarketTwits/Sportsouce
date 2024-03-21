@@ -1,9 +1,9 @@
 package com.markettwits.schedule.schedule.di
 
-import com.markettwits.schedule.schedule.data.ScheduleRepository
 import com.markettwits.schedule.schedule.data.ScheduleRepositoryBase
 import com.markettwits.schedule.schedule.data.StartScheduleMapper
 import com.markettwits.schedule.schedule.data.StartScheduleMapperBase
+import com.markettwits.schedule.schedule.domain.ScheduleRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf

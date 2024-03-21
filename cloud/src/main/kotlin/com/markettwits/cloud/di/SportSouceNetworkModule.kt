@@ -19,7 +19,8 @@ val sportSouceNetworkModule = module {
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
             clientEngine = OkHttp.create(),
-            baseUrl = "https://sport-73zoq.ondigitalocean.app"
+            baseUrl = sportsouceApiBaseUrl
         )
     }
 }
+private val sportsouceApiBaseUrl = "https://sport-73zoq.ondigitalocean.app"

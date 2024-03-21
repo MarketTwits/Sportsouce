@@ -6,11 +6,12 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.schedule.schedule.data.ScheduleRepository
+import com.markettwits.schedule.schedule.domain.ScheduleRepository
 import com.markettwits.schedule.schedule.domain.StartsSchedule
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Intent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Label
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.State
+import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.launch
 
 
@@ -31,6 +32,7 @@ internal class StartsScheduleStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(val data: List<StartsSchedule>) : Msg
+        data class InfoLoadedFull(val data: List<StartsListItem>) : Msg
         data class InfoFailed(val message: String) : Msg
     }
 
@@ -49,13 +51,18 @@ internal class StartsScheduleStoreFactory(
         private fun launch(){
             scope.launch {
                 dispatch(Msg.Loading)
-                repository.starts()
-                    .onFailure {
-                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
-                    }
-                    .onSuccess {
-                        dispatch(Msg.InfoLoaded(data = it))
-                    }
+                repository.allStarts().fold(onSuccess = {
+                    dispatch(Msg.InfoLoadedFull(data = it))
+                }, onFailure = {
+                    dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                })
+//                repository.actual()
+//                    .onFailure {
+//                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+//                    }
+//                    .onSuccess {
+//                        dispatch(Msg.InfoLoaded(data = it))
+//                    }
             }
         }
     }
@@ -67,6 +74,10 @@ internal class StartsScheduleStoreFactory(
                 is Msg.Loading -> State(isLoading = true)
                 is Msg.InfoLoaded -> State(
                     starts = message.data,
+                )
+
+                is Msg.InfoLoadedFull -> State(
+                    actualStarts = message.data,
                 )
             }
     }

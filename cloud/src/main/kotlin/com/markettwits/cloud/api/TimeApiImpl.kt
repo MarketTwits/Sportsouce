@@ -5,7 +5,7 @@ import com.markettwits.core_cloud.provider.HttpClientProvider
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
-class TimeApiImpl(
+internal class TimeApiImpl(
     private val httpClient: HttpClientProvider
 ) : TimeApi {
     private val json = httpClient.json()

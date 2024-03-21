@@ -19,7 +19,8 @@ val timeApiNetworkModule = module {
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
             clientEngine = OkHttp.create(),
-            baseUrl = "https://timeapi.io"
+            baseUrl = timeApiBaseUrl
         )
     }
 }
+private val timeApiBaseUrl = "https://timeapi.io"

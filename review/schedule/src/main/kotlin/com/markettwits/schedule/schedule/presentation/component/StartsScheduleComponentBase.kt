@@ -1,4 +1,4 @@
-package com.markettwits.schedule.schedule.presentation
+package com.markettwits.schedule.schedule.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.KoinApplication.Companion.init
 
 internal class StartsScheduleComponentBase(
     context: ComponentContext,

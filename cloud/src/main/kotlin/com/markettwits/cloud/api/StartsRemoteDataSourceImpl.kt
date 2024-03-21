@@ -49,7 +49,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import java.io.File
 
-class StartsRemoteDataSourceImpl(
+internal class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
 ) : SportsouceApi {
 

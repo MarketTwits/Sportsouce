@@ -19,9 +19,18 @@ abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMappe
                     it.start_status.name
                 ),
                 place = it.coordinates,
-                distance = it.condition_short ?: ""
+                distance = it.condition_short ?: "",
+                kindOfSports = mapKindOfSports(it.kindOfSports)
             )
         }
         return resultLists
     }
+
+    protected fun mapKindOfSports(kindOfSports: List<com.markettwits.cloud.model.common.KindOfSport>): List<StartsListItem.KindOfSport> =
+        kindOfSports.map {
+            StartsListItem.KindOfSport(
+                id = it.id,
+                name = it.name
+            )
+        }
 }

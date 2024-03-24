@@ -10,8 +10,12 @@ data class StartsListItem(
     val date: String,
     val statusCode: StatusCode,
     val place: String,
-    val distance: String
+    val distance: String,
+    val kindOfSports: List<KindOfSport> = emptyList()
 ) {
     @Serializable
     data class StatusCode(val id: Int, val message: String)
+
+    @Serializable
+    data class KindOfSport(val id: Int, val name: String)
 }

@@ -1,50 +1,21 @@
-package com.markettwits.schedule.schedule.presentation.components.list.calendar
+package com.markettwits.schedule.schedule.presentation.components.list.common.calendar
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.CalendarLayoutInfo
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.weekcalendar.WeekCalendarState
+import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
+import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.Week
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import java.time.LocalDate
 
-@Composable
-fun NavigationIcon(onBackClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .aspectRatio(1f)
-            .padding(8.dp)
-            .clip(shape = CircleShape)
-            .clickable(role = Role.Button, onClick = onBackClick),
-    ) {
-        Icon(
-            tint = Color.White,
-            modifier = Modifier.align(Alignment.Center),
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
-        )
-    }
-}
 
 /**
  * Alternative way to find the first fully visible month in the layout.
@@ -151,4 +122,11 @@ private fun CalendarLayoutInfo.firstMostVisibleMonth(viewportPercent: Float = 50
             }
         }?.month
     }
+}
+
+fun LocalDate.toCalendarDate(): CalendarDay {
+    return CalendarDay(
+        date = this,
+        position = DayPosition.MonthDate
+    )
 }

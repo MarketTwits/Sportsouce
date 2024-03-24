@@ -7,7 +7,7 @@ import com.markettwits.starts_common.domain.StartsListItem
 interface StartsScheduleStore : Store<StartsScheduleStore.Intent, StartsScheduleStore.State, StartsScheduleStore.Label> {
 
     sealed interface Intent {
-        data class OnClickItem(val item : Int) : Intent
+        data class OnClickItem(val item: List<StartsListItem>) : Intent
         data object Launch : Intent
         data object Back : Intent
     }
@@ -21,7 +21,7 @@ interface StartsScheduleStore : Store<StartsScheduleStore.Intent, StartsSchedule
     )
 
     sealed interface Label {
-        data class OnClickItem(val item : Int) : Label
+        data class OnClickItem(val item: List<StartsListItem>) : Label
         data object Back : Label
     }
 }

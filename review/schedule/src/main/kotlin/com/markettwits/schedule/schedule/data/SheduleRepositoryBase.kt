@@ -30,6 +30,6 @@ internal class ScheduleRepositoryBase(
     }
 
     override suspend fun allStarts(): Result<List<StartsListItem>> = runCatching {
-        startRemoteToUiMapper.mapSingle(service.fetchActualStarts().rows)
+        startRemoteToUiMapper.mapSingle(service.startWithFilter(mapOf("maxResultCount" to "1000")).rows)
     }
 }

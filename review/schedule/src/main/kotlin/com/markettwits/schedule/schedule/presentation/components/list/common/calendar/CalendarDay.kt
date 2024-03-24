@@ -1,4 +1,4 @@
-package com.markettwits.schedule.schedule.presentation.components.list.calendar
+package com.markettwits.schedule.schedule.presentation.components.list.common.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,9 +23,8 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 
 @Composable
-fun Day(
+fun CalendarDay(
     day: CalendarDay,
-    isSelected: Boolean = false,
     colors: List<Color> = emptyList(),
     onClick: (CalendarDay) -> Unit = {},
 ) {

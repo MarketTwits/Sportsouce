@@ -13,7 +13,7 @@ import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
 import com.markettwits.schedule.schedule.presentation.components.StartsScheduleFailedContent
 import com.markettwits.schedule.schedule.presentation.components.StartsScheduleLoadingContent
-import com.markettwits.schedule.schedule.presentation.components.list.calendar.MonthCalendarContent
+import com.markettwits.schedule.schedule.presentation.components.StartsScheduleSuccessContent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 
 @Composable
@@ -44,12 +44,11 @@ fun StartsScheduleScreen(component: StartsScheduleComponent) {
                 StartsScheduleLoadingContent()
             }
             if (state.actualStarts.isNotEmpty()) {
-                MonthCalendarContent(starts = state.actualStarts, onClickStart = {
+                StartsScheduleSuccessContent(
+                    starts = state.actualStarts
+                ) {
                     component.obtainEvent(StartsScheduleStore.Intent.OnClickItem(it))
-                })
-//                StartsScheduleSuccessContent(starts = state.starts, onClick = {
-//                    component.obtainEvent(StartsScheduleStore.Intent.OnClickItem(it))
-//                })
+                }
             }
         }
     }

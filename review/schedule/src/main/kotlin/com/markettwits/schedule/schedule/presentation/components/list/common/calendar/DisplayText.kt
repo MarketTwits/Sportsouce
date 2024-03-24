@@ -1,5 +1,7 @@
-package com.markettwits.schedule.schedule.presentation.components.list.calendar
+package com.markettwits.schedule.schedule.presentation.components.list.common.calendar
 
+import com.kizitonwose.calendar.core.Week
+import com.kizitonwose.calendar.core.yearMonth
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
@@ -31,5 +33,23 @@ fun String.parseStringToLocalDateTime(): LocalDate {
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
     return getDisplayName(TextStyle.SHORT, Locale.getDefault()).let { value ->
         if (uppercase) value.uppercase(Locale.getDefault()) else value
+    }
+}
+
+fun getWeekPageTitle(week: Week): String {
+    val firstDate = week.days.first().date
+    val lastDate = week.days.last().date
+    return when {
+        firstDate.yearMonth == lastDate.yearMonth -> {
+            firstDate.yearMonth.displayText()
+        }
+
+        firstDate.year == lastDate.year -> {
+            "${firstDate.month.displayText(short = false)} - ${lastDate.yearMonth.displayText()}"
+        }
+
+        else -> {
+            "${firstDate.yearMonth.displayText()} - ${lastDate.yearMonth.displayText()}"
+        }
     }
 }

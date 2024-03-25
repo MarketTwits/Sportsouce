@@ -3,23 +3,19 @@ package com.markettwits.schedule.schedule.presentation.components.list.month_cal
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.OutDateStyle
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.nextMonth
 import com.kizitonwose.calendar.core.previousMonth
-import com.markettwits.schedule.schedule.presentation.components.list.common.calendar.CalendarDay
 import com.markettwits.schedule.schedule.presentation.components.list.common.calendar.CalendarSimpleTitle
 import com.markettwits.schedule.schedule.presentation.components.list.common.calendar.MonthHeader
 import com.markettwits.schedule.schedule.presentation.components.list.common.calendar.displayText
@@ -35,7 +31,8 @@ import java.time.YearMonth
 @Composable
 fun MonthCalendarContent(
     starts: List<StartsListItem>,
-    onClickStart: (List<StartsListItem>) -> Unit
+    onClickStart: (List<StartsListItem>) -> Unit,
+    selectMonth: YearMonth,
 ) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(500) }
@@ -55,6 +52,9 @@ fun MonthCalendarContent(
         startTime,
         visibleMonth
     )
+    LaunchedEffect(selectMonth) {
+        state.animateScrollToMonth(selectMonth)
+    }
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -76,31 +76,18 @@ fun MonthCalendarContent(
                 }
             },
         )
-        HorizontalCalendar(
-            modifier = Modifier.wrapContentWidth(),
+        MonthCalendar(
             state = state,
-            dayContent = { day ->
-                val colors = if (day.position == DayPosition.MonthDate) {
-                    startTime[day.date].orEmpty().map { Color.Black }
-                } else {
-                    emptyList()
-                }
-                CalendarDay(
-                    day = day,
-                    colors = colors,
-                ) { clicked ->
-                    val item = startTime[clicked.date]
-                    if (item != null)
-                        onClickStart(item)
-                }
-
-            },
-            monthHeader = {
+            startTime = startTime,
+            header = { modifier, month ->
                 MonthHeader(
                     modifier = Modifier.padding(vertical = 8.dp),
                     daysOfWeek = daysOfWeek,
                 )
             },
+            onClickStart = {
+                onClickStart(it)
+            }
         )
         StartsListInfo(startsListItem = startsInMonth)
         KindOfSportsListInfo(startsListItem = startsInMonth) {

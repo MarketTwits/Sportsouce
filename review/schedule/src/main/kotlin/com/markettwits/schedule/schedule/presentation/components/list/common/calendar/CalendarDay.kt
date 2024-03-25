@@ -43,7 +43,7 @@ fun CalendarDay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val textColor = when (day.position) {
-                DayPosition.MonthDate -> MaterialTheme.colorScheme.onPrimary
+                DayPosition.MonthDate -> MaterialTheme.colorScheme.tertiary
                 DayPosition.InDate, DayPosition.OutDate -> Color.Transparent
             }
             val circleShapeColor = when (day.position) {
@@ -57,6 +57,56 @@ fun CalendarDay(
                 color = textColor,
                 fontSize = 12.sp,
             )
+            Box(
+                modifier = Modifier
+                    .size(140.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                if (colors.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .aspectRatio(1f)
+                            .align(Alignment.Center)
+                            .clip(Shapes.medium)
+                            .background(circleShapeColor)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(25.dp)
+                            .aspectRatio(1f)
+                            .clip(CircleShape)
+                            .align(Alignment.Center)
+                            .background(MaterialTheme.colorScheme.tertiary)
+
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CompactCalendarDay(
+    modifier: Modifier = Modifier,
+    day: CalendarDay,
+    colors: List<Color> = emptyList(),
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(1.dp)
+            .clip(CircleShape)
+    ) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val circleShapeColor = when (day.position) {
+                DayPosition.MonthDate -> MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                DayPosition.InDate, DayPosition.OutDate -> Color.Transparent
+            }
             Box(
                 modifier = Modifier
                     .size(140.dp)

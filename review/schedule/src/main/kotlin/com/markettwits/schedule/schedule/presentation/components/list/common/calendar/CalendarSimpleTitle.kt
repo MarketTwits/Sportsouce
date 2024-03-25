@@ -19,10 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.theme.FontNunito
 import java.util.Locale
 
 
@@ -57,16 +57,18 @@ fun CalendarSimpleTitle(
                         Locale.ROOT
                     ) else it.toString()
                 },
-                fontSize = 18.sp,
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.tertiary,
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Medium,
+                fontFamily = FontNunito.bold,
             )
             Text(
                 modifier = Modifier,
                 text = "$eventsCount стартов",
+                color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Medium,
+                fontFamily = FontNunito.regular,
             )
         }
         CalendarNavigationIcon(

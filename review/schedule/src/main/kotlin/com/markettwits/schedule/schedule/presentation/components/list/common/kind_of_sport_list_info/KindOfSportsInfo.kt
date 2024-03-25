@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 @Immutable
 data class KindOfSportsInfo(
-    val startId: Int,
+    val sportId: Int,
     val title: String,
     val count: Int,
     val color: Color,

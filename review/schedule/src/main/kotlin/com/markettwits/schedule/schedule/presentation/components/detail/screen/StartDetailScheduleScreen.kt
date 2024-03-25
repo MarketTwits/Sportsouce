@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ fun StartDetailScheduleScreen(component: StartDetailScheduleComponent) {
     val state = component.state.collectAsState()
     ModalBottomSheet(
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {
             component.obtainEvent(StartDetailScheduleStore.Intent.OnClickBack)
         }) {

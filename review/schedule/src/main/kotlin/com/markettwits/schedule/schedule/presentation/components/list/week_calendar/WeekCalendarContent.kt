@@ -104,6 +104,8 @@ fun WeekCalendarContent(
             }
         )
         StartsListInfo(startsListItem = startsInWeek)
-        KindOfSportsListInfo(startsListItem = startsInWeek)
+        KindOfSportsListInfo(startsListItem = startsInWeek, onClick = {
+            onClickItem(it)
+        })
     }
 }

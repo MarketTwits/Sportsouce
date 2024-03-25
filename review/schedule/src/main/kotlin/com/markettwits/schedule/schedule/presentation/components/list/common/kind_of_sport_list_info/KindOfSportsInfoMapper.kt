@@ -12,15 +12,22 @@ import com.markettwits.starts_common.domain.StartsListItem
 
 interface KindOfSportsInfoMapper {
 
-    fun map(
+    fun mapStarts(
         startsListItem: List<StartsListItem>,
         defaultColor: Color,
     ): List<KindOfSportsInfo>
+
+    fun mapSelectedSport(
+        startsList: List<StartsListItem>, sportId: Int
+    ): List<StartsListItem>
+
+    fun mapSportColor(sportId: Int, defaultColor: Color): Color
+    fun mapSportIcon(sportId: Int): ImageVector
 }
 
 object KindOfSportsInfoMapperBase : KindOfSportsInfoMapper {
 
-    override fun map(
+    override fun mapStarts(
         startsListItem: List<StartsListItem>,
         defaultColor: Color,
     ): List<KindOfSportsInfo> {
@@ -31,7 +38,7 @@ object KindOfSportsInfoMapperBase : KindOfSportsInfoMapper {
 
         return kindOfSportsMap.map { (id, count) ->
             KindOfSportsInfo(
-                startId = id,
+                sportId = id,
                 title = startsListItem.firstOrNull { it.kindOfSports.any { kind -> kind.id == id } }?.kindOfSports
                     ?.first { kind -> kind.id == id }?.name ?: "",
                 count = count,
@@ -41,10 +48,18 @@ object KindOfSportsInfoMapperBase : KindOfSportsInfoMapper {
         }
     }
 
-    private fun mapSportColor(sportId: Int, defaultColor: Color): Color =
+    override fun mapSelectedSport(
+        startsList: List<StartsListItem>,
+        sportId: Int
+    ): List<StartsListItem> =
+        startsList.filter { startsItem ->
+            startsItem.kindOfSports.any { kindOfSport -> kindOfSport.id == sportId }
+        }
+
+    override fun mapSportColor(sportId: Int, defaultColor: Color): Color =
         sportColors[sportId] ?: defaultColor
 
-    private fun mapSportIcon(sportId: Int): ImageVector =
+    override fun mapSportIcon(sportId: Int): ImageVector =
         sportIcons[sportId] ?: Icons.Default.CalendarMonth
 
     private val sportColors = mapOf(

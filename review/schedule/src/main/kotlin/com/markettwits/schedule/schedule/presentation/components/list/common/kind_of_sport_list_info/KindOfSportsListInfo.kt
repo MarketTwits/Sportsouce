@@ -1,6 +1,7 @@
 package com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,32 +28,42 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.schedule.schedule.presentation.components.list.common.starts_list_info.StartsListInfoItemLabel
 import com.markettwits.starts_common.domain.StartsListItem
+import java.util.Locale
 
 @Composable
-fun KindOfSportsListInfo(modifier: Modifier = Modifier, startsListItem: List<StartsListItem>) {
+fun KindOfSportsListInfo(
+    modifier: Modifier = Modifier,
+    startsListItem: List<StartsListItem>,
+    onClick: (List<StartsListItem>) -> Unit
+) {
     var items by remember {
         mutableStateOf(emptyList<KindOfSportsInfo>())
     }
     val defaultColor = MaterialTheme.colorScheme.tertiary
     LaunchedEffect(key1 = startsListItem) {
-        items = KindOfSportsInfoMapperBase.map(
+        items = KindOfSportsInfoMapperBase.mapStarts(
             startsListItem = startsListItem,
             defaultColor = defaultColor
         )
     }
     Column(modifier = modifier) {
-        items.forEach {
+        items.fastForEach { item ->
             KindOfSportsInfoItem(
                 modifier = Modifier.padding(10.dp),
-                count = it.count,
-                title = it.title,
-                color = it.color,
-                icon = it.icon
-            )
+                count = item.count,
+                title = item.title,
+                color = item.color,
+                icon = item.icon
+            ) {
+                val selectedStarts =
+                    KindOfSportsInfoMapperBase.mapSelectedSport(startsListItem, item.sportId)
+                onClick(selectedStarts)
+            }
         }
     }
 }
@@ -63,10 +74,14 @@ private fun KindOfSportsInfoItem(
     count: Int,
     title: String,
     color: Color,
-    icon: ImageVector
+    icon: ImageVector,
+    onClick: () -> Unit
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(Shapes.medium)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         KindOfSportsInfoIcon(
@@ -88,7 +103,7 @@ private fun KindOfSportsInfoValue(modifier: Modifier, count: Int, title: String,
     Column(modifier = modifier) {
         Text(
             modifier = modifier,
-            text = title,
+            text = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.regular,

@@ -1,4 +1,4 @@
-package com.markettwits.schedule.schedule.presentation.components.list.pager
+package com.markettwits.schedule.schedule.presentation.components.list.calendar_pager
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth

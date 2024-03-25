@@ -103,6 +103,8 @@ fun MonthCalendarContent(
             },
         )
         StartsListInfo(startsListItem = startsInMonth)
-        KindOfSportsListInfo(startsListItem = startsInMonth)
+        KindOfSportsListInfo(startsListItem = startsInMonth) {
+            onClickStart(it)
+        }
     }
 }

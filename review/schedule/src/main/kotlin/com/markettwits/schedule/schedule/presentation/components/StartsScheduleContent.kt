@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
+import com.markettwits.schedule.schedule.presentation.components.list.calendar_pager.StartsPagerCalendar
+import com.markettwits.schedule.schedule.presentation.components.list.calendar_pager.defaultStartCalendarPages
 import com.markettwits.schedule.schedule.presentation.components.list.month_calendar.MonthCalendarContent
-import com.markettwits.schedule.schedule.presentation.components.list.pager.StartsPagerCalendar
-import com.markettwits.schedule.schedule.presentation.components.list.pager.defaultStartCalendarPages
 import com.markettwits.schedule.schedule.presentation.components.list.week_calendar.WeekCalendarContent
 import com.markettwits.starts_common.domain.StartsListItem
 

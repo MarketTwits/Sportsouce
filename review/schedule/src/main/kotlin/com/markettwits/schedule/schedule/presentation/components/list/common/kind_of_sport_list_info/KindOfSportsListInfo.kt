@@ -105,7 +105,7 @@ private fun KindOfSportsInfoValue(modifier: Modifier, count: Int, title: String,
             modifier = modifier,
             text = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.regular,
             fontSize = 14.sp
         )

@@ -17,7 +17,7 @@ dependencies {
     implementation(projects.review.popular)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
-    implementation(projects.startsCommon)
+    implementation(projects.starts.startsCommon)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.kotlinx.datetime)

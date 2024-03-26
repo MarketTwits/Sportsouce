@@ -14,7 +14,7 @@ dependencies {
     implementation(projects.coreKoin)
     implementation(projects.start.start)
     implementation(projects.start.startFilter)
-    implementation(projects.startsCommon)
+    implementation(projects.starts.startsCommon)
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.koin.core)

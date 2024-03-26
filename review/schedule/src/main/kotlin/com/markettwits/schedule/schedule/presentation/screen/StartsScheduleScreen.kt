@@ -11,13 +11,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
-import com.markettwits.schedule.schedule.presentation.components.StartsScheduleFailedContent
-import com.markettwits.schedule.schedule.presentation.components.StartsScheduleLoadingContent
-import com.markettwits.schedule.schedule.presentation.components.StartsScheduleSuccessContent
+import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleFailedContent
+import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleLoadingContent
+import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleSuccessContent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
 
 @Composable
-fun StartsScheduleScreen(component: StartsScheduleComponent) {
+internal fun StartsScheduleScreen(component: StartsScheduleComponent) {
     val state by component.value.collectAsState()
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primary,

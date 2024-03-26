@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,7 +37,7 @@ fun StartDetailScheduleContent(
                 Text(
                     modifier = Modifier.wrapContentHeight(),
                     text = (index + 1).toString(),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.tertiary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     fontFamily = FontNunito.bold,

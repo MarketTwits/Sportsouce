@@ -3,7 +3,7 @@ package com.markettwits.start_search.search.data.local
 
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageListCache
-import com.markettwits.cahce.store.listStoreOfWrapper
+import com.markettwits.cahce.store_wrapper.listStoreOfWrapper
 import com.markettwits.start_search.search.domain.SearchHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

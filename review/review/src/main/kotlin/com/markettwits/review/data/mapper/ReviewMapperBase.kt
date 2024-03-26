@@ -4,7 +4,7 @@ import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.news_list.data.NewsRemoteToDomainMapper
 import com.markettwits.review.domain.Review
-import com.markettwits.starts_common.data.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.domain.StartsListItem
 
 class ReviewMapperBase(

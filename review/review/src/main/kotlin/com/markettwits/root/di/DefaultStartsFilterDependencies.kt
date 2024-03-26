@@ -5,8 +5,8 @@ import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.random.root.di.StartRandomComponentDependencies
 import com.markettwits.schedule.schedule.di.StartScheduleComponentDependencies
 import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
-import com.markettwits.starts_common.data.StartsCloudToListMapper
-import com.markettwits.starts_common.data.StartsCloudToListMapperBase
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

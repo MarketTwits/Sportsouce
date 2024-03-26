@@ -11,7 +11,7 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
     implementation(projects.start.start)
-    implementation(projects.startsCommon)
+    implementation(projects.starts.startsCommon)
     implementation(libs.koin.core)
     implementation("com.kizitonwose.calendar:compose:2.5.0")
     implementation(libs.bundles.decompose.compose)

@@ -10,7 +10,7 @@ import com.markettwits.review.data.ReviewRepositoryBase
 import com.markettwits.review.data.cache.ReviewCache
 import com.markettwits.review.data.mapper.ReviewMapperBase
 import com.markettwits.review.presentation.store.ReviewStoreFactory
-import com.markettwits.starts_common.data.StartsCloudToListMapperBase
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import org.koin.dsl.module
 
 val reviewModule = module(createdAtStart = true) {

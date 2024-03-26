@@ -9,4 +9,10 @@ interface ExecuteListWithCache {
         launch: suspend () -> List<T>,
         callback: suspend (List<T>) -> Unit
     )
+
+    suspend fun <T> executeListWithCache(
+        forced: Boolean = false,
+        cache: Cache<List<T>>,
+        launch: suspend () -> List<T>,
+    ): List<T>
 }

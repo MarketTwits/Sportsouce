@@ -18,7 +18,7 @@ dependencies {
     implementation(projects.profile.registrations)
     implementation(projects.profile.members)
     implementation(projects.cache)
-    implementation(projects.startsCommon)
+    implementation(projects.starts.startsCommon)
     implementation(libs.lottie)
     implementation("com.himanshoe:charty:2.0.0-alpha01")
     implementation("co.yml:ycharts:2.1.0")

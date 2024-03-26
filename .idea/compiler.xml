@@ -7,6 +7,7 @@
       <module name="Sportsouce.start-filter" target="17" />
       <module name="Sportsouce.start-register" target="17" />
       <module name="Sportsouce.start-search" target="17" />
+      <module name="Sportsouce.starts-common" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

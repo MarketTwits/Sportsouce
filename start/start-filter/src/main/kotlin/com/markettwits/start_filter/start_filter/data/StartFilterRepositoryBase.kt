@@ -7,7 +7,7 @@ import com.markettwits.start_filter.start_filter.data.mapper.StartFilterDomainTo
 import com.markettwits.start_filter.start_filter.data.mapper.StartFilterRemoteToDomainMapper
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
-import com.markettwits.starts_common.data.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

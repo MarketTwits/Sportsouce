@@ -1,7 +1,7 @@
 package com.markettwits.random.random.data
 
 import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.starts_common.data.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import kotlin.random.Random
 
 class RandomRepositoryBase(

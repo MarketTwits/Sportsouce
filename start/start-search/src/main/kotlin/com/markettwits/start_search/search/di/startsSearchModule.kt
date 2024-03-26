@@ -13,8 +13,8 @@ import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapper
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapperBase
 import com.markettwits.start_search.search.domain.SearchHistory
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
-import com.markettwits.starts_common.data.StartsCloudToListMapper
-import com.markettwits.starts_common.data.StartsCloudToListMapperBase
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

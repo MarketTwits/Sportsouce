@@ -14,4 +14,12 @@ class ExecuteListWithCacheBase : ExecuteListWithCacheAbstract() {
         else
             executeListWithCacheWithoutForced(cache, launch, callback)
     }
+
+    override suspend fun <T> executeListWithCache(
+        forced: Boolean,
+        cache: Cache<List<T>>,
+        launch: suspend () -> List<T>
+    ): List<T> {
+        TODO("Not yet implemented")
+    }
 }

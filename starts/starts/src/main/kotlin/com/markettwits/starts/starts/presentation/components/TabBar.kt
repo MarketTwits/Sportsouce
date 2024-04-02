@@ -3,11 +3,13 @@ package com.markettwits.starts.starts.presentation.components
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -22,22 +24,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import kotlinx.coroutines.launch
 
 
-@Preview
-@Composable
-private fun TabBarPreview() {
-    TabBar {}
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabBar(content: @Composable (Int) -> Unit) {
+internal fun TabBar(
+    content: @Composable ((page: Int) -> Unit),
+) {
     val scope = rememberCoroutineScope()
     val pages = listOf("Главная", "Ближайшие", "Прошедшие", "Анонсы")
     val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
@@ -90,6 +87,8 @@ fun TabBar(content: @Composable (Int) -> Unit) {
         modifier = Modifier.fillMaxSize(),
         state = pagerState,
     ) { page ->
-        content(page)
+        Column {
+            content(page)
+        }
     }
 }

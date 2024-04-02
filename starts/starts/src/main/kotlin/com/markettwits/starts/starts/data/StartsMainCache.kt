@@ -5,7 +5,7 @@ import com.markettwits.cahce.InStorageSingleCache
 import com.markettwits.cahce.store_wrapper.listStoreOfWrapper
 import com.markettwits.starts_common.domain.StartsListItem
 
-class StartsMainCache : InStorageSingleCache<List<List<StartsListItem>>>(
+internal class StartsMainCache : InStorageSingleCache<List<List<StartsListItem>>>(
     listStoreOfWrapper(
         path = InStorageCacheDirectory.path,
         fileName = "mainStarts"

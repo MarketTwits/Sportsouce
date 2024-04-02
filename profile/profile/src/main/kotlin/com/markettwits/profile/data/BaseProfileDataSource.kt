@@ -1,7 +1,7 @@
 package com.markettwits.profile.data
 
 import com.markettwits.profile.api.AuthDataSource
-import com.markettwits.profile.presentation.deprecated.ProfileUiState
+import com.markettwits.profile.presentation.component.base.ProfileUiState
 
 class BaseProfileDataSource(
     private val authDataSource: AuthDataSource

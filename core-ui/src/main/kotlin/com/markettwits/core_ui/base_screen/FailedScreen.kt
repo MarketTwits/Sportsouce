@@ -40,10 +40,6 @@ fun FailedScreen(
                 onClickBack()
             }
         }
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = 1685112333816, // epoch/unix timestamp
-            initialDisplayMode = DisplayMode.Picker,
-        )
         Column(
             modifier = modifier
                 .align(Alignment.Center)

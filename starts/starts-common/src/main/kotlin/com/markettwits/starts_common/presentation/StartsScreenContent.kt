@@ -10,8 +10,12 @@ import com.markettwits.starts_common.domain.StartsListItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun StartsScreenContent(items: List<StartsListItem>, onClick: (Int) -> Unit) {
-    LazyColumn {
+fun StartsScreenContent(
+    modifier: Modifier = Modifier,
+    items: List<StartsListItem>,
+    onClick: (Int) -> Unit
+) {
+    LazyColumn(modifier) {
         items(items, key = { it -> it.id }) {
             StartCard(
                 modifier = Modifier.animateItemPlacement(animationSpec = tween(600)),

@@ -4,6 +4,7 @@ pluginManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://jitpack.io")
         gradlePluginPortal()
     }
 }
@@ -12,6 +13,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
@@ -48,3 +50,16 @@ include(":review:popular")
 include(":core-koin")
 include(":starts:starts-common")
 include(":cache")
+
+include(":selfupdater:api")
+include(":selfupdater:impl")
+include(":selfupdater:unknown")
+include(":selfupdater:thirdparty:api")
+include(":selfupdater:thirdparty:github")
+include(":selfupdater:components")
+
+include(":settings:api")
+include(":settings:impl")
+
+include(":inappnotification:api")
+include(":inappnotification:impl")

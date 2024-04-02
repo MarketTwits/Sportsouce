@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.start.presentation.member.components.MemberScreen
-import com.markettwits.start.presentation.order.presentation.components.StartOrderScreen
+import com.markettwits.start.presentation.order.presentation.screen.StartOrderScreen
 import com.markettwits.start.presentation.promo.components.RegistrationPromoScreen
 
 @Composable

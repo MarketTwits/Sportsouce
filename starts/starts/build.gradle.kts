@@ -14,6 +14,8 @@ dependencies {
     implementation(projects.start.startSearch)
     implementation(projects.coreUi)
     implementation(projects.starts.startsCommon)
+    implementation(projects.selfupdater.components)
+    implementation(projects.inappnotification.api)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.material3.html.text)

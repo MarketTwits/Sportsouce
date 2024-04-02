@@ -218,7 +218,6 @@ interface StartRemoteToUiMapper {
                     return price.value
                 }
             }
-
             return distance.price.toInt() // or whatever default value you want to return when no interval matches
         }
 

@@ -1,12 +1,10 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.markettwits.root"
-
+    namespace = "com.markettwits.sportsauce.root"
 }
 
 dependencies {
@@ -14,6 +12,8 @@ dependencies {
     implementation(project(":profile:profile"))
     implementation(project(":review:review"))
     implementation(project(":core-ui"))
+    implementation(libs.koin.core)
+    implementation(projects.coreKoin)
     implementation(libs.bundles.composeUiBundle)
     implementation(libs.bundles.decompose.compose)
 }

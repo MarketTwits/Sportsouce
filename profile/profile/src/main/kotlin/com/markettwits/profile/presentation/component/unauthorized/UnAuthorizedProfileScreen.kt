@@ -14,7 +14,7 @@ import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.presentation.common.menu.MenuItem
 import com.markettwits.profile.presentation.common.menu.SignInOrRegistryButton
 import com.markettwits.profile.presentation.common.top_bar.ProfileTopBar
-import com.markettwits.profile.presentation.deprecated.ProfileUiState
+import com.markettwits.profile.presentation.component.base.ProfileUiState
 
 
 @Composable

@@ -15,6 +15,7 @@ import com.markettwits.schedule.schedule.presentation.components.list.StartsSche
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleLoadingContent
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleSuccessContent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
+import me.onebone.toolbar.BuildConfig
 
 @Composable
 internal fun StartsScheduleScreen(component: StartsScheduleComponent) {

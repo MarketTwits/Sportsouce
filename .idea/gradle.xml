@@ -32,6 +32,9 @@
             <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/inappnotification" />
+            <option value="$PROJECT_DIR$/inappnotification/api" />
+            <option value="$PROJECT_DIR$/inappnotification/impl" />
             <option value="$PROJECT_DIR$/news" />
             <option value="$PROJECT_DIR$/profile" />
             <option value="$PROJECT_DIR$/profile/change-password" />
@@ -45,6 +48,17 @@
             <option value="$PROJECT_DIR$/review/review" />
             <option value="$PROJECT_DIR$/review/schedule" />
             <option value="$PROJECT_DIR$/root" />
+            <option value="$PROJECT_DIR$/selfupdater" />
+            <option value="$PROJECT_DIR$/selfupdater/api" />
+            <option value="$PROJECT_DIR$/selfupdater/components" />
+            <option value="$PROJECT_DIR$/selfupdater/impl" />
+            <option value="$PROJECT_DIR$/selfupdater/thirdparty" />
+            <option value="$PROJECT_DIR$/selfupdater/thirdparty/api" />
+            <option value="$PROJECT_DIR$/selfupdater/thirdparty/github" />
+            <option value="$PROJECT_DIR$/selfupdater/unknown" />
+            <option value="$PROJECT_DIR$/settings" />
+            <option value="$PROJECT_DIR$/settings/api" />
+            <option value="$PROJECT_DIR$/settings/impl" />
             <option value="$PROJECT_DIR$/shop" />
             <option value="$PROJECT_DIR$/shop/shop-catalog" />
             <option value="$PROJECT_DIR$/start" />

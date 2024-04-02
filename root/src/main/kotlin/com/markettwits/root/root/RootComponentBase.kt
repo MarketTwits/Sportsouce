@@ -1,18 +1,22 @@
 package com.markettwits.root.root
 
+import android.content.Context
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.presentation.deprecated.DefaultProfileComponent
+import com.markettwits.profile.presentation.component.base.DefaultProfileComponent
 import com.markettwits.root.RootReviewComponentBase
 import com.markettwits.starts.root.internal.RootStartsComponentBase
 
 class RootComponentBase(
     componentContext: ComponentContext,
+    private val context: Context,
 ) : ComponentContext by componentContext, RootComponent {
+
+
     private val navigation = StackNavigation<RootComponent.Configuration>()
 
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
@@ -26,6 +30,7 @@ class RootComponentBase(
         navigation.bringToFront(configuration)
     }
 
+
     private fun createChild(
         configuration: RootComponent.Configuration,
         componentContext: ComponentContext
@@ -34,6 +39,7 @@ class RootComponentBase(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
+                    context = context
                 )
             )
 

@@ -43,7 +43,7 @@ class StartRepositoryBase(
         }
 
     private suspend fun launches(startId: Int): Result<StartItem> {
-        val result = retryRunCatchingAsync {
+        val result = runCatching {
             val cloud =
                 fetchFifth<StartRemote, List<StartMemberItem>, StartAlbumRemote, StartCommentsRemote, TimeRemote>(
                     { service.fetchStart(startId) },

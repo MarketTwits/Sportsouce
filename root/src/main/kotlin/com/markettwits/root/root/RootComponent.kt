@@ -2,7 +2,7 @@ package com.markettwits.root.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.presentation.deprecated.DefaultProfileComponent
+import com.markettwits.profile.presentation.component.base.DefaultProfileComponent
 import com.markettwits.root.RootReviewComponent
 import com.markettwits.starts.root.internal.RootStartsComponentBase
 import kotlinx.serialization.Serializable
@@ -13,11 +13,11 @@ interface RootComponent {
     @Serializable
     sealed class Configuration {
         @Serializable
-        object Starts : Configuration()
+        data object Starts : Configuration()
         @Serializable
-        object Review : Configuration()
+        data object Review : Configuration()
         @Serializable
-        object Profile : Configuration()
+        data object Profile : Configuration()
     }
 
     sealed class Child {

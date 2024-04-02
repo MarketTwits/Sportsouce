@@ -24,7 +24,6 @@ interface RootStartsSearchComponent {
 
     sealed interface Child {
         data class Start(val component: RootStartScreenComponent) : Child
-
         data class Filter(val component: RootStartFilterComponent) : Child
         data class Search(val component: StartsSearchComponent) : Child
 

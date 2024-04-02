@@ -1,5 +1,6 @@
 package com.markettwits.schedule.schedule.presentation.components.list.month_calendar
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -90,6 +91,9 @@ fun MonthCalendarContent(
             }
         )
         StartsListInfo(startsListItem = startsInMonth)
+        Log.e("mt05", "--------------------")
+        Log.e("mt05", startsInMonth.size.toString())
+        Log.e("mt05", startsInMonth.toString())
         KindOfSportsListInfo(startsListItem = startsInMonth) {
             onClickStart(it)
         }

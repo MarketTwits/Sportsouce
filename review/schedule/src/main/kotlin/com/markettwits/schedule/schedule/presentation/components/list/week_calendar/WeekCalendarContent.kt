@@ -82,13 +82,13 @@ fun WeekCalendarContent(
             state = state,
             dayContent = { day ->
                 val colors = if (day.position == WeekDayPosition.RangeDate) {
-                    startTime[day.date].orEmpty().map { Color.Black }
+                    startTime[day.date].orEmpty()
                 } else {
                     emptyList()
                 }
                 CalendarDay(
                     day = day.date.toCalendarDate(),
-                    colors = colors
+                    starts = colors
                 ) { clicked ->
                     selection = clicked
                     val item = startTime[selection?.date]

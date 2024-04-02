@@ -5,7 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.markettwits.profile.data.ProfileDataSource
-import com.markettwits.profile.presentation.deprecated.ProfileUiState
+import com.markettwits.profile.presentation.component.base.ProfileUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

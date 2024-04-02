@@ -18,7 +18,8 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         InStorageCacheDirectory.path = cacheDir.path
         InStorageFileDirectory.path = filesDir.path
-        val root = RootComponentBase(componentContext = defaultComponentContext())
+        val context = defaultComponentContext()
+        val root = RootComponentBase(componentContext = context, this.baseContext)
         setContent {
             SportSouceTheme {
                 RootContent(component = root)

@@ -8,14 +8,13 @@ import java.time.LocalDate
 fun getWeekCalendarVisibleStarts(
     starts: Map<LocalDate, List<StartsListItem>>,
     visibleWeek: Week,
-): List<StartsListItem> =
-    starts.entries.mapNotNull { entry ->
-        val condition =
-            entry.key in visibleWeek.days.map { it.date }
-        val item = if (condition)
-            entry.value.find {
-                it.date.parseStringToLocalDateTime() == entry.key
-            }
-        else null
-        item
+): List<StartsListItem> {
+    val visibleDays = visibleWeek.days.map { it.date }
+    return starts.flatMap { (date, items) ->
+        if (date in visibleDays) {
+            items.filter { it.date.parseStringToLocalDateTime() == date }
+        } else {
+            emptyList()
+        }
     }
+}

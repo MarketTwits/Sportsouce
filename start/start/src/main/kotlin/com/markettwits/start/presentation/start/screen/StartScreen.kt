@@ -120,8 +120,7 @@ fun StartScreen(
             if (state.isError) {
                 FailedScreen(
                     message = state.message,
-                    onClickHelp = {
-                    }
+                    onClickHelp = {}
                 ) {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
                 }

@@ -31,13 +31,13 @@ fun MonthCalendar(
         state = state,
         dayContent = { day ->
             val colors = if (day.position == DayPosition.MonthDate) {
-                startTime[day.date].orEmpty().map { Color.Black }
+                startTime[day.date].orEmpty()
             } else {
                 emptyList()
             }
             CalendarDay(
                 day = day,
-                colors = colors,
+                starts = colors,
             ) { clicked ->
                 if (startTime[clicked.date] != null)
                     if (onClickStart != null) {
@@ -67,14 +67,14 @@ fun CompactMonthCalendar(
         calendarScrollPaged = calendarScrollPaged,
         state = state,
         dayContent = { day ->
-            val colors = if (day.position == DayPosition.MonthDate) {
-                startTime[day.date].orEmpty().map { Color.Black }
+            val starts = if (day.position == DayPosition.MonthDate) {
+                startTime[day.date].orEmpty()
             } else {
                 emptyList()
             }
             CompactCalendarDay(
                 day = day,
-                colors = colors,
+                starts = starts,
             )
         },
         monthHeader = {

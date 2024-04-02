@@ -12,9 +12,10 @@ import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-class StartsRepositoryBase(
+internal class StartsRepositoryBase(
     private val service: SportsouceApi,
     private val cache: StartsMainCache,
     private val execute: ExecuteListWithCache,

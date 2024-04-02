@@ -4,28 +4,31 @@ calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
 jwtdecode = "3.18.2"
 kotlin = "1.9.23"
-gradle = "8.3.0-rc02"
+gradle = "8.3.1"
 
 #SDK
-
-compileSdk = "34"
-lazytable = "1.6.0"
-material3HtmlText = "2.0.0-beta01"
-minSdk = "26"
-mvikotlin = "3.3.0"
-orgJetbrainsComposeGradlePlugin = "1.5.11"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
+minSdk = "26"
+compileSdk = "34"
+versionCode = "1"
+versionName = "1.1.0"
 jvm = "8"
 jvm-dot = "1.8"
 
+#UI
+
+
+mvikotlin = "3.3.0"
+orgJetbrainsComposeGradlePlugin = "1.6.1"
+
 #DI
-koin = "3.4.0"
+koin = "3.5.3"
 
 # Compose
 compose = "1.5.11"
-compose-ui = "1.6.3"
-compose-bom = "2024.02.02"
+compose-ui = "1.6.4"
+compose-bom = "2024.03.00"
 compose-activity = "1.8.2"
 compose-lifecycle = "2.7.0"
 compose-material3 = "1.2.1"
@@ -36,6 +39,9 @@ onebone-toolbar = "2.3.5"
 realm-gradle-plugin = "10.2.0"
 zoomable = "1.5.1"
 pullRefresh = "1.0.1"
+lazytable = "1.6.0"
+material3HtmlText = "2.0.0-beta01"
+compose-markdown = "0.4.1"
 # Android
 android-lifecycle-ktx = "2.7.0"
 
@@ -96,6 +102,7 @@ jwtdecode = { module = "com.auth0:java-jwt", version.ref = "jwtdecode" }
 lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 material3-html-text = { module = "de.charlex.compose.material3:material3-html-text", version.ref = "material3HtmlText" }
 pullrefresh = { module = "eu.bambooapps:compose-material3-pullrefresh", version.ref = "pullRefresh" }
+compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "compose-markdown" }
 #MVI KOTLIN
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
 mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
@@ -152,6 +159,7 @@ koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "
 
 #UI
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+activity = { group = "androidx.activity", name = "activity-ktx", version = "1.8.2" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 

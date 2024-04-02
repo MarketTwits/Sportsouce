@@ -3,11 +3,14 @@ package com.markettwits.schedule.schedule.presentation.components.list.common.ca
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,17 +18,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfo
+import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfoMapper
+import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfoMapperBase
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 fun CalendarDay(
     day: CalendarDay,
-    colors: List<Color> = emptyList(),
+    starts: List<StartsListItem> = emptyList(),
     onClick: (CalendarDay) -> Unit = {},
 ) {
     Box(
@@ -59,10 +67,10 @@ fun CalendarDay(
             )
             Box(
                 modifier = Modifier
-                    .size(140.dp)
+                    .size(150.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                if (colors.isEmpty()) {
+                if (starts.isEmpty()) {
                     Box(
                         modifier = Modifier
                             .size(10.dp)
@@ -72,26 +80,31 @@ fun CalendarDay(
                             .background(circleShapeColor)
                     )
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .size(25.dp)
-                            .aspectRatio(1f)
-                            .clip(CircleShape)
-                            .align(Alignment.Center)
-                            .background(MaterialTheme.colorScheme.tertiary)
-
+                    val kindOfSport: List<KindOfSportsInfo> = KindOfSportsInfoMapperBase.mapStarts(
+                        starts,
+                        MaterialTheme.colorScheme.tertiary
                     )
+                    kindOfSport.forEachIndexed { index, start ->
+                        DayCircle(
+                            baseSize = 14.dp,
+                            start.color,
+                            index = index,
+                            kindOfSport.size
+                        )
+                    }
+
                 }
             }
         }
     }
 }
 
+
 @Composable
 fun CompactCalendarDay(
     modifier: Modifier = Modifier,
     day: CalendarDay,
-    colors: List<Color> = emptyList(),
+    starts: List<StartsListItem> = emptyList(),
 ) {
     Box(
         modifier = modifier
@@ -112,27 +125,56 @@ fun CompactCalendarDay(
                     .size(140.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                if (colors.isEmpty()) {
+                if (starts.isEmpty()) {
                     Box(
                         modifier = Modifier
-                            .size(10.dp)
+                            .size(6.dp)
                             .aspectRatio(1f)
                             .align(Alignment.Center)
                             .clip(Shapes.medium)
                             .background(circleShapeColor)
                     )
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .size(25.dp)
-                            .aspectRatio(1f)
-                            .clip(CircleShape)
-                            .align(Alignment.Center)
-                            .background(MaterialTheme.colorScheme.tertiary)
-
+                    val kindOfSport: List<KindOfSportsInfo> = KindOfSportsInfoMapperBase.mapStarts(
+                        starts,
+                        MaterialTheme.colorScheme.tertiary
                     )
+                    kindOfSport.forEachIndexed { index, start ->
+                        DayCircle(
+                            baseSize = 10.dp,
+                            color = start.color,
+                            index = index,
+                            listSize = kindOfSport.size
+                        )
+                        val boxSize =
+                            ((10.dp - (index * 2).dp) * (kindOfSport.size - index)).coerceAtMost(34.dp) // Decrease size with increasing index
+                        val margin = (150.dp - boxSize) / 2
+                        Box(
+                            modifier = Modifier
+                                .size(boxSize)
+                                .clip(CircleShape)
+                                .align(Alignment.Center)
+                                .background(start.color)
+                                .padding(margin)
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun BoxScope.DayCircle(baseSize: Dp, color: Color, index: Int, listSize: Int) {
+    val boxSize =
+        ((baseSize - (index * 2).dp) * (listSize - index)).coerceAtMost(32.dp) // Decrease size with increasing index
+    val margin = (150.dp - boxSize) / 2
+    Box(
+        modifier = Modifier
+            .size(boxSize)
+            .clip(CircleShape)
+            .align(Alignment.Center)
+            .background(color)
+            .padding(margin)
+    )
 }

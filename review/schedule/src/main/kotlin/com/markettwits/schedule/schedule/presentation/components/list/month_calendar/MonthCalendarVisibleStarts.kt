@@ -9,13 +9,10 @@ fun getMonthCalendarVisibleStarts(
     starts: Map<LocalDate, List<StartsListItem>>,
     visibleMonth: CalendarMonth,
 ): List<StartsListItem> =
-    starts.entries.mapNotNull { entry ->
-        val condition =
-            entry.key.monthValue == visibleMonth.yearMonth.monthValue && entry.key.year == visibleMonth.yearMonth.year
-        val item = if (condition)
-            entry.value.find {
-                it.date.parseStringToLocalDateTime() == entry.key
-            }
-        else null
-        item
+    starts.flatMap { (date, items) ->
+        if (date.year == visibleMonth.yearMonth.year && date.monthValue == visibleMonth.yearMonth.monthValue) {
+            items.filter { it.date.parseStringToLocalDateTime() == date }
+        } else {
+            emptyList()
+        }
     }

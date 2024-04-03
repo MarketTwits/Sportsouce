@@ -19,6 +19,5 @@ interface RootStartRandomComponent {
     sealed interface Child {
         data class Random(val component : StartRandomComponent) : Child
         data class Start(val component : RootStartScreenComponent) : Child
-
     }
 }

@@ -23,6 +23,7 @@ class MockStartsScreenComponent : StartsScreen {
                         "Лыжная база красное знамя у острова сокровищ возле сарая через 25 метров Колымская 25 дом 8",
                         false,
                         "<p><strong>Дистанция:</strong> 15 км, 30 км - классический стиль</p>",
+                        views = 0
                     )
                 ),
                 listOf(
@@ -34,7 +35,8 @@ class MockStartsScreenComponent : StartsScreen {
                         StartsListItem.StatusCode(2, "Регистрация на сайт скоро начнется"),
                         "Лыжная база красное знамя",
                         false,
-                        "<p><strong>Дистанция:</strong> 15 км, 30 км - классический стиль</p>"
+                        "<p><strong>Дистанция:</strong> 15 км, 30 км - классический стиль</p>",
+                        views = 0
                     )
                 ),
                 listOf(
@@ -46,7 +48,8 @@ class MockStartsScreenComponent : StartsScreen {
                         StartsListItem.StatusCode(2, "Регистрация на сайт скоро начнется"),
                         "Лыжная база красное знамя",
                         false,
-                        "<p><strong>Дистанция:</strong> 15 км, 30 км - классический стиль</p>"
+                        "<p><strong>Дистанция:</strong> 15 км, 30 км - классический стиль</p>",
+                        views = 0
                     )
                 )
             )

@@ -12,7 +12,7 @@ namespace = "com.markettwits.sportsouce"
 minSdk = "26"
 compileSdk = "34"
 versionCode = "1"
-versionName = "1.1.0"
+versionName = "1.1.1"
 jvm = "8"
 jvm-dot = "1.8"
 
@@ -32,7 +32,7 @@ compose-bom = "2024.03.00"
 compose-activity = "1.8.2"
 compose-lifecycle = "2.7.0"
 compose-material3 = "1.2.1"
-compose-preview = "1.6.3"
+compose-preview = "1.6.4"
 compose-coil = "2.5.0"
 accompanist = "0.34.0"
 onebone-toolbar = "2.3.5"
@@ -121,7 +121,6 @@ zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zooma
 junit = {group = "junit", name = "junit",version.ref = "junit"}
 junit-ext-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit-ext-ktx" }
 testing = { group = "org.testng", name = "testing", version.ref = "testing" }
-leakcanary = {group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary"}
 
 
 #Serialization

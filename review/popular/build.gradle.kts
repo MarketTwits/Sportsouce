@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.coreKoin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
-    implementation(libs.kotlinx.datetime)
+    implementation(projects.starts.startsCommon)
+    implementation(projects.start.start)
     implementation(libs.bundles.mviKotlin)
 }

@@ -21,7 +21,8 @@ abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMappe
                 place = it.coordinates,
                 distance = it.condition_short ?: "",
                 kindOfSports = mapKindOfSports(it.kindOfSports),
-                onMainPage = it.on_main_page ?: false
+                onMainPage = it.on_main_page ?: false,
+                views = it.viewsCount
             )
         }
         return resultLists

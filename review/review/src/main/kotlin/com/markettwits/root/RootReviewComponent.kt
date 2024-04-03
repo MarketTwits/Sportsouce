@@ -5,7 +5,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.news_event.NewsEventComponent
 import com.markettwits.news_list.domain.NewsInfo
 import com.markettwits.news_list.presentation.NewsComponent
-import com.markettwits.popular.presentation.PopularStartsComponent
+import com.markettwits.popular.root.RootStartsPopularComponent
 import com.markettwits.random.root.presentation.RootStartRandomComponent
 import com.markettwits.review.presentation.ReviewComponent
 import com.markettwits.schedule.root.RootStartsScheduleComponent
@@ -43,7 +43,7 @@ interface RootReviewComponent {
         data class Filter(val component : RootStartFilterComponent) : Child
         data class Random(val component : RootStartRandomComponent) : Child
         data class Schedule(val component : RootStartsScheduleComponent) : Child
-        data class Popular(val component : PopularStartsComponent) : Child
+        data class Popular(val component: RootStartsPopularComponent) : Child
         data class NewsEvent(val component : NewsEventComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
     }

@@ -103,9 +103,10 @@ fun DistanceItemBase(
             )
             HorizontalDivider()
             val infinity = item.distance.infinitySlot ?: false
+            val slots = if (item.distance.slots.toInt() <= 0) 0 else item.distance.slots.toInt()
             if (!infinity) {
                 Text(
-                    text = "Осталось слотов : " + item.distance.slots,
+                    text = "Осталось слотов : $slots",
                     fontSize = 12.sp,
                     fontFamily = FontNunito.bold,
                     maxLines = 1,

@@ -11,7 +11,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-internal val rootModule = module {
+internal val reviewRootModule = module {
     singleOf(::DefaultStartsFilterDependencies) bind StartsFilterDependencies::class
     singleOf(::DefaultStartRandomComponentDependencies) bind StartRandomComponentDependencies::class
     singleOf(::DefaultStartsScheduleComponentDependencies) bind StartScheduleComponentDependencies::class

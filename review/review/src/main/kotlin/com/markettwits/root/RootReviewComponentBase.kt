@@ -9,17 +9,16 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.di.ComponentKoinContext
 import com.markettwits.di.newsModule
 import com.markettwits.news_event.NewsEventComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory
 import com.markettwits.news_list.presentation.NewsComponentBase
-import com.markettwits.popular.presentation.PopularStartsComponentBase
+import com.markettwits.popular.root.RootStartsPopularComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase
-import com.markettwits.root.di.rootModule
+import com.markettwits.root.di.reviewRootModule
 import com.markettwits.schedule.root.RootStartsScheduleComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.root.RootStartFilterComponentBase
@@ -35,7 +34,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(rootModule, newsModule, reviewModule, sportSouceNetworkModule)
+        listOf(reviewRootModule, newsModule, reviewModule)
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
@@ -98,7 +97,6 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     context = componentContext,
                     dependencies = scope.get(),
                     pop = navigation::pop
-
                 )
             )
 
@@ -111,7 +109,10 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             )
 
             is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
-                PopularStartsComponentBase(context = componentContext)
+                RootStartsPopularComponentBase(
+                    context = componentContext,
+                    pop = navigation::pop,
+                )
             )
 
             is RootReviewComponent.Config.NewsEvent -> RootReviewComponent.Child.NewsEvent(

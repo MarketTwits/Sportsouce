@@ -9,13 +9,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
-import com.markettwits.inappnotification.api.InAppNotificationStorage
-import com.markettwits.inappnotification.api.model.InAppNotification
 import com.flipperdevices.selfupdater.api.SelfUpdaterSourceApi
 import com.flipperdevices.selfupdater.models.SelfUpdateResult
 import com.flipperdevices.selfupdater.models.SemVer
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
+import com.markettwits.inappnotification.api.InAppNotificationStorage
+import com.markettwits.inappnotification.api.model.InAppNotification
 
 
 class SelfUpdaterThirdParty(
@@ -105,7 +103,6 @@ class SelfUpdaterThirdParty(
             this.downloadId = manager.enqueue(request)
         } catch (e: Exception) {
             if (manual) {
-                Log.e("mt05", "MANUAL $e")
                 inAppNotificationStorage.addNotification(InAppNotification.SelfUpdateError(exception = e))
             }
             error { "Error while download update $e" }

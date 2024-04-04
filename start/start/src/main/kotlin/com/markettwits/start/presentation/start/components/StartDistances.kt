@@ -17,12 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
+import com.markettwits.core_ui.base_extensions.openWebPage
 import com.markettwits.core_ui.components.Shapes
+import com.markettwits.core_ui.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.common.StartContentBasePanel
@@ -34,8 +37,10 @@ fun StartDistances(
     startStatus: StartStatus,
     paymentDisabled: Boolean,
     paymentType: String,
+    regLink: String,
     onClick: (DistanceItem, Boolean, String) -> Unit,
 ) {
+    val context = LocalContext.current
     if (distance.isNotEmpty() && startStatus.code == 3) {
         StartContentBasePanel(modifier = modifier, label = "Дистанции") {
             LazyRow {
@@ -62,10 +67,22 @@ fun StartDistances(
                                     })
                             }
                         }
-
                     }
                 }
             }
+        }
+    }
+    if (regLink.isNotEmpty()) {
+        StartContentBasePanel(modifier = modifier, label = "Дистанции") {
+            ButtonContentBase(
+                modifier = modifier.fillMaxWidth(),
+                containerColor = MaterialTheme.colorScheme.secondary,
+                textColor = MaterialTheme.colorScheme.onSecondary,
+                title = "Перейти на сайт регистрации",
+                onClick = {
+                    openWebPage(regLink, context)
+                }
+            )
         }
     }
 }

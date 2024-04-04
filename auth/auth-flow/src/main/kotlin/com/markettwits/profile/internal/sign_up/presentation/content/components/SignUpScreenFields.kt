@@ -8,6 +8,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.markettwits.core_ui.components.textField.CalendarTextFiled
 import com.markettwits.core_ui.components.textField.DropDownSpinner
+import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 
@@ -17,7 +18,7 @@ internal fun SignUpScreenFields(
     statement: SignUpStatement,
     onValueChanged: (SignUpStatement) -> Unit
 ) {
-    OutlinedTextFieldBase(
+    OutlinePhoneTextFiled(
         modifier = modifier,
         label = "Телефон",
         value = statement.phone,

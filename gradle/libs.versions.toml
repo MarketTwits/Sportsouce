@@ -11,13 +11,11 @@ targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 minSdk = "26"
 compileSdk = "34"
-versionCode = "1"
-versionName = "1.2.0"
+versionName = "1.2.1"
 jvm = "8"
 jvm-dot = "1.8"
 
 #UI
-
 
 mvikotlin = "3.3.0"
 orgJetbrainsComposeGradlePlugin = "1.6.1"

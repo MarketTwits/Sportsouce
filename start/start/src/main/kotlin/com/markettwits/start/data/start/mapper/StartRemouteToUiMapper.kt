@@ -86,7 +86,8 @@ interface StartRemoteToUiMapper {
                         url = it.url,
                     )
                 } ?: emptyList(),
-                startAlbum = sortStartAlbum(mapStartAlbum(startAlbumRemote))
+                startAlbum = sortStartAlbum(mapStartAlbum(startAlbumRemote)),
+                regLink = startRemote.start_data.reg_link ?: ""
             )
         }
 

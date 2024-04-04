@@ -16,7 +16,7 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.R
-import com.markettwits.core_ui.components.BackFloatingActionButton
+import com.markettwits.core_ui.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.image.request.imageRequestCrossfade
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable

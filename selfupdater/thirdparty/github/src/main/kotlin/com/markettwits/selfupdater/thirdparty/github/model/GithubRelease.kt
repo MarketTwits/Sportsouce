@@ -1,11 +1,12 @@
 package com.markettwits.selfupdater.thirdparty.github.model
 
+import android.util.Log
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-private const val GMS_PREFIX = "flipper-zero-gms-"
-private const val NO_GMS_PREFIX = "flipper-zero-nogms-"
+
 private const val RELEASE_SUFFIX = "-release"
+private const val DEBUG_SUFFIX = "-debug"
 private const val APK_EXTENSION = ".apk"
 
 @Serializable
@@ -21,16 +22,16 @@ data class GithubRelease(
     @SerialName("body")
     val description: String
 ) {
-    fun getDownloadUrl(isGooglePlayEnable: Boolean): String? {
-        val prefix = if (isGooglePlayEnable) GMS_PREFIX else NO_GMS_PREFIX
-        return assets[0].browserDownloadUrl
-        // .firstOrNull { it.name.contains(prefix) }
-        // ?.browserDownloadUrl
+    fun getDownloadUrl(isDev: Boolean): String? {
+        val suffix = if (isDev) DEBUG_SUFFIX else RELEASE_SUFFIX
+        val matchingAssets = assets.filter { it.name.contains(suffix) }
+        Log.e("mt05", "matchingAssets $matchingAssets")
+        return matchingAssets.firstOrNull()?.browserDownloadUrl
     }
 
     fun getVersion(isDev: Boolean): String {
         return if (isDev) {
-            tagName
+            tagName.removeSuffix(DEBUG_SUFFIX)
         } else {
             tagName.removeSuffix(RELEASE_SUFFIX)
         }

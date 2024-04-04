@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.textField.CalendarTextFiled
 import com.markettwits.core_ui.components.textField.DropDownSpinner
+import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.members.member_common.domain.ProfileMember
@@ -98,7 +99,7 @@ fun MemberScreenContent(
                     onValueChanged(statement.copy(email = it))
                 }
             )
-            OutlinedTextFieldBase(
+            OutlinePhoneTextFiled(
                 modifier = Modifier.padding(vertical = 5.dp),
                 label = "Номер телефона",
                 value = statement.phone,

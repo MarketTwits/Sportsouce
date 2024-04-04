@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Sailing
 import androidx.compose.material.icons.filled.Snowboarding
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
 
 interface KindOfSportsInfoMapper {
@@ -63,12 +64,12 @@ object KindOfSportsInfoMapperBase : KindOfSportsInfoMapper {
         sportIcons[sportId] ?: Icons.Default.CalendarMonth
 
     private val sportColors = mapOf(
-        16 to Color.Blue,        // bike
-        15 to Color.Red,         // triathlon
-        14 to Color.Green,       // swimming
-        9 to Color.Yellow,       // run
-        7 to Color.Magenta,      // race with obstacles
-        2 to Color.Cyan          // ski race
+        16 to SportSouceColor.SportSouceRegistryOpenGreen,        // bike
+        15 to SportSouceColor.SportSouceStartEndedPink,         // triathlon
+        14 to SportSouceColor.SportSouceBlue,       // swimming
+        9 to SportSouceColor.SportSouceRegistryCommingSoonYellow,       // run
+        7 to SportSouceColor.SportSouceLightRed,      // race with obstacles
+        2 to SportSouceColor.SportSouceLighBlue          // ski race
     )
     private val sportIcons = mapOf(
         16 to Icons.AutoMirrored.Filled.DirectionsBike,

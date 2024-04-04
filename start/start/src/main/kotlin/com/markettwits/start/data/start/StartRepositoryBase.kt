@@ -17,7 +17,7 @@ import com.markettwits.start.data.start.mapper.StartRemoteToUiMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.component.CommentUiState
 
-class StartRepositoryBase(
+internal class StartRepositoryBase(
     private val service: SportsouceApi,
     private val timeService: TimeApi,
     private val authService: AuthDataSource,

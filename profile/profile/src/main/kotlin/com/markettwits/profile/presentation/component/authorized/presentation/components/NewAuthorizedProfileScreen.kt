@@ -44,7 +44,7 @@ fun NewAuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                     modifier = modifier
                         .verticalScroll(rememberScrollState())
                         .padding(top = it.calculateTopPadding())
-                        .padding(10.dp)
+                        .padding(14.dp)
                 ) {
                     UserInfoCard(
                         user = user,

@@ -1,5 +1,6 @@
 package com.markettwits.members.member_common.data.mapper
 
+import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
 import com.markettwits.cloud.model.profile.members.ProfileMembers
 import com.markettwits.core_ui.time.TimeMapper
@@ -42,4 +43,20 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
             type = member.type,
             user_id = userId.toString()
         )
+
+    override fun userToMember(user: User) = ProfileMember(
+        id = user.id,
+        userId = user.id,
+        name = user.name,
+        surname = user.surname,
+        phone = user.number,
+        gender = user.sex,
+        team = user.team ?: "",
+        birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
+        type = "",
+        email = user.email,
+        child = isUserChild(user.age)
+    )
+
+    private fun isUserChild(age: String?): Boolean = age?.toIntOrNull()?.let { it <= 18 } ?: false
 }

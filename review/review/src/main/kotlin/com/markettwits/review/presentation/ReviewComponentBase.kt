@@ -10,12 +10,13 @@ import com.markettwits.review.presentation.store.ReviewStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class ReviewComponentBase(
     context: ComponentContext,
     private val storeFactory: ReviewStoreFactory,
-    private val onClickMenu : (Int) -> Unit,
+    private val onClickMenu: (Int) -> Unit,
     private val onStartClick: (Int) -> Unit,
     private val onClickSearch: () -> Unit,
     private val onClickNews: (NewsInfo) -> Unit
@@ -31,15 +32,13 @@ class ReviewComponentBase(
     }
 
     init {
-        scope.launch {
-            store.labels.collect {
+        store.labels.onEach {
                 when (it) {
                     is ReviewStore.Label.OnClickItem -> onStartClick(it.item)
                     is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
                     is ReviewStore.Label.OnClickSearch -> onClickSearch()
                     is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
                 }
-            }
-        }
+        }.launchIn(scope)
     }
 }

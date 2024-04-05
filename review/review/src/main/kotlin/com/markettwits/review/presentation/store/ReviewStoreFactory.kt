@@ -9,6 +9,7 @@ import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.domain.Review
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class ReviewStoreFactory(
@@ -50,8 +51,10 @@ class ReviewStoreFactory(
 
         private fun launch(forced: Boolean) {
             scope.launch {
-                dispatch(Msg.Loading)
                 repository.review(forced)
+                    .onStart {
+                        dispatch(Msg.Loading)
+                    }
                     .catch {
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
@@ -70,6 +73,7 @@ class ReviewStoreFactory(
                     isLoading = false,
                     message = message.message
                 )
+
                 is Msg.Loading -> copy(isLoading = true, isError = false)
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,

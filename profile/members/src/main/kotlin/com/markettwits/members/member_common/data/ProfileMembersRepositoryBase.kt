@@ -17,22 +17,34 @@ class ProfileMembersRepositoryBase(
     private val executeWithCache: ExecuteListWithCache
 ) : ProfileMembersRepository {
 
-    override suspend fun observeMembers(forced: Boolean): Flow<List<ProfileMember>> = flow {
+    override suspend fun observeMembers(
+        forced: Boolean,
+        withUser: Boolean
+    ): Flow<List<ProfileMember>> = flow {
         executeWithCache.executeListWithCache(
             forced = forced,
             cache = cache,
             launch = ::fetchMembers,
             callback = {
-                emit(it)
+                emit(obtainMembersCallback(withUser, it))
             }
         )
     }
 
-    override suspend fun fetchMembers(): List<ProfileMember> {
+    private suspend fun obtainMembersCallback(
+        withUser: Boolean,
+        items: List<ProfileMember>
+    ): List<ProfileMember> =
+        if (withUser) items.toMutableList().apply { add(userAsMember().getOrThrow()) } else items
+
+    override suspend fun fetchMembers(withUser: Boolean): List<ProfileMember> {
         val user = auth.auth().getOrThrow()
         val token = auth.updateToken().getOrThrow()
         val members = service.memberTemplate(user.id, token)
-        return mapper.mapAll(members)
+        val mapMembers = mapper.mapAll(members).toMutableList()
+        if (withUser)
+            mapMembers.add(userAsMember().getOrThrow())
+        return mapMembers
     }
 
 
@@ -53,5 +65,9 @@ class ProfileMembersRepositoryBase(
         val user = auth.user().getOrThrow()
         val request = mapper.addOrUpdate(profileMember, false, user.id)
         service.addMember(request, token)
+    }
+
+    override suspend fun userAsMember(): Result<ProfileMember> = runCatching {
+        mapper.userToMember(auth.user().getOrThrow())
     }
 }

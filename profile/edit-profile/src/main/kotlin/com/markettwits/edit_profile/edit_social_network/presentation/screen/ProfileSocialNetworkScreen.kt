@@ -1,4 +1,4 @@
-package com.markettwits.edit_profile.edit_social_network.presentation.components
+package com.markettwits.edit_profile.edit_social_network.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -23,6 +23,8 @@ import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
+import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkContent
+import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkInfo
 import com.markettwits.edit_profile.edit_social_network.presentation.store.EditProfileSocialNetworkStore
 
 @Composable

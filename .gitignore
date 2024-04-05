@@ -17,3 +17,6 @@ local.properties
 # Project exclude paths
 /build-logic/build/
 /build-logic/build/classes/kotlin/main/
+
+/app/release
+/app/debug

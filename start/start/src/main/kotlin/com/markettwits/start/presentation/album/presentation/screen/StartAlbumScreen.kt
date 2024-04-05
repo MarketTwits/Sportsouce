@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
-import com.markettwits.start.presentation.album.presentation.components.StartAlbumScreenContent
+import com.markettwits.start.presentation.album.presentation.components.StartAlbumScreenContentNew
 import com.markettwits.start.presentation.album.presentation.store.StartAlbumStore
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
@@ -25,8 +25,7 @@ fun StartAlbumScreen(component: StartAlbumComponent) {
                 component.obtainEvent(StartAlbumStore.Intent.GoBack)
             }
         }) {
-        StartAlbumScreenContent(
-            modifier = Modifier,
+        StartAlbumScreenContentNew(
             items = state.images
         )
     }

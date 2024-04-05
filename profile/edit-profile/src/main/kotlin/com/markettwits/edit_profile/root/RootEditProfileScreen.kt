@@ -12,7 +12,7 @@ import com.markettwits.edit_profile.edit_profile_Image.presentation.components.E
 import com.markettwits.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
 import com.markettwits.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen
 import com.markettwits.edit_profile.edit_profile_sign_out.presentation.components.EditProfileSignOutScreenDialog
-import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkScreen
+import com.markettwits.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
 
 @Composable
 fun RootEditProfileScreen(component: RootEditProfileComponent) {

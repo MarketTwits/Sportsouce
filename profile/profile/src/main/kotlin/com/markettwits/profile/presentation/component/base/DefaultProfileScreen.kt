@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileScreen
-import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkScreen
+import com.markettwits.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
 import com.markettwits.edit_profile.root.RootEditProfileScreen
 import com.markettwits.members.member_root.component.RootMembersScreen
 import com.markettwits.profile.api.root.RootAuthFlowScreen

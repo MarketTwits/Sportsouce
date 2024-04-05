@@ -28,9 +28,9 @@ private fun addUrlIfNotEmpty(baseUrl: String, value: String): String {
 
 private fun validateRussianPhoneNumber(phoneNumber: String): String {
     if (phoneNumber.isNotEmpty()) {
-        val russianPhoneNumberRegex = Regex("^\\+7[0-9]{10}\$")
+        val russianPhoneNumberRegex = Regex("^\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}\$")
         if (!russianPhoneNumberRegex.matches(phoneNumber)) {
-            throw IllegalArgumentException("Введите корректный номер телефона, либо удалите его")
+            throw IllegalArgumentException("Введите корректный номер телефона в формате:\n +7 (000) 000-00-00, либо удалите его")
         }
     }
     return phoneNumber

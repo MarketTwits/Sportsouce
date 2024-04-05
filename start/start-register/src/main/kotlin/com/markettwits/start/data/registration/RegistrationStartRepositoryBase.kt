@@ -37,7 +37,7 @@ class RegistrationStartRepositoryBase(
             val user = authService.user().getOrThrow()
             val cities = teamsCityRepository.city().getOrThrow()
             val teams = teamsCityRepository.teams().getOrThrow()
-            val members = profileMembersRepository.observeMembers(false).first()
+            val members = profileMembersRepository.observeMembers(false, true).first()
             statementMapper.mapOrder(
                 startTitle,
                 cities,

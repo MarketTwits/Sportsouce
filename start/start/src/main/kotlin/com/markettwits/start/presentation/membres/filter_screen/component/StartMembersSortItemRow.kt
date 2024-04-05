@@ -2,10 +2,12 @@ package com.markettwits.start.presentation.membres.filter_screen.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -65,6 +67,7 @@ fun StartMemberFilterItemSelected(modifier: Modifier = Modifier, item: String, o
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StartMembersSortWrapper2(
     members: List<MembersFilterGroup>,
@@ -80,22 +83,38 @@ fun StartMembersSortWrapper2(
                 fontFamily = FontNunito.bold,
                 fontSize = 14.sp
             )
-            LazyRow(
-                content = {
-
-                    itemsIndexed(item.items) { index, item ->
-                        if (item is MembersFilterItem.Base) {
-                            StartMemberFilterItemBase(item = item.title) {
-                                component.toggleFilterItemState(groupIndex, index)
-                            }
-                        } else {
-                            StartMemberFilterItemSelected(item = item.title) {
-                                component.toggleFilterItemState(groupIndex, index)
-                            }
+            FlowRow(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                maxItemsInEachRow = 12
+            ) {
+                item.items.forEachIndexed { index, item ->
+                    if (item is MembersFilterItem.Base) {
+                        StartMemberFilterItemBase(item = item.title) {
+                            component.toggleFilterItemState(groupIndex, index)
+                        }
+                    } else {
+                        StartMemberFilterItemSelected(item = item.title) {
+                            component.toggleFilterItemState(groupIndex, index)
                         }
                     }
                 }
-            )
+            }
+//            LazyRow(
+//                content = {
+//
+//                    itemsIndexed(item.items) { index, item ->
+//                        if (item is MembersFilterItem.Base) {
+//                            StartMemberFilterItemBase(item = item.title) {
+//                                component.toggleFilterItemState(groupIndex, index)
+//                            }
+//                        } else {
+//                            StartMemberFilterItemSelected(item = item.title) {
+//                                component.toggleFilterItemState(groupIndex, index)
+//                            }
+//                        }
+//                    }
+//                }
+//            )
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
+import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.image.icons.IconTelegram
 import com.markettwits.core_ui.image.icons.IconVk
@@ -51,7 +52,7 @@ fun ProfileSocialNetworkContent(
                 icon = WhatsappIcon,
                 SportSouceColor.WhatsappIcon
             )
-            OutlinedTextFieldBase(
+            OutlinePhoneTextFiled(
                 modifier = localModifier,
                 value = user.whatsApp,
                 onValueChange = { newValue -> onUserChange(user.copy(whatsApp = newValue)) },

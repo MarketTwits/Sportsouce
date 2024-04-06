@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.theme.FontNunito
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun <E> DropDownSpinner(
@@ -32,7 +33,7 @@ fun <E> DropDownSpinner(
     defaultText: String = "Select...",
     selectedItem: E,
     onItemSelected: (Int, E) -> Unit,
-    itemList: List<E>?,
+    itemList: ImmutableList<E>?,
     textFiled: @Composable () -> Unit
 ) {
     var isOpen by remember { mutableStateOf(false) }

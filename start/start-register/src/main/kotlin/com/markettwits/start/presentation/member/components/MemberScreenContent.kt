@@ -23,6 +23,7 @@ import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.domain.StartStatement
 import com.markettwits.start.presentation.order.presentation.components.extra.fileds.CityFiled
 import com.markettwits.start.presentation.order.presentation.components.extra.fileds.TeamFiled
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +114,8 @@ fun MemberScreenContent(
             modifier = Modifier.padding(vertical = 5.dp),
             selectedItem = statement.sex, onItemSelected = { id, value ->
                 onValueChanged(statement.copy(sex = value))
-            }, itemList = statement.sexList.map { it.name }) {
+            }, itemList = statement.sexList.map { it.name }.toImmutableList()
+        ) {
             OutlinedTextFieldBase(
                 label = "Пол",
                 value = statement.sex,

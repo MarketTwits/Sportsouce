@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation(libs.android.gradle)
     implementation(libs.kotlin.gradle)
+    implementation("com.vk.vkompose:gradle-plugin:0.4.2")
     implementation("org.jetbrains.compose:compose-gradle-plugin:1.6.10-dev1514")
 
 }

@@ -29,8 +29,10 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
+@Suppress("NonSkippableComposable")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMemberTextFieldsContent(
@@ -39,7 +41,6 @@ fun EditMemberTextFieldsContent(
     member: ProfileMember,
     teams: List<Team>,
 ) {
-
     OnBackgroundCard(modifier = modifier) {
         val modifierInner = Modifier.padding(5.dp)
         Column(modifierInner) {
@@ -94,7 +95,7 @@ fun EditMemberTextFieldsContent(
                     onMemberChange(member.copy(birthday = it))
                 }
             )
-            val sexList = listOf("Мужской", "Женский")
+            val sexList = persistentListOf("Мужской", "Женский")
             DropDownSpinner(
                 modifier = modifierInner,
                 itemList = sexList,
@@ -120,7 +121,7 @@ fun EditMemberTextFieldsContent(
             ) { newValue -> onMemberChange(member.copy(team = newValue)) }
 
             val typeList = remember {
-                listOf("Родственник", "Друг", "Партнер по команде")
+                persistentListOf("Родственник", "Друг", "Партнер по команде")
             }
             DropDownSpinner(
                 modifier = modifierInner,

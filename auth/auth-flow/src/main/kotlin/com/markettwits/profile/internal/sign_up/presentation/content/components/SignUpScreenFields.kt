@@ -11,6 +11,7 @@ import com.markettwits.core_ui.components.textField.DropDownSpinner
 import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SignUpScreenFields(
@@ -52,7 +53,7 @@ internal fun SignUpScreenFields(
     ) {
         onValueChanged(statement.copy(surname = it))
     }
-    val sexList = listOf("Мужской", "Женский")
+    val sexList = persistentListOf("Мужской", "Женский")
     DropDownSpinner(
         itemList = sexList,
         selectedItem = statement.sex,

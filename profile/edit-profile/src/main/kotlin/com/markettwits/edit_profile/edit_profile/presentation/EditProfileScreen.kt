@@ -13,6 +13,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,12 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.base.OnEvent
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.components.top_bar.TopBarBase
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.edit_profile.edit_profile.presentation.components.UserDataPage
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileEvent
 import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileUiState
 import com.markettwits.profile.presentation.component.edit_profile.presentation.MockEditProfileScreen
 import com.markettwits.profile.presentation.component.edit_profile.presentation.components.MyInfoPage
@@ -124,29 +123,31 @@ fun EditProfileScreen(component: EditProfileComponent) {
                 snackbarData = it
             )
         }
-        OnEvent(event = component.events, onEvent = {
-            when (it) {
-                is EditProfileEvent.ShowError -> {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = it.message,
-                            duration = SnackbarDuration.Long,
-                            withDismissAction = true
-                        )
+        LaunchedEffect(Unit) {
+            component.events.collect {
+                when (it) {
+                    is EditProfileEvent.ShowError -> {
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = it.message,
+                                duration = SnackbarDuration.Long,
+                                withDismissAction = true
+                            )
+                        }
                     }
-                }
 
-                is EditProfileEvent.ShowSuccess -> {
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = it.message,
-                            duration = SnackbarDuration.Long,
-                            withDismissAction = true
-                        )
+                    is EditProfileEvent.ShowSuccess -> {
+                        scope.launch {
+                            snackBarHostState.showSnackbar(
+                                message = it.message,
+                                duration = SnackbarDuration.Long,
+                                withDismissAction = true
+                            )
+                        }
                     }
                 }
             }
-        })
+        }
     }
 }
 

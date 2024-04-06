@@ -14,7 +14,6 @@ data class User(
     val comment_for_address: String?,
     val createdAt: String,
     val email: String,
-    val favor: String?,
     val id: Int,
     val instagram: String?,
     val name: String,
@@ -22,14 +21,10 @@ data class User(
     val patronymic: String?,
     val photo_id: Int?,
     val photo: Photo? = null,
-    val role: String,
     val sex: String,
     val surname: String,
     val team: String?,
     val telegram: String?,
-    val updatedAt: String,
-    val verification_code: String,
-    val verified: Boolean,
     val vk: String?,
     val whatsapp: String?
 ) {

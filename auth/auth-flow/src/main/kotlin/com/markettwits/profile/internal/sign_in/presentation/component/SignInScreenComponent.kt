@@ -36,6 +36,11 @@ class SignInScreenComponent(
         keeper.validate()
     }
 
+    override fun handlePhone(phone: String) {
+        keeper.fieldState.value = keeper.fieldState.value.copy(email = phone)
+        keeper.validate()
+    }
+
     override fun handlePassword(password: String) {
         keeper.fieldState.value = keeper.fieldState.value.copy(password = password)
         keeper.validate()

@@ -22,6 +22,7 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import kotlinx.collections.immutable.toImmutableList
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +82,7 @@ fun EditProfileInfoFieldsContent(
                 onValueChange = { newValue -> onUserChange(user.copy(phoneNumber = newValue)) },
                 label = "Номер телефона"
             )
-            val sexList = listOf("Мужской", "Женский")
+            val sexList = listOf("Мужской", "Женский").toImmutableList()
             DropDownSpinner(
                 modifier = modifierInner,
                 itemList = sexList,

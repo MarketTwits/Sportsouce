@@ -7,6 +7,7 @@ kotlin = "1.9.23"
 gradle = "8.3.1"
 
 #SDK
+kotlinxCollectionsImmutable = "0.3.7"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 minSdk = "26"
@@ -97,6 +98,7 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", versi
 compose-coil = {group = "io.coil-kt", name = "coil-compose", version.ref = "compose-coil"}
 compose-icons = {group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-ui"}
 jwtdecode = { module = "com.auth0:java-jwt", version.ref = "jwtdecode" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 material3-html-text = { module = "de.charlex.compose.material3:material3-html-text", version.ref = "material3HtmlText" }
 pullrefresh = { module = "eu.bambooapps:compose-material3-pullrefresh", version.ref = "pullRefresh" }

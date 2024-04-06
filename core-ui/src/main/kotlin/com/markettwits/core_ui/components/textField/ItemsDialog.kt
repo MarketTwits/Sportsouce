@@ -32,6 +32,7 @@ import androidx.compose.ui.window.Dialog
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
 
+@Suppress("NonSkippableComposable")
 @Composable
 internal fun ItemsDialog(
     modifier: Modifier = Modifier,
@@ -109,6 +110,7 @@ private fun ItemsDialogHeader(modifier: Modifier, label: String, onDismissReques
     }
 }
 
+@Suppress("NonSkippableComposable")
 @Composable
 private fun ItemsDialogFilterBody(
     modifier: Modifier = Modifier,

@@ -1,8 +1,9 @@
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
-import localLibs
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.getByType
+
+plugins {
+    id("com.vk.vkompose")
+}
 
 configure<BaseExtension>{
     val extension = extensions.getByType<LibraryExtension>()
@@ -12,4 +13,22 @@ configure<BaseExtension>{
     composeOptions{
         kotlinCompilerExtensionVersion  = localLibs.findVersion("compose").get().toString()
     }
+}
+
+vkompose {
+    skippabilityCheck = false
+    // or
+
+    recompose {
+        isHighlighterEnabled = true
+        isLoggerEnabled = true
+    }
+
+    testTag {
+        isApplierEnabled = true
+        isDrawerEnabled = false
+        isCleanerEnabled = false
+    }
+
+    sourceInformationClean = true
 }

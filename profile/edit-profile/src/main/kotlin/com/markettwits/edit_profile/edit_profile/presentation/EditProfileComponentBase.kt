@@ -5,6 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.edit_profile.edit_profile.data.EditProfileDataStore
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileComponent
+import com.markettwits.edit_profile.edit_profile.presentation.EditProfileEvent
 import com.markettwits.edit_profile.edit_profile.presentation.EditProfileUiPage
 import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import kotlinx.coroutines.CoroutineScope

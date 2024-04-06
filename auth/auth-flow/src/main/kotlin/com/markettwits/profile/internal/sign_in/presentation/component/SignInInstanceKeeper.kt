@@ -2,10 +2,8 @@ package com.markettwits.profile.internal.sign_in.presentation.component
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCase
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,21 +27,23 @@ class SignInInstanceKeeper(
                         labels.value = SignInOutPuts.GoProfile
                     }
                 }, onFailure = {
-                    val message = when (it) {
-                        is ClientRequestException -> it.response.body<AuthErrorResponse>().message
-                        else -> it.message.toString()
-                    }
+                    val message = networkExceptionHandler(it).message.toString()
                     authUiState.value = SignInUiState.Error(message = message, messageShow = false)
                 })
         }
     }
 
     fun validate() {
-        if (fieldState.value.email.isNotEmpty() && fieldState.value.password.isNotEmpty()) {
+        if (validatePhone(fieldState.value.email) && fieldState.value.password.isNotEmpty()) {
             fieldState.value = fieldState.value.copy(enabled = true)
         } else {
             fieldState.value = fieldState.value.copy(enabled = false)
         }
+    }
+
+    fun validatePhone(phone: String): Boolean {
+        val regex = Regex("""\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}""")
+        return regex.matches(phone)
     }
 
     fun signUp() {

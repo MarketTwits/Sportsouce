@@ -11,5 +11,6 @@ internal interface SignInScreen {
     fun logIn()
     fun messageHasBeenShowed()
     fun handleEmail(email : String)
+    fun handlePhone(phone: String)
     fun handlePassword(password: String)
 }

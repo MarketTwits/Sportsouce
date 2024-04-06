@@ -26,6 +26,10 @@ internal class MockSignInScreenComponent : SignInScreen {
 
     }
 
+    override fun handlePhone(phone: String) {
+
+    }
+
     override fun handlePassword(password: String) {
 
     }

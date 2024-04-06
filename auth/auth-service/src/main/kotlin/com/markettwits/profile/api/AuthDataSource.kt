@@ -19,12 +19,12 @@ interface AuthDataSource {
     /**
      * Attempts to log in a user with the provided email and password.
      *
-     * @param email the email of the user
      * @param password the password of the user
+     * @param email the email of the user
      * @return a SignInUiState object representing the UI state after the login
      *     attempt
      */
-    suspend fun logIn(email : String, password : String) : Result<Unit>
+    suspend fun logIn(emailOrPhone: String, password: String): Result<Unit>
 
     /**
      * Updates the password of the current user.

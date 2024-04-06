@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.SportSouceColor
 import com.markettwits.profile.internal.common.AuthButton
@@ -52,13 +53,13 @@ internal fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState,
         ) {
             WelcomeContent()
             val modifier = Modifier.padding(10.dp)
-            OutlinedTextFieldBase(
+            OutlinePhoneTextFiled(
                 modifier = modifier,
-                label = "Почта",
+                label = "Номер телефона",
                 value = fieldState.email,
                 isError = state is SignInUiState.Error,
             ) {
-                component.handleEmail(it)
+                component.handlePhone(it)
             }
             OutlinedTextFieldBase(
                 modifier = modifier,

@@ -32,13 +32,12 @@ internal class BaseAuthDataSource(
             }
         )
 
-    override suspend fun logIn(email: String, password: String): Result<Unit> {
-        return runCatching {
+    override suspend fun logIn(email: String, password: String): Result<Unit> =
+        runCatching {
             val response = remoteService.signIn(SignInRequest(email = email, password = password))
             local.write(signInCacheMapper.map(response, password))
             auth()
         }
-    }
 
     override suspend fun updatePassword(password: String) {
         local.updatePassword(password)

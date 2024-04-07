@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.core_ui.time.BaseTimeMapper
 import com.markettwits.core_ui.time.TimeMapper
+import com.markettwits.inappnotification.api.di.crashlyticsModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.internal.sign_up.data.SignUpMapper
 import com.markettwits.profile.internal.sign_up.data.SignUpMapperBase
@@ -17,7 +18,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val signUpModule = module {
-    includes(authDataSourceModule)
+    includes(authDataSourceModule, crashlyticsModule)
     singleOf(::SignUpUseCaseBase) bind SignUpUseCase::class
     singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::SignUpMapperBase) bind SignUpMapper::class

@@ -1,5 +1,6 @@
 plugins {
     id("android-application-convention")
+    id("android-application-crashlytics-convention")
 }
 
 android {
@@ -42,13 +43,14 @@ android {
         }
     }
 }
-
 dependencies {
     implementation(projects.coreUi)
     implementation(projects.root)
     implementation(projects.cache)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.bundles.decompose.compose)
+    implementation(libs.tracer.crash.report)
+    implementation(projects.analytics.crashlytics)
     implementation(libs.koin.android)
 }
 

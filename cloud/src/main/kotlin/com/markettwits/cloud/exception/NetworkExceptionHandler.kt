@@ -19,3 +19,7 @@ suspend fun networkExceptionHandler(exception: Throwable): Exception =
         is SerializationException -> Exception("Ошибка обработки данных")
         else -> Exception(exception.message.toString())
     }
+
+fun Throwable.isResponseException(): Boolean =
+    (this is ResponseException || this is SerializationException)
+

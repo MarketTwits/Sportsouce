@@ -5,18 +5,18 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
+import com.markettwits.inappnotification.api.tracker.AnalyticsTracker
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.profile.internal.sign_up.domain.use_case.SignUpUseCase
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.launch
 
 internal class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
+    private val analyticsTracker: AnalyticsTracker,
     private val useCase: SignUpUseCase,
 ) {
     fun create(): SignUpStore =
@@ -54,11 +54,8 @@ internal class SignUpStoreFactory(
                     onSuccess = {
                         publish(SignUpStore.Label.OpenProfile)
                     }, onFailure = {
-                        val message = when (it) {
-                            is ClientRequestException -> it.response.body<AuthErrorResponse>().message
-                            else -> it.message.toString()
-                        }
-                        dispatch(Msg.LoadFailed(message))
+                        analyticsTracker.reportException(it, key = "sign_up")
+                        dispatch(Msg.LoadFailed(networkExceptionHandler(it).message.toString()))
                     })
 
             }

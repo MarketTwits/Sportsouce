@@ -36,7 +36,6 @@ data class StartItem(
         val startId: Int,
         val photos: List<Photo>,
         val name: String,
-        val isBeforeStart: Boolean,
     ) {
         data class Photo(
             val id: Int,

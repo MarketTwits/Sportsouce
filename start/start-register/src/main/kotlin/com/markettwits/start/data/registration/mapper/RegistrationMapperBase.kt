@@ -231,7 +231,6 @@ class RegistrationMapperBase : RegistrationMapper {
             }
             /** Registry single */
 
-
             if (members.size <= 1 && group.sex == mapGenderUiToCloud(members[0].sex)) {
                 return StartRegisterRequest.Group(
                     ageFrom = group.ageFrom,

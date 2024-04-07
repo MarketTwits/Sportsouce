@@ -5,6 +5,7 @@ pluginManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://jitpack.io")
+        maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
         gradlePluginPortal()
     }
 }
@@ -15,6 +16,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
     }
 }
 
@@ -63,3 +65,6 @@ include(":settings:impl")
 
 include(":inappnotification:api")
 include(":inappnotification:impl")
+
+include(":analytics:api")
+include(":analytics:crashlytics")

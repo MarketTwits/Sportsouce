@@ -1,12 +1,9 @@
 package com.markettwits.profile.internal.sign_in.presentation.components
 
-import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.theme.SportSouceTheme
-import com.markettwits.profile.internal.sign_in.presentation.component.MockSignInScreenComponent
 import com.markettwits.profile.internal.sign_in.presentation.component.SignInScreen
 
 @Composable
@@ -17,14 +14,3 @@ internal fun SignInScreen(component: SignInScreen) {
         SignInContent(state = state, fieldState = fieldState, component = component)
     }
 }
-
-
-@Preview()
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun AuthScreenPreview() {
-    SportSouceTheme {
-        SignInScreen(MockSignInScreenComponent())
-    }
-}
-

@@ -7,6 +7,7 @@ android {
     namespace = "com.markettwits.auth_flow"
 }
 dependencies {
+    implementation(projects.analytics.crashlytics)
     implementation(projects.auth.authService)
     implementation(projects.cloud)
     implementation(projects.coreUi)

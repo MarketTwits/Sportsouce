@@ -5,12 +5,14 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.isResponseException
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.event.EventContent
 import com.markettwits.core_ui.event.StateEventWithContent
 import com.markettwits.core_ui.event.consumed
 import com.markettwits.core_ui.event.triggered
+import com.markettwits.inappnotification.api.tracker.AnalyticsTracker
 import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
@@ -62,13 +64,14 @@ interface StartScreenStore : Store<Intent, State, Label> {
 class StartScreenStoreFactory(
     private val storeFactory: StoreFactory,
     private val service: StartRepository,
+    private val analyticsTracker: AnalyticsTracker
 ) {
     fun create(startID: Int): StartScreenStore =
         object : StartScreenStore, Store<Intent, State, Label> by storeFactory.create(
             name = "StartScreenStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { ExecutorImpl(startID) },
+            executorFactory = { ExecutorImpl(startID, analyticsTracker) },
             reducer = ReducerImpl
         ) {}
 
@@ -80,7 +83,10 @@ class StartScreenStoreFactory(
         data class InfoFailed(val message: String) : Msg
     }
 
-    private inner class ExecutorImpl(private val startId: Int) :
+    private inner class ExecutorImpl(
+        private val startId: Int,
+        private val analyticsTracker: AnalyticsTracker
+    ) :
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
@@ -102,7 +108,6 @@ class StartScreenStoreFactory(
                     if (!images.isNullOrEmpty())
                         publish(Label.OnClickFullAlbum(images))
                 }
-
                 is Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
                 is Intent.TriggerEvent -> dispatch(Msg.TriggerEvent(intent.message, intent.status))
             }
@@ -117,6 +122,10 @@ class StartScreenStoreFactory(
                 dispatch(Msg.Loading)
                 service.start(startId, relaunch).fold(
                     onFailure = {
+                        if (it.isResponseException()) {
+                            analyticsTracker.setKey(Pair("startId", startId.toString()))
+                            analyticsTracker.reportException(it, "StartScreenStore#launch")
+                        }
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },
                     onSuccess = {

@@ -32,7 +32,7 @@ data class User(
     sealed class Photo {
         @Serializable
         @SerialName("EmptyPhoto")
-        object EmptyPhoto : Photo()
+        data object EmptyPhoto : Photo()
 
         @Serializable
         data class WithPhoto(val id: Int, val name: String, val path: String) : Photo() {

@@ -1,12 +1,14 @@
 package com.markettwits.profile.presentation.component.authorized.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.profile.presentation.component.authorized.domain.UserProfileInteractor
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.Intent
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.Label
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.Message
 import com.markettwits.profile.presentation.component.authorized.presentation.store.AuthorizedProfileStore.State
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class AuthorizedProfileExecutor(private val interactor: UserProfileInteractor) :
@@ -23,9 +25,9 @@ class AuthorizedProfileExecutor(private val interactor: UserProfileInteractor) :
 
     private fun launch(forced: Boolean) {
         scope.launch {
-            dispatch(Message.Loading)
             interactor.userProfile(forced)
-                .catch { dispatch(Message.LoadingFailed(it.message.toString())) }
+                .onStart { dispatch(Message.Loading) }
+                .catch { dispatch(Message.LoadingFailed(networkExceptionHandler(it).message.toString())) }
                 .collect { dispatch(Message.LoadingSuccess(it)) }
         }
     }

@@ -13,7 +13,7 @@ data class StartAlbumRemote(
     data class Row(
         val createdAt: String,
         val id: Int,
-        val isBeforeStart: Boolean,
+        val isBeforeStart: Boolean? = null,
         val name: String,
         val photos: List<Photo>,
         val start: Start,

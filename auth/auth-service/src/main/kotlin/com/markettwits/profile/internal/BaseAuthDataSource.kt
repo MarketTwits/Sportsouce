@@ -26,17 +26,18 @@ internal class BaseAuthDataSource(
         }.fold(
             onSuccess = {
                 logIn(signUpRequest.email, signUpRequest.password)
+                Result.success(Unit)
             },
             onFailure = {
                 Result.failure(it)
             }
         )
 
-    override suspend fun logIn(email: String, password: String): Result<Unit> =
-        runCatching {
-            val response = remoteService.signIn(SignInRequest(email = email, password = password))
+    override suspend fun logIn(emailOrPhone: String, password: String): Result<User> = runCatching {
+        val response =
+            remoteService.signIn(SignInRequest(email = emailOrPhone, password = password))
             local.write(signInCacheMapper.map(response, password))
-            auth()
+        auth().getOrThrow()
         }
 
     override suspend fun updatePassword(password: String) {

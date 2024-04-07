@@ -98,19 +98,21 @@ class StartCommentsStoreFactory(
         private fun sendComment(mode: CommentMode, comment: String, startId: Int) {
             dispatch(Msg.Loading)
             scope.launch {
-                if (mode is CommentMode.Reply) {
-                    val value = service.writeSubComment(
+                val value = if (mode is CommentMode.Reply) {
+                    service.writeComment(
                         comment = comment,
-                        parentCommentId = mode.messageId
+                        id = mode.messageId,
+                        subComment = true
                     )
-                    handleCommentUiState(value, startId)
+
                 } else {
-                    val value = service.writeComment(
+                    service.writeComment(
                         comment = comment,
-                        startId = startId
+                        id = startId,
+                        subComment = false
                     )
-                    handleCommentUiState(value, startId)
                 }
+                handleCommentUiState(value, startId)
             }
         }
 

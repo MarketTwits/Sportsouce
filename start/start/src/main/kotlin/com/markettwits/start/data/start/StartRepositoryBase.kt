@@ -13,7 +13,7 @@ import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.core_ui.base.fetchFifth
 import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
-import com.markettwits.start.data.start.mapper.StartRemoteToUiMapper
+import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.component.CommentUiState
 
@@ -60,37 +60,24 @@ internal class StartRepositoryBase(
         return result
     }
 
-
-    override suspend fun writeComment(comment: String, startId: Int): CommentUiState {
+    override suspend fun writeComment(
+        comment: String,
+        id: Int,
+        subComment: Boolean
+    ): CommentUiState {
         return try {
-            val token = authService.updateToken()
-            val user = authService.auth()
-            service.writeComment(
-                startCommentRequest = StartCommentRequest(
-                    comment,
-                    startId,
-                    user.getOrThrow().id.toString()
-                ),
-                token = token.getOrThrow()
-            )
-            CommentUiState.Success
-        } catch (e: Exception) {
-            CommentUiState.Error(networkExceptionHandler(e).message.toString())
-        }
-    }
-
-    override suspend fun writeSubComment(comment: String, parentCommentId: Int): CommentUiState {
-        return try {
-            val token = authService.updateToken()
-            val user = authService.auth()
-            service.writeSubComment(
-                subComment = StartSubCommentRequest(
-                    comment,
-                    parentCommentId,
-                    user.getOrThrow().id.toString()
-                ),
-                token = token.getOrThrow()
-            )
+            val token = authService.updateToken().getOrThrow()
+            val userId = authService.auth().getOrThrow().id
+            if (subComment)
+                service.writeSubComment(
+                    subComment = StartSubCommentRequest(comment, id, userId.toString()),
+                    token = token
+                )
+            else
+                service.writeComment(
+                    startCommentRequest = StartCommentRequest(comment, id, userId.toString()),
+                    token = token
+                )
             CommentUiState.Success
         } catch (e: Exception) {
             CommentUiState.Error(networkExceptionHandler(e).message.toString())

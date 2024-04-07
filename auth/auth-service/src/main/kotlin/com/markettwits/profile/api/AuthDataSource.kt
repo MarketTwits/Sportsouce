@@ -24,7 +24,7 @@ interface AuthDataSource {
      * @return a SignInUiState object representing the UI state after the login
      *     attempt
      */
-    suspend fun logIn(emailOrPhone: String, password: String): Result<Unit>
+    suspend fun logIn(emailOrPhone: String, password: String): Result<User>
 
     /**
      * Updates the password of the current user.

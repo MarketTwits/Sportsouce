@@ -1,5 +1,6 @@
 package com.markettwits.profile.internal.sign_in.di
 
+import com.markettwits.inappnotification.api.di.crashlyticsModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCase
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCaseBase
@@ -9,7 +10,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val signInModule = module {
-    includes(authDataSourceModule)
+    includes(authDataSourceModule, crashlyticsModule)
     singleOf(::SignInUseCaseBase) bind SignInUseCase::class
     singleOf(::SignInInstanceKeeper)
 }

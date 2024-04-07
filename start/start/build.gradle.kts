@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.shop.shopCatalog)
+    implementation(projects.analytics.crashlytics)
     implementation(projects.cloud)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
@@ -19,7 +19,6 @@ dependencies {
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.koin.core)
-    implementation(libs.calendar)
     implementation(libs.material3.html.text)
     implementation(libs.lazytable)
 }

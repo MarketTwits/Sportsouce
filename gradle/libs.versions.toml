@@ -77,6 +77,9 @@ kotlinx-coroutines = "1.7.3"
 decompose = "3.0.0-alpha04"
 org-jetbrains-kotlin-jvm = "1.9.23"
 
+#Tracer
+tracer = "0.2.15"
+
 kotlinx-datetime = "0.5.0"
 kotlinGradlePlugin = "1.9.0"
 
@@ -162,8 +165,13 @@ activity = { group = "androidx.activity", name = "activity-ktx", version = "1.8.
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
+#Tracer
+tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", version.ref = "tracer" }
+
+#Gradle Plugins
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
+tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 
 [plugins]
 #kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}

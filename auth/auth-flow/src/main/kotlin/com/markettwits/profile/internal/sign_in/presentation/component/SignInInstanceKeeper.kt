@@ -3,6 +3,7 @@ package com.markettwits.profile.internal.sign_in.presentation.component
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.inappnotification.api.tracker.AnalyticsTracker
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,9 @@ import kotlinx.coroutines.launch
 
 class SignInInstanceKeeper(
     private val useCase: SignInUseCase,
+    private val analyticsTracker: AnalyticsTracker,
 ) : InstanceKeeper.Instance {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
     val labels: MutableValue<SignInOutPuts> = MutableValue(SignInOutPuts.Empty)
     val authUiState: MutableValue<SignInUiState> = MutableValue(SignInUiState.Initial)
@@ -23,11 +26,14 @@ class SignInInstanceKeeper(
             useCase.signIn(fieldState.value.email, fieldState.value.password).fold(
                 onSuccess = {
                     authUiState.value = SignInUiState.Success
+                    analyticsTracker.setUserId(it.id.toString())
                     scope.launch {
                         labels.value = SignInOutPuts.GoProfile
                     }
                 }, onFailure = {
                     val message = networkExceptionHandler(it).message.toString()
+                    analyticsTracker.setLog("email : ${fieldState.value.email}\npassword: ${fieldState.value.password}")
+                    analyticsTracker.reportException(it, key = "#SignInInstanceKeeper#login")
                     authUiState.value = SignInUiState.Error(message = message, messageShow = false)
                 })
         }
@@ -41,7 +47,7 @@ class SignInInstanceKeeper(
         }
     }
 
-    fun validatePhone(phone: String): Boolean {
+    private fun validatePhone(phone: String): Boolean {
         val regex = Regex("""\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}""")
         return regex.matches(phone)
     }

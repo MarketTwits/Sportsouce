@@ -9,7 +9,6 @@ import org.koin.dsl.koinApplication
 
 class ComponentKoinContext(private val retain: Boolean = true) : InstanceKeeper.Instance {
     private var koinApp: KoinApplication? = null
-
     @OptIn(KoinInternalApi::class)
     fun getOrCreateKoinScope(modules: List<Module>): Scope {
         if (koinApp == null) {

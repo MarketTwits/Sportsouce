@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -26,11 +27,6 @@ fun OnBackgroundCard(
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.(Modifier) -> Unit,
 ) {
-    val ripple = rememberRipple(
-        bounded = true,
-        radius = 250.dp,
-        color = MaterialTheme.colorScheme.secondary.copy(0.2f)
-    )
     Card(
         modifier = modifier
             .shadow(2.dp, shape = shape)

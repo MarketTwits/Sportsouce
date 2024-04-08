@@ -82,6 +82,7 @@ tracer = "0.2.15"
 
 kotlinx-datetime = "0.5.0"
 kotlinGradlePlugin = "1.9.0"
+kotlinGradlePluginVersion = "1.9.0"
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -91,6 +92,7 @@ compose-graphics = { group = "androidx.compose.ui", name = "ui-graphics", versio
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-ui" }
 compose-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
+compose-animation = { group = "androidx.compose.animation", name = "animation", version = "1.7.0-SNAPSHOT" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "compose-material3" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -172,6 +174,7 @@ tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", ve
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePluginVersion" }
 
 [plugins]
 #kotlin-serialization =  {id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}

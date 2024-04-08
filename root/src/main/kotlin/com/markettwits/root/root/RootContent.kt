@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.markettwits.profile.presentation.component.base.DefaultProfileScreen
 import com.markettwits.root.RootReviewScreen
 import com.markettwits.root.bottom_bar.BottomBar
+import com.markettwits.root_profile.RootProfileScreen
 import com.markettwits.starts.root.api.RootStartsScreen
 
 @Composable
@@ -42,7 +42,7 @@ private fun Children(component: RootComponentBase, modifier: Modifier = Modifier
     ) {
         when (val child = it.instance) {
             is RootComponent.Child.Starts -> RootStartsScreen(child.component)
-            is RootComponent.Child.Profile ->  DefaultProfileScreen(child.component)
+            is RootComponent.Child.Profile -> RootProfileScreen(child.component)
             is RootComponent.Child.Review -> RootReviewScreen(component = child.component)
         }
     }

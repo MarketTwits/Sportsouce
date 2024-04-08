@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.cache)
     implementation(libs.libphonenumber)
     implementation(libs.zoomable)
     api(libs.kotlinx.collections.immutable)

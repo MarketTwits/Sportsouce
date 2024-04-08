@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(project(":starts:starts"))
-    implementation(project(":profile:profile"))
+    implementation(project(":profile:root-profile"))
     implementation(project(":review:review"))
     implementation(project(":core-ui"))
     implementation(libs.koin.core)

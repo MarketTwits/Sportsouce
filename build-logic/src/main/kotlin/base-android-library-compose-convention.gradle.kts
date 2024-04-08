@@ -15,20 +15,20 @@ configure<BaseExtension>{
     }
 }
 
-vkompose {
-    skippabilityCheck = false
-    // or
-
-    recompose {
-        isHighlighterEnabled = true
-        isLoggerEnabled = true
-    }
-
-    testTag {
-        isApplierEnabled = true
-        isDrawerEnabled = false
-        isCleanerEnabled = false
-    }
-
-    sourceInformationClean = true
-}
+//vkompose {
+//    skippabilityCheck = false
+//    // or
+//
+//    recompose {
+//        isHighlighterEnabled = true
+//        isLoggerEnabled = true
+//    }
+//
+//    testTag {
+//        isApplierEnabled = true
+//        isDrawerEnabled = false
+//        isCleanerEnabled = false
+//    }
+//
+//    sourceInformationClean = true
+//}

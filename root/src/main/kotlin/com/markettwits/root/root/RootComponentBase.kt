@@ -7,8 +7,8 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.profile.presentation.component.base.DefaultProfileComponent
 import com.markettwits.root.RootReviewComponentBase
+import com.markettwits.root_profile.RootProfileComponentBase
 import com.markettwits.starts.root.internal.RootStartsComponentBase
 
 class RootComponentBase(
@@ -30,7 +30,6 @@ class RootComponentBase(
         navigation.bringToFront(configuration)
     }
 
-
     private fun createChild(
         configuration: RootComponent.Configuration,
         componentContext: ComponentContext
@@ -44,7 +43,7 @@ class RootComponentBase(
             )
 
             is RootComponent.Configuration.Profile -> RootComponent.Child.Profile(
-                DefaultProfileComponent(componentContext = componentContext)
+                RootProfileComponentBase(componentContext = componentContext)
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(

@@ -4,10 +4,10 @@ import com.flipperdevices.selfupdater.api.SelfUpdaterSourceApi
 import com.flipperdevices.selfupdater.models.SelfUpdateResult
 
 
-class SelfUpdaterUnknown() : SelfUpdaterSourceApi {
+class SelfUpdaterUnknown : SelfUpdaterSourceApi {
 
     override suspend fun checkUpdate(manual: Boolean): SelfUpdateResult {
-        return SelfUpdateResult.NO_UPDATES
+        return SelfUpdateResult.NoUpdates
     }
 
     override fun getInstallSourceName() = "Unknown"

@@ -1,7 +1,6 @@
 package com.markettwits.profile.authorized.presentation.components.top_bar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,20 +26,20 @@ fun ProfileTopBar(modifier: Modifier = Modifier, goSettings: () -> Unit) {
             .shadow(4.dp, RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
             .background(MaterialTheme.colorScheme.primary)
             .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 10.dp)
+            .padding(vertical = 5.dp)
             .fillMaxWidth()
     ) {
-        Icon(
+        IconButton(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(10.dp)
-                .clickable {
-                    goSettings()
-                },
-            imageVector = Icons.Default.Settings,
-            contentDescription = "back",
-            tint = MaterialTheme.colorScheme.tertiary,
-        )
+                .align(Alignment.CenterEnd),
+            onClick = { goSettings() }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "back",
+                tint = MaterialTheme.colorScheme.tertiary,
+            )
+        }
         Text(
             modifier = Modifier
                 .align(Alignment.CenterStart)

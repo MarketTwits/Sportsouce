@@ -15,12 +15,12 @@ class SelfUpdaterApiImpl(
 
     override suspend fun startCheckUpdate(manual: Boolean): SelfUpdateResult {
         if (!inProgressState.compareAndSet(expect = false, update = true)) {
-            return SelfUpdateResult.IN_PROGRESS
+            return SelfUpdateResult.InProgress
         }
         return try {
             selfUpdaterSourceApi.checkUpdate(manual = manual)
         } catch (e: Exception) {
-            return SelfUpdateResult.ERROR(e)
+            return SelfUpdateResult.Error(e)
         } finally {
             inProgressState.emit(false)
         }

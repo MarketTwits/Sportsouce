@@ -1,6 +1,5 @@
 package com.markettwits.root.root
 
-import android.content.Context
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -9,11 +8,10 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.root.RootReviewComponentBase
 import com.markettwits.root_profile.RootProfileComponentBase
-import com.markettwits.starts.root.internal.RootStartsComponentBase
+import com.markettwits.starts.root.RootStartsComponentBase
 
 class RootComponentBase(
     componentContext: ComponentContext,
-    private val context: Context,
 ) : ComponentContext by componentContext, RootComponent {
 
 
@@ -37,13 +35,14 @@ class RootComponentBase(
         when (configuration) {
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
-                    componentContext = componentContext,
-                    context = context
+                    componentContext = componentContext
                 )
             )
 
             is RootComponent.Configuration.Profile -> RootComponent.Child.Profile(
-                RootProfileComponentBase(componentContext = componentContext)
+                RootProfileComponentBase(
+                    componentContext = componentContext
+                )
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(

@@ -2,9 +2,6 @@ package com.markettwits.registrations.start_order_detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -44,11 +41,6 @@ fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(
-                    bottom = WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
-                )
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

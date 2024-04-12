@@ -20,7 +20,6 @@ class SelfUpdaterThirdParty(
     private val context: Context,
     private val updateParser: SelfUpdateParserApi,
     private val inAppNotificationStorage: InAppNotificationStorage,
-    private val version: String
 ) : SelfUpdaterSourceApi {
 
     private val nameParser = updateParser.getName()
@@ -33,8 +32,8 @@ class SelfUpdaterThirdParty(
     private val manager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
     override suspend fun checkUpdate(manual: Boolean): SelfUpdateResult {
-
-        val lastReleaseResult = runCatching { processCheckUpdate(version) }
+        val lastReleaseResult =
+            runCatching { processCheckUpdate(context.getPackageInfo().versionName) }
         val lastReleaseException = lastReleaseResult.exceptionOrNull()
         if (lastReleaseException != null) {
             if (manual) {
@@ -44,9 +43,9 @@ class SelfUpdaterThirdParty(
                     )
                 )
             }
-            return SelfUpdateResult.ERROR(IllegalStateException("Error while check update $lastReleaseException"))
+            return SelfUpdateResult.Error(IllegalStateException("Error while check update $lastReleaseException"))
         }
-        val lastRelease = lastReleaseResult.getOrNull() ?: return SelfUpdateResult.NO_UPDATES
+        val lastRelease = lastReleaseResult.getOrNull() ?: return SelfUpdateResult.NoUpdates
 
         val readyUpdateNotification = InAppNotification.SelfUpdateReady(
             actualVersion = lastRelease.version,
@@ -56,12 +55,13 @@ class SelfUpdaterThirdParty(
             },
             description = lastRelease.description
         )
-        if (manual) {
+        if (!manual) {
+            return SelfUpdateResult.SelfUpdateReady(lastRelease.version, lastRelease.description)
+        } else {
             readyUpdateNotification.action()
         }
         inAppNotificationStorage.addNotification(readyUpdateNotification)
-
-        return SelfUpdateResult.COMPLETE
+        return SelfUpdateResult.Complete
     }
 
     private suspend fun processCheckUpdate(version: String): SelfUpdate? {

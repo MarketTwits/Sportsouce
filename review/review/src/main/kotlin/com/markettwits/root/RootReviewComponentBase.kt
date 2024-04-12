@@ -1,6 +1,9 @@
 package com.markettwits.root
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -20,6 +23,9 @@ import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.ReviewComponentBase
 import com.markettwits.root.di.reviewRootModule
 import com.markettwits.schedule.root.RootStartsScheduleComponentBase
+import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
+import com.markettwits.selfupdater.components.notification.di.notificationModule
+import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.root.RootStartFilterComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
@@ -28,13 +34,14 @@ import com.markettwits.start_search.root.RootStartsSearchComponentBase
 class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     ComponentContext by context {
     private val navigation = StackNavigation<RootReviewComponent.Config>()
+    private val slotNavigation = SlotNavigation<RootReviewComponent.ConfigSlot>()
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(reviewRootModule, newsModule, reviewModule)
+        listOf(reviewRootModule, newsModule, reviewModule, notificationModule)
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
@@ -44,6 +51,15 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
         handleBackButton = true,
         childFactory = ::child,
     )
+    override val childSlot: Value<ChildSlot<RootReviewComponent.ConfigSlot, RootReviewComponent.ChildSlot>> =
+        childSlot(
+            source = slotNavigation,
+            serializer = RootReviewComponent.ConfigSlot.serializer(),
+            initialConfiguration = {
+                RootReviewComponent.ConfigSlot.Notification
+            },
+            childFactory = ::slotChild
+        )
 
     private fun child(
         config: RootReviewComponent.Config,
@@ -130,7 +146,33 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     pop = navigation::pop
                 )
             )
+
+            is RootReviewComponent.Config.Notification -> RootReviewComponent.Child.Notification(
+                SelfUpdateComponentBase(
+                    componentContext = componentContext,
+                    newAppVersion = config.newAppVersion,
+                    storeFactory = scope.get(),
+                )
+            )
         }
+
+    private fun slotChild(
+        configuration: RootReviewComponent.ConfigSlot,
+        componentContext: ComponentContext
+    ): RootReviewComponent.ChildSlot = when (configuration) {
+
+        is RootReviewComponent.ConfigSlot.Notification -> RootReviewComponent.ChildSlot.Notification(
+            component = InAppNotificationComponentBase(
+                componentContext = componentContext,
+                notificationStorage = scope.get(),
+                storeFactory = scope.get(),
+                openFullScreen = {
+                    navigation.push(RootReviewComponent.Config.Notification(it))
+                }
+            ),
+            render = scope.get()
+        )
+    }
 
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {

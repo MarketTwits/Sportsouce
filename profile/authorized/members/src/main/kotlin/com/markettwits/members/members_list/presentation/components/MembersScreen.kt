@@ -7,12 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.components.top_bar.TopBarWithClip
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.members.members_list.presentation.component.MembersListComponent
 import com.markettwits.members.members_list.presentation.components.components.MembersList
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore
@@ -60,13 +58,5 @@ fun MembersScreen(component: MembersListComponent) {
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun MembersScreenPreview() {
-    SportSouceTheme {
-        //   MembersScreen()
     }
 }

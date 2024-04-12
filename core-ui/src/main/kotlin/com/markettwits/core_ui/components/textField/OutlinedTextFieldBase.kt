@@ -1,6 +1,5 @@
 package com.markettwits.core_ui.components.textField
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -13,11 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.theme.FontNunito
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.core_ui.theme.SportSouceTheme
 
 @Composable
 fun OutlinedTextFieldBase(
@@ -82,12 +79,3 @@ fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
     disabledLabelColor = Color.Gray,
     disabledTextColor = MaterialTheme.colorScheme.tertiary
 )
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun TextFieldBasePreivew() {
-    SportSouceTheme {
-        OutlinedTextFieldBase(value = "someText", label = "Some label") {}
-    }
-}

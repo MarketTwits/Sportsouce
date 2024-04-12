@@ -12,10 +12,11 @@ fun SelfUpdateScreen(component: SelfUpdateComponent) {
     val state by component.state.collectAsState()
     SelfUpdateContent(
         isLoading = state.isLoading,
-        currentVersion = state.newAppInfo.version,
-        changes = state.newAppInfo.description,
+        currentVersion = state.newAppInfo?.version ?: "",
+        changes = state.newAppInfo?.description ?: "",
         isSuccess = state.isSuccess,
         isFailed = state.isFailed,
+        isUpdatesAvailable = state.updatesAvailable,
         message = state.message,
         onClickStartUpdate = {
             component.obtainEvent(SelfUpdateStore.Intent.OnClickUpdate)

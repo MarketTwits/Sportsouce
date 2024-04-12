@@ -21,7 +21,6 @@ import com.markettwits.core_ui.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.components.top_bar.TopBarClipWithLabel
 import com.markettwits.core_ui.event.EventEffect
 import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
 import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkContent
 import com.markettwits.edit_profile.edit_social_network.presentation.components.ProfileSocialNetworkInfo
@@ -34,71 +33,68 @@ fun ProfileSocialNetworkScreen(component: EditProfileSocialNetworkComponent) {
         SnackbarHostState()
     }
     val focusManager = LocalFocusManager.current
-    SportSouceTheme {
-        var snackBarColor = remember {
-            SportSouceColor.SportSouceLighBlue
-        }
-        Scaffold(topBar = {
-            TopBarClipWithLabel(
-                title = "Социальные сети",
-                goBack = {
-                    component.obtainEvent(EditProfileSocialNetworkStore.Intent.GoBack)
-                },
-                onClickLabel = {
-                    component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnCLickUpdate)
-                    focusManager.clearFocus()
-                }
+    var snackBarColor = remember {
+        SportSouceColor.SportSouceLighBlue
+    }
+    Scaffold(topBar = {
+        TopBarClipWithLabel(
+            title = "Социальные сети",
+            goBack = {
+                component.obtainEvent(EditProfileSocialNetworkStore.Intent.GoBack)
+            },
+            onClickLabel = {
+                component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnCLickUpdate)
+                focusManager.clearFocus()
+            }
+        )
+    }, snackbarHost = {
+        SnackbarHost(
+            hostState = snackBarHostState,
+        ) {
+            Snackbar(
+                contentColor = Color.White,
+                containerColor = snackBarColor,
+                dismissActionContentColor = Color.White,
+                snackbarData = it
             )
-        }, snackbarHost = {
-            SnackbarHost(
-                hostState = snackBarHostState,
+        }
+    }
+    ) { padding ->
+        state.data?.let {
+            Column(
+                modifier = Modifier
+                    .padding(top = padding.calculateTopPadding())
+                    .verticalScroll(rememberScrollState())
+                    .padding(10.dp)
             ) {
-                Snackbar(
-                    contentColor = Color.White,
-                    containerColor = snackBarColor,
-                    dismissActionContentColor = Color.White,
-                    snackbarData = it
+                ProfileSocialNetworkInfo()
+                ProfileSocialNetworkContent(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    user = it,
+                    onUserChange = {
+                        component.obtainEvent(
+                            EditProfileSocialNetworkStore.Intent.UpdateState(
+                                it
+                            )
+                        )
+                    }
                 )
             }
-        }
-        ) { padding ->
-            state.data?.let {
-
-                Column(
-                    modifier = Modifier
-                        .padding(top = padding.calculateTopPadding())
-                        .verticalScroll(rememberScrollState())
-                        .padding(10.dp)
-                ) {
-                    ProfileSocialNetworkInfo()
-                    ProfileSocialNetworkContent(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        user = it,
-                        onUserChange = {
-                            component.obtainEvent(
-                                EditProfileSocialNetworkStore.Intent.UpdateState(
-                                    it
-                                )
-                            )
-                        }
-                    )
-                }
 
 
-            }
-            if (state.isLoading) {
-                LoadingFullScreen(modifier = Modifier.padding(top = padding.calculateTopPadding()))
-            }
         }
-        EventEffect(
-            event = state.event,
-            onConsumed = {
-                component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnConsumedEvent)
-            },
-        ) {
-            snackBarColor =
-                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-            snackBarHostState.showLongMessageWithDismiss(message = it.message)
+        if (state.isLoading) {
+            LoadingFullScreen(modifier = Modifier.padding(top = padding.calculateTopPadding()))
         }
+    }
+    EventEffect(
+        event = state.event,
+        onConsumed = {
+            component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnConsumedEvent)
+        },
+    ) {
+        snackBarColor =
+            if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+        snackBarHostState.showLongMessageWithDismiss(message = it.message)
     }
 }

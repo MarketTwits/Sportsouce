@@ -16,10 +16,11 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.base.Fifth
-import com.markettwits.start.di.startRegistrationModule
-import com.markettwits.start.presentation.member.component.RegistrationMemberComponentBase
-import com.markettwits.start.presentation.order.presentation.store.OrderStore
-import com.markettwits.start.presentation.promo.component.RegistrationPromoComponentBase
+import com.markettwits.start.register.di.startRegistrationModule
+import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponentBase
+import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponentBase
+import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
+import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponentBase
 
 /**
  * @param pop callback for navigate to back
@@ -91,7 +92,7 @@ class RootStartRegisterBase(
         when (config) {
             is RootStartRegister.ConfigStack.StartRegistration ->
                 RootStartRegister.ChildStack.StartOrder(
-                    com.markettwits.start.presentation.order.presentation.component.OrderComponentComponentBase(
+                    OrderComponentComponentBase(
                         componentContext = componentContext,
                         startId = config.startId,
                         paymentDisabled = config.paymentDisabled,

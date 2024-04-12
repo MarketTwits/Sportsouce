@@ -1,16 +1,11 @@
 package com.markettwits.starts.starts.presentation.screen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -26,12 +21,9 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StartsScreen(
-    component: StartsScreen,
-    notification: @Composable ((Modifier) -> Unit),
-    showNotification: Boolean
+    component: StartsScreen
 ) {
     val state by component.starts.subscribeAsState()
     var loading by rememberSaveable {
@@ -60,8 +52,6 @@ fun StartsScreen(
                     content = { page ->
                         StartsScreenList(
                             modifier = it,
-                            notification = notification,
-                            showNotification = showNotification,
                             state = state,
                             page = page,
                             onClickRetry = component::retry,

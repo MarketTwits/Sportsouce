@@ -23,7 +23,10 @@ import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun ReviewScreen(component: ReviewComponent) {
+fun ReviewScreen(
+    component: ReviewComponent,
+    notification: @Composable ((Modifier) -> Unit),
+) {
     val state by component.value.collectAsState()
     CollapsingToolbarScaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.primary),
@@ -50,6 +53,7 @@ fun ReviewScreen(component: ReviewComponent) {
                     news = review.news,
                     actual = review.actualStarts,
                     archive = review.archiveStarts,
+                    notification = notification,
                     onClickStart = {
                         component.obtainEvent(ReviewStore.Intent.OnClickItem(it))
                     },

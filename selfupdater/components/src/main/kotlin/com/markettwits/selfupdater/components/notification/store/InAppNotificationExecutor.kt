@@ -1,13 +1,14 @@
 package com.markettwits.selfupdater.components.notification.store
 
+import android.util.Log
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.inappnotification.api.model.InAppNotification
 import com.flipperdevices.selfupdater.api.SelfUpdaterApi
+import com.markettwits.inappnotification.api.model.InAppNotification
+import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Intent
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Label
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Message
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.State
-import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import kotlinx.coroutines.launch
 
 class InAppNotificationExecutor(
@@ -33,7 +34,8 @@ class InAppNotificationExecutor(
 
     override fun executeAction(action: Unit, getState: () -> State) {
         scope.launch {
-            selfUpdaterApi.startCheckUpdate(false)
+            val result = selfUpdaterApi.startCheckUpdate(false)
+            Log.e("mt05", "updateResult: $result")
         }
     }
 

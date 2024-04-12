@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Sportsouce" parent="@style/Theme.AppCompat.DayNight" />
+    <style name="Theme.Sportsouce" parent="android:Theme.Material.NoActionBar" />
 
     <style name="Theme.Sportsouce.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/background_dark</item>

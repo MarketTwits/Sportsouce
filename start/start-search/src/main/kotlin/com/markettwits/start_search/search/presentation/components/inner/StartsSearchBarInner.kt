@@ -51,7 +51,6 @@ fun StartsSearchBarInner(
                 tint = MaterialTheme.colorScheme.outline
             )
         }
-
         BoundlessTextFieldBase(
             modifier = Modifier
                 .align(Alignment.CenterVertically)

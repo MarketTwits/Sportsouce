@@ -32,7 +32,7 @@ internal class StartRemoteToUiMapperBase(
         StartItem(
             id = startRemote.start_data.id,
             title = startRemote.start_data.name,
-            startPlace = startRemote.start_data.coordinates,
+            startPlace = startRemote.start_data.coordinates ?: "",
             image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
             startStatus = startRemote.start_data.start_status,
             startTime = timeMapper.mapTime(

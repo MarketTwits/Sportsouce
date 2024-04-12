@@ -10,4 +10,5 @@ dependencies {
     implementation(projects.inappnotification.api)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }

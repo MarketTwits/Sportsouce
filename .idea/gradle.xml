@@ -32,12 +32,17 @@
             <option value="$PROJECT_DIR$/cloud" />
             <option value="$PROJECT_DIR$/cloud-clubs" />
             <option value="$PROJECT_DIR$/cloud-shop" />
+            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/core/theme" />
             <option value="$PROJECT_DIR$/inappnotification" />
             <option value="$PROJECT_DIR$/inappnotification/api" />
             <option value="$PROJECT_DIR$/inappnotification/impl" />
+            <option value="$PROJECT_DIR$/intent" />
+            <option value="$PROJECT_DIR$/intent/api" />
+            <option value="$PROJECT_DIR$/intent/impl" />
             <option value="$PROJECT_DIR$/news" />
             <option value="$PROJECT_DIR$/profile" />
             <option value="$PROJECT_DIR$/profile/authorized" />

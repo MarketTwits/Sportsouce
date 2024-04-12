@@ -44,13 +44,14 @@ android {
     }
 }
 dependencies {
+    implementation(projects.core.theme)
     implementation(projects.coreUi)
     implementation(projects.root)
     implementation(projects.cache)
+    implementation(projects.analytics.crashlytics)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.tracer.crash.report)
-    implementation(projects.analytics.crashlytics)
     implementation(libs.koin.android)
 }
 

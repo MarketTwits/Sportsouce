@@ -4,7 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.root.RootReviewComponent
 import com.markettwits.root_profile.RootProfileComponent
-import com.markettwits.starts.root.internal.RootStartsComponentBase
+import com.markettwits.starts.root.RootStartsComponentBase
 import kotlinx.serialization.Serializable
 
 interface RootComponent {

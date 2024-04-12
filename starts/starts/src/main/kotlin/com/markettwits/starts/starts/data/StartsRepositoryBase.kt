@@ -1,5 +1,6 @@
 package com.markettwits.starts.starts.data
 
+import android.util.Log
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
 import com.markettwits.cloud.api.SportsouceApi
@@ -12,7 +13,6 @@ import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 internal class StartsRepositoryBase(
@@ -33,6 +33,7 @@ internal class StartsRepositoryBase(
                 },
             )
         }.onFailure {
+            Log.e("mt05", it.message.toString())
             starts.value = mapper.map(networkExceptionHandler(it))
         }
     }

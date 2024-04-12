@@ -24,7 +24,7 @@ fun TopBarBase(modifier: Modifier = Modifier, title: String, goBack: () -> Unit)
         modifier
             .background(MaterialTheme.colorScheme.primary)
             .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 4.dp)
+            .padding(vertical = 2.dp)
             .fillMaxWidth()
     ) {
         IconButton(

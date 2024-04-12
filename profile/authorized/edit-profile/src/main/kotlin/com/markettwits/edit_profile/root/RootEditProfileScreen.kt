@@ -5,11 +5,10 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.edit_profile.edit_profile_change_password.presentation.screen.ChangePasswordScreen
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_menu.presentation.EditProfileScreen
 import com.markettwits.edit_profile.edit_profile_Image.presentation.components.EditProfileImageScreen
 import com.markettwits.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
+import com.markettwits.edit_profile.edit_profile_change_password.presentation.screen.ChangePasswordScreen
 import com.markettwits.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen
 import com.markettwits.edit_profile.edit_profile_sign_out.presentation.components.EditProfileSignOutScreenDialog
 import com.markettwits.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
@@ -21,11 +20,10 @@ fun RootEditProfileScreen(component: RootEditProfileComponent) {
     val childStack by component.childStack.subscribeAsState()
     childSlot.child?.instance?.also {
         when (it) {
-            is RootEditProfileComponent.ChildSlot.EditProfileAbout -> SportSouceTheme {
+            is RootEditProfileComponent.ChildSlot.EditProfileAbout ->
                 EditProfileAboutScreen(
                     component = it.component
                 )
-            }
 
             is RootEditProfileComponent.ChildSlot.EditProfileImage ->
                 EditProfileImageScreen(
@@ -46,7 +44,6 @@ fun RootEditProfileScreen(component: RootEditProfileComponent) {
             is RootEditProfileComponent.ChildStack.SocialNetwork -> ProfileSocialNetworkScreen(
                 component = child.component
             )
-
             is RootEditProfileComponent.ChildStack.EditProfileMenu -> EditProfileScreen(component = child.component)
             is RootEditProfileComponent.ChildStack.ChangePassword -> ChangePasswordScreen(component = child.component)
             is RootEditProfileComponent.ChildStack.EditProfileInfo -> EditProfileInfoScreen(

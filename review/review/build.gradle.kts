@@ -18,6 +18,8 @@ dependencies {
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
     implementation(projects.starts.startsCommon)
+    implementation(projects.selfupdater.components)
+    implementation(projects.inappnotification.api)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.kotlinx.datetime)

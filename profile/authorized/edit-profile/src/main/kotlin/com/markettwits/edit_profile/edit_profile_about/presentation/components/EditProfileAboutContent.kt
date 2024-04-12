@@ -1,6 +1,5 @@
 package com.markettwits.edit_profile.edit_profile_about.presentation.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
@@ -23,7 +21,6 @@ import com.markettwits.core_ui.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStore
 import kotlinx.coroutines.delay
 
@@ -115,21 +112,5 @@ fun EditProfileAboutContent(
                 dismiss()
             }
         }
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun EditProfileAboutScreenContentPreview() {
-    SportSouceTheme {
-        EditProfileAboutContent(
-            onValueChanged = {},
-            dismiss = {},
-            state = EditProfileAboutStore.State(
-                isError = true,
-                isLoading = true
-            ),
-            apply = {})
     }
 }

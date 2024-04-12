@@ -29,33 +29,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceTheme
 import kotlinx.coroutines.launch
 
-private val listPreview = listOf(
-    BarchartInput(0, "09.2024", Color.Blue),
-    BarchartInput(0, "10.2024", Color.Blue),
-    BarchartInput(0, "11.2024", Color.Blue),
-    BarchartInput(0, "12.2024", Color.Blue),
-    BarchartInput(0, "12.2024", Color.Blue),
-    BarchartInput(0, "12.2024", Color.Blue),
-    BarchartInput(0, "12.2024", Color.Blue),
-    BarchartInput(20, "12.2024", Color.Blue),
-)
-
-@Preview
-@Composable
-private fun UserStartStatisticPreview() {
-    SportSouceTheme {
-        UserStartStatisticContent(items = listPreview) {}
-    }
-}
 
 @Composable
 internal fun UserStartStatisticContent(
@@ -138,17 +118,11 @@ private fun BarChart(
 }
 
 private fun calculateColumnHeight(input: BarchartInput, maxValue: Int): Dp {
-    val minHeight = 45.dp // Minimum height of the column
-    val maxHeight = 150.dp // Maximum height of the column
-
-    // Calculate coefficient based on the maximum value
+    val minHeight = 45.dp
+    val maxHeight = 150.dp
     val coefficient = if (maxValue > 0) maxHeight.value.toFloat() / maxValue.toFloat() else 0f
-
-    // Calculate the height based on the value and coefficient
     val height =
         (input.value * coefficient).coerceIn(minHeight.value.toFloat(), maxHeight.value.toFloat())
-
-    // Return the height as a Dp
     return height.dp
 }
 

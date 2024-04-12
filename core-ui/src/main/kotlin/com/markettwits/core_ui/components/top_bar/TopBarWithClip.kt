@@ -26,7 +26,7 @@ fun TopBarWithClip(modifier: Modifier = Modifier, title: String, goBack: () -> U
             .shadow(4.dp, RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
             .background(MaterialTheme.colorScheme.primary)
             .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 4.dp)
+            .padding(vertical = 2.dp)
             .fillMaxWidth()
     ) {
         IconButton(

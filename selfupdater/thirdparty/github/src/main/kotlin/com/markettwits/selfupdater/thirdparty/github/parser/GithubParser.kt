@@ -9,8 +9,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 
-private const val GITHUB_API_ALL_RELEASES =
-    "https://api.github.com/repos/MarketTwits/SportsouceMobile/releases"
 private const val GITHUB_API_LAST_RELEASE =
     "https://api.github.com/repos/MarketTwits/SportsouceMobile/releases/latest"
 

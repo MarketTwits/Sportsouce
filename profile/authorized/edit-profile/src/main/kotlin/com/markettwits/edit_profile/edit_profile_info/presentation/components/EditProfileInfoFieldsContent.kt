@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.base_extensions.date.mapToString
 import com.markettwits.core_ui.components.OnBackgroundCard
 import com.markettwits.core_ui.components.textField.CalendarTextFiled
 import com.markettwits.core_ui.components.textField.DropDownSpinner
@@ -14,7 +15,6 @@ import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
-import com.markettwits.profile.presentation.component.edit_profile.presentation.components.mapToString
 import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState

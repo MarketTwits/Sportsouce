@@ -18,5 +18,6 @@ interface AuthorizedProfileComponent {
         data object SocialNetwork : Output
         data object Members : Output
         data class Start(val startId: Int) : Output
+        data object Settings : Output
     }
 }

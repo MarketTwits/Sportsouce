@@ -65,7 +65,7 @@ libphonenumber = "8.13.31"
 
 #Database
 realm = "1.13.0"
-kstore = "0.7.1"
+kstore = "0.7.2"
 #Codegen
 ksp = "1.9.22-1.0.17"
 

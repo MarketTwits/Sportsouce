@@ -1,6 +1,5 @@
 package com.markettwits.review.presentation.components.content
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -15,13 +14,14 @@ import com.markettwits.review.presentation.components.social_network.SocialNetwo
 import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
-fun ColumnScope.ReviewContent(
+fun ReviewContent(
     news: List<NewsInfo>,
     actual: List<StartsListItem>,
     archive: List<StartsListItem>,
     onClickStart: (Int) -> Unit,
     onClickNewsInfo: (NewsInfo) -> Unit,
-    onClickMenu: (Int) -> Unit
+    onClickMenu: (Int) -> Unit,
+    notification: @Composable ((Modifier) -> Unit),
 ) {
     if (news.isNotEmpty()) {
         NewsContent(items = news) {
@@ -31,6 +31,7 @@ fun ColumnScope.ReviewContent(
     ReviewMenu {
         onClickMenu(it)
     }
+    notification(Modifier)
     if (actual.isNotEmpty()) {
         HorizontalDivider(modifier = Modifier.padding(10.dp))
         ActualStarts(starts = actual) {

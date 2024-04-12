@@ -4,9 +4,10 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.members.member_common.domain.ProfileMember
-import com.markettwits.start.domain.StartStatement
-import com.markettwits.start.presentation.member.component.RegistrationMemberComponent
-import com.markettwits.start.presentation.promo.component.RegistrationPromoComponent
+import com.markettwits.start.register.domain.StartStatement
+import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponent
+import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponent
+import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartRegister {
@@ -34,7 +35,7 @@ interface RootStartRegister {
     }
 
     sealed interface ChildStack {
-        data class StartOrder(val component: com.markettwits.start.presentation.order.presentation.component.OrderComponentComponent) :
+        data class StartOrder(val component: OrderComponentComponent) :
             ChildStack
 
         data class StartRegistrationMember(val component: RegistrationMemberComponent) : ChildStack

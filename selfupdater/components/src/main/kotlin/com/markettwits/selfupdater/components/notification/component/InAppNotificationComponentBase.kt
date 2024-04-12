@@ -1,6 +1,5 @@
 package com.markettwits.selfupdater.components.notification.component
 
-import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
@@ -8,9 +7,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.inappnotification.api.InAppNotificationStorage
 import com.markettwits.inappnotification.api.model.InAppNotification
+import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStoreFactory
-import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -41,7 +40,6 @@ class InAppNotificationComponentBase(
                 }
             }
         )
-        Log.e("mt05", "InAppNotificationStorage VN hasCode : ${notificationStorage.hashCode()}")
     }
 
     override val state: StateFlow<InAppNotificationStore.State> = store.stateFlow

@@ -15,17 +15,16 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.edit_profile.edit_profile.presentation.mapper.RemoteUserToEditProfileMapper
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.edit_profile.root.RootEditProfileComponentBase
 import com.markettwits.members.member_root.component.RootMembersComponentBase
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponentBase
-import com.markettwits.profile.presentation.component.edit_profile.presentation.EditProfileComponentBase
 import com.markettwits.registrations.registrations_list.presentation.component.RegistrationsComponentBase
 import com.markettwits.registrations.registrations_list.presentation.store.RegistrationsDataStoreFactory
 import com.markettwits.registrations.root_registrations.RootRegistrationsComponentBase
 import com.markettwits.registrations.start_order_detail.component.StartOrderComponentBase
+import com.markettwits.settings.root.RootSettingsComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 
 class RootAuthorizedProfileComponentBase(
@@ -91,18 +90,6 @@ class RootAuthorizedProfileComponentBase(
                     event = ::handleAuthorizedProfileEvent
                 )
             )
-
-
-            is RootAuthorizedProfileComponent.Config.EditProfile -> RootAuthorizedProfileComponent.Child.EditProfile(
-                EditProfileComponentBase(
-                    componentContext,
-                    userId = config.userId,
-                    mapper = RemoteUserToEditProfileMapper.Base(),
-                    goBack = ::onBackClicked,
-                    service = scope.get()
-                )
-            )
-
             is RootAuthorizedProfileComponent.Config.MyRegistries -> RootAuthorizedProfileComponent.Child.MyRegistries(
                 RootRegistrationsComponentBase(componentContext, pop = ::onBackClicked)
             )
@@ -155,6 +142,13 @@ class RootAuthorizedProfileComponentBase(
                     pop = navigation::pop
                 )
             )
+
+            RootAuthorizedProfileComponent.Config.Settings -> RootAuthorizedProfileComponent.Child.Settings(
+                RootSettingsComponentBase(
+                    componentContext = componentContext,
+                    pop = navigation::pop,
+                )
+            )
         }
 
 
@@ -192,6 +186,10 @@ class RootAuthorizedProfileComponentBase(
 
             is AuthorizedProfileComponent.Output.Members -> navigation.push(
                 RootAuthorizedProfileComponent.Config.Members
+            )
+
+            AuthorizedProfileComponent.Output.Settings -> navigation.push(
+                RootAuthorizedProfileComponent.Config.Settings
             )
         }
     }

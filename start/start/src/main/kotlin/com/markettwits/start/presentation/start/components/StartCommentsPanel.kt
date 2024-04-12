@@ -31,12 +31,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 import com.markettwits.start.presentation.start.component.CommentMode
@@ -299,35 +297,7 @@ fun CommentTextField(
                 }
             }
         },
-
         onValueChange = {
             comment = it
         })
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StartCommentsPanelPreview() {
-    SportSouceTheme {
-        CommentTextField(
-            sendComment = {},
-            mode = CommentMode.Reply("Daniel", 0),
-            isLoading = false,
-            onClickCloseReply = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StartCommentsFieldPreview() {
-    SportSouceTheme {
-        StartCommentsPanel(
-            commentsRemote = StartItem.Comments(
-                0,
-                emptyList()
-            ),
-            onClickReply = { string: String, int: Int -> }
-        )
-    }
 }

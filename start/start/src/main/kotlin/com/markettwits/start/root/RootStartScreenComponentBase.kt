@@ -12,7 +12,6 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.core_ui.base.Fifth
 import com.markettwits.start.di.startModule
-import com.markettwits.start.di.startRegistrationModule
 import com.markettwits.start.presentation.album.di.startAlbumModule
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponentBase
@@ -24,6 +23,7 @@ import com.markettwits.start.presentation.membres.list.StartMembersScreenCompone
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
 import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
+import com.markettwits.start.register.di.startRegistrationModule
 import com.markettwits.start_support.di.startSupportModule
 import com.markettwits.start_support.presentation.component.StartSupportComponentBase
 

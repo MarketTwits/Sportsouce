@@ -8,11 +8,10 @@ android {
     namespace = "com.markettwits.profile"
 }
 dependencies {
-    implementation(projects.profile.unauthorized)
+    implementation(projects.settings.impl)
     implementation(projects.start.start)
     implementation(projects.cloud)
     implementation(projects.auth.authService)
-    implementation(projects.auth.authFlow)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
     implementation(projects.profile.authorized.editProfile)

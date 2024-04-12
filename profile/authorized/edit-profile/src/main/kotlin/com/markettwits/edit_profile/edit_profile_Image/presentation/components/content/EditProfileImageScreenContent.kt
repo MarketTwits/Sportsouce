@@ -1,6 +1,5 @@
 package com.markettwits.edit_profile.edit_profile_Image.presentation.components.content
 
-import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.components.OnBackgroundCard
@@ -29,7 +27,6 @@ import com.markettwits.core_ui.components.Shapes
 import com.markettwits.core_ui.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore
 import kotlinx.coroutines.delay
 
@@ -100,18 +97,5 @@ internal fun EditProfileImageScreenContent(
             delay(800)
             dismiss()
         }
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun EditProfileAboutScreenContentPreview() {
-    SportSouceTheme {
-        EditProfileImageScreenContent(
-            onClickImageBox = {},
-            dismiss = {},
-            state = EditProfileImageStore.State(isSuccess = true, message = "ssafwfawfawfawfawfaw")
-        )
     }
 }

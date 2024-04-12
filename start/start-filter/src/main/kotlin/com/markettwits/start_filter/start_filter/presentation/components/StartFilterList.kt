@@ -26,14 +26,6 @@ fun StartFilterList(
             when (item.type) {
                 is StartFilterUi.FilterStartType.Dialog -> {
                     val openAlertDialog = remember { mutableStateOf(false) }
-//                    ItemsTextFiledDialog(
-//                        modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-//                        label = item.label,
-//                        value = item.selected.joinToString(", "),
-//                        items = item.list
-//                    ) {
-//                        onEvent(it, index, false)
-//                    }
                     MenuTextField(
                         enabled = false,
                         modifier = modifier
@@ -74,18 +66,7 @@ fun StartFilterList(
                             ) {}
                         }
                     )
-//                    DropDownSpinner(
-//                        modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-//                        label = item.label,
-//                        defaultText = "Select Country...",
-//                        selectedItem = item.selected.joinToString(", "),
-//                        onItemSelected = { id, selected ->
-//                            onEvent(selected, index, true)
-//                        },
-//                        itemList = item.list
-//                    )
                 }
-
                 is StartFilterUi.FilterStartType.Calendar -> {}
             }
 

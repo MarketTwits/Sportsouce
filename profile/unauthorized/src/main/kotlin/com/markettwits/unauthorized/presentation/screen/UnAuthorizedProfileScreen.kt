@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.theme.SportSouceTheme
 import com.markettwits.unauthorized.presentation.component.UnAuthorizedProfileComponent
 import com.markettwits.unauthorized.presentation.components.UnAuthorizedProfileContent
 import com.markettwits.unauthorized.presentation.components.UnAuthorizedProfileUiState
@@ -30,7 +29,6 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfileComponent) {
                     component.signIn()
                 })
             }
-
             is UnAuthorizedProfileUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(

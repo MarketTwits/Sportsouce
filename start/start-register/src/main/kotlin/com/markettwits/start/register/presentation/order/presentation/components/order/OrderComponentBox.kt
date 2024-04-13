@@ -1,5 +1,6 @@
 package com.markettwits.start.register.presentation.order.presentation.components.order
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,11 +21,17 @@ fun OrderComponentBox(
     onClickRegistry: () -> Unit
 ) {
     OnBackgroundCard(
-        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+        modifier = modifier,
+        shape = RoundedCornerShape(
+            topStart = 20.dp,
+            topEnd = 20.dp,
+            bottomEnd = 20.dp,
+            bottomStart = 20.dp
+        )
     ) {
         if (!paymentDisabled) {
             OrderPriceInfo(
-                modifier = modifier,
+                modifier = Modifier.padding(10.dp),
                 membersCount = price.membersCount,
                 discountInCache = price.discountInCache,
                 total = price.total
@@ -34,7 +41,7 @@ fun OrderComponentBox(
             onClickCheckRules()
         })
         RegistrationButton(
-            modifier = modifier,
+            modifier = Modifier.padding(10.dp),
             isEnabled = button.isEnabled,
             isLoading = button.isLoading,
             title = "Зарегестрироваться",

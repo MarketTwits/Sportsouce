@@ -1,9 +1,9 @@
 package com.markettwits.starts_common.data.mapper
 
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.sportsourcedemo.all.Row
 import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMapper) :
     StartsCloudToListMapper {

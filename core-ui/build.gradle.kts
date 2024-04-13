@@ -8,10 +8,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.libphonenumber)
     implementation(libs.zoomable)
     api(libs.kotlinx.collections.immutable)
-    api(libs.onebone.toolbar)
     api(libs.compose.ui.tooling.preview)
     api(libs.bundles.composeUiBundle)
     debugApi(libs.junit.ext.ktx)

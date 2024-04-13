@@ -74,3 +74,6 @@ include(":profile:root-profile")
 
 include(":intent:api")
 include(":intent:impl")
+
+include(":core:ui")
+include(":core:time")

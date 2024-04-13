@@ -1,8 +1,8 @@
 package com.markettwits.profile.authorized.presentation.components.statistics
 
 import androidx.compose.ui.graphics.Color
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
+import com.markettwits.time.TimePattern
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

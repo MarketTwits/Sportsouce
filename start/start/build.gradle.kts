@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.time)
     implementation(projects.analytics.crashlytics)
     implementation(projects.cloud)
     implementation(projects.coreUi)

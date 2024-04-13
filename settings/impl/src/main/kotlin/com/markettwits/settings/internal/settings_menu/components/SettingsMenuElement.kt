@@ -2,13 +2,9 @@ package com.markettwits.settings.internal.settings_menu.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Message
-import androidx.compose.material.icons.outlined.BugReport
-import androidx.compose.material.icons.outlined.DataUsage
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Gite
 import androidx.compose.material.icons.outlined.NightsStay
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -43,21 +39,21 @@ internal fun defaultApplicationElements(
         title = "Темная тема",
         icon = Icons.Outlined.NightsStay
     ),
-    SettingsMenuElement.Base(
-        id = 1,
-        title = "Внешний вид",
-        icon = Icons.Outlined.Palette
-    ),
-    SettingsMenuElement.Base(
-        id = 2,
-        title = "Управление данными",
-        icon = Icons.Outlined.DataUsage
-    ),
-    SettingsMenuElement.Base(
-        id = 3,
-        title = "Уведомления",
-        icon = Icons.Outlined.Notifications
-    ),
+//    SettingsMenuElement.Base(
+//        id = 1,
+//        title = "Внешний вид",
+//        icon = Icons.Outlined.Palette
+//    ),
+//    SettingsMenuElement.Base(
+//        id = 2,
+//        title = "Управление данными",
+//        icon = Icons.Outlined.DataUsage
+//    ),
+//    SettingsMenuElement.Base(
+//        id = 3,
+//        title = "Уведомления",
+//        icon = Icons.Outlined.Notifications
+//    ),
 )
 
 internal fun defaultSocialElements(): List<SettingsMenuElement> = listOf(
@@ -71,11 +67,11 @@ internal fun defaultSocialElements(): List<SettingsMenuElement> = listOf(
         title = "GitHub",
         icon = Icons.Outlined.Gite
     ),
-    SettingsMenuElement.Base(
-        id = 6,
-        title = "Сообщить об ошибке",
-        icon = Icons.Outlined.BugReport
-    ),
+//    SettingsMenuElement.Base(
+//        id = 6,
+//        title = "Сообщить об ошибке",
+//        icon = Icons.Outlined.BugReport
+//    ),
     SettingsMenuElement.Base(
         id = 7,
         title = "Проверить обновления",

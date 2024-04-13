@@ -7,6 +7,7 @@ android {
     namespace = "com.markettwits.starts"
 }
 dependencies {
+    implementation(projects.core.time)
     implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.coreKoin)

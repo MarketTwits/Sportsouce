@@ -7,7 +7,8 @@ android {
 }
 dependencies {
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.time)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)

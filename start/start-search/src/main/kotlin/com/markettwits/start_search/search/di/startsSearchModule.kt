@@ -4,8 +4,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.ObservableListCache
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.start_search.search.data.StartsSearchRepository
 import com.markettwits.start_search.search.data.StartsSearchRepositoryBase
 import com.markettwits.start_search.search.data.local.SearchHistoryCache
@@ -15,6 +13,8 @@ import com.markettwits.start_search.search.domain.SearchHistory
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
+import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

@@ -4,19 +4,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.base_screen.CollapsingToolbarRefreshScaffold
 import com.markettwits.core_ui.base_screen.FailedScreen
 import com.markettwits.core_ui.base_screen.FullImageScreen
 import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.base_screen.PullToRefreshScreen
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.authorized.presentation.components.members.MyMembersCard
 import com.markettwits.profile.authorized.presentation.components.statistics.UserStartStatistic
@@ -33,22 +32,21 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     var fullImageState by rememberSaveable { mutableStateOf(false) }
 
     state.user?.let { user ->
-        PullToRefreshScreen(isRefreshing = state.isLoading, onRefresh = {
-            component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
-        }) { modifier ->
-            Scaffold(
-                topBar = {
-                    ProfileTopBar(goSettings = {
+        CollapsingToolbarRefreshScaffold(
+            isRefreshing = state.isLoading, onRefresh = {
+                component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
+            },
+            toolbar = {
+                ProfileTopBar(
+                    modifier = Modifier.padding(bottom = 5.dp),
+                    goSettings = {
                         component.obtainOutput(AuthorizedProfileComponent.Output.Settings)
                     })
-                },
-                containerColor = MaterialTheme.colorScheme.background
-            ) {
+            }, body = {
                 Column(
-                    modifier = modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(top = it.calculateTopPadding())
+                    modifier = it
                         .padding(14.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     UserInfoCard(
                         user = user,
@@ -79,7 +77,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                     })
                 }
             }
-        }
+        )
     }
     if (state.isLoading && state.user == null) {
         LoadingFullScreen()

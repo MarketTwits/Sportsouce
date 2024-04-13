@@ -1,10 +1,10 @@
 package com.markettwits.start.register.presentation.order.presentation.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -61,7 +61,6 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.primary
     ) {
         it.calculateTopPadding()
         if (state.isLoading) {
@@ -79,18 +78,20 @@ fun StartOrderScreen(component: OrderComponentComponent) {
             Column(
                 modifier = Modifier
                     .padding(top = it.calculateTopPadding())
-                    .padding(10.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                Spacer(modifier = Modifier.padding(5.dp))
+                Column(modifier = Modifier.padding(horizontal = 14.dp)) {
                     StartDistanceInfoBox(
-                        modifier = Modifier.padding(5.dp),
                         format = order.distanceInfo.format,
                         startTitle = order.orderTitle,
                         distances = order.distanceInfo.distances
                     )
-                    StartMembers(members = order.members, onClickMember = { member, id ->
-                        component.obtainEvent(OrderStore.Intent.OnClickMember(member, id))
-                    })
+                    StartMembers(
+                        members = order.members,
+                        onClickMember = { member, id ->
+                            component.obtainEvent(OrderStore.Intent.OnClickMember(member, id))
+                        })
                     PaymentTypeBox(
                         paymentDisabled = order.paymentDisabled,
                         paymentType = order.paymentType,
@@ -106,19 +107,20 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                             component.obtainEvent(OrderStore.Intent.OnClickPromo(order.promo))
                         })
                     }
-                    OrderComponentBox(
-                        modifier = Modifier.padding(10.dp),
-                        price = order.orderPrice,
-                        paymentDisabled = order.paymentDisabled,
-                        button = state.button,
-                        politics = order.checkPolitics,
-                        onClickCheckRules = {
-                            component.obtainEvent(OrderStore.Intent.OnClickCheckedRules)
-                        },
-                        onClickRegistry = {
-                            component.obtainEvent(OrderStore.Intent.OnClickRegistry)
-                        }
-                    )
+                }
+                OrderComponentBox(
+                    price = order.orderPrice,
+                    paymentDisabled = order.paymentDisabled,
+                    button = state.button,
+                    politics = order.checkPolitics,
+                    onClickCheckRules = {
+                        component.obtainEvent(OrderStore.Intent.OnClickCheckedRules)
+                    },
+                    onClickRegistry = {
+                        component.obtainEvent(OrderStore.Intent.OnClickRegistry)
+                    }
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
             }
         }
         val context = LocalContext.current

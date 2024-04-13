@@ -17,4 +17,5 @@ dependencies {
     implementation(libs.material3.html.text)
     implementation(libs.kotlinx.datetime)
     implementation(libs.bundles.mviKotlin)
+    implementation(projects.core.time)
 }

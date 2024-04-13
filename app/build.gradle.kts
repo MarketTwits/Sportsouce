@@ -24,8 +24,8 @@ android {
             resourceConfigurations.addAll(setOf("en", "ru"))
         }
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             isDebuggable = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),

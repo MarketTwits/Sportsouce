@@ -191,6 +191,7 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 android-library-convention = {id = "android-library-convention", version = "unspecified"}
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
+kotlin-kmp-compose-convention = { id = "kotlin-compose-multiplatform-convention", version = "unspecified" }
 
 #KMM
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

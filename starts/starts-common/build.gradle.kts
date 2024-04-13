@@ -12,5 +12,6 @@ dependencies {
     implementation(projects.cache)
     implementation(projects.coreUi)
     implementation(libs.material3.html.text)
+    implementation(projects.core.time)
     implementation(libs.kotlinx.serialization.core)
 }

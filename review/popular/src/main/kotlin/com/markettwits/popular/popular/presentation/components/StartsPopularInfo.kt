@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun StartsPopularInfo(modifier: Modifier = Modifier) {
@@ -29,7 +29,7 @@ internal fun StartsPopularInfo(modifier: Modifier = Modifier) {
                 .padding(12.dp),
             text = socialNetworkLabel,
             color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.medium,
+            fontFamily = FontNunito.medium(),
             textAlign = TextAlign.Center,
             lineHeight = 14.sp,
             fontSize = 12.sp

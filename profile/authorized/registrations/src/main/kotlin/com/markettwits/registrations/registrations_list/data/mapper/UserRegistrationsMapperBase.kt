@@ -3,9 +3,9 @@ package com.markettwits.registrations.registrations_list.data.mapper
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.cloud.model.start_user.RemoteGroup
 import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.registrations.registrations_list.domain.StartOrderInfo
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 import kotlinx.serialization.json.Json
 
 class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegistrationsMapper {

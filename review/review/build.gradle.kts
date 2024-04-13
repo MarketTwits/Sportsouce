@@ -6,6 +6,7 @@ android {
     namespace = "com.markettwits.review"
 }
 dependencies {
+
     implementation(projects.cache)
     implementation(projects.cloud)
     implementation(projects.news)
@@ -15,6 +16,7 @@ dependencies {
     implementation(projects.review.random)
     implementation(projects.review.schedule)
     implementation(projects.review.popular)
+    implementation(projects.core.time)
     implementation(projects.coreUi)
     implementation(projects.coreKoin)
     implementation(projects.starts.startsCommon)

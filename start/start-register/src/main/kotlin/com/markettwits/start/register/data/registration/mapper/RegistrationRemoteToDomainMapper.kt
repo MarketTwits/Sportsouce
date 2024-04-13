@@ -3,8 +3,6 @@ package com.markettwits.start.register.data.registration.mapper
 import android.util.Log
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.order.domain.OrderDistance
@@ -12,6 +10,8 @@ import com.markettwits.start.register.presentation.order.domain.OrderPrice
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
 import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 interface RegistrationRemoteToDomainMapper {
     @Deprecated("change to order")
@@ -77,20 +77,22 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         paymentDisabled: Boolean,
         paymentType: String
     ): OrderStatement {
+        val startStatements = mapMembers(cities, teams, user, distanceItem, paymentDisabled)
         return OrderStatement(
             distanceInfo = mapOrderDistance(distanceItem),
-            members = mapMembers(cities, teams, user, distanceItem, paymentDisabled),
+            members = startStatements,
             promo = "",
             paymentDisabled = paymentDisabled,
             paymentType = paymentType,
             profileMembers = members,
             orderTitle = startTitle,
-            orderPrice = mapOrderPrice(distanceItem)
+            orderPrice = mapOrderPrice(distanceItem, startStatements.size)
         )
     }
 
     private fun mapOrderPrice(
-        distanceItem: DistanceItem
+        distanceItem: DistanceItem,
+        membersCount: Int
     ): OrderPrice {
         val price = when (distanceItem) {
             is DistanceItem.DistanceCombo -> distanceItem.price?.toDouble() ?: 0.0
@@ -98,7 +100,7 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         }
         return OrderPrice(
             total = price,
-            membersCount = 0,
+            membersCount = membersCount,
             discountInCache = 0.0,
             discountInPercent = 0
         )

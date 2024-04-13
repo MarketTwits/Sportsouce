@@ -4,8 +4,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.cloud.di.timeApiNetworkModule
-import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.members.member_root.di.rootMembersModule
 import com.markettwits.start.register.data.registration.RegistrationStartRepository
 import com.markettwits.start.register.data.registration.RegistrationStartRepositoryBase
@@ -29,6 +27,8 @@ import com.markettwits.start.register.presentation.order.presentation.store.Orde
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStoreFactory
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStoreFactory
 import com.markettwits.teams_city.di.teamsCityModule
+import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

@@ -1,7 +1,6 @@
 package com.markettwits.start.register.presentation.promo.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -54,14 +54,16 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.tertiary
                 )
-                Icon(
-                    modifier = Modifier.clickable {
-                        component.obtainEvent(RegistrationPromoStore.Intent.Dismiss)
-                    },
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "close",
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
+                IconButton(onClick = {
+                    component.obtainEvent(RegistrationPromoStore.Intent.Dismiss)
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "close",
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+
             }
             RegistrationPromoTextField(
                 label = "Введите код",

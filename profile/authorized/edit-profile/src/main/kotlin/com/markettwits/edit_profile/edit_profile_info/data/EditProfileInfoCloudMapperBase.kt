@@ -2,10 +2,10 @@ package com.markettwits.edit_profile.edit_profile_info.data
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 class EditProfileInfoCloudMapperBase(
     private val timeMapper: TimeMapper

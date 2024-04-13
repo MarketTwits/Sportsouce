@@ -2,8 +2,6 @@ package com.markettwits.profile.internal.sign_up.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.core_ui.time.BaseTimeMapper
-import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.inappnotification.api.di.crashlyticsModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.internal.sign_up.data.SignUpMapper
@@ -13,6 +11,8 @@ import com.markettwits.profile.internal.sign_up.domain.use_case.SignUpUseCaseBas
 import com.markettwits.profile.internal.sign_up.domain.validation.SignUpValidation
 import com.markettwits.profile.internal.sign_up.domain.validation.SignUpValidationBase
 import com.markettwits.profile.internal.sign_up.presentation.store.SignUpStoreFactory
+import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

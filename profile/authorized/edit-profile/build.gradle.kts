@@ -8,6 +8,7 @@ android {
     namespace = "com.markettwits.edit_profile"
 }
 dependencies {
+    implementation(projects.core.time)
     implementation(projects.cloud)
     implementation(projects.auth.authService)
     implementation(projects.coreUi)

@@ -3,9 +3,9 @@ package com.markettwits.profile.authorized.data.mapper
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.members.ProfileMembers
 import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
-import com.markettwits.core_ui.time.TimeMapper
 import com.markettwits.profile.authorized.domain.UserProfile
 import com.markettwits.registrations.registrations_list.data.mapper.UserRegistrationsMapper
+import com.markettwits.time.TimeMapper
 
 class AuthorizedProfileMapperBase(
     userRegistrationsMapper: UserRegistrationsMapper,

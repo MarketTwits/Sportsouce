@@ -246,7 +246,7 @@ fun DistanceItemCombo(
                     ),
                     onClick = { onClick() },
                 ) {
-                    Text("Зарегистрироваться")
+                    Text("Зарегистрироваться", color = MaterialTheme.colorScheme.onSecondary)
                 }
             }
         }

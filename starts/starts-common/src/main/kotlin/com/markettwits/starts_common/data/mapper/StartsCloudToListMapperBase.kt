@@ -1,6 +1,7 @@
 package com.markettwits.starts_common.data.mapper
 
-import com.markettwits.core_ui.time.TimeMapper
 
-class StartsCloudToListMapperBase(timeMapper: TimeMapper) :
+import com.markettwits.time.TimeMapper
+
+class StartsCloudToListMapperBase(private val timeMapper: TimeMapper) :
     StartsCloudToListMapperAbstract(timeMapper)

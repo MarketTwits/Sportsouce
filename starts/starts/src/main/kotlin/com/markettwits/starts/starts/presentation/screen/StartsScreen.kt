@@ -29,6 +29,7 @@ fun StartsScreen(
     var loading by rememberSaveable {
         mutableStateOf(false)
     }
+
     CollapsingToolbarScaffold(
         modifier = Modifier,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,

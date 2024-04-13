@@ -8,6 +8,7 @@ android {
     namespace = "com.markettwits.profile"
 }
 dependencies {
+    implementation(projects.core.time)
     implementation(projects.settings.impl)
     implementation(projects.start.start)
     implementation(projects.cloud)

@@ -3,9 +3,9 @@ package com.markettwits.members.member_common.data.mapper
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
 import com.markettwits.cloud.model.profile.members.ProfileMembers
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
     override fun mapAll(members: ProfileMembers): List<ProfileMember> =

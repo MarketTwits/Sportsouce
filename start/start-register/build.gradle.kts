@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.coreKoin)
     implementation(projects.auth.authService)
     implementation(projects.teamsCity)
+    implementation(projects.core.time)
     implementation(projects.profile.authorized.members)
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)

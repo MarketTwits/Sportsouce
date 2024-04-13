@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.base_screen.FailedScreen
-import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.base_screen.PullToRefreshScreen
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.popular.popular.presentation.component.StartsPopularComponent
 import com.markettwits.popular.popular.presentation.components.StartsPopularContent
 import com.markettwits.popular.popular.presentation.store.StartsPopularStore

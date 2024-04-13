@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.starts_common.presentation.StartCard
 
@@ -39,9 +39,9 @@ internal fun StartsPopularContent(
                 Column {
                     Text(
                         modifier = Modifier.padding(horizontal = 10.dp),
-                        text = index.toString(),
+                        text = (index + 1).toString(),
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.bold,
+                        fontFamily = FontNunito.bold(),
                         fontSize = 14.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -51,9 +51,9 @@ internal fun StartsPopularContent(
                 Column {
                     Text(
                         modifier = Modifier.padding(horizontal = 10.dp),
-                        text = "Просмотры : ${item.views + 1}",
+                        text = "Просмотры : ${item.views}",
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.bold,
+                        fontFamily = FontNunito.bold(),
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
                     )

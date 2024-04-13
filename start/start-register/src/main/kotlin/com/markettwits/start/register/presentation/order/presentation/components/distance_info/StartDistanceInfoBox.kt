@@ -22,9 +22,9 @@ fun StartDistanceInfoBox(
     startTitle: String,
     distances: List<String>,
 ) {
-    OnBackgroundCard {
+    OnBackgroundCard(modifier = modifier) {
         Text(
-            modifier = modifier,
+            modifier = Modifier.padding(10.dp),
             text = "Старт",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
@@ -33,11 +33,11 @@ fun StartDistanceInfoBox(
             color = MaterialTheme.colorScheme.tertiary
         )
         DistanceBox(
-            modifier = modifier,
+            modifier = Modifier.padding(4.dp),
             value = startTitle
         )
         Text(
-            modifier = modifier,
+            modifier = Modifier.padding(10.dp),
             text = "Формат",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
@@ -46,11 +46,11 @@ fun StartDistanceInfoBox(
             color = MaterialTheme.colorScheme.tertiary
         )
         DistanceBox(
-            modifier = modifier,
+            modifier = Modifier.padding(4.dp),
             value = format
         )
         Text(
-            modifier = modifier,
+            modifier = Modifier.padding(10.dp),
             text = "Дистанция",
             fontSize = 16.sp,
             fontFamily = FontNunito.bold,
@@ -61,7 +61,7 @@ fun StartDistanceInfoBox(
         Row {
             distances.forEach {
                 DistanceBox(
-                    modifier = modifier,
+                    modifier = Modifier.padding(4.dp),
                     value = it
                 )
             }

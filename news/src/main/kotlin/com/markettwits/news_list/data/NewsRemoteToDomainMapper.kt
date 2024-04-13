@@ -1,10 +1,10 @@
 package com.markettwits.news_list.data
 
 import com.markettwits.cloud.model.news.NewsRemote
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.news_list.domain.Hashtag
 import com.markettwits.news_list.domain.NewsInfo
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 interface NewsRemoteToDomainMapper {
     fun map(news: NewsRemote): List<NewsInfo>

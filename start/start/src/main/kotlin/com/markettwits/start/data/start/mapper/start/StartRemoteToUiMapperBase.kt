@@ -5,14 +5,14 @@ import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.time.TimeRemote
-import com.markettwits.core_ui.time.TimeMapper
-import com.markettwits.core_ui.time.TimePattern
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.distance.StartDistancesToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 
 internal class StartRemoteToUiMapperBase(
     private val timeMapper: TimeMapper,

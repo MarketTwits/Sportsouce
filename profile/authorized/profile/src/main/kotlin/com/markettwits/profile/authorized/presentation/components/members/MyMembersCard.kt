@@ -29,7 +29,7 @@ fun MyMembersCard(modifier: Modifier = Modifier, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(

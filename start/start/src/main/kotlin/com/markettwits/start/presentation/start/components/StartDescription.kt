@@ -25,8 +25,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import de.charlex.compose.material3.HtmlText
 
 
@@ -40,7 +40,7 @@ fun StartDescription(modifier: Modifier, description: String) {
         HtmlText(
             text = displayText,
             fontSize = 12.sp,
-            fontFamily = FontNunito.medium,
+            fontFamily = FontNunito.medium(),
             lineHeight = 12.sp,
             color = textColor,
             colorMapping = mapOf(
@@ -70,7 +70,7 @@ fun StartDescription(modifier: Modifier, description: String) {
                             .align(Alignment.Center)
                             .padding(10.dp),
                         text = if (expanded) "Скрыть" else "Подробнее",
-                        fontFamily = FontNunito.bold,
+                        fontFamily = FontNunito.bold(),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                     )

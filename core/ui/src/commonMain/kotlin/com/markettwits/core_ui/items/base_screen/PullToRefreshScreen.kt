@@ -1,10 +1,8 @@
 package com.markettwits.core_ui.items.base_screen
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import dev.materii.pullrefresh.PullRefreshIndicator
 import dev.materii.pullrefresh.PullRefreshLayout
 import dev.materii.pullrefresh.rememberPullRefreshState
@@ -28,8 +26,8 @@ fun PullToRefreshScreen(
             PullRefreshIndicator(
                 state = state,
                 flipped = false,
-                backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
-                contentColor = MaterialTheme.colorScheme.primary
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.tertiary
             )
         }
     ) {

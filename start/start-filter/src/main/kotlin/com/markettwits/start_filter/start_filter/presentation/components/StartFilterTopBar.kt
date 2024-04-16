@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.noRippleClickable
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun StartFilterTopBar(modifier: Modifier = Modifier, title: String, goBack: () -> Unit) {
@@ -42,7 +42,7 @@ fun StartFilterTopBar(modifier: Modifier = Modifier, title: String, goBack: () -
                 .padding(start = 30.dp),
             text = title,
             color = SportSouceColor.SportSouceBlue,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 18.sp
         )
     }

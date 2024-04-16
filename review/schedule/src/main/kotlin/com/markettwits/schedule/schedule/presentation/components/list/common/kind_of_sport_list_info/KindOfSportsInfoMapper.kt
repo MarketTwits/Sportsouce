@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.Sailing
 import androidx.compose.material.icons.filled.Snowboarding
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.starts_common.domain.StartsListItem
 
 interface KindOfSportsInfoMapper {

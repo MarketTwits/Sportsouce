@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponent
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore
 
@@ -50,7 +50,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
             ) {
                 Text(
                     text = "Промокод",
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.tertiary
                 )

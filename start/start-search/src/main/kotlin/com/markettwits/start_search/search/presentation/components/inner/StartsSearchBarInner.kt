@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.textField.BoundlessTextFieldBase
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
+import com.markettwits.core_ui.items.theme.FontNunito
 
 
 @Composable
@@ -62,7 +62,7 @@ fun StartsSearchBarInner(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     text = "Поиск старта",
                     color = MaterialTheme.colorScheme.outline,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Visible

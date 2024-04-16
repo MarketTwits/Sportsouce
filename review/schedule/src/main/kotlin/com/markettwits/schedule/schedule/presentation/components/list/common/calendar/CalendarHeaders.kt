@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.core.WeekDay
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import java.time.DayOfWeek
 
 
@@ -51,6 +51,6 @@ fun WeekHeaderItem(modifier: Modifier = Modifier, dayOfWeek: DayOfWeek) {
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onPrimary,
         text = dayOfWeek.displayText(uppercase = true),
-        fontFamily = FontNunito.medium
+        fontFamily = FontNunito.medium()
     )
 }

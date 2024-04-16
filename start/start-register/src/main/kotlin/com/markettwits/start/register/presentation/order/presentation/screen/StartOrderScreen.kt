@@ -19,12 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.base_screen.FailedScreen
-import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.common.EventEffectTest
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponent
 import com.markettwits.start.register.presentation.order.presentation.components.distance_info.StartDistanceInfoBox
@@ -131,7 +130,8 @@ fun StartOrderScreen(component: OrderComponentComponent) {
             },
         ) {
             processLink(it.message, linkBlock = {
-                openWebPage(it.message, context)
+                //TODO open web page
+                // openWebPage(it.message, context)
             }, notLinkBlock = {
                 snackBarColor = if (it.success)
                     SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed

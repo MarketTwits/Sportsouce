@@ -1,9 +1,9 @@
 package com.markettwits.start.register.presentation.member.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.consumed
-import com.markettwits.core_ui.event.triggered
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.consumed
+import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Message
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.State
 

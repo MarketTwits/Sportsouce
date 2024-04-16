@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
@@ -33,7 +33,7 @@ fun StartMembersItemText(text: String) {
         text = text,
         color = MaterialTheme.colorScheme.tertiary,
         textAlign = TextAlign.Center,
-        fontFamily = FontNunito.bold,
+        fontFamily = FontNunito.bold(),
         fontSize = 12.sp,
         overflow = TextOverflow.Ellipsis
     )

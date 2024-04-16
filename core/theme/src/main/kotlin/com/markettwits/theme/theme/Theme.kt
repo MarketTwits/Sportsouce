@@ -12,9 +12,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.markettwits.core_ui.theme.LocalDarkOrLightTheme
-import com.markettwits.core_ui.theme.SportSouceColor
-import com.markettwits.core_ui.theme.Typography
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
+import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.Typography
 import com.markettwits.theme.theme.component.ThemeComponent
 import com.markettwits.theme.theme.components.isDark
 import com.markettwits.theme.theme.components.systemColorPallet

@@ -12,15 +12,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.base_screen.FailedScreen
-import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
+import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
+import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.review.presentation.components.content.ReviewContent
 import com.markettwits.review.presentation.store.ReviewStore
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun ReviewScreen(

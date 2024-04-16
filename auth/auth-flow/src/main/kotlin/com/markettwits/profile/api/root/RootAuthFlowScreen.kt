@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.profile.internal.forgot_password.presentation.components.ForgotPasswordScreen
 import com.markettwits.profile.internal.sign_in.presentation.components.SignInScreen
-import com.markettwits.profile.internal.sign_up.presentation.content.SignUpScreen
+import com.markettwits.profile.internal.sign_up.presentation.components.SignUpScreen
 
 @Composable
 fun RootAuthFlowScreen(component: RootAuthFlowComponent) {

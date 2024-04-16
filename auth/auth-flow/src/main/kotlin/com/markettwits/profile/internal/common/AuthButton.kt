@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun AuthButton(
@@ -37,7 +37,7 @@ internal fun AuthButton(
         } else {
             Text(
                 text = title,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.primary
             )

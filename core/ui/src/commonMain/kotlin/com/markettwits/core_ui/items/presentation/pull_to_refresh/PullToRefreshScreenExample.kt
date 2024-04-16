@@ -28,7 +28,7 @@ fun PullToRefreshScreenExample() {
         mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
-    var pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
+    val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
         scope.launch {
             isRefreshing = true
             delay(1000)
@@ -46,7 +46,7 @@ fun PullToRefreshScreenExample() {
                 state = pullRefreshState,
                 flipped = false,
                 backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.tertiary
             )
         }
     ) {

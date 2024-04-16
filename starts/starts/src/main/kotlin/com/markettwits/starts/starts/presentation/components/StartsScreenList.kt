@@ -4,8 +4,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.base_screen.FailedScreen
-import com.markettwits.core_ui.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.presentation.StartCard
 

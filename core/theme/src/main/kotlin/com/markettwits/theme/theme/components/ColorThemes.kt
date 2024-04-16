@@ -3,7 +3,7 @@ package com.markettwits.theme.theme.components
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 internal val LightColorScheme = lightColorScheme(
     primary = Color.White,

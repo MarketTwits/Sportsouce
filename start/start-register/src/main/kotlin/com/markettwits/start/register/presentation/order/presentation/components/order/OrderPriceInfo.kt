@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun OrderPriceInfo(
@@ -23,7 +23,7 @@ fun OrderPriceInfo(
         modifier = modifier,
         text = "Ваш заказ",
         fontSize = 18.sp,
-        fontFamily = FontNunito.bold,
+        fontFamily = FontNunito.bold(),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         color = MaterialTheme.colorScheme.tertiary
@@ -32,7 +32,7 @@ fun OrderPriceInfo(
         modifier = modifier,
         text = "Участников : $membersCount",
         fontSize = 14.sp,
-        fontFamily = FontNunito.bold,
+        fontFamily = FontNunito.bold(),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         color = Color.LightGray
@@ -42,7 +42,7 @@ fun OrderPriceInfo(
             modifier = modifier,
             text = "Скидка : ",
             fontSize = 14.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = Color.LightGray
@@ -51,7 +51,7 @@ fun OrderPriceInfo(
             modifier = modifier,
             text = " - $discountInCache ₽",
             fontSize = 14.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = SportSouceColor.SportSouceLightRed
@@ -61,7 +61,7 @@ fun OrderPriceInfo(
         modifier = modifier,
         text = "Итого : $total ₽",
         fontSize = 18.sp,
-        fontFamily = FontNunito.bold,
+        fontFamily = FontNunito.bold(),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         color = MaterialTheme.colorScheme.tertiary

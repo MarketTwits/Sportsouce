@@ -8,10 +8,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":starts:starts"))
-    implementation(project(":profile:root-profile"))
-    implementation(project(":review:review"))
-    implementation(project(":core-ui"))
+    implementation(projects.starts.starts)
+    implementation(projects.profile.rootProfile)
+    implementation(projects.review.review)
+    implementation(projects.core.ui)
     implementation(libs.koin.core)
     implementation(projects.coreKoin)
     implementation(libs.bundles.composeUiBundle)

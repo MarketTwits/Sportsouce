@@ -10,7 +10,6 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.core_ui.base.Fifth
 import com.markettwits.start.di.startModule
 import com.markettwits.start.presentation.album.di.startAlbumModule
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
@@ -125,7 +124,7 @@ class RootStartScreenComponentBase(
                 RootStartRegisterBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    content = Fifth(
+                    content = RootStartRegister.StartRegisterParams(
                         config.startId,
                         config.distanceInfo,
                         config.paymentDisabled,

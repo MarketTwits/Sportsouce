@@ -14,11 +14,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.textField.CalendarTextFiled
-import com.markettwits.core_ui.components.textField.DropDownSpinner
-import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
+import com.markettwits.core_ui.items.components.textField.DropDownSpinner
+import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.order.presentation.components.extra.fileds.CityFiled
@@ -53,7 +53,7 @@ fun MemberScreenContent(
             modifier = Modifier.padding(vertical = 5.dp),
             text = "Участник ${userNumber + 1}",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary

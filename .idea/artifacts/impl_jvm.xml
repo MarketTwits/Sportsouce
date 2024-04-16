@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="impl-jvm">
+    <output-path>$PROJECT_DIR$/intent/impl/build/libs</output-path>
+    <root id="archive" name="impl-jvm.jar">
+      <element id="module-output" name="Sportsouce.intent.impl.jvmMain" />
+    </root>
+  </artifact>
+</component>

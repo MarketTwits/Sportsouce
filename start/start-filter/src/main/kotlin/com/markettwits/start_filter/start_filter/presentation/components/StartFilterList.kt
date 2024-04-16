@@ -9,7 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.DropDownSpinner
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 import com.markettwits.start_filter.start_filter.presentation.components.dialog.BottomScreenContent
 import kotlinx.collections.immutable.toImmutableList
@@ -50,7 +51,7 @@ fun StartFilterList(
                 }
 
                 is StartFilterUi.FilterStartType.DropDown -> {
-                    com.markettwits.core_ui.components.textField.DropDownSpinner(
+                    DropDownSpinner(
                         modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                         itemList = item.list.toImmutableList(),
                         selectedItem = item.selected.joinToString(", "),

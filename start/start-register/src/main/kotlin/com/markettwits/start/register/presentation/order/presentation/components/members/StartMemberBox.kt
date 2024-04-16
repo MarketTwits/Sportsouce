@@ -21,8 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun StartMemberBox(
@@ -50,7 +50,7 @@ fun StartMemberBox(
                 Text(
                     text = stage,
                     fontSize = 16.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -58,7 +58,7 @@ fun StartMemberBox(
                 Text(
                     text = memberName,
                     fontSize = 16.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary

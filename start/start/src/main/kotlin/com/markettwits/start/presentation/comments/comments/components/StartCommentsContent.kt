@@ -9,8 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.EventEffect
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore
 import com.markettwits.start.presentation.start.components.CommentTextField

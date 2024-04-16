@@ -5,11 +5,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
-fun LocalDate.mapToString(): String {
+fun LocalDate.mapDateToString(): String {
     val dateTime = LocalDate.parse(this.toString())
     val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     return dateTime.format(formatter)
 }
+
 
 fun Long.mapDateToString(): String {
     val sdf = SimpleDateFormat("dd.MM.yyyy")

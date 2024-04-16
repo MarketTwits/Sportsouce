@@ -20,9 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.noRippleClickable
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
 
 
@@ -43,7 +43,7 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
                 Text(
                     text = "Список участников",
                     color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.padding(start = 5.dp))
@@ -56,7 +56,7 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
                     Text(
                         text = membersCount.toString(),
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.regular,
+                        fontFamily = FontNunito.regular(),
                         fontSize = 12.sp
                     )
                 }

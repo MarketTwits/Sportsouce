@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.startStatusBackground
 
 @Composable
@@ -39,7 +39,7 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String
                     .padding(8.dp),
                 text = status.name,
                 fontSize = 14.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 color = color,
@@ -59,7 +59,7 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String
                     .padding(8.dp),
                 text = date,
                 fontSize = 14.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 color = Color.White

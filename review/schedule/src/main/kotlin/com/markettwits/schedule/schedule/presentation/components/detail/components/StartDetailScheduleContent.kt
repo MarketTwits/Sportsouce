@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.starts_common.presentation.StartCard
 
@@ -40,7 +40,7 @@ fun StartDetailScheduleContent(
                     color = MaterialTheme.colorScheme.tertiary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center
                 )

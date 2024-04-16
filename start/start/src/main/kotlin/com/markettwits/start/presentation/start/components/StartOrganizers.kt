@@ -23,11 +23,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.model.start.Organizer
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.image.icons.IconTelegram
-import com.markettwits.core_ui.image.icons.IconVk
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.IconTelegram
+import com.markettwits.core_ui.items.image.IconVk
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
@@ -52,7 +51,7 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                 Text(
                     text = it.name,
                     color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.regular,
+                    fontFamily = FontNunito.regular(),
                     fontSize = 14.sp
                 )
             }
@@ -72,14 +71,12 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                         },
                         text = it.phone,
                         color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.regular,
+                        fontFamily = FontNunito.regular(),
                         fontSize = 14.sp
                     )
                 }
             }
-            val context = LocalContext.current
             Row(modifier = modifier) {
-
                 it.social_networks?.forEach {
                     if (it.url != null) {
                         Box(
@@ -88,7 +85,8 @@ private fun StartOrganizersContent(modifier: Modifier, organizer: List<Organizer
                                 .background(MaterialTheme.colorScheme.secondary)
                                 .size(30.dp)
                                 .clickable {
-                                    openWebPage(it.url ?: "", context)
+                                    //TODO open web page
+                                    // openWebPage(it.url ?: "", context)
                                 }
                         ) {
                             val icon = when (it.code) {

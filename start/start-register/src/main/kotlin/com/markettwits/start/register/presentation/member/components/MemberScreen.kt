@@ -15,11 +15,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.markettwits.core_ui.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.base_screen.AlertDialogScreen
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
-import com.markettwits.core_ui.event.EventEffect
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.base_screen.AlertDialogScreen
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.event.EventEffect
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore

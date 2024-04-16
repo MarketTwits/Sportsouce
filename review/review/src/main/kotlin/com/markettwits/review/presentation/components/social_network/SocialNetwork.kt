@@ -21,12 +21,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.image.icons.IconTelegram
-import com.markettwits.core_ui.image.icons.IconVk
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.IconTelegram
+import com.markettwits.core_ui.items.image.IconVk
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun SocialNetwork(modifier: Modifier = Modifier) {
@@ -38,6 +37,7 @@ fun SocialNetwork(modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         val context = LocalContext.current
+
         SocialNetworkButton(
             modifier = Modifier.weight(1f),
             title = "Мы ВКонтакте",
@@ -91,15 +91,17 @@ private fun SocialNetworkButton(
             maxLines = 1,
             fontSize = 14.sp,
             overflow = TextOverflow.Ellipsis,
-            fontFamily = FontNunito.bold
+            fontFamily = FontNunito.bold()
         )
     }
 }
 
 private fun onClickTelegram(context : Context){
-    openWebPage("https://t.me/sportsauce", context)
+    //TODO open web page
+    // openWebPage("https://t.me/sportsauce", context)
 }
 
 private fun onClickVk(context : Context){
-    openWebPage("https://vk.com/sportsoyuznsk", context)
+    //TODO open web page
+    // openWebPage("https://vk.com/sportsoyuznsk", context)
 }

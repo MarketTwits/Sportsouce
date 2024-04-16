@@ -29,8 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.schedule.schedule.presentation.components.list.common.starts_list_info.StartsListInfoItemLabel
 import com.markettwits.starts_common.domain.StartsListItem
 import java.util.Locale
@@ -106,7 +106,7 @@ private fun KindOfSportsInfoValue(modifier: Modifier, count: Int, title: String,
             text = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.regular,
+            fontFamily = FontNunito.regular(),
             fontSize = 14.sp
         )
         Row(

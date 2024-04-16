@@ -1,0 +1,49 @@
+package com.markettwits.news_event.store
+
+import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
+import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.news_list.domain.NewsInfo
+
+class NewsEventStoreFactory(
+    private val storeFactory: StoreFactory,
+) {
+
+    fun create(item : NewsInfo): NewsEventStore =
+        object : NewsEventStore,
+            Store<NewsEventStore.Intent, NewsEventStore.State, NewsEventStore.Label> by storeFactory.create(
+                name = "NewsStore",
+                initialState = NewsEventStore.State(news = item),
+                bootstrapper = SimpleBootstrapper(Unit),
+                executorFactory = ::ExecutorImpl,
+                reducer = ReducerImpl
+            ) {}
+
+    private sealed interface Msg {
+        data class Show(val data: NewsInfo) : Msg
+    }
+
+
+    private inner class ExecutorImpl :
+        CoroutineExecutor<NewsEventStore.Intent, Unit, NewsEventStore.State, Msg, NewsEventStore.Label>() {
+        override fun executeIntent(
+            intent: NewsEventStore.Intent,
+            getState: () -> NewsEventStore.State
+        ) {
+            when (intent) {
+                NewsEventStore.Intent.Pop -> publish(NewsEventStore.Label.Pop)
+            }
+        }
+
+        override fun executeAction(action: Unit, getState: () -> NewsEventStore.State) = Unit
+    }
+
+    private object ReducerImpl : Reducer<NewsEventStore.State, Msg> {
+        override fun NewsEventStore.State.reduce(message: Msg): NewsEventStore.State =
+            when (message) {
+                is Msg.Show -> NewsEventStore.State(news = message.data)
+            }
+    }
+}

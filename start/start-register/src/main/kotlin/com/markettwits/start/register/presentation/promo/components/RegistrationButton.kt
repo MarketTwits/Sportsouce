@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun RegistrationButton(
@@ -45,7 +45,7 @@ fun RegistrationButton(
                 modifier = Modifier.padding(2.dp),
                 text = title,
                 fontSize = 16.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSecondary
             )

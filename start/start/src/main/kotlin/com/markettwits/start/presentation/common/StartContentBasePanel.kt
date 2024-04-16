@@ -19,8 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.noRippleClickable
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.theme.FontNunito
+
 
 @Composable
 fun StartContentBasePanel(
@@ -45,7 +46,7 @@ fun StartContentBasePanel(
         Text(
             text = label,
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary

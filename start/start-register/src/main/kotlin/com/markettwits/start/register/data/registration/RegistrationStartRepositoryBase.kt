@@ -2,7 +2,6 @@ package com.markettwits.start.register.data.registration
 
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.core_ui.base_extensions.retryRunCatchingAsync
 import com.markettwits.members.member_common.data.ProfileMembersRepository
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.register.data.registration.mapper.RegistrationMapper
@@ -33,7 +32,7 @@ class RegistrationStartRepositoryBase(
         paymentDisabled: Boolean,
         paymentType: String
     ): Result<OrderStatement> {
-        return retryRunCatchingAsync {
+        return runCatching {
             val user = authService.user().getOrThrow()
             val cities = teamsCityRepository.city().getOrThrow()
             val teams = teamsCityRepository.teams().getOrThrow()
@@ -52,7 +51,7 @@ class RegistrationStartRepositoryBase(
     }
 
     override suspend fun promo(value: String, startId: Int): Result<StartPromo> =
-        retryRunCatchingAsync {
+        runCatching {
             promoMapper.map(service.promo(value, startId))
         }
 

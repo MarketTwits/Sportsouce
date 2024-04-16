@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
@@ -64,7 +64,7 @@ fun StartsListInfoItemLabel(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.tertiary,
             overflow = TextOverflow.Ellipsis,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 16.sp
         )
         Text(
@@ -72,7 +72,7 @@ fun StartsListInfoItemLabel(
             text = title,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.regular,
+            fontFamily = FontNunito.regular(),
             fontSize = 14.sp
         )
     }

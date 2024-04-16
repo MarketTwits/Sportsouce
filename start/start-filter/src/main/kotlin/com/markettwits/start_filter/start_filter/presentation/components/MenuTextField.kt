@@ -3,7 +3,7 @@ package com.markettwits.start_filter.start_filter.presentation.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 
 @Composable
 fun MenuTextField(

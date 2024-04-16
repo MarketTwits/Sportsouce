@@ -10,12 +10,10 @@ dependencies {
     implementation(projects.analytics.crashlytics)
     implementation(projects.auth.authService)
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(libs.koin.core)
     implementation(libs.bundles.decompose.compose)
-    implementation(libs.material3.html.text)
-    implementation(libs.kotlinx.datetime)
     implementation(libs.bundles.mviKotlin)
     implementation(projects.core.time)
 }

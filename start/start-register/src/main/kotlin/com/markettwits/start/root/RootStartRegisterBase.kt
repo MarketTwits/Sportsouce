@@ -14,8 +14,6 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
-import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.core_ui.base.Fifth
 import com.markettwits.start.register.di.startRegistrationModule
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponentBase
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponentBase
@@ -31,7 +29,7 @@ import com.markettwits.start.register.presentation.promo.component.RegistrationP
 class RootStartRegisterBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-    private val content: Fifth<Int, DistanceItem, Boolean, String, String>
+    private val content: RootStartRegister.StartRegisterParams
 ) : ComponentContext by componentContext, RootStartRegister {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -47,11 +45,11 @@ class RootStartRegisterBase(
         source = stackNavigation,
         serializer = RootStartRegister.ConfigStack.serializer(),
         initialConfiguration = RootStartRegister.ConfigStack.StartRegistration(
-            startId = content.first,
-            distanceInfo = content.second,
-            paymentDisabled = content.third,
-            paymentType = content.fourth,
-            startTitle = content.fifth
+            startId = content.startId,
+            distanceInfo = content.distanceItem,
+            paymentDisabled = content.isPaymentDisabled,
+            paymentType = content.paymentType,
+            startTitle = content.startTitle
         ),
         handleBackButton = true,
         childFactory = ::childStack,

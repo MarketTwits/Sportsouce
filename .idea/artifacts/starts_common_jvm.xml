@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="starts-common-jvm">
+    <output-path>$PROJECT_DIR$/starts/starts-common/build/libs</output-path>
+    <root id="archive" name="starts-common-jvm.jar">
+      <element id="module-output" name="Sportsouce.starts.starts-common.jvmMain" />
+    </root>
+  </artifact>
+</component>

@@ -1,6 +1,6 @@
 package com.markettwits.start.register.presentation.order.domain.validation
 
-import com.markettwits.core_ui.result.flatMapCallback
+import com.markettwits.core_ui.items.result.flatMapCallback
 import com.markettwits.start.register.presentation.member.domain.RegistrationMemberValidator
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
 

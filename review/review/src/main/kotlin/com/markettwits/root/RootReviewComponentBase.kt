@@ -12,7 +12,7 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.di.ComponentKoinContext
+import com.markettwits.ComponentKoinContext
 import com.markettwits.di.newsModule
 import com.markettwits.news_event.NewsEventComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory

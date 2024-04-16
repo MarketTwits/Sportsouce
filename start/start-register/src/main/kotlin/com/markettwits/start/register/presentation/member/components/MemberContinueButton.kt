@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun MemberContinueButton(modifier: Modifier = Modifier, onClickContinue: () -> Unit) {
@@ -25,7 +25,7 @@ fun MemberContinueButton(modifier: Modifier = Modifier, onClickContinue: () -> U
         Text(
             text = "Продолжить",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onSecondary

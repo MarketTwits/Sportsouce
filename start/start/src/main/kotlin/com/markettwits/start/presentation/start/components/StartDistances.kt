@@ -23,10 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.components.buttons.ButtonContentBase
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
@@ -80,7 +79,8 @@ fun StartDistances(
                 textColor = MaterialTheme.colorScheme.onSecondary,
                 title = "Перейти на сайт регистрации",
                 onClick = {
-                    openWebPage(regLink, context)
+                    //TODO open web page
+                    // openWebPage(regLink, context)
                 }
             )
         }
@@ -113,7 +113,7 @@ fun DistanceItemBase(
             Text(
                 text = item.value,
                 fontSize = 12.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.tertiary
@@ -125,7 +125,7 @@ fun DistanceItemBase(
                 Text(
                     text = "Осталось слотов : $slots",
                     fontSize = 12.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -135,7 +135,7 @@ fun DistanceItemBase(
                 Text(
                     text = paymentType,
                     fontSize = 12.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -144,7 +144,7 @@ fun DistanceItemBase(
                 Text(
                     text = "Цена : " + item.distance.price + " ₽",
                     fontSize = 12.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -201,7 +201,7 @@ fun DistanceItemCombo(
             Text(
                 text = item.value,
                 fontSize = 12.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Visible,
                 color = MaterialTheme.colorScheme.tertiary
@@ -209,7 +209,7 @@ fun DistanceItemCombo(
             Text(
                 text = "",
                 fontSize = 12.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.tertiary
@@ -218,7 +218,7 @@ fun DistanceItemCombo(
                 Text(
                     text = paymentType,
                     fontSize = 12.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -227,7 +227,7 @@ fun DistanceItemCombo(
                 Text(
                     text = "Цена : " + item.price + " ₽",
                     fontSize = 12.sp,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary

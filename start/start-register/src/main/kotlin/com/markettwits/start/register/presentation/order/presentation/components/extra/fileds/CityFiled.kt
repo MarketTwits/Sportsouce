@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.components.textField.ItemsTextFiledDialog
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.order.presentation.components.extra.FilterPosition
 

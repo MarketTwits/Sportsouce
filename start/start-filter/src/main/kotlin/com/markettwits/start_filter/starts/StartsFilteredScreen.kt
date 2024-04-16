@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.base_screen.FailedScreen
-import com.markettwits.core_ui.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.start_filter.starts.store.StartsFilteredStore
 import com.markettwits.starts_common.presentation.StartCard
 

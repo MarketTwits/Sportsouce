@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.OnBackgroundCard
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.OnBackgroundCard
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.domain.StartStatement
 
 @Composable
@@ -32,7 +32,7 @@ fun PaymentTypeBox(
             modifier = modifier.padding(10.dp),
             text = "Как оплатить ?",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
@@ -84,7 +84,7 @@ private fun PaymentTypeChosen(
             modifier = modifier.padding(vertical = 1.dp, horizontal = 2.dp),
             text = value,
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary

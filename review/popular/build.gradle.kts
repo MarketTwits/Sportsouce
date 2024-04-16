@@ -6,8 +6,8 @@ android {
     namespace = "com.markettwits.popular"
 }
 dependencies {
-    implementation(projects.cloud)
     implementation(projects.core.time)
+    implementation(projects.cloud)
     implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(libs.koin.core)

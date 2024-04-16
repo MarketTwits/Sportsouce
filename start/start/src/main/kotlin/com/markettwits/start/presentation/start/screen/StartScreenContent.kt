@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.core_ui.base_screen.PullToRefreshScreen
-import com.markettwits.core_ui.components.FullImageContent
-import com.markettwits.core_ui.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.components.FullImageContent
+import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.StartMembersUi
 import com.markettwits.start.presentation.start.components.StartAlbums

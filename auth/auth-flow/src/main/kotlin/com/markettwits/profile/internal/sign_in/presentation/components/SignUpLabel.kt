@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun SignUpLabel(modifier: Modifier = Modifier, onClick: () -> Unit) {
@@ -29,7 +29,7 @@ internal fun SignUpLabel(modifier: Modifier = Modifier, onClick: () -> Unit) {
     ) {
         Text(
             text = "Зарегистрироваться",
-            fontFamily = FontNunito.medium,
+            fontFamily = FontNunito.medium(),
             fontSize = 14.sp,
             color = Color.Gray,
             modifier = Modifier

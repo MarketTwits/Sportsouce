@@ -1,6 +1,6 @@
 package com.markettwits.profile.internal.sign_up.domain.use_case
 
-import com.markettwits.core_ui.result.flatMapCallback
+import com.markettwits.core_ui.items.result.flatMapCallback
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.profile.internal.sign_up.data.SignUpMapper
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement

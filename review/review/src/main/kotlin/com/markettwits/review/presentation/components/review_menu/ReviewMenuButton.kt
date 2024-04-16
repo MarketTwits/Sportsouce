@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun ReviewMenuButton(
@@ -53,7 +53,7 @@ fun ReviewMenuButton(
                 maxLines = 1,
                 fontSize = 14.sp,
                 overflow = TextOverflow.Ellipsis,
-                fontFamily = FontNunito.bold
+                fontFamily = FontNunito.bold()
             )
         }
     }

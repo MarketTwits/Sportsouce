@@ -1,6 +1,5 @@
 package com.markettwits.review.presentation.components.review_menu
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun ReviewMenu(modifier: Modifier = Modifier, onClick : (Int) -> Unit) {

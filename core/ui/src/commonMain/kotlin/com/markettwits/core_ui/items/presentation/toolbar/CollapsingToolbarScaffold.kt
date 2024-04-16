@@ -81,7 +81,7 @@ interface CollapsingToolbarScaffoldScope {
 }
 
 @Composable
-internal fun CollapsingToolbarScaffold(
+fun CollapsingToolbarScaffold(
 	modifier: Modifier,
 	state: CollapsingToolbarScaffoldState,
 	scrollStrategy: ScrollStrategy,

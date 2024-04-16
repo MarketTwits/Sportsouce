@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.profile.internal.common.AuthButton
 import com.markettwits.profile.internal.common.WelcomeContent
 

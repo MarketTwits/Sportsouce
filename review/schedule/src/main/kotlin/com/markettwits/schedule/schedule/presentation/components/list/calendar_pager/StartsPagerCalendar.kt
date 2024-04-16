@@ -26,7 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import kotlinx.coroutines.launch
 
 
@@ -107,33 +107,7 @@ private fun StartTab(
             text = title,
             fontSize = 16.sp,
             color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.bold
+            fontFamily = FontNunito.bold()
         )
     }
-//    Tab(
-//        modifier = modifier
-//            .wrapContentSize()
-//            .clip(RoundedCornerShape(10.dp)),
-//        selectedContentColor = MaterialTheme.colorScheme.tertiary,
-//        unselectedContentColor = Color.Gray,
-//        selected = selected,
-//        icon = {
-//            if (icon != null)
-//                Icon(
-//                    imageVector = icon,
-//                    contentDescription = title,
-//                    tint = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline
-//                )
-//        },
-//        text = {
-//            Text(
-//                text = title,
-//                fontSize = 16.sp,
-//                color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-//                fontFamily = FontNunito.bold
-//            )
-//        },
-//        onClick = {
-//            onClick()
-//        })
 }

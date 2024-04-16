@@ -1,9 +1,9 @@
 package com.markettwits.profile.internal.sign_up.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.StateEventWithContent
-import com.markettwits.core_ui.event.consumed
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.StateEventWithContent
+import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.profile.internal.sign_up.presentation.store.SignUpStore.Intent
 import com.markettwits.profile.internal.sign_up.presentation.store.SignUpStore.Label

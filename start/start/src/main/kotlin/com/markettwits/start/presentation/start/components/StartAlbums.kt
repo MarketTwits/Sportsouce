@@ -35,12 +35,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.base_screen.FullImageScreen
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.image.request.imageRequestCrossfade
-import com.markettwits.core_ui.theme.FontNunito
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.base_screen.FullImageScreen
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
@@ -201,7 +201,7 @@ private fun StartAlbumItemContentEmpty(
                 modifier = Modifier.align(Alignment.Center),
                 text = "Ещё фото",
                 fontSize = 16.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
@@ -235,7 +235,7 @@ private fun HashtagLabel(modifier: Modifier, hashtag: String) {
                 text = hashtag,
                 fontSize = 12.sp,
                 overflow = TextOverflow.Ellipsis,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onSecondary
             )
         }

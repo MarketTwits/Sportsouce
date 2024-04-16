@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterItem
@@ -40,7 +40,7 @@ fun StartMemberFilterItemBase(modifier: Modifier = Modifier, item: String, onCli
             text = item,
             color = MaterialTheme.colorScheme.outline,
             maxLines = 1,
-            fontFamily = FontNunito.regular,
+            fontFamily = FontNunito.regular(),
             fontSize = 12.sp
         )
     }
@@ -61,7 +61,7 @@ fun StartMemberFilterItemSelected(modifier: Modifier = Modifier, item: String, o
             text = item,
             color = MaterialTheme.colorScheme.onSecondary,
             maxLines = 1,
-            fontFamily = FontNunito.regular,
+            fontFamily = FontNunito.regular(),
             fontSize = 12.sp
         )
     }
@@ -80,7 +80,7 @@ fun StartMembersSortWrapper2(
             Text(
                 text = item.title,
                 color = MaterialTheme.colorScheme.tertiary,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 fontSize = 14.sp
             )
             FlowRow(

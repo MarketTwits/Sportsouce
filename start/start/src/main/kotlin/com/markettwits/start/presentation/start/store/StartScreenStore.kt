@@ -8,10 +8,10 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.isResponseException
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.StateEventWithContent
-import com.markettwits.core_ui.event.consumed
-import com.markettwits.core_ui.event.triggered
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.StateEventWithContent
+import com.markettwits.core_ui.items.event.consumed
+import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.inappnotification.api.tracker.AnalyticsTracker
 import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem

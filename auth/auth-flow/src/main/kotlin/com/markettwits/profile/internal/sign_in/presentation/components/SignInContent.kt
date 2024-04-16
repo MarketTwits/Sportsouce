@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.textField.OutlinePhoneTextFiled
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.profile.internal.common.AuthButton
 import com.markettwits.profile.internal.common.WelcomeContent
 import com.markettwits.profile.internal.sign_in.presentation.component.SignInFieldUiState

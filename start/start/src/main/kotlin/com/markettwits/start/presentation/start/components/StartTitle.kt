@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
@@ -15,7 +15,7 @@ fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
         Text(
             text = title,
             fontSize = 18.sp,
-            fontFamily = FontNunito.extraBold,
+            fontFamily = FontNunito.extraBold(),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
@@ -23,7 +23,7 @@ fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
         Text(
             text = place,
             fontSize = 12.sp,
-            fontFamily = FontNunito.semiBoldBold,
+            fontFamily = FontNunito.semiBoldBold(),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary

@@ -1,7 +1,7 @@
 package com.markettwits.start.presentation.common
 
 import androidx.compose.ui.graphics.Color
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 typealias OnClick = () -> Unit
 

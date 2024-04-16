@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import kotlinx.coroutines.launch
 
 
@@ -70,7 +69,7 @@ internal fun TabBar(
                         text = item,
                         fontSize = 16.sp,
                         color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.bold
+                        fontFamily = FontNunito.bold()
                     )
                 },
                 onClick = {

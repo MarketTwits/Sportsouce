@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.OutDateStyle
 import com.kizitonwose.calendar.core.daysOfWeek
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.schedule.schedule.presentation.components.list.common.calendar.displayText
 import com.markettwits.schedule.schedule.presentation.components.list.month_calendar.CompactMonthCalendar
 import com.markettwits.starts_common.domain.StartsListItem
@@ -94,7 +94,7 @@ fun YearCalendar(
                                                 Locale.ROOT
                                             ) else it.toString()
                                         },
-                                    fontFamily = FontNunito.medium
+                                    fontFamily = FontNunito.medium()
                                 )
                             }
                         )

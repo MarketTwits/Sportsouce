@@ -7,7 +7,7 @@ android {
 }
 dependencies {
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(projects.start.start)
     implementation(projects.starts.startsCommon)

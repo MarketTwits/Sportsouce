@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
+import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
+import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_search.search.presentation.component.StartsSearchComponent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore
 import com.markettwits.starts_common.presentation.StartsScreenContent
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun StartsSearchScreen(component: StartsSearchComponent) {
@@ -67,7 +67,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                                 .padding(10.dp),
                             text = "РЕЗУЛЬТАТЫ ПОИСКА",
                             color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.bold,
+                            fontFamily = FontNunito.bold(),
                             fontSize = 12.sp,
                             overflow = TextOverflow.Visible
                         )
@@ -90,7 +90,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                                 .align(Alignment.CenterHorizontally),
                             text = "По вашему запросу ничего не найдено",
                             color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.medium,
+                            fontFamily = FontNunito.medium(),
                             fontSize = 14.sp,
                             overflow = TextOverflow.Visible
                         )

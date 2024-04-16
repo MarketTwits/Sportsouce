@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.OnBackgroundCard
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.OnBackgroundCard
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun StartDistanceInfoBox(
@@ -27,7 +27,7 @@ fun StartDistanceInfoBox(
             modifier = Modifier.padding(10.dp),
             text = "Старт",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
@@ -40,7 +40,7 @@ fun StartDistanceInfoBox(
             modifier = Modifier.padding(10.dp),
             text = "Формат",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
@@ -53,7 +53,7 @@ fun StartDistanceInfoBox(
             modifier = Modifier.padding(10.dp),
             text = "Дистанция",
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
@@ -80,7 +80,7 @@ private fun DistanceBox(modifier: Modifier = Modifier, value: String) {
             modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp),
             text = value,
             fontSize = 16.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onSecondary

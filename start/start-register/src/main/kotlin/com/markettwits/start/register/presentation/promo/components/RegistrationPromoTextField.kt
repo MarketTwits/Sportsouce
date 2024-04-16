@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun RegistrationPromoTextField(
@@ -34,7 +34,7 @@ fun RegistrationPromoTextField(
             if (isError)
                 Text(
                     text = message,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 14.sp,
                     color = SportSouceColor.SportSouceLightRed
                 )

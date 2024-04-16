@@ -1,9 +1,9 @@
 package com.markettwits.start.register.presentation.member.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.StateEventWithContent
-import com.markettwits.core_ui.event.consumed
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.StateEventWithContent
+import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Intent

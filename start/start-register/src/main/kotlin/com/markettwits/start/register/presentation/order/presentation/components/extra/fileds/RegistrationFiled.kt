@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.presentation.order.presentation.components.extra.RegistrationDialog
 
 @Composable

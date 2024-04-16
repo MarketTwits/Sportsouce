@@ -1,5 +1,7 @@
 plugins {
-    alias(libs.plugins.android.library.compose.convention)
+    //alias(libs.plugins.android.library.compose.convention)
+    alias(libs.plugins.kotlin.kmp.convention)
+    alias(libs.plugins.kotlin.kmp.compose)
     alias(libs.plugins.kotlin.serialization)
 
 }
@@ -7,23 +9,42 @@ plugins {
 android {
     namespace = "com.markettwits.profile"
 }
-dependencies {
-    implementation(projects.core.time)
-    implementation(projects.settings.impl)
-    implementation(projects.start.start)
-    implementation(projects.cloud)
-    implementation(projects.auth.authService)
-    implementation(projects.coreUi)
-    implementation(projects.coreKoin)
-    implementation(projects.profile.authorized.editProfile)
-    implementation(projects.profile.authorized.registrations)
-    implementation(projects.profile.authorized.members)
-    implementation(projects.cache)
-    implementation(projects.starts.startsCommon)
-    implementation(libs.lottie)
-    implementation(libs.koin.core)
-    implementation(libs.bundles.decompose.compose)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.bundles.mviKotlin)
-    implementation(libs.calendar)
+kotlin {
+    sourceSets.commonMain.dependencies {
+        implementation(projects.core.time)
+        implementation(projects.settings.impl)
+        implementation(projects.start.start)
+        implementation(projects.cloud)
+        implementation(projects.auth.authService)
+        implementation(projects.core.ui)
+        implementation(projects.coreKoin)
+        implementation(projects.profile.authorized.editProfile)
+        implementation(projects.profile.authorized.registrations)
+        implementation(projects.profile.authorized.members)
+        implementation(projects.cache)
+        implementation(projects.starts.startsCommon)
+        implementation(libs.koin.core)
+        implementation(libs.bundles.decompose.compose)
+        implementation(libs.bundles.mviKotlin)
+    }
 }
+//dependencies {
+//    implementation(projects.core.time)
+//    implementation(projects.settings.impl)
+//    implementation(projects.start.start)
+//    implementation(projects.cloud)
+//    implementation(projects.auth.authService)
+//    implementation(projects.core.ui)
+//    implementation(projects.coreKoin)
+//    implementation(projects.profile.authorized.editProfile)
+//    implementation(projects.profile.authorized.registrations)
+//    implementation(projects.profile.authorized.members)
+//    implementation(projects.cache)
+//    implementation(projects.starts.startsCommon)
+//    implementation(libs.lottie)
+//    implementation(libs.koin.core)
+//    implementation(libs.bundles.decompose.compose)
+//    implementation(libs.kotlinx.datetime)
+//    implementation(libs.bundles.mviKotlin)
+//    implementation(libs.calendar)
+//}

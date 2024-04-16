@@ -6,9 +6,9 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.core_ui.event.EventContent
-import com.markettwits.core_ui.event.consumed
-import com.markettwits.core_ui.event.triggered
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.consumed
+import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.inappnotification.api.tracker.AnalyticsTracker
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.profile.internal.sign_up.domain.use_case.SignUpUseCase
@@ -69,7 +69,6 @@ internal class SignUpStoreFactory(
                     isLoading = false,
                     event = triggered(EventContent(false, msg.message))
                 )
-
                 is Msg.Loading -> copy(isLoading = true)
                 is Msg.OnValueChanged -> copy(statement = msg.statement)
                 is Msg.OnConsumedEvent -> copy(event = consumed())

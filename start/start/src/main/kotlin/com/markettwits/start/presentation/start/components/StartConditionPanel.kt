@@ -14,9 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
@@ -43,7 +42,8 @@ private fun StartConditionPanelContent(
             .clip(Shapes.medium)
             .background(MaterialTheme.colorScheme.secondary)
             .clickable {
-                openWebPage(file.url, context)
+                //TODO openWebPage
+                // openWebPage(file.url, context)
             }
             .fillMaxWidth()
     ) {
@@ -53,7 +53,7 @@ private fun StartConditionPanelContent(
                 .align(Alignment.Center),
             text = "Положение",
             color = MaterialTheme.colorScheme.onSecondary,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 14.sp
         )
     }

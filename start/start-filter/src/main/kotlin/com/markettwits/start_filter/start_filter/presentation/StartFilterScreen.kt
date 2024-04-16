@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.start_filter.start_filter.presentation.components.FilterButtonSelectionPanel
 import com.markettwits.start_filter.start_filter.presentation.components.StartFilterList
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore

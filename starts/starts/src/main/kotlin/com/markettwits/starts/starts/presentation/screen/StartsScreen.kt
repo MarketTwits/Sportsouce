@@ -10,15 +10,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
+import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
+import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.start_search.search.presentation.components.publish.StartsSearchBarPublic
 import com.markettwits.starts.starts.presentation.component.StartsScreen
 import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts.starts.presentation.components.StartsScreenList
 import com.markettwits.starts.starts.presentation.components.TabBar
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 
 @Composable

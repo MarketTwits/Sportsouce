@@ -5,7 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.components.OnBackgroundCard
+import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.start.register.presentation.order.domain.OrderPrice
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
 import com.markettwits.start.register.presentation.promo.components.RegistrationButton

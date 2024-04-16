@@ -18,9 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.base_extensions.openWebPage
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
@@ -51,7 +50,8 @@ fun StartResultContent(
                     .clip(Shapes.medium)
                     .background(MaterialTheme.colorScheme.secondary)
                     .clickable {
-                        openWebPage(it.url, context)
+                        //TODO open web page
+                        //openWebPage(it.url, context)
                     }
                     .fillMaxWidth()
             ) {
@@ -62,7 +62,7 @@ fun StartResultContent(
                     textAlign = TextAlign.Center,
                     text = it.name,
                     color = MaterialTheme.colorScheme.onSecondary,
-                    fontFamily = FontNunito.bold,
+                    fontFamily = FontNunito.bold(),
                     fontSize = 14.sp
                 )
             }

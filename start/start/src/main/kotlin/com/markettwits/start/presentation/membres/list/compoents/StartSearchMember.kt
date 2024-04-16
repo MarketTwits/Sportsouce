@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.components.textField.BoundlessTextFieldBase
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.membres.list.MockStartMembersScreen
 import com.markettwits.start.presentation.membres.list.StartMembersScreen
 
@@ -41,7 +41,7 @@ fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScre
                 Text(
                     text = "Поиск участника",
                     fontSize = 14.sp,
-                    fontFamily = FontNunito.regular,
+                    fontFamily = FontNunito.regular(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = Color.Gray

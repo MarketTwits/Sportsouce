@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,10 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfo
-import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfoMapper
 import com.markettwits.schedule.schedule.presentation.components.list.common.kind_of_sport_list_info.KindOfSportsInfoMapperBase
 import com.markettwits.starts_common.domain.StartsListItem
 
@@ -61,7 +58,7 @@ fun CalendarDay(
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = day.date.dayOfMonth.toString(),
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 color = textColor,
                 fontSize = 12.sp,
             )

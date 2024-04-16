@@ -4,7 +4,7 @@ calendar = "1.2.1"
 coreSplashscreen = "1.0.1"
 jwtdecode = "3.18.2"
 kotlin = "1.9.23"
-gradle = "8.3.1"
+gradle = "8.3.2"
 
 #SDK
 kotlinxCollectionsImmutable = "0.3.7"
@@ -191,12 +191,11 @@ org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 android-library-convention = {id = "android-library-convention", version = "unspecified"}
 android-library-compose-convention = {id = "android-library-compose-convention", version = "unspecified"}
-kotlin-kmp-compose-convention = { id = "kotlin-compose-multiplatform-convention", version = "unspecified" }
+kotlin-kmp-convention = { id = "kotlin-multiplatform-convention", version = "unspecified" }
 
 #KMM
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.compose", version = "1.6.1" }
-
+kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-kmp-compose = { id = "org.jetbrains.compose", version = "1.6.1" }
 
 [bundles]
 composeUiBundle = [

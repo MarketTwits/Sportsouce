@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
 
 @Composable
@@ -42,7 +42,7 @@ fun BottomScreenContent(
                 modifier = modifier.padding(10.dp),
                 text = filterUi.label,
                 color = MaterialTheme.colorScheme.tertiary,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis
             )
@@ -97,7 +97,7 @@ private fun FilterPosition(
         Text(
             text = item,
             color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.medium,
+            fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )
     }

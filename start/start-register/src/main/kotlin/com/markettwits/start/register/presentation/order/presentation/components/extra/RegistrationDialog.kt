@@ -21,9 +21,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun RegistrationDialog(
@@ -45,7 +45,7 @@ fun RegistrationDialog(
                 modifier = modifier.padding(10.dp),
                 text = label,
                 color = SportSouceColor.SportSouceBlue,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 fontSize = 16.sp,
                 overflow = TextOverflow.Ellipsis
             )
@@ -104,7 +104,7 @@ fun FilterPosition(
         Text(
             text = item,
             color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.medium,
+            fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )
     }

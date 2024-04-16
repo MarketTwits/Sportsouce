@@ -19,17 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.R
-import com.markettwits.core_ui.components.Shapes
-import com.markettwits.core_ui.image.request.imageRequestCrossfade
-import com.markettwits.core_ui.theme.FontNunito
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
@@ -72,7 +71,7 @@ private fun ImageCard(
                     error = {
                         SubcomposeAsyncImageContent(
                             modifier = modifier,
-                            painter = painterResource(id = R.drawable.default_start_image)
+                            painter = DefaultImages.emptyImageStart()
                         )
                     },
                     success = {
@@ -98,7 +97,7 @@ private fun ImageCard(
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
             lineHeight = 10.sp,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 12.sp,
             textAlign = TextAlign.Start
         )
@@ -118,7 +117,7 @@ private fun ImageCardInfoStroke(modifier: Modifier = Modifier, title: String) {
             color = MaterialTheme.colorScheme.onSecondary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 10.sp,
             textAlign = TextAlign.Center
         )

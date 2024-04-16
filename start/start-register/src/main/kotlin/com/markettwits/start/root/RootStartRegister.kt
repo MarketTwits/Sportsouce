@@ -3,6 +3,7 @@ package com.markettwits.start.root
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponent
@@ -21,7 +22,7 @@ interface RootStartRegister {
         data class StartRegistration(
             val startId: Int,
             val startTitle: String,
-            val distanceInfo: com.markettwits.cloud.ext_model.DistanceItem,
+            val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : ConfigStack()
@@ -50,4 +51,13 @@ interface RootStartRegister {
     sealed interface ChildSlot {
         data class StartPromo(val component: RegistrationPromoComponent) : ChildSlot
     }
+
+    @Serializable
+    data class StartRegisterParams(
+        val startId: Int,
+        val distanceItem: DistanceItem,
+        val isPaymentDisabled: Boolean,
+        val paymentType: String,
+        val startTitle: String,
+    )
 }

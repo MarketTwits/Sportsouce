@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import com.markettwits.core_ui.base_extensions.openWebPage
 
 @Composable
 fun OrderCheckRulesBox(isChecked: Boolean, onClickRulesCheck: () -> Unit) {
@@ -49,8 +48,9 @@ private fun PrivacyPolicyText() {
         onClick = { offset ->
             val annotations = consentText.getStringAnnotations("PrivacyPolicy", offset, offset)
             if (annotations.isNotEmpty()) {
-                val url = "https://sportsauce.ru/confidentiality"
-                openWebPage(url, context)
+                //TODO ADD open web page
+//                val url = "https://sportsauce.ru/confidentiality"
+//                openWebPage(url, context)
             }
         }
     )

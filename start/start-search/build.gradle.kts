@@ -11,7 +11,7 @@ dependencies {
     implementation(projects.core.time)
     implementation(projects.cache)
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(projects.start.start)
     implementation(projects.start.startFilter)

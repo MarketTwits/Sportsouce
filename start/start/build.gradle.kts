@@ -11,7 +11,7 @@ dependencies {
     implementation(projects.core.time)
     implementation(projects.analytics.crashlytics)
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(projects.auth.authService)
     implementation(projects.start.startRegister)
@@ -20,6 +20,5 @@ dependencies {
     implementation(libs.bundles.mviKotlin)
     implementation(libs.bundles.decompose.compose)
     implementation(libs.koin.core)
-    implementation(libs.material3.html.text)
     implementation(libs.lazytable)
 }

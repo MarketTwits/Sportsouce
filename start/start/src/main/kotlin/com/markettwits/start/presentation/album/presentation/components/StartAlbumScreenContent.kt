@@ -24,10 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.base_screen.FullImageScreen
-import com.markettwits.core_ui.components.Shapes
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.base_screen.FullImageScreen
+import com.markettwits.core_ui.items.components.Shapes
 
 @Composable
 

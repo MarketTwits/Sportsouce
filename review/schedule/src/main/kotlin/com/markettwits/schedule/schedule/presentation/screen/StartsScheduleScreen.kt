@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleFailedContent
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleLoadingContent

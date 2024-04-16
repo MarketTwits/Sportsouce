@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.markettwits.auth_flow.R
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun WelcomeContent(content: String = "Добро пожаловать на SportSouce !") {
@@ -17,7 +17,7 @@ internal fun WelcomeContent(content: String = "Добро пожаловать �
     )
     Text(
         text = content,
-        fontFamily = FontNunito.bold,
+        fontFamily = FontNunito.bold(),
         fontSize = 24.sp,
         color = MaterialTheme.colorScheme.tertiary
     )

@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(projects.cloud)
-    implementation(projects.coreUi)
+    implementation(projects.core.ui)
     implementation(projects.coreKoin)
     implementation(projects.auth.authService)
     implementation(projects.teamsCity)

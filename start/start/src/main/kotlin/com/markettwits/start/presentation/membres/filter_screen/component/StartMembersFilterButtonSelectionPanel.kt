@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
 
 @Composable
@@ -36,7 +36,7 @@ fun StartMembersFilterButtonSelectionPanel(
             Text(
                 text = "Сбросить",
                 fontSize = 16.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.tertiary
@@ -55,7 +55,7 @@ fun StartMembersFilterButtonSelectionPanel(
             Text(
                 text = "Прмиенить",
                 fontSize = 16.sp,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onTertiary

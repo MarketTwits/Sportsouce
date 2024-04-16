@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
+import com.markettwits.core_ui.items.theme.FontNunito
 import java.util.Locale
 
 
@@ -60,7 +60,7 @@ fun CalendarSimpleTitle(
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.tertiary,
                 textAlign = TextAlign.Center,
-                fontFamily = FontNunito.bold,
+                fontFamily = FontNunito.bold(),
             )
             Text(
                 modifier = Modifier,
@@ -68,7 +68,7 @@ fun CalendarSimpleTitle(
                 color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
-                fontFamily = FontNunito.regular,
+                fontFamily = FontNunito.regular(),
             )
         }
         CalendarNavigationIcon(

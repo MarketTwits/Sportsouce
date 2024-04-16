@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun RegistrationTextField(
@@ -30,7 +30,7 @@ fun RegistrationTextField(
         keyboardOptions = keyboardOptions,
         value = value,
         label = {
-            Text(text = label, fontFamily = FontNunito.bold, fontSize = 14.sp)
+            Text(text = label, fontFamily = FontNunito.bold(), fontSize = 14.sp)
         },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
@@ -51,7 +51,7 @@ fun RegistrationTextField(
             disabledLabelColor = SportSouceColor.SportSouceBlue,
             disabledTextColor = SportSouceColor.SportSouceBlue
         ),
-        textStyle = TextStyle(fontFamily = FontNunito.medium),
+        textStyle = TextStyle(fontFamily = FontNunito.medium()),
         maxLines = 1,
         singleLine = true,
         onValueChange = { newValue -> onValueChange(newValue) },

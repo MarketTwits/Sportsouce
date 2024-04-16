@@ -17,8 +17,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.theme.FontNunito
-import com.markettwits.core_ui.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun StartRegistrationTopBar(goBack: () -> Unit) {
@@ -47,7 +47,7 @@ fun StartRegistrationTopBar(goBack: () -> Unit) {
                 .padding(start = 30.dp),
             text = "Регистрация",
             color = SportSouceColor.SportSouceBlue,
-            fontFamily = FontNunito.bold,
+            fontFamily = FontNunito.bold(),
             fontSize = 18.sp
         )
     }

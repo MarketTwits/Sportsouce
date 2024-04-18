@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.authorized.data.AuthorizedProfileRepositoryBase
 import com.markettwits.profile.authorized.data.cache.UserProfileCache
@@ -17,7 +18,11 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val authorizedProfileModule = module {
-    includes(authDataSourceModule, sportSouceNetworkModule)
+    includes(
+        authDataSourceModule,
+        sportSouceNetworkModule,
+        intentActionModule
+    )
     single<AuthorizedProfileStoreFactory> {
         AuthorizedProfileStoreFactory(
             storeFactory = get(),
@@ -33,6 +38,7 @@ val authorizedProfileModule = module {
                     executeWithCache = ExecuteWithCacheBase()
                 )
             ),
+            intentAction = get()
         )
     }
     singleOf(::DefaultStoreFactory) bind StoreFactory::class

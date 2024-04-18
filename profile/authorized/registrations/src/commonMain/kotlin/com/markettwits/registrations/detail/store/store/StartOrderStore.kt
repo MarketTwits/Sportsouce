@@ -11,7 +11,6 @@ interface StartOrderStore : Store<Intent, State, Label> {
         val isLoading: Boolean = false,
         val isFailed: Boolean = false,
         val message: String = "",
-        val paymentUrl: String = "",
         val startOrderInfo: StartOrderInfo
     )
 

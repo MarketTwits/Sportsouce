@@ -10,12 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.registrations.detail.component.StartOrderComponent
 import com.markettwits.registrations.detail.components.start.OrderDialogPaymentStatus
@@ -28,7 +26,6 @@ import com.markettwits.registrations.detail.store.store.StartOrderStore
 @Composable
 fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
     val state by component.state.collectAsState()
-    val context = LocalContext.current
     ModalBottomSheet(
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         modifier = Modifier,
@@ -66,12 +63,6 @@ fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
                 ) {
                     component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id))
                 }
-            }
-        }
-        LaunchedEffect(key1 = state.paymentUrl) {
-            if (state.paymentUrl.isNotEmpty()) {
-                // TODO open web page
-                //openWebPage(state.paymentUrl, context)
             }
         }
     }

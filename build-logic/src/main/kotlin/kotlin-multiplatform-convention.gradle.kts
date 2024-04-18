@@ -3,19 +3,14 @@ plugins {
     id("base-android-convention")
     id("org.jetbrains.kotlin.multiplatform")
 }
+
 kotlin {
-    // jvm()
+    jvm()
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = localLibs.findVersion("jvm-dot").get().toString()
             }
         }
-    }
-}
-android {
-    compileSdk = localLibs.findVersion("compileSdk").get().toString().toInt()
-    defaultConfig {
-        minSdk = localLibs.findVersion("minSdk").get().toString().toInt()
     }
 }

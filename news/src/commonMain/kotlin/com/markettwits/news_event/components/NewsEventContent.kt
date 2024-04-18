@@ -70,10 +70,8 @@ fun NewsEventContent(modifier: Modifier = Modifier, news: NewsInfo, goBack : () 
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
-
             }
         }
         BackFloatingActionButton { goBack() }
     }
-
 }

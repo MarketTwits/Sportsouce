@@ -195,7 +195,7 @@ kotlin-kmp-convention = { id = "kotlin-multiplatform-convention", version = "uns
 
 #KMM
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-kmp-compose = { id = "org.jetbrains.compose", version = "1.6.1" }
+kotlin-kmp-compose = { id = "org.jetbrains.compose", version = "1.6.10-dev1575" }
 
 [bundles]
 composeUiBundle = [

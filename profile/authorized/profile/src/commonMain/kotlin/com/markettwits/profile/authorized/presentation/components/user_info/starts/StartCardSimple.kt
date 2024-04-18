@@ -72,7 +72,7 @@ private fun ImageCard(
                     error = {
                         SubcomposeAsyncImageContent(
                             modifier = modifier,
-                            painter = DefaultImages.emptyImageStart()
+                            painter = DefaultImages.EmptyImageStart()
                         )
                     },
                     success = {

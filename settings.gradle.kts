@@ -23,6 +23,7 @@ dependencyResolutionManagement {
 rootProject.name = "Sportsouce"
 includeBuild("build-logic")
 include(":app")
+include(":desktop")
 include(":starts:starts")
 include(":start:start")
 include(":cloud")

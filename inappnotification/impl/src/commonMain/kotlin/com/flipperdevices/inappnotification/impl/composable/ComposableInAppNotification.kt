@@ -1,6 +1,5 @@
 package com.flipperdevices.inappnotification.impl.composable
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,24 +68,20 @@ private fun ComposableInAppNotificationCard(
     ) {
         when (notification) {
             is InAppNotification.SelfUpdateReady -> {
-                Log.e("mt05", "#ComposableInAppNotificationCard SelfUpdateReady")
                 ComposableInAppNotificationSelfUpdateReady(notification) {
                     onNotificationOpen(notification)
                 }
             }
 
             is InAppNotification.SelfUpdateError -> {
-                Log.e("mt05", "#ComposableInAppNotificationCard SelfUpdateError")
                 // ComposableInAppNotificationSelfUpdateError()
             }
 
             is InAppNotification.SelfUpdateStarted -> {
-                Log.e("mt05", "#ComposableInAppNotificationCard SelfUpdateError")
                 //ComposableInAppNotificationSelfUpdateStarted()
             }
 
             is InAppNotification.HiddenApp -> {
-                Log.e("mt05", "#ComposableInAppNotificationCard HiddenApp")
 //                ComposableInAppNotificationHideApp(
 //                    notification = notification,
 //                    onClickAction = onClickAction
@@ -94,7 +89,6 @@ private fun ComposableInAppNotificationCard(
             }
 
             is InAppNotification.Error -> {
-                Log.e("mt05", "#ComposableInAppNotificationCard Error")
 //                ComposableInAppNotificationError(
 //                    notification,
 //                    onClickAction

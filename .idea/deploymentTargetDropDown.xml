@@ -24,6 +24,9 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="desktop">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

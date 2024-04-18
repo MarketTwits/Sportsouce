@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="theme-jvm">
+    <output-path>$PROJECT_DIR$/core/theme/build/libs</output-path>
+    <root id="archive" name="theme-jvm.jar">
+      <element id="module-output" name="Sportsouce.core.theme.jvmMain" />
+    </root>
+  </artifact>
+</component>

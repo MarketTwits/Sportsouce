@@ -2,6 +2,7 @@ package com.markettwits.profile.authorized.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.profile.authorized.domain.UserProfile
+import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore.Label
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore.State
 
@@ -16,6 +17,7 @@ interface AuthorizedProfileStore : Store<AuthorizedProfileStore.Intent, State, L
 
     sealed interface Intent {
         data object Retry : Intent
+        data class OnClickUserSocialNetwork(val intent: UserSocialNetworkIntent) : Intent
     }
 
     sealed interface Message {

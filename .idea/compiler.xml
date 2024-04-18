@@ -3,6 +3,8 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
       <module name="Sportsouce.core-ui" target="17" />
+      <module name="Sportsouce.desktop.main" target="17" />
+      <module name="Sportsouce.desktop.test" target="17" />
       <module name="Sportsouce.kotlinmultiplatformsharedmodule" target="17" />
       <module name="Sportsouce.profile.change-password" target="17" />
       <module name="Sportsouce.profile.edit-profile" target="17" />

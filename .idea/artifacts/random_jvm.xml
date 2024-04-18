@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="random-jvm">
+    <output-path>$PROJECT_DIR$/review/random/build/libs</output-path>
+    <root id="archive" name="random-jvm.jar">
+      <element id="module-output" name="Sportsouce.review.random.jvmMain" />
+    </root>
+  </artifact>
+</component>

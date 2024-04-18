@@ -2,6 +2,7 @@ package com.markettwits.registrations.root.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.registrations.detail.store.store.StartOrderStoreFactory
 import com.markettwits.registrations.list.data.StartOrderRegistrationRepository
@@ -12,7 +13,11 @@ import com.markettwits.time.BaseTimeMapper
 import org.koin.dsl.module
 
 val userStartRegistrationModule = module {
-    includes(sportSouceNetworkModule, authDataSourceModule)
+    includes(
+        sportSouceNetworkModule,
+        authDataSourceModule,
+        intentActionModule
+    )
 
     single<StartOrderRegistrationRepository> {
         StartOrderRegistrationRepositoryBase(
@@ -27,7 +32,8 @@ val userStartRegistrationModule = module {
     single<StartOrderStoreFactory> {
         StartOrderStoreFactory(
             storeFactory = DefaultStoreFactory(),
-            repository = get()
+            repository = get(),
+            intentAction = get()
         )
     }
 }

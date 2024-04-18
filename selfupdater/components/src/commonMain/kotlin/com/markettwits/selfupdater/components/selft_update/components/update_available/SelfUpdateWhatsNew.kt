@@ -24,13 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.compose.LocalMarkdownColors
+import com.mikepenz.markdown.compose.LocalMarkdownTypography
+import com.mikepenz.markdown.compose.Markdown
 
 @Composable
 internal fun SelfUpdateWhatsNew(
@@ -75,15 +76,21 @@ internal fun SelfUpdateWhatsNew(
             shape = Shapes.medium,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            MarkdownText(
+            Markdown(
                 modifier = Modifier.padding(10.dp),
-                markdown = changes,
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.regular(),
-                )
+                content = changes,
+                colors = LocalMarkdownColors.current,
+                typography = LocalMarkdownTypography.current
             )
+//            MarkdownText(
+//                modifier = Modifier.padding(10.dp),
+//                markdown = changes,
+//                style = TextStyle(
+//                    color = MaterialTheme.colorScheme.onPrimary,
+//                    fontSize = 14.sp,
+//                    fontFamily = FontNunito.regular(),
+//                )
+//            )
         }
     }
 }

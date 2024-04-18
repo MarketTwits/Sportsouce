@@ -29,10 +29,7 @@ fun StartSupportScreen(
     EventEffect(event = state.eventWithContent, onConsumed = {
         component.obtainEvent(StartSupportStore.Intent.OnConsumedEvent)
     }) {
-        if (it.success)
-        //TODO open web page
-        //  openWebPage(state.message, context)
-        else
+        if (!it.success)
             event(EventContent(false, state.message))
     }
 }

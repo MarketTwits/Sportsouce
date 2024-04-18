@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="unauthorized-jvm">
+    <output-path>$PROJECT_DIR$/profile/unauthorized/build/libs</output-path>
+    <root id="archive" name="unauthorized-jvm.jar">
+      <element id="module-output" name="Sportsouce.profile.unauthorized.jvmMain" />
+    </root>
+  </artifact>
+</component>

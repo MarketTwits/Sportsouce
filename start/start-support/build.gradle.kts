@@ -9,7 +9,6 @@ android {
     namespace = "com.markettwits.start_support"
 }
 kotlin {
-    jvm()
     sourceSets.commonMain.dependencies {
         implementation(projects.intent.api)
         implementation(projects.intent.impl)

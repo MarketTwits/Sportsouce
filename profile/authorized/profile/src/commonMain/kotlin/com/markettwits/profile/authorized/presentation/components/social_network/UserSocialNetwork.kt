@@ -20,20 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.profile.authorized.domain.UserProfile
+import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
 
 
 @Composable
 fun UserSocialNetwork(
     modifier: Modifier = Modifier,
     items: UserProfile.SocialNetwork,
-    onClickAddSocialNetwork: () -> Unit
+    onClickAddSocialNetwork: () -> Unit,
+    onClickSocialNetwork: (UserSocialNetworkIntent) -> Unit
 ) {
-    val context = LocalContext.current
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
@@ -58,8 +58,7 @@ fun UserSocialNetwork(
                         url = items.telegram,
                         color = SportSouceColor.TelegramIcon,
                         onClick = {
-                            //TODO open web page
-
+                            onClickSocialNetwork(UserSocialNetworkIntent.Link(it.telegram))
                         })
                 }
                 if (it.instagram.isNotEmpty()) {
@@ -69,9 +68,7 @@ fun UserSocialNetwork(
                         url = items.instagram,
                         color = SportSouceColor.InstagramIcon,
                         onClick = {
-                            //TODO open web page
-
-                            // openWebPage(items.instagram, context)
+                            onClickSocialNetwork(UserSocialNetworkIntent.Link(it.instagram))
                         })
                 }
                 if (it.vk.isNotEmpty()) {
@@ -81,8 +78,7 @@ fun UserSocialNetwork(
                         url = items.vk,
                         color = SportSouceColor.VkIcon,
                         onClick = {
-                            //  //TODO open web page
-                            // openWebPage(items.vk, context)
+                            onClickSocialNetwork(UserSocialNetworkIntent.Link(it.vk))
                         })
                 }
                 if (it.whatsapp.isNotEmpty()) {
@@ -92,12 +88,10 @@ fun UserSocialNetwork(
                         url = items.whatsapp,
                         color = SportSouceColor.WhatsappIcon,
                         onClick = {
-                            //TODO open web page
-                            //  openWebPage(items.whatsapp, context)
+                            onClickSocialNetwork(UserSocialNetworkIntent.Phone(it.whatsapp))
                         })
                 }
             }
-
         }
     }
 }

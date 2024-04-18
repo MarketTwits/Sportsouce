@@ -33,6 +33,7 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.profile.authorized.domain.UserProfile
+import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
 import com.markettwits.profile.authorized.presentation.components.social_network.UserSocialNetwork
 
 
@@ -42,7 +43,8 @@ fun UserInfoCard(
     user: UserProfile,
     onClickEdit: () -> Unit,
     onClickAddSocialNetwork: () -> Unit,
-    onClickImage: (Painter) -> Unit
+    onClickImage: (Painter) -> Unit,
+    onClickSocialNetwork: (UserSocialNetworkIntent) -> Unit
 ) {
     OnBackgroundCard(modifier = modifier) {
         Box(
@@ -123,6 +125,7 @@ fun UserInfoCard(
         )
         UserSocialNetwork(
             items = user.socialNetwork,
+            onClickSocialNetwork = onClickSocialNetwork,
             onClickAddSocialNetwork = { onClickAddSocialNetwork() }
         )
 

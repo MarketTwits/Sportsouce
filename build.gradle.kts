@@ -4,7 +4,7 @@
 plugins {
     id("com.android.library") version "8.2.0" apply false
     id("org.jetbrains.kotlin.multiplatform") version "1.9.23" apply false
-    id("org.jetbrains.compose") version "1.6.1" apply false
+    id("org.jetbrains.compose") version "1.6.10-dev1575" apply false
 }
 
 tasks.withType<Wrapper>().configureEach {

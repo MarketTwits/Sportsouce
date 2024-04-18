@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.library.convention)
+    alias(libs.plugins.kotlin.jvm.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
-android.namespace = "com.markettwits.selfupdater.unknown"
+//android.namespace = "com.markettwits.selfupdater.unknown"
 
 dependencies {
     implementation(projects.selfupdater.api)

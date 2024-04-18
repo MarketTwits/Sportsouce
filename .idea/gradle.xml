@@ -38,6 +38,7 @@
             <option value="$PROJECT_DIR$/core/theme" />
             <option value="$PROJECT_DIR$/core/time" />
             <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/desktop" />
             <option value="$PROJECT_DIR$/inappnotification" />
             <option value="$PROJECT_DIR$/inappnotification/api" />
             <option value="$PROJECT_DIR$/inappnotification/impl" />

@@ -85,7 +85,7 @@ private fun ImageCard(
                     if (image.isEmpty())
                         SubcomposeAsyncImageContent(
                             modifier = modifier,
-                            painter = DefaultImages.emptyImageStart()
+                            painter = DefaultImages.EmptyImageStart()
                         )
                     else
                         Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))

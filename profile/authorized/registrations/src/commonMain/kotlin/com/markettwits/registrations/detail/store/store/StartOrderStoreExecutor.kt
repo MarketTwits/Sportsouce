@@ -1,6 +1,7 @@
 package com.markettwits.registrations.detail.store.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.IntentAction
 import com.markettwits.registrations.detail.store.store.StartOrderStore.Intent
 import com.markettwits.registrations.detail.store.store.StartOrderStore.Label
 import com.markettwits.registrations.detail.store.store.StartOrderStore.Message
@@ -9,7 +10,8 @@ import com.markettwits.registrations.list.data.StartOrderRegistrationRepository
 import kotlinx.coroutines.launch
 
 class StartOrderStoreExecutor(
-    private val repository: StartOrderRegistrationRepository
+    private val repository: StartOrderRegistrationRepository,
+    private val intentAction: IntentAction
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
@@ -25,6 +27,7 @@ class StartOrderStoreExecutor(
             repository.pay(id).fold(
                 onSuccess = {
                     dispatch(Message.Success(it))
+                    intentAction.openWebPage(it)
                 },
                 onFailure = {
                     dispatch(Message.Failed(it.message.toString()))

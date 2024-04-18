@@ -8,7 +8,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
 import com.markettwits.edit_profile.root.RootEditProfileScreen
 import com.markettwits.members.member_root.component.RootMembersScreen
-import com.markettwits.profile.authorized.presentation.components.AuthorizedProfileScreen
+import com.markettwits.profile.authorized.presentation.screen.AuthorizedProfileScreen
 import com.markettwits.registrations.detail.components.StartOrderProfileDialogScreen
 import com.markettwits.registrations.list.presentation.MyRegistrationsScreen
 import com.markettwits.registrations.root.RootRegistrationsScreen

@@ -159,7 +159,7 @@ fun RegistrationsCardImageCard(
             error = {
                 SubcomposeAsyncImageContent(
                     modifier = modifier,
-                    painter = DefaultImages.emptyImageStart()
+                    painter = DefaultImages.EmptyImageStart()
                 )
             },
             success = {

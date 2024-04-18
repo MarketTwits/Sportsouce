@@ -1,6 +1,6 @@
 package com.markettwits.members.member_add_edit.domain.validate
 
-import android.util.Patterns
+
 import com.markettwits.members.member_common.domain.ProfileMember
 
 abstract class AddOrEditMemberValidatorAbstract : AddOrEditMemberValidator {
@@ -15,8 +15,8 @@ abstract class AddOrEditMemberValidatorAbstract : AddOrEditMemberValidator {
         if (profileMember.phone.isEmpty()) throw IllegalArgumentException(
             "Введите корректый номер телефона"
         )
-        if (!Patterns.EMAIL_ADDRESS.matcher(profileMember.email)
-                .matches()
+        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+        if (profileMember.email.matches(emailRegex)
         ) throw IllegalArgumentException(
             "Введите корректую почту"
         )

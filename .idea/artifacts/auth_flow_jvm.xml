@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="auth-flow-jvm">
+    <output-path>$PROJECT_DIR$/auth/auth-flow/build/libs</output-path>
+    <root id="archive" name="auth-flow-jvm.jar">
+      <element id="module-output" name="Sportsouce.auth.auth-flow.jvmMain" />
+    </root>
+  </artifact>
+</component>

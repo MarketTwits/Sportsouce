@@ -7,6 +7,7 @@ plugins {
 android.namespace = "com.markettwits.selfupdater.thirdparty.github"
 
 kotlin {
+    jvm()
     sourceSets {
         commonMain.dependencies {
             implementation(projects.selfupdater.thirdparty.api)

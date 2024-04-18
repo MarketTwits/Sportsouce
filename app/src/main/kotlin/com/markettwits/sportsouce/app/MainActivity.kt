@@ -31,7 +31,8 @@ class MainActivity : ComponentActivity() {
             setContent {
                 SportSauceTheme(
                     component = theme
-                ) {
+                ) { isDarkTheme ->
+                    SportSauceSystemBarColors(isDarkTheme)
                     RootContent(component = root)
                 }
             }

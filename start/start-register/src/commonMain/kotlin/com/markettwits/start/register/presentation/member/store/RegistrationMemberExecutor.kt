@@ -14,9 +14,15 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
         when (intent) {
             is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement))
             is Intent.OnClickContinue -> apply(getState().value)
-            is Intent.Pop -> publish(Label.OnClickPop)
+            is Intent.Pop -> onClickPop(getState())
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
+            is Intent.OnClickCloseDialog -> closeDialog()
         }
+    }
+
+    private fun closeDialog() {
+        dispatch(Message.ChangeAllerDialogState(false))
+        publish(Label.OnClickPop)
     }
 
     private fun apply(startStatement: StartStatement) {
@@ -26,5 +32,11 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
             }, onFailure = {
                 dispatch(Message.ShowEvent(it.message.toString()))
             })
+    }
+    private fun onClickPop(state: State) {
+        if (!state.isClosedAllerDialog)
+            dispatch(Message.ChangeAllerDialogState(true))
+        else
+            dispatch(Message.ChangeAllerDialogState(false))
     }
 }

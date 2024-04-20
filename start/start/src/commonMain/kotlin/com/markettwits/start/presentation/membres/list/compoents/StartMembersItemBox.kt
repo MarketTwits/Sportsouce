@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
@@ -44,12 +45,11 @@ fun TestTable(items: List<StartMembersUi>) {
     val columns = 5
     val rows = items.size
     if (items.isNotEmpty()) {
-
-        val screenWidth = 1300.dp
+        val window = rememberScreenSizeInfo()
         val dimensionPortrait = lazyTableDimensions(150.dp, 100.dp)
-        val dimensionLandscape = lazyTableDimensions(screenWidth / 5, 60.dp)
+        val dimensionLandscape = lazyTableDimensions(window.wDP / 5, 60.dp)
 
-        val dimension = if (screenWidth > 1500.dp)
+        val dimension = if (window.wDP > 1500.dp)
             dimensionLandscape else dimensionPortrait
 
         LazyTable(

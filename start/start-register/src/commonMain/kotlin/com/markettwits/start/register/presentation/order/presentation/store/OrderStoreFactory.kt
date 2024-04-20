@@ -14,7 +14,7 @@ class OrderStoreFactory(
     private val handle: OrderStoreExecutorHandle
 ) {
     fun create(
-        state: State,
+        state: State?,
         distanceInfo: DistanceItem,
         startTitle: String,
         starId: Int,
@@ -22,9 +22,9 @@ class OrderStoreFactory(
         paymentDisabled: Boolean
     ): OrderStore = object : OrderStore, Store<Intent, State, Label> by storeFactory.create(
         name = "OrderStoreStore",
-        initialState = state,
+        initialState = state ?: State(),
         bootstrapper = OrderBootstrapper(
-            state.orderStatement == null,
+            state?.orderStatement == null,
             interactor,
             startTitle,
             distanceInfo,

@@ -15,6 +15,8 @@ interface ReviewStore : Store<Intent, State, Label> {
         data class OnClickNews(val news: NewsInfo) : Intent
         data class OnClickItem(val item : Int) : Intent
         data class OnClickMenu(val item : Int) : Intent
+        data object OnClickTelegram : Intent
+        data object OnClickVk : Intent
         data class Launch(val forced: Boolean = false) : Intent
     }
 

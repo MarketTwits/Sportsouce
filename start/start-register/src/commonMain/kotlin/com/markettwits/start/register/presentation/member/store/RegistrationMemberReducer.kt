@@ -13,6 +13,7 @@ object RegistrationMemberReducer : Reducer<State, Message> {
             is Message.OnValueChanged -> copy(value = msg.startStatement)
             is Message.ShowEvent -> copy(event = triggered(EventContent(false, msg.message)))
             is Message.OnConsumedEvent -> copy(event = consumed())
+            is Message.ChangeAllerDialogState -> copy(isClosedAllerDialog = msg.show)
         }
     }
 }

@@ -19,7 +19,6 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
@@ -33,6 +32,7 @@ import java.io.File
 fun main() {
     //overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
+    //C:\Users\danii\AppData\Local\Temp
     InStorageCacheDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
     InStorageFileDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
 
@@ -50,7 +50,7 @@ fun main() {
     application {
         val windowState = rememberWindowState()
 
-        LifecycleController(lifecycle, windowState)
+        // LifecycleController(lifecycle, windowState)
 
         var isCloseRequested by remember { mutableStateOf(false) }
 

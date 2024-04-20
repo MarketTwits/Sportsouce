@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 
 @Composable
 fun BottomScreenContent(

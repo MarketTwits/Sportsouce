@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.start.register.presentation.member.components.MemberScreen
+import com.markettwits.start.register.presentation.member.screen.MemberScreen
 import com.markettwits.start.register.presentation.order.presentation.screen.StartOrderScreen
 import com.markettwits.start.register.presentation.promo.components.RegistrationPromoScreen
 

@@ -1,9 +1,10 @@
-package com.markettwits.start_filter.start_filter.presentation
+package com.markettwits.start_filter.start_filter.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilerStoreFactory
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +16,7 @@ internal class StartFilterComponentBase(
     context: ComponentContext,
     private val storeFactory: StartFilerStoreFactory,
     private val pop: () -> Unit,
-    private val show: (StartFilterUi) -> Unit,
+    private val show: (StartFilterUi, StartFilter.Sorted) -> Unit,
 ) : StartFilterComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
@@ -32,7 +33,7 @@ internal class StartFilterComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartFilterStore.Label.GoBack -> pop()
-                    is StartFilterStore.Label.Apply -> show(it.item)
+                    is StartFilterStore.Label.Apply -> show(it.item, it.sorted)
                 }
             }
         }

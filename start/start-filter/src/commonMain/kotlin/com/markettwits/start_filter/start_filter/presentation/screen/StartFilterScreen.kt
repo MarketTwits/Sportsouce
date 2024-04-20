@@ -1,4 +1,4 @@
-package com.markettwits.start_filter.start_filter.presentation
+package com.markettwits.start_filter.start_filter.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterComponent
 import com.markettwits.start_filter.start_filter.presentation.components.FilterButtonSelectionPanel
 import com.markettwits.start_filter.start_filter.presentation.components.StartFilterList
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore

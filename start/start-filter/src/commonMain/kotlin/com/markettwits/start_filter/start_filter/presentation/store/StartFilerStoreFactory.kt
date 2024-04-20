@@ -8,14 +8,15 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.start_filter.start_filter.data.StartFilterRepository
 import com.markettwits.start_filter.start_filter.domain.StartFilter
-import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 internal class StartFilerStoreFactory(
     private val storeFactory: StoreFactory,
     private val repository: StartFilterRepository
 ) {
-
     fun create(): StartFilterStore =
         object : StartFilterStore,
             Store<StartFilterStore.Intent, StartFilterStore.State, StartFilterStore.Label> by storeFactory.create(
@@ -53,7 +54,13 @@ internal class StartFilerStoreFactory(
                     )
                 )
 
-                StartFilterStore.Intent.Apply -> publish(StartFilterStore.Label.Apply(getState().filter))
+                StartFilterStore.Intent.Apply -> publish(
+                    StartFilterStore.Label.Apply(
+                        getState().filter,
+                        StartFilter.Sorted.Popular
+                    )
+                )
+
                 StartFilterStore.Intent.Reset -> dispatch(
                     Msg.ChangeFilter(reset(getState().filter))
                 )
@@ -97,16 +104,16 @@ internal class StartFilerStoreFactory(
 
         private fun launch() {
             scope.launch {
-                dispatch(Msg.Loading)
-                repository.filter().collect {
-                    it.onFailure {
+                repository.filter()
+                    .onStart {
+                        dispatch(Msg.Loading)
+                    }
+                    .catch {
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
-                    it.onSuccess {
+                    .collect {
                         dispatch(Msg.InfoLoaded(it))
                     }
-                }
-
             }
         }
     }
@@ -126,7 +133,7 @@ internal class StartFilerStoreFactory(
 
                 is Msg.InfoLoaded -> StartFilterStore.State(
                     isLoading = false,
-                    mapFilterDomainToUi(message.startFilter)
+                    message.startFilter.uiFilter()
                 )
 
                 is Msg.ChangeFilter -> StartFilterStore.State(
@@ -134,37 +141,53 @@ internal class StartFilerStoreFactory(
                     filter = message.filter
                 )
             }
-
-        fun mapFilterDomainToUi(startFilter: StartFilter): StartFilterUi {
-            return StartFilterUi(
-                items = listOf(
-                    StartFilterUi.FilterGroupItemUi(
-                        label = "Вид спорта",
-                        type = StartFilterUi.FilterStartType.Dialog,
-                        list = startFilter.kindOfSport
-                    ),
-                    StartFilterUi.FilterGroupItemUi(
-                        label = "Сезон",
-                        type = StartFilterUi.FilterStartType.Dialog,
-                        list = startFilter.startSeason
-                    ),
-                    StartFilterUi.FilterGroupItemUi(
-                        label = "Место проведения",
-                        type = StartFilterUi.FilterStartType.DropDown,
-                        list = startFilter.city
-                    ),
-                    StartFilterUi.FilterGroupItemUi(
-                        label = "Дата проведения",
-                        type = StartFilterUi.FilterStartType.Calendar,
-                        list = emptyList()
-                    ),
-                    StartFilterUi.FilterGroupItemUi(
-                        label = "Актуальность",
-                        type = StartFilterUi.FilterStartType.DropDown,
-                        list = startFilter.startStatus.map { it.title }
-                    )
-                )
-            )
-        }
     }
 }
+
+internal fun defaultStartSortedList(): List<StartFilter.Sorted> = listOf(
+    StartFilter.Sorted.FirstBefore,
+    StartFilter.Sorted.LastBefore,
+    StartFilter.Sorted.Popular,
+)
+
+internal fun StartFilter.Sorted.uiStartSortedList(): String =
+    when (this) {
+        StartFilter.Sorted.FirstBefore -> "Сначала актуальные"
+        StartFilter.Sorted.LastBefore -> "Сначала прошедшие"
+        StartFilter.Sorted.Popular -> "По популярности"
+    }
+
+internal fun StartFilter.uiFilter(): StartFilterUi = StartFilterUi(
+    items = listOf(
+        StartFilterUi.FilterGroupItemUi(
+            label = "Вид спорта",
+            type = StartFilterUi.FilterStartType.Dialog,
+            list = this.kindOfSport
+        ),
+        StartFilterUi.FilterGroupItemUi(
+            label = "Сезон",
+            type = StartFilterUi.FilterStartType.Dialog,
+            list = this.startSeason
+        ),
+        StartFilterUi.FilterGroupItemUi(
+            label = "Место проведения",
+            type = StartFilterUi.FilterStartType.DropDown,
+            list = this.city
+        ),
+        StartFilterUi.FilterGroupItemUi(
+            label = "Дата проведения",
+            type = StartFilterUi.FilterStartType.Calendar,
+            list = emptyList()
+        ),
+        StartFilterUi.FilterGroupItemUi(
+            label = "Актуальность",
+            type = StartFilterUi.FilterStartType.DropDown,
+            list = this.startStatus.map { it.title }
+        ),
+        StartFilterUi.FilterGroupItemUi(
+            "Сортировка",
+            type = StartFilterUi.FilterStartType.DropDown,
+            list = defaultStartSortedList().map { it.uiStartSortedList() }
+        )
+    )
+)

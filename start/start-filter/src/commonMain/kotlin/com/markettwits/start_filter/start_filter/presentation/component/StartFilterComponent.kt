@@ -1,4 +1,4 @@
-package com.markettwits.start_filter.start_filter.presentation
+package com.markettwits.start_filter.start_filter.presentation.component
 
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilterStore
 import kotlinx.coroutines.flow.StateFlow

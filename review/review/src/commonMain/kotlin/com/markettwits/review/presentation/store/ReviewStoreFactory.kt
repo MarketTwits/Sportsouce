@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.IntentAction
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.domain.Review
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class ReviewStoreFactory(
     private val storeFactory: StoreFactory,
-    private val repository: ReviewRepository
+    private val repository: ReviewRepository,
+    private val intentAction: IntentAction
 ) {
 
     fun create(): ReviewStore =
@@ -23,7 +25,7 @@ class ReviewStoreFactory(
                 name = "ReviewStore",
                 initialState = ReviewStore.State(),
                 bootstrapper = SimpleBootstrapper(Unit),
-                executorFactory = ::ExecutorImpl,
+                executorFactory = { ExecutorImpl(intentAction) },
                 reducer = ReducerImpl
             ) {}
 
@@ -33,8 +35,9 @@ class ReviewStoreFactory(
         data class InfoFailed(val message: String) : Msg
     }
 
-    private inner class ExecutorImpl :
-        CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>() {
+    private inner class ExecutorImpl(
+        private val intentAction: IntentAction
+    ) : CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>() {
         override fun executeIntent(intent: ReviewStore.Intent, getState: () -> ReviewStore.State) {
             when (intent) {
                 is ReviewStore.Intent.Launch -> launch(intent.forced)
@@ -42,6 +45,9 @@ class ReviewStoreFactory(
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
                 is ReviewStore.Intent.OnClickNews -> publish(ReviewStore.Label.OnClickNews(intent.news))
                 is ReviewStore.Intent.OnClickSearch -> publish(ReviewStore.Label.OnClickSearch)
+                is ReviewStore.Intent.OnClickTelegram -> intentAction.openWebPage(SPORT_SAUCE_TG_URL)
+                is ReviewStore.Intent.OnClickVk -> intentAction.openWebPage(SPORT_SAUCE_VK_URL)
+
             }
         }
 
@@ -63,6 +69,11 @@ class ReviewStoreFactory(
                     }
             }
         }
+    }
+
+    private companion object {
+        const val SPORT_SAUCE_TG_URL = "hhttps://t.me/sportsauce"
+        const val SPORT_SAUCE_VK_URL = "https://vk.com/sportsoyuznsk"
     }
 
     private object ReducerImpl : Reducer<ReviewStore.State, Msg> {

@@ -6,7 +6,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.start_filter.start_filter.data.StartFilterRepository
-import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
+import com.markettwits.start_filter.start_filter.domain.StartFilter
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Intent
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Label
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.State
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 interface StartsFilteredStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
-        data class Launch(val request: StartFilterUi) : Intent
+        data object Launch : Intent
         data class OnItemClick(val itemId: Int) : Intent
         data object OnClickBack : Intent
     }
@@ -25,7 +26,8 @@ interface StartsFilteredStore : Store<Intent, State, Label> {
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val starts: List<StartsListItem> = emptyList()
+        val starts: List<StartsListItem> = emptyList(),
+        val sorted: StartFilter.Sorted = StartFilter.Sorted.FirstBefore
     )
 
     sealed interface Label {
@@ -39,12 +41,12 @@ internal class StartsFilteredStoreFactory(
     private val startFilterRepository: StartFilterRepository
 ) {
 
-    fun create(request: StartFilterUi): StartsFilteredStore =
+    fun create(request: StartFilterUi, sorted: StartFilter.Sorted): StartsFilteredStore =
         object : StartsFilteredStore, Store<Intent, State, Label> by storeFactory.create(
             name = "StartsFilteredStore",
             initialState = State(),
-            bootstrapper = BootstrapperImpl(request),
-            executorFactory = ::ExecutorImpl,
+            bootstrapper = BootstrapperImpl(request, sorted),
+            executorFactory = { ExecutorImpl(request) },
             reducer = ReducerImpl
         ) {}
 
@@ -61,12 +63,15 @@ internal class StartsFilteredStoreFactory(
         data class InfoFailed(val message: String) : Action
     }
 
-    private inner class BootstrapperImpl(private val state: StartFilterUi) :
+    private inner class BootstrapperImpl(
+        private val state: StartFilterUi,
+        private val sorted: StartFilter.Sorted
+    ) :
         CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
                 dispatch(Action.Loading)
-                startFilterRepository.starts(state)
+                startFilterRepository.starts(state, sorted)
                     .onFailure {
                         dispatch(Action.InfoFailed(it.message.toString()))
                     }
@@ -78,13 +83,14 @@ internal class StartsFilteredStoreFactory(
 
     }
 
-
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
+    private inner class ExecutorImpl(
+        private val state: StartFilterUi,
+    ) : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
                 is Intent.OnItemClick -> publish(Label.OnItemClick(intent.itemId))
-                is Intent.Launch -> launch(intent.request)
+                is Intent.Launch -> launch(state, getState().sorted)
             }
         }
 
@@ -96,10 +102,13 @@ internal class StartsFilteredStoreFactory(
             }
         }
 
-        private fun launch(state: StartFilterUi) {
+        private fun launch(
+            state: StartFilterUi,
+            sorted: StartFilter.Sorted
+        ) {
             scope.launch {
                 dispatch(Msg.Loading)
-                startFilterRepository.starts(state)
+                startFilterRepository.starts(state, sorted)
                     .onFailure {
                         dispatch(Msg.InfoFailed(it.message.toString()))
                     }
@@ -114,9 +123,14 @@ internal class StartsFilteredStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State =
             when (message) {
-                is Msg.InfoFailed -> State(isError = true, message = message.message)
-                is Msg.InfoLoaded -> State(starts = message.starts)
-                is Msg.Loading -> State(isLoading = true)
+                is Msg.InfoFailed -> copy(
+                    isError = true,
+                    isLoading = false,
+                    message = message.message
+                )
+
+                is Msg.InfoLoaded -> copy(isLoading = false, starts = message.starts)
+                is Msg.Loading -> copy(isLoading = true)
             }
     }
 }

@@ -13,7 +13,7 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
 import com.markettwits.start_filter.start_filter.di.createStartFilterModules
-import com.markettwits.start_filter.start_filter.presentation.StartFilterComponentBase
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterComponentBase
 import com.markettwits.start_filter.start_filter.presentation.store.StartFilerStoreFactory
 import com.markettwits.start_filter.starts.StartsFilteredComponentBase
 import com.markettwits.start_filter.starts.store.StartsFilteredStoreFactory
@@ -56,8 +56,8 @@ class RootStartFilterComponentBase(
                         repository = scope.get()
                     ),
                     pop = pop::invoke,
-                    show = {
-                        navigation.push(RootStartFilterComponent.Config.Starts(it))
+                    show = { filter, sorted ->
+                        navigation.push(RootStartFilterComponent.Config.Starts(filter, sorted))
                     },
 
                     )
@@ -67,6 +67,7 @@ class RootStartFilterComponentBase(
                 StartsFilteredComponentBase(
                     context = componentContext,
                     request = config.request,
+                    startFilterSorted = config.sorted,
                     storeFactory = StartsFilteredStoreFactory(
                         storeFactory = DefaultStoreFactory(),
                         startFilterRepository = scope.get()

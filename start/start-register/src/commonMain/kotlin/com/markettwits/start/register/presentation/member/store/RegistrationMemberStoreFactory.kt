@@ -31,7 +31,7 @@ class RegistrationMemberStoreFactory(
         RegistrationMemberStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "RegistrationMemberStore",
-            initialState = State(userNumber, startStatement, startMembers),
+            initialState = State(userNumber, startStatement, startMembers, false),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { RegistrationMemberExecutor(validator) },
             reducer = RegistrationMemberReducer

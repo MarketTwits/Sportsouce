@@ -1,13 +1,13 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -41,8 +41,8 @@ fun StartDistances(
 ) {
     if (distance.isNotEmpty() && startStatus.code == 3) {
         StartContentBasePanel(modifier = modifier, label = "Дистанции") {
-            LazyRow {
-                items(distance) {
+            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+                distance.forEach {
                     Column(modifier.clip(Shapes.medium)) {
                         when (it) {
                             is DistanceItem.DistanceCombo -> {
@@ -68,6 +68,7 @@ fun StartDistances(
                     }
                 }
             }
+
         }
     }
     if (regLink.isNotEmpty()) {

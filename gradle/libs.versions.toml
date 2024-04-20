@@ -13,8 +13,8 @@ namespace = "com.markettwits.sportsouce"
 minSdk = "26"
 compileSdk = "34"
 versionName = "1.2.2"
-jvm = "8"
-jvm-dot = "1.8"
+jvm = "11"
+jvm-dot = "11"
 
 #UI
 

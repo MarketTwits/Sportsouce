@@ -42,6 +42,8 @@ fun BoundlessTextFieldBase(
         placeholder = placeholder,
         supportingText = supportingText,
         colors = TextFieldDefaults.colors(
+            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
             unfocusedContainerColor = MaterialTheme.colorScheme.primary,
             focusedContainerColor = MaterialTheme.colorScheme.primary,
             cursorColor = MaterialTheme.colorScheme.tertiary,

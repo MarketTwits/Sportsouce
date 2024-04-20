@@ -12,8 +12,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil3.ImageLoader
-import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
@@ -42,7 +40,6 @@ internal fun FullImageScreenInternal(
     painter: Painter? = null,
     onDismiss: () -> Unit
 ) {
-    val imageLoadr = ImageLoader.Builder(LocalPlatformContext.current)
     Dialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -56,7 +53,7 @@ internal fun FullImageScreenInternal(
             val currentModel = image ?: painter
             SubcomposeAsyncImage(
                 model = currentModel,
-                filterQuality = FilterQuality.Medium,
+                filterQuality = FilterQuality.High,
                 contentDescription = "",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

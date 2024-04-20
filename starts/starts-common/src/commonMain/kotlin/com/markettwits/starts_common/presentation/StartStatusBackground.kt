@@ -18,8 +18,8 @@ fun startStatusBackground(statusCode: Int): Color =
         1 -> SportSouceColor.SportSouceLightRed
         2 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
         3 -> SportSouceColor.SportSouceRegistryOpenGreen
-        5 -> SportSouceColor.SportSouceRegistryOpenGreen
         4 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
+        5 -> SportSouceColor.SportSouceRegistryOpenGreen
         6 -> SportSouceColor.SportSouceStartEndedPink
         else -> SportSouceColor.SportSouceBlue
     }

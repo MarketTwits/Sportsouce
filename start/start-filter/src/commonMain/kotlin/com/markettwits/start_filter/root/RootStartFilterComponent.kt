@@ -3,8 +3,9 @@ package com.markettwits.start_filter.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.root.RootStartScreenComponent
-import com.markettwits.start_filter.start_filter.presentation.StartFilterComponent
-import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
+import com.markettwits.start_filter.start_filter.domain.StartFilter
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterComponent
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 import com.markettwits.start_filter.starts.StartsFilteredComponent
 import kotlinx.serialization.Serializable
 
@@ -17,7 +18,7 @@ interface RootStartFilterComponent {
         data object Filter : Config
 
         @Serializable
-        data class Starts(val request: StartFilterUi) : Config
+        data class Starts(val request: StartFilterUi, val sorted: StartFilter.Sorted) : Config
 
         @Serializable
         data class Start(val startId: Int) : Config

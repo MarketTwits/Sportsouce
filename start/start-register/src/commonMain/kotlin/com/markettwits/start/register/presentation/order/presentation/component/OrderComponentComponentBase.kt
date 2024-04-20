@@ -1,7 +1,6 @@
 package com.markettwits.start.register.presentation.order.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -30,16 +29,9 @@ class OrderComponentComponentBase(
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
-    private val restoreState: MutableValue<OrderStore.State> = MutableValue(
-        stateKeeper.consume(
-            key = ORDER_STORE_STATE_KEY,
-            OrderStore.State.serializer()
-        ) ?: OrderStore.State()
-    )
-
     private val store = instanceKeeper.getStore {
         storeFactory.create(
-            state = restoreState.value,
+            state = stateKeeper.consume(ORDER_STORE_STATE_KEY, OrderStore.State.serializer()),
             distanceInfo = distanceInfo,
             starId = startId,
             paymentType = paymentType,
@@ -68,7 +60,6 @@ class OrderComponentComponentBase(
                         it.memberId,
                         it.membersProfile
                     )
-
                     is OrderStore.Label.GoBack -> pop()
                     is OrderStore.Label.OnClickPromo -> onClickPromo(startId, it.promo)
                 }

@@ -6,6 +6,8 @@ plugins {
 
 kotlin {
     jvm()
+
+    jvmToolchain(localLibs.findVersion("jvm-dot").get().toString().toInt())
     androidTarget {
         compilations.all {
             kotlinOptions {

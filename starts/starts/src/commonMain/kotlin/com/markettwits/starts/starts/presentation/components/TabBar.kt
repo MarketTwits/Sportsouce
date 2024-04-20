@@ -3,7 +3,9 @@ package com.markettwits.starts.starts.presentation.components
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +22,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -47,41 +50,39 @@ internal fun TabBar(
                 .fillMaxWidth()
         )
     }
-    ScrollableTabRow(
-        modifier = Modifier.height(50.dp),
-        selectedTabIndex = pagerState.currentPage,
-        divider = {},
-        indicator = indicator,
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.primary
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        pages.forEachIndexed { index, item ->
-            val selected = pagerState.currentPage == index
-            Tab(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .clip(RoundedCornerShape(10.dp)),
-                selectedContentColor = MaterialTheme.colorScheme.tertiary,
-                unselectedContentColor = Color.Gray,
-                selected = selected,
-                text = {
-                    Text(
-                        text = item,
-                        fontSize = 16.sp,
-                        color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.bold()
-                    )
-                },
-                onClick = {
-                    scope.launch {
-                        pagerState.animateScrollToPage(
-                            page = index,
-                            animationSpec = spring(stiffness = Spring.StiffnessVeryLow)
-                        )
+        ScrollableTabRow(
+            modifier = Modifier.height(50.dp),
+            selectedTabIndex = pagerState.currentPage,
+            divider = {},
+            indicator = indicator,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primary
+        ) {
+            pages.forEachIndexed { index, item ->
+                val selected = pagerState.currentPage == index
+                PageItem(
+                    item = item,
+                    isSelected = selected,
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(
+                                page = index,
+                                animationSpec = spring(stiffness = Spring.StiffnessMedium)
+                            )
+                        }
                     }
-                })
+
+                )
+            }
         }
     }
+
     HorizontalPager(
         modifier = Modifier.fillMaxSize(),
         state = pagerState,
@@ -90,4 +91,31 @@ internal fun TabBar(
             content(page)
         }
     }
+}
+
+@Composable
+private fun PageItem(
+    modifier: Modifier = Modifier,
+    item: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Tab(
+        modifier = modifier
+            .wrapContentSize()
+            .clip(RoundedCornerShape(10.dp)),
+        selectedContentColor = MaterialTheme.colorScheme.tertiary,
+        unselectedContentColor = Color.Gray,
+        selected = isSelected,
+        text = {
+            Text(
+                text = item,
+                fontSize = 16.sp,
+                color = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
+                fontFamily = FontNunito.bold()
+            )
+        },
+        onClick = {
+            onClick()
+        })
 }

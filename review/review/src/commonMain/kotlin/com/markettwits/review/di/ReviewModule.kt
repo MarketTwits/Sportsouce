@@ -3,6 +3,7 @@ package com.markettwits.review.di
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.intentActionModule
 import com.markettwits.news_list.data.NewsRemoteToDomainMapper
 import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.data.ReviewRepositoryBase
@@ -14,10 +15,12 @@ import com.markettwits.time.BaseTimeMapper
 import org.koin.dsl.module
 
 val reviewModule = module(createdAtStart = true) {
+    includes(intentActionModule)
     single<ReviewStoreFactory> {
         ReviewStoreFactory(
             storeFactory = DefaultStoreFactory(),
-            repository = get()
+            repository = get(),
+            intentAction = get()
         )
     }
     single<ReviewRepository> {

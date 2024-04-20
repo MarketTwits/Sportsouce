@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="11">
       <module name="Sportsouce.core-ui" target="17" />
       <module name="Sportsouce.desktop.main" target="17" />
       <module name="Sportsouce.desktop.test" target="17" />

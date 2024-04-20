@@ -107,7 +107,7 @@ fun UserInfoCard(
                 .padding(vertical = 10.dp, horizontal = 30.dp)
                 .height(35.dp),
             onClick = { onClickEdit() },
-            border = BorderStroke(0.1.dp, MaterialTheme.colorScheme.tertiary),
+            border = BorderStroke(0.1.dp, MaterialTheme.colorScheme.outline),
             contentPadding = PaddingValues(),
             content = {
                 Text(

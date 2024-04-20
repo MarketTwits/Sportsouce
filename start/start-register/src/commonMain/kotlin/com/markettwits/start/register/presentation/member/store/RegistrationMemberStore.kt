@@ -15,11 +15,13 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
         val userNumber: Int,
         val value: StartStatement,
         val members: List<ProfileMember>,
+        val isClosedAllerDialog: Boolean,
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Intent {
         data object OnClickContinue : Intent
+        data object OnClickCloseDialog : Intent
         data object OnConsumedEvent : Intent
         data object Pop : Intent
         data class ChangeFiled(val startStatement: StartStatement) : Intent
@@ -28,6 +30,7 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
     sealed interface Message {
         data class OnValueChanged(val startStatement: StartStatement) : Message
         data class ShowEvent(val message: String) : Message
+        data class ChangeAllerDialogState(val show: Boolean) : Message
         data object OnConsumedEvent : Message
     }
 

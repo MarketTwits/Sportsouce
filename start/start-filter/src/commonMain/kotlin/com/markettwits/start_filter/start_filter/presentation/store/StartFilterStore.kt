@@ -1,7 +1,8 @@
 package com.markettwits.start_filter.start_filter.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.start_filter.start_filter.presentation.StartFilterUi
+import com.markettwits.start_filter.start_filter.domain.StartFilter
+import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 
 
 interface StartFilterStore :
@@ -26,7 +27,7 @@ interface StartFilterStore :
     )
 
     sealed interface Label {
-        data class Apply(val item: StartFilterUi) : Label
+        data class Apply(val item: StartFilterUi, val sorted: StartFilter.Sorted) : Label
         data object GoBack : Label
     }
 }

@@ -21,6 +21,8 @@ fun ReviewContent(
     onClickStart: (Int) -> Unit,
     onClickNewsInfo: (NewsInfo) -> Unit,
     onClickMenu: (Int) -> Unit,
+    onClickTelegram: () -> Unit,
+    onClickVk: () -> Unit,
     notification: @Composable ((Modifier) -> Unit),
 ) {
     if (news.isNotEmpty()) {
@@ -42,6 +44,6 @@ fun ReviewContent(
             onClickStart(it)
         }
         HorizontalDivider(modifier = Modifier.padding(10.dp))
-        SocialNetwork()
+        SocialNetwork(onClickVk = onClickVk, onClickTelegram = onClickTelegram)
     }
 }

@@ -128,6 +128,5 @@ fun UserInfoCard(
             onClickSocialNetwork = onClickSocialNetwork,
             onClickAddSocialNetwork = { onClickAddSocialNetwork() }
         )
-
     }
 }

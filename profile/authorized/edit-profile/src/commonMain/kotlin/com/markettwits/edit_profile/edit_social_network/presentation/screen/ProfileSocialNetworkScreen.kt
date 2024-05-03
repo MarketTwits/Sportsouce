@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -67,24 +68,20 @@ fun ProfileSocialNetworkScreen(component: EditProfileSocialNetworkComponent) {
                     .verticalScroll(rememberScrollState())
                     .padding(10.dp)
             ) {
-                ProfileSocialNetworkInfo()
+                ProfileSocialNetworkInfo(modifier = Modifier.align(Alignment.CenterHorizontally))
                 ProfileSocialNetworkContent(
                     modifier = Modifier.padding(vertical = 10.dp),
                     user = it,
                     onUserChange = {
-                        component.obtainEvent(
-                            EditProfileSocialNetworkStore.Intent.UpdateState(
-                                it
-                            )
-                        )
+                        component.obtainEvent(EditProfileSocialNetworkStore.Intent.UpdateState(it))
                     }
                 )
             }
-
-
         }
         if (state.isLoading) {
-            LoadingFullScreen(modifier = Modifier.padding(top = padding.calculateTopPadding()))
+            LoadingFullScreen(
+                modifier = Modifier.padding(top = padding.calculateTopPadding())
+            )
         }
     }
     EventEffect(

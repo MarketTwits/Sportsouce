@@ -8,8 +8,8 @@ import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
-import com.markettwits.root.root.RootComponentBase
-import com.markettwits.root.root.RootContent
+import com.markettwits.root.RootComponentBase
+import com.markettwits.root.RootContent
 import com.markettwits.theme.theme.SportSauceTheme
 import com.markettwits.theme.theme.component.ThemeComponentBase
 import org.koin.android.ext.koin.androidContext

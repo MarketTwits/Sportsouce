@@ -18,6 +18,9 @@ fun SelfUpdateScreen(component: SelfUpdateComponent) {
         isFailed = state.isFailed,
         isUpdatesAvailable = state.updatesAvailable,
         message = state.message,
+        onClickGoBack = {
+            component.obtainEvent(SelfUpdateStore.Intent.OnClickGoBack)
+        },
         onClickStartUpdate = {
             component.obtainEvent(SelfUpdateStore.Intent.OnClickUpdate)
         },

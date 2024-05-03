@@ -2,7 +2,8 @@ package com.markettwits.start_search.search.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.start_search.search.data.StartsSearchRepository
+import com.markettwits.start_search.search.data.repository.StartsSearchRepository
+import com.markettwits.start_search.search.domain.CoroutineDebounceBase
 import com.markettwits.start_search.search.domain.StartsSearch
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Intent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Label
@@ -13,6 +14,9 @@ import kotlinx.coroutines.launch
 
 class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+
+    private val debounce by CoroutineDebounceBase(scope)
+
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
             is Intent.ChangeTextFiled -> starts(intent.value)
@@ -41,7 +45,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
 
     private fun starts(value: String, done: Boolean = false) {
         dispatch(Message.ChangeTextFiled(value))
-        scope.launch {
+        debounce.debounce {
             repository.search(value, addToHistory = done)
                 .catch {
                     dispatch(Message.InfoFailed(networkExceptionHandler(it).message.toString()))

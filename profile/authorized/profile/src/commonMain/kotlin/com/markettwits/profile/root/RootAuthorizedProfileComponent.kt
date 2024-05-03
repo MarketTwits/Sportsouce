@@ -36,9 +36,6 @@ interface RootAuthorizedProfileComponent {
         @Serializable
         data object EditProfileMenu : Config()
 
-//        @Serializable
-//        data class EditProfile(val userId: Int) : Config()
-
         @Serializable
         data object AuthProfile : Config()
 

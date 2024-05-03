@@ -1,10 +1,9 @@
 package com.markettwits.profile.authorized.presentation.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,11 +29,15 @@ import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileSt
 
 @Composable
 fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
+
     val state by component.state.collectAsState()
     var fullImageState by rememberSaveable { mutableStateOf(false) }
+
     state.user?.let { user ->
         CollapsingToolbarRefreshScaffold(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             isRefreshing = state.isLoading, onRefresh = {
                 component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
             },
@@ -45,45 +48,42 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                         component.obtainOutput(AuthorizedProfileComponent.Output.Settings)
                     })
             }, body = {
-                Column(
-                    modifier = it
-                        .padding(14.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    UserInfoCard(
-                        user = user,
-                        onClickAddSocialNetwork = {
-                            component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
-                        },
-                        onClickEdit = {
-                            component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
-                        },
-                        onClickImage = {
-                            fullImageState = true
-                        },
-                        onClickSocialNetwork = {
-                            component.obtainEvent(
-                                AuthorizedProfileStore.Intent.OnClickUserSocialNetwork(
-                                    it
+                LazyColumn(modifier = it.padding(14.dp)) {
+                    item {
+                        UserInfoCard(
+                            user = user,
+                            onClickAddSocialNetwork = {
+                                component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
+                            },
+                            onClickEdit = {
+                                component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
+                            },
+                            onClickImage = {
+                                fullImageState = true
+                            },
+                            onClickSocialNetwork = {
+                                component.obtainEvent(
+                                    AuthorizedProfileStore.Intent.OnClickUserSocialNetwork(it)
                                 )
-                            )
-                        }
-                    )
-                    UserStarts(
-                        starts = user.activity.userRegistry,
-                        onClickAll = {
-                            component.obtainOutput(AuthorizedProfileComponent.Output.AllRegistries)
-                        },
-                        onClickStart = { start ->
-                            component.obtainOutput(
-                                AuthorizedProfileComponent.Output.StartOrder(start)
-                            )
-                        }
-                    )
-                    UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
-                    MyMembersCard(onClick = {
-                        component.obtainOutput(AuthorizedProfileComponent.Output.Members)
-                    })
+                            }
+                        )
+                        UserStarts(
+                            starts = user.activity.userRegistry,
+                            onClickAll = {
+                                component.obtainOutput(AuthorizedProfileComponent.Output.AllRegistries)
+                            },
+                            onClickStart = { start ->
+                                component.obtainOutput(
+                                    AuthorizedProfileComponent.Output.StartOrder(start)
+                                )
+                            }
+                        )
+                        UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
+                        MyMembersCard(onClick = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.Members)
+                        })
+                    }
+
                 }
             }
         )

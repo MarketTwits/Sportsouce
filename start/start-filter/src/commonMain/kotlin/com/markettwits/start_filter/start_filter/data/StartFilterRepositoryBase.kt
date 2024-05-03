@@ -30,10 +30,6 @@ internal class StartFilterRepositoryBase(
             emit(fetchFilter())
         }
 
-    //        execute.executeWithCache(
-//            cache = cache,
-//            launch = ::fetchFilter,
-//        )
     override suspend fun starts(
         state: StartFilterUi,
         sorted: StartFilter.Sorted

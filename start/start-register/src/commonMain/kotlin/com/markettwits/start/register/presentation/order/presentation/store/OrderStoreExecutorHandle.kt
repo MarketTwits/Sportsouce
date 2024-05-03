@@ -16,6 +16,7 @@ interface OrderStoreExecutorHandle {
         state: OrderStore.State,
         distanceItem: DistanceItem,
         startId: Int,
+        isSuccess: () -> Unit,
         newState: (OrderStore.State) -> Unit
     )
 

@@ -11,6 +11,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -19,6 +20,7 @@ import com.markettwits.start.register.presentation.member.component.Registration
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponentBase
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponentBase
+import com.markettwits.start.register.presentation.success.RegisterSuccessComponentBase
 
 /**
  * @param pop callback for navigate to back
@@ -115,6 +117,9 @@ class RootStartRegisterBase(
                                     member,
                                 )
                             )
+                        },
+                        openSuccess = {
+                            stackNavigation.replaceCurrent(RootStartRegister.ConfigStack.StartRegistrationSuccess)
                         }
                     )
                 )
@@ -135,6 +140,13 @@ class RootStartRegisterBase(
                             )
                         }
                     }
+                )
+            )
+
+            RootStartRegister.ConfigStack.StartRegistrationSuccess -> RootStartRegister.ChildStack.StartRegistrationSuccess(
+                RegisterSuccessComponentBase(
+                    componentComponent = componentContext,
+                    next = pop::invoke
                 )
             )
         }

@@ -68,6 +68,7 @@ fun StartsScheduleSuccessContent(
 @Composable
 fun StartsScheduleLoadingContent(
     modifier: Modifier = Modifier,
+    onClickPop: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

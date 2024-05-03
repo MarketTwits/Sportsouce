@@ -59,3 +59,15 @@ data class StartOrderInfo(
         ) : PaymentStatus
     }
 }
+
+fun List<StartOrderInfo>.containsUnpaymant(): Boolean {
+    return this.any { !it.payment.payment }
+}
+
+fun List<StartOrderInfo>.indexOfFirstUnpaid(): Int {
+    return this.indexOfFirst { !it.payment.payment }
+}
+
+fun List<StartOrderInfo>.firstUnpaidItem(): StartOrderInfo? {
+    return this.firstOrNull { !it.payment.payment }
+}

@@ -56,9 +56,6 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
                 message = state.message,
                 onClickRetry = {
                     component.obtainEvent(RegistrationsStore.Intent.LoadData)
-                },
-                onClickBack = {
-                    component.obtainEvent(RegistrationsStore.Intent.Pop)
                 })
         }
     }

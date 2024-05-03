@@ -22,6 +22,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.social_networks.IconTelegram
+import com.markettwits.core_ui.items.image.social_networks.IconVk
+import com.markettwits.core_ui.items.image.social_networks.InstagramIcon
+import com.markettwits.core_ui.items.image.social_networks.WhatsappIcon
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.profile.authorized.domain.UserProfile
 import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
@@ -54,8 +58,7 @@ fun UserSocialNetwork(
                 if (it.telegram.isNotEmpty()) {
                     SocialNetworkButton(
                         modifier = Modifier.padding(5.dp),
-                        icon = com.markettwits.core_ui.items.image.IconTelegram,
-                        url = items.telegram,
+                        icon = IconTelegram,
                         color = SportSouceColor.TelegramIcon,
                         onClick = {
                             onClickSocialNetwork(UserSocialNetworkIntent.Link(it.telegram))
@@ -64,8 +67,7 @@ fun UserSocialNetwork(
                 if (it.instagram.isNotEmpty()) {
                     SocialNetworkButton(
                         modifier = Modifier.padding(5.dp),
-                        icon = com.markettwits.core_ui.items.image.InstagramIcon,
-                        url = items.instagram,
+                        icon = InstagramIcon,
                         color = SportSouceColor.InstagramIcon,
                         onClick = {
                             onClickSocialNetwork(UserSocialNetworkIntent.Link(it.instagram))
@@ -74,8 +76,7 @@ fun UserSocialNetwork(
                 if (it.vk.isNotEmpty()) {
                     SocialNetworkButton(
                         modifier = Modifier.padding(5.dp),
-                        icon = com.markettwits.core_ui.items.image.IconVk,
-                        url = items.vk,
+                        icon = IconVk,
                         color = SportSouceColor.VkIcon,
                         onClick = {
                             onClickSocialNetwork(UserSocialNetworkIntent.Link(it.vk))
@@ -84,8 +85,7 @@ fun UserSocialNetwork(
                 if (it.whatsapp.isNotEmpty()) {
                     SocialNetworkButton(
                         modifier = Modifier.padding(5.dp),
-                        icon = com.markettwits.core_ui.items.image.WhatsappIcon,
-                        url = items.whatsapp,
+                        icon = WhatsappIcon,
                         color = SportSouceColor.WhatsappIcon,
                         onClick = {
                             onClickSocialNetwork(UserSocialNetworkIntent.Phone(it.whatsapp))
@@ -100,11 +100,9 @@ fun UserSocialNetwork(
 fun SocialNetworkButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    url: String = "",
     color: Color,
     onClick: () -> Unit
 ) {
-
     OutlinedButton(
         modifier = modifier
             .size(width = 55.dp, height = 35.dp),

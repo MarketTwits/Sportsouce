@@ -15,7 +15,7 @@ fun main() {
         )
     )
     runBlocking {
-        val categories = service.product("3fdda91b-8bca-11ed-0a80-028100c7ebff")
+        val categories = service.products()
         println(categories)
     }
 }

@@ -77,13 +77,11 @@ fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
-                            onClickBack = onClickBack,
                             onClickDistance = onClickDistance,
                             onClickMembers = onClickMembers,
                             onClickUrl = onClickUrl,
                             onClickPhone = onClickPhone,
                             onClickFullAlbum = onClickFullAlbum,
-                            onClickImage = onClickImage,
                             donations = donations,
                             comments = comments
                         )
@@ -98,13 +96,11 @@ fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = it,
                         data = data,
-                        onClickBack = onClickBack,
                         onClickDistance = onClickDistance,
                         onClickMembers = onClickMembers,
                         onClickUrl = onClickUrl,
                         onClickPhone = onClickPhone,
                         onClickFullAlbum = onClickFullAlbum,
-                        onClickImage = onClickImage,
                         donations = donations,
                         comments = comments
                     )

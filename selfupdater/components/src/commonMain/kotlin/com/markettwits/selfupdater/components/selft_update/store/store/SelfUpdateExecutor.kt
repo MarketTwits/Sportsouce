@@ -18,8 +18,8 @@ class SelfUpdateExecutor(private val selfUpdaterApi: SelfUpdaterApi) :
             is Intent.OnClickUpdate -> {
                 startCheck(true)
             }
-
             is Intent.ConsumedEvent -> dispatch(Message.ConsumedEvent)
+            is Intent.OnClickGoBack -> publish(Label.GoBack)
         }
     }
 

@@ -23,7 +23,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 fun MyMembersCard(modifier: Modifier = Modifier, onClick: () -> Unit) {
     OnBackgroundCard(
         modifier = modifier
-            .padding(vertical = 10.dp)
+            .padding(top = 14.dp)
             .fillMaxWidth(), onClick = onClick::invoke
     ) {
         Row(

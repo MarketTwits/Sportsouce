@@ -11,7 +11,7 @@ internal class SignUpValidationBase : SignUpValidation {
         runCatching {
             if (statement.name.isNotEmpty()) else throw IllegalArgumentException("Имя не должно быть пустым")
             if (statement.surname.isNotEmpty()) else throw IllegalArgumentException("Фамилия не должна быть пустой")
-            if (validateRussianPhoneNumber(statement.phone)) else throw IllegalArgumentException("Формат телефона +70000000000")
+            if (validateRussianPhoneNumber(statement.phone)) else throw IllegalArgumentException("Формат телефона +7 (000) 000-00-00")
             if (validateEmail(statement.email)) else throw IllegalArgumentException("Введите корректный адрес почты")
             if (statement.sex.isNotEmpty()) else throw IllegalArgumentException("Укажите свой пол")
             if (statement.birthday.isNotEmpty()) else throw IllegalArgumentException("Укажите свой день рождения")
@@ -23,15 +23,14 @@ internal class SignUpValidationBase : SignUpValidation {
             statement
         }
 
-    fun comparePassword(first: String, second: String): Boolean =
-        first == second
+    private fun comparePassword(first: String, second: String): Boolean = first == second
 
-    fun validateRussianPhoneNumber(phoneNumber: String): Boolean {
-        val regexPattern = """^\+7\d{10}$"""
+    private fun validateRussianPhoneNumber(phoneNumber: String): Boolean {
+        val regexPattern = "^\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}\$"
         return Regex(regexPattern).matches(phoneNumber)
     }
 
-    fun validateEmail(email: String): Boolean {
+    private fun validateEmail(email: String): Boolean {
         val regexPattern = """^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$"""
         return Regex(regexPattern).matches(email)
     }

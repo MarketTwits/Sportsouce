@@ -1,6 +1,8 @@
 package com.markettwits
 
 import java.awt.Desktop
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import java.net.URI
 
 class IntentActionBase : IntentAction {
@@ -10,6 +12,8 @@ class IntentActionBase : IntentAction {
     }
 
     override fun openPhone(phone: String) {
-        throw NoSuchMethodException("don't implements in jvm target")
+        Toolkit.getDefaultToolkit()
+            .systemClipboard
+            .setContents(StringSelection(phone), null)
     }
 }

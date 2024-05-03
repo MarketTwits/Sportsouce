@@ -25,7 +25,7 @@ fun MonthCalendar(
     header: @Composable() ((Modifier, CalendarMonth) -> Unit)? = null,
 ) {
     HorizontalCalendar(
-        modifier = modifier.wrapContentWidth(),
+        modifier = modifier,
         userScrollEnabled = userScrollEnabled,
         state = state,
         dayContent = { day ->

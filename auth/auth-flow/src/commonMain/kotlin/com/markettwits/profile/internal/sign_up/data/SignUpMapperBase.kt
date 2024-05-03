@@ -12,8 +12,11 @@ internal class SignUpMapperBase(private val timeMapper: TimeMapper) : SignUpMapp
             kind = "phoneCheck",
             name = statement.name,
             password = statement.password,
-            number = statement.phone,
+            number = mapPhoneToRemote(statement.phone),
             sex = statement.sex,
             surname = statement.surname
         )
+
+    override fun mapPhoneToRemote(phone: String): String =
+        phone.replace(Regex("\\D"), "")
 }

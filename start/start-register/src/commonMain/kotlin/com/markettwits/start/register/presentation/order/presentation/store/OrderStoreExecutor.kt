@@ -31,6 +31,9 @@ class OrderStoreExecutor(
                     state = getState(),
                     distanceItem = distanceItem,
                     startId = startId,
+                    isSuccess = {
+                        publish(Label.GoSuccess)
+                    },
                     newState = {
                         dispatch(Message.UpdateState(it))
                     })

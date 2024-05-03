@@ -37,7 +37,6 @@ private fun ImageCardContent(
     onClick: (String) -> Unit
 ) {
 
-
     SubcomposeAsyncImage(
         model = imageUrl,
         contentDescription = "",

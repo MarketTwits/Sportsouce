@@ -73,7 +73,7 @@ private fun StartAlbumsContent(
         mutableStateOf("")
     }
     LazyRow(
-        modifier = modifier
+        modifier = modifier,
     ) {
         items(album.photos.take(6), key = { it.id }) {
             StartAlbumItemContent(

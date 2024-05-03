@@ -6,7 +6,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            compileOnly(projects.cloud)
+            implementation(projects.cloud)
             implementation(projects.cache)
             implementation(projects.core.ui)
             implementation(projects.core.time)

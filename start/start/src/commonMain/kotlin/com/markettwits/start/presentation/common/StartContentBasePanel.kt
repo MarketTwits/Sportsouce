@@ -3,6 +3,7 @@ package com.markettwits.start.presentation.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -37,6 +39,7 @@ fun StartContentBasePanel(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .noRippleClickable {
                 panelState = !panelState
             },
@@ -45,7 +48,7 @@ fun StartContentBasePanel(
     ) {
         Text(
             text = label,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             fontFamily = FontNunito.bold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

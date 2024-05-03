@@ -10,14 +10,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 
 @Composable
-fun LoadingFullScreen(modifier: Modifier = Modifier) {
+fun LoadingFullScreen(
+    modifier: Modifier = Modifier,
+    onClickBack: (() -> Unit)? = null,
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Transparent),
     ) {
+        if (onClickBack != null) {
+            BackFloatingActionButton {
+                onClickBack()
+            }
+        }
         CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center),
             color = MaterialTheme.colorScheme.tertiary,

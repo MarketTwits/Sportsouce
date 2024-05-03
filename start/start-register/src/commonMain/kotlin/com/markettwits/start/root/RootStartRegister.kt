@@ -9,6 +9,7 @@ import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponent
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponent
+import com.markettwits.start.register.presentation.success.RegisterSuccessComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartRegister {
@@ -33,13 +34,16 @@ interface RootStartRegister {
             val profileMembers: List<ProfileMember>,
             val startStatement: StartStatement,
         ) : ConfigStack()
+
+        @Serializable
+        data object StartRegistrationSuccess : ConfigStack()
     }
 
     sealed interface ChildStack {
-        data class StartOrder(val component: OrderComponentComponent) :
-            ChildStack
+        data class StartOrder(val component: OrderComponentComponent) : ChildStack
 
         data class StartRegistrationMember(val component: RegistrationMemberComponent) : ChildStack
+        data class StartRegistrationSuccess(val component: RegisterSuccessComponent) : ChildStack
     }
 
     @Serializable

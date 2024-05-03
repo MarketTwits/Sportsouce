@@ -129,12 +129,19 @@ fun StartScreen(
                 }
             }
             if (state.isLoading && state.data == null) {
-                LoadingFullScreen()
+                LoadingFullScreen(
+                    onClickBack = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
+                    }
+                )
             }
             if (state.isError) {
                 FailedScreen(
                     message = state.message,
-                    onClickHelp = {}
+                    onClickHelp = {},
+                    onClickBack = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
+                    }
                 ) {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
                 }

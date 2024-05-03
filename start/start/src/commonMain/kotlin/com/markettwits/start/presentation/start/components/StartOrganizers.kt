@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HomeRepairService
@@ -21,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.core_ui.items.components.Shapes
-import com.markettwits.core_ui.items.image.IconTelegram
-import com.markettwits.core_ui.items.image.IconVk
+import com.markettwits.core_ui.items.image.social_networks.IconTelegram
+import com.markettwits.core_ui.items.image.social_networks.IconVk
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
@@ -35,7 +36,7 @@ fun StartOrganizers(
 ) {
     if (organizer.isNotEmpty()) {
         StartContentBasePanel(modifier = modifier, label = "Организаторы", openByDefault = false) {
-            StartOrganizersContent(modifier, organizer, onClickUrl, onClickPhone)
+            StartOrganizersContent(Modifier.padding(4.dp), organizer, onClickUrl, onClickPhone)
         }
     }
 }

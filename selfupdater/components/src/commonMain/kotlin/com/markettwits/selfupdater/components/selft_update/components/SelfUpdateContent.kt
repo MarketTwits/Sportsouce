@@ -30,6 +30,7 @@ internal fun SelfUpdateContent(
     message: String,
     consumed: () -> Unit,
     onClickStartUpdate: () -> Unit,
+    onClickGoBack: () -> Unit
 ) {
     if (isUpdatesAvailable) {
         Column(
@@ -57,7 +58,9 @@ internal fun SelfUpdateContent(
     }
 
     if (isLoading) {
-        LoadingFullScreen()
+        LoadingFullScreen(onClickBack = {
+            onClickGoBack()
+        })
     }
     if (isSuccess || isFailed) {
         SelfUpdateStartedDialog(message = message, result = isSuccess) {

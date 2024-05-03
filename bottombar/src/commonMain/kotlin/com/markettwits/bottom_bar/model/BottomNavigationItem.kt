@@ -1,15 +1,14 @@
-package com.markettwits.root.bottom_bar
+package com.markettwits.bottom_bar.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.markettwits.root.root.RootComponent
 
 @Immutable
-internal data class BottomNavigationItem(
+data class BottomNavigationItem(
     val title: String,
-    val configuration: RootComponent.Configuration,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val hasNews: Boolean,
-    val badgeCount: Int? = null
+    val badgeCount: Int? = null,
+    val configuration: Configuration
 )

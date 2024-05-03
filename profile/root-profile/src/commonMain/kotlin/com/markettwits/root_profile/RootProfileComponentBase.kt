@@ -66,7 +66,7 @@ class RootProfileComponentBase(
             is RootProfileComponent.Config.AuthFlow -> RootProfileComponent.Child.AuthFlow(
                 RootAuthFlowComponentBase(
                     context = componentContext,
-                    goProfile = { navigation.replaceAll(RootProfileComponent.Config.UnAuthProfile) }
+                    goProfile = { navigation.replaceAll(RootProfileComponent.Config.AuthProfile) }
                 )
             )
         }

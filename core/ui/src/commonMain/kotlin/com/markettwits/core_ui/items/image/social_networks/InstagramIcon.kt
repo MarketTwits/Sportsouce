@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.items.image
+package com.markettwits.core_ui.items.image.social_networks
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

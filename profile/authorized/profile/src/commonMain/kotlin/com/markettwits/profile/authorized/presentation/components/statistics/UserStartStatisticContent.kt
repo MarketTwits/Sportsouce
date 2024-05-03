@@ -44,7 +44,7 @@ internal fun UserStartStatisticContent(
     onClickInfo: () -> Unit,
 ) {
     OnBackgroundCard(
-        modifier = modifier.padding(top = 10.dp)
+        modifier = modifier.padding(top = 14.dp)
     ) {
         Column(
             modifier = Modifier.padding(10.dp),

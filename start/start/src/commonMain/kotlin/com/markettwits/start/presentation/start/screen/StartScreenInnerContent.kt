@@ -13,26 +13,26 @@ import com.markettwits.start.presentation.start.components.StartConditionPanel
 import com.markettwits.start.presentation.start.components.StartDescription
 import com.markettwits.start.presentation.start.components.StartDistances
 import com.markettwits.start.presentation.start.components.StartMembersPanel
+import com.markettwits.start.presentation.start.components.StartMembersStatistics
 import com.markettwits.start.presentation.start.components.StartOrganizers
 import com.markettwits.start.presentation.start.components.StartResult
 import com.markettwits.start.presentation.start.components.StartStatus
 import com.markettwits.start.presentation.start.components.StartTitle
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
-    onClickBack: () -> Unit,
     onClickDistance: (DistanceItem, Boolean, String) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
-    onClickImage: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
-    val innerModifier = Modifier.padding(5.dp)
+    val innerModifier = Modifier.padding(8.dp)
     Column(modifier = modifier) {
         StartTitle(
             modifier = innerModifier,
@@ -58,6 +58,10 @@ fun StartScreenInnerContent(
                 onClickDistance(distance, paymentDisabled, paymentType)
             },
             onClickUrl = onClickUrl
+        )
+        StartMembersStatistics(
+            modifier = innerModifier,
+            membersUi = data.membersUi.toImmutableList()
         )
         StartOrganizers(
             modifier = innerModifier,

@@ -17,6 +17,7 @@ interface SelfUpdateStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent {
+        data object OnClickGoBack : Intent
         data object OnClickUpdate : Intent
         data object ConsumedEvent : Intent
     }
@@ -30,6 +31,8 @@ interface SelfUpdateStore : Store<Intent, State, Label> {
         data object ConsumedEvent : Message
     }
 
-    sealed interface Label
+    sealed interface Label {
+        data object GoBack : Label
+    }
 
 }

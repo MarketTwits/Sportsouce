@@ -33,12 +33,12 @@ class ReviewComponentBase(
 
     init {
         store.labels.onEach {
-                when (it) {
-                    is ReviewStore.Label.OnClickItem -> onStartClick(it.item)
-                    is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
-                    is ReviewStore.Label.OnClickSearch -> onClickSearch()
-                    is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
-                }
+            when (it) {
+                is ReviewStore.Label.OnClickItem -> onStartClick(it.item)
+                is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
+                is ReviewStore.Label.OnClickSearch -> onClickSearch()
+                is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
+            }
         }.launchIn(scope)
     }
 }

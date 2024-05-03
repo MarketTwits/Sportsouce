@@ -55,6 +55,7 @@ include(":review:popular")
 include(":core-koin")
 include(":starts:starts-common")
 include(":cache")
+include(":bottombar")
 
 include(":selfupdater:api")
 include(":selfupdater:impl")

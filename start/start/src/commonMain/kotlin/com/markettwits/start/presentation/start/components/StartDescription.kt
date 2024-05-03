@@ -1,6 +1,8 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -38,10 +40,13 @@ fun StartDescription(modifier: Modifier, description: String) {
     Column(modifier) {
         val textColor = MaterialTheme.colorScheme.tertiary
         HtmlText(
+            modifier = Modifier.animateContentSize(
+                animationSpec = tween(700)
+            ),
             text = displayText,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             fontFamily = FontNunito.medium(),
-            lineHeight = 12.sp,
+            lineHeight = 14.sp,
             color = textColor,
             colorMapping = mapOf(
                 Pair(Color.Black, textColor),
@@ -51,7 +56,7 @@ fun StartDescription(modifier: Modifier, description: String) {
         )
 
         AnimatedVisibility(
-            visible = description.length > 150,
+            visible = description.length > 200,
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically()
         ) {

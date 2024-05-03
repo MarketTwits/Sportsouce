@@ -43,7 +43,7 @@ fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick:
                     text = "Список участников",
                     color = MaterialTheme.colorScheme.tertiary,
                     fontFamily = FontNunito.bold(),
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.padding(start = 5.dp))
                 Box(

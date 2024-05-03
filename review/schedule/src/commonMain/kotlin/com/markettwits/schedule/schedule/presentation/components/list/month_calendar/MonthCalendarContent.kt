@@ -58,8 +58,8 @@ fun MonthCalendarContent(
     }
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         CalendarSimpleTitle(
             modifier = Modifier

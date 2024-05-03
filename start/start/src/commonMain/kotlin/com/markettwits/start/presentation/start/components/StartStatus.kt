@@ -30,15 +30,15 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth()
-                .border(width = 3.dp, color = color, shape = Shapes.medium)
+                .border(width = 4.dp, color = color, shape = Shapes.medium)
                 .clip(Shapes.medium)
         ) {
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(8.dp),
+                    .padding(10.dp),
                 text = status.name,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -56,9 +56,9 @@ fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(8.dp),
+                    .padding(10.dp),
                 text = date,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,

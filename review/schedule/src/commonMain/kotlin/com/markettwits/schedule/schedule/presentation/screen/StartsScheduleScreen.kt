@@ -41,7 +41,9 @@ internal fun StartsScheduleScreen(component: StartsScheduleComponent) {
                 )
             }
             if (state.isLoading) {
-                StartsScheduleLoadingContent()
+                StartsScheduleLoadingContent {
+                    component.obtainEvent(StartsScheduleStore.Intent.Back)
+                }
             }
             if (state.actualStarts.isNotEmpty()) {
                 StartsScheduleSuccessContent(

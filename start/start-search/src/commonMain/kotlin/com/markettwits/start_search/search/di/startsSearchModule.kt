@@ -4,11 +4,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.ObservableListCache
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.start_search.search.data.StartsSearchRepository
-import com.markettwits.start_search.search.data.StartsSearchRepositoryBase
 import com.markettwits.start_search.search.data.local.SearchHistoryCache
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapper
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapperBase
+import com.markettwits.start_search.search.data.repository.StartsSearchRepository
+import com.markettwits.start_search.search.data.repository.StartsSearchRepositoryBase
 import com.markettwits.start_search.search.domain.SearchHistory
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper

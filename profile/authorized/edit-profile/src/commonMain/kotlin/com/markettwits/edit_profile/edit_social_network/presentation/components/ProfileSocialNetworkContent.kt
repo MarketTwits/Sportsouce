@@ -16,9 +16,10 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.items.image.IconTelegram
-import com.markettwits.core_ui.items.image.IconVk
-import com.markettwits.core_ui.items.image.InstagramIcon
+import com.markettwits.core_ui.items.image.social_networks.IconTelegram
+import com.markettwits.core_ui.items.image.social_networks.IconVk
+import com.markettwits.core_ui.items.image.social_networks.InstagramIcon
+import com.markettwits.core_ui.items.image.social_networks.WhatsappIcon
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.edit_profile.edit_social_network.domain.UserSocialNetwork
@@ -48,7 +49,7 @@ fun ProfileSocialNetworkContent(
             SocialNetworkRaw(
                 modifier = localModifier,
                 label = "WhatsApp",
-                icon = com.markettwits.core_ui.items.image.WhatsappIcon,
+                icon = WhatsappIcon,
                 color = SportSouceColor.WhatsappIcon
             )
             OutlinePhoneTextFiled(

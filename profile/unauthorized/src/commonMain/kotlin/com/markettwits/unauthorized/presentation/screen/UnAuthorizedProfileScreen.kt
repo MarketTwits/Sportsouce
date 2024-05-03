@@ -33,7 +33,7 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfileComponent) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }

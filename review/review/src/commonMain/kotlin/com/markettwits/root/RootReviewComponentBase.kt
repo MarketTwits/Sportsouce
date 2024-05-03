@@ -152,6 +152,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     componentContext = componentContext,
                     newAppVersion = config.newAppVersion,
                     storeFactory = scope.get(),
+                    goBack = navigation::pop
                 )
             )
         }

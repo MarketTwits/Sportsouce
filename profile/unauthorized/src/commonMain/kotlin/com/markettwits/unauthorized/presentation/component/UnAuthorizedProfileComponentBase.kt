@@ -24,8 +24,11 @@ class UnAuthorizedProfileComponentBase(
         ) ?: UnAuthorizedProfileUiState.Loading
     )
 
+
     init {
+        // lifecycle.doOnCreate {
         check()
+        // }
 
         stateKeeper.register(
             key = "PROFILE_STATE",

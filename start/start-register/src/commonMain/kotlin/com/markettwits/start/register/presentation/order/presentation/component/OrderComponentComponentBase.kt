@@ -24,7 +24,8 @@ class OrderComponentComponentBase(
     private val storeFactory: OrderStoreFactory,
     private val pop: () -> Unit,
     private val onClickMember: (StartStatement, Int, List<ProfileMember>) -> Unit,
-    private val onClickPromo: (Int, String) -> Unit
+    private val onClickPromo: (Int, String) -> Unit,
+    private val openSuccess: () -> Unit
 ) : OrderComponentComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -62,6 +63,7 @@ class OrderComponentComponentBase(
                     )
                     is OrderStore.Label.GoBack -> pop()
                     is OrderStore.Label.OnClickPromo -> onClickPromo(startId, it.promo)
+                    is OrderStore.Label.GoSuccess -> openSuccess()
                 }
             }
         }

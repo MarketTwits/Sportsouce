@@ -8,6 +8,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.start.register.presentation.member.screen.MemberScreen
 import com.markettwits.start.register.presentation.order.presentation.screen.StartOrderScreen
 import com.markettwits.start.register.presentation.promo.components.RegistrationPromoScreen
+import com.markettwits.start.register.presentation.success.RegisterSuccessScreen
 
 @Composable
 fun RootStartRegisterScreen(component: RootStartRegister) {
@@ -25,6 +26,9 @@ fun RootStartRegisterScreen(component: RootStartRegister) {
         when (val child = it.instance) {
             is RootStartRegister.ChildStack.StartOrder -> StartOrderScreen(component = child.component)
             is RootStartRegister.ChildStack.StartRegistrationMember -> MemberScreen(component = child.component)
+            is RootStartRegister.ChildStack.StartRegistrationSuccess -> RegisterSuccessScreen(
+                component = child.component
+            )
         }
     }
 }

@@ -35,6 +35,7 @@ class OrderStoreExecutorHandleBase(
         state: OrderStore.State,
         distanceItem: DistanceItem,
         startId: Int,
+        isSuccess: () -> Unit,
         newState: (OrderStore.State) -> Unit,
     ) {
         scope.launch {
@@ -62,6 +63,7 @@ class OrderStoreExecutorHandleBase(
                         val button = changeButtonState(state, true, false)
                         newState(state.copy(event = message.event, button = button.button))
                     }
+                    isSuccess()
                 }
             }, onFailure = {
                 val message = showMessage(state, false, it.message.toString())

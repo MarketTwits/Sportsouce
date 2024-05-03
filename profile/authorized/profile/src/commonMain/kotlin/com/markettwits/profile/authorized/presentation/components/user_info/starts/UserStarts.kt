@@ -28,7 +28,7 @@ fun UserStarts(
     onClickAll: () -> Unit,
     onClickStart: (StartOrderInfo) -> Unit,
 ) {
-    OnBackgroundCard(modifier = modifier.padding(top = 10.dp)) {
+    OnBackgroundCard(modifier = modifier.padding(top = 14.dp)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

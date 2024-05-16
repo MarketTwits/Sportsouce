@@ -33,7 +33,7 @@ import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.starts_common.domain.StartsListItem
-import de.charlex.compose.material3.HtmlText
+import com.markettwits.core_ui.items.text.HtmlText
 
 @Composable
 fun StartCard(

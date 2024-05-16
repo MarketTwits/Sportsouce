@@ -2,6 +2,7 @@ package com.markettwits.cahce.execute.base
 
 import com.markettwits.cahce.Cache
 import com.markettwits.cahce.ObservableCache
+import kotlinx.coroutines.flow.Flow
 
 class ExecuteWithCacheBase : ExecuteWithObservableCacheAbstract() {
     override suspend fun <T> executeWithCache(
@@ -20,7 +21,7 @@ class ExecuteWithCacheBase : ExecuteWithObservableCacheAbstract() {
         forced: Boolean,
         cache: ObservableCache<T>,
         launch: suspend () -> T,
-    ) = if (forced)
+    ): Flow<T> = if (forced)
         executeObservableCacheWithForced(cache, launch)
     else
         executeObservableCacheWithoutForced(cache, launch)

@@ -62,7 +62,7 @@ fun StartsListInfoItemLabel(
             modifier = Modifier,
             text = value,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onPrimary,
             overflow = TextOverflow.Ellipsis,
             fontFamily = FontNunito.bold(),
             fontSize = 16.sp
@@ -71,7 +71,7 @@ fun StartsListInfoItemLabel(
             modifier = modifier,
             text = title,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.regular(),
             fontSize = 14.sp
         )

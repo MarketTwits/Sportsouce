@@ -11,7 +11,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.bottom_bar.component.BottomBarComponentBase
 import com.markettwits.bottom_bar.component.BottomBarComponentHandle
-import com.markettwits.bottom_bar.component.BottomBarStorageImpl
+import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 import com.markettwits.bottom_bar.model.Configuration
 import com.markettwits.root_profile.RootProfileComponentBase
 import com.markettwits.starts.root.RootStartsComponentBase

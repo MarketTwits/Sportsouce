@@ -13,8 +13,10 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
+import com.markettwits.club.dashboard.di.clubDashboardModule
+import com.markettwits.club.root.RootClubComponentBase
 import com.markettwits.di.newsModule
-import com.markettwits.news_event.NewsEventComponentBase
+import com.markettwits.news_event.component.NewsEventComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory
 import com.markettwits.news_list.presentation.NewsComponentBase
 import com.markettwits.popular.root.RootStartsPopularComponentBase
@@ -41,7 +43,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(reviewRootModule, newsModule, reviewModule, notificationModule)
+        listOf(
+            reviewRootModule,
+            newsModule,
+            reviewModule,
+            notificationModule,
+            clubDashboardModule
+        )
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
@@ -155,6 +163,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     goBack = navigation::pop
                 )
             )
+
+            RootReviewComponent.Config.Club -> RootReviewComponent.Child.Club(
+                RootClubComponentBase(
+                    componentContext = componentContext,
+                    pop = navigation::pop
+                )
+            )
         }
 
     private fun slotChild(
@@ -181,6 +196,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Random
             3 -> RootReviewComponent.Config.Filter
+            4 -> RootReviewComponent.Config.Club
             else -> RootReviewComponent.Config.Filter
         }
     }

@@ -1,7 +1,13 @@
 package com.markettwits.cahce
 
-abstract class InMemoryCache<T> : Cache<T> {
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+
+abstract class InMemoryCache<T> : ObservableCache<T> {
+
     private val data = HashMap<Any, T>()
+
+    private val sharedFlow = MutableSharedFlow<T?>()
 
     override suspend fun get(key: Any): T? {
         return data[key]
@@ -17,11 +23,15 @@ abstract class InMemoryCache<T> : Cache<T> {
         return list
     }
 
+    override fun observe(): Flow<T?> = sharedFlow
+
     override suspend fun set(key: Any, value: T) {
         data[key] = value
+        sharedFlow.emit(value)
     }
 
     override suspend fun clear() {
         data.clear()
+        sharedFlow.emit(null)
     }
 }

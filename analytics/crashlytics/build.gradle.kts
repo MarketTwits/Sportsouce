@@ -1,5 +1,4 @@
 plugins {
-    // alias(libs.plugins.android.library.convention)
     alias(libs.plugins.kotlin.kmp.convention)
     id("ru.ok.tracer") version ("0.2.15")
 }

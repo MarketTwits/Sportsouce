@@ -10,6 +10,7 @@ import com.markettwits.start_search.search.presentation.store.StartsSearchStore.
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Message
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.State
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class StartsSearchExecutor(private val repository: StartsSearchRepository) :
@@ -47,6 +48,9 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
         dispatch(Message.ChangeTextFiled(value))
         debounce.debounce {
             repository.search(value, addToHistory = done)
+                .onStart {
+                    dispatch(Message.Loading)
+                }
                 .catch {
                     dispatch(Message.InfoFailed(networkExceptionHandler(it).message.toString()))
                 }

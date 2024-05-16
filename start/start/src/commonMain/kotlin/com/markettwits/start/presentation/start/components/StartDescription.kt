@@ -24,12 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
-import de.charlex.compose.material3.HtmlText
 
 
 @Composable
@@ -38,7 +37,7 @@ fun StartDescription(modifier: Modifier, description: String) {
     val displayText = if (expanded) description else description.take(150)
 
     Column(modifier) {
-        val textColor = MaterialTheme.colorScheme.tertiary
+        val textColor = MaterialTheme.colorScheme.onPrimary
         HtmlText(
             modifier = Modifier.animateContentSize(
                 animationSpec = tween(700)
@@ -48,11 +47,6 @@ fun StartDescription(modifier: Modifier, description: String) {
             fontFamily = FontNunito.medium(),
             lineHeight = 14.sp,
             color = textColor,
-            colorMapping = mapOf(
-                Pair(Color.Black, textColor),
-                Pair(Color.Gray, textColor),
-                Pair(Color.LightGray, textColor)
-            )
         )
 
         AnimatedVisibility(
@@ -81,7 +75,6 @@ fun StartDescription(modifier: Modifier, description: String) {
                     )
                 }
             }
-
         }
     }
 }

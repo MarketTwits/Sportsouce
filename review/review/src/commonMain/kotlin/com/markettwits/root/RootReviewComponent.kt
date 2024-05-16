@@ -2,8 +2,9 @@ package com.markettwits.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.club.root.RootClubComponent
 import com.markettwits.inappnotification.api.InAppNotificationRenderer
-import com.markettwits.news_event.NewsEventComponent
+import com.markettwits.news_event.component.NewsEventComponent
 import com.markettwits.news_list.domain.NewsInfo
 import com.markettwits.news_list.presentation.NewsComponent
 import com.markettwits.popular.root.RootStartsPopularComponent
@@ -43,6 +44,9 @@ interface RootReviewComponent {
 
         @Serializable
         data class Notification(val newAppVersion: NewAppVersion) : Config
+
+        @Serializable
+        data object Club : Config
     }
 
     sealed interface Child {
@@ -55,6 +59,7 @@ interface RootReviewComponent {
         data class NewsEvent(val component : NewsEventComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
+        data class Club(val component: RootClubComponent) : Child
     }
 
     @Serializable

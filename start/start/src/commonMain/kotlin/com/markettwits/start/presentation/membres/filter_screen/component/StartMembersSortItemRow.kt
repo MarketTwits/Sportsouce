@@ -99,22 +99,6 @@ fun StartMembersSortWrapper2(
                     }
                 }
             }
-//            LazyRow(
-//                content = {
-//
-//                    itemsIndexed(item.items) { index, item ->
-//                        if (item is MembersFilterItem.Base) {
-//                            StartMemberFilterItemBase(item = item.title) {
-//                                component.toggleFilterItemState(groupIndex, index)
-//                            }
-//                        } else {
-//                            StartMemberFilterItemSelected(item = item.title) {
-//                                component.toggleFilterItemState(groupIndex, index)
-//                            }
-//                        }
-//                    }
-//                }
-//            )
         }
     }
 }

@@ -36,11 +36,7 @@ class ChangeThemeExecutor(
                 2 -> ColorTheme.System
                 else -> error("unknown theme id ${colorThemeUi.id}")
             }
-            settingsRepository.updateSettings(
-                ApplicationSettings(
-                    theme = selectedTheme
-                )
-            )
+            settingsRepository.updateSettings(ApplicationSettings(theme = selectedTheme))
             publish(Label.Dismiss)
         }
     }

@@ -16,7 +16,9 @@ class AuthorizedProfileComponentBase(
     private val event: (AuthorizedProfileComponent.Output) -> Unit
 ) :
     AuthorizedProfileComponent, ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
@@ -39,5 +41,4 @@ class AuthorizedProfileComponentBase(
             }
         }
     }
-
 }

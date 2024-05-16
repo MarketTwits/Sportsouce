@@ -31,8 +31,10 @@
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/cache" />
             <option value="$PROJECT_DIR$/cloud" />
-            <option value="$PROJECT_DIR$/cloud-clubs" />
             <option value="$PROJECT_DIR$/cloud-shop" />
+            <option value="$PROJECT_DIR$/club" />
+            <option value="$PROJECT_DIR$/club/cloud" />
+            <option value="$PROJECT_DIR$/club/dashboard" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />

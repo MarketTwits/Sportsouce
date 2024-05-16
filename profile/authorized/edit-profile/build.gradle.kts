@@ -17,18 +17,13 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.coreKoin)
             implementation(projects.teamsCity)
-            // pick image
-            // implementation(libs.compose.activity)
-            // implementation("io.github.mr0xf00:easycrop:0.1.1")
-
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.bundles.mviKotlin)
         }
         androidMain.dependencies {
-            implementation("io.github.onseok:peekaboo-ui:0.5.2")
-            implementation("io.github.onseok:peekaboo-image-picker:0.5.2")
+            implementation(libs.compose.activity)
+            implementation("io.github.mr0xf00:easycrop:0.1.1")
         }
     }
 }

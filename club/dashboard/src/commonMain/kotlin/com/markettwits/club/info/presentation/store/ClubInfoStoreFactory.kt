@@ -1,32 +1,33 @@
 package com.markettwits.club.info.presentation.store
 
-import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.markettwits.club.info.presentation.store.ClubInfoStore.Intent
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
-import com.markettwits.club.info.domain.ClubInfoRepository
+import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.markettwits.club.common.domain.ClubRepository
+import com.markettwits.club.info.domain.models.ClubInfo
+import com.markettwits.club.info.presentation.store.ClubInfoStore.Intent
 import com.markettwits.club.info.presentation.store.ClubInfoStore.Label
 import com.markettwits.club.info.presentation.store.ClubInfoStore.State
-import com.markettwits.club.info.presentation.store.ClubInfoStore.Message
 
 internal class ClubInfoStoreFactory(
     private val storeFactory: StoreFactory,
-    private val repository: ClubInfoRepository
+    private val repository: ClubRepository
 ) {
 
-    fun create(index: Int): ClubInfoStore = ClubInfoStoreImpl(
+    fun create(index: Int, items: List<ClubInfo>): ClubInfoStore = ClubInfoStoreImpl(
         index,
+        items,
         repository
     )
 
     private inner class ClubInfoStoreImpl(
         private val index: Int,
-        private val repository: ClubInfoRepository
+        private val items: List<ClubInfo>,
+        private val repository: ClubRepository
     ) : ClubInfoStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ClubInfoStore",
-            initialState = ClubInfoStore.State(currentIndex = index),
+            initialState = State(currentIndex = index, info = items),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { ClubInfoExecutor(repository) },
             reducer = ClubInfoReducer

@@ -53,7 +53,9 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
     ) {
         LottieAnimation(
             iterations = LottieConstants.IterateForever,
-            modifier = Modifier.height(300.dp),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .height(300.dp),
             composition = composition
         )
         Text(

@@ -1,13 +1,15 @@
 package com.markettwits.club.dashboard.presentation.dashboard.store
 
 import androidx.compose.runtime.Immutable
-import com.markettwits.club.dashboard.domain.model.Subscription
-import com.markettwits.club.dashboard.domain.model.SubscriptionItems
+import com.markettwits.club.dashboard.domain.Subscription
+import com.markettwits.club.dashboard.domain.SubscriptionItems
+import com.markettwits.club.info.domain.models.ClubInfo
 
 @Immutable
 data class SubscriptionUiState(
     val items: List<SubscriptionsUi>,
-    val priceInfo: PriceInfoUi
+    val priceInfo: PriceInfoUi,
+    val clubInfo: List<ClubInfo>
 )
 
 @Immutable
@@ -28,6 +30,10 @@ data class PriceInfoUi(
     val monthOfCount: Int,
     val totalCost: Int,
 )
+
+internal fun SubscriptionUiState.getSelectedSubscriptionUi(): SubscriptionUi? =
+    items.flatMap { it.subscriptions }
+        .firstOrNull { it.isSelected }
 
 internal fun List<SubscriptionItems>.mapSubscriptionsToUi(): List<SubscriptionsUi> =
     this.map {

@@ -1,5 +1,8 @@
 package com.markettwits.club.info.domain.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 
 class Trainer(
     val id: Int,

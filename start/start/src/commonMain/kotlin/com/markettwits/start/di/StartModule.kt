@@ -8,7 +8,6 @@ import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.start.data.start.StartMemoryCache
-import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.data.start.StartRepositoryBase
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapperBase
@@ -20,6 +19,7 @@ import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapperBase
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapperBase
+import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

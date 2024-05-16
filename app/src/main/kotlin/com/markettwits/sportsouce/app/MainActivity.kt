@@ -1,9 +1,6 @@
 package com.markettwits.sportsouce.app
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -12,13 +9,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.defaultComponentContext
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
+import com.markettwits.decomposeComponentContext
+import com.markettwits.initKoin
 import com.markettwits.root.RootComponentBase
 import com.markettwits.root.RootContent
 import com.markettwits.theme.theme.SportSauceTheme
 import com.markettwits.theme.theme.component.ThemeComponentBase
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.stopKoin
 
 

@@ -14,8 +14,8 @@ import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.crashlitics.api.tracker.AnalyticsTracker
-import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
+import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
 import com.markettwits.start.presentation.start.store.StartScreenStore.Label

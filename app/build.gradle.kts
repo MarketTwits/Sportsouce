@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.bundles.decompose.compose)
     implementation(libs.tracer.crash.report)
     implementation(libs.koin.android)
+    implementation(projects.coreKoin)
 }
 
 

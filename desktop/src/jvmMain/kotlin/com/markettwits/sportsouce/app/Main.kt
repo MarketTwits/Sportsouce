@@ -7,6 +7,8 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
 import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.decomposeComponentContext
+import com.markettwits.initKoin
 import com.markettwits.root.RootComponentBase
 import com.markettwits.root.RootContent
 import com.markettwits.theme.theme.SportSauceTheme
@@ -21,20 +23,20 @@ fun main() {
     InStorageFileDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
 
     val lifecycle = LifecycleRegistry()
-    val root =
-        runOnUiThread { RootComponentBase(DefaultComponentContext(lifecycle)) }
-    val theme = runOnUiThread {
-        ThemeComponentBase(DefaultComponentContext(lifecycle))
-    }
-
-    application {
-        Window(
-            title = "Спорт Союз",
-            icon = DefaultImages.SportSauceLightLogo(),
-            onCloseRequest = { exitApplication() }
-        ) {
-            SportSauceTheme(theme) {
-                RootContent(root)
+    val context = DefaultComponentContext(lifecycle)
+    initKoin {
+        decomposeComponentContext(context)
+        val root = runOnUiThread { RootComponentBase(context) }
+        val theme = runOnUiThread { ThemeComponentBase(context) }
+        application {
+            Window(
+                title = "Спорт Союз",
+                icon = DefaultImages.SportSauceLightLogo(),
+                onCloseRequest = { exitApplication() }
+            ) {
+                SportSauceTheme(theme) {
+                    RootContent(root)
+                }
             }
         }
     }

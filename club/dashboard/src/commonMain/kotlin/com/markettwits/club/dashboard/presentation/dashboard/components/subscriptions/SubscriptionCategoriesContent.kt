@@ -3,7 +3,6 @@ package com.markettwits.club.dashboard.presentation.dashboard.components.subscri
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,7 +12,7 @@ import com.markettwits.club.dashboard.presentation.dashboard.store.Subscriptions
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SubscriptionCategoriesContent(
     modifier: Modifier = Modifier,

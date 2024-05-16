@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.success.icon.SuccessPaymantIc
 
 @Composable
@@ -41,7 +40,7 @@ fun RegisterSuccessScreen(
             Spacer(modifier = Modifier.padding(14.dp))
             Text(
                 text = "Вы успешно зарегистрировались на старт",
-                color = SportSouceColor.SportSouceBlue,
+                color = MaterialTheme.colorScheme.tertiary,
                 textAlign = TextAlign.Center,
                 fontFamily = FontNunito.bold(),
                 fontSize = 24.sp,

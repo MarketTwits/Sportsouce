@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.selfupdater.components.selft_update.components.update_available.SelfUpdateAvailable
 import com.markettwits.selfupdater.components.selft_update.components.update_available.SelfUpdateButton
 import com.markettwits.selfupdater.components.selft_update.components.update_available.SelfUpdateStartedDialog
@@ -33,19 +34,24 @@ internal fun SelfUpdateContent(
     onClickGoBack: () -> Unit
 ) {
     if (isUpdatesAvailable) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(10.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            SelfUpdateAvailable(isAvailable = true)
-            Spacer(modifier = Modifier.padding(14.dp))
-            SelfUpdateWhatsNew(actualVersion = currentVersion, changes = changes)
-            Spacer(modifier = Modifier.padding(14.dp))
-            SelfUpdateButton(isLoading = isLoading, onClickStartUpdate = onClickStartUpdate)
+        Box {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(10.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SelfUpdateAvailable(isAvailable = true)
+                Spacer(modifier = Modifier.padding(14.dp))
+                SelfUpdateWhatsNew(actualVersion = currentVersion, changes = changes)
+                Spacer(modifier = Modifier.padding(14.dp))
+                SelfUpdateButton(isLoading = isLoading, onClickStartUpdate = onClickStartUpdate)
+            }
+            BackFloatingActionButton {
+                onClickGoBack()
+            }
         }
     }
     if (!isUpdatesAvailable && !isLoading) {
@@ -54,6 +60,9 @@ internal fun SelfUpdateContent(
                 modifier = Modifier.align(Alignment.Center),
                 isAvailable = false
             )
+            BackFloatingActionButton {
+                onClickGoBack()
+            }
         }
     }
 

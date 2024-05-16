@@ -18,8 +18,7 @@ internal class ClubDashboardComponentBase(
     private val componentContext: ComponentContext,
     private val storeFactory: ClubDashboardStoreFactory,
     private val listener: BottomBarVisibilityListener,
-    private val goBack: () -> Unit,
-    private val goInfo: (Int) -> Unit
+    private val output: (ClubDashboardComponent.Output) -> Unit,
 ) : ClubDashboardComponent, BottomBarSideEffectHandlerAbstract(listener),
     ComponentContext by componentContext {
 
@@ -27,7 +26,7 @@ internal class ClubDashboardComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(listener)
     }
-    override val popInner = goBack
+    override val popInner = { output(ClubDashboardComponent.Output.Dismiss) }
     override val state: StateFlow<ClubDashboardStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: ClubDashboardStore.Intent) {
@@ -38,7 +37,18 @@ internal class ClubDashboardComponentBase(
         store.labels.onEach {
             when (it) {
                 is ClubDashboardStore.Label.GoBack -> goBackInner()
-                is ClubDashboardStore.Label.OnClickInfo -> goInfo(it.index)
+                is ClubDashboardStore.Label.OnClickInfo -> output(
+                    ClubDashboardComponent.Output.GoInfo(
+                        it.index,
+                        it.items
+                    )
+                )
+
+                is ClubDashboardStore.Label.OnClickRegistration -> output(
+                    ClubDashboardComponent.Output.Subscription(
+                        it.workoutId
+                    )
+                )
             }
         }.launchIn(scope)
         backHandler.register(bottomBarBackHandler)

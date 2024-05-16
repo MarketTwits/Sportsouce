@@ -13,8 +13,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
 import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
 import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionBottomPanel
-import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionsContent
 import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionCategoriesContent
+import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionsContent
 import com.markettwits.club.dashboard.presentation.dashboard.components.title.MainDashboardContent
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.informations.menu.ClubMenuContent
@@ -72,10 +72,14 @@ fun ClubDashboardScreen(
                     onClickIncrease = {
                         component.obtainEvent(ClubDashboardStore.Intent.OnClickIncrease)
                     },
-                    onClickSubscribe = {}
+                    onClickSubscribe = {
+                        component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration)
+                    }
                 )
-                ClubMenuContent {
-                    component.obtainEvent(ClubDashboardStore.Intent.OnClickInfo(it))
+                if (state.subscription.clubInfo.isNotEmpty()) {
+                    ClubMenuContent {
+                        component.obtainEvent(ClubDashboardStore.Intent.OnClickInfo(it))
+                    }
                 }
             }
         }

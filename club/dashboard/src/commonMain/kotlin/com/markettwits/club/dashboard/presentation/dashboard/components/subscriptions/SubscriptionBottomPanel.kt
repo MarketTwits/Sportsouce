@@ -2,7 +2,9 @@ package com.markettwits.club.dashboard.presentation.dashboard.components.subscri
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,6 +75,9 @@ private fun SubscriptionBottomPanelButton(
         containerColor = MaterialTheme.colorScheme.secondary,
         textColor = Color.White,
         showContent = true,
+        onClick = {
+            onClick()
+        },
         content = {
             Column {
                 Text(
@@ -95,9 +100,6 @@ private fun SubscriptionBottomPanelButton(
                 )
             }
         },
-        onClick = {
-            onClick()
-        },
         shape = Shapes.medium
     )
 }
@@ -118,12 +120,19 @@ private fun SubscriptionCounter(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(
-            modifier = Modifier.offset(y = (-7).dp),
-            onClick = onClickDecrease,
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
+                .clickable(onClick = onClickDecrease)
         ) {
             Text(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier
+                    .offset(y = (-7).dp)
+                    .padding(10.dp)
+                    .align(Alignment.Center)
+                    .animateContentSize(),
                 text = "–",
                 fontSize = 38.sp,
                 fontFamily = FontNunito.bold(),
@@ -131,19 +140,29 @@ private fun SubscriptionCounter(
             )
         }
         Text(
+            modifier = Modifier
+                .weight(1f),
+            textAlign = TextAlign.Center,
             text = monthOfCount.toString(),
             fontSize = 20.sp,
             fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.tertiary
         )
-        IconButton(
-            modifier = Modifier.offset(y = (-7).dp),
-            onClick = onClickIncrease,
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .clip(RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp))
+                .clickable(onClick = onClickIncrease)
         ) {
             Text(
-                modifier = Modifier.animateContentSize(),
+                modifier = Modifier
+                    .offset(y = (-7).dp)
+                    .padding(10.dp)
+                    .align(Alignment.Center)
+                    .animateContentSize(),
                 text = "+",
-                fontSize = 40.sp,
+                fontSize = 38.sp,
                 fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.secondary
             )

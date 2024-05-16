@@ -1,14 +1,11 @@
 package com.markettwits.profile.authorized.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnStart
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStoreFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class AuthorizedProfileComponentBase(
     componentContext: ComponentContext,
@@ -16,8 +13,6 @@ class AuthorizedProfileComponentBase(
     private val event: (AuthorizedProfileComponent.Output) -> Unit
 ) :
     AuthorizedProfileComponent, ComponentContext by componentContext {
-
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {
         storeFactory.create()
@@ -33,12 +28,8 @@ class AuthorizedProfileComponentBase(
     }
 
     init {
-        scope.launch {
-            store.labels.collect {
-                when (it) {
-                    AuthorizedProfileStore.Label.GoEditProfile -> TODO()
-                }
-            }
+        lifecycle.doOnStart {
+            store.accept(AuthorizedProfileStore.Intent.Retry)
         }
     }
 }

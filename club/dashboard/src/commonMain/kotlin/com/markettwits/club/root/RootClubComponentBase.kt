@@ -12,8 +12,12 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.club.dashboard.di.clubDashboardModule
 import com.markettwits.club.dashboard.di.createDashboardComponent
+import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
 import com.markettwits.club.info.di.clubInfoModule
 import com.markettwits.club.info.di.createClubInfoComponent
+import com.markettwits.club.registration.di.createClubRegistrationComponent
+import com.markettwits.club.registration.di.workoutRegistrationModule
+import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent
 import com.markettwits.getOrCreateKoinScope
 
 class RootClubComponentBase(
@@ -22,11 +26,10 @@ class RootClubComponentBase(
 ) : ComponentContext by componentContext, RootClubComponent {
 
     private val scope = getOrCreateKoinScope(
-        listOf(clubDashboardModule, clubInfoModule)
+        listOf(clubDashboardModule, clubInfoModule, workoutRegistrationModule)
     )
 
     private val stackNavigation = StackNavigation<RootClubComponent.StackConfig>()
-
     private val slotNavigation = SlotNavigation<RootClubComponent.SlotConfig>()
 
     override val childSlot: Value<ChildSlot<*, RootClubComponent.SlotChild>> =
@@ -54,13 +57,23 @@ class RootClubComponentBase(
             is RootClubComponent.SlotConfig.ClubInfo -> RootClubComponent.SlotChild.ClubInfo(
                 scope.createClubInfoComponent(
                     index = config.index,
+                    items = config.items,
                     goBack = {
                         slotNavigation.dismiss()
                     },
                 )
             )
-        }
 
+            is RootClubComponent.SlotConfig.WorkoutRegistration -> RootClubComponent.SlotChild.WorkoutRegistration(
+                createClubRegistrationComponent(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    workoutId = config.workoutId
+                ) {
+                    workoutRegistrationOuPuts(it)
+                }
+            )
+        }
 
     private fun childStack(
         stackConfig: RootClubComponent.StackConfig,
@@ -68,9 +81,34 @@ class RootClubComponentBase(
     ): RootClubComponent.StackChild =
         when (stackConfig) {
             RootClubComponent.StackConfig.Dashboard -> RootClubComponent.StackChild.Dashboard(
-                scope.createDashboardComponent(goBack = pop::invoke, goInfo = {
-                    slotNavigation.activate(RootClubComponent.SlotConfig.ClubInfo(it))
+                scope.createDashboardComponent(output = {
+                    dashboardOuPuts(it)
                 })
             )
         }
+
+    private fun dashboardOuPuts(output: ClubDashboardComponent.Output) {
+        when (output) {
+            is ClubDashboardComponent.Output.Dismiss -> pop()
+            is ClubDashboardComponent.Output.GoInfo ->
+                slotNavigation.activate(
+                    RootClubComponent.SlotConfig.ClubInfo(
+                        output.index,
+                        output.clubInfo
+                    )
+                )
+
+            is ClubDashboardComponent.Output.Subscription -> slotNavigation.activate(
+                RootClubComponent.SlotConfig.WorkoutRegistration(output.workoutId)
+            )
+        }
+    }
+
+    private fun workoutRegistrationOuPuts(output: WorkoutRegistrationComponent.Output) {
+        when (output) {
+            is WorkoutRegistrationComponent.Output.Dismiss -> {
+                slotNavigation.dismiss()
+            }
+        }
+    }
 }

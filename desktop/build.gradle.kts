@@ -7,6 +7,8 @@ kotlin {
     sourceSets.jvmMain.dependencies {
         implementation(compose.desktop.currentOs)
         implementation(projects.core.ui)
+        implementation(libs.koin.core)
+        implementation(projects.coreKoin)
         implementation(compose.desktop.common)
         implementation(projects.root)
         implementation(projects.core.theme)

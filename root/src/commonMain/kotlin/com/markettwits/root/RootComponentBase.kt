@@ -76,7 +76,6 @@ class RootComponentBase(
                         override fun navigateTo(configuration: Configuration) {
                             navigation.bringToFront(BottomBarConfigurationMapper.map(configuration))
                         }
-
                         override fun getActiveConfiguration(observer: (Configuration) -> Unit) {
                             childStack.subscribe {
                                 observer(

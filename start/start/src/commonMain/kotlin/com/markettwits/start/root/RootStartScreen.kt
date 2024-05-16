@@ -20,13 +20,11 @@ fun RootStartScreen(component: RootStartScreenComponent) {
                 startCommentsComponent = child.commentsComponent,
                 startSupportComponent = child.supportComponent,
             )
-
             is RootStartScreenComponent.Child.StartMembers -> StartMembersScreen(component = child.component)
             is RootStartScreenComponent.Child.StartRegistration -> RootStartRegisterScreen(child.component)
             is RootStartScreenComponent.Child.StartMembersFilter -> StartMembersFilterScreen(
                 component = child.component
             )
-
             is RootStartScreenComponent.Child.StartAlbum -> StartAlbumScreen(component = child.component)
         }
     }

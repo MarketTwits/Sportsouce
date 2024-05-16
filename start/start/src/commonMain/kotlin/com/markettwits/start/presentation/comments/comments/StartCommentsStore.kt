@@ -9,8 +9,8 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
-import com.markettwits.start.data.start.StartRepository
 import com.markettwits.start.domain.StartItem
+import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Intent
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.Label
 import com.markettwits.start.presentation.comments.comments.StartCommentsStore.State

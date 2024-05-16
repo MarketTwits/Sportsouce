@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.club.dashboard.presentation.dashboard.screen.ClubDashboardScreen
 import com.markettwits.club.info.presentation.screen.ClubInfoScreen
+import com.markettwits.club.registration.presentation.screen.WorkoutRegistrationScreen
 
 @Composable
 fun RootClubScreen(component: RootClubComponent) {
@@ -17,6 +18,9 @@ fun RootClubScreen(component: RootClubComponent) {
     childSlot.child?.instance?.also { child ->
         when (child) {
             is RootClubComponent.SlotChild.ClubInfo -> ClubInfoScreen(component = child.component)
+            is RootClubComponent.SlotChild.WorkoutRegistration -> WorkoutRegistrationScreen(
+                component = child.component
+            )
         }
     }
 

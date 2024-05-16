@@ -1,6 +1,6 @@
 package com.markettwits.club.dashboard.presentation.dashboard.store
 
-import com.markettwits.club.dashboard.domain.model.SubscriptionItems
+import com.markettwits.club.dashboard.domain.SubscriptionItems
 
 
 private fun initSubscriptions(subscriptionsList: List<SubscriptionItems>): List<SubscriptionsUi> {

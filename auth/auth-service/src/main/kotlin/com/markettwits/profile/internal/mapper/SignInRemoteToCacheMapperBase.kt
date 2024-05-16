@@ -12,11 +12,4 @@ internal class SignInRemoteToCacheMapperBase : SignInRemoteToCacheMapper {
             accessToken = remote.accessToken,
             refreshToken = remote.refreshToken,
         )
-//        CredentialRealmCache().apply {
-//            _userId = remote.user.id.toLong()
-//            _email = remote.user.email
-//            _password = password
-//            _accessToken = remote.accessToken
-//            _refreshToken = remote.refreshToken
-//        }
 }

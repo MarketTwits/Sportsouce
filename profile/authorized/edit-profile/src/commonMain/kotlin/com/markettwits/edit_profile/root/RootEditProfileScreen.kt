@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.edit_profile.edit_menu.presentation.EditProfileScreen
-import com.markettwits.edit_profile.edit_profile_Image.presentation.components.NewEditProfileImageScreen
+import com.markettwits.edit_profile.edit_profile_Image.presentation.screen.NewEditProfileImageScreen
 import com.markettwits.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
 import com.markettwits.edit_profile.edit_profile_change_password.presentation.screen.ChangePasswordScreen
 import com.markettwits.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen

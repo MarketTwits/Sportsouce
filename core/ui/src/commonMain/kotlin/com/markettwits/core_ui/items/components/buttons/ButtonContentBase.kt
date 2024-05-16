@@ -20,7 +20,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 fun ButtonContentBase(
     modifier: Modifier = Modifier,
     title: String = "",
-    onClick: () -> Unit,
+    onClick: (() -> Unit?)? = null,
     isEnabled: Boolean = true,
     shape: Shape = Shapes.large,
     containerColor: Color = Color.Transparent,
@@ -40,7 +40,9 @@ fun ButtonContentBase(
         shape = shape,
         border = borderStroke,
         onClick = {
-            onClick()
+            if (onClick != null) {
+                onClick()
+            }
         }) {
         if (content == null || !showContent) {
             Text(

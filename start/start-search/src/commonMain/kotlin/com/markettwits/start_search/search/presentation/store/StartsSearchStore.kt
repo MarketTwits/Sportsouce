@@ -10,6 +10,7 @@ import com.markettwits.starts_common.domain.StartsListItem
 interface StartsSearchStore : Store<Intent, State, Label> {
     data class State(
         val isError: Boolean = false,
+        val isLoading: Boolean = false,
         val message: String = "",
         val query: String = "",
         val starts: List<StartsListItem> = emptyList(),
@@ -26,6 +27,7 @@ interface StartsSearchStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message {
+        data object Loading : Message
         data class ChangeTextFiled(val value: String) : Message
         data class InfoLoaded(val starts: StartsSearch) : Message
         data class InfoFailed(val message: String) : Message

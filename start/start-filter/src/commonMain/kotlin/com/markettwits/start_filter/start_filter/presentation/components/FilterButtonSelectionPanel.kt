@@ -61,8 +61,3 @@ fun FilterButtonSelectionPanel(
         }
     }
 }
-
-@Composable
-private fun StartMembersFilterButtonSelectionPanelPreview() {
-    FilterButtonSelectionPanel(onClickApply = {}, onClickReset = {})
-}

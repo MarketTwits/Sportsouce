@@ -10,7 +10,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.di.newsModule
-import com.markettwits.news_event.NewsEventComponentBase
+import com.markettwits.news_event.component.NewsEventComponentBase
 import com.markettwits.news_event.store.NewsEventStoreFactory
 import com.markettwits.news_list.presentation.NewsComponentBase
 

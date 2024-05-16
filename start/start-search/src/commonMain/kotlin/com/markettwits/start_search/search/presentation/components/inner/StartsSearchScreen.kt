@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
@@ -53,6 +54,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 .background(MaterialTheme.colorScheme.primary)
                 .fillMaxSize()
         ) {
+            if (state.isLoading) {
+                LoadingFullScreen()
+            }
             if (state.query.isEmpty()) {
                 SearchHistoryColumn(
                     items = state.searchHistory
@@ -60,42 +64,17 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
                 }
             } else {
-                state.starts.let { starts ->
-                    if (starts.isNotEmpty()) {
-                        Text(
-                            modifier = Modifier
-                                .padding(10.dp),
-                            text = "РЕЗУЛЬТАТЫ ПОИСКА",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.bold(),
-                            fontSize = 12.sp,
-                            overflow = TextOverflow.Visible
-                        )
-                        StartsScreenContent(
-                            items = starts
-                        ) { startId ->
-                            val startTitle = starts.find { it.id == startId }?.name
-                            if (startTitle != null)
-                                component.obtainEvent(
-                                    StartsSearchStore.Intent.OnClickStart(
-                                        startId,
-                                        startTitle
-                                    )
-                                )
-                        }
-                    } else {
-                        Text(
-                            modifier = Modifier
-                                .padding(20.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = "По вашему запросу ничего не найдено",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 14.sp,
-                            overflow = TextOverflow.Visible
+                SearchResultColumn(
+                    starts = state.starts,
+                    onClickStart = { startId, startTitle ->
+                        component.obtainEvent(
+                            StartsSearchStore.Intent.OnClickStart(
+                                startId,
+                                startTitle
+                            )
                         )
                     }
-                }
+                )
             }
         }
 

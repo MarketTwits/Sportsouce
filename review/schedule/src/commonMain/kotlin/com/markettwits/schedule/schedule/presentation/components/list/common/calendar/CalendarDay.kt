@@ -48,7 +48,7 @@ fun CalendarDay(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val textColor = when (day.position) {
-                DayPosition.MonthDate -> MaterialTheme.colorScheme.tertiary
+                DayPosition.MonthDate -> MaterialTheme.colorScheme.onPrimary
                 DayPosition.InDate, DayPosition.OutDate -> Color.Transparent
             }
             val circleShapeColor = when (day.position) {

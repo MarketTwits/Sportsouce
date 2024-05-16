@@ -58,14 +58,14 @@ fun CalendarSimpleTitle(
                     ) else it.toString()
                 },
                 fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center,
                 fontFamily = FontNunito.bold(),
             )
             Text(
                 modifier = Modifier,
                 text = "$eventsCount стартов",
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
                 fontFamily = FontNunito.regular(),

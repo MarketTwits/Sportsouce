@@ -85,7 +85,7 @@ fun YearCalendar(
                                 Text(
                                     textAlign = TextAlign.Center,
                                     fontSize = 14.sp,
-                                    color = MaterialTheme.colorScheme.tertiary,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     text = month.yearMonth.month.displayText(false)
                                         .replaceFirstChar {
                                             if (it.isLowerCase()) it.titlecase(

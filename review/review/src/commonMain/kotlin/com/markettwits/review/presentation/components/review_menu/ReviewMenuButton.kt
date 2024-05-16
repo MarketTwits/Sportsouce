@@ -36,7 +36,7 @@ fun ReviewMenuButton(
             .clip(Shapes.large)
             .clickable(onClick = onClick::invoke)
             .background(background)
-            .fillMaxWidth()
+        // .fillMaxWidth()
     ) {
         Row(
             modifier = modifier.padding(15.dp),

@@ -8,6 +8,7 @@ android {
 }
 kotlin {
     sourceSets.commonMain.dependencies {
+        implementation(projects.club.dashboard)
         implementation(projects.cache)
         implementation(projects.cloud)
         implementation(projects.news)

@@ -2,7 +2,7 @@ package com.markettwits.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.news_event.NewsEventComponent
+import com.markettwits.news_event.component.NewsEventComponent
 import com.markettwits.news_list.domain.NewsInfo
 import com.markettwits.news_list.presentation.NewsComponent
 import kotlinx.serialization.Serializable

@@ -42,9 +42,10 @@ fun BottomBar(component: BottomBarComponent, modifier: Modifier = Modifier) {
                         component.onClickTabBar(item.configuration)
                     },
                     label = {
-                        Text(text = item.title, color = MaterialTheme.colorScheme.tertiary)
+                        if (state.showLabel)
+                            Text(text = item.title, color = MaterialTheme.colorScheme.tertiary)
                     },
-                    alwaysShowLabel = true,
+                    alwaysShowLabel = state.showLabel,
                     icon = {
                         Icon(
                             imageVector = if (state.selectedTab == item.configuration) {

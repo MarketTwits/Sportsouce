@@ -44,7 +44,7 @@ fun KindOfSportsListInfo(
     var items by remember {
         mutableStateOf(emptyList<KindOfSportsInfo>())
     }
-    val defaultColor = MaterialTheme.colorScheme.tertiary
+    val defaultColor = MaterialTheme.colorScheme.onPrimary
     LaunchedEffect(key1 = startsListItem) {
         items = KindOfSportsInfoMapperBase.mapStarts(
             startsListItem = startsListItem,
@@ -105,7 +105,7 @@ private fun KindOfSportsInfoValue(modifier: Modifier, count: Int, title: String,
             modifier = modifier,
             text = title.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.regular(),
             fontSize = 14.sp
         )

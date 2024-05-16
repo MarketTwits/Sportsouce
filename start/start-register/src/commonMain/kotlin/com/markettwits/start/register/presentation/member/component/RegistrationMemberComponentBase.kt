@@ -22,8 +22,7 @@ class RegistrationMemberComponentBase(
     private val memberId: Int,
     private val pop: () -> Unit,
     private val apply: (StartStatement, Int) -> Unit
-) :
-    RegistrationMemberComponent, ComponentContext by componentContext {
+) : RegistrationMemberComponent, ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main)
     private val store = instanceKeeper.getStore {
         storeFactory.create(memberId, startStatement, membersProfile)
@@ -44,7 +43,6 @@ class RegistrationMemberComponentBase(
                         it.startStatement,
                         memberId
                     )
-
                     is RegistrationMemberStore.Label.OnClickPop -> pop()
                 }
             }

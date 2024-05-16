@@ -71,8 +71,6 @@ fun StartFilterList(
 
                 is StartFilterUi.FilterStartType.Calendar -> {}
             }
-
-
         }
     }
 }

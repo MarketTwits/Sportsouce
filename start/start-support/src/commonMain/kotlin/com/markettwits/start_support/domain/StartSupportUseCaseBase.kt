@@ -10,8 +10,11 @@ internal class StartSupportUseCaseBase(private val repository: StartSupportRepos
             repository.donation(startId, currentPrice)
         }
 
-    override fun validate(price: String): Result<Int> =
-        if (price.all { it.isDigit() })
-            Result.success(price.toInt())
-        else Result.failure(IllegalArgumentException("Сумма может быть только числом"))
+    override fun validate(price: String): Result<Int> {
+        if (!(price.all { it.isDigit() }))
+            Result.failure<Int>(IllegalArgumentException("Сумма может быть только числом"))
+        if (price.toInt() >= 1_000_000)
+            Result.failure<Int>(IllegalArgumentException("Сумма не может быть больше 1 000 000 рублей"))
+        return Result.success(price.toInt())
+    }
 }

@@ -21,5 +21,4 @@ internal class SettingsRepositoryBase(
 
     override suspend fun fetchSettings(): ApplicationSettings =
         settingsCache.get() ?: ApplicationSettings()
-
 }

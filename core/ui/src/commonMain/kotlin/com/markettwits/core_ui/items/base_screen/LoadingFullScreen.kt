@@ -1,5 +1,8 @@
 package com.markettwits.core_ui.items.base_screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,10 +30,17 @@ fun LoadingFullScreen(
                 onClickBack()
             }
         }
-        CircularProgressIndicator(
+        AnimatedVisibility(
             modifier = Modifier.align(Alignment.Center),
-            color = MaterialTheme.colorScheme.tertiary,
-            strokeCap = StrokeCap.Round
-        )
+            visible = true,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.tertiary,
+                strokeCap = StrokeCap.Round
+            )
+        }
     }
 }

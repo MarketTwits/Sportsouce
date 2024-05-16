@@ -1,7 +1,11 @@
 package com.markettwits.bottom_bar.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class BottomBarState(
     val showTopBar: Boolean,
     val selectedTab: Configuration,
+    val showLabel: Boolean,
     val items: List<BottomNavigationItem>
 )

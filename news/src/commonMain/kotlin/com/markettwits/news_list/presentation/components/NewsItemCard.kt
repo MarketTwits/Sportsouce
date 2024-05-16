@@ -25,7 +25,7 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.news_list.domain.NewsInfo
-import de.charlex.compose.material3.HtmlText
+import com.markettwits.core_ui.items.text.HtmlText
 
 @Composable
 fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (NewsInfo) -> Unit) {
@@ -94,7 +94,6 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (Ne
                 fontSize = 10.sp,
                 fontFamily = FontNunito.regular(),
                 color = Color.White,
-                colorMapping = mapOf(Color.White to Color.White)
             )
         }
     }

@@ -2,6 +2,7 @@ package com.markettwits.start.presentation.membres.list.compoents
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,20 +25,6 @@ import eu.wewox.lazytable.LazyTableItem
 import eu.wewox.lazytable.LazyTableScrollDirection
 import eu.wewox.lazytable.lazyTableDimensions
 
-
-@Composable
-fun StartMembersItemText(text: String) {
-    Text(
-        modifier = Modifier.padding(5.dp),
-        style = LocalTextStyle.current.copy(lineBreak = LineBreak.Paragraph),
-        text = text,
-        color = MaterialTheme.colorScheme.tertiary,
-        textAlign = TextAlign.Center,
-        fontFamily = FontNunito.bold(),
-        fontSize = 12.sp,
-        overflow = TextOverflow.Ellipsis
-    )
-}
 
 
 @Composable
@@ -80,7 +67,6 @@ fun TestTable(items: List<StartMembersUi>) {
             ) {
                 HeaderCell(column = it)
             }
-
         }
     }
 }
@@ -101,11 +87,20 @@ private fun Cell(
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth()
+                .border(1.dp, MaterialTheme.colorScheme.outline)
                 .background(MaterialTheme.colorScheme.primary)
         ) {
             if (content.isNotEmpty()) {
-                StartMembersItemText(content)
+                Text(
+                    modifier = Modifier.padding(2.dp),
+                    text = content,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontNunito.bold(),
+                    fontSize = 12.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -129,11 +124,20 @@ private fun TeamCell(
     }
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
+        modifier = Modifier.fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
         if (content.isNotEmpty()) {
-            StartMembersItemText(content)
+            Text(
+                modifier = Modifier.padding(2.dp),
+                text = content,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center,
+                fontFamily = FontNunito.bold(),
+                fontSize = 12.sp,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -157,9 +161,20 @@ private fun HeaderCell(column: Int) {
     }
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
+        modifier = Modifier.fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .background(MaterialTheme.colorScheme.secondary)
     ) {
-        StartMembersItemText(content)
+        if (content.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(2.dp),
+                text = content,
+                color = MaterialTheme.colorScheme.onSecondary,
+                textAlign = TextAlign.Center,
+                fontFamily = FontNunito.bold(),
+                fontSize = 12.sp,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }

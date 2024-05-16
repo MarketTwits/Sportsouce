@@ -1,25 +1,31 @@
 package com.markettwits.bottom_bar.components
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import com.markettwits.bottom_bar.component.BottomBarStorage
-import com.markettwits.bottom_bar.component.BottomBarStorageImpl
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
+import com.markettwits.bottom_bar.component.storage.BottomBarStorage
+import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 
+@Composable
 fun rememberBottomBarNestedScroll(
-    bottomBarStorage: BottomBarStorage = BottomBarStorageImpl
-): NestedScrollConnection =
+    bottomBarStorage: BottomBarVisibilityListener = BottomBarStorageImpl
+): NestedScrollConnection = remember {
+
     object : NestedScrollConnection {
         private var accumulatedScroll = 0f
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
             accumulatedScroll += available.y
             if (accumulatedScroll < 0) {
-                bottomBarStorage.show()
+                bottomBarStorage.hide()
                 accumulatedScroll = 0f
             } else if (accumulatedScroll > 0) {
-                bottomBarStorage.hide()
+                bottomBarStorage.show()
                 accumulatedScroll = 0f
             }
             return Offset.Zero
         }
     }
+}

@@ -1,13 +1,22 @@
-package de.charlex.compose.material3
+package com.markettwits.core_ui.items.text
 
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -19,6 +28,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +39,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
+import be.digitalia.compose.htmlconverter.HtmlStyle
 import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
+import be.digitalia.compose.htmlconverter.htmlToString
+import kotlinx.coroutines.launch
 
 /**
  * Simple Text composable to show the text with html styling from string
@@ -51,11 +66,6 @@ import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
 fun HtmlText(
     modifier: Modifier = Modifier,
     text: String,
-    urlSpanStyle: SpanStyle = SpanStyle(
-        color = MaterialTheme.colorScheme.tertiary,
-        textDecoration = TextDecoration.Underline
-    ),
-    colorMapping: Map<Color, Color> = emptyMap(),
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -68,14 +78,11 @@ fun HtmlText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
-    inlineContent: Map<String, InlineTextContent> = mapOf(),
-    onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current,
-    onUriClick: ((String) -> Unit)? = null,
 ) {
     val annotatedString = htmlToAnnotatedString(
-        html = text
+        html = text,
     )
+    println(annotatedString)
 
     HtmlText(
         modifier = modifier,
@@ -92,10 +99,6 @@ fun HtmlText(
         overflow = overflow,
         softWrap = softWrap,
         maxLines = maxLines,
-        inlineContent = inlineContent,
-        onTextLayout = onTextLayout,
-        style = style,
-        onUriClick = onUriClick
     )
 }
 
@@ -115,6 +118,7 @@ fun HtmlText(
  *
  * @see androidx.compose.material.Text
  */
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun HtmlText(
     modifier: Modifier = Modifier,
@@ -131,82 +135,45 @@ fun HtmlText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
-    inlineContent: Map<String, InlineTextContent> = mapOf(),
-    onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current,
-    onUriClick: ((String) -> Unit)? = null,
 ) {
-    val clickable =
-        annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
-
-    val uriHandler = LocalUriHandler.current
+    val handler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    val urls = remember(layoutResult, annotatedString) {
-        annotatedString.getStringAnnotations("url", 0, annotatedString.lastIndex)
-    }
-
-    Text(
-        modifier = modifier.then(if (clickable) Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = { pos ->
-                    layoutResult.value?.let { layoutResult ->
-                        val position = layoutResult.getOffsetForPosition(pos)
-                        annotatedString
-                            .getStringAnnotations(position, position)
-                            .firstOrNull()
-                            ?.let { sa ->
-                                if (sa.tag == "url") { // NON-NLS
-                                    val url = sa.item
-                                    onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
-                                }
-                            }
-                    }
-                })
+    val pressIndicator = if (annotatedString.containsLinks()) modifier.pointerInput(Unit) {
+        detectTapGestures { pos ->
+            layoutResult.value?.let { layoutResult ->
+                val position = layoutResult.getOffsetForPosition(pos)
+                annotatedString
+                    .getUrlAnnotations(position, position)
+                    .firstOrNull()?.let { range -> handler.openUri(range.item.url) }
             }
-            .semantics {
-                if (urls.size == 1) {
-                    role = Role.Button
-                    onClick("Link (${annotatedString.substring(urls[0].start, urls[0].end)}") {
-                        val url = urls[0].item
-                        onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
-                        true
-                    }
-                } else {
-                    customActions = urls.map {
-                        CustomAccessibilityAction(
-                            "Link (${
-                                annotatedString.substring(
-                                    it.start,
-                                    it.end
-                                )
-                            })"
-                        ) {
-                            val url = it.item
-                            onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
-                            true
-                        }
-                    }
-                }
-            } else Modifier),
+        }
+    } else modifier
+
+    BasicText(
         text = annotatedString,
-        color = color,
-        fontSize = fontSize,
-        fontStyle = fontStyle,
-        fontWeight = fontWeight,
-        fontFamily = fontFamily,
-        letterSpacing = letterSpacing,
-        textDecoration = textDecoration,
-        textAlign = textAlign,
-        lineHeight = lineHeight,
-        overflow = overflow,
+        modifier = modifier.then(pressIndicator),
+        style = TextStyle(
+            color = color,
+            fontSize = fontSize,
+            fontStyle = fontStyle,
+            fontWeight = fontWeight,
+            fontFamily = fontFamily,
+            letterSpacing = letterSpacing,
+            textDecoration = textDecoration,
+            textAlign = textAlign ?: TextAlign.Start,
+            lineHeight = lineHeight,
+        ),
         softWrap = softWrap,
+        overflow = overflow,
         maxLines = maxLines,
-        inlineContent = inlineContent,
         onTextLayout = {
             layoutResult.value = it
-            onTextLayout(it)
-        },
-        style = style
+        }
     )
 }
+
+@OptIn(ExperimentalTextApi::class)
+internal fun AnnotatedString.containsLinks(): Boolean = getUrlAnnotations(0, length).isNotEmpty()
+
+

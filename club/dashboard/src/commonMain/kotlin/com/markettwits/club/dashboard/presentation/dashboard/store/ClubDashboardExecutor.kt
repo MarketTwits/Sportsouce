@@ -72,7 +72,8 @@ internal class ClubDashboardExecutor(
         onCompletion: suspend (SubscriptionUiState) -> Unit
     ) {
         scope.launch {
-            clubRepository.subscriptions()
+
+        clubRepository.subscriptions()
                 .onStart { dispatch(Message.Loading) }
                 .catch { dispatch(Message.Failed(it.message.toString())) }
                 .collect {

@@ -29,7 +29,6 @@ import com.markettwits.selfupdater.components.notification.component.InAppNotifi
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
-import com.markettwits.start_filter.root.RootStartFilterComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
 
 
@@ -104,14 +103,6 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 RootStartScreenComponentBase(
                     componentContext,
                     startId = config.startId,
-                    pop = navigation::pop
-                )
-            )
-
-            is RootReviewComponent.Config.Filter -> RootReviewComponent.Child.Filter(
-                RootStartFilterComponentBase(
-                    context = componentContext,
-                    dependencies = scope.get(),
                     pop = navigation::pop
                 )
             )
@@ -195,9 +186,9 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             0 -> RootReviewComponent.Config.Popular
             1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Random
-            3 -> RootReviewComponent.Config.Filter
+            3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Club
-            else -> RootReviewComponent.Config.Filter
+            else -> RootReviewComponent.Config.Search
         }
     }
 }

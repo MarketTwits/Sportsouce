@@ -11,7 +11,7 @@ object BottomBarStorageImpl : BottomBarStorage {
     override val state: MutableStateFlow<BottomBarState> = MutableStateFlow(
         BottomBarState(
             showTopBar = true,
-            showLabel = false,
+            showLabel = true,
             selectedTab = Configuration.Home,
             items = defaultMenuItems()
         )

@@ -29,10 +29,11 @@ fun RegistrationsShouldBePay(modifier: Modifier, onClick: () -> Unit) {
         Column(modifier = Modifier.padding(10.dp)) {
             Text(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(4.dp)
                     .align(Alignment.Start),
                 text = "У вас есть неоплаченные старты, оплатите их до окончания регистрации",
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
                 color = Color.White,
                 fontFamily = FontNunito.medium(),
                 fontSize = 16.sp

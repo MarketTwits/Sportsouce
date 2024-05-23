@@ -29,8 +29,6 @@ fun NewsScreen(modifier: Modifier = Modifier, component: NewsComponent) {
                 onClickRetry = {
                     component.obtainEvent(NewsStore.Intent.Launch)
                 },
-                onClickHelp = {
-                }
             )
         }
         if (state.isLoading) {

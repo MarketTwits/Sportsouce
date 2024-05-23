@@ -138,7 +138,6 @@ fun StartScreen(
             if (state.isError) {
                 FailedScreen(
                     message = state.message,
-                    onClickHelp = {},
                     onClickBack = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
                     }

@@ -1,39 +1,34 @@
 package com.markettwits.start_search.search.presentation.components.inner
 
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
-import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
-import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_search.search.presentation.component.StartsSearchComponent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore
-import com.markettwits.starts_common.presentation.StartsScreenContent
 
 @Composable
 fun StartsSearchScreen(component: StartsSearchComponent) {
     val state by component.model.collectAsState()
-    CollapsingToolbarScaffold(
+    Scaffold(
         modifier = Modifier,
-        scrollStrategy = ScrollStrategy.EnterAlways,
-        state = rememberCollapsingToolbarScaffoldState(),
-        toolbar = {
+        topBar = {
             StartsSearchBarInner(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier,
                 query = state.query,
+                isWithFilter = state.filter.filterIsEmpty(),
                 onQueryChanged = {
                     component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it))
                 },
@@ -48,16 +43,40 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 },
             )
         },
+        bottomBar = {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = state.filter.items.find { it.selected.isNotEmpty() }?.selected?.isNotEmpty()
+                    ?: false,
+                enter = slideInVertically() + expandVertically(expandFrom = Alignment.Top),
+                exit = slideOutVertically() + shrinkVertically()
+            ) {
+                SearchFilterContent(
+                    filterParams = state.filter.selectedValueToString(),
+                    onClickPanel = {
+                        component.obtainEvent(StartsSearchStore.Intent.OnClickFilter)
+                    },
+                    onClickRemoveFilter = {
+                        component.obtainEvent(StartsSearchStore.Intent.OnClickRemoveFilter)
+                    }
+                )
+            }
+        }
     ) {
         Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary)
-                .fillMaxSize()
+            modifier = Modifier.padding(
+                top = it.calculateTopPadding(),
+                bottom = it.calculateBottomPadding()
+            ).background(MaterialTheme.colorScheme.background)
         ) {
             if (state.isLoading) {
                 LoadingFullScreen()
             }
-            if (state.query.isEmpty()) {
+            if (state.isError) {
+                FailedScreen(message = state.message) {
+                    component.obtainEvent(StartsSearchStore.Intent.OnClickRetry)
+                }
+            }
+            if (state.query.isEmpty() && state.filter.filterIsEmpty()) {
                 SearchHistoryColumn(
                     items = state.searchHistory
                 ) {
@@ -68,15 +87,11 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                     starts = state.starts,
                     onClickStart = { startId, startTitle ->
                         component.obtainEvent(
-                            StartsSearchStore.Intent.OnClickStart(
-                                startId,
-                                startTitle
-                            )
+                            StartsSearchStore.Intent.OnClickStart(startId, startTitle)
                         )
                     }
                 )
             }
         }
-
     }
 }

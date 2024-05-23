@@ -2,6 +2,9 @@ package com.markettwits.start_search.search.data.repository
 
 import com.markettwits.cahce.ObservableListCache
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.start_search.filter.data.mapper.StartFilterDomainToRemoteMapper
+import com.markettwits.start_search.filter.domain.StartFilter
+import com.markettwits.start_search.filter.presentation.component.StartFilterUi
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapper
 import com.markettwits.start_search.search.domain.SearchHistory
 import com.markettwits.start_search.search.domain.StartsSearch
@@ -11,12 +14,17 @@ import kotlinx.coroutines.flow.map
 class StartsSearchRepositoryBase(
     private val service: SportsouceApi,
     private val cloudMapper: StartsSearchToUiMapper,
+    private val filterMapper: StartFilterDomainToRemoteMapper,
     private val cache: ObservableListCache<SearchHistory>,
 ) : StartsSearchRepository {
 
-    override suspend fun search(value: String, addToHistory: Boolean): Flow<StartsSearch> =
+    override suspend fun search(
+        filter: StartFilterUi,
+        sorted: StartFilter.Sorted,
+        value: String,
+    ): Flow<StartsSearch> =
         history().map {
-            val starts = service.startWithFilter(cloudMapper.map(value))
+            val starts = service.startWithFilter(filterMapper.map(filter, value))
             cloudMapper.map(it, starts)
         }
 

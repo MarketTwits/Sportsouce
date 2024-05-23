@@ -1,7 +1,6 @@
 package com.markettwits.schedule.schedule.presentation.components.list.month_calendar
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -60,8 +59,7 @@ fun CompactMonthCalendar(
     header: @Composable() ((Modifier, CalendarMonth) -> Unit)? = null,
 ) {
     HorizontalCalendar(
-        modifier = modifier
-            .wrapContentWidth(),
+        modifier = modifier,
         userScrollEnabled = userScrollEnabled,
         calendarScrollPaged = calendarScrollPaged,
         state = state,

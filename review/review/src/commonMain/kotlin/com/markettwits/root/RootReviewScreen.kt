@@ -13,7 +13,6 @@ import com.markettwits.schedule.root.RootStartsScheduleScreen
 import com.markettwits.selfupdater.components.notification.screen.NotificationScreen
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
 import com.markettwits.start.root.RootStartScreen
-import com.markettwits.start_filter.root.RootStartFilterScreen
 import com.markettwits.start_search.root.RootStartsSearchScreen
 
 @Composable
@@ -38,12 +37,11 @@ fun RootReviewScreen(component: RootReviewComponent) {
                 }
             )
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
-            is RootReviewComponent.Child.Filter -> RootStartFilterScreen(component = child.component)
+            is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)
             is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
             is RootReviewComponent.Child.Popular -> RootStartsPopularScreen(component = child.component)
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
-            is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Notification -> SelfUpdateScreen(component = child.component)
             is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
         }

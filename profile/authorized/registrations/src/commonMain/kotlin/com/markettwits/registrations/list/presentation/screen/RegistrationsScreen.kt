@@ -1,4 +1,4 @@
-package com.markettwits.registrations.list.presentation
+package com.markettwits.registrations.list.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

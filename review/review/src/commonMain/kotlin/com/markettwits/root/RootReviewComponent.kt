@@ -15,7 +15,6 @@ import com.markettwits.selfupdater.components.notification.component.InAppNotifi
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
 import com.markettwits.start.root.RootStartScreenComponent
-import com.markettwits.start_filter.root.RootStartFilterComponent
 import com.markettwits.start_search.root.RootStartsSearchComponent
 import kotlinx.serialization.Serializable
 
@@ -28,8 +27,6 @@ interface RootReviewComponent {
         data object Review : Config
         @Serializable
         data class Start(val startId: Int) : Config
-        @Serializable
-        data object Filter : Config
         @Serializable
         data object Random : Config
         @Serializable
@@ -52,7 +49,6 @@ interface RootReviewComponent {
     sealed interface Child {
         data class Review(val component: ReviewComponent, val newsComponent : NewsComponent) : Child
         data class Start(val component: RootStartScreenComponent) : Child
-        data class Filter(val component : RootStartFilterComponent) : Child
         data class Random(val component : RootStartRandomComponent) : Child
         data class Schedule(val component : RootStartsScheduleComponent) : Child
         data class Popular(val component: RootStartsPopularComponent) : Child

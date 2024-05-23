@@ -11,7 +11,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.start_search.search.presentation.store.StartsSearchStore
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.starts_common.presentation.StartsScreenContent
 
@@ -23,7 +22,8 @@ fun ColumnScope.SearchResultColumn(
     if (starts.isNotEmpty()) {
         Text(
             modifier = Modifier
-                .padding(10.dp),
+                .padding(horizontal = 10.dp)
+                .padding(vertical = 4.dp),
             text = "РЕЗУЛЬТАТЫ ПОИСКА",
             color = MaterialTheme.colorScheme.outline,
             fontFamily = FontNunito.bold(),
@@ -31,7 +31,8 @@ fun ColumnScope.SearchResultColumn(
             overflow = TextOverflow.Visible
         )
         StartsScreenContent(
-            items = starts
+            items = starts,
+            isMaxWith = true
         ) { startId ->
             val startTitle = starts.find { it.id == startId }?.name
             if (startTitle != null)

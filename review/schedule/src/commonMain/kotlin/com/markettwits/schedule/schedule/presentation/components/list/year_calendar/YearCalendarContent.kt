@@ -50,16 +50,13 @@ fun YearCalendarContent(
             title = Year.of(yearsRange.value).value.toString(),
             goToPrevious = {
                 yearsRange.value -= 1
-                // currentYear = currentYear.minusYears(1)
             },
             goToNext = {
                 yearsRange.value += 1
-                // currentYear = currentYear.plusYears(1)
             },
         )
         val startsByDate: Map<LocalDate, List<StartsListItem>> =
             starts.groupBy { it.date.parseStringToLocalDateTime() }
-
 
         YearCalendar(
             year = Year.of(yearsRange.value),

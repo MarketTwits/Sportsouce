@@ -5,6 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.start_search.filter.presentation.component.StartFilterUi
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,7 @@ class StartsSearchComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: StartsSearchStoreFactory,
     private val back: () -> Unit,
-    private val filter: () -> Unit,
+    private val filter: (StartFilterUi) -> Unit,
     private val start: (Int) -> Unit
 ) : StartsSearchComponent,
     ComponentContext by componentContext {
@@ -34,7 +35,7 @@ class StartsSearchComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartsSearchStore.Label.OnClickBack -> back()
-                    is StartsSearchStore.Label.OnClickFilter -> filter()
+                    is StartsSearchStore.Label.OnClickFilter -> filter(it.filter)
                     is StartsSearchStore.Label.OnClickStart -> start(it.id)
                 }
             }

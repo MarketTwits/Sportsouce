@@ -1,12 +1,16 @@
 package com.markettwits
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 
-class IntentActionBase(private val context: Context) : IntentAction {
+class IntentActionBase(
+    private val context: Context,
+) : IntentAction {
     override fun openWebPage(url: String) {
         try {
             val webpage =
@@ -30,5 +34,11 @@ class IntentActionBase(private val context: Context) : IntentAction {
         } catch (_: ActivityNotFoundException) {
             Log.e("mt05", "Ошибка при открытие телефона")
         }
+    }
+
+    override fun copyToSystemBuffer(text: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", text)
+        clipboard.setPrimaryClip(clip)
     }
 }

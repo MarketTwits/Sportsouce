@@ -30,6 +30,7 @@ class RootClubComponentBase(
     )
 
     private val stackNavigation = StackNavigation<RootClubComponent.StackConfig>()
+
     private val slotNavigation = SlotNavigation<RootClubComponent.SlotConfig>()
 
     override val childSlot: Value<ChildSlot<*, RootClubComponent.SlotChild>> =
@@ -56,6 +57,7 @@ class RootClubComponentBase(
         when (config) {
             is RootClubComponent.SlotConfig.ClubInfo -> RootClubComponent.SlotChild.ClubInfo(
                 scope.createClubInfoComponent(
+                    componentContext = componentContext,
                     index = config.index,
                     items = config.items,
                     goBack = {

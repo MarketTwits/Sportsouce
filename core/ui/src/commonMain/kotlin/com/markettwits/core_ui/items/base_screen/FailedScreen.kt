@@ -28,10 +28,12 @@ fun FailedScreen(
     title: String = "Ой что-то пошло не так...",
     message: String = "Произошла ошибка при загрузке данных",
     onClickBack: (() -> Unit?)? = null,
-    onClickHelp: (() -> Unit?)? = null,
     onClickRetry: () -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
         if (onClickBack != null) {
             BackFloatingActionButton {
                 onClickBack()

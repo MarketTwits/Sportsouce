@@ -1,7 +1,6 @@
 package com.markettwits.start_search.search.presentation.components.inner
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,16 +24,18 @@ fun ColumnScope.SearchHistoryColumn(
     items: List<String>,
     onClick: (String) -> Unit
 ) {
-    Text(
-        modifier = Modifier
-            .align(Alignment.Start)
-            .padding(10.dp),
-        text = "НЕДАВНИЕ",
-        color = MaterialTheme.colorScheme.outline,
-        fontFamily = FontNunito.bold(),
-        fontSize = 14.sp,
-        overflow = TextOverflow.Visible
-    )
+    if (items.isNotEmpty()) {
+        Text(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(10.dp),
+            text = "НЕДАВНИЕ",
+            color = MaterialTheme.colorScheme.outline,
+            fontFamily = FontNunito.bold(),
+            fontSize = 14.sp,
+            overflow = TextOverflow.Visible
+        )
+    }
     items.forEach { item ->
         SearchHistoryItem(
             modifier = Modifier.align(Alignment.Start),

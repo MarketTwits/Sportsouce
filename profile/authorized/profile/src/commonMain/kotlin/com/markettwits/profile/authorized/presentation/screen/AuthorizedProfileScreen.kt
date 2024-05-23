@@ -94,7 +94,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
     if (state.isError) {
         FailedScreen(
             message = state.message,
-            onClickHelp = { }) {
+        ) {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
         }
     }

@@ -119,7 +119,7 @@ fun CompactCalendarDay(
             }
             Box(
                 modifier = Modifier
-                    .size(140.dp)
+                    // .size(140.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
                 if (starts.isEmpty()) {

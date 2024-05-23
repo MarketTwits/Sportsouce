@@ -12,8 +12,26 @@ class IntentActionBase : IntentAction {
     }
 
     override fun openPhone(phone: String) {
+        if (Desktop.isDesktopSupported()) {
+            val desktop = Desktop.getDesktop()
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    val uri = URI("tel:$phone")
+                    desktop.browse(uri)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                println("Browsing action is not supported on your desktop environment")
+            }
+        } else {
+            println("Desktop is not supported on your system")
+        }
+    }
+
+    override fun copyToSystemBuffer(text: String) {
         Toolkit.getDefaultToolkit()
             .systemClipboard
-            .setContents(StringSelection(phone), null)
+            .setContents(StringSelection(text), null)
     }
 }

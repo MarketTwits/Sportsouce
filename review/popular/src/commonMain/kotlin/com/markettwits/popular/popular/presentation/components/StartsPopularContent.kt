@@ -2,6 +2,7 @@ package com.markettwits.popular.popular.presentation.components
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.starts_common.presentation.StartCard
 
@@ -27,7 +29,11 @@ internal fun StartsPopularContent(
     items: List<StartsListItem>,
     onClick: (Int) -> Unit
 ) {
-    LazyColumn(modifier) {
+    val size = rememberScreenSizeInfo()
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center
+    ) {
         item {
             StartsPopularInfo(Modifier.padding(10.dp))
         }

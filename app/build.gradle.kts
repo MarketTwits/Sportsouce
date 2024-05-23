@@ -23,24 +23,24 @@ android {
         defaultConfig {
             resourceConfigurations.addAll(setOf("en", "ru"))
         }
-        debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            isDebuggable = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            isDebuggable = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
+//        debug {
+//            isMinifyEnabled = true
+//            isShrinkResources = true
+//            isDebuggable = true
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android.txt"),
+//                "proguard-rules.pro"
+//            )
+//        }
+//        release {
+//            isMinifyEnabled = true
+//            isShrinkResources = true
+//            isDebuggable = false
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android.txt"),
+//                "proguard-rules.pro"
+//            )
+//        }
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_11
             targetCompatibility = JavaVersion.VERSION_11
@@ -63,5 +63,3 @@ dependencies {
     implementation(libs.koin.android)
     implementation(projects.coreKoin)
 }
-
-

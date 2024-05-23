@@ -68,7 +68,6 @@ fun StartsScheduleSuccessContent(
 @Composable
 fun StartsScheduleLoadingContent(
     modifier: Modifier = Modifier,
-    onClickPop: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -81,11 +80,10 @@ fun StartsScheduleLoadingContent(
 fun StartsScheduleFailedContent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    onClickPop: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         content = {
-            FailedScreen(onClickRetry = onClick::invoke, onClickBack = { onClickPop() })
+            FailedScreen(onClickRetry = onClick::invoke)
         })
 }

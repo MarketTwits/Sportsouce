@@ -14,7 +14,6 @@ kotlin {
         implementation(projects.news)
         implementation(projects.start.startSearch)
         implementation(projects.start.start)
-        implementation(projects.start.startFilter)
         implementation(projects.review.random)
         implementation(projects.review.schedule)
         implementation(projects.review.popular)

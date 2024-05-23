@@ -3,7 +3,7 @@ package com.markettwits.root.di
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.random.root.di.StartRandomComponentDependencies
 import com.markettwits.schedule.schedule.di.StartScheduleComponentDependencies
-import com.markettwits.start_filter.start_filter.di.StartsFilterDependencies
+import com.markettwits.start_search.filter.di.StartsFilterDependencies
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import com.markettwits.time.BaseTimeMapper

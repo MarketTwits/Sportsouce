@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.ObservableListCache
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.start_search.filter.di.startFilterModule
 import com.markettwits.start_search.search.data.local.SearchHistoryCache
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapper
 import com.markettwits.start_search.search.data.mapper.StartsSearchToUiMapperBase
@@ -20,11 +21,11 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val startsSearchModule = module {
-    includes(sportSouceNetworkModule)
+    includes(sportSouceNetworkModule, startFilterModule)
     singleOf(::SearchHistoryCache)
     singleOf(::StartsSearchStoreFactory)
-    singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
+    singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
     singleOf(::StartsSearchToUiMapperBase) bind StartsSearchToUiMapper::class
     singleOf(::StartsSearchRepositoryBase) bind StartsSearchRepository::class
     singleOf(::BaseTimeMapper) bind TimeMapper::class

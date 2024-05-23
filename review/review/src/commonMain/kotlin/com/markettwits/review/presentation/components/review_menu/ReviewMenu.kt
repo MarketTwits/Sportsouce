@@ -1,10 +1,8 @@
 package com.markettwits.review.presentation.components.review_menu
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -47,7 +45,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick : (Int) -> Unit) {
 private fun menu() = listOf<ReviewMenuItem>(
     ReviewMenuItem(
         0,
-        "Популярное",
+        "Популярные",
         Icons.Filled.LocalFireDepartment,
         SportSouceColor.SportSouceStartEndedPink.copy(alpha = 0.1f),
         SportSouceColor.SportSouceStartEndedPink

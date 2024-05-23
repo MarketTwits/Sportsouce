@@ -7,7 +7,10 @@ import com.markettwits.start_search.search.presentation.store.StartsSearchStore.
 object StartsSearchReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Brush -> copy(query = "")
+            is Message.Brush -> {
+                if (msg.brushWithItems) copy(query = "", starts = emptyList()) else copy(query = "")
+            }
+
             is Message.InfoFailed -> copy(isError = true, message = msg.message, isLoading = false)
             is Message.InfoLoaded -> copy(
                 isError = false,
@@ -15,8 +18,10 @@ object StartsSearchReducer : Reducer<State, Message> {
                 starts = msg.starts.items,
                 searchHistory = msg.starts.searches
             )
+
             is Message.ChangeTextFiled -> copy(query = msg.value)
             is Message.Loading -> copy(isLoading = true)
+            is Message.FilterApply -> copy(filter = msg.filter, sorted = msg.sorted)
         }
     }
 }

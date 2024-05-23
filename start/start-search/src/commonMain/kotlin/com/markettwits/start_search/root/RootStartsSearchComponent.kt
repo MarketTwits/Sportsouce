@@ -1,31 +1,42 @@
 package com.markettwits.start_search.root
 
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.root.RootStartScreenComponent
-import com.markettwits.start_filter.root.RootStartFilterComponent
+import com.markettwits.start_search.filter.presentation.component.StartFilterComponent
+import com.markettwits.start_search.filter.presentation.component.StartFilterUi
 import com.markettwits.start_search.search.presentation.component.StartsSearchComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartsSearchComponent {
-    val childStack: Value<ChildStack<*, Child>>
+    val childStack: Value<com.arkivanov.decompose.router.stack.ChildStack<*, ChildStack>>
+    val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<*, ChildSlot>>
 
     @Serializable
-    sealed interface Config {
+    sealed interface ConfigStack {
         @Serializable
-        data object Search : Config
+        data object Search : ConfigStack
 
         @Serializable
-        data class Start(val startId: Int) : Config
+        data class Start(val startId: Int) : ConfigStack
 
-        @Serializable
-        data object Filter : Config
+//        @Serializable
+//        data object Filter : ConfigStack
     }
 
-    sealed interface Child {
-        data class Start(val component: RootStartScreenComponent) : Child
-        data class Filter(val component: RootStartFilterComponent) : Child
-        data class Search(val component: StartsSearchComponent) : Child
+    sealed class ChildStack {
+        data class Start(val component: RootStartScreenComponent) : ChildStack()
 
+        //data class Filter(val component: RootStartFilterComponent) : ChildStack()
+        data class Search(val component: StartsSearchComponent) : ChildStack()
+    }
+
+    @Serializable
+    sealed interface ConfigSlot {
+        @Serializable
+        data class Filter(val filterUi: StartFilterUi?) : ConfigSlot
+    }
+
+    sealed class ChildSlot {
+        data class Filter(val component: StartFilterComponent) : ChildSlot()
     }
 }

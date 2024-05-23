@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +28,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 fun StartsSearchBarInner(
     modifier: Modifier = Modifier,
     query: String = "",
+    isWithFilter: Boolean,
     onQueryChanged: (String) -> Unit,
     onBrushClicked: () -> Unit,
     onFilterClicked: () -> Unit,
@@ -56,6 +57,7 @@ fun StartsSearchBarInner(
                 .weight(1f)
                 .padding(top = 5.dp),
             value = query,
+            onValueChange = onQueryChanged,
             placeholder = {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
@@ -67,9 +69,7 @@ fun StartsSearchBarInner(
                     overflow = TextOverflow.Visible
                 )
             },
-            onValueChange = {
-                onQueryChanged(it)
-            })
+        )
         if (query.isEmpty()) {
             IconButton(
                 onClick = { }
@@ -96,11 +96,13 @@ fun StartsSearchBarInner(
             onClick = { onFilterClicked() }
         ) {
             Icon(
-                imageVector = Icons.Default.Settings,
+                imageVector = Icons.AutoMirrored.Filled.Notes,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.outline
+                tint = if (isWithFilter)
+                    MaterialTheme.colorScheme.tertiary
+                else
+                    MaterialTheme.colorScheme.outline
             )
         }
-
     }
 }

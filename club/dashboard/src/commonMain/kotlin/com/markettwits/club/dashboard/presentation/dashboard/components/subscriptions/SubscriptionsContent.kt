@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.club.dashboard.presentation.dashboard.store.SubscriptionUi
 import com.markettwits.core_ui.items.components.OnBackgroundCard
-import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
 import com.markettwits.core_ui.items.theme.FontNunito
 
@@ -49,6 +48,7 @@ fun SubscriptionsContent(
                     modifier = Modifier.padding(4.dp),
                     isSelected = subscriptionUi.isSelected,
                     title = subscriptionUi.subscription.name,
+                    description = subscriptionUi.subscription.description,
                     price = subscriptionUi.subscription.price.toString(),
                     discountInPercent = subscriptionUi.subscription.discount,
                     onClick = {
@@ -65,6 +65,7 @@ private fun SubscriptionContentItem(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
     title: String,
+    description: String,
     price: String,
     discountInPercent: Int,
     onClick: () -> Unit
@@ -94,6 +95,13 @@ private fun SubscriptionContentItem(
                 fontFamily = FontNunito.semiBoldBold(),
                 color = MaterialTheme.colorScheme.onPrimary
             )
+//            HtmlText(
+//                textAlign = TextAlign.Start,
+//                text = description,
+//                fontSize = 14.sp,
+//                fontFamily = FontNunito.medium(),
+//                color = MaterialTheme.colorScheme.outline
+//            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {

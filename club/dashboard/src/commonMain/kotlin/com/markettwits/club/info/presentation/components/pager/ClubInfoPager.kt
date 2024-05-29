@@ -37,7 +37,7 @@ fun ClubInfoPager(
     startIndex: Int,
     clubInfo: List<ClubInfo>
 ) {
-    val pagerState = rememberPagerState(startIndex, pageCount = { clubInfo.size })
+    val pagerState = rememberPagerState(startIndex, pageCount = { clubInfo.size - 1 })
     val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = modifier
@@ -54,6 +54,7 @@ fun ClubInfoPager(
                 is ClubInfo.Questions -> QuestionsContent(questions = item.questions.mapToQuestionUi())
                 is ClubInfo.Statistics -> StatisticsContent(statistics = item.statistics)
                 is ClubInfo.Trainings -> TrainingsContent(trainings = item.training)
+                is ClubInfo.Schedules -> {}
             }
         }
         ClubInfoPageIndicator(

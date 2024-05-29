@@ -2,6 +2,7 @@ package com.markettwits.core_cloud.provider
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -21,6 +22,7 @@ class HttpClientProviderBase(
     private val clientEngine: HttpClientEngine,
     private val baseUrl: String
 ) : HttpClientProvider {
+
     override fun provide(loggerEnabled: Boolean) = HttpClient(clientEngine) {
         expectSuccess = true
         install(ContentNegotiation) {
@@ -36,6 +38,9 @@ class HttpClientProviderBase(
                 level = LogLevel.ALL
             }
         }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 100000
+        }
         defaultRequest {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
             url.takeFrom(
@@ -47,5 +52,4 @@ class HttpClientProviderBase(
     }
 
     override fun json(): Json = json
-
 }

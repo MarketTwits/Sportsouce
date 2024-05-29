@@ -61,6 +61,7 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
         scheduleRemote.rows.map {
             Schedule(
                 id = it.id,
+                workoutId = it.workout_id,
                 address = it.address,
                 description = it.description,
                 kindOfSport = it.kindOfSport.name,

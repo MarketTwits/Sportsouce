@@ -18,6 +18,7 @@ internal class ForgotPasswordExecutor(private val useCase: ForgotPasswordUseCase
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
             is Intent.OnValueChange -> dispatch(Message.OnValueChanged(intent.email))
             is Intent.OnClickReset -> launch(getState().email)
+            is Intent.OnClickBack -> publish(Label.OnClickBack)
         }
     }
 

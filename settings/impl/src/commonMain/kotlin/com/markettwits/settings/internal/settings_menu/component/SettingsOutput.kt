@@ -13,6 +13,11 @@ sealed interface SettingsOutput {
         override fun handleOutput(handleSettingsMenu: HandleSettingsMenu) {
             handleSettingsMenu.openCheckUpdatesScreen()
         }
+    }
 
+    data object Appearance : SettingsOutput {
+        override fun handleOutput(handleSettingsMenu: HandleSettingsMenu) {
+            handleSettingsMenu.openAppearanceContent()
+        }
     }
 }

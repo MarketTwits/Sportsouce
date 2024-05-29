@@ -2,7 +2,9 @@ package com.markettwits.profile.authorized.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
+import com.markettwits.cloud.exception.isNetworkConnectionError
 import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.authorized.domain.UserProfileInteractor
 import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore.Intent
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class AuthorizedProfileExecutor(
     private val interactor: UserProfileInteractor,
+    private val exceptionTracker: ExceptionTracker,
     private val action: IntentAction
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
@@ -41,7 +44,13 @@ class AuthorizedProfileExecutor(
         scope.launch {
             interactor.userProfile(forced)
                 .onStart { dispatch(Message.Loading) }
-                .catch { dispatch(Message.LoadingFailed(networkExceptionHandler(it).message.toString())) }
+                .catch {
+                    if (!it.isNetworkConnectionError()) exceptionTracker.reportException(
+                        it,
+                        "#UserProfile#launch"
+                    )
+                    dispatch(Message.LoadingFailed(networkExceptionHandler(it).message.toString()))
+                }
                 .collect { dispatch(Message.LoadingSuccess(it)) }
         }
     }

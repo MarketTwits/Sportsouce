@@ -32,7 +32,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlin.random.Random
 
 @Composable
-fun StartMembersStatistics(
+internal fun StartMembersStatistics(
     modifier: Modifier = Modifier,
     membersUi: ImmutableList<StartMembersUi>
 ) {

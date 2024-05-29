@@ -14,7 +14,7 @@ import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SubscriptionCategoriesContent(
+internal fun SubscriptionCategoriesContent(
     modifier: Modifier = Modifier,
     subscriptions: List<SubscriptionsUi>,
     onClick: (SubscriptionsUi) -> Unit

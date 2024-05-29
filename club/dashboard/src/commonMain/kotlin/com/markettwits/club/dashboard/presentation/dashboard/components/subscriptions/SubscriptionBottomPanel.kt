@@ -29,7 +29,7 @@ import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun SubscriptionBottomPanel(
+internal fun SubscriptionBottomPanel(
     modifier: Modifier = Modifier,
     cost: String,
     countOfMonth: Int,
@@ -43,7 +43,7 @@ fun SubscriptionBottomPanel(
         ) {
             SubscriptionBottomPanelButton(
                 modifier = Modifier
-                    .height(60.dp)
+                    .height(65.dp)
                     .fillMaxWidth(0.6f),
                 cost = cost,
                 countOfMonth = countOfMonth,
@@ -52,7 +52,7 @@ fun SubscriptionBottomPanel(
             Spacer(modifier = Modifier.padding(4.dp))
             SubscriptionCounter(
                 Modifier
-                    .height(60.dp)
+                    .height(65.dp)
                     .fillMaxWidth(1f),
                 monthOfCount = countOfMonth,
                 onClickDecrease = onClickDecrease::invoke,

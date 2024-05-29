@@ -83,9 +83,11 @@ class RootClubComponentBase(
     ): RootClubComponent.StackChild =
         when (stackConfig) {
             RootClubComponent.StackConfig.Dashboard -> RootClubComponent.StackChild.Dashboard(
-                scope.createDashboardComponent(output = {
-                    dashboardOuPuts(it)
-                })
+                scope.createDashboardComponent(
+                    componentContext = componentContext,
+                    output = {
+                        dashboardOuPuts(it)
+                    })
             )
         }
 

@@ -45,9 +45,9 @@ class ReviewStoreFactory(
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
                 is ReviewStore.Intent.OnClickNews -> publish(ReviewStore.Label.OnClickNews(intent.news))
                 is ReviewStore.Intent.OnClickSearch -> publish(ReviewStore.Label.OnClickSearch)
+                is ReviewStore.Intent.OnClickSettings -> publish(ReviewStore.Label.OnClickSettings)
                 is ReviewStore.Intent.OnClickTelegram -> intentAction.openWebPage(SPORT_SAUCE_TG_URL)
                 is ReviewStore.Intent.OnClickVk -> intentAction.openWebPage(SPORT_SAUCE_VK_URL)
-
             }
         }
 

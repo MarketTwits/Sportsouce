@@ -3,6 +3,7 @@ package com.markettwits.root_profile
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
@@ -66,7 +67,8 @@ class RootProfileComponentBase(
             is RootProfileComponent.Config.AuthFlow -> RootProfileComponent.Child.AuthFlow(
                 RootAuthFlowComponentBase(
                     context = componentContext,
-                    goProfile = { navigation.replaceAll(RootProfileComponent.Config.AuthProfile) }
+                    goProfile = { navigation.replaceAll(RootProfileComponent.Config.AuthProfile) },
+                    goBack = { navigation.pop() }
                 )
             )
         }

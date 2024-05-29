@@ -3,7 +3,7 @@ package com.markettwits.profile.internal.sign_in.presentation.component
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.crashlitics.api.tracker.AnalyticsTracker
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SignInInstanceKeeper(
     private val useCase: SignInUseCase,
-    private val analyticsTracker: AnalyticsTracker,
+    private val exceptionTracker: ExceptionTracker,
 ) : InstanceKeeper.Instance {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -26,14 +26,14 @@ class SignInInstanceKeeper(
             useCase.signIn(fieldState.value.email, fieldState.value.password).fold(
                 onSuccess = {
                     authUiState.value = SignInUiState.Success
-                    analyticsTracker.setUserId(it.id.toString())
+                    exceptionTracker.setUserId(it.id.toString())
                     scope.launch {
                         labels.value = SignInOutPuts.GoProfile
                     }
                 }, onFailure = {
                     val message = networkExceptionHandler(it).message.toString()
-                    analyticsTracker.setLog("email : ${fieldState.value.email}\npassword: ${fieldState.value.password}")
-                    analyticsTracker.reportException(it, key = "#SignInInstanceKeeper#login")
+                    exceptionTracker.setLog("email : ${fieldState.value.email}\npassword: ${fieldState.value.password}")
+                    exceptionTracker.reportException(it, key = "#SignInInstanceKeeper#login")
                     authUiState.value = SignInUiState.Error(message = message, messageShow = false)
                 })
         }

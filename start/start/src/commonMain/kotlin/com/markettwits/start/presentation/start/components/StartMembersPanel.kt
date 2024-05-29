@@ -26,7 +26,7 @@ import com.markettwits.start.presentation.common.OnClick
 
 
 @Composable
-fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick: OnClick) {
+internal fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int, onClick: OnClick) {
     if (membersCount != 0) {
         HorizontalDivider()
         Row(

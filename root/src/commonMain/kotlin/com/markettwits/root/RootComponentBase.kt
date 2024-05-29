@@ -9,9 +9,11 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.bottom_bar.component.BottomBarComponentBase
-import com.markettwits.bottom_bar.component.BottomBarComponentHandle
-import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.markettwits.ComponentKoinContext
+import com.markettwits.bottom_bar.component.component.BottomBarComponentBase
+import com.markettwits.bottom_bar.component.component.BottomBarComponentHandle
+import com.markettwits.bottom_bar.di.bottomBarModule
 import com.markettwits.bottom_bar.model.Configuration
 import com.markettwits.root_profile.RootProfileComponentBase
 import com.markettwits.starts.root.RootStartsComponentBase
@@ -20,10 +22,12 @@ class RootComponentBase(
     componentContext: ComponentContext,
 ) : ComponentContext by componentContext, RootComponent {
 
+    private val scope = instanceKeeper.getOrCreate {
+        ComponentKoinContext()
+    }.getOrCreateKoinScope(listOf(bottomBarModule))
+
     private val navigation = StackNavigation<RootComponent.Configuration>()
-
     private val slotNavigation = SlotNavigation<RootComponent.SlotConfiguration>()
-
 
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = navigation,
@@ -76,6 +80,7 @@ class RootComponentBase(
                         override fun navigateTo(configuration: Configuration) {
                             navigation.bringToFront(BottomBarConfigurationMapper.map(configuration))
                         }
+
                         override fun getActiveConfiguration(observer: (Configuration) -> Unit) {
                             childStack.subscribe {
                                 observer(
@@ -84,7 +89,7 @@ class RootComponentBase(
                             }
                         }
                     },
-                    bottomBarStorage = BottomBarStorageImpl,
+                    bottomBarStorage = scope.get(),
                 )
             )
         }

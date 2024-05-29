@@ -96,7 +96,7 @@ fun FilterBody(
 }
 
 @Composable
-private fun FilterPosition(
+fun FilterPosition(
     title: String,
     selected: Boolean,
     onClick: () -> Unit,

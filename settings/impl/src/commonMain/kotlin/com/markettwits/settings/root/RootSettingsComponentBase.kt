@@ -16,6 +16,8 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.selfupdater.components.selft_update.di.selfUpdateComponentModule
+import com.markettwits.settings.internal.appearance.component.AppearanceComponentBase
+import com.markettwits.settings.internal.change_theme.component.ChangeThemeComponentBase
 import com.markettwits.settings.internal.change_theme.di.changeThemeModule
 import com.markettwits.settings.internal.settings_menu.component.HandleSettingsMenu
 import com.markettwits.settings.internal.settings_menu.component.SettingsComponentBase
@@ -88,10 +90,18 @@ class RootSettingsComponentBase(
     ): RootSettingsComponent.SlotChild =
         when (config) {
             RootSettingsComponent.SlotConfig.ChangeTheme -> RootSettingsComponent.SlotChild.ChangeTheme(
-                com.markettwits.settings.internal.change_theme.component.ChangeThemeComponentBase(
+                ChangeThemeComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     pop = slotNavigation::dismiss
+                )
+            )
+
+            is RootSettingsComponent.SlotConfig.Appearance -> RootSettingsComponent.SlotChild.Appearance(
+                AppearanceComponentBase(
+                    componentContext = componentContext,
+                    pop = slotNavigation::dismiss,
+                    storeFactory = scope.get()
                 )
             )
         }
@@ -102,5 +112,9 @@ class RootSettingsComponentBase(
 
     override fun openCheckUpdatesScreen() {
         stackNavigation.push(RootSettingsComponent.StackConfig.SelfUpdate)
+    }
+
+    override fun openAppearanceContent() {
+        slotNavigation.activate(RootSettingsComponent.SlotConfig.Appearance)
     }
 }

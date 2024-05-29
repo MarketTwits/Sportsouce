@@ -5,7 +5,7 @@ import com.markettwits.schedule.schedule.presentation.components.list.common.cal
 import com.markettwits.starts_common.domain.StartsListItem
 import java.time.LocalDate
 
-fun getMonthCalendarVisibleStarts(
+internal fun getMonthCalendarVisibleStarts(
     starts: Map<LocalDate, List<StartsListItem>>,
     visibleMonth: CalendarMonth,
 ): List<StartsListItem> =

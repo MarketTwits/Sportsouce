@@ -8,7 +8,7 @@ import com.markettwits.start_support.presentation.component.StartSupportComponen
 import com.markettwits.start_support.presentation.components.StartSupportScreen
 
 @Composable
-fun StartSupport(
+internal fun StartSupport(
     modifier: Modifier,
     component: StartSupportComponent,
     eventContent: (EventContent) -> Unit

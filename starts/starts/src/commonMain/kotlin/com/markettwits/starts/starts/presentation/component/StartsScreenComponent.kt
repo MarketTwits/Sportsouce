@@ -10,6 +10,7 @@ class StartsScreenComponent(
     private val dataSource: StartsRepository,
     private val toDetail: (Int) -> Unit,
     private val toSearch: () -> Unit,
+    private val toSettings: () -> Unit
 ) : ComponentContext by componentContext, StartsScreen {
 
     private val someLogic =
@@ -21,6 +22,10 @@ class StartsScreenComponent(
 
     override fun onSearchClick() {
         toSearch()
+    }
+
+    override fun onSettingsClick() {
+        toSettings()
     }
 
     override fun retry() {

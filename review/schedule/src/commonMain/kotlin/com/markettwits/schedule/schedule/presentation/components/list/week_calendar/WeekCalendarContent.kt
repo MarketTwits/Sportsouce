@@ -3,6 +3,7 @@ package com.markettwits.schedule.schedule.presentation.components.list.week_cale
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -75,6 +77,8 @@ fun WeekCalendarContent(
             },
         )
         WeekCalendar(
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+                .sizeIn(minWidth = 800.dp, maxWidth = 800.dp),
             state = state,
             dayContent = { day ->
                 val colors = if (day.position == WeekDayPosition.RangeDate) {

@@ -22,7 +22,7 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
-fun StartResult(
+internal fun StartResult(
     modifier: Modifier = Modifier,
     results: List<StartItem.Result>,
     title: String,

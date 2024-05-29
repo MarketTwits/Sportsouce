@@ -17,6 +17,7 @@ internal class SignUpComponentBase(
     private val pop: () -> Unit,
     private val profile: () -> Unit
 ) : SignUpComponent, ComponentContext by context {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {

@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductsRemoteRow(
     val assortmentId: String?,
-    val brand: String,
+    val brand: String?,
     val categories: List<Category>,
     val code: String,
     val codeList: List<Code>,
@@ -19,7 +19,7 @@ data class ProductsRemoteRow(
     val id: String,
     val images: List<Image>,
     val isHidden: Boolean,
-    val model: String,
+    val model: String?,
     val name: String,
     val options: List<OptionWithInfo>,
     val price: Int,

@@ -19,7 +19,7 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
-fun StartConditionPanel(
+internal fun StartConditionPanel(
     modifier: Modifier = Modifier,
     file: StartItem.ConditionFile,
     onClickFile: (String) -> Unit,

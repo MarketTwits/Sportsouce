@@ -19,7 +19,7 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
                 gender = it.gender,
                 team = it.team,
                 birthday = timeMapper.mapTime(TimePattern.FullWithDots, it.birthday),
-                type = it.type,
+                type = it.type ?: "Партнер по команде",
                 email = it.email,
                 child = it.child ?: false
             )
@@ -54,7 +54,7 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
         team = user.team ?: "",
         birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
         type = "",
-        email = user.email,
+        email = user.email ?: "",
         child = isUserChild(user.age)
     )
 

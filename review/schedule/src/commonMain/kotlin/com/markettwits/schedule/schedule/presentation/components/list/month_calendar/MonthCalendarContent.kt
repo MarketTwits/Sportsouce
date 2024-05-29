@@ -4,12 +4,14 @@ package com.markettwits.schedule.schedule.presentation.components.list.month_cal
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -30,7 +32,7 @@ import java.time.YearMonth
 
 
 @Composable
-fun MonthCalendarContent(
+internal fun MonthCalendarContent(
     starts: List<StartsListItem>,
     onClickStart: (List<StartsListItem>) -> Unit,
     selectMonth: YearMonth,
@@ -78,6 +80,9 @@ fun MonthCalendarContent(
             },
         )
         MonthCalendar(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .sizeIn(minWidth = 800.dp, maxWidth = 800.dp),
             state = state,
             startTime = startTime,
             header = { modifier, month ->

@@ -15,7 +15,7 @@ import com.markettwits.starts_common.domain.StartsListItem
 import java.time.LocalDate
 
 @Composable
-fun MonthCalendar(
+internal fun MonthCalendar(
     modifier: Modifier = Modifier,
     state: CalendarState = rememberCalendarState(),
     startTime: Map<LocalDate, List<StartsListItem>>,
@@ -50,7 +50,7 @@ fun MonthCalendar(
 }
 
 @Composable
-fun CompactMonthCalendar(
+internal fun CompactMonthCalendar(
     modifier: Modifier = Modifier,
     state: CalendarState = rememberCalendarState(),
     startTime: Map<LocalDate, List<StartsListItem>>,

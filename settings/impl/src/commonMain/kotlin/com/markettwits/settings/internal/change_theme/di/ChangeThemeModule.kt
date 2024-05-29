@@ -8,7 +8,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val changeThemeModule = module {
+internal val changeThemeModule = module {
     includes(settingsModule)
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::ChangeThemeStoreFactory)

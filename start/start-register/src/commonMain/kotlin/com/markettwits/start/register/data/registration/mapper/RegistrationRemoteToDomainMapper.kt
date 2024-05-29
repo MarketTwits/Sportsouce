@@ -52,7 +52,7 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             surname = user.surname,
             birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
             age = user.age?.toInt() ?: 0,
-            email = user.email,
+            email = user.email ?: "",
             sex = user.sex,
             city = user.address ?: "",
             team = user.team ?: "",

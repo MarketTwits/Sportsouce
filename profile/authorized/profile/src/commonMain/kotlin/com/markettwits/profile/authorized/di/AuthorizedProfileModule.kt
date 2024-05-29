@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.profile.authorized.data.AuthorizedProfileRepositoryBase
@@ -21,6 +22,7 @@ val authorizedProfileModule = module {
     includes(
         authDataSourceModule,
         sportSouceNetworkModule,
+        crashlyticsModule,
         intentActionModule
     )
     single<AuthorizedProfileStoreFactory> {
@@ -38,7 +40,8 @@ val authorizedProfileModule = module {
                     executeWithCache = ExecuteWithCacheBase()
                 )
             ),
-            intentAction = get()
+            intentAction = get(),
+            exceptionTracker = get()
         )
     }
     singleOf(::DefaultStoreFactory) bind StoreFactory::class

@@ -15,7 +15,11 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-internal fun MainDashboardTitle(modifier: Modifier = Modifier) {
+internal fun MainDashboardTitle(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String,
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -24,7 +28,7 @@ internal fun MainDashboardTitle(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = "Спортивный клуб",
+            text = title,
             fontSize = 24.sp,
             fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.onPrimary
@@ -34,7 +38,7 @@ internal fun MainDashboardTitle(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = "Комплексный подход во всем - от дружной команды до собственных спортивных мероприятий",
+            text = description,
             fontSize = 14.sp,
             fontFamily = FontNunito.semiBoldBold(),
             color = MaterialTheme.colorScheme.onPrimary

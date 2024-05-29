@@ -81,3 +81,4 @@ include(":intent:impl")
 
 include(":core:ui")
 include(":core:time")
+include(":lib")

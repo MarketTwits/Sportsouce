@@ -22,7 +22,7 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object OnClickBack : Intent
-        data object OnClickRegistration : Intent
+        data class OnClickRegistration(val workoutId: Int? = null) : Intent
         data class OnClickKindOfSport(val subscriptionsUi: SubscriptionsUi) : Intent
         data class OnClickSubscription(val subscriptionUi: SubscriptionUi) : Intent
         data class OnClickInfo(val index: Int) : Intent

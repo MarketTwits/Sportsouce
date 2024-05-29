@@ -29,7 +29,7 @@ import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
-fun StartDistances(
+internal fun StartDistances(
     modifier: Modifier = Modifier,
     distance: List<DistanceItem>,
     startStatus: StartStatus,

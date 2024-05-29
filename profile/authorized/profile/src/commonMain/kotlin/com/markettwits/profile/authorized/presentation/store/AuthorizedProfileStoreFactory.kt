@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.authorized.domain.UserProfileInteractor
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore.Intent
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore.Label
@@ -12,15 +13,17 @@ import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileSt
 class AuthorizedProfileStoreFactory(
     private val storeFactory: StoreFactory,
     private val interactor: UserProfileInteractor,
+    private val exceptionTracker: ExceptionTracker,
     private val intentAction: IntentAction
 ) {
 
     fun create(): AuthorizedProfileStore {
-        return AuthorizedProfileStoreImpl(interactor, intentAction)
+        return AuthorizedProfileStoreImpl(interactor, exceptionTracker, intentAction)
     }
 
     private inner class AuthorizedProfileStoreImpl(
         private val interactor: UserProfileInteractor,
+        private val exceptionTracker: ExceptionTracker,
         private val intentAction: IntentAction
     ) :
         AuthorizedProfileStore,
@@ -28,7 +31,13 @@ class AuthorizedProfileStoreFactory(
             name = "AuthorizedProfileStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { AuthorizedProfileExecutor(interactor, intentAction) },
+            executorFactory = {
+                AuthorizedProfileExecutor(
+                    interactor,
+                    exceptionTracker,
+                    intentAction
+                )
+            },
             reducer = AuthorizedProfileReducer
         )
 }

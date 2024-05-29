@@ -18,8 +18,9 @@ class ReviewComponentBase(
     private val storeFactory: ReviewStoreFactory,
     private val onClickMenu: (Int) -> Unit,
     private val onStartClick: (Int) -> Unit,
+    private val onClickNews: (NewsInfo) -> Unit,
     private val onClickSearch: () -> Unit,
-    private val onClickNews: (NewsInfo) -> Unit
+    private val onClickSettings: () -> Unit,
 ) : ReviewComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
@@ -38,6 +39,7 @@ class ReviewComponentBase(
                 is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
                 is ReviewStore.Label.OnClickSearch -> onClickSearch()
                 is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
+                is ReviewStore.Label.OnClickSettings -> onClickSettings()
             }
         }.launchIn(scope)
     }

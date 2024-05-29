@@ -23,7 +23,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.startStatusBackground
 
 @Composable
-fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String) {
+internal fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String) {
     Column(modifier = modifier) {
         val color = startStatusBackground(status.code)
         Box(

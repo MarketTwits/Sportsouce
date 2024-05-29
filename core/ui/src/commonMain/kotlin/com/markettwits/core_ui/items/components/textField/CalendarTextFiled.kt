@@ -95,7 +95,6 @@ private fun sportSouceCalendarColors(): DatePickerColors = DatePickerDefaults.co
     yearContentColor = MaterialTheme.colorScheme.tertiary,
     disabledYearContentColor = MaterialTheme.colorScheme.onBackground,
     currentYearContentColor = MaterialTheme.colorScheme.tertiary,
-
     selectedYearContentColor = MaterialTheme.colorScheme.onSecondary,
     disabledSelectedYearContentColor = MaterialTheme.colorScheme.onBackground,
     selectedYearContainerColor = MaterialTheme.colorScheme.secondary,

@@ -3,7 +3,7 @@ package com.markettwits.root
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.bottom_bar.component.BottomBarComponent
+import com.markettwits.bottom_bar.component.component.BottomBarComponent
 import com.markettwits.root_profile.RootProfileComponent
 import com.markettwits.starts.root.RootStartsComponentBase
 import kotlinx.serialization.Serializable

@@ -6,12 +6,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import sportsouce.auth.auth_flow.generated.resources.Res
 import sportsouce.auth.auth_flow.generated.resources.im_welcom_image
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 internal fun WelcomeContent(content: String = "Добро пожаловать на SportSouce !") {
     Image(

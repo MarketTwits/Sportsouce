@@ -1,7 +1,6 @@
 package com.markettwits.review.presentation.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -34,9 +33,12 @@ fun ReviewScreen(
         state = rememberCollapsingToolbarScaffoldState(),
         scrollStrategy = ScrollStrategy.EnterAlways,
         toolbar = {
-            StartsSearchBarPublic(modifier = Modifier.clickable {
-                component.obtainEvent(ReviewStore.Intent.OnClickSearch)
-            })
+            StartsSearchBarPublic(
+                onClickSearchPanel = {
+                    component.obtainEvent(ReviewStore.Intent.OnClickSearch)
+                }, onClickSettings = {
+                    component.obtainEvent(ReviewStore.Intent.OnClickSettings)
+                })
         }
     ) {
         PullToRefreshScreen(
@@ -49,11 +51,10 @@ fun ReviewScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                val review = state.review
                 ReviewContent(
-                    news = review.news,
-                    actual = review.actualStarts,
-                    archive = review.archiveStarts,
+                    news = state.review.news,
+                    actual = state.review.actualStarts,
+                    archive = state.review.archiveStarts,
                     notification = notification,
                     onClickStart = {
                         component.obtainEvent(ReviewStore.Intent.OnClickItem(it))

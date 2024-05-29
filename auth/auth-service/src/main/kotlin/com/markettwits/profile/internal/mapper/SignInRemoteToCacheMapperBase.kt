@@ -7,7 +7,7 @@ internal class SignInRemoteToCacheMapperBase : SignInRemoteToCacheMapper {
     override fun map(remote: SignInResponseSuccess, password: String): CredentialRealmCache =
         CredentialRealmCache(
             userId = remote.user.id.toLong(),
-            email = remote.user.email,
+            email = remote.user.email ?: "",
             password = password,
             accessToken = remote.accessToken,
             refreshToken = remote.refreshToken,

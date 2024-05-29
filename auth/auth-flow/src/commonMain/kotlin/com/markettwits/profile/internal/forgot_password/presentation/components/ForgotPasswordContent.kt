@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.profile.internal.common.AuthButton
+import com.markettwits.profile.internal.common.ConsumeRowContent
 import com.markettwits.profile.internal.common.WelcomeContent
 
 @Composable
@@ -19,7 +20,8 @@ internal fun ForgotPasswordContent(
     email: String,
     isLoading: Boolean,
     onValueChanged: (String) -> Unit,
-    onClick: () -> Unit
+    onClickConsume: () -> Unit,
+    onClickRecover: () -> Unit
 ) {
     val focus = LocalFocusManager.current
     Column(
@@ -43,7 +45,8 @@ internal fun ForgotPasswordContent(
             loading = isLoading
         ) {
             focus.clearFocus()
-            onClick()
+            onClickRecover()
         }
+        ConsumeRowContent(title = "Назад", onClickConsume = onClickConsume)
     }
 }

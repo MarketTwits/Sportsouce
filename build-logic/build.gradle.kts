@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.kotlin.gradle)
     implementation("ru.ok.tracer:ru.ok.tracer.gradle.plugin:0.2.15")
     implementation("com.vk.vkompose:gradle-plugin:0.4.2")
-    implementation("org.jetbrains.compose:org.jetbrains.compose.gradle.plugin:1.6.1")
-    implementation("org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:1.9.23")
+    implementation("org.jetbrains.compose:org.jetbrains.compose.gradle.plugin:1.6.10")
+    implementation("org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.0.0")
+    implementation("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.0.0")
 }

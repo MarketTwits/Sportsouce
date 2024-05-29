@@ -2,6 +2,7 @@ package com.markettwits.starts.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.settings.root.RootSettingsComponent
 import com.markettwits.start.root.RootStartScreenComponent
 import com.markettwits.start_search.root.RootStartsSearchComponent
 import com.markettwits.starts.starts.presentation.component.StartsScreenComponent
@@ -21,6 +22,9 @@ interface RootStartsComponent {
 
         @Serializable
         data object Search : Config()
+
+        @Serializable
+        data object Settings : Config()
     }
 
 
@@ -28,5 +32,6 @@ interface RootStartsComponent {
         data class Start(val component: RootStartScreenComponent) : Child()
         data class Starts(val component: StartsScreenComponent) : Child()
         data class Search(val component: RootStartsSearchComponent) : Child()
+        data class Settings(val component: RootSettingsComponent) : Child()
     }
 }

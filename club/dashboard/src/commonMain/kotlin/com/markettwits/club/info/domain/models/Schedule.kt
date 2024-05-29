@@ -1,9 +1,11 @@
 package com.markettwits.club.info.domain.models
 
-import com.markettwits.club.cloud.models.schedule.Workout
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Schedule(
     val id: Int,
+    val workoutId: Int,
     val address: String,
     val description: String,
     val kindOfSport: String,

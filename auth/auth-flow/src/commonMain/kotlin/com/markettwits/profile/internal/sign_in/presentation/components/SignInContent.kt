@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,12 +20,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.profile.internal.common.AuthButton
+import com.markettwits.profile.internal.common.OutlinePasswordTextField
 import com.markettwits.profile.internal.common.WelcomeContent
 import com.markettwits.profile.internal.sign_in.presentation.component.SignInFieldUiState
 import com.markettwits.profile.internal.sign_in.presentation.component.SignInScreen
@@ -34,11 +34,16 @@ import com.markettwits.profile.internal.sign_in.presentation.component.SignInUiS
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState, component: SignInScreen) {
+internal fun SignInContent(
+    state: SignInUiState,
+    fieldState: SignInFieldUiState,
+    component: SignInScreen
+) {
     val scope = rememberCoroutineScope()
     val snackbarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
+    val focusManager = LocalFocusManager.current
     Box(
         Modifier
             .fillMaxSize()
@@ -61,30 +66,34 @@ internal fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState,
             ) {
                 component.handlePhone(it)
             }
-            OutlinedTextFieldBase(
+            OutlinePasswordTextField(
                 modifier = modifier,
                 label = "Пароль",
                 value = fieldState.password,
-                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 isError = state is SignInUiState.Error
             ) {
                 component.handlePassword(it)
             }
-            ForgotPasswordLabel(modifier = modifier) {
-                component.forgotPassword()
-            }
-            AuthButton(
-                modifier = modifier,
-                "Войти",
-                enabled = state != SignInUiState.Loading && fieldState.enabled,
-                loading = state is SignInUiState.Loading
-            ) {
-                component.logIn()
-            }
-            SignUpLabel(modifier = modifier.padding(top = 10.dp)) {
-                component.signUp()
-            }
-
+            UnderFieldsContent(
+                isButtonEnabled = state != SignInUiState.Loading && fieldState.enabled,
+                isButtonLoading = state is SignInUiState.Loading,
+                onClickRegistry = {
+                    component.forgotPassword()
+                },
+                onClickAuth = {
+                    component.logIn()
+                    focusManager.clearFocus()
+                }
+            )
+            CreateProfileAndBackContent(
+                onClickRegistry = {
+                    component.signUp()
+                },
+                onClickConsume = {
+                    component.back()
+                }
+            )
         }
         SnackbarHost(
             hostState = snackbarHostState,
@@ -98,15 +107,9 @@ internal fun SignInContent(state: SignInUiState, fieldState: SignInFieldUiState,
         }
         if ((state is SignInUiState.Error)) {
             if (!state.messageShow) {
-                LaunchedEffect(snackbarHostState) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = state.message,
-                            duration = SnackbarDuration.Long,
-                            withDismissAction = true
-                        )
-                        component.messageHasBeenShowed()
-                    }
+                scope.launch {
+                    snackbarHostState.showLongMessageWithDismiss(state.message)
+                    component.messageHasBeenShowed()
                 }
             }
         }

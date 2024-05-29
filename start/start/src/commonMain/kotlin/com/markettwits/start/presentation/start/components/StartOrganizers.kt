@@ -28,7 +28,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
-fun StartOrganizers(
+internal fun StartOrganizers(
     modifier: Modifier = Modifier,
     organizer: List<Organizer>,
     onClickUrl: (String) -> Unit,

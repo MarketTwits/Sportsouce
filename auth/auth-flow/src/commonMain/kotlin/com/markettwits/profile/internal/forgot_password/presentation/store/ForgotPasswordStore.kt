@@ -19,6 +19,7 @@ interface ForgotPasswordStore : Store<Intent, State, Label> {
         data class OnValueChange(val email: String) : Intent
         data object OnClickReset : Intent
         data object OnConsumedEvent : Intent
+        data object OnClickBack : Intent
     }
 
     sealed interface Message {
@@ -30,6 +31,8 @@ interface ForgotPasswordStore : Store<Intent, State, Label> {
     }
 
 
-    sealed interface Label
+    sealed interface Label {
+        data object OnClickBack : Label
+    }
 
 }

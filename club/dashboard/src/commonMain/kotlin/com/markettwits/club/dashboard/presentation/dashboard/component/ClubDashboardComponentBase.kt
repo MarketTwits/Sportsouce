@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.bottom_bar.component.BottomBarSideEffectHandlerAbstract
-import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
+import com.markettwits.bottom_bar.component.component.BottomBarSideEffectHandlerAbstract
+import com.markettwits.bottom_bar.component.storage.BottomBarStorage
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 internal class ClubDashboardComponentBase(
     private val componentContext: ComponentContext,
     private val storeFactory: ClubDashboardStoreFactory,
-    private val listener: BottomBarVisibilityListener,
+    private val listener: BottomBarStorage,
     private val output: (ClubDashboardComponent.Output) -> Unit,
 ) : ClubDashboardComponent, BottomBarSideEffectHandlerAbstract(listener),
     ComponentContext by componentContext {
@@ -43,7 +43,6 @@ internal class ClubDashboardComponentBase(
                         it.items
                     )
                 )
-
                 is ClubDashboardStore.Label.OnClickRegistration -> output(
                     ClubDashboardComponent.Output.Subscription(
                         it.workoutId

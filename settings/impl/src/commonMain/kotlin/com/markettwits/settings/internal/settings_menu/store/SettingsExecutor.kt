@@ -21,6 +21,7 @@ class SettingsExecutor(
     private fun obtainMenu(itemId: Int) {
         when (itemId) {
             0 -> publish(Label.OutPut(SettingsOutput.ChangeTheme))
+            1 -> publish(Label.OutPut(SettingsOutput.Appearance))
             4 -> intentAction.openWebPage(SPORT_SAUCE_GROUP)
             5 -> intentAction.openWebPage(GIT_HUB_WEB_PAGE)
             7 -> publish(Label.OutPut(SettingsOutput.CheckUpdates))

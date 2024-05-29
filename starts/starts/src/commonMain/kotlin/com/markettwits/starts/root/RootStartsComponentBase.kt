@@ -7,6 +7,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.settings.root.RootSettingsComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
 import com.markettwits.starts.starts.di.startsModule
@@ -57,6 +58,9 @@ class RootStartsComponentBase(
                         },
                         toSearch = {
                             navigation.push(RootStartsComponent.Config.Search)
+                        },
+                        toSettings = {
+                            navigation.push(RootStartsComponent.Config.Settings)
                         }
                     ),
                 )
@@ -64,6 +68,13 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Search -> RootStartsComponent.Child.Search(
                 RootStartsSearchComponentBase(
                     context = componentContext,
+                    pop = navigation::pop
+                )
+            )
+
+            is RootStartsComponent.Config.Settings -> RootStartsComponent.Child.Settings(
+                RootSettingsComponentBase(
+                    componentContext = componentContext,
                     pop = navigation::pop
                 )
             )

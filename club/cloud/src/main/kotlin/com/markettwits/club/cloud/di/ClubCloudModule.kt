@@ -20,4 +20,4 @@ val clubCloudModule = module {
         )
     }
 }
-private val sportsouceApiBaseUrl = "https://dev-sportsauce-api-b7xxf.ondigitalocean.app"
+private const val sportsouceApiBaseUrl = "https://dev-sportsauce-api-b7xxf.ondigitalocean.app"

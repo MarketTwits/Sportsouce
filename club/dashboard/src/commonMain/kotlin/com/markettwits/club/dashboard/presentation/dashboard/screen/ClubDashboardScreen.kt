@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
 import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
+import com.markettwits.club.dashboard.presentation.dashboard.components.schedule.ScheduleContent
 import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionBottomPanel
 import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionCategoriesContent
 import com.markettwits.club.dashboard.presentation.dashboard.components.subscriptions.SubscriptionsContent
 import com.markettwits.club.dashboard.presentation.dashboard.components.title.MainDashboardContent
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.informations.menu.ClubMenuContent
+import com.markettwits.club.info.domain.models.findFirstSchedule
 import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
@@ -73,13 +75,21 @@ fun ClubDashboardScreen(
                         component.obtainEvent(ClubDashboardStore.Intent.OnClickIncrease)
                     },
                     onClickSubscribe = {
-                        component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration)
+                        component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration())
                     }
                 )
                 if (state.subscription.clubInfo.isNotEmpty()) {
                     ClubMenuContent {
                         component.obtainEvent(ClubDashboardStore.Intent.OnClickInfo(it))
                     }
+                }
+                state.subscription.clubInfo.findFirstSchedule()?.let { schedules ->
+                    ScheduleContent(
+                        schedule = schedules.schedule,
+                        onClick = {
+                            component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration(it.id))
+                        }
+                    )
                 }
             }
         }

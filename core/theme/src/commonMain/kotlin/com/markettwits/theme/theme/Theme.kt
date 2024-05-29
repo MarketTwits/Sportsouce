@@ -23,6 +23,7 @@ fun SportSauceTheme(
     val theme = component.getAppTheme().collectAsState()
     val isDark = isDark(theme = theme.value)
     val palette = systemColorPallet(theme = theme.value, systemIsDark = isSystemInDarkTheme())
+
     SportSauceTheme(
         isDark = isDark,
         colorScheme = palette,

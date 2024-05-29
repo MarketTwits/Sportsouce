@@ -41,7 +41,7 @@ import com.markettwits.start.presentation.start.component.CommentMode
 
 
 @Composable
-fun StartCommentsPanel(
+internal fun StartCommentsPanel(
     modifier: Modifier = Modifier,
     commentsRemote: StartItem.Comments,
     onClickReply: (String, Int) -> Unit,
@@ -140,8 +140,6 @@ private fun StartCommentCard(
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
-
-
 
             if (replies.isNotEmpty()) {
                 if (!showReply) {

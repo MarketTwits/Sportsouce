@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
+internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
     Column(modifier = modifier.padding(vertical = 4.dp)) {
         Text(
             text = title,

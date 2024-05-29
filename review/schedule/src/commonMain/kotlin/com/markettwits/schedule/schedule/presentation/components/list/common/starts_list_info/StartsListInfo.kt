@@ -64,13 +64,16 @@ fun StartsListInfoItemLabel(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onPrimary,
             overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
             fontFamily = FontNunito.bold(),
             fontSize = 16.sp
         )
         Text(
-            modifier = modifier,
+            modifier = Modifier,
             text = title,
             textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
             color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.regular(),
             fontSize = 14.sp

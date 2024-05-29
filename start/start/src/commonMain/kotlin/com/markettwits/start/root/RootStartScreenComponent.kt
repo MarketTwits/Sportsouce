@@ -3,7 +3,7 @@ package com.markettwits.start.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
-import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent

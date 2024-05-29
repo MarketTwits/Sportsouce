@@ -9,6 +9,7 @@ import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStoreF
 import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,8 @@ internal class StartsScheduleComponentBase(
         storeFactory.create()
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<StartsScheduleStore.State> = store.stateFlow
     override fun obtainEvent(event: StartsScheduleStore.Intent) {
         store.accept(event)

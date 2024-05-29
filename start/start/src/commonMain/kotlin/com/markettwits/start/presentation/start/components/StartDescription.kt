@@ -32,7 +32,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 
 
 @Composable
-fun StartDescription(modifier: Modifier, description: String) {
+internal fun StartDescription(modifier: Modifier, description: String) {
     var expanded by remember { mutableStateOf(false) }
     val displayText = if (expanded) description else description.take(150)
 

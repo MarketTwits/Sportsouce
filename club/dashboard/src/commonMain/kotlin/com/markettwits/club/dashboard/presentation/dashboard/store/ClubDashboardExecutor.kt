@@ -50,14 +50,10 @@ internal class ClubDashboardExecutor(
                     getState().subscription.clubInfo
                 )
             )
-
-            is Intent.OnClickRegistration -> {
-                publish(
-                    Label.OnClickRegistration(
-                        getState().subscription.getSelectedSubscriptionUi()?.subscription?.id ?: 0
-                    )
-                )
-            }
+            is Intent.OnClickRegistration -> onClickRegistration(
+                getState().subscription,
+                intent.workoutId
+            )
         }
     }
 
@@ -67,13 +63,18 @@ internal class ClubDashboardExecutor(
         }
     }
 
+    private fun onClickRegistration(state: SubscriptionUiState, workoutId: Int?) {
+        val id = workoutId ?: (state.getSelectedSubscriptionUi()?.subscription?.id ?: 0)
+        publish(Label.OnClickRegistration(id))
+    }
+
     private fun launchDashboard(
         state: SubscriptionUiState,
         onCompletion: suspend (SubscriptionUiState) -> Unit
     ) {
         scope.launch {
 
-        clubRepository.subscriptions()
+            clubRepository.subscriptions()
                 .onStart { dispatch(Message.Loading) }
                 .catch { dispatch(Message.Failed(it.message.toString())) }
                 .collect {

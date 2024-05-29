@@ -8,6 +8,7 @@ class MockStartsScreenComponent : StartsScreen {
 
     override fun onItemClick(startId: Int) = Unit
     override fun onSearchClick() = Unit
+    override fun onSettingsClick() = Unit
     override fun retry() = Unit
 
     override val starts: Value<StartsUiState> = MutableValue(

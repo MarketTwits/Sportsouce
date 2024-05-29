@@ -19,9 +19,9 @@ import com.markettwits.profile.internal.sign_up.presentation.component.SignUpCom
 
 class RootAuthFlowComponentBase(
     context: ComponentContext,
-    private val goProfile: () -> Unit
-) : RootAuthFlowComponent,
-    ComponentContext by context {
+    private val goProfile: () -> Unit,
+    private val goBack: () -> Unit
+) : RootAuthFlowComponent, ComponentContext by context {
     private val navigation = StackNavigation<RootAuthFlowComponent.Config>()
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -35,8 +35,8 @@ class RootAuthFlowComponentBase(
     override val childStack: Value<ChildStack<*, RootAuthFlowComponent.Child>> = childStack(
         source = navigation,
         serializer = RootAuthFlowComponent.Config.serializer(),
-        initialConfiguration = RootAuthFlowComponent.Config.SignIn,
         handleBackButton = true,
+        initialConfiguration = RootAuthFlowComponent.Config.SignIn,
         childFactory = ::child,
     )
 
@@ -48,15 +48,18 @@ class RootAuthFlowComponentBase(
             is RootAuthFlowComponent.Config.ForgotPassword -> RootAuthFlowComponent.Child.ForgotPassword(
                 ForgotPasswordComponentBase(
                     componentContext = componentContext,
-                    storeFactory = scope.get()
+                    storeFactory = scope.get(),
+                    pop = navigation::pop
                 )
             )
+
             is RootAuthFlowComponent.Config.SignIn -> RootAuthFlowComponent.Child.SignIn(
                 SignInScreenComponent(
                     context = componentContext,
                     signInInstanceKeeper = scope.get(),
                     toSignUp = { navigation.push(RootAuthFlowComponent.Config.SignUp) },
                     toProfile = { goProfile() },
+                    toBack = { goBack() },
                     toForgotPassword = {
                         navigation.push(RootAuthFlowComponent.Config.ForgotPassword)
                     }

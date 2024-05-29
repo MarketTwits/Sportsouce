@@ -28,6 +28,7 @@ import com.markettwits.schedule.root.RootStartsScheduleComponentBase
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
+import com.markettwits.settings.root.RootSettingsComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
 
@@ -88,6 +89,9 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     },
                     onClickNews = {
                         navigation.push(RootReviewComponent.Config.NewsEvent(it))
+                    },
+                    onClickSettings = {
+                        navigation.push(RootReviewComponent.Config.Settings)
                     }
                 ),
                 newsComponent = NewsComponentBase(
@@ -157,6 +161,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
 
             RootReviewComponent.Config.Club -> RootReviewComponent.Child.Club(
                 RootClubComponentBase(
+                    componentContext = componentContext,
+                    pop = navigation::pop
+                )
+            )
+
+            RootReviewComponent.Config.Settings -> RootReviewComponent.Child.Settings(
+                RootSettingsComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop
                 )

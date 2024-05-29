@@ -1,6 +1,5 @@
 package com.markettwits.starts.starts.presentation.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,9 +35,10 @@ fun StartsScreen(
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             Column {
-                StartsSearchBarPublic(modifier = Modifier.clickable {
-                    component.onSearchClick()
-                })
+                StartsSearchBarPublic(
+                    onClickSearchPanel = component::onSearchClick,
+                    onClickSettings = component::onSettingsClick
+                )
             }
         }
     ) {

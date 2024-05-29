@@ -7,7 +7,6 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
 import com.markettwits.core_ui.items.image.DefaultImages
-import com.markettwits.decomposeComponentContext
 import com.markettwits.initKoin
 import com.markettwits.root.RootComponentBase
 import com.markettwits.root.RootContent
@@ -25,7 +24,6 @@ fun main() {
     val lifecycle = LifecycleRegistry()
     val context = DefaultComponentContext(lifecycle)
     initKoin {
-        decomposeComponentContext(context)
         val root = runOnUiThread { RootComponentBase(context) }
         val theme = runOnUiThread { ThemeComponentBase(context) }
         application {

@@ -6,14 +6,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
-import com.markettwits.bottom_bar.component.storage.BottomBarStorage
-import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 
 @Composable
 fun rememberBottomBarNestedScroll(
-    bottomBarStorage: BottomBarVisibilityListener = BottomBarStorageImpl
+    bottomBarStorage: BottomBarVisibilityListener
 ): NestedScrollConnection = remember {
-
     object : NestedScrollConnection {
         private var accumulatedScroll = 0f
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {

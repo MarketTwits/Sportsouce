@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.FullImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
@@ -26,7 +27,7 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 
 @Composable
-fun StartScreenContent(
+internal fun StartScreenContent(
     data: StartItem,
     isLoading: Boolean,
     onClickRetry: () -> Unit,
@@ -64,7 +65,7 @@ fun StartScreenContent(
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .fillMaxSize()
-                                .clickable { onClickImage() },
+                                .noRippleClickable { onClickImage() },
                             imageUrl = data.image,
                             isPortrait = false
                         )

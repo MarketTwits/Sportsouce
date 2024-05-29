@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
-    alias(libs.plugins.kotlin.kmp.compose)
+    alias(libs.plugins.kotlin.kmp.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 android {

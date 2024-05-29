@@ -8,6 +8,9 @@ import androidx.compose.ui.Modifier
 internal fun MainDashboardContent(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         MainDashboardImage()
-        MainDashboardTitle()
+        MainDashboardTitle(
+            title = "Спортивный клуб",
+            description = "Комплексный подход во всем - от дружной команды до собственных спортивных мероприятий"
+        )
     }
 }

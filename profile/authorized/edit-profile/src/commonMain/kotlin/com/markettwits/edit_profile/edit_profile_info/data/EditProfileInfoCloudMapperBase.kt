@@ -15,7 +15,7 @@ class EditProfileInfoCloudMapperBase(
             address = userData.city,
             birthday = timeMapper.mapTimeToCloud(TimePattern.FullWithDots, userData.birthday),
             comment_for_address = user.comment_for_address,
-            email = user.email,
+            email = user.email ?: "",
             favor = null, // You need to provide the correct value
             instagram = user.instagram,
             name = userData.name,
@@ -42,7 +42,7 @@ class EditProfileInfoCloudMapperBase(
                 surname = user.surname,
                 sex = user.sex,
                 birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
-                email = user.email,
+                email = user.email ?: "",
                 phoneNumber = user.number,
                 city = user.address ?: "",
                 team = user.team ?: ""

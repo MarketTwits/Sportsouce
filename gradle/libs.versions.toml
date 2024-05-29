@@ -2,9 +2,10 @@
 #plugins
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
-kotlin = "1.9.23"
-kotlin-kmp-compose = "1.6.10-dev1575"
-gradle = "8.3.2"
+#kotlin = "1.9.23"
+kotlin = "2.0.0"
+kotlin-kmp-compose = "1.6.10"
+gradle = "8.5.0-beta02"
 
 #SDK
 multiplatformMarkdownRendererM3 = "0.14.0"
@@ -21,14 +22,12 @@ mvikotlin = "3.3.0"
 orgJetbrainsComposeGradlePlugin = "1.6.1"
 
 koin = "3.5.3"
-compose-compiler = "1.5.13"
 compose-activity = "1.9.0"
 compose-preview = "1.6.7"
 zoomable = "1.5.1"
 pullRefresh = "1.0.1"
 lazytable = "1.6.0"
 junit = "4.13.2"
-
 
 core-ktx = "1.13.1"
 ktor = "2.3.10"
@@ -121,10 +120,12 @@ ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "kotlin-kmp-compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 #Convention Plugins
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 kotlin-kmp-convention = { id = "kotlin-multiplatform-convention", version = "unspecified" }
+kotlin-kmp-compose-convention = { id = "kotlin-multiplatform-compose-convetion", version = "unspecified" }
 
 
 [bundles]

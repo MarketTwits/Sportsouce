@@ -25,7 +25,7 @@ import com.markettwits.core_ui.items.base_screen.FullImageScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponent
 import com.markettwits.start.presentation.comments.comments.components.StartCommentsContent
 import com.markettwits.start.presentation.start.component.StartScreenComponent
 import com.markettwits.start.presentation.start.components.StartSupport

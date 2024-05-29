@@ -12,6 +12,7 @@ interface ReviewStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object OnClickSearch : Intent
+        data object OnClickSettings : Intent
         data class OnClickNews(val news: NewsInfo) : Intent
         data class OnClickItem(val item : Int) : Intent
         data class OnClickMenu(val item : Int) : Intent
@@ -29,6 +30,7 @@ interface ReviewStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object OnClickSearch : Label
+        data object OnClickSettings : Label
         data class OnClickNews(val news: NewsInfo) : Label
         data class OnClickItem(val item : Int) : Label
         data class OnClickMenu(val item : Int) : Label

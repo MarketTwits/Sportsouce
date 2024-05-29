@@ -1,6 +1,7 @@
 package com.markettwits.profile.internal.sign_up.data
 
 import com.markettwits.cloud.model.sign_up.SignUpRequest
+import com.markettwits.profile.internal.sign_in.domain.clearPhone
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.time.TimeMapper
 
@@ -12,11 +13,8 @@ internal class SignUpMapperBase(private val timeMapper: TimeMapper) : SignUpMapp
             kind = "phoneCheck",
             name = statement.name,
             password = statement.password,
-            number = mapPhoneToRemote(statement.phone),
+            number = statement.phone.clearPhone(),
             sex = statement.sex,
             surname = statement.surname
         )
-
-    override fun mapPhoneToRemote(phone: String): String =
-        phone.replace(Regex("\\D"), "")
 }

@@ -10,11 +10,17 @@ class SignInScreenComponent(
     private val signInInstanceKeeper: SignInInstanceKeeper,
     private val toSignUp: () -> Unit,
     private val toProfile: () -> Unit,
-    private val toForgotPassword: () -> Unit
+    private val toForgotPassword: () -> Unit,
+    private val toBack: () -> Unit
 ) : SignInScreen, ComponentContext by context {
     private val keeper = instanceKeeper.getOrCreateSimple { signInInstanceKeeper }
     override val state: Value<SignInUiState> = keeper.authUiState
     override val fieldState: Value<SignInFieldUiState> = keeper.fieldState
+
+    override fun back() {
+        toBack()
+    }
+
     override fun signUp() {
         keeper.signUp()
     }

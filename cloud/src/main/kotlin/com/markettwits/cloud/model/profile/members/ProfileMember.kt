@@ -19,7 +19,7 @@ data class ProfileMembers(
         val phone: String,
         val surname: String,
         val team: String,
-        val type: String,
+        val type: String? = null,
         val updatedAt: String,
         val user_id: Int,
     )

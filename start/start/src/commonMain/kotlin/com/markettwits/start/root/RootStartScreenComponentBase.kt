@@ -13,8 +13,8 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.start.di.startModule
 import com.markettwits.start.presentation.album.di.startAlbumModule
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
-import com.markettwits.start.presentation.comments.comments.StartCommentsComponentBase
-import com.markettwits.start.presentation.comments.comments.StartCommentsStoreFactory
+import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponentBase
+import com.markettwits.start.presentation.comments.comments.store.StartCommentsStoreFactory
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent

@@ -24,7 +24,7 @@ import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun SubscriptionsContent(
+internal fun SubscriptionsContent(
     modifier: Modifier = Modifier,
     subscriptions: List<SubscriptionUi>,
     onClick: (SubscriptionUi) -> Unit

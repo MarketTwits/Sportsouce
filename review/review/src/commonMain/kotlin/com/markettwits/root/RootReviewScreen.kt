@@ -12,6 +12,7 @@ import com.markettwits.review.presentation.screen.ReviewScreen
 import com.markettwits.schedule.root.RootStartsScheduleScreen
 import com.markettwits.selfupdater.components.notification.screen.NotificationScreen
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
+import com.markettwits.settings.root.RootSettingsScreen
 import com.markettwits.start.root.RootStartScreen
 import com.markettwits.start_search.root.RootStartsSearchScreen
 
@@ -44,6 +45,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
             is RootReviewComponent.Child.Notification -> SelfUpdateScreen(component = child.component)
             is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
+            is RootReviewComponent.Child.Settings -> RootSettingsScreen(component = child.component)
         }
     }
 }

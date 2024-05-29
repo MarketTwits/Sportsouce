@@ -9,14 +9,14 @@ import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
-import com.markettwits.crashlitics.api.tracker.AnalyticsTracker
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.profile.internal.sign_up.domain.use_case.SignUpUseCase
 import kotlinx.coroutines.launch
 
 internal class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
-    private val analyticsTracker: AnalyticsTracker,
+    private val exceptionTracker: ExceptionTracker,
     private val useCase: SignUpUseCase,
 ) {
     fun create(): SignUpStore =
@@ -54,7 +54,7 @@ internal class SignUpStoreFactory(
                     onSuccess = {
                         publish(SignUpStore.Label.OpenProfile)
                     }, onFailure = {
-                        analyticsTracker.reportException(it, key = "sign_up")
+                        exceptionTracker.reportException(it, key = "sign_up")
                         dispatch(Msg.LoadFailed(networkExceptionHandler(it).message.toString()))
                     })
 

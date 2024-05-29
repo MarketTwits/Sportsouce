@@ -2,7 +2,6 @@ package com.markettwits.settings.internal.change_theme.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.settings.api.api.MutableSettingsRepository
-import com.markettwits.settings.api.api.params.ApplicationSettings
 import com.markettwits.settings.api.api.params.ColorTheme
 import com.markettwits.settings.internal.change_theme.components.ColorThemeUi
 import com.markettwits.settings.internal.change_theme.store.ChangeThemeStore.Intent
@@ -36,7 +35,8 @@ class ChangeThemeExecutor(
                 2 -> ColorTheme.System
                 else -> error("unknown theme id ${colorThemeUi.id}")
             }
-            settingsRepository.updateSettings(ApplicationSettings(theme = selectedTheme))
+            val settings = settingsRepository.fetchSettings()
+            settingsRepository.updateSettings(settings.copy(theme = selectedTheme))
             publish(Label.Dismiss)
         }
     }

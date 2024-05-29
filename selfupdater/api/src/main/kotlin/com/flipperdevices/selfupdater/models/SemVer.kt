@@ -27,7 +27,6 @@ data class SemVer(
         ) {
             return comparableNumber
         }
-
         return additionalVersion.compareTo(other.additionalVersion)
     }
 

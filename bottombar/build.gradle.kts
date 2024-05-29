@@ -1,7 +1,6 @@
 plugins {
-    //  alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.kmp.convention)
-    alias(libs.plugins.kotlin.kmp.compose)
+    alias(libs.plugins.kotlin.kmp.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -14,6 +13,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(libs.koin.core)
             implementation(projects.coreKoin)
+            implementation(projects.settings.api)
             implementation(libs.bundles.decompose.compose)
         }
     }

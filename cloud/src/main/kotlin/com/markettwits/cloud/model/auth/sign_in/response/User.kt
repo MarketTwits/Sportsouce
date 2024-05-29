@@ -13,7 +13,7 @@ data class User(
     val birthday: String,
     val comment_for_address: String?,
     val createdAt: String,
-    val email: String,
+    val email: String? = null,
     val id: Int,
     val instagram: String?,
     val name: String,

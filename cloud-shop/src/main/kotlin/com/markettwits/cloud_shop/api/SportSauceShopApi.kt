@@ -8,7 +8,10 @@ import com.markettwits.cloud_shop.model.products.ProductsRemote
 
 interface SportSauceShopApi {
     suspend fun categories(): List<ChildrenItem>
+
     suspend fun filters(): FiltersRemote
+
     suspend fun products(): ProductsRemote
+
     suspend fun product(uuid: String): ProductRemote
 }

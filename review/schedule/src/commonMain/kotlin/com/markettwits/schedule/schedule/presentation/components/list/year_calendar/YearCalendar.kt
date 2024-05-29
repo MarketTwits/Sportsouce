@@ -3,14 +3,17 @@ package com.markettwits.schedule.schedule.presentation.components.list.year_cale
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +39,12 @@ fun YearCalendar(
     onClickMonth: (YearMonth) -> Unit
 ) {
     val months = (1..12).chunked(3) // Splitting 12 months into chunks of 3
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .sizeIn(minWidth = 800.dp, maxWidth = 800.dp)
+        ) {
         months.forEach { rowMonths ->
             Row(
                 Modifier
@@ -99,6 +107,7 @@ fun YearCalendar(
                     }
                 }
             }
+        }
         }
     }
 }

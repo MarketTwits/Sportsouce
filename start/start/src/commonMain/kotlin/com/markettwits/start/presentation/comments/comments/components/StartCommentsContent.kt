@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.EventEffect
-import com.markettwits.start.presentation.comments.comments.StartCommentsComponent
-import com.markettwits.start.presentation.comments.comments.StartCommentsStore
+import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponent
+import com.markettwits.start.presentation.comments.comments.store.StartCommentsStore
 import com.markettwits.start.presentation.start.components.CommentTextField
 import com.markettwits.start.presentation.start.components.StartCommentsPanel
 

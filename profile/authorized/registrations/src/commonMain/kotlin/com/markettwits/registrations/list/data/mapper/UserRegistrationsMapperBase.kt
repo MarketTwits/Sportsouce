@@ -25,7 +25,7 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
                 ageGroup = mapStartGroup(it.group ?: ""),
                 distance = it.distance,
                 member = it.surname + " " + it.name,
-                cost = it.price.toString(),
+                cost = if (it.price == null) "0" else it.price.toString(),
                 team = it.team,
                 kindOfSport = it.format,
                 startTitle = it.start.name,

@@ -10,7 +10,7 @@ internal class EditProfileImageCloudMapperBase : EditProfileImageCloudMapper {
             address = user.address ?: "",
             birthday = user.birthday,
             comment_for_address = user.comment_for_address,
-            email = user.email,
+            email = user.email ?: "",
             favor = null, // You need to provide the correct value
             instagram = user.instagram,
             name = user.name,

@@ -24,7 +24,7 @@ import java.time.YearMonth
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun StartsScheduleSuccessContent(
+internal fun StartsScheduleSuccessContent(
     modifier: Modifier = Modifier,
     starts: List<StartsListItem>,
     onClick: (List<StartsListItem>) -> Unit,
@@ -49,7 +49,6 @@ fun StartsScheduleSuccessContent(
                     },
                     selectMonth = month
                 )
-
                 2 -> YearCalendarContent(
                     starts = starts,
                     onClickStart = { onClick(it) },
@@ -66,7 +65,7 @@ fun StartsScheduleSuccessContent(
 }
 
 @Composable
-fun StartsScheduleLoadingContent(
+internal fun StartsScheduleLoadingContent(
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -77,7 +76,7 @@ fun StartsScheduleLoadingContent(
 }
 
 @Composable
-fun StartsScheduleFailedContent(
+internal fun StartsScheduleFailedContent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

@@ -2,11 +2,11 @@ package com.markettwits.start.data.start.mapper.distance
 
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start_member.StartMemberItem
-import com.markettwits.crashlitics.api.tracker.AnalyticsTracker
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.serialization.json.Json
 
 internal class StartDistancesToUiMapperBase(
-    private val analyticsTracker: AnalyticsTracker
+    private val exceptionTracker: ExceptionTracker
 ) : StartDistancesToUiMapperAbstract() {
     override fun mapDistanceInfoList(
         startMember: List<StartMemberItem>,
@@ -53,9 +53,9 @@ internal class StartDistancesToUiMapperBase(
     ): List<DistanceItem> = try {
         json.decodeFromString<List<DistanceItem>>(kindOfSport)
     } catch (e: Exception) {
-        analyticsTracker.setKey(Pair("startId", startId.toString()))
-        analyticsTracker.setLog(kindOfSport)
-        analyticsTracker.reportException(e, "KindOfSportsToDistanceItemJson")
+        exceptionTracker.setKey(Pair("startId", startId.toString()))
+        exceptionTracker.setLog(kindOfSport)
+        exceptionTracker.reportException(e, "KindOfSportsToDistanceItemJson")
         emptyList()
     }
 }

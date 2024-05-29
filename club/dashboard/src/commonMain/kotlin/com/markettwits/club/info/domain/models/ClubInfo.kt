@@ -25,4 +25,13 @@ sealed interface ClubInfo {
     data class Trainings(val training: List<Training>) : ClubInfo {
         override val id: Int = 3
     }
+
+    @Serializable
+    data class Schedules(val schedule: List<Schedule>) : ClubInfo {
+        override val id: Int = 4
+    }
 }
+
+fun List<ClubInfo>.findFirstSchedule(): ClubInfo.Schedules? =
+    this.filterIsInstance<ClubInfo.Schedules>().firstOrNull()
+

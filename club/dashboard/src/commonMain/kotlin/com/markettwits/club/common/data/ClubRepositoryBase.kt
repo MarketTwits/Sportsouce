@@ -6,7 +6,13 @@ import com.markettwits.club.common.domain.mapper.ClubInfoMapper
 import com.markettwits.club.common.domain.mapper.SubscriptionMapper
 import com.markettwits.club.dashboard.domain.SubscriptionItems
 import com.markettwits.club.info.domain.models.ClubInfo
+import com.markettwits.club.info.domain.models.Question
+import com.markettwits.club.info.domain.models.Schedule
+import com.markettwits.club.info.domain.models.Statistic
+import com.markettwits.club.info.domain.models.Trainer
+import com.markettwits.club.info.domain.models.Training
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
+import com.markettwits.core_ui.items.base.fetchFifth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -26,11 +32,20 @@ class ClubRepositoryBase(
         }
 
     override suspend fun clubInfo(): Result<List<ClubInfo>> = runCatching {
+        val cloud =
+            fetchFifth<List<Trainer>, List<Question>, List<Statistic>, List<Training>, List<Schedule>>(
+                { clubInfoMapper.mapTrainers(service.trainers()) },
+                { clubInfoMapper.mapQuestions(service.questions()) },
+                { clubInfoMapper.mapStatistics(service.clubSettings()) },
+                { clubInfoMapper.mapTraining(service.workout()) },
+                { clubInfoMapper.mapSchedule(service.schedule()) }
+            )
         listOf(
-            ClubInfo.Commands(clubInfoMapper.mapTrainers(service.trainers())),
-            ClubInfo.Questions(clubInfoMapper.mapQuestions(service.questions())),
-            ClubInfo.Statistics(clubInfoMapper.mapStatistics(service.clubSettings())),
-            ClubInfo.Trainings(clubInfoMapper.mapTraining(service.workout())),
+            ClubInfo.Commands(cloud.first),
+            ClubInfo.Questions(cloud.second),
+            ClubInfo.Statistics(cloud.third),
+            ClubInfo.Trainings(cloud.fourth),
+            ClubInfo.Schedules(cloud.fifth)
         )
     }
 

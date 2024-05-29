@@ -21,7 +21,7 @@ import com.markettwits.start.presentation.start.components.StartTitle
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun StartScreenInnerContent(
+internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
     onClickDistance: (DistanceItem, Boolean, String) -> Unit,

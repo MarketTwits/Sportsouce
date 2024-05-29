@@ -13,7 +13,7 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
-import com.markettwits.crashlitics.api.tracker.AnalyticsTracker
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
@@ -66,7 +66,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 class StartScreenStoreFactory(
     private val storeFactory: StoreFactory,
     private val service: StartRepository,
-    private val analyticsTracker: AnalyticsTracker,
+    private val exceptionTracker: ExceptionTracker,
     private val intentAction: IntentAction
 ) {
     fun create(startID: Int): StartScreenStore =
@@ -74,7 +74,7 @@ class StartScreenStoreFactory(
             name = "StartScreenStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { ExecutorImpl(startID, analyticsTracker, intentAction) },
+            executorFactory = { ExecutorImpl(startID, exceptionTracker, intentAction) },
             reducer = ReducerImpl
         ) {}
 
@@ -88,7 +88,7 @@ class StartScreenStoreFactory(
 
     private inner class ExecutorImpl(
         private val startId: Int,
-        private val analyticsTracker: AnalyticsTracker,
+        private val exceptionTracker: ExceptionTracker,
         private val intentAction: IntentAction
     ) :
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
@@ -130,8 +130,8 @@ class StartScreenStoreFactory(
                 service.start(startId, relaunch).fold(
                     onFailure = {
                         if (it.isResponseException()) {
-                            analyticsTracker.setKey(Pair("startId", startId.toString()))
-                            analyticsTracker.reportException(it, "StartScreenStore#launch")
+                            exceptionTracker.setKey(Pair("startId", startId.toString()))
+                            exceptionTracker.reportException(it, "StartScreenStore#launch")
                         }
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },

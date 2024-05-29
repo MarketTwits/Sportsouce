@@ -94,12 +94,16 @@ class MaskVisualTransformation(private val mask: String) : VisualTransformation 
 }
 
 private fun removeSpecialCharacters(input: String): String {
-    return input
+    var cleanedNumber = input
         .replace("(", "")
         .replace(")", "")
         .replace("-", "")
         .replace("+7", "")
         .replace("\\s+".toRegex(), "")
+    if (cleanedNumber.startsWith("7")) {
+        cleanedNumber = cleanedNumber.substring(1)
+    }
+    return cleanedNumber
 }
 
 object NumberDefaults {

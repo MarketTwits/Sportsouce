@@ -45,7 +45,7 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
-fun StartAlbums(
+internal fun StartAlbums(
     modifier: Modifier = Modifier,
     albums: List<StartItem.Album>,
     onCLickFullAlbum: () -> Unit

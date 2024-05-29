@@ -7,5 +7,5 @@ internal class SignInUseCaseBase(
     private val authDataSource: AuthDataSource
 ) : SignInUseCase {
     override suspend fun signIn(email: String, password: String): Result<User> =
-        authDataSource.logIn(email, password)
+        authDataSource.logIn(email.clearPhone(), password)
 }

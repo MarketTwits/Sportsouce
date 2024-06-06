@@ -12,11 +12,13 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.domain.StartStatement
+import com.markettwits.start.register.presentation.order.domain.OrderDistance
 
 @Composable
 fun StartMembers(
     modifier: Modifier = Modifier,
-    members: List<StartStatement>,
+    members: List<OrderDistance>,
+    visibleIndex: Int,
     onClickMember: (StartStatement, Int) -> Unit
 ) {
     OnBackgroundCard(
@@ -33,10 +35,12 @@ fun StartMembers(
                 color = MaterialTheme.colorScheme.tertiary
             )
             Column {
-                members.forEachIndexed { index, member ->
+                members[visibleIndex].members.forEachIndexed { index, member ->
                     StartMemberBox(
                         modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
-                        onClick = { onClickMember(member, index) },
+                        onClick = {
+                            onClickMember(member, index)
+                        },
                         stage = "Участник ${index + 1}",
                         memberName = "${member.surname} ${member.name}"
                     )

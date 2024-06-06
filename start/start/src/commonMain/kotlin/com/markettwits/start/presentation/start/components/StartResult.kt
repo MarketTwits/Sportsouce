@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
 internal fun StartResult(
@@ -52,7 +51,7 @@ fun StartResultContent(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(8.dp)
                         .align(Alignment.Center),
                     textAlign = TextAlign.Center,
                     text = it.name,

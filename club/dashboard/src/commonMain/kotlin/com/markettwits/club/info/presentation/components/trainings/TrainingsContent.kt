@@ -21,8 +21,8 @@ import coil3.compose.AsyncImage
 import com.markettwits.club.info.domain.models.Training
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.text.HtmlText
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun TrainingsContent(
@@ -72,7 +72,7 @@ fun TrainingItemContent(
                 .size(100.dp)
                 .clip(Shapes.medium),
             model = imageRequestCrossfade(training.imageUrl),
-            contentDescription = null,
+            contentDescription = "image",
             contentScale = ContentScale.FillBounds
         )
         Column(modifier = modifier.padding(10.dp)) {

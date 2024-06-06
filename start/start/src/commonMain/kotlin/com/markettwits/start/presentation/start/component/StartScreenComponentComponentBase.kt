@@ -17,7 +17,7 @@ class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
     private val back: () -> Unit,
-    private val register: (DistanceItem, Boolean, String, String) -> Unit,
+    private val register: (DistanceItem, Boolean, String, String, List<DistanceItem.Discount>) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
     private val album: (List<String>) -> Unit,
@@ -41,7 +41,8 @@ class StartScreenComponentComponentBase(
                         it.distanceInfo,
                         it.paymentDisabled,
                         it.paymentType,
-                        it.startTitle
+                        it.startTitle,
+                        it.discount
                     )
 
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)

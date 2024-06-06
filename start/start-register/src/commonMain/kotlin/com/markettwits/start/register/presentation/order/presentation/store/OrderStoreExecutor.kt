@@ -12,8 +12,7 @@ class OrderStoreExecutor(
     private val handle: OrderStoreExecutorHandle,
     private val distanceItem: DistanceItem,
     private val startId: Int
-) :
-    CoroutineExecutor<Intent, OrderStore.Action, State, Message, Label>() {
+) : CoroutineExecutor<Intent, OrderStore.Action, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
             is Intent.ChangePaymentType -> dispatch(
@@ -77,6 +76,11 @@ class OrderStoreExecutor(
             is Intent.OnConsumedEvent -> dispatch(Message.UpdateState(getState().copy(event = consumed())))
             is Intent.Retry -> {}
             is Intent.OnClickUrl -> handle.onClickUrl(intent.url)
+            is Intent.OnClickDistance -> {
+                val newState =
+                    getState().orderStatement?.copy(currentOrderDistanceVisibleIndex = intent.distanceIndex)
+                dispatch(Message.UpdateState(getState().copy(orderStatement = newState)))
+            }
         }
     }
 

@@ -39,7 +39,7 @@ fun MyMembersCard(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 fontSize = 18.sp
             )
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .clip(Shapes.medium)
             ) {
                 Icon(

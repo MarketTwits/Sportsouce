@@ -13,7 +13,7 @@ abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMappe
                 id = it.id,
                 name = it.name,
                 image = it.posterLinkFile?.fullPath ?: "",
-                date = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.start_date),
+                date = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.start_date),
                 statusCode = StartsListItem.StatusCode(
                     it.start_status.code,
                     it.start_status.name

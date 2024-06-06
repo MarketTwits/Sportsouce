@@ -6,7 +6,17 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 kotlin {
-    jvm()
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "20"
+        }
+        withJava()
+    }
+
+    jvmToolchain(20)
+    //jvmToolchain(libs.versions.jvm.dot.get().toInt())
+
+
     sourceSets.jvmMain.dependencies {
         implementation(compose.desktop.currentOs)
         implementation(projects.core.ui)
@@ -26,14 +36,21 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "com.markettwits.sportsouce.app.MainKt"
+
         nativeDistributions {
             packageName = "Спорт Союз"
-            version = libs.versions.versionName.get()
+            // packageVersion = libs.versions.versionName.get()
             description = "Sportsauce Desktop Application"
             copyright = "© 2024 My Name. All rights reserved."
             vendor = "MarketTwits"
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+        }
+        buildTypes.release.proguard {
+            configurationFiles.from("compose-desktop.pro")
+            obfuscate.set(false)
+            optimize.set(false)
+            version.set("7.5.0")
         }
     }
 }
-

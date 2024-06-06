@@ -13,15 +13,6 @@ configure<BaseExtension> {
         versionCode = versionCode(versionName ?: "")
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
 }
 fun versionCode(versionName: String): Int {
     val components = versionName.split(".")

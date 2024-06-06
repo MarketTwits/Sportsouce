@@ -35,8 +35,8 @@ internal fun StartSupportPanel(
         }
         Spacer(modifier = Modifier.padding(5.dp))
         ButtonContentBase(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
             textColor = titleColor,
             isEnabled = isEnabled,
             title = "Поддержать",

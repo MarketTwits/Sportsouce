@@ -10,6 +10,7 @@ interface RegistrationStartRepository {
     suspend fun loadOrder(
         startTitle: String,
         distanceInfo: DistanceItem,
+        discounts: List<DistanceItem.Discount>,
         paymentDisabled: Boolean,
         paymentType: String,
     ): Result<OrderStatement>

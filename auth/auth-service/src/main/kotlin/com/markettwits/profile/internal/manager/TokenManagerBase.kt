@@ -1,10 +1,10 @@
 package com.markettwits.profile.internal.manager
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.Base64
 
 internal class TokenManagerBase : TokenManager {
+
     override fun decode(token: String): Payload {
         val parts = token.split('.')
         val payloadJson = String(Base64.getDecoder().decode(parts[1]))

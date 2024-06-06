@@ -6,6 +6,7 @@ import com.markettwits.profile.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.time.TimeMapper
 
 internal class SignUpMapperBase(private val timeMapper: TimeMapper) : SignUpMapper {
+
     override fun mapToRemote(statement: SignUpStatement): SignUpRequest =
         SignUpRequest(
             birthday = timeMapper.mapTimeToCloud(time = statement.birthday),

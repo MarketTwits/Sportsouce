@@ -17,6 +17,7 @@ import com.markettwits.start.presentation.start.components.StartMembersStatistic
 import com.markettwits.start.presentation.start.components.StartOrganizers
 import com.markettwits.start.presentation.start.components.StartResult
 import com.markettwits.start.presentation.start.components.StartStatus
+import com.markettwits.start.presentation.start.components.StartTimeProgram
 import com.markettwits.start.presentation.start.components.StartTitle
 import kotlinx.collections.immutable.toImmutableList
 
@@ -44,6 +45,10 @@ internal fun StartScreenInnerContent(
             status = data.startStatus, date = data.startTime
         )
         StartDescription(modifier = innerModifier, description = data.description)
+        StartTimeProgram(
+            modifier = innerModifier,
+            startTimes = data.startTimes
+        )
         StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
             onClickFullAlbum()
         })

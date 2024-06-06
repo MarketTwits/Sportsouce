@@ -2,7 +2,6 @@
 #plugins
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
-#kotlin = "1.9.23"
 kotlin = "2.0.0"
 kotlin-kmp-compose = "1.6.10"
 gradle = "8.5.0-beta02"
@@ -13,7 +12,7 @@ targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 minSdk = "26"
 compileSdk = "34"
-versionName = "1.2.2"
+versionName = "1.2.4"
 jvm = "11"
 jvm-dot = "11"
 #UI

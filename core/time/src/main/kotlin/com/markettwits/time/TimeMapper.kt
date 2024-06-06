@@ -15,6 +15,7 @@ interface TimeMapper {
 }
 
 class BaseTimeMapper : TimeMapper {
+
     override fun mapTime(timePattern: TimePattern, time: String): String {
         val instant = Instant.parse(time)
         val dateTime = LocalDateTime.ofInstant(instant, TimeZone.getDefault().toZoneId())
@@ -33,19 +34,25 @@ class BaseTimeMapper : TimeMapper {
 }
 
 interface TimePattern {
+
     fun map(): String
 
+    /** 20.05.2024 00:00 */
     object Full : TimePattern {
-        override fun map() = "MMMM dd, yyyy 'в' hh:mm a"
-
+        override fun map() = "dd.MM.yyyy HH:mm"
     }
-    object ddMMMMyyyy : TimePattern {
+
+    /** 20 05 2024 */
+    object FullWithEmptySpace : TimePattern {
         override fun map() = "dd MMMM yyyy"
     }
 
+    /** 20.05.2024 */
     object FullWithDots : TimePattern {
         override fun map() = "dd.MM.yyyy"
     }
+
+    /** 2024-07-31T17:00:00.000Z */
     object Remote : TimePattern {
         override fun map() = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
     }

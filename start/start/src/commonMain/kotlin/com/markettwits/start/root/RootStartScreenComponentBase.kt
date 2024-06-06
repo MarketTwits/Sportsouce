@@ -60,14 +60,15 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
                     back = pop::invoke,
-                    register = { distanceInfo, paymentDisabled, paymentType, startTitle ->
+                    register = { distanceInfo, paymentDisabled, paymentType, startTitle, discounts ->
                         navigation.push(
                             RootStartScreenComponent.Config.StartRegistration(
                                 startId = startId,
                                 distanceInfo = distanceInfo,
                                 paymentDisabled = paymentDisabled,
                                 paymentType = paymentType,
-                                startTitle = startTitle
+                                startTitle = startTitle,
+                                discounts = discounts
                             )
                         )
                     },
@@ -127,9 +128,10 @@ class RootStartScreenComponentBase(
                     content = RootStartRegister.StartRegisterParams(
                         config.startId,
                         config.distanceInfo,
+                        config.discounts,
                         config.paymentDisabled,
                         config.paymentType,
-                        config.startTitle
+                        config.startTitle,
                     )
                 )
             )

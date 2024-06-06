@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.club.dashboard.presentation.dashboard.store.SubscriptionUi
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
+import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
@@ -47,7 +48,7 @@ internal fun SubscriptionsContent(
                 SubscriptionContentItem(
                     modifier = Modifier.padding(4.dp),
                     isSelected = subscriptionUi.isSelected,
-                    title = subscriptionUi.subscription.name,
+                    title = subscriptionUi.subscription.type,
                     description = subscriptionUi.subscription.description,
                     price = subscriptionUi.subscription.price.toString(),
                     discountInPercent = subscriptionUi.subscription.discount,
@@ -95,13 +96,14 @@ private fun SubscriptionContentItem(
                 fontFamily = FontNunito.semiBoldBold(),
                 color = MaterialTheme.colorScheme.onPrimary
             )
-//            HtmlText(
-//                textAlign = TextAlign.Start,
-//                text = description,
-//                fontSize = 14.sp,
-//                fontFamily = FontNunito.medium(),
-//                color = MaterialTheme.colorScheme.outline
-//            )
+            HtmlText(
+                textAlign = TextAlign.Start,
+                text = description,
+                fontSize = 14.sp,
+                lineHeight = 14.sp,
+                fontFamily = FontNunito.regular(),
+                color = MaterialTheme.colorScheme.outline
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {

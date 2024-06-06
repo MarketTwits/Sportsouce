@@ -72,42 +72,7 @@ private fun ScheduleItemRowInfo(
     value: String,
     isHtml: Boolean = false,
 ) {
-//    Row(
-//        modifier = modifier,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-
-//        HtmlText(
-//            modifier = Modifier,
-//            textAlign = TextAlign.Center,
-//            annotatedString = buildAnnotatedString {
-//                withStyle(
-//                    style = SpanStyle(
-//                        color = MaterialTheme.colorScheme.onPrimary,
-//                        fontSize = 12.sp,
-//                        fontFamily = FontNunito.semiBoldBold(),
-//                    ),
-//                ) {
-//                    append(title)
-//                }
-//                append(": ")
-//                withStyle(
-//                    style = SpanStyle(
-//                        color = MaterialTheme.colorScheme.outline,
-//                        fontSize = 12.sp,
-//                        fontFamily = FontNunito.semiBoldBold(),
-//                    )
-//                ) {
-//                    append(value)
-//                }
-//            },
-//            fontSize = 12.sp,
-//            overflow = TextOverflow.Ellipsis,
-//            fontFamily = FontNunito.semiBoldBold(),
-//            color = MaterialTheme.colorScheme.onPrimary)
-// //       )
-
-    Column {
+    Column(modifier = modifier) {
         Text(
             modifier = Modifier,
             textAlign = TextAlign.Start,
@@ -140,8 +105,6 @@ private fun ScheduleItemRowInfo(
             )
         })
     }
-
-    // }
 }
 
 @Composable

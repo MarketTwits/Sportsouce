@@ -9,6 +9,7 @@ import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.distance.StartDistancesToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
+import com.markettwits.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.time.TimeMapper
@@ -19,7 +20,8 @@ internal class StartRemoteToUiMapperBase(
     private val membersMapper: StartMembersToUiMapper,
     private val commentsMapper: StartCommentsToUiMapper,
     private val albumsMapper: StartAlbumsToUiMapper,
-    private val distancesMapper: StartDistancesToUiMapper
+    private val distancesMapper: StartDistancesToUiMapper,
+    private val startTimesMapper: StartTimesMapper
 ) : StartRemoteToUiMapper {
     override fun map(
         startRemote: StartRemote,
@@ -36,7 +38,7 @@ internal class StartRemoteToUiMapperBase(
             image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
             startStatus = startRemote.start_data.start_status,
             startTime = timeMapper.mapTime(
-                TimePattern.ddMMMMyyyy,
+                TimePattern.FullWithEmptySpace,
                 startRemote.start_data.start_date
             ),
             startData = startRemote.start_data.start_date,
@@ -76,10 +78,18 @@ internal class StartRemoteToUiMapperBase(
                 )
             } ?: emptyList(),
             startAlbum = albumsMapper.map(startAlbumRemote),
-            regLink = startRemote.start_data.reg_link ?: ""
+            regLink = startRemote.start_data.reg_link ?: "",
+            startTimes = startTimesMapper.map(
+                beginningRegistry = startRemote.start_data.registration_start_date,
+                endRegistry = startRemote.start_data.registration_end_date,
+                beginningStart = startRemote.start_data.start_date,
+                endStart = startRemote.start_data.end_date
+            ),
+            discounts = distancesMapper.mapDiscountCloud(startRemote.start_data.discount)
         )
 
     override fun map(e: Exception): String = e.message.toString()
+
     override fun map(commentsRemote: StartCommentsRemote): StartItem.Comments =
         commentsMapper.map(commentsRemote)
 

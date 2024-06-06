@@ -8,6 +8,7 @@ data class Discount(
     val c_to: Int,
     val id: Int,
     val start_id: Int,
+    val percent: Boolean?,
     val type: String?,
     val value: Int
 )

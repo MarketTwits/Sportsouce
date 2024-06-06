@@ -67,6 +67,8 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                                 )
                             }
                         )
+                    }
+                    item {
                         UserStarts(
                             starts = user.activity.userRegistry,
                             onClickAll = {
@@ -78,12 +80,15 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                                 )
                             }
                         )
+                    }
+                    item {
                         UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
+                    }
+                    item {
                         MyMembersCard(onClick = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.Members)
                         })
                     }
-
                 }
             }
         )

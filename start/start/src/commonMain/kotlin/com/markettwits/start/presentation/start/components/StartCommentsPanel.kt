@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.common.StartContentBasePanel
 import com.markettwits.start.presentation.start.component.CommentMode
 
 

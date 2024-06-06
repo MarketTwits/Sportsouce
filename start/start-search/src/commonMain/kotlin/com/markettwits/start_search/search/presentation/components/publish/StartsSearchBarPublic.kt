@@ -57,7 +57,7 @@ fun StartsSearchBarPublic(
             Icon(
                 imageVector = Icons.Default.Settings,
                 tint = MaterialTheme.colorScheme.outline,
-                contentDescription = null
+                contentDescription = "Settings"
             )
         }
     }

@@ -7,7 +7,7 @@ import com.markettwits.settings.internal.settings_menu.store.SettingsStore.State
 object SettingsReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            else -> State
+            is Message.CurrentVersion -> copy(version = msg.version)
         }
     }
 }

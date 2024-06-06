@@ -24,6 +24,8 @@ import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 @Composable
 fun SettingsApplicationVersionElement(
     modifier: Modifier = Modifier,
+    versionName: String,
+    versionBuildNumber: String
 ) {
     val image =
         if (LocalDarkOrLightTheme.current) DefaultImages.SportSauceDarkLogo() else DefaultImages.SportSauceLightLogo()
@@ -50,7 +52,7 @@ fun SettingsApplicationVersionElement(
                     fontFamily = FontNunito.semiBoldBold(),
                 )
                 Text(
-                    text = "Версия 1.2.1 Сборка 123123",
+                    text = "Версия $versionName Сборка $versionBuildNumber",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.outline,
                     fontFamily = FontNunito.semiBoldBold(),

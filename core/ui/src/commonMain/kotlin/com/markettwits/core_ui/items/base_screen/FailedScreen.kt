@@ -48,7 +48,7 @@ fun FailedScreen(
             Image(
                 modifier = modifier.size(100.dp),
                 imageVector = WarningYellowIc,
-                contentDescription = null
+                contentDescription = "Warning $message"
             )
             Text(
                 modifier = modifier,

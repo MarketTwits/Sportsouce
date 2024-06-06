@@ -24,6 +24,7 @@ interface RootStartRegister {
             val startId: Int,
             val startTitle: String,
             val distanceInfo: DistanceItem,
+            val discounts: List<DistanceItem.Discount>,
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : ConfigStack()
@@ -60,6 +61,7 @@ interface RootStartRegister {
     data class StartRegisterParams(
         val startId: Int,
         val distanceItem: DistanceItem,
+        val discounts: List<DistanceItem.Discount>,
         val isPaymentDisabled: Boolean,
         val paymentType: String,
         val startTitle: String,

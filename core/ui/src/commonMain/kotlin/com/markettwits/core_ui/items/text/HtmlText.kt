@@ -1,35 +1,21 @@
 package com.markettwits.core_ui.items.text
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.customActions
-import androidx.compose.ui.semantics.onClick
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -39,12 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastAny
-import be.digitalia.compose.htmlconverter.HtmlStyle
 import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
-import be.digitalia.compose.htmlconverter.htmlToString
-import kotlinx.coroutines.launch
 
 /**
  * Simple Text composable to show the text with html styling from string
@@ -77,13 +58,12 @@ fun HtmlText(
     lineHeight: TextUnit = TextUnit.Unspecified,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
+    selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
 ) {
     val annotatedString = htmlToAnnotatedString(
         html = text,
     )
-    println(annotatedString)
-
     HtmlText(
         modifier = modifier,
         annotatedString = annotatedString,
@@ -97,6 +77,7 @@ fun HtmlText(
         textAlign = textAlign,
         lineHeight = lineHeight,
         overflow = overflow,
+        selectable = selectable,
         softWrap = softWrap,
         maxLines = maxLines,
     )
@@ -134,6 +115,7 @@ fun HtmlText(
     lineHeight: TextUnit = TextUnit.Unspecified,
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
+    selectable: Boolean,
     maxLines: Int = Int.MAX_VALUE,
 ) {
     val handler = LocalUriHandler.current
@@ -150,27 +132,59 @@ fun HtmlText(
         }
     } else modifier
 
-    BasicText(
-        text = annotatedString,
-        modifier = modifier.then(pressIndicator),
-        style = TextStyle(
-            color = color,
-            fontSize = fontSize,
-            fontStyle = fontStyle,
-            fontWeight = fontWeight,
-            fontFamily = fontFamily,
-            letterSpacing = letterSpacing,
-            textDecoration = textDecoration,
-            textAlign = textAlign ?: TextAlign.Start,
-            lineHeight = lineHeight,
-        ),
-        softWrap = softWrap,
-        overflow = overflow,
-        maxLines = maxLines,
-        onTextLayout = {
-            layoutResult.value = it
-        }
+    val selectionColor = TextSelectionColors(
+        handleColor = MaterialTheme.colorScheme.tertiary,
+        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
     )
+    CompositionLocalProvider(LocalTextSelectionColors provides selectionColor) {
+        if (selectable) {
+            SelectionContainer(content = {
+                Text(
+                    text = annotatedString,
+                    modifier = modifier.then(pressIndicator),
+                    style = TextStyle(
+                        color = color,
+                        fontSize = fontSize,
+                        fontStyle = fontStyle,
+                        fontWeight = fontWeight,
+                        fontFamily = fontFamily,
+                        letterSpacing = letterSpacing,
+                        textDecoration = textDecoration,
+                        textAlign = textAlign ?: TextAlign.Start,
+                        lineHeight = lineHeight,
+                    ),
+                    softWrap = softWrap,
+                    overflow = overflow,
+                    maxLines = maxLines,
+                    onTextLayout = {
+                        layoutResult.value = it
+                    },
+                )
+            })
+        } else {
+            Text(
+                text = annotatedString,
+                modifier = modifier.then(pressIndicator),
+                style = TextStyle(
+                    color = color,
+                    fontSize = fontSize,
+                    fontStyle = fontStyle,
+                    fontWeight = fontWeight,
+                    fontFamily = fontFamily,
+                    letterSpacing = letterSpacing,
+                    textDecoration = textDecoration,
+                    textAlign = textAlign ?: TextAlign.Start,
+                    lineHeight = lineHeight,
+                ),
+                softWrap = softWrap,
+                overflow = overflow,
+                maxLines = maxLines,
+                onTextLayout = {
+                    layoutResult.value = it
+                }
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalTextApi::class)

@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.kmp) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
 }
-
 tasks.withType<Wrapper>().configureEach {
     distributionType = Wrapper.DistributionType.BIN
     gradleVersion = libs.versions.gradle.get()

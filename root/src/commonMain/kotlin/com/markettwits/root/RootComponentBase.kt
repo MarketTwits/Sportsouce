@@ -26,21 +26,22 @@ class RootComponentBase(
         ComponentKoinContext()
     }.getOrCreateKoinScope(listOf(bottomBarModule))
 
-    private val navigation = StackNavigation<RootComponent.Configuration>()
+    private val stackNavigation = StackNavigation<RootComponent.Configuration>()
+
     private val slotNavigation = SlotNavigation<RootComponent.SlotConfiguration>()
 
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
-        source = navigation,
+        source = stackNavigation,
         serializer = RootComponent.Configuration.serializer(),
-        initialStack = { listOf(RootComponent.Configuration.Starts) },
+        initialStack = { listOf(RootComponent.Configuration.Review) },
         childFactory = ::createChild,
     )
+
     override val slotChild: Value<ChildSlot<*, RootComponent.Navigation>> = childSlot(
         source = slotNavigation,
         serializer = RootComponent.SlotConfiguration.serializer(),
         initialConfiguration = { RootComponent.SlotConfiguration.BottomBar },
         childFactory = ::createBottomBar
-
     )
 
     private fun createChild(
@@ -61,12 +62,11 @@ class RootComponentBase(
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
-                component = RootReviewComponentBase(
+                RootReviewComponentBase(
                     context = componentContext
                 )
             )
         }
-
 
     private fun createBottomBar(
         configuration: RootComponent.SlotConfiguration,
@@ -77,8 +77,13 @@ class RootComponentBase(
                 BottomBarComponentBase(
                     componentContext = componentContext,
                     navigationComponentHandle = object : BottomBarComponentHandle {
+
                         override fun navigateTo(configuration: Configuration) {
-                            navigation.bringToFront(BottomBarConfigurationMapper.map(configuration))
+                            stackNavigation.bringToFront(
+                                BottomBarConfigurationMapper.map(
+                                    configuration
+                                )
+                            )
                         }
 
                         override fun getActiveConfiguration(observer: (Configuration) -> Unit) {

@@ -4,6 +4,7 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.start.register.domain.StartStatement
+import com.markettwits.start.register.presentation.order.domain.OrderDistance
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -54,10 +55,9 @@ class RegistrationMapperBase : RegistrationMapper {
             alone = false,
             day = 1,
             distance = startDistanceItem.value,
-            format = "Лично",
             distances = mapNewStartComboDistances(
                 user = user,
-                startStatement = startStatement.members,
+                orderDistance = startStatement.distanceInfo,
                 items = startDistanceItem.distances
             ),
             payment_disabled = startStatement.paymentDisabled,
@@ -71,23 +71,28 @@ class RegistrationMapperBase : RegistrationMapper {
 
     private fun mapNewStartComboDistances(
         user: User,
-        startStatement: List<StartStatement>,
+        orderDistance: List<OrderDistance>,
         items: List<DistanceItem.DistanceInfo>
     ): List<StartRegisterRequest.Combo.Distance> {
         val values = items.map { distance ->
+            val isAlone =
+                distance.groups[0].stages?.isEmpty() ?: distance.distanceStages.isNullOrEmpty()
             StartRegisterRequest.Combo.Distance(
-                alone = false,
+                alone = isAlone,
                 distance = distance.value,
                 format = distance.format,
-                member = startStatement.mapIndexed { index, member ->
-                    mapStartMember(
-                        user = user,
-                        teamNumber = index + 1,
-                        contactPerson = member.contactPerson,
-                        startStatement = member,
-                        startDistanceInfo = distance
-                    )
-                }
+                member = orderDistance
+                    .filter { it.distance == distance.value }
+                    .flatMap { it.members }
+                    .mapIndexed { index, member ->
+                        mapStartMember(
+                            user = user,
+                            teamNumber = index + 1,
+                            contactPerson = member.contactPerson,
+                            startStatement = member,
+                            startDistanceInfo = distance
+                        )
+                    }
             )
         }
         return values
@@ -100,7 +105,7 @@ class RegistrationMapperBase : RegistrationMapper {
         startStatement: StartStatement,
         startDistanceInfo: DistanceItem.DistanceInfo
     ): StartRegisterRequest.Member {
-        return StartRegisterRequest.Member(
+        val member = StartRegisterRequest.Member(
             age = calculateAge(startStatement.birthday),
             birthday = convertDateFormat(startStatement.birthday),
             cite = null,
@@ -125,6 +130,7 @@ class RegistrationMapperBase : RegistrationMapper {
             vk = user.vk,
             whatsapp = user.whatsapp
         )
+        return member
     }
 
     private fun mapStartMembersNew(
@@ -132,7 +138,8 @@ class RegistrationMapperBase : RegistrationMapper {
         startStatement: OrderStatement,
         startDistanceInfo: DistanceItem.DistanceInfo
     ): List<StartRegisterRequest.Member> {
-        return startStatement.members.mapIndexed { index, member ->
+        val members = startStatement.distanceInfo.flatMap { it.members }
+        return members.mapIndexed { index, member ->
             StartRegisterRequest.Member(
                 age = calculateAge(member.birthday),
                 birthday = convertDateFormat(member.birthday),
@@ -193,7 +200,7 @@ class RegistrationMapperBase : RegistrationMapper {
         orderStatement: OrderStatement,
         startDistanceInfo: DistanceItem.DistanceInfo
     ): StartRegisterRequest.Group {
-        val members = orderStatement.members
+        val members = orderStatement.distanceInfo.flatMap { it.members }
         val ageSum = members.sumOf { calculateAge(it.birthday) }
         val listOfGroups = startDistanceInfo.groups
 
@@ -280,8 +287,8 @@ class RegistrationMapperBase : RegistrationMapper {
 
     private fun mapGenderUiToCloud(sex: String): String {
         return when (sex) {
-            "Мужской" -> "male"
-            "Женский" -> "female"
+            "Мужской" -> "Мужской"
+            "Женский" -> "Женский"
             else -> throw java.lang.IllegalArgumentException("Нет стартов для $sex пол")
         }
     }

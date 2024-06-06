@@ -42,7 +42,6 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
 internal fun StartAlbums(

@@ -1,6 +1,7 @@
 package com.markettwits.start.data.start.mapper.distance
 
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.cloud.model.start.Discount
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.serialization.json.Json
@@ -47,7 +48,19 @@ internal class StartDistancesToUiMapperBase(
         kindOfSport: String
     ): List<DistanceItem> = mapKindOfSportsToDistanceItemListBase(startId, kindOfSport)
 
-    fun mapKindOfSportsToDistanceItemListBase(
+    override fun mapDiscountCloud(discount: List<Discount>): List<DistanceItem.Discount> =
+        discount.map {
+            DistanceItem.Discount(
+                id = it.id,
+                start_id = it.start_id,
+                c_from = it.c_from,
+                c_to = it.c_to,
+                value = it.value,
+                percent = it.percent ?: true,
+            )
+        }
+
+    private fun mapKindOfSportsToDistanceItemListBase(
         startId: Int,
         kindOfSport: String
     ): List<DistanceItem> = try {

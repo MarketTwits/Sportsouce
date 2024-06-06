@@ -2,11 +2,15 @@ package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,8 +30,8 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
-import com.markettwits.start.presentation.common.StartContentBasePanel
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StartDistances(
     modifier: Modifier = Modifier,
@@ -41,7 +45,12 @@ internal fun StartDistances(
 ) {
     if (distance.isNotEmpty() && startStatus.code == 3) {
         StartContentBasePanel(modifier = modifier, label = "Дистанции") {
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            FlowRow(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                maxItemsInEachRow = 4,
+                horizontalArrangement = Arrangement.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
                 distance.forEach {
                     Column(modifier.clip(Shapes.medium)) {
                         when (it) {
@@ -111,7 +120,7 @@ fun DistanceItemBase(
         ) {
             Text(
                 text = item.value,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -123,8 +132,8 @@ fun DistanceItemBase(
             if (!infinity) {
                 Text(
                     text = "Осталось слотов : $slots",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -133,8 +142,8 @@ fun DistanceItemBase(
             if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
                     text = paymentType,
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -142,8 +151,8 @@ fun DistanceItemBase(
             } else {
                 Text(
                     text = "Цена : " + item.distance.price + " ₽",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -184,7 +193,7 @@ fun DistanceItemCombo(
     Box(
         modifier = Modifier
             .padding(4.dp)
-            .fillMaxWidth()
+            .sizeIn(maxWidth = 300.dp)
             .border(
                 width = 3.dp,
                 color = MaterialTheme.colorScheme.secondary,
@@ -199,7 +208,7 @@ fun DistanceItemCombo(
         ) {
             Text(
                 text = item.value,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Visible,
@@ -207,7 +216,7 @@ fun DistanceItemCombo(
             )
             Text(
                 text = "",
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -216,8 +225,8 @@ fun DistanceItemCombo(
             if (paymentDisabled && paymentType.isNotEmpty()) {
                 Text(
                     text = paymentType,
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
@@ -225,8 +234,8 @@ fun DistanceItemCombo(
             } else {
                 Text(
                     text = "Цена : " + item.price + " ₽",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary

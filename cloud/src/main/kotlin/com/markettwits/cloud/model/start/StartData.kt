@@ -25,7 +25,7 @@ data class StartData(
     val createdAt: String,
     val days: List<Int>?,
     val description: String? = "",
-   // val discount: List<Discount>,
+    val discount: List<Discount>,
     val driving_directions: Int?,
     val end_date: String,
     val finish_reg: String?,

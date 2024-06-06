@@ -19,7 +19,7 @@ interface NewsRemoteToDomainMapper {
                     shortDescription = it.short_description,
                     fullDescription = it.full_description,
                     imageUrl = if (it.images.isNotEmpty()) it.images[0].fullPath else "",
-                    createData = timeMapper.mapTime(TimePattern.ddMMMMyyyy, it.createdAt),
+                    createData = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.createdAt),
                     hashtags = it.hashtags.map {
                         Hashtag(
                             id = it.id,

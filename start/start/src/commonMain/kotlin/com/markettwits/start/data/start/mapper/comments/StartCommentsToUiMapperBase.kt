@@ -16,7 +16,7 @@ internal class StartCommentsToUiMapperBase(
                 comment = it.comment,
                 countSub = it.countSub,
                 createdAt = timeMapper.mapTime(
-                    TimePattern.ddMMMMyyyy,
+                    TimePattern.FullWithEmptySpace,
                     it.createdAt
                 ),
                 personId = it.personId,
@@ -25,7 +25,7 @@ internal class StartCommentsToUiMapperBase(
                         id = reply.id,
                         comment = reply.comment,
                         createdAt = timeMapper.mapTime(
-                            TimePattern.ddMMMMyyyy,
+                            TimePattern.FullWithEmptySpace,
                             reply.createdAt
                         ),
                         user = StartItem.Comments.User(
@@ -37,7 +37,7 @@ internal class StartCommentsToUiMapperBase(
                     )
                 } ?: emptyList(),
                 updatedAt = timeMapper.mapTime(
-                    TimePattern.ddMMMMyyyy,
+                    TimePattern.FullWithEmptySpace,
                     it.updatedAt
                 ),
                 user = StartItem.Comments.User(

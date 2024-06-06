@@ -7,15 +7,21 @@ import com.markettwits.settings.internal.settings_menu.store.SettingsStore.Inten
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.Label
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.Message
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.State
+import com.markettwits.version.ApplicationVersionManager
 
 class SettingsExecutor(
-    private val intentAction: IntentAction
+    private val intentAction: IntentAction,
+    private val versionManager: ApplicationVersionManager
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
             is Intent.GoBack -> publish(Label.GoBack)
             is Intent.OnClickItemMenu -> obtainMenu(intent.itemId)
         }
+    }
+
+    override fun executeAction(action: Unit, getState: () -> State) {
+        dispatch(Message.CurrentVersion(versionManager.currentDistribution()))
     }
 
     private fun obtainMenu(itemId: Int) {

@@ -4,6 +4,7 @@ import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.start.domain.StartItem
 
 internal class StartAlbumsToUiMapperBase : StartAlbumsToUiMapper {
+
     override fun map(startAlbum: StartAlbumRemote, sorted: Boolean): List<StartItem.Album> {
         val photos = startAlbum.rows.flatMap { row ->
             row.photos.map { photoRemote ->

@@ -36,9 +36,9 @@ internal class BaseAuthDataSource(
     override suspend fun logIn(emailOrPhone: String, password: String): Result<User> = runCatching {
         val response =
             remoteService.signIn(SignInRequest(email = emailOrPhone, password = password))
-            local.write(signInCacheMapper.map(response, password))
+        local.write(signInCacheMapper.map(response, password))
         auth().getOrThrow()
-        }
+    }
 
     override suspend fun updatePassword(password: String) {
         local.updatePassword(password)

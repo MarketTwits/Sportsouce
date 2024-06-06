@@ -29,6 +29,7 @@ class RegistrationStartRepositoryBase(
     override suspend fun loadOrder(
         startTitle: String,
         distanceInfo: DistanceItem,
+        discounts: List<DistanceItem.Discount>,
         paymentDisabled: Boolean,
         paymentType: String
     ): Result<OrderStatement> {
@@ -45,7 +46,8 @@ class RegistrationStartRepositoryBase(
                 user,
                 distanceInfo,
                 paymentDisabled,
-                paymentType
+                paymentType,
+                discounts
             )
         }
     }

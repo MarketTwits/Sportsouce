@@ -18,7 +18,9 @@ import com.markettwits.core_ui.items.theme.FontNunito
 fun MembersEmptyCard(modifier: Modifier = Modifier) {
     OnBackgroundCard(modifier = modifier) {
         Column(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(10.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -7,12 +7,15 @@ import com.markettwits.start.register.presentation.member.store.RegistrationMemb
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Label
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Message
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.State
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class RegistrationMemberExecutor(private val validation: RegistrationMemberValidator) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
-            is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement))
+            is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement.updateAge()))
             is Intent.OnClickContinue -> apply(getState().value)
             is Intent.Pop -> onClickPop(getState())
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
@@ -33,10 +36,22 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
                 dispatch(Message.ShowEvent(it.message.toString()))
             })
     }
+
     private fun onClickPop(state: State) {
         if (!state.isClosedAllerDialog)
             dispatch(Message.ChangeAllerDialogState(true))
         else
             dispatch(Message.ChangeAllerDialogState(false))
+    }
+
+    private fun StartStatement.updateAge(): StartStatement {
+        return if (birthday.isNotEmpty()) {
+            val birthLocalDate =
+                LocalDate.parse(birthday, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            val year = ChronoUnit.YEARS.between(birthLocalDate, LocalDate.now()).toInt()
+            copy(age = year.toString())
+        } else
+            copy()
+
     }
 }

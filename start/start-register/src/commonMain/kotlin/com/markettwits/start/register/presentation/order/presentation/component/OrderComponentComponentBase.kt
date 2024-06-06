@@ -20,6 +20,7 @@ class OrderComponentComponentBase(
     private val startTitle: String,
     private val paymentType: String,
     private val distanceInfo: DistanceItem,
+    private val discounts: List<DistanceItem.Discount>,
     private val paymentDisabled: Boolean,
     private val storeFactory: OrderStoreFactory,
     private val pop: () -> Unit,
@@ -38,6 +39,7 @@ class OrderComponentComponentBase(
             paymentType = paymentType,
             paymentDisabled = paymentDisabled,
             startTitle = startTitle,
+            discounts = discounts
         )
     }
 

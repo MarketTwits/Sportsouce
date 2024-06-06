@@ -7,6 +7,7 @@ import com.markettwits.start.register.presentation.common.EventContentTest
 import com.markettwits.start.register.presentation.common.triggered
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
 import com.markettwits.start.register.presentation.order.domain.interactor.OrderInteractor
+import com.markettwits.start.register.presentation.order.domain.price.updatePriceWithDiscount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +16,7 @@ class OrderStoreExecutorHandleBase(
     private val interactor: OrderInteractor,
     private val intentAction: IntentAction
 ) : OrderStoreExecutorHandle {
+
     private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun changeButtonState(
@@ -102,13 +104,24 @@ class OrderStoreExecutorHandleBase(
         startStatement: StartStatement,
         id: Int
     ): OrderStatement {
-        val updatedMembers = currentState.members.toMutableList()
-        if (id in updatedMembers.indices) {
-            updatedMembers[id] = startStatement
+        val currentPage = currentState.currentOrderDistanceVisibleIndex
+        val updatedMembers = currentState.distanceInfo.toMutableList()
+
+        if (currentPage in updatedMembers.indices) {
+            val updatedDistance = updatedMembers[currentPage].copy(
+                members = updatedMembers[currentPage].members.toMutableList().apply {
+                    if (id in indices) {
+                        this[id] = startStatement
+                    } else {
+                        throw IndexOutOfBoundsException("Error: Index out of bounds")
+                    }
+                }
+            )
+            updatedMembers[currentPage] = updatedDistance
         } else {
             throw IndexOutOfBoundsException("Error: Index out of bounds")
         }
-        return currentState.copy(members = updatedMembers.toList())
+        return currentState.copy(distanceInfo = updatedMembers).updatePriceWithDiscount()
     }
 
     override fun applyPromo(
@@ -117,19 +130,20 @@ class OrderStoreExecutorHandleBase(
         percent: Int
     ): OrderStore.State {
         val order = state.orderStatement!!
-        val discountPercent = percent.toDouble() / 100
-        val currentPrice = order.orderPrice.total
-        val discountAmount = currentPrice * discountPercent
-        val discountedPrice = currentPrice - discountAmount
+
+        if (order.orderPrice.promoIsApplied)
+            return state.copy(
+                event = showMessage(state, success = false, "Промокод уже применен").event,
+            )
         val newOrderPrice = order.orderPrice.copy(
-            discountInCache = discountAmount,
-            discountInPercent = percent,
-            total = discountedPrice
+            promoIsApplied = true,
+            promoDiscountInPercent = percent,
         )
         val message = showMessage(state, success = true, message = "Промокод $promo применен")
+        val newState = state.orderStatement.copy(orderPrice = newOrderPrice, promo = promo)
         return state.copy(
             event = message.event,
-            orderStatement = state.orderStatement.copy(orderPrice = newOrderPrice, promo = promo)
+            orderStatement = newState.updatePriceWithDiscount()
         )
     }
 

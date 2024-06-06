@@ -86,7 +86,7 @@ private fun SocialNetworkButton(
                 .padding(horizontal = 10.dp)
                 .size(20.dp),
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = title,
             tint = textColor
         )
         Text(

@@ -35,6 +35,7 @@ interface OrderStore : Store<OrderStore.Intent, OrderStore.State, OrderStore.Lab
         data class OnClickPromo(val promo: String) : Intent
         data class OnClickUrl(val url: String) : Intent
         data class OnClickMember(val member: StartStatement, val id: Int) : Intent
+        data class OnClickDistance(val distanceIndex: Int) : Intent
         data object OnConsumedEvent : Intent
         data object OnClickCheckedRules : Intent
         data object OnClickRegistry : Intent

@@ -89,6 +89,13 @@ fun MemberScreenContent(
             }, onValueChanged = {
                 onValueChanged(statement.copy(birthday = it))
             })
+        OutlinedTextFieldBase(
+            modifier = Modifier.padding(vertical = 5.dp),
+            label = "Возраст",
+            isEnabled = false,
+            value = statement.age,
+            onValueChange = {}
+        )
 
         if (statement.contactPerson) {
             OutlinedTextFieldBase(

@@ -14,6 +14,8 @@ internal fun SettingsContent(
     modifier: Modifier = Modifier,
     applicationsMenu: List<SettingsMenuElement>,
     socialMenu: List<SettingsMenuElement>,
+    versionName: String,
+    versionBuildNumber: String,
     onClickMenu: (SettingsMenuElement) -> Unit
 ) {
     Column(
@@ -29,6 +31,9 @@ internal fun SettingsContent(
             onClickMenu(it)
         })
         Spacer(modifier = Modifier.padding(20.dp))
-        SettingsApplicationVersionElement()
+        SettingsApplicationVersionElement(
+            versionName = versionName,
+            versionBuildNumber = versionBuildNumber
+        )
     }
 }

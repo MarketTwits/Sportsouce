@@ -7,6 +7,7 @@ import kotlinx.serialization.json.jsonObject
 
 @Serializable(with = DistanceItem.DistanceItemSerializer::class)
 sealed interface DistanceItem {
+
     @Serializable
     data class DistanceCombo(
         val value: String,
@@ -56,6 +57,16 @@ sealed interface DistanceItem {
 
     @Serializable
     data class Stage(val value: String, val sex: List<String>)
+
+    @Serializable
+    data class Discount(
+        val id: Int,
+        val start_id: Int,
+        val c_from: Int,
+        val c_to: Int,
+        val value: Int,
+        val percent: Boolean
+    )
 
     object DistanceItemSerializer :
         JsonContentPolymorphicSerializer<DistanceItem>(DistanceItem::class) {

@@ -11,8 +11,12 @@ import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 interface RegistrationRemoteToDomainMapper {
+
     @Deprecated("change to order")
     fun map(
         cities: List<City>,
@@ -30,12 +34,14 @@ interface RegistrationRemoteToDomainMapper {
         user: User,
         distanceItem: DistanceItem,
         paymentDisabled: Boolean,
-        paymentType: String
+        paymentType: String,
+        discounts: List<DistanceItem.Discount>
     ): OrderStatement
 }
 
 class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
     RegistrationRemoteToDomainMapper {
+
     override fun map(
         cities: List<City>,
         teams: List<Team>,
@@ -44,14 +50,15 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         paymentDisabled: Boolean
     ): StartStatement {
         val price = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.price ?: 0
-            is DistanceItem.DistanceInfo -> distanceItem.distance.price.toIntOrNull() ?: 0
+            is DistanceItem.DistanceCombo -> calculatePriceForComboStartStartStatement(distanceItem)
+            is DistanceItem.DistanceInfo -> calculatePriceForStartStartStatement(distanceItem)
         }
+        val birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday)
         return StartStatement(
             name = user.name,
             surname = user.surname,
-            birthday = timeMapper.mapTime(TimePattern.FullWithDots, user.birthday),
-            age = user.age?.toInt() ?: 0,
+            birthday = birthday,
+            age = user.age ?: calculateAge(birthday).toString(),
             email = user.email ?: "",
             sex = user.sex,
             city = user.address ?: "",
@@ -61,8 +68,14 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             cities = mapCitiesToStartStatement(cities),
             teams = mapTeamsToStartStatement(teams),
             sexList = mapSexToDomain(),
-            price = price,
-            paymentDisabled = paymentDisabled
+            price = 0,
+            paymentDisabled = paymentDisabled,
+            yearDiscountApplied = false,
+            distanceTitle = when (distanceItem) {
+                is DistanceItem.DistanceCombo -> distanceItem.value
+                is DistanceItem.DistanceInfo -> distanceItem.value
+            }
+
         )
     }
 
@@ -74,19 +87,52 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         user: User,
         distanceItem: DistanceItem,
         paymentDisabled: Boolean,
-        paymentType: String
+        paymentType: String,
+        discounts: List<DistanceItem.Discount>
     ): OrderStatement {
-        val startStatements = mapMembers(cities, teams, user, distanceItem, paymentDisabled)
+        val distanceInfo = mapDistanceItem(distanceItem, cities, teams, user, paymentDisabled)
         return OrderStatement(
-            distanceInfo = mapOrderDistance(distanceItem),
-            members = startStatements,
+            distanceInfo = distanceInfo,
+            //mapOrderDistance(distanceItem, cities, teams, user, paymentDisabled),
             promo = "",
             paymentDisabled = paymentDisabled,
             paymentType = paymentType,
             profileMembers = members,
             orderTitle = startTitle,
-            orderPrice = mapOrderPrice(distanceItem, startStatements.size)
+            orderPrice = mapOrderPrice(distanceItem, distanceInfo.map { it.members }.size),
+            discounts = discounts,
+            currentOrderDistanceVisibleIndex = 0
         )
+    }
+
+    private fun mapDistanceItem(
+        distanceItem: DistanceItem,
+        cities: List<City>,
+        teams: List<Team>,
+        user: User,
+        paymentDisabled: Boolean
+    ): List<OrderDistance> {
+        return when (distanceItem) {
+            is DistanceItem.DistanceCombo -> {
+                distanceItem.distances.map { distance ->
+                    OrderDistance(
+                        format = distance.format,
+                        distance = distance.value,
+                        members = mapBaseMembers(cities, teams, user, distance, paymentDisabled)
+                    )
+                }
+            }
+
+            is DistanceItem.DistanceInfo -> {
+                listOf(
+                    OrderDistance(
+                        format = distanceItem.format,
+                        distance = distanceItem.value,
+                        members = mapBaseMembers(cities, teams, user, distanceItem, paymentDisabled)
+                    )
+                )
+            }
+        }
     }
 
     private fun mapOrderPrice(
@@ -94,56 +140,44 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         membersCount: Int
     ): OrderPrice {
         val price = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.price?.toDouble() ?: 0.0
-            is DistanceItem.DistanceInfo -> distanceItem.distance.price.toDouble()
+            is DistanceItem.DistanceCombo -> distanceItem.price ?: 0
+            is DistanceItem.DistanceInfo -> distanceItem.distance.price.toInt()
+        }
+        val discount = when (distanceItem) {
+            is DistanceItem.DistanceCombo -> distanceItem.sale?.toInt() ?: 0
+            is DistanceItem.DistanceInfo -> 0
         }
         return OrderPrice(
             total = price,
+            initialTotal = price,
+            //totalAfterCombo = price - calculateDiscount(price,discount),
             membersCount = membersCount,
-            discountInCache = 0.0,
-            discountInPercent = 0
+            discountPromoInCache = 0,
+            discountAgeInCache = 0,
+            discountComboInCache = if (distanceItem is DistanceItem.DistanceCombo) calculateDiscount(
+                price,
+                discount
+            ) else 0,
+            promoDiscountInPercent = 0
+
         )
     }
 
-    private fun mapOrderDistance(distanceItem: DistanceItem): OrderDistance {
-        val distances = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.distances.map { it.value }
-            is DistanceItem.DistanceInfo -> listOf(distanceItem.value)
-        }
-        val format = when (distanceItem) {
-            is DistanceItem.DistanceCombo -> distanceItem.value
-            is DistanceItem.DistanceInfo -> distanceItem.format
-        }
-        return OrderDistance(
-            format = format,
-            distances = distances
-        )
-    }
+    private fun calculateDiscount(originalCost: Int, discountPercentage: Int): Int =
+        if (discountPercentage != 0) (originalCost / discountPercentage) else originalCost
 
-    private fun mapMembers(
+    private fun mapBaseMembers(
         cities: List<City>,
         teams: List<Team>,
         user: User,
-        distanceItem: DistanceItem,
+        distanceItem: DistanceItem.DistanceInfo,
         paymentDisabled: Boolean
     ): List<StartStatement> {
-        return when (distanceItem) {
-            is DistanceItem.DistanceCombo -> singleMember(
-                cities,
-                teams,
-                user,
-                distanceItem,
-                paymentDisabled
-            )
-
-            is DistanceItem.DistanceInfo -> {
-                val stages = distanceItem.groups[0].stages
-                if (stages.isNullOrEmpty()) {
-                    singleMember(cities, teams, user, distanceItem, paymentDisabled)
-                } else {
-                    mapGroups(cities, teams, user, distanceItem, paymentDisabled)
-                }
-            }
+        val stages = distanceItem.groups[0].stages ?: distanceItem.distanceStages
+        return if (stages.isNullOrEmpty()) {
+            singleMember(cities, teams, user, distanceItem, paymentDisabled)
+        } else {
+            mapGroups(cities, teams, user, distanceItem, paymentDisabled)
         }
     }
 
@@ -153,8 +187,7 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
         user: User,
         distanceItem: DistanceItem,
         paymentDisabled: Boolean
-    ): List<StartStatement> =
-        listOf(map(cities, teams, user, distanceItem, paymentDisabled))
+    ): List<StartStatement> = listOf(map(cities, teams, user, distanceItem, paymentDisabled))
 
     private fun mapGroups(
         cities: List<City>,
@@ -165,14 +198,15 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
     ): List<StartStatement> {
         val startStatements = mutableListOf<StartStatement>()
         startStatements.add(map(cities, teams, user, distanceItem, paymentDisabled))
-        val stageCount = distanceItem.groups[0].stages?.size ?: 1
+        val stageCount =
+            distanceItem.groups[0].stages?.size ?: distanceItem.distanceStages?.size ?: 1
         for (i in 1 until stageCount) {
             startStatements.add(
                 StartStatement(
                     name = "",
                     surname = "",
                     birthday = "",
-                    age = 0,
+                    age = "",
                     email = "",
                     sex = "",
                     city = "",
@@ -184,12 +218,35 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
                     cities = mapCitiesToStartStatement(cities),
                     teams = mapTeamsToStartStatement(teams),
                     sexList = mapSexToDomain(),
-                    paymentDisabled = paymentDisabled
+                    paymentDisabled = paymentDisabled,
+                    yearDiscountApplied = false,
+                    distanceTitle = distanceItem.value
                 )
             )
         }
         return startStatements
     }
+}
+
+private fun calculatePriceForStartStartStatement(distanceItem: DistanceItem.DistanceInfo): Int {
+    val stageCount = distanceItem.groups[0].stages?.size ?: 1
+    val totalPrice = distanceItem.distance.price.toIntOrNull() ?: 0
+    val memberPrice = totalPrice / stageCount
+    return memberPrice
+}
+
+private fun calculatePriceForComboStartStartStatement(distanceItem: DistanceItem.DistanceCombo): Int {
+    val stageCount = distanceItem.distances.map { it.distanceStages }.size
+    val totalPrice = distanceItem.price ?: 0
+    val memberPrice = totalPrice / stageCount
+    return memberPrice
+}
+
+private fun calculateAge(birthday: String): Int {
+    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val birthLocalDate = LocalDate.parse(birthday, dateFormatter)
+    val currentDate = LocalDate.now()
+    return ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
 }
 
 private fun mapCitiesToStartStatement(city: List<City>): List<StartStatement.City> =

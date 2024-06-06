@@ -47,7 +47,7 @@ fun StartsSearchBarInner(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
+                contentDescription = "ArrowBack",
                 tint = MaterialTheme.colorScheme.outline
             )
         }
@@ -76,7 +76,7 @@ fun StartsSearchBarInner(
             ) {
                 Icon(
                     imageVector = Icons.Default.Mic,
-                    contentDescription = null,
+                    contentDescription = "Mic",
                     tint = MaterialTheme.colorScheme.outline
                 )
             }
@@ -87,7 +87,7 @@ fun StartsSearchBarInner(
                 Icon(
 
                     imageVector = Icons.Default.Close,
-                    contentDescription = null,
+                    contentDescription = "Close",
                     tint = Color.Gray
                 )
             }
@@ -97,7 +97,7 @@ fun StartsSearchBarInner(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Notes,
-                contentDescription = null,
+                contentDescription = "Notes",
                 tint = if (isWithFilter)
                     MaterialTheme.colorScheme.tertiary
                 else

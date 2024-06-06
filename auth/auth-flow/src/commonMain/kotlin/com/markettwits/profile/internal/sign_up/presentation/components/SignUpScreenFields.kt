@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
@@ -96,11 +95,10 @@ internal fun SignUpScreenFields(
         onValueChanged(statement.copy(password = it))
     }
 
-    OutlinedTextFieldBase(
+    OutlinePasswordTextField(
         modifier = modifier,
         label = "Подтвердите пароль",
         value = statement.repeatPassword,
-        visualTransformation = PasswordVisualTransformation(),
     ) {
         onValueChanged(statement.copy(repeatPassword = it))
     }

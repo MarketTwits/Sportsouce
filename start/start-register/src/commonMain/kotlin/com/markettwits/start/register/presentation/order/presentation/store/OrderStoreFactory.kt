@@ -16,6 +16,7 @@ class OrderStoreFactory(
     fun create(
         state: State?,
         distanceInfo: DistanceItem,
+        discounts: List<DistanceItem.Discount>,
         startTitle: String,
         starId: Int,
         paymentType: String,
@@ -28,6 +29,7 @@ class OrderStoreFactory(
             interactor,
             startTitle,
             distanceInfo,
+            discounts,
             paymentDisabled,
             paymentType
         ),

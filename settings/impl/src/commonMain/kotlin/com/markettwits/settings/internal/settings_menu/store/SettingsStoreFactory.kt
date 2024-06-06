@@ -7,23 +7,26 @@ import com.markettwits.IntentAction
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.Intent
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.Label
 import com.markettwits.settings.internal.settings_menu.store.SettingsStore.State
+import com.markettwits.version.ApplicationVersionManager
 
 class SettingsStoreFactory(
     private val storeFactory: StoreFactory,
+    private val versionManager: ApplicationVersionManager,
     private val intentAction: IntentAction
 ) {
 
-    fun create(): SettingsStore = SettingsStoreImpl(intentAction)
+    fun create(): SettingsStore = SettingsStoreImpl(intentAction, versionManager)
 
 
     private inner class SettingsStoreImpl(
-        private val intentAction: IntentAction
+        private val intentAction: IntentAction,
+        private val versionManager: ApplicationVersionManager,
     ) : SettingsStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "SettingsStore",
-            initialState = State,
+            initialState = State(null),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { SettingsExecutor(intentAction) },
+            executorFactory = { SettingsExecutor(intentAction, versionManager) },
             reducer = SettingsReducer
         )
 }

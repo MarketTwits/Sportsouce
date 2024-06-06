@@ -35,7 +35,7 @@ fun RegisterSuccessScreen(
         ) {
             Image(
                 imageVector = SuccessPaymantIc,
-                contentDescription = null
+                contentDescription = "Success"
             )
             Spacer(modifier = Modifier.padding(14.dp))
             Text(

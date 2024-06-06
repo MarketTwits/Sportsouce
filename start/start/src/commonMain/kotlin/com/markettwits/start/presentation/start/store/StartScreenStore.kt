@@ -55,7 +55,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String,
-            val startTitle: String
+            val startTitle: String,
+            val discount: List<DistanceItem.Discount>
         ) : Label
 
         data object OnClickBack : Label
@@ -95,12 +96,14 @@ class StartScreenStoreFactory(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
+
                 is Intent.OnClickDistance -> publish(
                     Label.OnClickDistance(
                         intent.distanceInfo,
                         intent.paymentDisabled,
                         intent.paymentType,
-                        getState().data?.title ?: ""
+                        getState().data?.title ?: "",
+                        getState().data?.discounts ?: emptyList()
                     )
                 )
 

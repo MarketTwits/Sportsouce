@@ -45,7 +45,8 @@ internal fun StartDescription(modifier: Modifier, description: String) {
             text = displayText,
             fontSize = 14.sp,
             fontFamily = FontNunito.medium(),
-            lineHeight = 14.sp,
+            lineHeight = 15.sp,
+            selectable = true,
             color = textColor,
         )
 

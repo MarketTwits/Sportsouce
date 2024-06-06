@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.start.presentation.common.StartContentBasePanel
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -56,7 +55,7 @@ internal fun StartMembersStatistics(
 
 
 @Composable
-fun ColorPalette(
+private fun ColorPalette(
     modifier: Modifier = Modifier,
     members: ImmutableList<StartRegistrationDistanceStatistics>
 ) {
@@ -79,7 +78,7 @@ fun ColorPalette(
 }
 
 @Composable
-fun BarChartItem(
+private fun BarChartItem(
     modifier: Modifier = Modifier,
     member: StartRegistrationDistanceStatistics,
 ) {
@@ -98,7 +97,7 @@ fun BarChartItem(
         Text(
             text = member.distance,
             color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.medium(),
+            fontFamily = FontNunito.semiBoldBold(),
             fontSize = 14.sp,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 6.dp)
@@ -144,17 +143,16 @@ private fun mapColor(index: Int): Color =
         else -> Color.random()
     }
 
-fun Color.Companion.random(): Color {
+private fun Color.Companion.random(): Color {
     val red = Random.nextInt(256)
     val green = Random.nextInt(256)
     val blue = Random.nextInt(256)
     return Color(red, green, blue)
 }
 
-
 @Stable
 @Immutable
-data class StartRegistrationDistanceStatistics(
+private data class StartRegistrationDistanceStatistics(
     val count: Int,
     val distance: String,
     val color: Color

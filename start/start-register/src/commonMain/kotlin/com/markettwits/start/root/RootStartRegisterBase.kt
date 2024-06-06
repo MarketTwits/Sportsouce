@@ -51,7 +51,8 @@ class RootStartRegisterBase(
             distanceInfo = content.distanceItem,
             paymentDisabled = content.isPaymentDisabled,
             paymentType = content.paymentType,
-            startTitle = content.startTitle
+            startTitle = content.startTitle,
+            discounts = content.discounts
         ),
         handleBackButton = true,
         childFactory = ::childStack,
@@ -97,6 +98,7 @@ class RootStartRegisterBase(
                         startId = config.startId,
                         paymentDisabled = config.paymentDisabled,
                         distanceInfo = config.distanceInfo,
+                        discounts = config.discounts,
                         paymentType = config.paymentType,
                         startTitle = config.startTitle,
                         storeFactory = scope.get(),

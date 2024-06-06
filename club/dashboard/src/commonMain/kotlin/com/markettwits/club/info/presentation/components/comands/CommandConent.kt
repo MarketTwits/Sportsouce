@@ -24,8 +24,8 @@ import com.markettwits.core_ui.items.base_screen.FullImageScreen
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.text.HtmlText
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 fun CommandContent(
@@ -86,7 +86,7 @@ private fun TrainerItemContent(
                         onClickImage(trainer.imageUrl)
                     },
                 model = imageRequestCrossfade(trainer.imageUrl),
-                contentDescription = null
+                contentDescription = trainer.name
             )
             Text(
                 textAlign = TextAlign.Start,

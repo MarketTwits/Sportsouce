@@ -69,20 +69,24 @@ fun StartOrderScreen(component: OrderComponentComponent) {
                 Spacer(modifier = Modifier.padding(5.dp))
                 Column(modifier = Modifier.padding(horizontal = 14.dp)) {
                     StartDistanceInfoBox(
-                        format = order.distanceInfo.format,
                         startTitle = order.orderTitle,
-                        distances = order.distanceInfo.distances
+                        distances = order.distanceInfo,
+                        visibleIndex = order.currentOrderDistanceVisibleIndex,
+                        onClickDistance = {
+                            component.obtainEvent(OrderStore.Intent.OnClickDistance(it))
+                        }
                     )
                     StartMembers(
-                        members = order.members,
+                        members = order.distanceInfo,
+                        visibleIndex = order.currentOrderDistanceVisibleIndex,
                         onClickMember = { member, id ->
                             component.obtainEvent(OrderStore.Intent.OnClickMember(member, id))
                         })
                     PaymentTypeBox(
                         paymentDisabled = order.paymentDisabled,
                         paymentType = order.paymentType,
-                        members = order.members,
-                        distances = order.distanceInfo.distances,
+                        members = order.distanceInfo.flatMap { it.members },
+                        distances = order.distanceInfo.map { it.distance },
                         payNow = order.payNow,
                         onClickChangePayment = {
                             component.obtainEvent(OrderStore.Intent.ChangePaymentType(it))

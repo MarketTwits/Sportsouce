@@ -32,7 +32,8 @@ internal abstract class StartDistancesToUiMapperAbstract : StartDistancesToUiMap
         date: String
     ): Int {
         val totalPrices = distances.sumOf { getPriceForDate(it.distance, date) }
-        return calculateDiscountedCost(totalPrices, sale)
+        return totalPrices
+        // return calculateDiscountedCost(totalPrices, sale)
     }
 
     private fun calculateRemainingSlotsBase(

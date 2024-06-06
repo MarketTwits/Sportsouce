@@ -24,7 +24,9 @@ data class StartItem(
     val conditionFile: ConditionFile,
     val commentsRemote: Comments,
     val result: List<Result>,
-    val usefulLinks: List<Result>
+    val usefulLinks: List<Result>,
+    val startTimes: StartTimes,
+    val discounts: List<DistanceItem.Discount>
 ) {
     sealed class ConditionFile {
         data class Base(val url: String) : ConditionFile()
@@ -44,6 +46,13 @@ data class StartItem(
             val tags: Map<Int, String>,
         )
     }
+
+    data class StartTimes(
+        val beginningRegistry: String,
+        val endRegistry: String,
+        val beginningStart: String,
+        val endStart: String,
+    )
 
     data class Result(
         val id: Int,

@@ -72,6 +72,7 @@
             <option value="$PROJECT_DIR$/selfupdater/thirdparty/api" />
             <option value="$PROJECT_DIR$/selfupdater/thirdparty/github" />
             <option value="$PROJECT_DIR$/selfupdater/unknown" />
+            <option value="$PROJECT_DIR$/selfupdater/ver" />
             <option value="$PROJECT_DIR$/settings" />
             <option value="$PROJECT_DIR$/settings/api" />
             <option value="$PROJECT_DIR$/settings/impl" />

@@ -46,7 +46,7 @@ fun SearchFilterContent(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Notes,
-                    contentDescription = null,
+                    contentDescription = "Notes",
                     tint = MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 10.dp))
@@ -77,7 +77,7 @@ fun SearchFilterContent(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = null,
+                    contentDescription = "Close",
                     tint = MaterialTheme.colorScheme.outline
                 )
             }

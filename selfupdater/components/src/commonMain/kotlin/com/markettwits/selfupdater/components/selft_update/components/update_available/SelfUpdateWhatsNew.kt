@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.mikepenz.markdown.compose.LocalMarkdownColors
-import com.mikepenz.markdown.compose.LocalMarkdownTypography
 import com.mikepenz.markdown.compose.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 
 @Composable
 internal fun SelfUpdateWhatsNew(
@@ -79,18 +79,9 @@ internal fun SelfUpdateWhatsNew(
             Markdown(
                 modifier = Modifier.padding(10.dp),
                 content = changes,
-                colors = LocalMarkdownColors.current,
-                typography = LocalMarkdownTypography.current
+                colors = markdownColor(),
+                typography = markdownTypography()
             )
-//            MarkdownText(
-//                modifier = Modifier.padding(10.dp),
-//                markdown = changes,
-//                style = TextStyle(
-//                    color = MaterialTheme.colorScheme.onPrimary,
-//                    fontSize = 14.sp,
-//                    fontFamily = FontNunito.regular(),
-//                )
-//            )
         }
     }
 }

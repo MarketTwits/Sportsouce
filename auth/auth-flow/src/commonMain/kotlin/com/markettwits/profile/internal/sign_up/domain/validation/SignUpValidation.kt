@@ -20,6 +20,7 @@ internal class SignUpValidationBase : SignUpValidation {
                     statement.repeatPassword
                 )
             ) else throw IllegalArgumentException("Пароли не совпадают")
+            if (!statement.password.contains(" ")) else throw IllegalArgumentException("Пароль не должен содержать пробелов")
             statement
         }
 

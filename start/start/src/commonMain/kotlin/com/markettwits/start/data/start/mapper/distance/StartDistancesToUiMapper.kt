@@ -1,6 +1,7 @@
 package com.markettwits.start.data.start.mapper.distance
 
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.cloud.model.start.Discount
 import com.markettwits.cloud.model.start_member.StartMemberItem
 
 internal interface StartDistancesToUiMapper {
@@ -15,5 +16,6 @@ internal interface StartDistancesToUiMapper {
         kindOfSport: String
     ): List<DistanceItem>
 
+    fun mapDiscountCloud(discount: List<Discount>): List<DistanceItem.Discount>
 
 }

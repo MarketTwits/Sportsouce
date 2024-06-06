@@ -21,6 +21,5 @@ class ThemeComponentBase(
     private val feature = instanceKeeper.getOrCreate {
         ThemeComponentFeature(scope.get())
     }
-
     override fun getAppTheme(): StateFlow<ColorTheme> = feature.getAppTheme()
 }

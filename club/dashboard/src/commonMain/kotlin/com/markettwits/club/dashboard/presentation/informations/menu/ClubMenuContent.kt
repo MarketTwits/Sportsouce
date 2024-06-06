@@ -1,6 +1,5 @@
 package com.markettwits.club.dashboard.presentation.informations.menu
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,11 +10,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.ModelTraining
 import androidx.compose.material.icons.filled.QuestionAnswer
 import androidx.compose.material.icons.filled.SportsRugby
 import androidx.compose.material.icons.filled.SupportAgent
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -69,7 +66,7 @@ fun ClubMenuItem(
         Row(modifier = Modifier.fillMaxWidth().weight(0.9f)) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = "Club menu",
                 tint = MaterialTheme.colorScheme.secondary
             )
             Spacer(modifier = Modifier.padding(4.dp))
@@ -95,7 +92,7 @@ fun ClubMenuItem(
                 .size(40.dp)
                 .weight(0.1f),
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
+            contentDescription = "Click Right",
             tint = MaterialTheme.colorScheme.outline
         )
     }

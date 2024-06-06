@@ -19,12 +19,12 @@ data class StartRegisterRequest(
     val registration_without_payment: Boolean,
     val start_id: Int
 ) {
+    /** @param alone - false when members more then one */
     @Serializable
     data class Combo(
         val alone: Boolean,
         val day: Int,
         val distance: String,
-        val format: String,
         val distances: List<Distance>,
         val payment_disabled: Boolean?,
         val payment_type: String,

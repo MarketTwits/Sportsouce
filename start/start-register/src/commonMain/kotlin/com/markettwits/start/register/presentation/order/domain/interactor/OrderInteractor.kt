@@ -16,6 +16,7 @@ interface OrderInteractor {
     suspend fun order(
         startTitle: String,
         distanceInfo: DistanceItem,
+        discounts: List<DistanceItem.Discount>,
         paymentDisabled: Boolean,
         paymentType: String
     ): Result<OrderStatement>

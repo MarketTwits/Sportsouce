@@ -3,6 +3,7 @@ package com.markettwits.start.register.presentation.order.domain.interactor
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.register.domain.StartRegistryResult
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
+import com.markettwits.start.register.presentation.order.domain.price.updatePriceWithDiscount
 import com.markettwits.start.register.presentation.order.domain.validation.OrderValidation
 
 class OrderInteractorBase(
@@ -27,8 +28,12 @@ class OrderInteractorBase(
     override suspend fun order(
         startTitle: String,
         distanceInfo: DistanceItem,
+        discounts: List<DistanceItem.Discount>,
         paymentDisabled: Boolean,
         paymentType: String
     ): Result<OrderStatement> =
-        repository.loadOrder(startTitle, distanceInfo, paymentDisabled, paymentType)
+        repository.loadOrder(startTitle, distanceInfo, discounts, paymentDisabled, paymentType)
+            .map {
+                it.updatePriceWithDiscount()
+            }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -25,7 +26,6 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.social_networks.IconTelegram
 import com.markettwits.core_ui.items.image.social_networks.IconVk
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.start.presentation.common.StartContentBasePanel
 
 @Composable
 internal fun StartOrganizers(
@@ -56,6 +56,7 @@ private fun StartOrganizersContent(
                     contentDescription = "icon",
                     tint = MaterialTheme.colorScheme.secondary
                 )
+                Spacer(Modifier.padding(horizontal = 2.dp))
                 Text(
                     text = it.name,
                     color = MaterialTheme.colorScheme.tertiary,

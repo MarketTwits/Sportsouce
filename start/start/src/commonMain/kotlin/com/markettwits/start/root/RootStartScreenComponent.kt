@@ -2,6 +2,7 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
 import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
@@ -37,7 +38,8 @@ interface RootStartScreenComponent {
         data class StartRegistration(
             val startId: Int,
             val startTitle: String,
-            val distanceInfo: com.markettwits.cloud.ext_model.DistanceItem,
+            val discounts: List<DistanceItem.Discount>,
+            val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : Config()

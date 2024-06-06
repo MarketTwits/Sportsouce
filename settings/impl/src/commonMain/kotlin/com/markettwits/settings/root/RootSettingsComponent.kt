@@ -17,6 +17,8 @@ interface RootSettingsComponent {
     sealed class StackConfig {
         @Serializable
         data object SettingsMenu : StackConfig()
+
+        @Serializable
         data object SelfUpdate : StackConfig()
     }
 
@@ -24,6 +26,8 @@ interface RootSettingsComponent {
     sealed interface SlotConfig {
         @Serializable
         data object ChangeTheme : SlotConfig
+
+        @Serializable
         data object Appearance : SlotConfig
     }
 
@@ -32,7 +36,6 @@ interface RootSettingsComponent {
         data class SelfUpdate(val component: SelfUpdateComponent) : StackChild()
     }
 
-    @Serializable
     sealed interface SlotChild {
         data class ChangeTheme(val component: com.markettwits.settings.internal.change_theme.component.ChangeThemeComponent) :
             SlotChild

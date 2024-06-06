@@ -34,7 +34,9 @@ fun OrderComponentBox(
             OrderPriceInfo(
                 modifier = Modifier.padding(10.dp),
                 membersCount = price.membersCount,
-                discountInCache = price.discountInCache,
+                discountCombo = price.discountComboInCache,
+                discountPromo = price.discountPromoInCache,
+                discountAge = price.discountAgeInCache,
                 total = price.total
             )
         }

@@ -84,7 +84,7 @@ fun <E> DropDownSpinner(
                 .size(24.dp),
             tint = MaterialTheme.colorScheme.tertiary,
             imageVector = if (!isOpen) Icons.Default.ArrowDropDown else Icons.Default.ArrowDropUp,
-            contentDescription = null
+            contentDescription = "Close"
         )
         Spacer(
             modifier = Modifier

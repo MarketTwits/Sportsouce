@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
@@ -18,6 +20,7 @@ fun SettingsScreen(component: SettingsComponent) {
 
     val isSystemInDarkTheme = LocalDarkOrLightTheme.current
     val applicationItems = defaultApplicationElements(isSystemInDarkTheme)
+    val state by component.state.collectAsState()
 
     Scaffold(
         topBar = {
@@ -31,6 +34,8 @@ fun SettingsScreen(component: SettingsComponent) {
             modifier = Modifier.padding(top = it.calculateTopPadding()),
             applicationsMenu = applicationItems,
             socialMenu = defaultSocialElements(),
+            versionName = state.version?.versionName ?: "",
+            versionBuildNumber = state.version?.versionBuildNumber ?: "",
             onClickMenu = {
                 component.obtainEvent(SettingsStore.Intent.OnClickItemMenu(it.id))
             }

@@ -70,7 +70,7 @@ class RootClubComponentBase(
                 createClubRegistrationComponent(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    workoutId = config.workoutId
+                    type = config.type
                 ) {
                     workoutRegistrationOuPuts(it)
                 }
@@ -103,7 +103,7 @@ class RootClubComponentBase(
                 )
 
             is ClubDashboardComponent.Output.Subscription -> slotNavigation.activate(
-                RootClubComponent.SlotConfig.WorkoutRegistration(output.workoutId)
+                RootClubComponent.SlotConfig.WorkoutRegistration(output.type)
             )
         }
     }

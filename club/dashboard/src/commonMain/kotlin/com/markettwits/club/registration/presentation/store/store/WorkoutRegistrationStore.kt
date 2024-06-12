@@ -1,6 +1,7 @@
 package com.markettwits.club.registration.presentation.store.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Intent
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Label
@@ -9,7 +10,12 @@ import com.markettwits.club.registration.presentation.store.store.WorkoutRegistr
 interface WorkoutRegistrationStore : Store<Intent, State, Label> {
 
     data class State(
-        val form: WorkoutRegistrationForm = WorkoutRegistrationForm(0, ",", "", ""),
+        val form: WorkoutRegistrationForm = WorkoutRegistrationForm(
+            RegistrationType.Empty,
+            ",",
+            "",
+            ""
+        ),
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val isSuccess: Boolean = false,

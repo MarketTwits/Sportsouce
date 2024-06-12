@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 interface RootComponent {
     val childStack: Value<ChildStack<*, Child>>
     val slotChild: Value<ChildSlot<*, Navigation>>
+
     @Serializable
     sealed class Configuration {
         @Serializable

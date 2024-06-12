@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
 import com.markettwits.club.info.presentation.component.ClubInfoComponent
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent
 import kotlinx.serialization.Serializable
 
@@ -27,7 +28,7 @@ interface RootClubComponent {
         ) : SlotConfig
 
         @Serializable
-        data class WorkoutRegistration(val workoutId: Int) : SlotConfig
+        data class WorkoutRegistration(val type: RegistrationType) : SlotConfig
     }
 
     sealed class StackChild {

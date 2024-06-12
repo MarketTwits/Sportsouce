@@ -4,6 +4,8 @@ import ru.ok.tracer.CoreTracerConfiguration
 import ru.ok.tracer.TracerConfiguration
 import ru.ok.tracer.crash.report.CrashFreeConfiguration
 import ru.ok.tracer.crash.report.CrashReportConfiguration
+import ru.ok.tracer.disk.usage.DiskUsageConfiguration
+import ru.ok.tracer.heap.dumps.HeapDumpConfiguration
 
 abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
 
@@ -12,6 +14,8 @@ abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
             CoreTracerConfiguration.build {},
             CrashReportConfiguration.build {},
             CrashFreeConfiguration.build {},
+            HeapDumpConfiguration.build {},
+            DiskUsageConfiguration.build {},
         )
 
     override val tracerConfiguration: MutableList<TracerConfiguration>

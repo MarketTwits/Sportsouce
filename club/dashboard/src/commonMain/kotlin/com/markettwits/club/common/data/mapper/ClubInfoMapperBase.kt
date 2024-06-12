@@ -13,6 +13,7 @@ import com.markettwits.club.info.domain.models.Trainer
 import com.markettwits.club.info.domain.models.Training
 
 internal class ClubInfoMapperBase : ClubInfoMapper {
+
     override fun mapTrainers(trainersRemoteRow: TrainersRemote): List<Trainer> =
         trainersRemoteRow.rows.map {
             Trainer(
@@ -53,7 +54,7 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
                 id = it.id,
                 type = it.type,
                 htmlDescription = it.description,
-                imageUrl = it.icon.fullPath
+                imageUrl = it.icon?.fullPath ?: ""
             )
         }
 

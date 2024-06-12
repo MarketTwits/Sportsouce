@@ -8,6 +8,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
 import com.markettwits.bottom_bar.components.BottomBar
@@ -38,13 +40,12 @@ private fun BottomBarInner(component: RootComponent, modifier: Modifier) {
         }
     }
 }
-
 @Composable
 private fun Children(component: RootComponent, modifier: Modifier = Modifier) {
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = component.childStack,
         modifier = modifier,
-        animation = stackAnimation(fade()),
+        animation = stackAnimation(fade() + scale()),
     ) {
         when (val child = it.instance) {
             is RootComponent.Child.Starts -> RootStartsScreen(child.component)
@@ -52,4 +53,5 @@ private fun Children(component: RootComponent, modifier: Modifier = Modifier) {
             is RootComponent.Child.Review -> RootReviewScreen(child.component)
         }
     }
+
 }

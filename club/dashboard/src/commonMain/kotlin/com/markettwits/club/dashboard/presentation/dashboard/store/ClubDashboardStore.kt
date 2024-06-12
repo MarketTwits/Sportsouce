@@ -6,6 +6,7 @@ import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboard
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Label
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.State
 import com.markettwits.club.info.domain.models.ClubInfo
+import com.markettwits.club.registration.domain.RegistrationType
 
 interface ClubDashboardStore : Store<Intent, State, Label> {
     data class State(
@@ -22,7 +23,8 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object OnClickBack : Intent
-        data class OnClickRegistration(val workoutId: Int? = null) : Intent
+        data class OnClickRegistration(val type: RegistrationType) : Intent
+        data object OnClickRegistrationSubscription : Intent
         data class OnClickKindOfSport(val subscriptionsUi: SubscriptionsUi) : Intent
         data class OnClickSubscription(val subscriptionUi: SubscriptionUi) : Intent
         data class OnClickInfo(val index: Int) : Intent
@@ -41,7 +43,7 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
     sealed interface Label {
         data object GoBack : Label
         data class OnClickInfo(val index: Int, val items: List<ClubInfo>) : Label
-        data class OnClickRegistration(val workoutId: Int) : Label
+        data class OnClickRegistration(val type: RegistrationType) : Label
     }
 
 }

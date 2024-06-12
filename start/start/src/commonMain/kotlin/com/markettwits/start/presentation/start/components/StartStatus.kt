@@ -61,7 +61,7 @@ internal fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, dat
                 fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     }

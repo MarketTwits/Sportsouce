@@ -6,6 +6,7 @@ import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboard
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Label
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Message
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.State
+import com.markettwits.club.registration.domain.RegistrationType
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -50,10 +51,10 @@ internal class ClubDashboardExecutor(
                     getState().subscription.clubInfo
                 )
             )
-            is Intent.OnClickRegistration -> onClickRegistration(
-                getState().subscription,
-                intent.workoutId
-            )
+            is Intent.OnClickRegistration -> publish(Label.OnClickRegistration(intent.type))
+
+
+            Intent.OnClickRegistrationSubscription -> onClickRegistrationSubscription(getState().subscription)
         }
     }
 
@@ -63,9 +64,10 @@ internal class ClubDashboardExecutor(
         }
     }
 
-    private fun onClickRegistration(state: SubscriptionUiState, workoutId: Int?) {
-        val id = workoutId ?: (state.getSelectedSubscriptionUi()?.subscription?.id ?: 0)
-        publish(Label.OnClickRegistration(id))
+    private fun onClickRegistrationSubscription(state: SubscriptionUiState) {
+        val id = (state.getSelectedSubscriptionUi()?.subscription?.id ?: 0)
+        val count = state.priceInfo.monthOfCount
+        publish(Label.OnClickRegistration(RegistrationType.Subscription(count = count, id = id)))
     }
 
     private fun launchDashboard(
@@ -88,6 +90,8 @@ internal class ClubDashboardExecutor(
     private suspend fun launchClubInfo(state: SubscriptionUiState) {
         clubRepository.clubInfo().onSuccess {
             dispatch(Message.Loaded(state.copy(clubInfo = it)))
+        }.onFailure {
+            println(it.message.toString())
         }
     }
 }

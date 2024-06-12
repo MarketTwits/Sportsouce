@@ -5,6 +5,7 @@ import com.markettwits.club.cloud.di.clubCloudModule
 import com.markettwits.club.common.data.ClubRepositoryBase
 import com.markettwits.club.common.domain.ClubRepository
 import com.markettwits.club.registration.data.WorkoutRegistrationUseCaseBase
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationUseCase
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponentBase
@@ -24,12 +25,12 @@ val workoutRegistrationModule = module {
 internal fun createClubRegistrationComponent(
     storeFactory: WorkoutRegistrationStoreFactory,
     componentContext: ComponentContext,
-    workoutId: Int,
+    type: RegistrationType,
     output: (WorkoutRegistrationComponent.Output) -> Unit,
 ): WorkoutRegistrationComponent =
     WorkoutRegistrationComponentBase(
         componentContext = componentContext,
-        workoutId = workoutId,
+        type = type,
         storeFactory = storeFactory,
         output = output,
     )

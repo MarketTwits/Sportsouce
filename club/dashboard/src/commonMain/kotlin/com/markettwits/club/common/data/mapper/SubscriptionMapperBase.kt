@@ -6,6 +6,7 @@ import com.markettwits.club.cloud.models.workout.WorkoutRegistrationRequestRemot
 import com.markettwits.club.common.domain.mapper.SubscriptionMapper
 import com.markettwits.club.dashboard.domain.Subscription
 import com.markettwits.club.dashboard.domain.SubscriptionItems
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 
 class SubscriptionMapperBase : SubscriptionMapper {
@@ -19,7 +20,9 @@ class SubscriptionMapperBase : SubscriptionMapper {
 
     override fun map(workoutRegistrationForm: WorkoutRegistrationForm): WorkoutRegistrationRequestRemote =
         WorkoutRegistrationRequestRemote(
-            workoutId = workoutRegistrationForm.workoutId,
+            id = workoutRegistrationForm.type.id,
+            count = mapSubscriptionCount(workoutRegistrationForm),
+            type = mapSubscriptionType(workoutRegistrationForm),
             name = workoutRegistrationForm.name,
             surname = workoutRegistrationForm.surname,
             phone = workoutRegistrationForm.phone
@@ -37,4 +40,16 @@ class SubscriptionMapperBase : SubscriptionMapper {
             price = it.price
         )
     }
+
+    private fun mapSubscriptionType(workoutRegistrationForm: WorkoutRegistrationForm): String =
+        when (workoutRegistrationForm.type) {
+            is RegistrationType.Schedule -> "schedule"
+            is RegistrationType.Subscription -> "subscription"
+            is RegistrationType.Trainer -> "trainer"
+            is RegistrationType.Workout -> "workout"
+            is RegistrationType.Empty -> throw IllegalStateException("Request should contains non Empty Request exception")
+        }
+
+    private fun mapSubscriptionCount(workoutRegistrationForm: WorkoutRegistrationForm): Int? =
+        if (workoutRegistrationForm.type is RegistrationType.Subscription) workoutRegistrationForm.type.count else null
 }

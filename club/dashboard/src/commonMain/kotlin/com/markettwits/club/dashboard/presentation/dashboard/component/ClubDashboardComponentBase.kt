@@ -45,7 +45,7 @@ internal class ClubDashboardComponentBase(
                 )
                 is ClubDashboardStore.Label.OnClickRegistration -> output(
                     ClubDashboardComponent.Output.Subscription(
-                        it.workoutId
+                        it.type
                     )
                 )
             }

@@ -20,6 +20,7 @@ import com.markettwits.club.dashboard.presentation.dashboard.components.title.Ma
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.informations.menu.ClubMenuContent
 import com.markettwits.club.info.domain.models.findFirstSchedule
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
@@ -75,7 +76,7 @@ fun ClubDashboardScreen(
                         component.obtainEvent(ClubDashboardStore.Intent.OnClickIncrease)
                     },
                     onClickSubscribe = {
-                        component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration())
+                        component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistrationSubscription)
                     }
                 )
                 if (state.subscription.clubInfo.isNotEmpty()) {
@@ -87,7 +88,11 @@ fun ClubDashboardScreen(
                     ScheduleContent(
                         schedule = schedules.schedule,
                         onClick = {
-                            component.obtainEvent(ClubDashboardStore.Intent.OnClickRegistration(it.id))
+                            component.obtainEvent(
+                                ClubDashboardStore.Intent.OnClickRegistration(
+                                    RegistrationType.Schedule(it.id)
+                                )
+                            )
                         }
                     )
                 }

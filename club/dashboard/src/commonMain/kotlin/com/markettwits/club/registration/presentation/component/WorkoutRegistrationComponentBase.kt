@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStoreFactory
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 class WorkoutRegistrationComponentBase(
     componentContext: ComponentContext,
     storeFactory: WorkoutRegistrationStoreFactory,
-    private val workoutId: Int,
+    private val type: RegistrationType,
     private val output: (WorkoutRegistrationComponent.Output) -> Unit
 
 ) : WorkoutRegistrationComponent, ComponentContext by componentContext {
@@ -24,7 +25,7 @@ class WorkoutRegistrationComponentBase(
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(workoutId)
+        storeFactory.create(type)
     }
     override val state: StateFlow<WorkoutRegistrationStore.State> = store.stateFlow
 

@@ -52,6 +52,9 @@ org-jetbrains-kotlin-jvm = "1.9.23"
 tracer = "0.2.15"
 kotlinx-collections-immutable = "0.3.7"
 
+#Kermit Logger
+kermit = "2.0.4"
+
 kotlinGradlePluginVersion = "1.9.0"
 
 [libraries]
@@ -102,6 +105,13 @@ koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "
 
 #Tracer
 tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", version.ref = "tracer" }
+tracer-heap-dump = { group = "ru.ok.tracer", name = "tracer-heap-dumps", version.ref = "tracer" }
+tracer-disk-usage = { group = "ru.ok.tracer", name = "tracer-disk-usage", version.ref = "tracer" }
+tracer-profiler-sampling = { group = "ru.ok.tracer", name = "tracer-profiler-sampling", version.ref = "tracer" }
+
+#Kermit
+kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
+
 
 #Gradle Plugins
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}

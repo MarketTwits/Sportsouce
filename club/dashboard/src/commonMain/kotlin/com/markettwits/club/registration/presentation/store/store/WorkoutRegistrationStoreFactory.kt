@@ -3,6 +3,7 @@ package com.markettwits.club.registration.presentation.store.store
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationUseCase
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Intent
@@ -14,19 +15,19 @@ class WorkoutRegistrationStoreFactory(
     private val useCase: WorkoutRegistrationUseCase,
     private val intentAction: IntentAction
 ) {
-    fun create(workoutId: Int): WorkoutRegistrationStore =
-        WorkoutRegistrationStoreImpl(useCase, intentAction, workoutId)
+    fun create(registrationType: RegistrationType): WorkoutRegistrationStore =
+        WorkoutRegistrationStoreImpl(useCase, intentAction, registrationType)
 
     private inner class WorkoutRegistrationStoreImpl(
         private val useCase: WorkoutRegistrationUseCase,
         private val intentAction: IntentAction,
-        private val workoutId: Int
+        private val registrationType: RegistrationType
     ) :
         WorkoutRegistrationStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "WorkoutRegistrationStore",
             initialState = State(
-                form = WorkoutRegistrationForm(workoutId, "", "", "")
+                form = WorkoutRegistrationForm(registrationType, "", "", "")
             ),
             executorFactory = { WorkoutRegistrationExecutor(useCase, intentAction) },
             reducer = WorkoutRegistrationReducer

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".app.SportSouceApp"
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"

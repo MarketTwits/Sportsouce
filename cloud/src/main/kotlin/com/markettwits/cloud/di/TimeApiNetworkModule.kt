@@ -11,9 +11,7 @@ import org.koin.dsl.module
 
 val timeApiNetworkModule = module {
     single<TimeApi> {
-        TimeApiImpl(
-            get(named("time"))
-        )
+        TimeApiImpl(get(named("time")))
     }
     single<HttpClientProvider>(named("time")) {
         HttpClientProviderBase(
@@ -23,4 +21,5 @@ val timeApiNetworkModule = module {
         )
     }
 }
+
 private val timeApiBaseUrl = "https://timeapi.io"

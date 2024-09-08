@@ -44,6 +44,7 @@ class OrderComponentComponentBase(
     }
 
     override val model: StateFlow<OrderStore.State> = store.stateFlow
+
     override fun obtainEvent(event: OrderStore.Intent) {
         store.accept(event)
     }

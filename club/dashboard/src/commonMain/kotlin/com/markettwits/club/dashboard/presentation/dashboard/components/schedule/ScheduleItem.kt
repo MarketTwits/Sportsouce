@@ -44,10 +44,12 @@ internal fun ScheduleItem(
                 title = "Место проведения",
                 value = schedule.address
             )
-            ScheduleItemRowInfo(
-                title = "Тренер",
-                value = schedule.trainerFullName
-            )
+            if (schedule.trainerFullName.isNotEmpty()) {
+                ScheduleItemRowInfo(
+                    title = "Тренер",
+                    value = schedule.trainerFullName
+                )
+            }
             ScheduleItemRowInfo(
                 title = "Описание",
                 value = schedule.description,

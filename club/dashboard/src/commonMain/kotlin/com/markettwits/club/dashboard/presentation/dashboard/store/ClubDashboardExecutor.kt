@@ -1,18 +1,21 @@
 package com.markettwits.club.dashboard.presentation.dashboard.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.club.cloud.exception.isNetworkConnectionError
 import com.markettwits.club.common.domain.ClubRepository
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Intent
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Label
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Message
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.State
 import com.markettwits.club.registration.domain.RegistrationType
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 internal class ClubDashboardExecutor(
     private val clubRepository: ClubRepository,
+    private val exceptionTracker: ExceptionTracker
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
@@ -51,6 +54,7 @@ internal class ClubDashboardExecutor(
                     getState().subscription.clubInfo
                 )
             )
+
             is Intent.OnClickRegistration -> publish(Label.OnClickRegistration(intent.type))
 
 
@@ -75,7 +79,6 @@ internal class ClubDashboardExecutor(
         onCompletion: suspend (SubscriptionUiState) -> Unit
     ) {
         scope.launch {
-
             clubRepository.subscriptions()
                 .onStart { dispatch(Message.Loading) }
                 .catch { dispatch(Message.Failed(it.message.toString())) }
@@ -91,7 +94,8 @@ internal class ClubDashboardExecutor(
         clubRepository.clubInfo().onSuccess {
             dispatch(Message.Loaded(state.copy(clubInfo = it)))
         }.onFailure {
-            println(it.message.toString())
+            if (!it.isNetworkConnectionError())
+                exceptionTracker.reportException(it, key = "ClubDashboardExecutor#launchClubInfo")
         }
     }
 }

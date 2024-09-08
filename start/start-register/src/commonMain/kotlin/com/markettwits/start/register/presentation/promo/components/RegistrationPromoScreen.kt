@@ -76,7 +76,7 @@ fun RegistrationPromoScreen(component: RegistrationPromoComponent) {
             )
             RegistrationButton(
                 modifier = Modifier.padding(10.dp),
-                title = "Прмиенить",
+                title = "Применить",
                 isEnabled = !state.isLoading,
                 isLoading = state.isLoading,
                 onClick = {

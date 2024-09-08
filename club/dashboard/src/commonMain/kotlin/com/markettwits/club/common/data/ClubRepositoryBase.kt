@@ -21,6 +21,7 @@ class ClubRepositoryBase(
     private val subscriptionMapper: SubscriptionMapper,
     private val clubInfoMapper: ClubInfoMapper
 ) : ClubRepository {
+
     override suspend fun subscriptions(): Flow<List<SubscriptionItems>> = flow {
         val subscriptions = subscriptionMapper.map(service.subscription())
         emit(subscriptions)

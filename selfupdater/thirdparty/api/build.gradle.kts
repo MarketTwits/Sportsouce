@@ -7,6 +7,9 @@ android {
 }
 kotlin {
     sourceSets {
+        androidMain.dependencies {
+            implementation(projects.selfupdater.googleplay)
+        }
         commonMain.dependencies {
             implementation(projects.selfupdater.api)
             implementation(projects.inappnotification.api)

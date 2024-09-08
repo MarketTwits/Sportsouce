@@ -12,7 +12,7 @@ internal fun StartSupport(
     component: StartSupportComponent,
     eventContent: (EventContent) -> Unit
 ) {
-    StartContentBasePanel(modifier = modifier, label = "Поддержкать проект") {
+    StartContentBasePanel(modifier = modifier, label = "Поддержать проект") {
         StartSupportScreen(modifier = modifier, component = component, event = eventContent)
     }
 }

@@ -36,12 +36,3 @@ object GradlePlugins {
         "5.3.5"
     )
 }
-
-//fun DependencyHandler.gradlePlugins(){
-//    implementation(GradlePlugins.TRACER)
-//    implementation(GradlePlugins.VK_COMPOSE)
-//    implementation(GradlePlugins.GET_BRAINS_COMPOSE)
-//    implementation(GradlePlugins.KOTLIN_KMP)
-//    implementation(GradlePlugins.KOTLIN_COMPOSE_PLUGIN)
-//    implementation(GradlePlugins.BUILD_CONFIG)
-//}

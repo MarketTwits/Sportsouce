@@ -14,9 +14,6 @@
   -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
  -dontwarn javax.annotation.**
 
-#-keep class com.markettwits.root.** { *;}
-#-keep class com.markettwits.theme.** { *;}
-
 -keepclassmembers class androidx.compose.ui.platform.ViewLayerContainer {
     protected void dispatchGetDisplayList(); }
 
@@ -24,10 +21,3 @@
     android.view.View findViewByAccessibilityIdTraversal(int); }
 
 -keep,allowshrinking class * extends androidx.compose.ui.node.ModifierNodeElement
-
-#-dontwarn com.markettwits.root.RootComponent
-#-dontwarn com.markettwits.root.RootComponentBase
-#-dontwarn com.markettwits.root.RootContentKt
-#-dontwarn com.markettwits.theme.theme.ThemeKt
-#-dontwarn com.markettwits.theme.theme.component.ThemeComponent
-#-dontwarn com.markettwits.theme.theme.component.ThemeComponentBase

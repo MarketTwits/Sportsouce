@@ -26,9 +26,10 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 fun main() {
 
+    Locale.setDefault(Locale("ru", "RUS"))
+
     overrideSchedulers(main = Dispatchers.Main::asScheduler)
 
-    Locale.setDefault(Locale("ru", "RU"))
     InStorageCacheDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
     InStorageFileDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
 

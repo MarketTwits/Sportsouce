@@ -53,6 +53,7 @@ dependencies {
     implementation(projects.root)
     implementation(projects.cache)
     implementation(projects.analytics.crashlytics)
+    implementation(projects.core.activityholder)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.compose.activity)
     implementation(libs.bundles.decompose.compose)

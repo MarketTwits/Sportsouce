@@ -25,7 +25,7 @@ class SubscriptionMapperBase : SubscriptionMapper {
             type = mapSubscriptionType(workoutRegistrationForm),
             name = workoutRegistrationForm.name,
             surname = workoutRegistrationForm.surname,
-            phone = workoutRegistrationForm.phone
+            phone = mapPhone(workoutRegistrationForm.phone)
         )
 
     private fun mapSubscriptions(
@@ -33,7 +33,7 @@ class SubscriptionMapperBase : SubscriptionMapper {
     ): List<Subscription> = subscriptionsRemote.map {
         Subscription(
             description = it.description,
-            discount = it.discount,
+            discount = it.discount ?: 0,
             name = it.name,
             id = it.id,
             type = it.type,
@@ -52,4 +52,6 @@ class SubscriptionMapperBase : SubscriptionMapper {
 
     private fun mapSubscriptionCount(workoutRegistrationForm: WorkoutRegistrationForm): Int? =
         if (workoutRegistrationForm.type is RegistrationType.Subscription) workoutRegistrationForm.type.count else null
+
+    private fun mapPhone(phone: String): String = phone.replace(Regex("\\D"), "")
 }

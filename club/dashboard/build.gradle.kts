@@ -9,6 +9,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.analytics.crashlytics)
             implementation(projects.club.cloud)
             implementation(projects.cache)
             implementation(projects.bottombar)

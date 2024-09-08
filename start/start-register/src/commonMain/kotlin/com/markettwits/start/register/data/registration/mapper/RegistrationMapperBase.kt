@@ -113,7 +113,7 @@ class RegistrationMapperBase : RegistrationMapper {
             contactPerson = contactPerson,
             email = startStatement.email,
             fromContacts = true,
-            gender = mapGenderUiToCloud(startStatement.sex),
+            gender = mapGenderUiToCloud(true, startStatement.sex),
             group = mapGroup(startStatement, startDistanceInfo),
             instagram = "",
             name = startStatement.name,
@@ -238,7 +238,7 @@ class RegistrationMapperBase : RegistrationMapper {
             }
             /** Registry single */
 
-            if (members.size <= 1 && group.sex == mapGenderUiToCloud(members[0].sex)) {
+            if (members.size <= 1 && group.sex == mapGenderUiToCloud(false, members[0].sex)) {
                 return StartRegisterRequest.Group(
                     ageFrom = group.ageFrom,
                     ageTo = group.ageTo,
@@ -260,7 +260,7 @@ class RegistrationMapperBase : RegistrationMapper {
         for (participantNumber in participantNumbers) {
             if (participantNumber >= 0 && participantNumber < stagesList.size) {
                 val stage = stagesList[participantNumber]
-                if (stage.sex.contains(mapGenderUiToCloud(members[participantNumber].sex))) {
+                if (stage.sex.contains(mapGenderUiToCloud(false, members[participantNumber].sex))) {
                     matchingStages.add(stage)
                 }
             }
@@ -285,10 +285,10 @@ class RegistrationMapperBase : RegistrationMapper {
     }
 
 
-    private fun mapGenderUiToCloud(sex: String): String {
+    private fun mapGenderUiToCloud(isPresent: Boolean, sex: String): String {
         return when (sex) {
-            "Мужской" -> "Мужской"
-            "Женский" -> "Женский"
+            "Мужской" -> if (isPresent) "Мужской" else "male"
+            "Женский" -> if (isPresent) "Женский" else "female"
             else -> throw java.lang.IllegalArgumentException("Нет стартов для $sex пол")
         }
     }

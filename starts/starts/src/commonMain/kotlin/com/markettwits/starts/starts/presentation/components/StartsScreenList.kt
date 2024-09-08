@@ -23,7 +23,6 @@ internal fun StartsScreenList(
     onClickRetry: () -> Unit
 ) {
     val size = rememberScreenSizeInfo()
-
     when (state) {
 
         is StartsUiState.Success -> {

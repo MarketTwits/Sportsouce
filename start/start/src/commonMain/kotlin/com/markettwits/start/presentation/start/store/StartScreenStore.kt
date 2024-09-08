@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.cloud.exception.isResponseException
+import com.markettwits.cloud.exception.isNetworkConnectionError
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.items.event.EventContent
@@ -132,7 +132,7 @@ class StartScreenStoreFactory(
                 dispatch(Msg.Loading)
                 service.start(startId, relaunch).fold(
                     onFailure = {
-                        if (it.isResponseException()) {
+                        if (!it.isNetworkConnectionError()) {
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
                             exceptionTracker.reportException(it, "StartScreenStore#launch")
                         }

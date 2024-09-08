@@ -7,8 +7,11 @@ import com.markettwits.starts_common.domain.StartsListItem
 
 
 interface StartsCloudToUiMapper {
+
     fun map(exception: Throwable): StartsUiState
+
     fun mapSuccess(items: List<List<StartsListItem>>): StartsUiState
+
     fun mapAll(vararg items: List<Row>): StartsUiState
 
     class Base(

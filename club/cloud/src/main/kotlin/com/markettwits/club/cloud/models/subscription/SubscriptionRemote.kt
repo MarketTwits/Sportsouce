@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class SubscriptionRemote(
     val createdAt: String,
     val description: String,
-    val discount: Int,
+    val discount: Int?,
     val id: Int,
     val kindOfSportId: Int,
     val name: String,

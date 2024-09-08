@@ -22,10 +22,11 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.news_list.domain.NewsInfo
-import com.markettwits.core_ui.items.text.HtmlText
 
 @Composable
 fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (NewsInfo) -> Unit) {
@@ -53,17 +54,16 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (Ne
             .clickable {
                 onCLick(newsInfo)
             }
-
     ) {
         SubcomposeAsyncImage(
             model = newsInfo.imageUrl,
-            contentDescription = "",
+            contentDescription = newsInfo.title,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxSize(),
             error = {
-                Box(
-                    modifier = imageModifierError
-                        .fillMaxSize()
+                SubcomposeAsyncImageContent(
+                    painter = DefaultImages.EmptyImageStart(),
+                    contentScale = ContentScale.Crop
                 )
             },
             success = {

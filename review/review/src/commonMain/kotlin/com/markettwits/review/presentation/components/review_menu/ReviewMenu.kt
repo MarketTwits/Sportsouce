@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SportsRugby
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -69,10 +67,10 @@ private fun menu() = listOf<ReviewMenuItem>(
     ),
     ReviewMenuItem(
         2,
-        "Рандом",
-        Icons.Filled.AutoAwesome,
-        SportSouceColor.SportSouceRegistryCommingSoonYellow.copy(alpha = 0.1f),
-        SportSouceColor.SportSouceRegistryCommingSoonYellow
+        "Клуб",
+        Icons.Filled.TableChart,
+        SportSouceColor.SportSouceLightRed.copy(alpha = 0.1f),
+        SportSouceColor.SportSouceLightRed
     ),
     ReviewMenuItem(
         3,
@@ -80,13 +78,6 @@ private fun menu() = listOf<ReviewMenuItem>(
         Icons.Filled.Settings,
         SportSouceColor.SportSouceRegistryOpenGreen.copy(alpha = 0.1f),
         SportSouceColor.SportSouceRegistryOpenGreen
-    ),
-    ReviewMenuItem(
-        4,
-        "Клуб",
-        Icons.Filled.SportsRugby,
-        SportSouceColor.SportSouceLightRed.copy(alpha = 0.1f),
-        SportSouceColor.SportSouceLightRed
     )
 )
 

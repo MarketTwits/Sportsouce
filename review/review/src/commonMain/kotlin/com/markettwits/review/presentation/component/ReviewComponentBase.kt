@@ -27,7 +27,9 @@ class ReviewComponentBase(
         storeFactory.create()
     }
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     override val value: StateFlow<ReviewStore.State> = store.stateFlow
+
     override fun obtainEvent(event: ReviewStore.Intent) {
         store.accept(event)
     }

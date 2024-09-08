@@ -21,7 +21,9 @@ internal class TeamsCityRepositoryBase(
     private val cache: TeamsAndCitiesCache,
     private val executeWithCache: ExecuteWithCache
 ) : TeamsCityRepository {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     override suspend fun cityFlow(): Flow<List<City>> = flow {
         executeWithCache.executeWithCache(
             cache = cache,

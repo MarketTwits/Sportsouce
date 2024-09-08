@@ -65,12 +65,7 @@ internal abstract class StartDistancesToUiMapperAbstract : StartDistancesToUiMap
                 return price.value
             }
         }
-        return distance.price.toInt() // or whatever default value you want to return when no interval matches
-    }
-
-    private fun calculateDiscountedCost(originalCost: Int, discountPercentage: Int): Int {
-        val discountMultiplier = 1.0 - (discountPercentage.toDouble() / 100.0)
-        return (originalCost * discountMultiplier).toInt()
+        return 1 // or whatever default value you want to return when no interval matches
     }
 
     protected fun mapCurrentTime(time: String): String {

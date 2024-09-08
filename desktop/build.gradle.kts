@@ -5,8 +5,15 @@ plugins {
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.markettwits.sportsouce.app.MainKt"
+    }
+}
+
 kotlin {
-    jvm {
+
+jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "20"
         }
@@ -14,8 +21,6 @@ kotlin {
     }
 
     jvmToolchain(20)
-    //jvmToolchain(libs.versions.jvm.dot.get().toInt())
-
 
     sourceSets.jvmMain.dependencies {
         implementation(compose.desktop.currentOs)
@@ -35,6 +40,7 @@ kotlin {
 
 compose.desktop {
     application {
+
         mainClass = "com.markettwits.sportsouce.app.MainKt"
 
         nativeDistributions {
@@ -46,6 +52,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
         }
+
         buildTypes.release.proguard {
             configurationFiles.from("compose-desktop.pro")
             obfuscate.set(false)

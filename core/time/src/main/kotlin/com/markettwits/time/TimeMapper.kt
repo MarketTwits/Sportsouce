@@ -10,7 +10,9 @@ import java.util.Locale
 import java.util.TimeZone
 
 interface TimeMapper {
+
     fun mapTime(formatter: TimePattern, time: String): String
+
     fun mapTimeToCloud(formatter: TimePattern = TimePattern.FullWithDots, time: String): String
 }
 

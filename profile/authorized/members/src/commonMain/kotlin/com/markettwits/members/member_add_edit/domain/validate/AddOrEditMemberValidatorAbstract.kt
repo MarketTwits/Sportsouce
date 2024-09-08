@@ -12,11 +12,10 @@ abstract class AddOrEditMemberValidatorAbstract : AddOrEditMemberValidator {
         if (profileMember.surname.isEmpty()) throw IllegalArgumentException(
             "Фамилия не должно быть пустой"
         )
-        if (profileMember.phone.isEmpty()) throw IllegalArgumentException(
+        if (validateRussianPhoneNumber(profileMember.phone)) throw IllegalArgumentException(
             "Введите корректый номер телефона"
         )
-        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
-        if (profileMember.email.matches(emailRegex)
+        if (validateEmail(profileMember.email)
         ) throw IllegalArgumentException(
             "Введите корректую почту"
         )
@@ -33,5 +32,15 @@ abstract class AddOrEditMemberValidatorAbstract : AddOrEditMemberValidator {
             "Введите кем приходится вам участник"
         )
         return profileMember
+    }
+
+    private fun validateRussianPhoneNumber(phoneNumber: String): Boolean {
+        val regexPattern = "^\\+7 \\(\\d{3}\\) \\d{3}-\\d{2}-\\d{2}\$"
+        return !Regex(regexPattern).matches(phoneNumber)
+    }
+
+    private fun validateEmail(email: String): Boolean {
+        val regexPattern = """^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$"""
+        return !Regex(regexPattern).matches(email)
     }
 }

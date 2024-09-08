@@ -51,7 +51,7 @@ fun OrderComponentBox(
             modifier = Modifier.padding(10.dp),
             isEnabled = button.isEnabled,
             isLoading = button.isLoading,
-            title = "Зарегестрироваться",
+            title = "Зарегистрироваться",
             onClick = {
                 onClickRegistry()
             })

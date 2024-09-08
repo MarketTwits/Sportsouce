@@ -44,8 +44,8 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Popular -> RootStartsPopularScreen(component = child.component)
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
             is RootReviewComponent.Child.Notification -> SelfUpdateScreen(component = child.component)
-            is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
             is RootReviewComponent.Child.Settings -> RootSettingsScreen(component = child.component)
+            is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
         }
     }
 }

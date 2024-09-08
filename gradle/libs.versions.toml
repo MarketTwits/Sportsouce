@@ -2,50 +2,46 @@
 #plugins
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
+vk-compose-gradle-plugin = "0.4.2"
 kotlin = "2.0.0"
-kotlin-kmp-compose = "1.6.10"
+kotlin-kmp-compose = "1.6.11"
 gradle = "8.5.0-beta02"
 
 #SDK
 multiplatformMarkdownRendererM3 = "0.14.0"
+buildConfigPlugin = "5.3.5"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 minSdk = "26"
 compileSdk = "34"
-versionName = "1.2.4"
+versionName = "1.2.6"
 jvm = "11"
 jvm-dot = "11"
-#UI
-
-mvikotlin = "3.3.0"
-orgJetbrainsComposeGradlePlugin = "1.6.1"
 
 koin = "3.5.3"
 compose-activity = "1.9.0"
 compose-preview = "1.6.7"
-zoomable = "1.5.1"
-pullRefresh = "1.0.1"
 lazytable = "1.6.0"
 junit = "4.13.2"
 
-core-ktx = "1.13.1"
-ktor = "2.3.10"
+ktor = "2.3.11"
 #UI
-appcompat = "1.6.1"
+appcompat = "1.7.0"
 
+#Kotlin Utils
 kotlinx-serialization = "1.6.3"
 kotlinx-coroutines = "1.8.0"
 kotlinx-datetime = "0.5.0"
 
 #Database
-kstore = "0.7.2"
-#Codegen
-ksp = "1.9.22-1.0.17"
-
-#Serialization
+kstore = "0.8.0"
 
 #Decompose
 decompose = "3.0.0-alpha04"
+
+#MVIKotlin
+mvikotlin = "3.3.0"
+
 org-jetbrains-kotlin-jvm = "1.9.23"
 
 #Tracer
@@ -55,25 +51,19 @@ kotlinx-collections-immutable = "0.3.7"
 #Kermit Logger
 kermit = "2.0.4"
 
-kotlinGradlePluginVersion = "1.9.0"
-
 [libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "compose-activity" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
-kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRendererM3" }
-pullrefresh = { module = "eu.bambooapps:compose-material3-pullrefresh", version.ref = "pullRefresh" }
 
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
 mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
 mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", version.ref = "mvikotlin" }
 mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
-
-zoomable = { group = "net.engawapg.lib", name = "zoomable", version.ref = "zoomable" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 junit = {group = "junit", name = "junit",version.ref = "junit"}
@@ -83,6 +73,7 @@ kotlinx-serialization-core = {group = "org.jetbrains.kotlinx", name = "kotlinx-s
 kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
 kstore-file = { module = "io.github.xxfast:kstore-file", version.ref = "kstore" }
@@ -112,30 +103,31 @@ tracer-profiler-sampling = { group = "ru.ok.tracer", name = "tracer-profiler-sam
 #Kermit
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 
-
 #Gradle Plugins
 android-gradle = {module = "com.android.tools.build:gradle", version.ref = "gradle"}
 kotlin-gradle = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin"}
+org-jetbrains-kotlin-multiplatform-gradle-plugin = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
+org-jetbrains-kotlin-plugin-compose-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
+org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "kotlin-kmp-compose" }
+buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.ref = "buildConfigPlugin" }
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePluginVersion" }
-org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "orgJetbrainsComposeGradlePlugin" }
 
 [plugins]
+
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "gradle" }
 android-application = {id = "com.android.application", version.ref = "gradle"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "kotlin-kmp-compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+vk-compose-gradle-plugin = { id = "com.vk.vkompose:gradle-plugin", version.ref = "vk-compose-gradle-plugin" }
 
 #Convention Plugins
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 kotlin-kmp-convention = { id = "kotlin-multiplatform-convention", version = "unspecified" }
 kotlin-kmp-compose-convention = { id = "kotlin-multiplatform-compose-convetion", version = "unspecified" }
-
 
 [bundles]
 decompose-compose = ["decompose-compose-extension", "decompose"]

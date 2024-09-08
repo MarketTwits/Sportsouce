@@ -13,7 +13,6 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.club.dashboard.di.clubDashboardModule
 import com.markettwits.club.root.RootClubComponentBase
 import com.markettwits.di.newsModule
 import com.markettwits.news_event.component.NewsEventComponentBase
@@ -48,7 +47,6 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             newsModule,
             reviewModule,
             notificationModule,
-            clubDashboardModule
         )
     )
 
@@ -159,15 +157,15 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 )
             )
 
-            RootReviewComponent.Config.Club -> RootReviewComponent.Child.Club(
-                RootClubComponentBase(
+            is RootReviewComponent.Config.Settings -> RootReviewComponent.Child.Settings(
+                RootSettingsComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop
                 )
             )
 
-            RootReviewComponent.Config.Settings -> RootReviewComponent.Child.Settings(
-                RootSettingsComponentBase(
+            is RootReviewComponent.Config.Club -> RootReviewComponent.Child.Club(
+                RootClubComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop
                 )
@@ -196,9 +194,8 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
             1 -> RootReviewComponent.Config.Schedule
-            2 -> RootReviewComponent.Config.Random
+            2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
-            4 -> RootReviewComponent.Config.Club
             else -> RootReviewComponent.Config.Search
         }
     }

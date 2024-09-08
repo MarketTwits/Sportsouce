@@ -9,6 +9,11 @@ kotlin {
     jvm()
     jvmToolchain(localLibs.findVersion("jvm-dot").get().toString().toInt())
     androidTarget()
+
+    compilerOptions {
+        freeCompilerArgs.addAll(suppressException())
+    }
+
 }
 buildConfig {
     val version = localLibs.findVersion("versionName").get().toString()
@@ -30,3 +35,8 @@ fun versionCode(versionName: String): Int {
         ?: throw IllegalArgumentException("patch version in version name not found")
     return major * 10000 + minor * 100 + patch
 }
+
+fun suppressException(): List<String> = listOf(
+    "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+    "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"
+)

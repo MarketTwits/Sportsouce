@@ -50,10 +50,10 @@ interface RootReviewComponent {
         data class Notification(val newAppVersion: NewAppVersion) : Config
 
         @Serializable
-        data object Club : Config
+        data object Settings : Config
 
         @Serializable
-        data object Settings : Config
+        data object Club : Config
     }
 
     sealed interface Child {
@@ -65,8 +65,8 @@ interface RootReviewComponent {
         data class NewsEvent(val component: NewsEventComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
-        data class Club(val component: RootClubComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
+        data class Club(val component: RootClubComponent) : Child
     }
 
     @Serializable

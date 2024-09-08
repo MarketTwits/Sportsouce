@@ -38,6 +38,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core-cloud" />
             <option value="$PROJECT_DIR$/core-koin" />
+            <option value="$PROJECT_DIR$/core/activityholder" />
             <option value="$PROJECT_DIR$/core/theme" />
             <option value="$PROJECT_DIR$/core/time" />
             <option value="$PROJECT_DIR$/core/ui" />
@@ -67,6 +68,7 @@
             <option value="$PROJECT_DIR$/selfupdater" />
             <option value="$PROJECT_DIR$/selfupdater/api" />
             <option value="$PROJECT_DIR$/selfupdater/components" />
+            <option value="$PROJECT_DIR$/selfupdater/googleplay" />
             <option value="$PROJECT_DIR$/selfupdater/impl" />
             <option value="$PROJECT_DIR$/selfupdater/thirdparty" />
             <option value="$PROJECT_DIR$/selfupdater/thirdparty/api" />

@@ -13,7 +13,7 @@ tasks.withType<Jar> {
 
 kotlin {
 
-jvm {
+    jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "20"
         }
@@ -45,7 +45,6 @@ compose.desktop {
 
         nativeDistributions {
             packageName = "Спорт Союз"
-            // packageVersion = libs.versions.versionName.get()
             description = "Sportsauce Desktop Application"
             copyright = "© 2024 My Name. All rights reserved."
             vendor = "MarketTwits"

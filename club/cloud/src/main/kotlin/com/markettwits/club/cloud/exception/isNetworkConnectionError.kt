@@ -12,7 +12,6 @@ fun Throwable.isNetworkConnectionError(): Boolean {
         is io.ktor.client.network.sockets.SocketTimeoutException,
         is TimeoutException,
         is UnknownHostException -> true
-
         else -> false
     }
 }

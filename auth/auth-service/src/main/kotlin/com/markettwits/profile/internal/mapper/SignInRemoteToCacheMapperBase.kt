@@ -4,6 +4,7 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.profile.internal.database.data.entities.CredentialRealmCache
 
 internal class SignInRemoteToCacheMapperBase : SignInRemoteToCacheMapper {
+
     override fun map(remote: SignInResponseSuccess, password: String): CredentialRealmCache =
         CredentialRealmCache(
             userId = remote.user.id.toLong(),

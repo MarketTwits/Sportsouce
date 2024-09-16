@@ -28,6 +28,8 @@ import com.markettwits.selfupdater.components.notification.component.InAppNotifi
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.settings.root.RootSettingsComponentBase
+import com.markettwits.shop.catalog.di.shopCatalogModule
+import com.markettwits.shop.root.RootShopCatalogComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 import com.markettwits.start_search.root.RootStartsSearchComponentBase
 
@@ -47,6 +49,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             newsModule,
             reviewModule,
             notificationModule,
+            shopCatalogModule
         )
     )
 
@@ -170,11 +173,15 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     pop = navigation::pop
                 )
             )
+
+            is RootReviewComponent.Config.Shop -> RootReviewComponent.Child.Shop(
+                RootShopCatalogComponentBase(componentContext = componentContext)
+            )
         }
 
     private fun slotChild(
         configuration: RootReviewComponent.ConfigSlot,
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): RootReviewComponent.ChildSlot = when (configuration) {
 
         is RootReviewComponent.ConfigSlot.Notification -> RootReviewComponent.ChildSlot.Notification(
@@ -196,6 +203,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
+            4 -> RootReviewComponent.Config.Shop
             else -> RootReviewComponent.Config.Search
         }
     }

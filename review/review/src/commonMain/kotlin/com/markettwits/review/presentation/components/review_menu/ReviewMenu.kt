@@ -78,6 +78,13 @@ private fun menu() = listOf<ReviewMenuItem>(
         Icons.Filled.Settings,
         SportSouceColor.SportSouceRegistryOpenGreen.copy(alpha = 0.1f),
         SportSouceColor.SportSouceRegistryOpenGreen
+    ),
+    ReviewMenuItem(
+        4,
+        "Магазин",
+        Icons.Filled.Settings,
+        SportSouceColor.SportSouceRegistryCommingSoonYellow.copy(alpha = 0.1f),
+        SportSouceColor.SportSouceRegistryCommingSoonYellow
     )
 )
 

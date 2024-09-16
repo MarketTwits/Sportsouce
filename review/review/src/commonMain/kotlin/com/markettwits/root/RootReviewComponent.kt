@@ -15,6 +15,7 @@ import com.markettwits.selfupdater.components.notification.component.InAppNotifi
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
 import com.markettwits.settings.root.RootSettingsComponent
+import com.markettwits.shop.root.RootShopCatalogComponent
 import com.markettwits.start.root.RootStartScreenComponent
 import com.markettwits.start_search.root.RootStartsSearchComponent
 import kotlinx.serialization.Serializable
@@ -54,6 +55,9 @@ interface RootReviewComponent {
 
         @Serializable
         data object Club : Config
+
+        @Serializable
+        data object Shop : Config
     }
 
     sealed interface Child {
@@ -67,6 +71,7 @@ interface RootReviewComponent {
         data class Notification(val component: SelfUpdateComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
         data class Club(val component: RootClubComponent) : Child
+        data class Shop(val component: RootShopCatalogComponent) : Child
     }
 
     @Serializable

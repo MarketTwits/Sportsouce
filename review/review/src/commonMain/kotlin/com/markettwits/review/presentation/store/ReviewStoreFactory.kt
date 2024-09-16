@@ -72,7 +72,7 @@ class ReviewStoreFactory(
     }
 
     private companion object {
-        const val SPORT_SAUCE_TG_URL = "hhttps://t.me/sportsauce"
+        const val SPORT_SAUCE_TG_URL = "https://t.me/sportsauce"
         const val SPORT_SAUCE_VK_URL = "https://vk.com/sportsoyuznsk"
     }
 

@@ -7,8 +7,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.review.data.ReviewRepository
 import com.markettwits.review.domain.Review
+import com.markettwits.review.domain.ReviewRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch

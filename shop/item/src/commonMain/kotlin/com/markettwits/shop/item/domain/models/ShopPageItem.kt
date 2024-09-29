@@ -3,6 +3,7 @@ package com.markettwits.shop.item.domain.models
 data class ShopPageItem(
     val id: String,
     val code: String,
+    val fullPathUrl: String,
     val price: Price,
     val visual: Visual,
     val options: List<Option>,

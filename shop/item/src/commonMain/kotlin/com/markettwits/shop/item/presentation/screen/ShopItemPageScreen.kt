@@ -17,9 +17,15 @@ fun ShopItemPageScreen(component: ShopItemPageComponent) {
         state = state, onClickOption = {
             component.obtainEvent(ShopItemPageStore.Intent.OnClickOption(it))
         }, onClickRetry = {
-
+            component.obtainEvent(ShopItemPageStore.Intent.OnClickRetry)
         }, onClickGoBack = {
-
+            component.obtainEvent(ShopItemPageStore.Intent.OnClickGoBack)
+        },
+        onClickShare = {
+            component.obtainEvent(ShopItemPageStore.Intent.OnClickShare)
+        },
+        onClickAddToFavorite = {
+            component.obtainEvent(ShopItemPageStore.Intent.OnClickAddToFavorite)
         }
     )
 

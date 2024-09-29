@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="registrations-jvm">
-    <output-path>$PROJECT_DIR$/profile/authorized/registrations/build/libs</output-path>
-    <root id="archive" name="registrations-jvm.jar">
-      <element id="module-output" name="Sportsouce.profile.authorized.registrations.jvmMain" />
-    </root>
-  </artifact>
-</component>

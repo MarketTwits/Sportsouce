@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
-import com.markettwits.cahce.InStorageCacheDirectory
-import com.markettwits.cahce.InStorageFileDirectory
 import com.markettwits.initKoin
 import com.markettwits.root.RootComponentBase
 import com.markettwits.root.RootContent
@@ -22,11 +20,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
-        InStorageCacheDirectory.path = cacheDir.path
-        InStorageFileDirectory.path = filesDir.path
-        val defaultComponentContext = defaultComponentContext()
         initKoin {
             androidContext(applicationContext)
+            val defaultComponentContext = defaultComponentContext()
             val root = RootComponentBase(componentContext = defaultComponentContext)
             val theme = ThemeComponentBase(componentContext = defaultComponentContext)
             setContent {
@@ -38,6 +34,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 
     override fun onDestroy() {

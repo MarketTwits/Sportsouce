@@ -2,10 +2,12 @@ package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -21,6 +23,7 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.item.domain.models.ShopPageItem
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ShopItemExtraOptions(
     extraOption: List<ShopPageItem.ExtraOption>,
@@ -35,34 +38,50 @@ internal fun ShopItemExtraOptions(
                 fontSize = 12.sp,
                 fontFamily = FontNunito.medium(),
             )
-            Row(
+            FlowRow(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.Center,
+                maxItemsInEachRow = 3,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 options.items.forEach { (id, value, isSelected) ->
-                    val borderColors =
-                        if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
-                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
-                    Button(
-                        onClick = { onClickOption(id) },
-                        border = BorderStroke(if (isSelected) 2.dp else 1.dp, borderColors),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = Shapes.medium,
-                        enabled = !isSelected
-                    ) {
-                        Text(
-                            text = value,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            textAlign = TextAlign.Center,
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                        )
-                    }
+                    ShopItemExtraOptionButton(
+                        isSelected = isSelected,
+                        value = value,
+                        onClick = { onClickOption(id) })
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ShopItemExtraOptionButton(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    value: String,
+    onClick: () -> Unit,
+) {
+    val borderColors =
+        if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
+    Button(
+        modifier = modifier.defaultMinSize(minHeight = 40.dp) // set to atleast 40dp
+            .wrapContentHeight(Alignment.CenterVertically),
+        onClick = onClick,
+        border = BorderStroke(if (isSelected) 2.dp else 1.dp, borderColors),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.primary
+        ),
+        shape = Shapes.medium,
+        enabled = !isSelected
+    ) {
+        Text(
+            text = value,
+            color = MaterialTheme.colorScheme.tertiary,
+            textAlign = TextAlign.Center,
+            fontSize = 12.sp,
+            fontFamily = FontNunito.semiBoldBold(),
+        )
     }
 }

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="desktop-jvm-provider(?)">
-    <output-path>$PROJECT_DIR$/desktop/build/libs</output-path>
-    <root id="archive" name="desktop-jvm-provider(_).jar">
-      <element id="module-output" name="Sportsouce.desktop.jvmMain" />
-    </root>
-  </artifact>
-</component>

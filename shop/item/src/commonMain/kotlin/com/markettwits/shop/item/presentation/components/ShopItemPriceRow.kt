@@ -31,7 +31,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopPageItem
                 text = "${price.currentPrice} ₽",
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 fontFamily = FontNunito.bold(),
             )
             Spacer(modifier = Modifier.padding(horizontal = 2.dp))
@@ -42,7 +42,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopPageItem
                     color = MaterialTheme.colorScheme.outline,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.LineThrough,
-                    fontSize = 10.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontNunito.light(),
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 2.dp))
@@ -50,7 +50,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopPageItem
                     text = "- ${price.discount}%",
                     color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,
-                    fontSize = 10.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontNunito.light(),
                 )
             }

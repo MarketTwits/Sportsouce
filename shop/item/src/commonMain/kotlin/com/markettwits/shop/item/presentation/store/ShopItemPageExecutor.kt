@@ -1,6 +1,7 @@
 package com.markettwits.shop.item.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.IntentAction
 import com.markettwits.shop.item.domain.ShopItemRepository
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Intent
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Label
@@ -10,12 +11,18 @@ import kotlinx.coroutines.launch
 
 class ShopItemPageExecutor(
     private val repository: ShopItemRepository,
+    private val intentAction: IntentAction,
     private val productId: String,
-) :
-    CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
             is Intent.OnClickOption -> launch(intent.itemId)
+            is Intent.OnClickGoBack -> publish(Label.GoBack)
+            is Intent.OnClickRetry -> launch(getState().item?.id)
+            is Intent.OnClickAddToFavorite -> TODO()
+            is Intent.OnClickShare -> getState().item?.let {
+                intentAction.sharePlainText(it.fullPathUrl)
+            }
         }
     }
 

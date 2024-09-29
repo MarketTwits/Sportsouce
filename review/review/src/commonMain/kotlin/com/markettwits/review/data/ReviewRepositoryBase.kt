@@ -5,6 +5,7 @@ import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.review.data.cache.ReviewCache
 import com.markettwits.review.data.mapper.ReviewMapper
 import com.markettwits.review.domain.Review
+import com.markettwits.review.domain.ReviewRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

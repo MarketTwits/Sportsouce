@@ -70,7 +70,7 @@ private fun DescriptionOrItemOptionsButton(
             text = title,
             color = textColor,
             textAlign = TextAlign.Center,
-            fontSize = 10.sp,
+            fontSize = 14.sp,
             fontFamily = FontNunito.medium(),
         )
     }
@@ -80,7 +80,7 @@ private fun DescriptionOrItemOptionsButton(
 private fun ShopItemDescription(description: String) {
     HtmlText(
         text = description,
-        fontSize = 10.sp,
+        fontSize = 12.sp,
         color = MaterialTheme.colorScheme.tertiary,
         fontFamily = FontNunito.medium(),
     )
@@ -90,7 +90,6 @@ private fun ShopItemDescription(description: String) {
 private fun ShopItemOptions(options: List<ShopPageItem.Option>) {
     Column {
         options.forEachIndexed { index, option ->
-            // val backgroundColor = if (index % 2 == 0) Color.LightGray else Color.White
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -98,7 +97,7 @@ private fun ShopItemOptions(options: List<ShopPageItem.Option>) {
                     text = option.optionTitle,
                     color = MaterialTheme.colorScheme.outline,
                     textAlign = TextAlign.Center,
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     fontFamily = FontNunito.medium(),
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 5.dp))
@@ -106,7 +105,7 @@ private fun ShopItemOptions(options: List<ShopPageItem.Option>) {
                     text = option.optionValue,
                     color = MaterialTheme.colorScheme.tertiary,
                     textAlign = TextAlign.Center,
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     fontFamily = FontNunito.medium(),
                 )
             }

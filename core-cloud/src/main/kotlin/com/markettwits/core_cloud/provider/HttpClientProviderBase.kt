@@ -20,7 +20,7 @@ import kotlinx.serialization.json.Json
 class HttpClientProviderBase(
     private val json: Json,
     private val clientEngine: HttpClientEngine,
-    private val baseUrl: String
+    private val baseUrl: String,
 ) : HttpClientProvider {
 
     override fun provide(loggerEnabled: Boolean) = HttpClient(clientEngine) {

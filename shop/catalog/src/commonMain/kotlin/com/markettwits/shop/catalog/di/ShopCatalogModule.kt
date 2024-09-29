@@ -5,6 +5,8 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
 import com.markettwits.shop.catalog.data.ShopCatalogRepositoryBase
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
+import com.markettwits.shop.catalog.domain.mapper.ShopProductsCategoriesMapper
+import com.markettwits.shop.catalog.domain.mapper.ShopProductsCategoriesMapperBase
 import com.markettwits.shop.catalog.domain.mapper.ShopProductsMapper
 import com.markettwits.shop.catalog.domain.mapper.ShopProductsMapperBase
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStoreFactory
@@ -16,6 +18,7 @@ val shopCatalogModule = module {
     includes(sportSauceShopCloudModule)
     singleOf(::ShopCatalogRepositoryBase) bind ShopCatalogRepository::class
     singleOf(::ShopProductsMapperBase) bind ShopProductsMapper::class
+    singleOf(::ShopProductsCategoriesMapperBase) bind ShopProductsCategoriesMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::ShopCatalogStoreFactory)
 }

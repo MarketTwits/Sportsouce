@@ -26,6 +26,7 @@ class RegistrationPromoComponentBase(
         storeFactory.create(startId, promo)
     }
     override val state: StateFlow<RegistrationPromoStore.State> = store.stateFlow
+
     override val labels: Flow<RegistrationPromoStore.Label> = store.labels
 
     override fun obtainEvent(intent: RegistrationPromoStore.Intent) {

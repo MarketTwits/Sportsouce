@@ -8,8 +8,11 @@ object ShopCatalogReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.Failed -> copy(isLoading = false, isError = true, message = msg.message)
-            is Message.Loaded -> copy(isLoading = false, isError = false, items = msg.items)
+            is Message.Loaded -> copy(isLoading = false, isError = false, shopItems = msg.items)
             is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.CategoriesLoaded -> copy(categories = msg.items)
+            is Message.UpdateCategories -> copy(options = options.copy(catalogId = msg.id))
+            is Message.FilterApplied -> copy(filterState = msg.filterState)
         }
     }
 }

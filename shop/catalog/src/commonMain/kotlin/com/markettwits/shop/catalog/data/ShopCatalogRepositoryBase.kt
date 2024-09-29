@@ -1,34 +1,50 @@
 package com.markettwits.shop.catalog.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.map
+import app.cash.paging.PagingData
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
+import com.markettwits.shop.catalog.domain.mapper.ShopProductsCategoriesMapper
 import com.markettwits.shop.catalog.domain.mapper.ShopProductsMapper
-import com.markettwits.shop.catalog.presentation.cards.ShopItem
+import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
+import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
+import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.paging.SHOP_ITEMS_PAGE_SIZE
+import com.markettwits.shop.paging.ShopCatalogPagingSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ShopCatalogRepositoryBase(
     private val cloudService: SportSauceShopApi,
-    private val mapper: ShopProductsMapper,
+    private val productMapper: ShopProductsMapper,
+    private val categoriesMapper: ShopProductsCategoriesMapper,
 ) : ShopCatalogRepository {
 
-    override suspend fun products(): Result<List<ShopItem>> = runCatching {
-        if (ShopCatalogLocalCache.fetch().isNotEmpty()) {
-            return Result.success(ShopCatalogLocalCache.fetch())
-        } else {
-            val items = mapper.map(cloudService.products().rows)
-            ShopCatalogLocalCache.write(items)
-            items
-        }
-
-    }
-}
-
-data object ShopCatalogLocalCache {
-
-    private val innerItems = emptyList<ShopItem>().toMutableList()
-
-    fun write(items: List<ShopItem>) {
-        innerItems.addAll(items)
+    override fun paddingProducts(
+        categoryId: Int?,
+        options: Set<String>,
+        price: ShopFilterPrice,
+    ): Flow<PagingData<ShopItem>> {
+        return Pager(
+            PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
+        ) {
+            ShopCatalogPagingSource(cloudService, categoryId, options, price)
+        }.flow.map { it.map { data -> productMapper.map(data) } }
     }
 
-    fun fetch(): List<ShopItem> = innerItems
+    override suspend fun categories(): Result<List<ShopCategoryItem>> = runCatching {
+        categoriesMapper.map(cloudService.categories())
+    }
+
+    override fun pagingProducts(categoryId: Int?): Flow<PagingData<ShopItem>> {
+        return Pager(
+            PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
+        ) {
+            ShopCatalogPagingSource(cloudService, categoryId)
+        }.flow.map { it.map { data -> productMapper.map(data) } }
+    }
+
+
 }

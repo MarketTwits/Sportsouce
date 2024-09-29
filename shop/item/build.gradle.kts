@@ -19,6 +19,8 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.core.ui)
             implementation(projects.coreKoin)
+            implementation(projects.intent.api)
+            implementation(projects.intent.impl)
         }
     }
 }

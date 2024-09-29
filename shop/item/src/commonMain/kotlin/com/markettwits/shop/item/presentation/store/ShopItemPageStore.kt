@@ -17,6 +17,10 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickOption(val itemId: String) : Intent
+        data object OnClickRetry : Intent
+        data object OnClickGoBack : Intent
+        data object OnClickShare : Intent
+        data object OnClickAddToFavorite : Intent
     }
 
     sealed interface Message {
@@ -25,6 +29,8 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
         data class Failed(val message: String) : Message
     }
 
-    sealed interface Label
+    sealed interface Label {
+        data object GoBack : Label
+    }
 
 }

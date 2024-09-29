@@ -29,6 +29,7 @@ class OrderComponentComponentBase(
     private val openSuccess: () -> Unit
 ) : OrderComponentComponent,
     ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {

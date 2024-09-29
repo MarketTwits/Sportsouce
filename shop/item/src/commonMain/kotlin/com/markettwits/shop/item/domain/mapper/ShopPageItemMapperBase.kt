@@ -18,6 +18,7 @@ class ShopPageItemMapperBase : ShopPageItemMapper {
             visual = calculateVisual(products),
             options = calculateOptions(products),
             extraOptions = calculateExtras(products),
+            fullPathUrl = "shop.sportsauce.ru/product/${products.product.id}"
         )
 }
 

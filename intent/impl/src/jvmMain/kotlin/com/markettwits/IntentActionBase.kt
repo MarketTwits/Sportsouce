@@ -34,4 +34,6 @@ class IntentActionBase : IntentAction {
             .systemClipboard
             .setContents(StringSelection(text), null)
     }
+
+    override fun sharePlainText(text: String) = Unit
 }

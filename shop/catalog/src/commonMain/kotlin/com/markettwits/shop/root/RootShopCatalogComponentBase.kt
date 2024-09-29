@@ -10,13 +10,21 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.shop.catalog.di.shopCatalogModule
-import com.markettwits.shop.catalog.presentation.component.CardsComponent
-import com.markettwits.shop.catalog.presentation.component.CardsComponentBase
+import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
+import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponentBase
+import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
+import com.markettwits.shop.filter.di.shopFilterModule
+import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
+import com.markettwits.shop.filter.presentation.component.ShopFilterComponentBase
+import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.item.di.shopItemPageModule
+import com.markettwits.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBase
 
 
-class RootShopCatalogComponentBase(componentContext: ComponentContext) : RootShopCatalogComponent,
+class RootShopCatalogComponentBase(
+    componentContext: ComponentContext,
+) : RootShopCatalogComponent,
     ComponentContext by componentContext {
 
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
@@ -28,7 +36,8 @@ class RootShopCatalogComponentBase(componentContext: ComponentContext) : RootSho
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(
             shopItemPageModule,
-            shopCatalogModule
+            shopCatalogModule,
+            shopFilterModule
         )
     )
 
@@ -40,14 +49,13 @@ class RootShopCatalogComponentBase(componentContext: ComponentContext) : RootSho
         childFactory = ::child,
     )
 
-
     private fun child(
         config: RootShopCatalogComponent.Config,
         componentContext: ComponentContext,
     ): RootShopCatalogComponent.Child =
         when (config) {
             is RootShopCatalogComponent.Config.ShopCatalog -> RootShopCatalogComponent.Child.ShopCatalog(
-                CardsComponentBase(
+                ShopCatalogComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     outputs = CardsComponentOutputsImpl()
@@ -58,19 +66,50 @@ class RootShopCatalogComponentBase(componentContext: ComponentContext) : RootSho
                 component = ShopItemPageComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    options = ShopItemPageComponentBase.Options(config.id)
+                    options = ShopItemPageComponentBase.Options(config.id),
+                    outputs = ShopItemComponentOutputsImpl()
+                )
+            )
+
+            is RootShopCatalogComponent.Config.ShopFilter -> RootShopCatalogComponent.Child.ShopFilter(
+                component = ShopFilterComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    output = ShopFilterComponentOutputsImpl(),
+                    outerState = config.state
                 )
             )
         }
 
-    inner class CardsComponentOutputsImpl : CardsComponent.Outputs {
-        override fun onClickShopItem(id: String) {
+
+    inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
+        override fun onClickShopItem(id: String) =
             stackNavigation.push(RootShopCatalogComponent.Config.ShopItem(id))
+
+        override fun goBack() =
+            stackNavigation.pop()
+
+        override fun goFilter(
+            filterState: ShopFilterStore.State?,
+        ) = stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter(filterState))
+    }
+
+    inner class ShopItemComponentOutputsImpl : ShopItemPageComponent.Output {
+        override fun goBack() = stackNavigation.pop()
+    }
+
+    inner class ShopFilterComponentOutputsImpl : ShopFilterComponent.Output {
+
+        override fun goBack() = stackNavigation.pop()
+
+        override fun applyFilter(state: ShopFilterStore.State) {
+            stackNavigation.pop {
+                (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopCatalog)?.component?.obtainEvent(
+                    ShopCatalogStore.Intent.ApplyFilter(state)
+                )
+            }
         }
 
-        override fun goBack() {
-            stackNavigation.pop()
-        }
     }
 
 }

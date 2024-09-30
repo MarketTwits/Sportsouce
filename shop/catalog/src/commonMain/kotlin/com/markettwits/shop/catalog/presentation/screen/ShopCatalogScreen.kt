@@ -1,4 +1,4 @@
-package com.markettwits.shop.catalog.presentation.components
+package com.markettwits.shop.catalog.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,12 +22,14 @@ import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
+import com.markettwits.shop.catalog.presentation.components.ShopCategories
+import com.markettwits.shop.catalog.presentation.components.ShopItemCard
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
 import com.markettwits.shop.paging.fold
 
 
 @Composable
-fun ShopItemCardBaseList(
+fun ShopCatalogScreen(
     modifier: Modifier = Modifier,
     component: ShopCatalogComponent,
 ) {
@@ -38,7 +41,7 @@ fun ShopItemCardBaseList(
 
     val itemsState = state.shopItems.collectAsLazyPagingItems()
 
-    Column {
+    Scaffold(modifier = modifier) {
         ShopCategories(shopCategoryItem = state.categories,
             selectedCategoryItemId = state.options.catalogId ?: 0,
             onItemClick = {
@@ -50,7 +53,7 @@ fun ShopItemCardBaseList(
             Text("Фильтр")
         }
         itemsState.fold(onLoading = {
-            LoadingFullScreen { }
+            LoadingFullScreen()
         }, onException = {
             FailedScreen(
                 message = (it.message.toString()),

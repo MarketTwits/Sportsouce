@@ -29,8 +29,11 @@ object ShopFilterReducer : Reducer<State, Message> {
                 currentCategoryPath = emptyList(),
                 options = emptyList(),
                 selectedPrice = ShopFilterPrice.EMPTY,
-                selectedOptionUID = emptySet()
+                selectedOptionUID = emptySet(),
+                isApplied = false
             )
+
+            is Message.ApplyFilter -> copy(isApplied = true)
         }
     }
 }

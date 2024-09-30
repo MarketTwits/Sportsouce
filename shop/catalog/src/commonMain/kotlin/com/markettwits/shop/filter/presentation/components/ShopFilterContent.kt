@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 
@@ -20,6 +19,7 @@ internal fun ShopFilterContent(
     modifier: Modifier = Modifier,
     state: ShopFilterStore.State,
     onClickGoBack: () -> Unit,
+    onClickReset: () -> Unit,
     onMaxPriceChange: (Int) -> Unit,
     onMinPriceChange: (Int) -> Unit,
     onOptionClick: (String) -> Unit,
@@ -28,19 +28,22 @@ internal fun ShopFilterContent(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopBarBase(title = "Фильтр", goBack = onClickGoBack)
-        },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ShopFilterApplyButton(onClick = onClickApplyFilter)
-        }
+        },
+        topBar = {
+            ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)
+        },
     ) { paddingValues ->
         Column(
             modifier = modifier
-                .padding(top = paddingValues.calculateTopPadding())
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    bottom = 40.dp
+                )
         ) {
             ShopFilterCategories(
                 categories = state.categories,

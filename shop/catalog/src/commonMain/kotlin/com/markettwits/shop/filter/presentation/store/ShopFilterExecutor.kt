@@ -33,7 +33,7 @@ class ShopFilterExecutor(
 
     override fun executeAction(action: Unit, getState: () -> State) {
         if (getState().categories.isEmpty())
-            launch()
+            firstLaunch()
     }
 
 }

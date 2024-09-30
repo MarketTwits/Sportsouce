@@ -27,16 +27,18 @@ internal fun ShopFilterOptions(
     onOptionClick: (String) -> Unit,
 ) {
     Column {
-        Text(
-            text = "Опции",
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            softWrap = true,
-            textAlign = TextAlign.Start,
-            fontSize = 18.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.tertiary
-        )
+        if (options.isNotEmpty()) {
+            Text(
+                text = "Опции",
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                softWrap = true,
+                textAlign = TextAlign.Start,
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
         options.forEach { optionInfo ->
             Text(
                 modifier = Modifier.padding(4.dp),

@@ -19,6 +19,7 @@ interface ShopFilterStore : Store<Intent, State, Label> {
         val selectedPrice: ShopFilterPrice = ShopFilterPrice.EMPTY,
         val selectedOptionUID: Set<String> = emptySet(),
         val isLoading: Boolean = false,
+        val isApplied: Boolean = false,
     )
 
     sealed interface Intent {
@@ -35,7 +36,6 @@ interface ShopFilterStore : Store<Intent, State, Label> {
             val categories: List<ShopCategoryItem>,
             val price: ShopFilterPrice,
         ) : Message
-
         data class UpdateSelectedOption(val selectedOptions: Set<String>) : Message
         data class UpdateCategories(val categories: List<ShopCategoryItem>) : Message
         data class UpdateCurrentPath(val path: List<ShopCategoryItem>) : Message
@@ -47,6 +47,7 @@ interface ShopFilterStore : Store<Intent, State, Label> {
         data class UpdatePrice(val price: ShopFilterPrice) : Message
         data object Loading : Message
         data object ResetFilter : Message
+        data object ApplyFilter : Message
     }
 
     sealed interface Label {

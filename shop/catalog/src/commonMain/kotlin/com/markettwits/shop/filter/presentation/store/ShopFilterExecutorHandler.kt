@@ -74,10 +74,6 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
     }
 
     fun onClickApplyFilter(currentState: State) {
-        val categoryId =
-            if (currentState.currentCategoryPath.isNotEmpty())
-                currentState.currentCategoryPath.last().id
-            else null
         publish(Label.ApplyFilter(currentState))
     }
 
@@ -88,17 +84,12 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
     }
 
 
-    fun launch() {
+    fun firstLaunch() {
         scope.launch {
-            repository.filter().fold(
-                onSuccess = {
-                    dispatch(Message.Loading)
-                    dispatch(Message.FilterLoaded(it, ShopFilterPrice.EMPTY))
-                },
-                onFailure = {
-
-                }
-            )
+            dispatch(Message.Loading)
+            repository.filter().onSuccess {
+                dispatch(Message.FilterLoaded(it, ShopFilterPrice.EMPTY))
+            }
         }
     }
 }

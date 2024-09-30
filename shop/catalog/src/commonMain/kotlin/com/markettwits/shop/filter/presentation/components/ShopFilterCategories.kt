@@ -2,15 +2,16 @@ package com.markettwits.shop.filter.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -90,15 +91,15 @@ fun ShopFilterCategories(
                 )
             }
         }
-
-        currentCategories.forEach { value ->
-            FlowRow(
-                maxItemsInEachRow = 4,
-            ) {
-                Button(
-                    modifier = Modifier.padding(2.dp),
-                    elevation = ButtonDefaults.buttonElevation(),
-                    colors = ButtonDefaults.buttonColors(
+        FlowRow(
+            maxItemsInEachRow = 4,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            currentCategories.forEach { value ->
+                OutlinedCard(
+                    modifier = Modifier.padding(8.dp),
+                    elevation = CardDefaults.elevatedCardElevation(),
+                    colors = CardDefaults.elevatedCardColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer
                     ),
                     shape = Shapes.medium,
@@ -106,7 +107,12 @@ fun ShopFilterCategories(
                         onClickCategory(value)
                     }, content = {
                         Text(
+                            modifier = Modifier.padding(8.dp),
                             text = value.title,
+                            maxLines = 1,
+                            fontSize = 12.sp,
+                            fontFamily = FontNunito.medium(),
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     })
             }

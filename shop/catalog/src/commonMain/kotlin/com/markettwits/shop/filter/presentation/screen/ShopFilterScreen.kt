@@ -21,6 +21,9 @@ fun ShopFilterScreen(
         onClickGoBack = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickGoBack)
         },
+        onClickReset = {
+            component.obtainEvent(ShopFilterStore.Intent.OnClickResetFilter)
+        },
         onMinPriceChange = {
             component.obtainEvent(ShopFilterStore.Intent.OnUpdatePrice(true, it))
         },

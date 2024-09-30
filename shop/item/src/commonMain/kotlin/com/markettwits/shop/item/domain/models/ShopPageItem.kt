@@ -23,9 +23,13 @@ data class ShopPageItem(
 
     data class Option(val id: String, val optionTitle: String, val optionValue: String)
 
-    data class ExtraOption(val title: String, val items: List<OptionValue>)
-
-    data class OptionValue(val id: String, val optionValue: String, val isProductsValue: Boolean)
+    data class ExtraOption(val title: String, val items: List<OptionValue>) {
+        data class OptionValue(
+            val id: String,
+            val optionValue: String,
+            val isProductsValue: Boolean,
+        )
+    }
 
 
 }

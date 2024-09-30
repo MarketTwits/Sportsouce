@@ -50,6 +50,10 @@ kotlinx-collections-immutable = "0.3.7"
 
 #Kermit Logger
 kermit = "2.0.4"
+coreKtx = "1.13.1"
+junitVersion = "1.2.1"
+espressoCore = "3.5.1"
+material = "1.12.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -111,6 +115,10 @@ org-jetbrains-kotlin-plugin-compose-gradle-plugin = { module = "org.jetbrains.ko
 org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetbrains.compose.gradle.plugin", version.ref = "kotlin-kmp-compose" }
 buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.ref = "buildConfigPlugin" }
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 

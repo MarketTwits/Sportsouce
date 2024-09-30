@@ -25,31 +25,35 @@ class ShopPageItemMapperBase : ShopPageItemMapper {
 private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOption> {
 
     val size = products.sizeList.map {
-        ShopPageItem.OptionValue(id = it.product.id, optionValue = it.size, isProductsValue = false)
+        ShopPageItem.ExtraOption.OptionValue(
+            id = it.product.id,
+            optionValue = it.size,
+            isProductsValue = false
+        )
     }.toMutableList()
     val colorColorTaste = products.colorTasteList?.map {
-        ShopPageItem.OptionValue(
+        ShopPageItem.ExtraOption.OptionValue(
             id = it.product.id,
             optionValue = it.colorTaste,
             isProductsValue = false
         )
-    }?.toMutableList() ?: emptyList<ShopPageItem.OptionValue>().toMutableList()
+    }?.toMutableList() ?: emptyList<ShopPageItem.ExtraOption.OptionValue>().toMutableList()
     val sex = products.genderList.map {
-        ShopPageItem.OptionValue(
+        ShopPageItem.ExtraOption.OptionValue(
             id = it.product.id,
             optionValue = it.gender,
             isProductsValue = false
         )
     }.toMutableList()
     val currentSize = products.sizeValue?.name?.let {
-        ShopPageItem.OptionValue(
+        ShopPageItem.ExtraOption.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
         )
     }
     val currentColorTaste = products.productColorTasteValue?.let {
-        ShopPageItem.OptionValue(
+        ShopPageItem.ExtraOption.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
@@ -57,7 +61,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
     }
 
     val currentSex = products.productGenderValue?.let {
-        ShopPageItem.OptionValue(
+        ShopPageItem.ExtraOption.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
@@ -68,6 +72,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
 
     if (currentSize != null) {
         size.add(currentSize)
+        size.reverse()
         optionsList.add(
             ShopPageItem.ExtraOption(
                 title = "Размер",
@@ -78,6 +83,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
 
     if (currentColorTaste != null) {
         colorColorTaste.add(currentColorTaste)
+        colorColorTaste.reverse()
         optionsList.add(
             ShopPageItem.ExtraOption(
                 title = "Вкус/Цвет",
@@ -88,6 +94,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
 
     if (currentSex != null) {
         sex.add(currentSex)
+        sex.reverse()
         optionsList.add(
             ShopPageItem.ExtraOption(
                 title = "Пол",

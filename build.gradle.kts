@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose) apply false
     alias(libs.plugins.kotlin.kmp) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
 tasks.withType<Wrapper>().configureEach {
     distributionType = Wrapper.DistributionType.BIN

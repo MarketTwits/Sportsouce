@@ -1,7 +1,7 @@
 package com.markettwits.shop.filter.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Message
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.State
 

@@ -12,6 +12,7 @@ kotlin {
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
+            implementation(projects.shop.filter)
             implementation(projects.shop.cloud)
             implementation(projects.shop.item)
             implementation(projects.core.ui)

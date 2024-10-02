@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.textField.defaultOutlineTextFiledColors
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 
 @Composable
 fun ShopFilterPriceSlider(

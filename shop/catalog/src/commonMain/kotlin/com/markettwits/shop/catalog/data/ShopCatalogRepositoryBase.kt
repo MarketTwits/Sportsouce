@@ -6,11 +6,11 @@ import androidx.paging.map
 import app.cash.paging.PagingData
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.shop.catalog.domain.mapper.ShopProductsCategoriesMapper
 import com.markettwits.shop.catalog.domain.mapper.ShopProductsMapper
-import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
 import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapper
+import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.shop.paging.SHOP_ITEMS_PAGE_SIZE
 import com.markettwits.shop.paging.ShopCatalogPagingSource
 import kotlinx.coroutines.flow.Flow

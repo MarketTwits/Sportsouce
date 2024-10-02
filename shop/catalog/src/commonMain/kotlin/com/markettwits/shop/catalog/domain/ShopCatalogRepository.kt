@@ -1,9 +1,9 @@
 package com.markettwits.shop.catalog.domain
 
 import app.cash.paging.PagingData
-import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
 import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import kotlinx.coroutines.flow.Flow
 
 interface ShopCatalogRepository {

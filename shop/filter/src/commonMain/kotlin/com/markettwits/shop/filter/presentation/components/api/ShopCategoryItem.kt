@@ -1,4 +1,5 @@
-package com.markettwits.shop.catalog.presentation.components
+package com.markettwits.shop.filter.presentation.components.api
+
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,9 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -18,29 +22,32 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 
 @Composable
-internal fun ShopCategories(
+fun ShopCategories(
     modifier: Modifier = Modifier,
-    shopCategoryItem: List<ShopCategoryItem>,
-    selectedCategoryItemId: Int,
-    onItemClick: (ShopCategoryItem) -> Unit,
+    selectedCategoriesPath: List<ShopCategoryItem>,
+    onClickCategory: (ShopCategoryItem) -> Unit,
 ) {
+    val currentPath by remember {
+        mutableStateOf(selectedCategoriesPath.filter { it.children.isNotEmpty() })
+    }
     Row(
         modifier = modifier
+            .padding(10.dp)
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        shopCategoryItem.forEach {
+        currentPath.forEach {
             ShopCategoryItem(
-                modifier = Modifier.padding(5.dp),
-                isSelected = selectedCategoryItemId == it.id,
+                isSelected = true,
                 shopCategoryItem = it,
-                onClick = { onItemClick(it) })
+                onClick = { onClickCategory(it) })
         }
     }
 }
@@ -66,18 +73,19 @@ private fun ShopCategoryItem(
     ElevatedButton(
         modifier = modifier,
         onClick = onClick,
-        shape = Shapes.large,
+        shape = Shapes.medium,
+        elevation = ButtonDefaults.elevatedButtonElevation(),
         colors = buttonColor
     ) {
         Text(
             text = shopCategoryItem.title,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            lineHeight = 18.sp,
+            lineHeight = 14.sp,
             softWrap = true,
             textAlign = TextAlign.Start,
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
+            fontSize = 14.sp,
+            fontFamily = FontNunito.semiBoldBold(),
         )
     }
 }

@@ -62,6 +62,17 @@ internal class SportSauceShopApiBase(
         return json.decodeFromString(response.body<String>())
     }
 
+    override suspend fun products(limit: Int, offset: Int, query: String): ProductsRemote {
+        val response = client.get("product/deep-search") {
+            url {
+                parameters.append("limit", limit.toString())
+                parameters.append("offset", offset.toString())
+                parameters.append("search", query.trim())
+            }
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun products(
         limit: Int,
         offset: Int,

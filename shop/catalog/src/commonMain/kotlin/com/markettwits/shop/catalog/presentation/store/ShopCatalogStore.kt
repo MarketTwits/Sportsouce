@@ -18,16 +18,20 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         val isError: Boolean,
         val message: String,
         val shopItems: Flow<PagingData<ShopItem>>,
-        val options: ShopCatalogOptions,
-        val categories: List<ShopCategoryItem> = emptyList(),
         val filterState: ShopFilterStore.State? = null,
+        val queryState : String = "",
+
     )
 
     sealed interface Intent {
+        data object OnClickGoBack : Intent
+        data object OnClickSearch : Intent
         data class OnClickItem(val id: String) : Intent
-        data class OnClickCategory(val categoryId: Int) : Intent
+        data class OnClickCategory(val categoryItem: ShopCategoryItem) : Intent
         data object OnClickFilter : Intent
         data class ApplyFilter(val state: ShopFilterStore.State) : Intent
+        data class ApplyQuery(val query : String) : Intent
+
     }
 
     sealed interface Message {
@@ -37,12 +41,15 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         data class UpdateCategories(val id: Int) : Message
         data class Failed(val message: String) : Message
         data class FilterApplied(val filterState: ShopFilterStore.State) : Message
+        data class QueryApplied(val query: String) : Message
     }
 
     sealed interface Label {
         data class OnClickItem(val id: String) : Label
         data object GoBack : Label
+        data class GoSearch(val query: String) : Label
         data class GoFilter(val filterState: ShopFilterStore.State?) : Label
+        data class OnClickCategory(val categoryItem: ShopCategoryItem) : Label
     }
 
 }

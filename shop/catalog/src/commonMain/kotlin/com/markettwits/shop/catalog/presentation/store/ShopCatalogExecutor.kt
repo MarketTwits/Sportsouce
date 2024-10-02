@@ -8,46 +8,38 @@ import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Message
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
-import kotlinx.coroutines.launch
 
 class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
+            is Intent.OnClickGoBack -> publish(Label.GoBack)
             is Intent.OnClickItem -> publish(Label.OnClickItem(intent.id))
             is Intent.OnClickFilter -> publish(Label.GoFilter(getState().filterState))
-            is Intent.OnClickCategory -> {
-                dispatch(Message.UpdateCategories(intent.categoryId))
-                //  launch(intent.categoryId)
-            }
-
+            is Intent.OnClickSearch -> publish(Label.GoSearch(getState().queryState))
+            is Intent.OnClickCategory -> publish(Label.OnClickCategory(intent.categoryItem))
+            is Intent.ApplyQuery -> launchWithQuery(intent.query)
             is Intent.ApplyFilter -> {
                 val categoryId =
                     if (intent.state.currentCategoryPath.isNotEmpty())
                         intent.state.currentCategoryPath.last().id
                     else null
-                launch(categoryId, intent.state.selectedOptionUID, intent.state.selectedPrice)
+                launchWithFilter(
+                    categoryId = categoryId,
+                    options = intent.state.selectedOptionUID,
+                    price = intent.state.selectedPrice
+                )
                 dispatch(Message.FilterApplied(intent.state))
             }
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
-        launch(null, emptySet(), ShopFilterPrice.EMPTY)
+        launchWithFilter(null, emptySet(), ShopFilterPrice.EMPTY)
     }
 
-    private fun launchCategories() {
-        scope.launch {
-            repository.categories().fold(onSuccess = {
-                dispatch(Message.CategoriesLoaded(it))
-            }, onFailure = {
-                dispatch(Message.Failed(it.message.toString()))
-            })
-        }
-    }
-
-    private fun launch(
+    private fun launchWithFilter(
         categoryId: Int?,
         options: Set<String>,
         price: ShopFilterPrice,
@@ -63,5 +55,10 @@ class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
         )
     }
 
-
+    private fun launchWithQuery(
+        query: String
+    ) {
+        dispatch(Message.QueryApplied(query))
+        dispatch(Message.Loaded(repository.paddingProducts(query).cachedIn(scope)))
+    }
 }

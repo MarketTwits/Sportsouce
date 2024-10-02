@@ -1,4 +1,4 @@
-package com.markettwits.shop.filter.presentation.components
+package com.markettwits.shop.filter.presentation.components.filter
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

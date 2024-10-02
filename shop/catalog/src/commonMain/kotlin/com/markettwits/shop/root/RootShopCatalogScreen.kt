@@ -6,6 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.shop.catalog.presentation.screen.ShopCatalogScreen
 import com.markettwits.shop.filter.presentation.screen.ShopFilterScreen
 import com.markettwits.shop.item.presentation.screen.ShopItemPageScreen
+import com.markettwits.shop.search.presentation.screen.ShopSearchScreen
 
 @Composable
 fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
@@ -17,6 +18,7 @@ fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
             is RootShopCatalogComponent.Child.ShopCatalog -> ShopCatalogScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopItem -> ShopItemPageScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopFilter -> ShopFilterScreen(component = child.component)
+            is RootShopCatalogComponent.Child.ShopSearch -> ShopSearchScreen(component = child.component)
         }
     }
 }

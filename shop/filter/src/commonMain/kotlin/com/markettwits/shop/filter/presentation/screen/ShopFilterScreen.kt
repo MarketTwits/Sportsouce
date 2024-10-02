@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
-import com.markettwits.shop.filter.presentation.components.ShopFilterContent
+import com.markettwits.shop.filter.presentation.components.filter.ShopFilterContent
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 
 @Composable

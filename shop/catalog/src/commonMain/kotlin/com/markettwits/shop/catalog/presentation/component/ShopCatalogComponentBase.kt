@@ -36,6 +36,8 @@ class ShopCatalogComponentBase(
                 is ShopCatalogStore.Label.GoBack -> outputs.goBack()
                 is ShopCatalogStore.Label.OnClickItem -> outputs.onClickShopItem(it.id)
                 is ShopCatalogStore.Label.GoFilter -> outputs.goFilter(it.filterState)
+                is ShopCatalogStore.Label.OnClickCategory -> outputs.onClickCategory(it.categoryItem)
+                is ShopCatalogStore.Label.GoSearch -> outputs.goSearch(it.query)
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }

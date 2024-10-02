@@ -5,7 +5,7 @@ coreSplashscreen = "1.0.1"
 vk-compose-gradle-plugin = "0.4.2"
 kotlin = "2.0.0"
 kotlin-kmp-compose = "1.6.11"
-gradle = "8.5.0-beta02"
+gradle = "8.5.0"
 
 #SDK
 multiplatformMarkdownRendererM3 = "0.14.0"

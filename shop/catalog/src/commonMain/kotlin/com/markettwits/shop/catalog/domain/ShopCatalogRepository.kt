@@ -18,4 +18,8 @@ interface ShopCatalogRepository {
         price: ShopFilterPrice,
     ): Flow<PagingData<ShopItem>>
 
+    fun paddingProducts(
+        query : String
+    ) : Flow<PagingData<ShopItem>>
+
 }

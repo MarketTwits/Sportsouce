@@ -24,6 +24,12 @@ interface SportSauceShopApi {
         options: Set<String>? = null,
     ): ProductsRemote
 
+    suspend fun products(
+        limit: Int,
+        offset: Int,
+        query : String
+    ) : ProductsRemote
+
     suspend fun product(uuid: String): ProductRemote
 
     suspend fun productOption(): OptionRemote

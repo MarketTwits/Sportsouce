@@ -36,6 +36,5 @@ fun ShopItemsContentWithData(
                 ShopItemCard(shopItem = it, onItemClick = onClickItem)
             }
         }
-
     }
 }

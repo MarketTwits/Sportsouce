@@ -1,8 +1,8 @@
 package com.markettwits.shop.filter.domain
 
-import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
-import com.markettwits.shop.catalog.domain.models.ShopOptionInfo
+import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
+import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 
 interface ShopFilterRepository {
 

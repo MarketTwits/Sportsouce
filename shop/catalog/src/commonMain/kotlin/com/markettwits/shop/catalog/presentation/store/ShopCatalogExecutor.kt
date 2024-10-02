@@ -3,11 +3,11 @@ package com.markettwits.shop.catalog.presentation.store
 import androidx.paging.cachedIn
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Intent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Message
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import kotlinx.coroutines.launch
 
 class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :

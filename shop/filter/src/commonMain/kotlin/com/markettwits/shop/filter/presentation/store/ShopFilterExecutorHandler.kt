@@ -1,9 +1,9 @@
 package com.markettwits.shop.filter.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.shop.catalog.domain.models.ShopCategoryItem
-import com.markettwits.shop.catalog.domain.models.ShopFilterPrice
 import com.markettwits.shop.filter.domain.ShopFilterRepository
+import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Intent
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Label
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Message

@@ -1,4 +1,4 @@
-package com.markettwits.shop.catalog.domain.models
+package com.markettwits.shop.filter.domain.models
 
 import kotlinx.serialization.Serializable
 

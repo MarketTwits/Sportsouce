@@ -35,7 +35,8 @@ class ShopItemPageComponentBase(
     init {
         store.labels.onEach {
             when (it) {
-                ShopItemPageStore.Label.GoBack -> outputs.goBack()
+                is ShopItemPageStore.Label.GoBack -> outputs.goBack()
+                is ShopItemPageStore.Label.UpdateItem -> outputs.updateItem(it.shopPageItem)
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }

@@ -36,6 +36,7 @@ class ShopItemPageExecutor(
             repository.item(itemId ?: productId).fold(
                 onSuccess = {
                     dispatch(Message.Loaded(it))
+                    publish(Label.UpdateItem(it))
                 }, onFailure = {
                     dispatch(Message.Failed(it.message.toString()))
                 }

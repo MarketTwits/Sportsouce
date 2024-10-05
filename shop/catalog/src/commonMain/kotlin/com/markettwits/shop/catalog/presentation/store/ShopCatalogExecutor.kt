@@ -9,13 +9,13 @@ import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Message
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 
-class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
+internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickItem -> publish(Label.OnClickItem(intent.id))
+            is Intent.OnClickItem -> publish(Label.OnClickItem(intent.item))
             is Intent.OnClickFilter -> publish(Label.GoFilter(getState().filterState))
             is Intent.OnClickSearch -> publish(Label.GoSearch(getState().queryState))
             is Intent.OnClickCategory -> publish(Label.OnClickCategory(intent.categoryItem))

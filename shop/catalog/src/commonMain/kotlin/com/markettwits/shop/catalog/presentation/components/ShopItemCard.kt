@@ -1,5 +1,6 @@
 package com.markettwits.shop.catalog.presentation.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,9 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,17 +45,17 @@ import com.markettwits.shop.catalog.domain.models.ShopItem
 fun ShopItemCard(
     modifier: Modifier = Modifier,
     shopItem: ShopItem,
-    onItemClick: (String) -> Unit,
+    onItemClick: (ShopItem) -> Unit,
 ) {
     Box(
         modifier = modifier
-            .width(180.dp)
-            .height(240.dp)
+            .width(140.dp)
+            .height(260.dp)
             .padding(4.dp)
             .clip(Shapes.large)
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
-                onItemClick(shopItem.id)
+                onItemClick(shopItem)
             }
     ) {
         Column {
@@ -56,14 +64,14 @@ fun ShopItemCard(
                     .clip(Shapes.large)
                     .padding(2.dp)
                     .align(Alignment.CenterHorizontally)
-                    .weight(0.6f),
+                    .weight(0.7f),
                 image = shopItem.imageUrl,
             )
             ShowCardPrice(
                 modifier = Modifier
                     .padding(4.dp)
                     .align(Alignment.Start)
-                    .weight(0.4f),
+                    .weight(0.3f),
                 currentPrice = shopItem.currentPrice,
                 previousPrice = shopItem.previousPrice,
                 discount = shopItem.discount,
@@ -74,41 +82,81 @@ fun ShopItemCard(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ImageCard(
     modifier: Modifier = Modifier,
-    image: String,
+    image: List<String>,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        SubcomposeAsyncImage(
-            model = imageRequestCrossfade(image),
-            filterQuality = FilterQuality.High,
-            contentDescription = "",
-            alignment = Alignment.Center,
-            contentScale = ContentScale.Fit,
-            clipToBounds = true,
-            modifier = Modifier.fillMaxSize(),
-            error = {
-                if (image.isEmpty())
-                //Handle empty image
+    Column(modifier = modifier) {
+        val pagerState = rememberPagerState(initialPage = 0, pageCount = { image.size })
+        HorizontalPager(
+            modifier = Modifier
+                .weight(0.9f)
+                .clip(Shapes.large)
+                .padding(2.dp)
+                .fillMaxSize(),
+            state = pagerState
+        ) { index ->
+            SubcomposeAsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = imageRequestCrossfade(image[index]),
+                filterQuality = FilterQuality.High,
+                contentDescription = "",
+                alignment = Alignment.Center,
+                contentScale = ContentScale.Fit,
+                clipToBounds = true,
+                error = {
+                    if (image.isEmpty())
+                    //Handle empty image
 //                        SubcomposeAsyncImageContent(
 //                            modifier = modifier,
 //                            painter = DefaultImages.EmptyImageStart()
 //                        )
-                else
+                    else
+                        Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
+                },
+                loading = {
                     Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
-            },
-            loading = {
-                Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
-            },
-            success = {
-                SubcomposeAsyncImageContent(modifier = modifier)
-            }
-        )
+                },
+                success = {
+                    SubcomposeAsyncImageContent(modifier = Modifier)
+                }
+            )
+        }
+        if (image.size > 1){
+            ShopImagePageIndicator(
+                Modifier.weight(0.1f),
+                pagerState = pagerState
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ShopImagePageIndicator(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState
+) {
+    Row(
+        modifier
+            .wrapContentHeight()
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        repeat(pagerState.pageCount) { iteration ->
+            val color =
+                if (pagerState.currentPage == iteration)
+                    MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .clip(CircleShape)
+                    .background(color)
+                    .size(4.dp)
+            )
+        }
     }
 }
 

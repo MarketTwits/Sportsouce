@@ -18,7 +18,8 @@ class ShopPageItemMapperBase : ShopPageItemMapper {
             visual = calculateVisual(products),
             options = calculateOptions(products),
             extraOptions = calculateExtras(products),
-            fullPathUrl = "shop.sportsauce.ru/product/${products.product.id}"
+            quantity = products.product.quantity,
+            fullPathUrl = "https://shop.sportsauce.ru/product/${products.product.id}"
         )
 }
 
@@ -118,7 +119,7 @@ private fun calculateOptions(products: ProductRemote): List<ShopPageItem.Option>
 
 private fun calculateVisual(product: ProductRemote): ShopPageItem.Visual =
     ShopPageItem.Visual(
-        imageUrl = product.product.images?.firstOrNull()?.file?.fullPath ?: "",
+        imageUrl = product.product.images?.map { it.file?.fullPath ?: "" } ?: emptyList(),
         description = product.product.description,
         displayName = product.product.shopDisplayName ?: product.product.name
     )

@@ -2,7 +2,6 @@ package com.markettwits.shop.catalog.presentation.store
 
 import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.shop.catalog.domain.models.ShopCatalogOptions
 import com.markettwits.shop.catalog.domain.models.ShopItem
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Intent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
@@ -26,7 +25,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object OnClickGoBack : Intent
         data object OnClickSearch : Intent
-        data class OnClickItem(val id: String) : Intent
+        data class OnClickItem(val item: ShopItem) : Intent
         data class OnClickCategory(val categoryItem: ShopCategoryItem) : Intent
         data object OnClickFilter : Intent
         data class ApplyFilter(val state: ShopFilterStore.State) : Intent
@@ -45,7 +44,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        data class OnClickItem(val id: String) : Label
+        data class OnClickItem(val item: ShopItem) : Label
         data object GoBack : Label
         data class GoSearch(val query: String) : Label
         data class GoFilter(val filterState: ShopFilterStore.State?) : Label

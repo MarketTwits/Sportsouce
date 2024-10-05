@@ -30,14 +30,15 @@ private fun convertToShopItem(productsRemoteRow: ProductsRemoteRow): ShopItem {
         discount = null
     }
 
-    val imageUrl = productsRemoteRow.images.firstOrNull()?.file?.fullPath ?: ""
+    val imageUrl = productsRemoteRow.images.map { it.file?.fullPath.toString() }
 
     return ShopItem(
-        id = productsRemoteRow.id,
+        uuid = productsRemoteRow.id,
         currentPrice = currentPrice,
         previousPrice = previousPrice,
         discount = discount,
         title = productsRemoteRow.name,
+        quantity = productsRemoteRow.quantity,
         imageUrl = imageUrl
     )
 }

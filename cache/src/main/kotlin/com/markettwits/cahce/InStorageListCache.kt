@@ -29,6 +29,8 @@ abstract class InStorageListCache<T : @Serializable Any>(
         cache.minus(value)
     }
 
+    suspend fun update(operation: (List<T>?) -> List<T>?)  = cache.update(operation)
+
     override fun observe(): Flow<List<T>?> =
         cache.updates
 }

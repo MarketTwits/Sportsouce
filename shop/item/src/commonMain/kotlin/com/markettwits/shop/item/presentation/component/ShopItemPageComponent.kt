@@ -1,5 +1,6 @@
 package com.markettwits.shop.item.presentation.component
 
+import com.markettwits.shop.item.domain.models.ShopPageItem
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore
 import kotlinx.coroutines.flow.StateFlow
 
@@ -11,6 +12,7 @@ interface ShopItemPageComponent {
 
     interface Output {
         fun goBack()
+        fun updateItem(item : ShopPageItem)
     }
 
 }

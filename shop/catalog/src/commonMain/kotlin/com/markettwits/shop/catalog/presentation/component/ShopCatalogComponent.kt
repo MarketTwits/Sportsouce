@@ -1,5 +1,6 @@
 package com.markettwits.shop.catalog.presentation.component
 
+import com.markettwits.shop.catalog.domain.models.ShopItem
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
@@ -12,7 +13,7 @@ interface ShopCatalogComponent {
     fun obtainEvent(intent: ShopCatalogStore.Intent)
 
     interface Outputs {
-        fun onClickShopItem(id: String)
+        fun onClickShopItem(item: ShopItem)
 
         fun goBack()
 

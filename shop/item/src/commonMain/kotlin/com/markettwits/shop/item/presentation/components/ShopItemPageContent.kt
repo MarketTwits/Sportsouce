@@ -1,6 +1,7 @@
 package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore
@@ -13,6 +14,7 @@ internal fun ShopItemPageContent(
     onClickGoBack: () -> Unit,
     onClickAddToFavorite: () -> Unit,
     onClickShare: () -> Unit,
+    cartContent: @Composable (Modifier) -> Unit
 ) {
     if (state.isError) {
         FailedScreen(
@@ -32,7 +34,8 @@ internal fun ShopItemPageContent(
             onClickGoBack = onClickGoBack,
             onRefresh = onClickRetry,
             onClickAddToFavorite = onClickAddToFavorite,
-            onClickShare = onClickShare
+            onClickShare = onClickShare,
+            content = cartContent
         )
     }
 }

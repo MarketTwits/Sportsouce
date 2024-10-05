@@ -5,7 +5,7 @@ import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Message
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 
-object ShopCatalogReducer : Reducer<State, Message> {
+internal object ShopCatalogReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.Failed -> copy(isLoading = false, isError = true, message = msg.message)

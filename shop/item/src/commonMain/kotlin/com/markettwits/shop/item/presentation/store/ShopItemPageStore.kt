@@ -31,6 +31,7 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object GoBack : Label
+        data class UpdateItem(val shopPageItem: ShopPageItem) : Label
     }
 
 }

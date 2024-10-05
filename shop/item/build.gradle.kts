@@ -17,6 +17,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
             implementation(projects.shop.cloud)
+            implementation(projects.shop.cart)
             implementation(projects.core.ui)
             implementation(projects.coreKoin)
             implementation(projects.intent.api)

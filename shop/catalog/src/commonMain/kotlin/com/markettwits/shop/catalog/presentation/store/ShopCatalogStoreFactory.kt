@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.shop.catalog.domain.models.ShopCatalogOptions
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Intent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State

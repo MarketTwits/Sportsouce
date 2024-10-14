@@ -82,11 +82,10 @@ internal class ShopCartExecutor(
 
     private fun calculateTotalDiscount(cart: List<ShopItemCart>): String {
         var totalDiscount = 0
-
         for (item in cart) {
             if (item.numberPreviousPrice != null && item.numberPreviousPrice > item.numberPrice) {
                 val discountPerItem = item.numberPreviousPrice - item.numberPrice
-                totalDiscount += discountPerItem * item.quantity
+                totalDiscount += discountPerItem * item.count
             }
         }
         return if (totalDiscount <= 0) "" else  totalDiscount.toString()

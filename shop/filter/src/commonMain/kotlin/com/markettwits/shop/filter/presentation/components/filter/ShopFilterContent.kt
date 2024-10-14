@@ -30,7 +30,7 @@ internal fun ShopFilterContent(
         modifier = modifier,
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            ShopFilterApplyButton(onClick = onClickApplyFilter)
+            ShopFilterApplyButton(onClickApply = onClickApplyFilter, onClickReset = onClickReset)
         },
         topBar = {
             ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)

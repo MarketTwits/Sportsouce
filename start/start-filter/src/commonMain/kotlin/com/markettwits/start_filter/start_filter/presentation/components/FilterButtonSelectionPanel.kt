@@ -51,7 +51,7 @@ fun FilterButtonSelectionPanel(
             onClick = { onClickApply() }
         ) {
             Text(
-                text = "Прмиенить",
+                text = "Применить",
                 fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,

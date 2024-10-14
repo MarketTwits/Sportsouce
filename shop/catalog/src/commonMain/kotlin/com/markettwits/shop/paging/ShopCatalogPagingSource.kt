@@ -17,12 +17,19 @@ class ShopCatalogPagingSource(
     override suspend fun load(offset: Int, limit: Int): List<ProductsRemoteRow> {
         return when (params) {
             is ShopCatalogParams.WithFilter -> shopApi.products(
-                limit,
-                offset,
-                params.categoryId,
-                params.options
+                limit = limit,
+                offset = offset,
+                categoryId = params.categoryId,
+                options = params.options,
+                priceMax = params.price?.maxPrice?.apply(),
+                priceMin = params.price?.minPrice?.apply()
             ).rows
-            is ShopCatalogParams.WithQuery -> shopApi.products(limit, offset, params.query).rows
+
+            is ShopCatalogParams.WithQuery -> shopApi.products(
+                limit = limit,
+                offset = offset,
+                query = params.query
+            ).rows
         }
     }
 }

@@ -4,19 +4,19 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android.namespace = "com.markettwits.shop.cart"
+android.namespace = "com.markettwits.shop.order"
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.bundles.decompose.compose)
-            implementation(libs.bundles.mviKotlin)
             implementation(libs.koin.core)
-            implementation(projects.cache)
+            implementation(libs.bundles.mviKotlin)
+            implementation(projects.shop.cloud)
+            implementation(projects.shop.cart)
             implementation(projects.core.ui)
             implementation(projects.coreKoin)
-            implementation(projects.shop.cloud)
+            implementation(projects.auth.authService)
         }
     }
 }

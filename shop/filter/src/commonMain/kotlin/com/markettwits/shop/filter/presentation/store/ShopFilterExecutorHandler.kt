@@ -89,6 +89,10 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
             dispatch(Message.Loading)
             repository.filter().onSuccess {
                 dispatch(Message.FilterLoaded(it, ShopFilterPrice.EMPTY))
+            }.onFailure {
+                println("error")
+                println(it.toString())
+                publish(Label.GoBack)
             }
         }
     }

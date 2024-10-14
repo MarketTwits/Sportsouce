@@ -175,7 +175,10 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             )
 
             is RootReviewComponent.Config.Shop -> RootReviewComponent.Child.Shop(
-                RootShopCatalogComponentBase(componentContext = componentContext)
+                RootShopCatalogComponentBase(
+                    componentContext = componentContext,
+                    pop = navigation::pop
+                )
             )
         }
 

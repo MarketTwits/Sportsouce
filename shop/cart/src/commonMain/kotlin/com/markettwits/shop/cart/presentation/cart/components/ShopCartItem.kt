@@ -1,6 +1,12 @@
 package com.markettwits.shop.cart.presentation.cart.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +21,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -93,18 +102,21 @@ private fun ImageCard(
             contentScale = ContentScale.Fit,
             clipToBounds = true,
             modifier = Modifier.fillMaxSize(),
-            error = {
-                if (image.isEmpty())
-                //Handle empty image
-//                        SubcomposeAsyncImageContent(
-//                            modifier = modifier,
-//                            painter = DefaultImages.EmptyImageStart()
-//                        )
-                else
-                    Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
-            },
             loading = {
                 Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
+            },
+            error = {
+                Box(modifier = Modifier
+                    .fillMaxSize()){
+                    Icon(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .align(Alignment.Center),
+                        imageVector = Icons.Default.Photo,
+                        tint = MaterialTheme.colorScheme.outline,
+                        contentDescription = ""
+                    )
+                }
             },
             success = {
                 SubcomposeAsyncImageContent(modifier = modifier)
@@ -178,6 +190,7 @@ private fun ShowCardPrice(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SubscriptionCounter(
     modifier: Modifier = Modifier,
@@ -209,14 +222,25 @@ private fun SubscriptionCounter(
                 color = MaterialTheme.colorScheme.secondary
             )
         }
-        Text(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            textAlign = TextAlign.Center,
-            text = monthOfCount.toString(),
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.tertiary
-        )
+        AnimatedContent(
+            targetState = monthOfCount,
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInVertically { -it } togetherWith slideOutVertically { it }
+                } else {
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                }
+            }
+        ) { count ->
+            Text(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                textAlign = TextAlign.Center,
+                text = count.toString(),
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
         Box(
             modifier = Modifier
                 .clickable(onClick = onClickIncrease)

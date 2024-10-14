@@ -19,13 +19,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -106,16 +108,6 @@ private fun ImageCard(
                 alignment = Alignment.Center,
                 contentScale = ContentScale.Fit,
                 clipToBounds = true,
-                error = {
-                    if (image.isEmpty())
-                    //Handle empty image
-//                        SubcomposeAsyncImageContent(
-//                            modifier = modifier,
-//                            painter = DefaultImages.EmptyImageStart()
-//                        )
-                    else
-                        Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
-                },
                 loading = {
                     Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
                 },
@@ -129,6 +121,19 @@ private fun ImageCard(
                 Modifier.weight(0.1f),
                 pagerState = pagerState
             )
+        }
+        if (image.isEmpty()){
+            Box(modifier = Modifier
+                .fillMaxSize()){
+                Icon(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.Center),
+                    imageVector = Icons.Default.Photo,
+                    tint = MaterialTheme.colorScheme.outline,
+                    contentDescription = ""
+                )
+            }
         }
     }
 }

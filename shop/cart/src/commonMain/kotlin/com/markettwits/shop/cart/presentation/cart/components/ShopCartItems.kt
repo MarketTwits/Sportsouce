@@ -3,9 +3,7 @@ package com.markettwits.shop.cart.presentation.cart.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.markettwits.shop.cart.domain.ShopItemCart
 
+@OptIn(ExperimentalFoundationApi::class)
 internal fun LazyListScope.ShopCartItems(
     modifier: Modifier = Modifier,
     items: List<ShopItemCart>,
@@ -26,7 +25,7 @@ internal fun LazyListScope.ShopCartItems(
     onClickDecrease: (ShopItemCart) -> Unit,
 ) {
     items(items, key = {it.id}) {
-        AnimationBox{
+        AnimationBox(key = it.id){
             ShopCartItem(
                 modifier = modifier,
                 shopCartItemCart = it,
@@ -35,19 +34,18 @@ internal fun LazyListScope.ShopCartItems(
                 onClickDecrease = onClickDecrease
             )
         }
-
     }
 }
 
 @Composable
 private fun <T> T.AnimationBox(
+    key : Any = Unit,
     enter: EnterTransition = expandVertically() + fadeIn(),
     exit: ExitTransition = fadeOut() + shrinkVertically(),
     content: @Composable T.() -> Unit
 ) {
-    val state = remember {
+    val state = remember(key) {
         MutableTransitionState(false).apply {
-            // Start the animation immediately.
             targetState = true
         }
     }

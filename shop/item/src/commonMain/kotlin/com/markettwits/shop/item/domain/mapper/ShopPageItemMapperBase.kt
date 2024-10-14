@@ -126,15 +126,15 @@ private fun calculateVisual(product: ProductRemote): ShopPageItem.Visual =
 
 private fun calculatePrice(price: Int, discountPrice: Int?): ShopPageItem.Price {
     val currentPrice: String
-    val previousPrice: String?
-    val discount: Int?
-    return if (discountPrice != null && discountPrice > 0 && discountPrice < price) {
-        currentPrice = formatPrice(discountPrice / 100)
-        previousPrice = formatPrice(price / 100)
-        discount =
-            ((price - discountPrice) * 100 / price)
-        ShopPageItem.Price(
-            currentPrice = currentPrice,
+        val previousPrice: String?
+        val discount: Int?
+        return if (discountPrice != null && discountPrice > 0 && discountPrice < price) {
+            currentPrice = formatPrice(discountPrice / 100)
+            previousPrice = formatPrice(price / 100)
+            discount =
+                ((price - discountPrice) * 100 / price)
+            ShopPageItem.Price(
+                currentPrice = currentPrice,
             previousPrice = previousPrice,
             discount = discount
         )

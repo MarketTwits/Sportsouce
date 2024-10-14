@@ -1,7 +1,11 @@
 package com.markettwits.shop.cart.presentation.page.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -67,13 +72,14 @@ internal fun ShopCartItemExpanded(
     onClickRemoveFromCart: () -> Unit
 ) {
     Column(modifier = modifier) {
-        AnimatedVisibility(quantity <= countInCart){
-            Box(modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .clip(Shapes.medium)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-            ){
+        AnimatedVisibility(quantity <= countInCart) {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .clip(Shapes.medium)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
+            ) {
                 Text(
                     modifier = Modifier.padding(10.dp),
                     text = "На складе больше нет такого товара",
@@ -143,7 +149,7 @@ private fun SubscriptionCounter(
                 .weight(1f)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
-                .clickable(onClick = onClickDecrease)
+                .noRippleClickable(onClick = onClickDecrease)
         ) {
             Text(
                 modifier = Modifier
@@ -157,22 +163,33 @@ private fun SubscriptionCounter(
                 color = MaterialTheme.colorScheme.secondary
             )
         }
-        Text(
-            modifier = Modifier
-                .weight(1f),
-            textAlign = TextAlign.Center,
-            text = countInCart.toString(),
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.tertiary
-        )
+        AnimatedContent(
+            targetState = countInCart,
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInVertically { -it } togetherWith slideOutVertically { it }
+                } else {
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                }
+            }
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f),
+                textAlign = TextAlign.Center,
+                text = countInCart.toString(),
+                fontSize = 20.sp,
+                fontFamily = FontNunito.bold(),
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
         val addIsAvailable = quantity > countInCart
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
                 .clip(RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp))
-                .clickable(onClick = {
+                .noRippleClickable(onClick = {
                     if (addIsAvailable) {
                         onClickIncrease()
                     }

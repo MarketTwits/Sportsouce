@@ -8,7 +8,7 @@ data class ShopCategoryItem(
     val description: String,
     val id: Int,
     val level: Int,
-    val parentId: Int,
+    val parentId: Int?,
     val slug: String,
     val title: String,
 )

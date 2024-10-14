@@ -1,5 +1,8 @@
 package com.markettwits.shop.filter.presentation.components.filter
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -17,25 +20,46 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun ShopFilterApplyButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClickReset: () -> Unit,
+    onClickApply: () -> Unit
 ) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        enabled = true,
-        colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-        ),
-        shape = Shapes.small,
-        onClick = { onClick() }
-    ) {
-        Text(
-            modifier = Modifier.padding(2.dp),
-            text = "Применить",
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onSecondary
-        )
+    Row(modifier = modifier.padding(10.dp)) {
+        Button(
+            modifier = Modifier.weight(1f),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp
+            ),
+            border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.secondary),
+            onClick = { onClickReset() }
+        ) {
+            Text(
+                text = "Сбросить",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+        Spacer(modifier = Modifier.weight(0.1f))
+        Button(
+            modifier = Modifier.weight(1f),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp
+            ),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+            border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.secondary),
+            onClick = { onClickApply() }
+        ) {
+            Text(
+                text = "Применить",
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+        }
     }
 }

@@ -10,7 +10,8 @@ interface ShopCartRepository{
 
     suspend fun fetchAll() : List<ShopItemCart>
 
-    suspend fun fetchByUUID(uuid : String) : ShopItemCart
+    suspend fun fetchByUUID(uuid : String) : ShopItemCart?
 
     fun observe() : Flow<List<ShopItemCart>>
+
 }

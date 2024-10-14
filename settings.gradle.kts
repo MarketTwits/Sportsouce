@@ -38,6 +38,7 @@ include(":shop:item")
 include(":shop:filter")
 include(":shop:search")
 include(":shop:cart")
+include(":shop:order")
 include(":teams-city")
 include(":start:start-register")
 include(":start:start-search")
@@ -82,3 +83,5 @@ include(":core:theme")
 include(":core:activityholder")
 include(":selfupdater:googleplay")
 
+
+include(":order")

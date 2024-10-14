@@ -1,6 +1,10 @@
 package com.markettwits.shop.cart.presentation.cart.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,17 +13,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CardTravel
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,9 +44,9 @@ internal fun ShopCartOrder(
     discount: String,
     totalCost: String,
     isByCache: Boolean,
-    isCreateOrderAvailable : Boolean,
+    isCreateOrderAvailable: Boolean,
     onClickChangePaymentType: () -> Unit,
-    onClickCreateOrder : () -> Unit
+    onClickCreateOrder: () -> Unit
 ) {
     Column(modifier = modifier) {
         PaymentTypeContent(
@@ -89,15 +89,40 @@ private fun OrderContent(
             color = Color.LightGray
         )
         DiscountRow(title = "Скидка :", value = discount)
-        Text(
-            modifier = Modifier.padding(vertical = 4.dp),
-            text = "Итого : $totalCost ₽",
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        Row(
+            modifier = Modifier
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Итого : ",
+                fontSize = 20.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            AnimatedContent(
+                targetState = totalCost,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInVertically { -it } togetherWith slideOutVertically { it }
+                    } else {
+                        slideInVertically { it } togetherWith slideOutVertically { -it }
+                    }
+                }
+            ) { value ->
+                Text(
+                    text = "$value ₽",
+                    fontSize = 20.sp,
+                    fontFamily = FontNunito.bold(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
     }
 }
 
@@ -115,7 +140,8 @@ private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: Str
                 color = Color.LightGray
             )
             Text(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier
+                    .padding(10.dp),
                 text = " - $value ₽",
                 fontSize = 14.sp,
                 fontFamily = FontNunito.bold(),
@@ -212,8 +238,8 @@ private fun PaymentTypeItem(
 @Composable
 private fun CreateOrderButton(
     modifier: Modifier = Modifier,
-    isAvailable : Boolean,
-    onClick : () -> Unit
+    isAvailable: Boolean,
+    onClick: () -> Unit
 ) {
     Button(
         modifier = modifier

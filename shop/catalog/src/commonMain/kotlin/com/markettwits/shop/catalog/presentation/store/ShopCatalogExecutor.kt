@@ -8,6 +8,7 @@ import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Message
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
+import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 
 internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
@@ -19,7 +20,7 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
             is Intent.OnClickFilter -> publish(Label.GoFilter(getState().filterState))
             is Intent.OnClickSearch -> publish(Label.GoSearch(getState().queryState))
             is Intent.OnClickCategory -> publish(Label.OnClickCategory(intent.categoryItem))
-            is Intent.ApplyQuery -> launchWithQuery(intent.query)
+            is Intent.ApplyQuery -> launchWithQuery(intent.query,getState().filterState)
             is Intent.ApplyFilter -> {
                 val categoryId =
                     if (intent.state.currentCategoryPath.isNotEmpty())
@@ -47,18 +48,34 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
         dispatch(
             Message.Loaded(
                 repository.paddingProducts(
-                    categoryId,
-                    options,
-                    price
+                    categoryId = categoryId,
+                    options = options,
+                    price = price
                 ).cachedIn(scope)
             )
         )
+        dispatch(Message.QueryApplied(""))
     }
 
     private fun launchWithQuery(
-        query: String
+        query: String,
+        filterState : ShopFilterStore.State?
     ) {
         dispatch(Message.QueryApplied(query))
         dispatch(Message.Loaded(repository.paddingProducts(query).cachedIn(scope)))
+        filterState?.let {
+            dispatch(Message.FilterApplied(clearFilterStateChosen(filterState)))
+        }
+
+    }
+
+    private fun clearFilterStateChosen(filterState: ShopFilterStore.State) :ShopFilterStore.State{
+        return filterState.copy(
+            selectedPrice = ShopFilterPrice.EMPTY,
+            selectedOptionUID = emptySet(),
+            options = emptyList(),
+            currentCategoryPath = emptyList(),
+            isApplied = false
+        )
     }
 }

@@ -13,7 +13,7 @@ val sportSauceShopCloudModule = module {
             HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
                 clientEngine = OkHttp.create(),
-                baseUrl = devBaseUrl
+                baseUrl = baseUrl
             )
         )
     }

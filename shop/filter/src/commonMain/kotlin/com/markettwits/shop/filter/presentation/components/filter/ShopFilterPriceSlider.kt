@@ -202,7 +202,7 @@ private fun PriceTextBox(
             ),
             onValueChange = { text ->
                 if (text.all { it.isDigit() }) {
-                    onValueChange(text.ifEmpty { "0" })
+                    onValueChange(text)
                 }
             }
         )

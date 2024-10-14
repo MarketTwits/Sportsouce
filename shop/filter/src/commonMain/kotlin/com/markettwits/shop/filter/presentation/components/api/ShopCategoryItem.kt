@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.cloud_shop.model.common.OptionInfo
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -30,11 +31,14 @@ import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 fun ShopCategories(
     modifier: Modifier = Modifier,
     selectedCategoriesPath: List<ShopCategoryItem>,
-    onClickCategory: (ShopCategoryItem) -> Unit,
+    onClickCategory: () -> Unit,
 ) {
-    val currentPath by remember {
+    val currentCategoriesPath by remember {
         mutableStateOf(selectedCategoriesPath.filter { it.children.isNotEmpty() })
     }
+//    val currentOptionsPath by remember {
+//        mutableStateOf(selectedOptionsPath.filter { it.values?.isNotEmpty() ?: false })
+//    }
     Row(
         modifier = modifier
             .padding(10.dp)
@@ -43,12 +47,19 @@ fun ShopCategories(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        currentPath.forEach {
+        currentCategoriesPath.forEach {
             ShopCategoryItem(
                 isSelected = true,
-                shopCategoryItem = it,
-                onClick = { onClickCategory(it) })
+                title = it.title,
+                onClick =  { onClickCategory() })
         }
+//        currentOptionsPath.forEach {
+//            ShopCategoryItem(
+//                isSelected = true,
+//                title = it.name,
+//                onClick = {onClickCategory()}
+//            )
+//        }
     }
 }
 
@@ -56,7 +67,7 @@ fun ShopCategories(
 private fun ShopCategoryItem(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
-    shopCategoryItem: ShopCategoryItem,
+    title: String,
     onClick: () -> Unit,
 ) {
     val buttonColor =
@@ -78,7 +89,7 @@ private fun ShopCategoryItem(
         colors = buttonColor
     ) {
         Text(
-            text = shopCategoryItem.title,
+            text = title,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             lineHeight = 14.sp,

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shop
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -82,7 +84,7 @@ private fun menu() = listOf<ReviewMenuItem>(
     ReviewMenuItem(
         4,
         "Магазин",
-        Icons.Filled.Settings,
+        Icons.Filled.ShoppingCart,
         SportSouceColor.SportSouceRegistryCommingSoonYellow.copy(alpha = 0.1f),
         SportSouceColor.SportSouceRegistryCommingSoonYellow
     )

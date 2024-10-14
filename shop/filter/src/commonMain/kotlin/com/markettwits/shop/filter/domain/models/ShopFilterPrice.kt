@@ -14,8 +14,16 @@ data class ShopFilterPrice(
 
     @Serializable
     sealed interface Value {
-        data class Price(val cost: Int) : Value
-        data object Empty : Value
+
+        fun apply() : Int?
+
+        data class Price(val cost: Int) : Value {
+            override fun apply(): Int = cost
+        }
+
+        data object Empty : Value {
+            override fun apply(): Int? = null
+        }
     }
 
 }

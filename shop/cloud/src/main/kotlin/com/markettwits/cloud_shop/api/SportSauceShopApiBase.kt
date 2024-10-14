@@ -42,6 +42,8 @@ internal class SportSauceShopApiBase(
         offset: Int?,
         categoryId: Int?,
         options: Set<String>?,
+        priceMax : Int?,
+        priceMin : Int?
     ): ProductsRemote {
         val response = client.get("product") {
             url {
@@ -56,6 +58,12 @@ internal class SportSauceShopApiBase(
                 }
                 if (options != null) {
                     parameters.append("options%5B%5D", options.joinToString(","))
+                }
+                if (priceMax != null){
+                    parameters.append("max_price", priceMax.toString())
+                }
+                if (priceMin != null){
+                    parameters.append("mnx_price", priceMin.toString())
                 }
             }
         }

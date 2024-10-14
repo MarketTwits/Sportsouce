@@ -42,11 +42,11 @@ class ShopFilterMapperBase : ShopFilterMapper {
     private fun convertChildrenItemToCategoryItem(childrenItem: ChildrenItem): ShopCategoryItem {
         return ShopCategoryItem(
             children = childrenItem.children.map { convertChildrenItemToCategoryItem(it) },
-            description = childrenItem.description,
+            description = childrenItem.description ?: "",
             id = childrenItem.id,
-            level = childrenItem.level,
+            level = childrenItem.level ?: 1,
             parentId = childrenItem.parent_id,
-            slug = childrenItem.slug,
+            slug = childrenItem.slug ?: "",
             title = childrenItem.title
         )
     }

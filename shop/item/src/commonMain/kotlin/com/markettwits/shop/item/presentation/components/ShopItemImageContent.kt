@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -144,7 +145,8 @@ private fun FullImageContent(
                     modifier = Modifier
                         .padding(18.dp)
                         .align(Alignment.Center),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+
                 ) {
                     SubcomposeAsyncImage(
                         model = imageUrl[index],

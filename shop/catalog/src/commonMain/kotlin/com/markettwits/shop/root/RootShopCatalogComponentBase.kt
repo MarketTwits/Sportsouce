@@ -42,6 +42,7 @@ import kotlin.random.Random
 
 class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
+    private val pop : () -> Unit,
 ) : RootShopCatalogComponent,
     ComponentContext by componentContext {
 
@@ -136,8 +137,7 @@ class RootShopCatalogComponentBase(
         override fun onClickShopItem(item: ShopItem) =
             stackNavigation.push(RootShopCatalogComponent.Config.ShopItem(item))
 
-        override fun goBack() =
-            stackNavigation.pop()
+        override fun goBack() = pop.invoke()
 
         override fun goFilter(
             filterState: ShopFilterStore.State?,

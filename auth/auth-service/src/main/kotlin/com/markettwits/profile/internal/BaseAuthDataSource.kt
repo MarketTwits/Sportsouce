@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.mapNotNull
 internal class BaseAuthDataSource(
     private val remoteService: SportsouceApi,
     private val signInCacheMapper: SignInRemoteToCacheMapper,
-    private val cache: ObservableCache<User>,
+    private val userInfoCache: ObservableCache<User>,
     private val tokenManager: TokenManager,
-    private val local: AuthCacheDataSource
+    private val authCache: AuthCacheDataSource
 ) : AuthDataSource {
     override suspend fun register(signUpRequest: SignUpRequest): Result<Unit> =
         runCatching {
@@ -36,19 +36,19 @@ internal class BaseAuthDataSource(
     override suspend fun logIn(emailOrPhone: String, password: String): Result<User> = runCatching {
         val response =
             remoteService.signIn(SignInRequest(email = emailOrPhone, password = password))
-        local.write(signInCacheMapper.map(response, password))
+        authCache.write(signInCacheMapper.map(response, password))
         auth().getOrThrow()
     }
 
     override suspend fun updatePassword(password: String) {
-        local.updatePassword(password)
+        authCache.updatePassword(password)
     }
 
     override suspend fun auth(): Result<User> =
         updateToken().fold(onSuccess = {
             return runCatching {
                 val user = remoteService.auth(it)
-                cache.set(value = user)
+                userInfoCache.set(value = user)
                 user
             }
         }, onFailure = {
@@ -57,10 +57,10 @@ internal class BaseAuthDataSource(
 
     override suspend fun updateToken(): Result<String> = validateToken()
 
-    override suspend fun observeUser(): Flow<User> = cache.observe().mapNotNull { it }
+    override suspend fun observeUser(): Flow<User> = userInfoCache.observe().mapNotNull { it }
 
     override suspend fun user(): Result<User> = runCatching {
-        cache.get() ?: auth().getOrThrow()
+        userInfoCache.get() ?: auth().getOrThrow()
     }
 
     override suspend fun updateUser(request: ChangeProfileInfoRequest): Result<Unit> = runCatching {
@@ -74,7 +74,7 @@ internal class BaseAuthDataSource(
 
     private suspend fun validateToken(): Result<String> {
         return runCatching {
-            val data = local.read()
+            val data = authCache.read()
             val token = tokenManager.decode(data.accessToken)
             val currentToken = if (tokenManager.isExpired(token.exp)) {
                 data.accessToken
@@ -86,7 +86,7 @@ internal class BaseAuthDataSource(
                             password = data.password
                         )
                     )
-                local.write(signInCacheMapper.map(response, data.password))
+                authCache.write(signInCacheMapper.map(response, data.password))
                 response.accessToken
             }
             currentToken
@@ -94,8 +94,8 @@ internal class BaseAuthDataSource(
     }
 
     override suspend fun clear() {
-        local.clearAll()
-        cache.clear()
+        authCache.clearAll()
+        userInfoCache.clear()
     }
 
 }

@@ -30,7 +30,8 @@ import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ShopFilterCategories(
+internal fun ShopFilterCategories(
+    modifier: Modifier = Modifier,
     categories: List<ShopCategoryItem>,
     currentPath: List<ShopCategoryItem>,
     onClickCategory: (ShopCategoryItem?) -> Unit,
@@ -42,7 +43,7 @@ fun ShopFilterCategories(
         currentPath.last().children
     }
 
-    Column {
+    Column(modifier = modifier) {
         var currentCategory by remember { mutableStateOf("") }
         currentCategory =
             if (currentPath.isNotEmpty()) currentPath.last().title else "Все категории"

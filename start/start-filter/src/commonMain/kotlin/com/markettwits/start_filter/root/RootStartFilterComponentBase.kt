@@ -25,6 +25,7 @@ class RootStartFilterComponentBase(
     private val pop: () -> Unit
 ) : RootStartFilterComponent,
     ComponentContext by context {
+
     private val navigation = StackNavigation<RootStartFilterComponent.Config>()
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -58,9 +59,7 @@ class RootStartFilterComponentBase(
                     pop = pop::invoke,
                     show = { filter, sorted ->
                         navigation.push(RootStartFilterComponent.Config.Starts(filter, sorted))
-                    },
-
-                    )
+                    })
             )
 
             is RootStartFilterComponent.Config.Starts -> RootStartFilterComponent.Child.Starts(

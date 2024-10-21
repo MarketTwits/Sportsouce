@@ -21,7 +21,7 @@ interface SportSauceShopApi {
         limit: Int? = null,
         offset: Int? = null,
         categoryId: Int? = null,
-        options: Set<String>? = null,
+        options: List<String>? = null,
         priceMax : Int? = null,
         priceMin : Int? = null
     ): ProductsRemote

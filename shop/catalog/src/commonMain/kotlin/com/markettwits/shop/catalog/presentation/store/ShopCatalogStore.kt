@@ -19,14 +19,12 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         val shopItems: Flow<PagingData<ShopItem>>,
         val filterState: ShopFilterStore.State? = null,
         val queryState : String = "",
-
     )
 
     sealed interface Intent {
         data object OnClickGoBack : Intent
         data object OnClickSearch : Intent
         data class OnClickItem(val item: ShopItem) : Intent
-        data class OnClickCategory(val categoryItem: ShopCategoryItem) : Intent
         data object OnClickFilter : Intent
         data class ApplyFilter(val state: ShopFilterStore.State) : Intent
         data class ApplyQuery(val query : String) : Intent
@@ -47,8 +45,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         data class OnClickItem(val item: ShopItem) : Label
         data object GoBack : Label
         data class GoSearch(val query: String) : Label
-        data class GoFilter(val filterState: ShopFilterStore.State?) : Label
-        data class OnClickCategory(val categoryItem: ShopCategoryItem) : Label
+        data object GoFilter : Label
     }
 
 }

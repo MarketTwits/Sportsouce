@@ -40,6 +40,5 @@ data class ShopPageItem(
         )
     }
 
-
 }
 

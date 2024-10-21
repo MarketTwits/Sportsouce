@@ -17,11 +17,8 @@ interface ShopCatalogComponent {
 
         fun goBack()
 
-        fun goFilter(filterState: ShopFilterStore.State?)
+        fun goFilter()
 
         fun goSearch(query : String)
-
-        fun onClickCategory(categoryItem: ShopCategoryItem)
-
     }
 }

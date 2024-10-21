@@ -9,6 +9,7 @@ import com.markettwits.shop.filter.domain.mapper.ShopFilterMapper
 import com.markettwits.shop.filter.domain.mapper.ShopFilterMapperBase
 import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapper
 import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapperBase
+import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.filter.presentation.store.ShopFilterStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -21,4 +22,7 @@ val shopFilterModule = module {
     singleOf(::ShopFilterMapperBase) bind ShopFilterMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::ShopFilterStoreFactory)
+    single<ShopFilterStore> {
+        ShopFilterStoreFactory(DefaultStoreFactory(), get()).create()
+    }
 }

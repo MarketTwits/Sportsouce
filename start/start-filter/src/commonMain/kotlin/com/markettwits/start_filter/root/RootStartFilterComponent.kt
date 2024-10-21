@@ -14,6 +14,7 @@ interface RootStartFilterComponent {
 
     @Serializable
     sealed interface Config {
+
         @Serializable
         data object Filter : Config
 

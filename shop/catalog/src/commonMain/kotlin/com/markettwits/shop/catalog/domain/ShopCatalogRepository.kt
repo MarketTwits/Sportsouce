@@ -10,11 +10,9 @@ interface ShopCatalogRepository {
 
     suspend fun categories(): Result<List<ShopCategoryItem>>
 
-    fun pagingProducts(categoryId: Int?): Flow<PagingData<ShopItem>>
-
     fun paddingProducts(
         categoryId: Int?,
-        options: Set<String>,
+        options: List<String>?,
         price: ShopFilterPrice,
     ): Flow<PagingData<ShopItem>>
 

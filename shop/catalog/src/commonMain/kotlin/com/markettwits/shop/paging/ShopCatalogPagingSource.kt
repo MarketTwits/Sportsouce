@@ -39,7 +39,7 @@ sealed interface ShopCatalogParams {
 
     data class WithFilter(
         val categoryId: Int? = null,
-        val options: Set<String>? = null,
+        val options: List<String>? = null,
         val price: ShopFilterPrice? = null,
     ) : ShopCatalogParams
 

@@ -17,6 +17,13 @@ data class ShopOptionInfo(
         val name: String,
         val productOptionUuid: String,
         val updatedAt: String,
-        val uuid: String,
+        val uuid: String
     )
 }
+
+fun List<ShopOptionInfo.Value>.mapToStringOptions() =
+    this.groupBy { it.productOptionUuid }
+        .map { (productOptionUuid, values) ->
+            val uuids = values.joinToString(",") { it.uuid }
+            "$productOptionUuid:$uuids"
+        }

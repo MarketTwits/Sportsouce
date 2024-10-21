@@ -14,7 +14,6 @@ interface ShopFilterComponent {
         fun goBack()
 
         fun applyFilter(state: ShopFilterStore.State)
-
     }
 
 }

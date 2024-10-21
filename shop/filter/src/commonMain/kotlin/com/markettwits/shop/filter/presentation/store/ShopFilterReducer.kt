@@ -24,12 +24,12 @@ object ShopFilterReducer : Reducer<State, Message> {
 
             is Message.Loading -> copy(isLoading = true)
             is Message.UpdateCategories -> copy(categories = msg.categories)
-            is Message.UpdateCurrentPath -> copy(currentCategoryPath = msg.path)
+            is Message.UpdateCurrentPath -> copy(selectedCategoryPath = msg.path)
             is Message.ResetFilter -> copy(
-                currentCategoryPath = emptyList(),
+                selectedCategoryPath = emptyList(),
                 options = emptyList(),
                 selectedPrice = ShopFilterPrice.EMPTY,
-                selectedOptionUID = emptySet(),
+                selectedOptionUID = emptyList(),
                 isApplied = false
             )
 

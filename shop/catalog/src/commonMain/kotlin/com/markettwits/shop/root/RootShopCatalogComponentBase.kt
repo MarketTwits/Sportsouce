@@ -11,6 +11,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
+import com.markettwits.getOrCreateKoinScope
 import com.markettwits.shop.cart.di.shopCartModule
 import com.markettwits.shop.cart.domain.ShopItemCart
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
@@ -42,17 +43,13 @@ import kotlin.random.Random
 
 class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
-    private val pop : () -> Unit,
+    private val pop: () -> Unit,
 ) : RootShopCatalogComponent,
     ComponentContext by componentContext {
 
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
 
-    private val koinContext = instanceKeeper.getOrCreate {
-        ComponentKoinContext()
-    }
-
-    private val scope = koinContext.getOrCreateKoinScope(
+    private val scope = componentContext.getOrCreateKoinScope(
         listOf(
             shopItemPageModule,
             shopCatalogModule,
@@ -86,7 +83,8 @@ class RootShopCatalogComponentBase(
                     onClickCartHolder = {
                         stackNavigation.push(RootShopCatalogComponent.Config.ShopCart)
                     }
-                )
+                ),
+                componentFilter = createShopFilterComponent(componentContext)
             )
 
             is RootShopCatalogComponent.Config.ShopItem -> RootShopCatalogComponent.Child.ShopItem(
@@ -105,12 +103,7 @@ class RootShopCatalogComponentBase(
             )
 
             is RootShopCatalogComponent.Config.ShopFilter -> RootShopCatalogComponent.Child.ShopFilter(
-                component = ShopFilterComponentBase(
-                    componentContext = componentContext,
-                    storeFactory = scope.get(),
-                    output = ShopFilterComponentOutputsImpl(),
-                    outerState = config.state
-                )
+                createShopFilterComponent(componentContext)
             )
 
             is RootShopCatalogComponent.Config.ShopSearch -> RootShopCatalogComponent.Child.ShopSearch(
@@ -131,6 +124,13 @@ class RootShopCatalogComponentBase(
             )
         }
 
+    private fun createShopFilterComponent(componentContext: ComponentContext) =
+        ShopFilterComponentBase(
+            componentContext = componentContext,
+            store = scope.get(),
+            output = ShopFilterComponentOutputsImpl(),
+            //outerState = null
+        )
 
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
@@ -139,22 +139,11 @@ class RootShopCatalogComponentBase(
 
         override fun goBack() = pop.invoke()
 
-        override fun goFilter(
-            filterState: ShopFilterStore.State?,
-        ) = stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter(filterState))
+        override fun goFilter() = stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter(null))
 
         override fun goSearch(query: String) {
             stackNavigation.push(RootShopCatalogComponent.Config.ShopSearch(query))
         }
-
-        override fun onClickCategory(categoryItem: ShopCategoryItem) {
-            (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopFilter)?.component?.let {
-                it.obtainEvent(ShopFilterStore.Intent.OnClickCategory(categoryItem))
-                it.obtainEvent(ShopFilterStore.Intent.OnClickApplyFilter)
-            }
-        }
-
-
     }
 
     private inner class ShopItemComponentOutputsImpl : ShopItemPageComponent.Output {
@@ -162,6 +151,7 @@ class RootShopCatalogComponentBase(
 
         override fun updateItem(item: ShopPageItem) {
             (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopItem)?.componentCart?.updateItem(
+
                 ShopItemCart(
                     id = Random.nextInt(),
                     uuid = item.id,
@@ -189,7 +179,7 @@ class RootShopCatalogComponentBase(
         }
     }
 
-    private inner class ShopSearchComponentOutputsImpl : ShopSearchComponent.Outputs{
+    private inner class ShopSearchComponentOutputsImpl : ShopSearchComponent.Outputs {
         override fun onClickGoBack() = stackNavigation.pop()
 
         override fun onApplyQuery(query: String) {
@@ -200,12 +190,13 @@ class RootShopCatalogComponentBase(
             }
         }
     }
-    private inner class ShopPageCartComponentOutputsImpl : ShopCartPageComponent.Outputs{
+
+    private inner class ShopPageCartComponentOutputsImpl : ShopCartPageComponent.Outputs {
         override fun goToCart() {
             stackNavigation.bringToFront(RootShopCatalogComponent.Config.ShopCart)
         }
-
     }
+
     private inner class ShopCartComponentOutputsImpl : ShopCartComponent.Outputs {
         override fun goBack() = stackNavigation.pop()
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,22 +16,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ShopSearchBarInner(
     modifier: Modifier = Modifier,
@@ -66,10 +62,19 @@ internal fun ShopSearchBarInner(
                 .padding(top = 5.dp),
             value = query,
             onValueChange = onQueryChanged,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            maxLines = 1,
+            minLines = 1,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
             keyboardActions = KeyboardActions(onNext = {
                 onApplyQuery()
-            }),
+            }, onSearch = {
+                onApplyQuery()
+            }, onSend = {
+                onApplyQuery()
+            }
+            ),
             placeholder = {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
@@ -81,10 +86,15 @@ internal fun ShopSearchBarInner(
                     overflow = TextOverflow.Visible
                 )
             },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = Color.Transparent,
-                disabledBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.tertiary,
+                disabledIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent
             )
         )
         if (query.isEmpty()) {
@@ -102,7 +112,6 @@ internal fun ShopSearchBarInner(
                 onClick = { onBrushClicked() }
             ) {
                 Icon(
-
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
                     tint = Color.Gray

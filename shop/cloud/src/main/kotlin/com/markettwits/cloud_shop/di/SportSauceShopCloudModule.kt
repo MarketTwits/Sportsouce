@@ -10,11 +10,12 @@ import org.koin.dsl.module
 val sportSauceShopCloudModule = module {
     single<SportSauceShopApi> {
         SportSauceShopApiBase(
-            HttpClientProviderBase(
+            httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
                 clientEngine = OkHttp.create(),
                 baseUrl = baseUrl
-            )
+            ),
+            isLoggerEnabled = true //FIXME fetch from BuildConfig
         )
     }
 }

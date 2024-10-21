@@ -25,13 +25,16 @@ class ShopCatalogRepositoryBase(
 
     override fun paddingProducts(
         categoryId: Int?,
-        options: Set<String>,
+        options: List<String>?,
         price: ShopFilterPrice,
     ): Flow<PagingData<ShopItem>> {
         return Pager(
             PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
         ) {
-            ShopCatalogPagingSource(cloudService, ShopCatalogParams.WithFilter( categoryId, options, price))
+            ShopCatalogPagingSource(
+                cloudService,
+                ShopCatalogParams.WithFilter(categoryId, options, price)
+            )
         }.flow.map { it.map { data -> productMapper.map(data) } }
     }
 
@@ -40,22 +43,12 @@ class ShopCatalogRepositoryBase(
             PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
         ) {
             ShopCatalogPagingSource(cloudService, ShopCatalogParams.WithQuery(query))
-        }.flow.map { it.map {
-            data -> productMapper.map(data) }
+        }.flow.map {
+            it.map { data -> productMapper.map(data) }
         }
     }
 
     override suspend fun categories(): Result<List<ShopCategoryItem>> = runCatching {
         categoriesMapper.map(cloudService.categories())
     }
-
-    override fun pagingProducts(categoryId: Int?): Flow<PagingData<ShopItem>> {
-        return Pager(
-            PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
-        ) {
-            ShopCatalogPagingSource(cloudService, ShopCatalogParams.WithFilter(categoryId = categoryId))
-        }.flow.map { it.map { data -> productMapper.map(data) } }
-    }
-
-
 }

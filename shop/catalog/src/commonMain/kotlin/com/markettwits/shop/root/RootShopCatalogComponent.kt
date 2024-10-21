@@ -41,7 +41,8 @@ interface RootShopCatalogComponent {
 
         data class ShopCatalog(
             val componentPage: ShopCatalogComponent,
-            val componentCart: ShopCartCatalogComponent
+            val componentCart: ShopCartCatalogComponent,
+            val componentFilter : ShopFilterComponent
         ) : Child
 
         data class ShopItem(

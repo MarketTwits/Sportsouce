@@ -15,15 +15,15 @@ import kotlinx.coroutines.flow.onEach
 
 class ShopFilterComponentBase(
     componentContext: ComponentContext,
-    private val storeFactory: ShopFilterStoreFactory,
+    private val store: ShopFilterStore,
     private val output: ShopFilterComponent.Output,
-    private val outerState: ShopFilterStore.State?,
+   // private val outerState: ShopFilterStore.State?,
 ) : ShopFilterComponent,
     ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore {
-        storeFactory.create(outerState)
-    }
+//    private val store = instanceKeeper.getStore {
+//        storeFactory.create()
+//    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ShopFilterStore.State> = store.stateFlow
@@ -35,14 +35,9 @@ class ShopFilterComponentBase(
     init {
         store.labels.onEach {
             when (it) {
-                is ShopFilterStore.Label.ApplyFilter -> output.applyFilter(
-                    it.state
-                )
-
+                is ShopFilterStore.Label.ApplyFilter -> output.applyFilter(it.state)
                 is ShopFilterStore.Label.GoBack -> output.goBack()
             }
-        }.launchIn(
-            CoroutineScope(Dispatchers.Main.immediate)
-        )
+        }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }
 }

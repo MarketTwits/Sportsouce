@@ -14,18 +14,20 @@ import com.markettwits.shop.cart.presentation.catalog.components.ShopCartCatalog
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.shop.catalog.presentation.components.ShopItemsContent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
-import com.markettwits.shop.filter.presentation.components.api.ShopCategories
+import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
+import com.markettwits.shop.filter.presentation.components.api.SelectedFilterParams
 import com.markettwits.shop.search.presentation.components.publish.ShopSearchBar
 
 
 @Composable
 fun ShopCatalogScreen(
     modifier: Modifier = Modifier,
-    component: ShopCatalogComponent,
-    cartComponent : ShopCartCatalogComponent
+    catalogComponent: ShopCatalogComponent,
+    cartComponent : ShopCartCatalogComponent,
+    filterComponent: ShopFilterComponent,
 ) {
 
-    val state by component.state.collectAsState()
+    val state by catalogComponent.state.collectAsState()
 
     val shopItems = state.shopItems.collectAsLazyPagingItems()
 
@@ -35,15 +37,15 @@ fun ShopCatalogScreen(
             ShopSearchBar(
                 query = state.queryState,
                 onClickSearchPanel = {
-                    component.obtainEvent(ShopCatalogStore.Intent.OnClickSearch)
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickSearch)
                 }, onClickFilter = {
-                    component.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
                 },
                 onBrushClicked = {
-                    component.obtainEvent(ShopCatalogStore.Intent.ApplyQuery(""))
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.ApplyQuery(""))
                 },
                 onClickBack = {
-                    component.obtainEvent(ShopCatalogStore.Intent.OnClickGoBack)
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickGoBack)
                 }
             )
         },
@@ -53,13 +55,9 @@ fun ShopCatalogScreen(
         }
         ) { paddingValues ->
         Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-            ShopCategories(
-                selectedCategoriesPath = state.filterState?.currentCategoryPath ?: emptyList(),
-                onClickCategory = {
-
-                })
+            SelectedFilterParams(component = filterComponent)
             ShopItemsContent(items = shopItems, onClickItem = {
-                component.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
+                catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
             })
         }
     }

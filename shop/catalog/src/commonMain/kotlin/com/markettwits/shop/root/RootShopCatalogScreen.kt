@@ -17,8 +17,9 @@ fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
     ) {
         when (val child = it.instance) {
             is RootShopCatalogComponent.Child.ShopCatalog -> ShopCatalogScreen(
-                component = child.componentPage,
-                cartComponent = child.componentCart
+                catalogComponent = child.componentPage,
+                cartComponent = child.componentCart,
+                filterComponent = child.componentFilter
             )
             is RootShopCatalogComponent.Child.ShopItem -> ShopItemPageScreen(
                 component = child.componentPage,

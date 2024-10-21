@@ -41,7 +41,7 @@ internal class SportSauceShopApiBase(
         limit: Int?,
         offset: Int?,
         categoryId: Int?,
-        options: Set<String>?,
+        options: List<String>?,
         priceMax : Int?,
         priceMin : Int?
     ): ProductsRemote {
@@ -56,8 +56,8 @@ internal class SportSauceShopApiBase(
                 if (offset != null) {
                     parameters.append("offset", offset.toString())
                 }
-                if (options != null) {
-                    parameters.append("options%5B%5D", options.joinToString(","))
+                options?.forEach {
+                    parameters.append("options[]", it)
                 }
                 if (priceMax != null){
                     parameters.append("max_price", priceMax.toString())

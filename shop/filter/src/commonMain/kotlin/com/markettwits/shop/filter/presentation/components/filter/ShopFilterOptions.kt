@@ -23,8 +23,8 @@ import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 @Composable
 internal fun ShopFilterOptions(
     options: List<ShopOptionInfo>,
-    selectedOptions: Set<String>,
-    onOptionClick: (String) -> Unit,
+    selectedOptions: List<ShopOptionInfo.Value>,
+    onOptionClick: (ShopOptionInfo.Value) -> Unit,
 ) {
     Column {
         if (options.isNotEmpty()) {
@@ -56,17 +56,21 @@ internal fun ShopFilterOptions(
                     maxItemsInEachRow = 4,
                 ) {
                     values.forEach { value ->
+
+                        val isSelected = selectedOptions.any { option -> option.uuid == value.uuid }
+
                         Button(
                             modifier = Modifier.padding(4.dp),
                             elevation = ButtonDefaults.buttonElevation(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor =
-                                if (selectedOptions.contains(value.uuid))
+                                if (isSelected)
                                     MaterialTheme.colorScheme.secondary
-                                else MaterialTheme.colorScheme.tertiaryContainer
+                                else
+                                    MaterialTheme.colorScheme.tertiaryContainer
                             ),
                             shape = Shapes.medium,
-                            onClick = { onOptionClick(value.uuid) }) {
+                            onClick = { onOptionClick(value) }) {
                             Text(
                                 text = value.name,
                                 overflow = TextOverflow.Ellipsis,
@@ -75,7 +79,7 @@ internal fun ShopFilterOptions(
                                 textAlign = TextAlign.Start,
                                 fontSize = 12.sp,
                                 fontFamily = FontNunito.medium(),
-                                color = if (selectedOptions.contains(value.uuid))
+                                color = if (isSelected)
                                     MaterialTheme.colorScheme.onSecondary
                                 else MaterialTheme.colorScheme.onTertiaryContainer
                             )

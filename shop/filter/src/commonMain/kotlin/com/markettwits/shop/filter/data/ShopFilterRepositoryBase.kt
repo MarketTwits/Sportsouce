@@ -12,10 +12,9 @@ class ShopFilterRepositoryBase(
     private val shopFilterMapper: ShopFilterMapper,
 ) : ShopFilterRepository {
 
-    override suspend fun filter(): Result<List<ShopCategoryItem>> =
-        runCatching {
-            shopFilterMapper.mapCategories(service.categories())
-        }
+    override suspend fun filter(): Result<List<ShopCategoryItem>> = runCatching {
+        shopFilterMapper.mapCategories(service.categories())
+    }
 
     override suspend fun options(catalogId: Int): Result<Pair<List<ShopOptionInfo>, ShopFilterPrice>> =
         runCatching {

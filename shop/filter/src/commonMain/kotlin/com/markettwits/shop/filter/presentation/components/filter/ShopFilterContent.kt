@@ -11,7 +11,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.cloud_shop.model.common.OptionInfo
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 
 @Composable
@@ -20,9 +22,9 @@ internal fun ShopFilterContent(
     state: ShopFilterStore.State,
     onClickGoBack: () -> Unit,
     onClickReset: () -> Unit,
-    onMaxPriceChange: (Int) -> Unit,
-    onMinPriceChange: (Int) -> Unit,
-    onOptionClick: (String) -> Unit,
+    onMaxPriceChange: (String) -> Unit,
+    onMinPriceChange: (String) -> Unit,
+    onOptionClick: (ShopOptionInfo.Value) -> Unit,
     onClickCategory: (ShopCategoryItem?) -> Unit,
     onClickApplyFilter: () -> Unit,
 ) {
@@ -47,7 +49,7 @@ internal fun ShopFilterContent(
         ) {
             ShopFilterCategories(
                 categories = state.categories,
-                currentPath = state.currentCategoryPath,
+                currentPath = state.selectedCategoryPath,
                 onClickCategory = onClickCategory,
             )
             Spacer(modifier = Modifier.height(16.dp))

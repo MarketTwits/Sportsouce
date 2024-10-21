@@ -47,8 +47,8 @@ import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 fun ShopFilterPriceSlider(
     modifier: Modifier = Modifier,
     shopFilterPrice: ShopFilterPrice,
-    onMinPriceChange: (Int) -> Unit,
-    onMaxPriceChange: (Int) -> Unit,
+    onMinPriceChange: (String) -> Unit,
+    onMaxPriceChange: (String) -> Unit,
 ) {
     Column(modifier = modifier) {
         Text(
@@ -69,16 +69,12 @@ fun ShopFilterPriceSlider(
                 modifier = Modifier.weight(1f),
                 value = shopFilterPrice.minPrice,
                 isFrom = true,
-                onValueChange = { min ->
-                    onMinPriceChange(min.toInt())
-                })
+                onValueChange = onMinPriceChange)
             PriceTextBox(
                 modifier = Modifier.weight(1f),
                 value = shopFilterPrice.maxPrice,
                 isFrom = false,
-                onValueChange = { max ->
-                    onMaxPriceChange(max.toInt())
-                })
+                onValueChange = onMaxPriceChange)
         }
 //        ShopFilterPriceSliderContent(
 //            activeStart = minPrice.toFloat(),

@@ -1,6 +1,6 @@
 package com.markettwits.cloud.exception
 
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.model.auth.common.ErrorResponse
 import com.markettwits.cloud.model.auth.common.AuthException
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpRequestTimeoutException
@@ -13,16 +13,16 @@ import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
 
 
-suspend fun networkExceptionHandler(exception: Throwable): Exception =
-    when (exception) {
+suspend fun networkExceptionHandler(exception: Throwable): Exception = when (exception) {
         is AuthException -> Exception(exception.message)
         is UnknownHostException -> Exception("Проблема интернет соединения")
         is HttpRequestTimeoutException -> Exception("Неустойчивое интернет соединение")
         is SocketTimeoutException -> Exception("Ошибка обработки запроса")
-        is ResponseException -> Exception(exception.response.body<AuthErrorResponse>().message)
+        is ResponseException -> Exception(exception.response.body<ErrorResponse>().message)
         is SerializationException -> Exception("Ошибка обработки данных")
         else -> Exception(exception.message.toString())
     }
+
 fun Throwable.isNetworkConnectionError(): Boolean {
     return when (this) {
         is ConnectException,

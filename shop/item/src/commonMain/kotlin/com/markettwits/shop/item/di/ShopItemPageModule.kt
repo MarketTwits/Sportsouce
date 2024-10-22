@@ -6,8 +6,8 @@ import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
 import com.markettwits.intentActionModule
 import com.markettwits.shop.item.data.ShopItemRepositoryBase
 import com.markettwits.shop.item.domain.ShopItemRepository
-import com.markettwits.shop.item.domain.mapper.ShopPageItemMapper
-import com.markettwits.shop.item.domain.mapper.ShopPageItemMapperBase
+import com.markettwits.shop.item.data.mapper.ShopPageItemMapper
+import com.markettwits.shop.item.data.mapper.ShopPageItemMapperBase
 import com.markettwits.shop.item.presentation.store.ShopItemPageStoreFactory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind

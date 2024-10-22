@@ -8,6 +8,7 @@ import com.markettwits.club.registration.presentation.store.store.WorkoutRegistr
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Label
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Message
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.State
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import kotlinx.coroutines.launch
 
 class WorkoutRegistrationExecutor(
@@ -21,7 +22,6 @@ class WorkoutRegistrationExecutor(
             is Intent.OnClickRegistration -> {
                 onClickRegistration(getState().form)
             }
-
             is Intent.OnClickPhone -> intentAction.openPhone(intent.phone)
             is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
             is Intent.OnClickContinueAfterSuccess -> {
@@ -38,7 +38,7 @@ class WorkoutRegistrationExecutor(
                 .fold(onSuccess = {
                     dispatch(Message.RegistrationSuccess)
                 }, onFailure = {
-                    dispatch(Message.RegistrationFailed(it.message.toString()))
+                    dispatch(Message.RegistrationFailed(it.networkExceptionHandler().message.toString()))
                 })
         }
     }

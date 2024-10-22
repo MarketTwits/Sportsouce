@@ -18,15 +18,19 @@ class ShopItemPageExecutor(
         when (intent) {
             is Intent.OnClickOption -> launch(intent.itemId)
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickRetry -> launch(getState().item?.id)
+            is Intent.OnClickRetry -> launch(getState().item?.product?.id)
             is Intent.OnClickAddToFavorite -> TODO()
             is Intent.OnClickShare -> getState().item?.let {
-                intentAction.sharePlainText(it.fullPathUrl)
+                intentAction.sharePlainText(it.product.fullPathUrl)
             }
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
+        val item = getState().item
+        if (item != null){
+            Message.Loaded(item)
+        }
         launch(productId)
     }
 

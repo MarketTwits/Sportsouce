@@ -2,10 +2,10 @@ package com.markettwits.shop.catalog.presentation.store
 
 import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.shop.catalog.domain.models.ShopItem
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Intent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import kotlinx.coroutines.flow.Flow

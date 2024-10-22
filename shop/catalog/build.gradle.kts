@@ -17,6 +17,7 @@ kotlin {
             implementation(projects.shop.item)
             implementation(projects.shop.search)
             implementation(projects.shop.cart)
+            implementation(projects.shop.domain)
             implementation(projects.core.ui)
             implementation(projects.coreKoin)
             implementation("app.cash.paging:paging-common:3.3.0-alpha02-0.4.0")

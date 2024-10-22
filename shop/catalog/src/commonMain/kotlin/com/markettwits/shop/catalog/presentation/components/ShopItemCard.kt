@@ -40,7 +40,7 @@ import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.domain.model.ShopItem
 
 
 @Composable
@@ -67,17 +67,17 @@ fun ShopItemCard(
                     .padding(2.dp)
                     .align(Alignment.CenterHorizontally)
                     .weight(0.7f),
-                image = shopItem.imageUrl,
+                image = shopItem.visual.imageUrl,
             )
             ShowCardPrice(
                 modifier = Modifier
                     .padding(4.dp)
                     .align(Alignment.Start)
                     .weight(0.3f),
-                currentPrice = shopItem.currentPrice,
-                previousPrice = shopItem.previousPrice,
-                discount = shopItem.discount,
-                title = shopItem.title
+                currentPrice = shopItem.price.currentPrice,
+                previousPrice = shopItem.price.previousPrice,
+                discount = shopItem.price.discount,
+                title = shopItem.visual.displayName
             )
 
         }

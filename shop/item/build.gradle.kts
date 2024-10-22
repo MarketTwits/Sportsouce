@@ -16,6 +16,7 @@ kotlin {
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
+            implementation(projects.shop.domain)
             implementation(projects.shop.cloud)
             implementation(projects.shop.cart)
             implementation(projects.core.ui)

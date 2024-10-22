@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.markettwits.club.dashboard"
 }
+
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -18,6 +19,7 @@ kotlin {
             implementation(projects.coreKoin)
             implementation(projects.intent.api)
             implementation(projects.intent.impl)
+            implementation(projects.core.errors)
             implementation(libs.compottie)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)

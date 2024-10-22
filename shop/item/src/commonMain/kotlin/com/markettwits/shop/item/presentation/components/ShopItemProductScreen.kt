@@ -46,13 +46,13 @@ internal fun ShopItemProductScreen(
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = paddingValues.calculateBottomPadding())
                 ) {
-                    ShopItemImageContent(imageUrl = item.visual.imageUrl)
-                    ShopItemTitle(title = item.visual.displayName)
-                    ShopItemPriceRow(price = item.price)
+                    ShopItemImageContent(imageUrl = item.product.visual.imageUrl)
+                    ShopItemTitle(title = item.product.visual.displayName)
+                    ShopItemPriceRow(price = item.product.price)
                     ShopItemExtraOptions(extraOption = item.extraOptions, onClickOption = onClickOption)
                     ShopItemDescriptionOrOptions(
-                        description = item.visual.description,
-                        options = item.options
+                        description = item.product.visual.description,
+                        options = item.product.options
                     )
                 }
                 ShopItemActionRow(

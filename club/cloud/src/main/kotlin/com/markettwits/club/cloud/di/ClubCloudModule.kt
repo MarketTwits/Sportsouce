@@ -16,8 +16,9 @@ val clubCloudModule = module {
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
             clientEngine = OkHttp.create(),
-            baseUrl = sportsouceApiBaseUrl
+            baseUrl = sportSourceApiBaseUrl
         )
     }
 }
-private const val sportsouceApiBaseUrl = "https://dev-sportsauce-api-b7xxf.ondigitalocean.app"
+
+private const val sportSourceApiBaseUrl = "https://dev-sportsauce-api-b7xxf.ondigitalocean.app"

@@ -1,6 +1,6 @@
 package com.markettwits.shop.catalog.data
 
-import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.domain.model.ShopItem
 
 data object ShopCatalogLocalCache {
 

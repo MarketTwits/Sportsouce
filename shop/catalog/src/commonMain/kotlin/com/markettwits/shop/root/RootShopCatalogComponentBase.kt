@@ -8,26 +8,21 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.ComponentKoinContext
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.shop.cart.di.shopCartModule
 import com.markettwits.shop.cart.domain.ShopItemCart
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponentBase
-import com.markettwits.shop.cart.presentation.page.component.ShopCartPageComponentBase
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponentBase
 import com.markettwits.shop.cart.presentation.page.component.ShopCartPageComponent
+import com.markettwits.shop.cart.presentation.page.component.ShopCartPageComponentBase
 import com.markettwits.shop.catalog.di.shopCatalogModule
-import com.markettwits.shop.catalog.domain.models.ShopItem
-import com.markettwits.shop.catalog.domain.models.mapToCart
-import com.markettwits.shop.catalog.domain.models.mapToShopItem
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponentBase
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.filter.di.shopFilterModule
-import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponentBase
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
@@ -91,14 +86,25 @@ class RootShopCatalogComponentBase(
                 componentPage = ShopItemPageComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    options = ShopItemPageComponentBase.Options(config.shopItem.uuid),
+                    options = ShopItemPageComponentBase.Options(
+                        config.option.productId,
+                        config.option.shopItem
+                    ),
                     outputs = ShopItemComponentOutputsImpl()
                 ),
                 componentCart = ShopCartPageComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     outputs = ShopPageCartComponentOutputsImpl(),
-                    shopItemCart = config.shopItem.mapToCart()
+                    shopItemCart = ShopItemCart(
+                        id = Random.nextInt(),
+                        uuid = config.option.shopItem?.id ?: "",
+                        currentPrice = config.option.shopItem?.price?.currentPrice ?: "",
+                        quantity = config.option.shopItem?.quantity ?: 0,
+                        previousPrice = config.option.shopItem?.price?.previousPrice ?: "",
+                        title = config.option.shopItem?.visual?.displayName ?: "",
+                        imageUrl = config.option.shopItem?.visual?.imageUrl ?: emptyList()
+                    )
                 )
             )
 
@@ -135,11 +141,12 @@ class RootShopCatalogComponentBase(
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
         override fun onClickShopItem(item: ShopItem) =
-            stackNavigation.push(RootShopCatalogComponent.Config.ShopItem(item))
+            stackNavigation.push(RootShopCatalogComponent.Config.ShopItem(ShopItemPageComponentBase.Options(item.id,item)))
 
         override fun goBack() = pop.invoke()
 
-        override fun goFilter() = stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter(null))
+        override fun goFilter() =
+            stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter(null))
 
         override fun goSearch(query: String) {
             stackNavigation.push(RootShopCatalogComponent.Config.ShopSearch(query))
@@ -154,12 +161,12 @@ class RootShopCatalogComponentBase(
 
                 ShopItemCart(
                     id = Random.nextInt(),
-                    uuid = item.id,
-                    currentPrice = item.price.currentPrice,
-                    previousPrice = item.price.previousPrice,
-                    title = item.visual.displayName,
-                    quantity = item.quantity,
-                    imageUrl = item.visual.imageUrl
+                    uuid = item.product.id,
+                    currentPrice = item.product.price.currentPrice,
+                    previousPrice = item.product.price.previousPrice,
+                    title = item.product.visual.displayName,
+                    quantity = item.product.quantity,
+                    imageUrl = item.product.visual.imageUrl
                 )
             )
         }
@@ -201,7 +208,13 @@ class RootShopCatalogComponentBase(
         override fun goBack() = stackNavigation.pop()
 
         override fun goShopItem(shopItemCart: ShopItemCart) {
-            stackNavigation.bringToFront(RootShopCatalogComponent.Config.ShopItem(shopItemCart.mapToShopItem()))
+            stackNavigation.bringToFront(
+                RootShopCatalogComponent.Config.ShopItem(
+                    ShopItemPageComponentBase.Options(
+                        productId = shopItemCart.uuid
+                    )
+                )
+            )
         }
     }
 }

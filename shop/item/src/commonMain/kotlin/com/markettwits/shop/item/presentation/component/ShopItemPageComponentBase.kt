@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore
 import com.markettwits.shop.item.presentation.store.ShopItemPageStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +23,7 @@ class ShopItemPageComponentBase(
 ) : ShopItemPageComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(productId = options.productId)
+        storeFactory.create(productId = options.productId, shopItem = options.shopItem)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,6 +43,9 @@ class ShopItemPageComponentBase(
     }
 
     @Serializable
-    data class Options(val productId: String)
+    data class Options(
+        val productId: String,
+        val shopItem: ShopItem? = null
+    )
 
 }

@@ -54,6 +54,7 @@ internal class StartsRemoteDataSourceImpl(
 ) : SportsouceApi {
 
     private val json = httpClient.json()
+
     private val client = httpClient.provide(false)
 
     override suspend fun teams(): TeamsRemote {

@@ -7,6 +7,7 @@ import com.markettwits.club.info.presentation.store.ClubInfoStore.Intent
 import com.markettwits.club.info.presentation.store.ClubInfoStore.Label
 import com.markettwits.club.info.presentation.store.ClubInfoStore.Message
 import com.markettwits.club.info.presentation.store.ClubInfoStore.State
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import kotlinx.coroutines.launch
 
 internal class ClubInfoExecutor(
@@ -27,8 +28,6 @@ internal class ClubInfoExecutor(
             scope.launch {
                 repository.clubInfo().onSuccess {
                     dispatch(Message.Loaded(it))
-                }.onFailure {
-                    println(it)
                 }
             }
         } else {

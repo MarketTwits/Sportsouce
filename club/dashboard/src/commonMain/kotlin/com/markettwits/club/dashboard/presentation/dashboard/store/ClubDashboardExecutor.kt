@@ -1,13 +1,13 @@
 package com.markettwits.club.dashboard.presentation.dashboard.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.club.cloud.exception.isNetworkConnectionError
 import com.markettwits.club.common.domain.ClubRepository
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Intent
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Label
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.Message
 import com.markettwits.club.dashboard.presentation.dashboard.store.ClubDashboardStore.State
 import com.markettwits.club.registration.domain.RegistrationType
+import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart

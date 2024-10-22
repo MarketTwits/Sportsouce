@@ -6,8 +6,8 @@ import androidx.paging.map
 import app.cash.paging.PagingData
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.shop.catalog.domain.mapper.ShopProductsMapper
-import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.domain.mapper.ShopProductsMapper
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapper
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
@@ -35,7 +35,7 @@ class ShopCatalogRepositoryBase(
                 cloudService,
                 ShopCatalogParams.WithFilter(categoryId, options, price)
             )
-        }.flow.map { it.map { data -> productMapper.map(data) } }
+        }.flow.map {  it.map { data -> productMapper.map(data) } }
     }
 
     override fun paddingProducts(query: String): Flow<PagingData<ShopItem>> {

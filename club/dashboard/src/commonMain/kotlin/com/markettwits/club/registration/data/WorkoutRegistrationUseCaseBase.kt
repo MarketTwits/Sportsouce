@@ -8,6 +8,7 @@ import com.markettwits.core_ui.items.result.flatMapCallback
 class WorkoutRegistrationUseCaseBase(
     private val repository: ClubRepository
 ) : WorkoutRegistrationUseCase {
+
     override suspend fun register(workoutRegistrationForm: WorkoutRegistrationForm): Result<Unit> =
         validate(workoutRegistrationForm).flatMapCallback {
             repository.workoutRegistration(workoutRegistrationForm)

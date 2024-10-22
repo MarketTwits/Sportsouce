@@ -15,8 +15,8 @@ internal class SportSauceClubsApiBase(
 ) : SportSauceClubsApi {
 
     private val json = httpClient.json()
-    private val client = httpClient.provide(true)
 
+    private val client = httpClient.provide(true)
 
     override suspend fun trainers(): com.markettwits.club.cloud.models.trainer.TrainersRemote {
         val response = client.get("trainer")

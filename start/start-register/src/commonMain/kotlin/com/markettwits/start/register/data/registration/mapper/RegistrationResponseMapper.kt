@@ -1,6 +1,6 @@
 package com.markettwits.start.register.data.registration.mapper
 
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.model.auth.common.ErrorResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.start.register.domain.StartRegistryResult
 import io.ktor.client.call.body
@@ -37,7 +37,7 @@ class RegistrationResponseMapperBase : RegistrationResponseMapper {
             return StartRegistryResult(
                 isSuccess = false,
                 isError = true,
-                message = response.response.body<AuthErrorResponse>().message,
+                message = response.response.body<ErrorResponse>().message,
                 paymentUrl = ""
             )
         } else {

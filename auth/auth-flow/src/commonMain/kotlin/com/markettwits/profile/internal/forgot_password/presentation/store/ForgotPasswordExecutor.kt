@@ -1,7 +1,7 @@
 package com.markettwits.profile.internal.forgot_password.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.model.auth.common.AuthErrorResponse
+import com.markettwits.cloud.model.auth.common.ErrorResponse
 import com.markettwits.profile.internal.forgot_password.domain.use_case.ForgotPasswordUseCase
 import com.markettwits.profile.internal.forgot_password.presentation.store.ForgotPasswordStore.Intent
 import com.markettwits.profile.internal.forgot_password.presentation.store.ForgotPasswordStore.Label
@@ -30,7 +30,7 @@ internal class ForgotPasswordExecutor(private val useCase: ForgotPasswordUseCase
                     dispatch(Message.Success(it))
                 }, onFailure = {
                     val message = when (it) {
-                        is ClientRequestException -> it.response.body<AuthErrorResponse>().message
+                        is ClientRequestException -> it.response.body<ErrorResponse>().message
                         else -> it.message.toString()
                     }
                     dispatch(Message.Failed(message))

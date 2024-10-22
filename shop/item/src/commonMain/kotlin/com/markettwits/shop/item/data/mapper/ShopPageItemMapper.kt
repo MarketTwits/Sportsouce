@@ -1,4 +1,4 @@
-package com.markettwits.shop.item.domain.mapper
+package com.markettwits.shop.item.data.mapper
 
 import com.markettwits.cloud_shop.model.product.ProductRemote
 import com.markettwits.shop.item.domain.models.ShopPageItem

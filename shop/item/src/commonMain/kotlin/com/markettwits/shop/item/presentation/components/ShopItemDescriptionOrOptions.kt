@@ -21,13 +21,14 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.domain.models.ShopPageItem
 
 @Composable
 internal fun ShopItemDescriptionOrOptions(
     modifier: Modifier = Modifier,
     description: String,
-    options: List<ShopPageItem.Option>,
+    options: List<ShopItem.Option>,
 ) {
     var isDescription by remember {
         mutableStateOf(true)
@@ -87,7 +88,7 @@ private fun ShopItemDescription(description: String) {
 }
 
 @Composable
-private fun ShopItemOptions(options: List<ShopPageItem.Option>) {
+private fun ShopItemOptions(options: List<ShopItem.Option>) {
     Column {
         options.forEachIndexed { index, option ->
             Row(

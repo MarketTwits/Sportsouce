@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
-import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.paging.fold
 
 

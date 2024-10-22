@@ -11,7 +11,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
-import com.markettwits.shop.catalog.domain.models.ShopItem
+import com.markettwits.shop.domain.model.ShopItem
 
 @Composable
 fun ShopItemsBase(
@@ -35,7 +35,7 @@ fun ShopItemsBase(
         ) {
             items(
                 count = items.itemCount,
-                key = items.itemKey { it.uuid },
+                key = items.itemKey { it.id },
             ) { index ->
                 items[index]?.let {
                     ShopItemCard(shopItem = it, onItemClick = onClickItem)

@@ -15,10 +15,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.domain.models.ShopPageItem
 
 @Composable
-internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopPageItem.Price) {
+internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Price) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,

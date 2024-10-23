@@ -6,7 +6,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
 import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.domain.ShopItemRepository
-import com.markettwits.shop.item.domain.models.ShopPageItem
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Intent
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Label
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.State
@@ -30,10 +29,7 @@ class ShopItemPageStoreFactory(
         ShopItemPageStore, Store<Intent, State, Label> by storeFactory.create(
         name = "ShopItemPageStore",
         initialState = State(
-            false, false, "", item = if (shopItem != null) ShopPageItem(
-                product = shopItem,
-                extraOptions = emptyList()
-            ) else null
+            false, false, "", shopItem = shopItem, emptyList()
         ),
         bootstrapper = SimpleBootstrapper(Unit),
         executorFactory = { ShopItemPageExecutor(repository, intentAction, id) },

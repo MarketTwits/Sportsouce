@@ -1,11 +1,7 @@
 package com.markettwits.shop.cart.presentation.cart.screen
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,8 +28,7 @@ fun ShopCartScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
         ) {
             ShopCartItems(
                 items = state.items,
@@ -48,9 +43,11 @@ fun ShopCartScreen(
                     discount = state.order.discount,
                     totalCost = state.order.totalCost,
                     isByCache = state.order.payByCache,
+                    isByDelivery = state.order.isDelivery,
                     isCreateOrderAvailable = true,
                     onClickChangePaymentType = component::onClickChangePaymentType,
-                    onClickCreateOrder = component::onClickCreateOrder
+                    onClickCreateOrder = component::onClickCreateOrder,
+                    onClickChangeDeliveryWay = component::onClickChangeDeliveryWay
                 )
             }
         }

@@ -25,6 +25,7 @@ internal class ShopCartExecutor(
             is Intent.OnClickChangePaymentType -> onClickChangePaymentType(getState())
             is Intent.OnClickCreateOrder -> {}
             is Intent.Init -> executeAction(Unit) { getState() }
+            is Intent.OnClickChangeDeliveryWay -> onClickChangeDeliveryWay(getState())
         }
     }
 
@@ -51,6 +52,18 @@ internal class ShopCartExecutor(
     private fun onClickChangePaymentType(state: State) {
         val value = state.order.payByCache
         dispatch(Message.UpdateOrder(state.order.copy(payByCache = !value)))
+    }
+
+    private fun onClickChangeDeliveryWay(state: State) {
+        val value = state.order.isDelivery
+        dispatch(
+            Message.UpdateOrder(
+                state.order.copy(
+                    isDelivery = !value,
+                    payByCache = value
+                )
+            )
+        )
     }
 
     private fun updateState(items: List<ShopItemCart>, state: State) {
@@ -88,7 +101,7 @@ internal class ShopCartExecutor(
                 totalDiscount += discountPerItem * item.count
             }
         }
-        return if (totalDiscount <= 0) "" else  totalDiscount.toString()
+        return if (totalDiscount <= 0) "" else totalDiscount.toString()
     }
 
 }

@@ -14,6 +14,7 @@ interface ShopCartStore : Store<Intent, State, Label> {
     ){
         data class Order(
             val payByCache : Boolean = false,
+            val isDelivery : Boolean = false,
             val itemsCount : String = "",
             val totalCost : String = "",
             val discount : String = ""
@@ -26,6 +27,7 @@ interface ShopCartStore : Store<Intent, State, Label> {
         data class OnClickItem(val item : ShopItemCart) : Intent
         data object OnClickGoBack : Intent
         data object OnClickChangePaymentType : Intent
+        data object OnClickChangeDeliveryWay : Intent
         data object OnClickCreateOrder : Intent
         data object Init : Intent
     }

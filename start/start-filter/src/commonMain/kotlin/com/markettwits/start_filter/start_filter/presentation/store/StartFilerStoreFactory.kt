@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.start_filter.start_filter.data.StartFilterRepository
+import com.markettwits.start_filter.start_filter.domain.StartFilterRepository
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 import kotlinx.coroutines.flow.catch

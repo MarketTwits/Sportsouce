@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.domain.model.ShopItem
-import com.markettwits.shop.item.domain.models.ShopPageItem
 
 @Composable
 internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Price) {

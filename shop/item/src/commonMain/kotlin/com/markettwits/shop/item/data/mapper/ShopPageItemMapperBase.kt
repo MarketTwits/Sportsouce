@@ -2,7 +2,8 @@ package com.markettwits.shop.item.data.mapper
 
 import com.markettwits.cloud_shop.model.product.ProductRemote
 import com.markettwits.shop.domain.mapper.ShopProductsMapper
-import com.markettwits.shop.item.domain.models.ShopPageItem
+import com.markettwits.shop.domain.model.ShopItem
+import com.markettwits.shop.item.domain.models.ShopExtraOptions
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -10,45 +11,45 @@ class ShopPageItemMapperBase(
     private val shopProductsMapper: ShopProductsMapper
 ) : ShopPageItemMapper {
 
-    override fun map(products: ProductRemote): ShopPageItem =
-        ShopPageItem(
-            product = shopProductsMapper.map(products.product),
-            extraOptions = calculateExtras(products),
+    override fun map(products: ProductRemote): Pair<ShopItem,List<ShopExtraOptions>> =
+        Pair(
+            first = shopProductsMapper.map(products.product),
+            second = calculateExtras(products),
         )
 }
 
-private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOption> {
+private fun calculateExtras(products: ProductRemote): List<ShopExtraOptions> {
 
     val size = products.sizeList?.map {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = it.product.id,
             optionValue = it.size,
             isProductsValue = false
         )
     }?.toMutableList()
     val colorColorTaste = products.colorTasteList?.map {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = it.product.id,
             optionValue = it.colorTaste,
             isProductsValue = false
         )
-    }?.toMutableList() ?: emptyList<ShopPageItem.ExtraOption.OptionValue>().toMutableList()
+    }?.toMutableList() ?: emptyList<ShopExtraOptions.OptionValue>().toMutableList()
     val sex = products.genderList?.map {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = it.product.id,
             optionValue = it.gender,
             isProductsValue = false
         )
     }?.toMutableList()
     val currentSize = products.sizeValue?.name?.let {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
         )
     }
     val currentColorTaste = products.productColorTasteValue?.let {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
@@ -56,20 +57,20 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
     }
 
     val currentSex = products.productGenderValue?.let {
-        ShopPageItem.ExtraOption.OptionValue(
+        ShopExtraOptions.OptionValue(
             id = products.product.id,
             optionValue = it,
             isProductsValue = true
         )
     }
 
-    val optionsList = mutableListOf<ShopPageItem.ExtraOption>()
+    val optionsList = mutableListOf<ShopExtraOptions>()
 
     if (currentSize != null) {
         size?.add(currentSize)
         size?.reverse()
         optionsList.add(
-            ShopPageItem.ExtraOption(
+            ShopExtraOptions(
                 title = "Размер",
                 items = size ?: emptyList()
             )
@@ -80,7 +81,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
         colorColorTaste.add(currentColorTaste)
         colorColorTaste.reverse()
         optionsList.add(
-            ShopPageItem.ExtraOption(
+            ShopExtraOptions(
                 title = "Вкус/Цвет",
                 items = colorColorTaste
             )
@@ -91,7 +92,7 @@ private fun calculateExtras(products: ProductRemote): List<ShopPageItem.ExtraOpt
         sex?.add(currentSex)
         sex?.reverse()
         optionsList.add(
-            ShopPageItem.ExtraOption(
+            ShopExtraOptions(
                 title = "Пол",
                 items = sex ?: emptyList()
             )

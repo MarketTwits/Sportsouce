@@ -16,19 +16,20 @@ internal fun ShopItemPageContent(
     onClickShare: () -> Unit,
     cartContent: @Composable (Modifier) -> Unit
 ) {
-    if (state.isError) {
+    if (state.isError && state.shopItem == null) {
         FailedScreen(
             message = state.message,
             onClickRetry = onClickRetry,
             onClickBack = onClickGoBack
         )
     }
-    if (state.isLoading && state.item == null) {
+    if (state.isLoading && state.shopItem == null) {
         LoadingFullScreen(onClickBack = onClickGoBack)
     }
-    if (state.item != null) {
+    if (state.shopItem != null) {
         ShopItemProductScreen(
-            item = state.item,
+            item = state.shopItem,
+            options = state.shopItemOptions,
             isLoading = state.isLoading,
             onClickOption = onClickOption,
             onClickGoBack = onClickGoBack,

@@ -22,7 +22,6 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.domain.model.ShopItem
-import com.markettwits.shop.item.domain.models.ShopPageItem
 
 @Composable
 internal fun ShopItemDescriptionOrOptions(

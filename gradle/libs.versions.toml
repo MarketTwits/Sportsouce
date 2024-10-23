@@ -9,7 +9,7 @@ gradle = "8.5.0"
 
 #SDK
 multiplatformMarkdownRendererM3 = "0.14.0"
-buildConfigPlugin = "5.4.0"
+buildConfigPlugin = "5.5.0"
 targetSdk = "34"
 namespace = "com.markettwits.sportsouce"
 minSdk = "26"

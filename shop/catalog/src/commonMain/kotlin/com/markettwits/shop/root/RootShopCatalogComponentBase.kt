@@ -27,7 +27,6 @@ import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponentBase
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.item.di.shopItemPageModule
-import com.markettwits.shop.item.domain.models.ShopPageItem
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBase
 import com.markettwits.shop.search.presentation.component.ShopSearchComponent
@@ -156,17 +155,17 @@ class RootShopCatalogComponentBase(
     private inner class ShopItemComponentOutputsImpl : ShopItemPageComponent.Output {
         override fun goBack() = stackNavigation.pop()
 
-        override fun updateItem(item: ShopPageItem) {
+        override fun updateItem(item: ShopItem) {
             (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopItem)?.componentCart?.updateItem(
 
                 ShopItemCart(
                     id = Random.nextInt(),
-                    uuid = item.product.id,
-                    currentPrice = item.product.price.currentPrice,
-                    previousPrice = item.product.price.previousPrice,
-                    title = item.product.visual.displayName,
-                    quantity = item.product.quantity,
-                    imageUrl = item.product.visual.imageUrl
+                    uuid = item.id,
+                    currentPrice = item.price.currentPrice,
+                    previousPrice = item.price.previousPrice,
+                    title = item.visual.displayName,
+                    quantity = item.quantity,
+                    imageUrl = item.visual.imageUrl
                 )
             )
         }

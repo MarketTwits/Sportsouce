@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.start_filter.start_filter.data.StartFilterRepository
+import com.markettwits.start_filter.start_filter.domain.StartFilterRepository
 import com.markettwits.start_filter.start_filter.domain.StartFilter
 import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 import com.markettwits.start_filter.starts.store.StartsFilteredStore.Intent

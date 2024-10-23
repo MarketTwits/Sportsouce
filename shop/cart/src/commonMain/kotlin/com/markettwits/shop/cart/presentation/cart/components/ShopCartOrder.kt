@@ -44,14 +44,18 @@ internal fun ShopCartOrder(
     discount: String,
     totalCost: String,
     isByCache: Boolean,
+    isByDelivery: Boolean,
     isCreateOrderAvailable: Boolean,
     onClickChangePaymentType: () -> Unit,
-    onClickCreateOrder: () -> Unit
+    onClickChangeDeliveryWay : () -> Unit,
+    onClickCreateOrder: () -> Unit,
 ) {
     Column(modifier = modifier) {
         PaymentTypeContent(
             isByCache = isByCache,
-            onClickChangePaymentType = onClickChangePaymentType
+            isByDelivery = isByDelivery,
+            onClickChangePaymentType = onClickChangePaymentType,
+            onClickChangeDeliveryWay = onClickChangeDeliveryWay
         )
         OrderContent(
             itemsCount = itemsCount,
@@ -157,7 +161,9 @@ private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: Str
 private fun PaymentTypeContent(
     modifier: Modifier = Modifier,
     isByCache: Boolean,
-    onClickChangePaymentType: () -> Unit
+    isByDelivery: Boolean,
+    onClickChangePaymentType: () -> Unit,
+    onClickChangeDeliveryWay : () -> Unit
 ) {
     Column(modifier = modifier) {
         Text(
@@ -172,17 +178,44 @@ private fun PaymentTypeContent(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PaymentTypeItem(
-                title = "Наличными",
-                icon = Icons.Default.Money,
-                isSelected = isByCache,
-                onClick = onClickChangePaymentType
-            )
+            if (!isByDelivery) {
+                PaymentTypeItem(
+                    title = "Наличными",
+                    icon = Icons.Default.Money,
+                    isSelected = isByCache,
+                    onClick = onClickChangePaymentType
+                )
+            }
             PaymentTypeItem(
                 title = "Онлайн",
                 icon = Icons.Default.ShoppingCart,
                 isSelected = !isByCache,
                 onClick = onClickChangePaymentType
+            )
+        }
+        Text(
+            modifier = modifier,
+            text = "Способ доставка",
+            fontSize = 20.sp,
+            fontFamily = FontNunito.bold(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PaymentTypeItem(
+                title = "Самовывоз",
+                icon = Icons.Default.Money,
+                isSelected = !isByDelivery,
+                onClick = onClickChangeDeliveryWay
+            )
+            PaymentTypeItem(
+                title = "Доставка",
+                icon = Icons.Default.ShoppingCart,
+                isSelected = isByDelivery,
+                onClick = onClickChangeDeliveryWay
             )
         }
     }

@@ -18,18 +18,18 @@ class ShopItemPageExecutor(
         when (intent) {
             is Intent.OnClickOption -> launch(intent.itemId)
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickRetry -> launch(getState().item?.product?.id)
+            is Intent.OnClickRetry -> launch(getState().shopItem?.id)
             is Intent.OnClickAddToFavorite -> TODO()
-            is Intent.OnClickShare -> getState().item?.let {
-                intentAction.sharePlainText(it.product.fullPathUrl)
+            is Intent.OnClickShare -> getState().shopItem?.let {
+                intentAction.sharePlainText(it.fullPathUrl)
             }
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
-        val item = getState().item
+        val item = getState().shopItem
         if (item != null){
-            Message.Loaded(item)
+            Message.Loaded(item = item, emptyList())
         }
         launch(productId)
     }
@@ -39,8 +39,8 @@ class ShopItemPageExecutor(
             dispatch(Message.Loading)
             repository.item(itemId ?: productId).fold(
                 onSuccess = {
-                    dispatch(Message.Loaded(it))
-                    publish(Label.UpdateItem(it))
+                    dispatch(Message.Loaded(item = it.first, shopItemOptions = it.second))
+                    publish(Label.UpdateItem(it.first))
                 }, onFailure = {
                     dispatch(Message.Failed(it.message.toString()))
                 }

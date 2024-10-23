@@ -2,7 +2,7 @@ package com.markettwits.start_filter.start_filter.di
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
-import com.markettwits.start_filter.start_filter.data.StartFilterRepository
+import com.markettwits.start_filter.start_filter.domain.StartFilterRepository
 import com.markettwits.start_filter.start_filter.data.StartFilterRepositoryBase
 import com.markettwits.start_filter.start_filter.data.cache.FilterCache
 import com.markettwits.start_filter.start_filter.data.mapper.StartFilterDomainToRemoteMapper

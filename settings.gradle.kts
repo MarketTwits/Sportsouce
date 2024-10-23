@@ -4,7 +4,7 @@ pluginManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://jitpack.io")
+       // maven("https://jitpack.io")
         maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
         gradlePluginPortal()
     }
@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
+       // maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
     }

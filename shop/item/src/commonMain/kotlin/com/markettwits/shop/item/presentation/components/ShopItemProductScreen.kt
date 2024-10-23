@@ -16,11 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
-import com.markettwits.shop.item.domain.models.ShopPageItem
+import com.markettwits.shop.domain.model.ShopItem
+import com.markettwits.shop.item.domain.models.ShopExtraOptions
 
 @Composable
 internal fun ShopItemProductScreen(
-    item: ShopPageItem,
+    item: ShopItem,
+    options: List<ShopExtraOptions>,
     isLoading: Boolean,
     onClickOption: (String) -> Unit,
     onClickGoBack: () -> Unit,
@@ -34,7 +36,7 @@ internal fun ShopItemProductScreen(
         onRefresh = onRefresh,
     ) {
         Scaffold(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             bottomBar = {
                 content(Modifier.fillMaxWidth())
             },
@@ -46,13 +48,13 @@ internal fun ShopItemProductScreen(
                         .verticalScroll(rememberScrollState())
                         .padding(bottom = paddingValues.calculateBottomPadding())
                 ) {
-                    ShopItemImageContent(imageUrl = item.product.visual.imageUrl)
-                    ShopItemTitle(title = item.product.visual.displayName)
-                    ShopItemPriceRow(price = item.product.price)
-                    ShopItemExtraOptions(extraOption = item.extraOptions, onClickOption = onClickOption)
+                    ShopItemImageContent(imageUrl = item.visual.imageUrl)
+                    ShopItemTitle(title = item.visual.displayName)
+                    ShopItemPriceRow(price = item.price)
+                    ShopItemExtraOptions(extraOption = options, onClickOption = onClickOption)
                     ShopItemDescriptionOrOptions(
-                        description = item.product.visual.description,
-                        options = item.product.options
+                        description = item.visual.description,
+                        options = item.options
                     )
                 }
                 ShopItemActionRow(

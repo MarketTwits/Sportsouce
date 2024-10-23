@@ -21,6 +21,8 @@ interface ShopCartComponent {
 
     fun onClickCreateOrder()
 
+    fun onClickChangeDeliveryWay()
+
     interface Outputs {
 
         fun goBack()

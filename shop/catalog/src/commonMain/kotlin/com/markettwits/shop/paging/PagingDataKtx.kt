@@ -23,7 +23,6 @@ fun <T : Any> loadingPagingDataFlow(): Flow<PagingData<T>> {
 inline fun <T : Any> LazyPagingItems<T>.isPagingDataFailed(throwable: (Throwable) -> Unit) {
     if (this.loadState.refresh is LoadState.Error)
         throwable((this.loadState.refresh as LoadState.Error).error)
-
 }
 
 inline fun <T : Any> LazyPagingItems<T>.isPagingDataLoadingFirstTime(block: () -> Unit) {

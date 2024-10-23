@@ -49,6 +49,9 @@ class ShopCartComponentBase(
         store.accept(ShopCartStore.Intent.OnClickCreateOrder)
     }
 
+    override fun onClickChangeDeliveryWay() {
+        store.accept(ShopCartStore.Intent.OnClickChangeDeliveryWay)
+    }
 
 
     init {

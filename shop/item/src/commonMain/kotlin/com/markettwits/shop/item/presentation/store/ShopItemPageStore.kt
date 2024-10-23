@@ -1,7 +1,8 @@
 package com.markettwits.shop.item.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.shop.item.domain.models.ShopPageItem
+import com.markettwits.shop.domain.model.ShopItem
+import com.markettwits.shop.item.domain.models.ShopExtraOptions
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Intent
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.Label
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore.State
@@ -12,7 +13,8 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
         val isLoading: Boolean,
         val isError: Boolean,
         val message: String,
-        val item: ShopPageItem?,
+        val shopItem: ShopItem?,
+        val shopItemOptions : List<ShopExtraOptions>,
     )
 
     sealed interface Intent {
@@ -25,13 +27,13 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
-        data class Loaded(val item: ShopPageItem) : Message
+        data class Loaded(val item: ShopItem, val shopItemOptions: List<ShopExtraOptions>) : Message
         data class Failed(val message: String) : Message
     }
 
     sealed interface Label {
         data object GoBack : Label
-        data class UpdateItem(val shopPageItem: ShopPageItem) : Label
+        data class UpdateItem(val shopPageItem: ShopItem) : Label
     }
 
 }

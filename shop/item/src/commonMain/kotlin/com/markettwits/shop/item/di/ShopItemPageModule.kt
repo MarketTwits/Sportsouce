@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
 import com.markettwits.intentActionModule
 import com.markettwits.shop.item.data.ShopItemRepositoryBase
+import com.markettwits.shop.item.data.cache.ShopItemLocalCache
 import com.markettwits.shop.item.domain.ShopItemRepository
 import com.markettwits.shop.item.data.mapper.ShopPageItemMapper
 import com.markettwits.shop.item.data.mapper.ShopPageItemMapperBase
@@ -18,5 +19,6 @@ val shopItemPageModule = module {
     singleOf(::ShopItemRepositoryBase) bind ShopItemRepository::class
     singleOf(::ShopPageItemMapperBase) bind ShopPageItemMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
+    singleOf(::ShopItemLocalCache)
     singleOf(::ShopItemPageStoreFactory)
 }

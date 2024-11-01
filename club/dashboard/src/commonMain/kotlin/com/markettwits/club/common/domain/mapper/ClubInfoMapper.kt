@@ -12,9 +12,15 @@ import com.markettwits.club.info.domain.models.Trainer
 import com.markettwits.club.info.domain.models.Training
 
 interface ClubInfoMapper {
+
     fun mapTrainers(trainersRemoteRow: TrainersRemote): List<Trainer>
+
     fun mapQuestions(questionRemoteRow: QuestionRemoteRow): List<Question>
+
     fun mapStatistics(settingsRemoteRow: ClubSettingsRemote): List<Statistic>
+
     fun mapTraining(workoutRemoteRow: WorkoutRemote): List<Training>
+
     fun mapSchedule(scheduleRemote: ScheduleRemote): List<Schedule>
+
 }

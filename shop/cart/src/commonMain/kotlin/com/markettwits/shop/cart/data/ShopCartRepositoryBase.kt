@@ -18,12 +18,12 @@ internal class ShopCartRepositoryBase(
     override suspend fun add(shopItemCart: ShopItemCart) {
         cacheDataSource.update {
             it?.let {
-                val currentItem = it.find { t1 -> t1.uuid == shopItemCart.uuid } ?: shopItemCart
+                val currentItem = it.find { t1 -> t1.item.id == shopItemCart.item.id } ?: shopItemCart
                 if (currentItem.count <= 0)
                     it.plus(currentItem.copy(count = currentItem.count + 1))
                 else{
                     it.map { value ->
-                        if (value.uuid == shopItemCart.uuid)
+                        if (value.item.id == shopItemCart.item.id)
                             value.copy(count = value.count + 1)
                         else
                             value
@@ -36,12 +36,12 @@ internal class ShopCartRepositoryBase(
     override suspend fun remove(shopItemCart: ShopItemCart) {
         cacheDataSource.update {
             it?.let {
-                val currentItem = it.find { t1 -> t1.uuid == shopItemCart.uuid } ?: shopItemCart
+                val currentItem = it.find { t1 -> t1.item.id == shopItemCart.item.id } ?: shopItemCart
                 if (currentItem.count <= 1)
                     it.minus(currentItem)
                 else{
                     it.map { value ->
-                        if (value.uuid == shopItemCart.uuid)
+                        if (value.item.id == shopItemCart.item.id)
                             value.copy(count = value.count - 1)
                         else
                             value
@@ -54,7 +54,7 @@ internal class ShopCartRepositoryBase(
     override suspend fun fetchAll(): List<ShopItemCart> = cacheDataSource.getList()
 
     override suspend fun fetchByUUID(uuid : String): ShopItemCart =
-         cacheDataSource.getList().first { it.uuid == uuid  }
+         cacheDataSource.getList().first { it.item.id == uuid  }
 
     override fun observe(): Flow<List<ShopItemCart>> = cacheDataSource.observe().map { it ?: emptyList() }
 }

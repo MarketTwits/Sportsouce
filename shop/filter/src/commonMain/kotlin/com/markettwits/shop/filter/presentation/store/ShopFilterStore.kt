@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.cloud_shop.model.common.OptionInfo
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
+import com.markettwits.shop.filter.domain.models.ShopFilterResult
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Intent
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Label
@@ -54,7 +55,7 @@ interface ShopFilterStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object GoBack : Label
-        data class ApplyFilter(val state: State) : Label
+        data class ApplyFilter(val result: ShopFilterResult) : Label
     }
 
 }

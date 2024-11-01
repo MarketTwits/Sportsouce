@@ -8,12 +8,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShopCatalogRepository {
 
-    suspend fun categories(): Result<List<ShopCategoryItem>>
-
     fun paddingProducts(
         categoryId: Int?,
         options: List<String>?,
-        price: ShopFilterPrice,
+        maxPrice: Int?,
+        minPrice : Int?
     ): Flow<PagingData<ShopItem>>
 
     fun paddingProducts(

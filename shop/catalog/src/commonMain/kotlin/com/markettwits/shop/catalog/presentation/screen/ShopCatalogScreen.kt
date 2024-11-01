@@ -9,6 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
+import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
+import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import com.markettwits.shop.cart.presentation.catalog.components.ShopCartCatalogWidget
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
@@ -23,7 +26,7 @@ import com.markettwits.shop.search.presentation.components.publish.ShopSearchBar
 fun ShopCatalogScreen(
     modifier: Modifier = Modifier,
     catalogComponent: ShopCatalogComponent,
-    cartComponent : ShopCartCatalogComponent,
+    cartComponent: ShopCartCatalogComponent,
     filterComponent: ShopFilterComponent,
 ) {
 
@@ -33,32 +36,38 @@ fun ShopCatalogScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            ShopSearchBar(
-                query = state.queryState,
-                onClickSearchPanel = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickSearch)
-                }, onClickFilter = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
-                },
-                onBrushClicked = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.ApplyQuery(""))
-                },
-                onClickBack = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickGoBack)
-                }
-            )
-        },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             ShopCartCatalogWidget(component = cartComponent)
         }
-        ) { paddingValues ->
-        Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-            SelectedFilterParams(component = filterComponent)
-            ShopItemsContent(items = shopItems, onClickItem = {
-                catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
-            })
+    ) { paddingValues ->
+        CollapsingToolbarScaffold(
+            modifier = modifier,
+            state = rememberCollapsingToolbarScaffoldState(),
+            scrollStrategy = ScrollStrategy.EnterAlways,
+            toolbar = {
+                ShopSearchBar(
+                    query = state.queryState,
+                    onClickSearchPanel = {
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickSearch)
+                    }, onClickFilter = {
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
+                    },
+                    onBrushClicked = {
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.ApplyQuery(""))
+                    },
+                    onClickBack = {
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickGoBack)
+                    }
+                )
+            }
+        ) {
+            Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
+                SelectedFilterParams(component = filterComponent)
+                ShopItemsContent(items = shopItems, onClickItem = {
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
+                })
+            }
         }
     }
 }

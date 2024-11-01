@@ -1,5 +1,6 @@
 package com.markettwits.shop.root
 
+import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
@@ -10,10 +11,12 @@ import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBase
+import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponent
+import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponentBase
 import com.markettwits.shop.search.presentation.component.ShopSearchComponent
 import kotlinx.serialization.Serializable
 
-interface RootShopCatalogComponent {
+interface RootShopCatalogComponent : ComponentContext {
 
     val childStack: Value<ChildStack<*, Child>>
 
@@ -27,13 +30,16 @@ interface RootShopCatalogComponent {
         data class ShopItem(val option : ShopItemPageComponentBase.Options) : Config
 
         @Serializable
-        data class ShopFilter(val state: ShopFilterStore.State?) : Config
+        data object ShopFilter : Config
 
         @Serializable
         data class ShopSearch(val query: String = "") : Config
 
         @Serializable
         data object ShopCart : Config
+
+        @Serializable
+        data class ShopOrder(val option : ShopCreateOrderComponentBase.Option) : Config
 
     }
 
@@ -55,5 +61,7 @@ interface RootShopCatalogComponent {
         data class ShopSearch(val component: ShopSearchComponent) : Child
 
         data class ShopCart(val component : ShopCartComponent) : Child
+
+        data class ShopOrder(val component : ShopCreateOrderComponent) : Child
     }
 }

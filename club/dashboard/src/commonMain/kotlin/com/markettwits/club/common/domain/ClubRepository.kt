@@ -6,7 +6,10 @@ import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import kotlinx.coroutines.flow.Flow
 
 interface ClubRepository {
+
     suspend fun subscriptions(): Flow<List<SubscriptionItems>>
+
     suspend fun workoutRegistration(workoutRegistrationForm: WorkoutRegistrationForm): Result<Unit>
+
     suspend fun clubInfo(): Result<List<ClubInfo>>
 }

@@ -20,37 +20,35 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
             is Intent.OnClickItem -> publish(Label.OnClickItem(intent.item))
             is Intent.OnClickFilter -> publish(Label.GoFilter)
             is Intent.OnClickSearch -> publish(Label.GoSearch(getState().queryState))
-            is Intent.ApplyQuery -> launchWithQuery(intent.query,getState().filterState)
+            is Intent.ApplyQuery -> launchWithQuery(intent.query)
             is Intent.ApplyFilter -> {
-                val categoryId =
-                    if (intent.state.selectedCategoryPath.isNotEmpty())
-                        intent.state.selectedCategoryPath.last().id
-                    else null
                 launchWithFilter(
-                    categoryId = categoryId,
-                    options = intent.state.selectedOptionUID.mapToStringOptions(),
-                    price = intent.state.selectedPrice
+                    categoryId = intent.state.categoryId,
+                    options = intent.state.options,
+                    maxPrice = intent.state.maxPrice,
+                    minPrice = intent.state.minPrice
                 )
-                dispatch(Message.FilterApplied(intent.state))
             }
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
-        launchWithFilter(null, emptyList(), ShopFilterPrice.EMPTY)
+        launchWithFilter(null, emptyList(), null, null)
     }
 
     private fun launchWithFilter(
         categoryId: Int?,
         options: List<String>,
-        price: ShopFilterPrice,
+        maxPrice: Int?,
+        minPrice : Int?
     ) {
         dispatch(
             Message.Loaded(
                 repository.paddingProducts(
                     categoryId = categoryId,
                     options = options.ifEmpty { null },
-                    price = price
+                    maxPrice = maxPrice,
+                    minPrice = minPrice
                 ).cachedIn(scope)
             )
         )
@@ -59,23 +57,9 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
 
     private fun launchWithQuery(
         query: String,
-        filterState : ShopFilterStore.State?
     ) {
         dispatch(Message.QueryApplied(query))
         dispatch(Message.Loaded(repository.paddingProducts(query).cachedIn(scope)))
-        filterState?.let {
-            dispatch(Message.FilterApplied(clearFilterStateChosen(filterState)))
-        }
-
     }
 
-    private fun clearFilterStateChosen(filterState: ShopFilterStore.State) :ShopFilterStore.State{
-        return filterState.copy(
-            selectedPrice = ShopFilterPrice.EMPTY,
-            selectedOptionUID = emptyList(),
-            options = emptyList(),
-            selectedCategoryPath = emptyList(),
-            isApplied = false
-        )
-    }
 }

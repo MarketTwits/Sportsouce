@@ -7,6 +7,7 @@ import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.Label
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore.State
 import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
+import com.markettwits.shop.filter.domain.models.ShopFilterResult
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +18,6 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         val isError: Boolean,
         val message: String,
         val shopItems: Flow<PagingData<ShopItem>>,
-        val filterState: ShopFilterStore.State? = null,
         val queryState : String = "",
     )
 
@@ -26,7 +26,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
         data object OnClickSearch : Intent
         data class OnClickItem(val item: ShopItem) : Intent
         data object OnClickFilter : Intent
-        data class ApplyFilter(val state: ShopFilterStore.State) : Intent
+        data class ApplyFilter(val state: ShopFilterResult) : Intent
         data class ApplyQuery(val query : String) : Intent
 
     }
@@ -34,10 +34,8 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
     sealed interface Message {
         data object Loading : Message
         data class Loaded(val items: Flow<PagingData<ShopItem>>) : Message
-        data class CategoriesLoaded(val items: List<ShopCategoryItem>) : Message
         data class UpdateCategories(val id: Int) : Message
         data class Failed(val message: String) : Message
-        data class FilterApplied(val filterState: ShopFilterStore.State) : Message
         data class QueryApplied(val query: String) : Message
     }
 

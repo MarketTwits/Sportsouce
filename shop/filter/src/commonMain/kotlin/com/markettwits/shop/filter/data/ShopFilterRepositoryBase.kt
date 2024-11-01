@@ -2,7 +2,7 @@ package com.markettwits.shop.filter.data
 
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.filter.domain.ShopFilterRepository
-import com.markettwits.shop.filter.domain.mapper.ShopFilterMapper
+import com.markettwits.shop.filter.data.mapper.ShopFilterMapper
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo

@@ -33,7 +33,7 @@ suspend fun Throwable.networkExceptionHandler(): Exception = when (this) {
     is UnknownHostException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is HttpRequestTimeoutException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is SocketTimeoutException -> Exception(TIMEOUT_EXCEPTION_MESSAGE)
-    is ResponseException -> Exception(this.response.body<ResponseError>().message)
+    is ResponseException -> Exception(response.body<ResponseError>().message)
     is SerializationException -> Exception(SERIALIZATION_EXCEPTION_MESSAGE)
     else -> Exception(this.message.toString())
 }

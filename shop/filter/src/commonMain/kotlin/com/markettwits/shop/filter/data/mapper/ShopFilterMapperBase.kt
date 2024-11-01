@@ -1,4 +1,4 @@
-package com.markettwits.shop.filter.domain.mapper
+package com.markettwits.shop.filter.data.mapper
 
 import com.markettwits.cloud_shop.model.categories.ChildrenItem
 import com.markettwits.cloud_shop.model.common.OptionInfo
@@ -22,17 +22,13 @@ class ShopFilterMapperBase : ShopFilterMapper {
 
     override fun mapOptions(options: List<OptionInfo>): List<ShopOptionInfo> = options.map {
         ShopOptionInfo(
-            createdAt = it.createdAt,
             inFilter = it.in_filter,
             name = it.name,
-            updatedAt = it.updatedAt,
             uuid = it.uuid,
             values = it.values?.map { value ->
                 ShopOptionInfo.Value(
-                    createdAt = value.createdAt,
                     name = value.name,
                     productOptionUuid = value.product_option_uuid,
-                    updatedAt = it.updatedAt,
                     uuid = value.uuid
                 )
             } ?: emptyList()

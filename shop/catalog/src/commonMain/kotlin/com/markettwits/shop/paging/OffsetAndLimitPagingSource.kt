@@ -18,17 +18,17 @@ abstract class OffsetAndLimitPagingSource<Value : Any>(
             } else {
                 INITIAL_LOAD_SIZE
             }
-            val faps = load(offset, params.loadSize)
-            if (faps.isEmpty()) {
+            val data = load(offset, params.loadSize)
+            if (data.isEmpty()) {
                 LoadResult.Page(
-                    data = faps,
+                    data = data,
                     prevKey = null,
                     nextKey = null
                 )
             } else {
                 val nextKey = position + (params.loadSize / pageSize)
                 LoadResult.Page(
-                    data = faps,
+                    data = data,
                     prevKey = null,
                     nextKey = nextKey
                 )

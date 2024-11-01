@@ -24,7 +24,7 @@ class ShopProductsMapperBase : ShopProductsMapper {
             visual = calculateVisual(productsRemoteRow),
             options = calculateOptions(productsRemoteRow),
             quantity = productsRemoteRow.quantity,
-            fullPathUrl = "https://shop.sportsauce.ru/product/${productsRemoteRow.id}"
+            fullPathUrl = "$DEFAULT_SHOP_PRODUCT_PATH${productsRemoteRow.id}"
         )
     }
 
@@ -71,5 +71,9 @@ class ShopProductsMapperBase : ShopProductsMapper {
     private fun formatPrice(price: Int): String {
         val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
         return formatter.format(price)
+    }
+
+    private companion object{
+        private const val DEFAULT_SHOP_PRODUCT_PATH = "https://shop.sportsauce.ru/product/"
     }
 }

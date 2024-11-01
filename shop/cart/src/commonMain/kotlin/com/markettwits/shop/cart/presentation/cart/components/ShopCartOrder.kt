@@ -222,7 +222,7 @@ private fun PaymentTypeContent(
 }
 
 @Composable
-private fun PaymentTypeItem(
+fun PaymentTypeItem(
     modifier: Modifier = Modifier,
     title: String,
     icon: ImageVector,

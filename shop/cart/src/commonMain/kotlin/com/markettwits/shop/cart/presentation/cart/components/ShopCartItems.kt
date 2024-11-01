@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.markettwits.shop.cart.domain.ShopItemCart
 
-@OptIn(ExperimentalFoundationApi::class)
 internal fun LazyListScope.ShopCartItems(
     modifier: Modifier = Modifier,
     items: List<ShopItemCart>,
@@ -24,8 +23,8 @@ internal fun LazyListScope.ShopCartItems(
     onClickIncrease: (ShopItemCart) -> Unit,
     onClickDecrease: (ShopItemCart) -> Unit,
 ) {
-    items(items, key = {it.id}) {
-        AnimationBox(key = it.id){
+    items(items, key = {it.item.id}) {
+        AnimationBox(key = it.item.id){
             ShopCartItem(
                 modifier = modifier,
                 shopCartItemCart = it,

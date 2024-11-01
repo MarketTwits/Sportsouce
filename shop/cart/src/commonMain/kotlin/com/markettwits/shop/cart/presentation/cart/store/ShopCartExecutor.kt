@@ -23,7 +23,7 @@ internal class ShopCartExecutor(
             is Intent.OnClickItem -> publish(Label.GoToShopItem(intent.item))
             is Intent.OnClickGoBack -> publish(Label.GoBack)
             is Intent.OnClickChangePaymentType -> onClickChangePaymentType(getState())
-            is Intent.OnClickCreateOrder -> {}
+            is Intent.OnClickCreateOrder -> publish(Label.GoOrderScreen(getState().items))
             is Intent.Init -> executeAction(Unit) { getState() }
             is Intent.OnClickChangeDeliveryWay -> onClickChangeDeliveryWay(getState())
         }
@@ -42,7 +42,7 @@ internal class ShopCartExecutor(
     }
 
     private fun onClickIncrease(itemCart: ShopItemCart) {
-        if (itemCart.quantity > itemCart.count) {
+        if (itemCart.item.quantity > itemCart.count) {
             scope.launch {
                 repository.add(itemCart)
             }
@@ -94,14 +94,14 @@ internal class ShopCartExecutor(
     }
 
     private fun calculateTotalDiscount(cart: List<ShopItemCart>): String {
-        var totalDiscount = 0
-        for (item in cart) {
-            if (item.numberPreviousPrice != null && item.numberPreviousPrice > item.numberPrice) {
-                val discountPerItem = item.numberPreviousPrice - item.numberPrice
-                totalDiscount += discountPerItem * item.count
+            var totalDiscount = 0
+            for (item in cart) {
+                if (item.numberPreviousPrice != null && item.numberPreviousPrice > item.numberPrice) {
+                    val discountPerItem = item.numberPreviousPrice - item.numberPrice
+                    totalDiscount += discountPerItem * item.count
+                }
             }
-        }
-        return if (totalDiscount <= 0) "" else totalDiscount.toString()
+            return if (totalDiscount <= 0) "" else totalDiscount.toString()
     }
 
 }

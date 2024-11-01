@@ -2,8 +2,10 @@ package com.markettwits.cloud_shop.api
 
 import com.markettwits.cloud_shop.model.categories.ChildrenItem
 import com.markettwits.cloud_shop.model.option.OptionRemote
+import com.markettwits.cloud_shop.model.order.request.CreateShopOrderRequest
+import com.markettwits.cloud_shop.model.order.response.CreateShopOrderResponse
+import com.markettwits.cloud_shop.model.product.Product
 import com.markettwits.cloud_shop.model.product.ProductRemote
-import com.markettwits.cloud_shop.model.products.ProductsRemote
 import com.markettwits.cloud_shop.model.renderFilter.RenderFilterRemote
 
 
@@ -13,10 +15,6 @@ interface SportSauceShopApi {
 
     suspend fun categories(): List<ChildrenItem>
 
-    suspend fun products(): ProductsRemote
-
-    suspend fun products(limit: Int, offset: Int): ProductsRemote
-
     suspend fun products(
         limit: Int? = null,
         offset: Int? = null,
@@ -24,13 +22,13 @@ interface SportSauceShopApi {
         options: List<String>? = null,
         priceMax : Int? = null,
         priceMin : Int? = null
-    ): ProductsRemote
+    ): List<Product>
 
     suspend fun products(
         limit: Int,
         offset: Int,
         query : String
-    ) : ProductsRemote
+    ) : List<Product>
 
     suspend fun product(uuid: String): ProductRemote
 

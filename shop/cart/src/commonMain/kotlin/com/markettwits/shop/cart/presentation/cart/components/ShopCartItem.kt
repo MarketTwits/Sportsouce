@@ -6,7 +6,6 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,11 +14,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
@@ -63,16 +59,16 @@ internal fun ShopCartItem(
         ImageCard(
             modifier = Modifier
                 .padding(2.dp),
-            image = shopCartItemCart.imageUrl.firstOrNull() ?: "",
+            image = shopCartItemCart.item.visual.imageUrl.firstOrNull() ?: "",
         )
         Column {
             ShowCardPrice(
                 modifier = Modifier
                     .padding(4.dp),
-                currentPrice = shopCartItemCart.currentPrice,
-                previousPrice = shopCartItemCart.previousPrice,
-                quantity = shopCartItemCart.quantity,
-                title = shopCartItemCart.title
+                currentPrice = shopCartItemCart.item.price.currentPrice,
+                previousPrice = shopCartItemCart.item.price.previousPrice,
+                quantity = shopCartItemCart.item.quantity,
+                title = shopCartItemCart.item.visual.displayName
             )
             SubscriptionCounter(
                 monthOfCount = shopCartItemCart.count,
@@ -80,7 +76,6 @@ internal fun ShopCartItem(
                 onClickIncrease = { onClickIncrease(shopCartItemCart) }
             )
         }
-
     }
 }
 

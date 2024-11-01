@@ -29,6 +29,8 @@ interface ShopCartComponent {
 
         fun goShopItem(shopItemCart: ShopItemCart)
 
+        fun goOrder(items : List<ShopItemCart>)
+
     }
 
 }

@@ -55,6 +55,13 @@ interface AuthDataSource {
     suspend fun user(): Result<User>
 
     /**
+     * Retrieves the authenticated user's ID data.
+     *
+     * @return a Result object containing the user id
+     */
+    suspend fun userID() : Result<Int>
+
+    /**
      * Updates the profile information of the authenticated user.
      *
      * @param request the request containing the updated profile information

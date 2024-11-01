@@ -29,7 +29,7 @@ class ShopSearchComponentBase(
     init {
         store.labels.onEach {
             when(it){
-                is ShopSearchStore.Label.GoBack -> outputs.onClickGoBack()
+                is ShopSearchStore.Label.GoBack -> outputs.goBack()
                 is ShopSearchStore.Label.OnApplyQuery -> outputs.onApplyQuery(it.query)
             }
         }

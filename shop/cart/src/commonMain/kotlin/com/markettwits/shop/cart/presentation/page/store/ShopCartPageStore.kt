@@ -17,7 +17,7 @@ class ShopCartPageStoreFactory(
     private val repository: ShopCartRepository
 ) : ShopCartPageStore.Factory {
 
-    override fun create(shopItemCart: ShopItemCart): ShopCartPageStore {
+    override fun create(shopItemCart: ShopItemCart?): ShopCartPageStore {
         return ShopCartPageStoreBase(repository, shopItemCart)
     }
 }
@@ -33,13 +33,13 @@ interface ShopCartPageStore : InstanceKeeper.Instance {
     fun updateItem(shopItemCart: ShopItemCart)
 
     interface Factory {
-        fun create(shopItemCart: ShopItemCart): ShopCartPageStore
+        fun create(shopItemCart: ShopItemCart?): ShopCartPageStore
     }
 }
 
 private class ShopCartPageStoreBase(
     private val repository: ShopCartRepository,
-    initialShopItemCart: ShopItemCart
+    initialShopItemCart: ShopItemCart?
 ) : ShopCartPageStore {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -55,15 +55,19 @@ private class ShopCartPageStoreBase(
 
     override fun add() {
         scope.launch {
-            if (currentShopItemCart.value.quantity > currentShopItemCart.value.count) {
-                repository.add(currentShopItemCart.value)
+            currentShopItemCart.value?.also { value ->
+                if (value.item.quantity > value.count) {
+                    repository.add(value)
+                }
             }
         }
     }
 
     override fun remove() {
         scope.launch {
-            repository.remove(currentShopItemCart.value)
+            currentShopItemCart.value?.also { value ->
+                repository.remove(value)
+            }
         }
     }
 
@@ -76,14 +80,14 @@ private class ShopCartPageStoreBase(
         repository.observe()
             .map { items ->
                 runCatching {
-                    items.first { it.uuid == currentShopItemCart.value.uuid }
+                    items.first { it.item.id == currentShopItemCart.value?.item?.id }
                 }
             }
             .onEach { item ->
                 item.fold(onSuccess = {
                     state.value = ShopCartPageComponent.State.InCart(
                         count = it.count.toString(),
-                        quantity = it.quantity
+                        quantity = it.item.quantity
                     )
                 }, onFailure = {
                     state.value = ShopCartPageComponent.State.Empty

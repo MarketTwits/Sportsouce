@@ -39,6 +39,7 @@ interface ShopCartStore : Store<Intent, State, Label> {
 
     sealed interface Label{
         data object GoBack : Label
+        data class GoOrderScreen(val items : List<ShopItemCart>) : Label
         data class GoToShopItem(val shopItemCart: ShopItemCart) : Label
     }
 

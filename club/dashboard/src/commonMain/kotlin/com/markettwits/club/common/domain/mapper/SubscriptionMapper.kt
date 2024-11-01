@@ -6,6 +6,9 @@ import com.markettwits.club.dashboard.domain.SubscriptionItems
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 
 interface SubscriptionMapper {
+
     fun map(subscriptionsRemote: List<SubscriptionItemsRemote>): List<SubscriptionItems>
+
     fun map(workoutRegistrationForm: WorkoutRegistrationForm): WorkoutRegistrationRequestRemote
+
 }

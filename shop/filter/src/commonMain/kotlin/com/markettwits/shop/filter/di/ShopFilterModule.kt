@@ -5,10 +5,10 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
 import com.markettwits.shop.filter.data.ShopFilterRepositoryBase
 import com.markettwits.shop.filter.domain.ShopFilterRepository
-import com.markettwits.shop.filter.domain.mapper.ShopFilterMapper
-import com.markettwits.shop.filter.domain.mapper.ShopFilterMapperBase
-import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapper
-import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapperBase
+import com.markettwits.shop.filter.data.mapper.ShopFilterMapper
+import com.markettwits.shop.filter.data.mapper.ShopFilterMapperBase
+import com.markettwits.shop.filter.data.mapper.ShopProductsCategoriesMapper
+import com.markettwits.shop.filter.data.mapper.ShopProductsCategoriesMapperBase
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.filter.presentation.store.ShopFilterStoreFactory
 import org.koin.core.module.dsl.singleOf

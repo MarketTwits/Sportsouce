@@ -8,7 +8,7 @@ import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
 import com.markettwits.shop.domain.mapper.ShopProductsMapper
 import com.markettwits.shop.domain.model.ShopItem
-import com.markettwits.shop.filter.domain.mapper.ShopProductsCategoriesMapper
+import com.markettwits.shop.filter.data.mapper.ShopProductsCategoriesMapper
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.shop.paging.SHOP_ITEMS_PAGE_SIZE
@@ -20,20 +20,20 @@ import kotlinx.coroutines.flow.map
 class ShopCatalogRepositoryBase(
     private val cloudService: SportSauceShopApi,
     private val productMapper: ShopProductsMapper,
-    private val categoriesMapper: ShopProductsCategoriesMapper,
 ) : ShopCatalogRepository {
 
     override fun paddingProducts(
         categoryId: Int?,
         options: List<String>?,
-        price: ShopFilterPrice,
+        maxPrice: Int?,
+        minPrice : Int?
     ): Flow<PagingData<ShopItem>> {
         return Pager(
             PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
         ) {
             ShopCatalogPagingSource(
                 cloudService,
-                ShopCatalogParams.WithFilter(categoryId, options, price)
+                ShopCatalogParams.WithFilter(categoryId, options, maxPrice, minPrice)
             )
         }.flow.map {  it.map { data -> productMapper.map(data) } }
     }
@@ -46,9 +46,5 @@ class ShopCatalogRepositoryBase(
         }.flow.map {
             it.map { data -> productMapper.map(data) }
         }
-    }
-
-    override suspend fun categories(): Result<List<ShopCategoryItem>> = runCatching {
-        categoriesMapper.map(cloudService.categories())
     }
 }

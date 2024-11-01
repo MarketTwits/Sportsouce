@@ -59,6 +59,7 @@ class ShopCartComponentBase(
             when(it){
                 is ShopCartStore.Label.GoBack -> outputs.goBack()
                 is ShopCartStore.Label.GoToShopItem -> outputs.goShopItem(it.shopItemCart)
+                is ShopCartStore.Label.GoOrderScreen -> outputs.goOrder(it.items)
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
 

@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.shop.cart)
             implementation(projects.core.ui)
+            implementation(projects.shop.domain)
             implementation(projects.coreKoin)
             implementation(projects.auth.authService)
         }

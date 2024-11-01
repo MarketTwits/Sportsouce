@@ -42,6 +42,4 @@ class ShopCatalogComponentBase(
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }
-
-
 }

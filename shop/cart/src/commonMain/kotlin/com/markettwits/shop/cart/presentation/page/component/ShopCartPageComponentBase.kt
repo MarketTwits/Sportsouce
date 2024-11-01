@@ -10,7 +10,7 @@ class ShopCartPageComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: ShopCartPageStoreFactory,
     private val outputs : ShopCartPageComponent.Outputs,
-    private val shopItemCart: ShopItemCart
+    private val shopItemCart: ShopItemCart?
 ) : ShopCartPageComponent,
     ComponentContext by componentContext {
 

@@ -10,7 +10,7 @@ interface ShopSearchComponent {
     fun obtainEvent(intent : ShopSearchStore.Intent)
 
     interface Outputs{
-        fun onClickGoBack()
+        fun goBack()
         fun onApplyQuery(query : String)
     }
 }

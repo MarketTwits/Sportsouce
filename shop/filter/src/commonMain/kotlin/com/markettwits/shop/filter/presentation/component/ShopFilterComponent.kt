@@ -1,5 +1,6 @@
 package com.markettwits.shop.filter.presentation.component
 
+import com.markettwits.shop.filter.domain.models.ShopFilterResult
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import kotlinx.coroutines.flow.StateFlow
 
@@ -13,7 +14,7 @@ interface ShopFilterComponent {
 
         fun goBack()
 
-        fun applyFilter(state: ShopFilterStore.State)
+        fun applyFilter(result: ShopFilterResult)
     }
 
 }

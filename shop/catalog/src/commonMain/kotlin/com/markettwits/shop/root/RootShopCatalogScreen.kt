@@ -1,12 +1,17 @@
 package com.markettwits.shop.root
 
 import androidx.compose.runtime.Composable
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.stack.animation.plus
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.shop.cart.presentation.cart.screen.ShopCartScreen
 import com.markettwits.shop.catalog.presentation.screen.ShopCatalogScreen
 import com.markettwits.shop.filter.presentation.screen.ShopFilterScreen
 import com.markettwits.shop.item.presentation.screen.ShopItemPageScreen
+import com.markettwits.shop.order.presentation.screen.ShopCreateOrderScreen
 import com.markettwits.shop.search.presentation.screen.ShopSearchScreen
 
 @Composable
@@ -28,6 +33,7 @@ fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
             is RootShopCatalogComponent.Child.ShopFilter -> ShopFilterScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopSearch -> ShopSearchScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopCart -> ShopCartScreen(component = child.component)
+            is RootShopCatalogComponent.Child.ShopOrder -> ShopCreateOrderScreen(component = child.component)
         }
     }
 }

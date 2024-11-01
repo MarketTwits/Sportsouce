@@ -21,15 +21,15 @@ class ShopCatalogPagingSource(
                 offset = offset,
                 categoryId = params.categoryId,
                 options = params.options,
-                priceMax = params.price?.maxPrice?.apply(),
-                priceMin = params.price?.minPrice?.apply()
-            ).rows
+                priceMax = params.maxPrice,
+                priceMin = params.minPrice
+            )
 
             is ShopCatalogParams.WithQuery -> shopApi.products(
                 limit = limit,
                 offset = offset,
                 query = params.query
-            ).rows
+            )
         }
     }
 }
@@ -40,7 +40,8 @@ sealed interface ShopCatalogParams {
     data class WithFilter(
         val categoryId: Int? = null,
         val options: List<String>? = null,
-        val price: ShopFilterPrice? = null,
+        val maxPrice: Int? = null,
+        val minPrice : Int? = null,
     ) : ShopCatalogParams
 
     data class WithQuery(

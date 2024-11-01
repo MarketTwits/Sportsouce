@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.markettwits.profile.api.root.RootAuthFlowScreen
 import com.markettwits.shop.cart.presentation.cart.screen.ShopCartScreen
 import com.markettwits.shop.catalog.presentation.screen.ShopCatalogScreen
 import com.markettwits.shop.filter.presentation.screen.ShopFilterScreen
@@ -34,6 +35,7 @@ fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
             is RootShopCatalogComponent.Child.ShopSearch -> ShopSearchScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopCart -> ShopCartScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopOrder -> ShopCreateOrderScreen(component = child.component)
+            is RootShopCatalogComponent.Child.AuthFlow -> RootAuthFlowScreen(component = child.component)
         }
     }
 }

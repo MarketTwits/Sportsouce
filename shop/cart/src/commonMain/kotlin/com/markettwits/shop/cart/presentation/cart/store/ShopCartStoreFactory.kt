@@ -25,7 +25,7 @@ class ShopCartStoreFactory(
         ShopCartStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ShopCartStore",
-            initialState = ShopCartStore.State(),
+            initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { ShopCartExecutor(repository) },
             reducer = ShopCartReducer

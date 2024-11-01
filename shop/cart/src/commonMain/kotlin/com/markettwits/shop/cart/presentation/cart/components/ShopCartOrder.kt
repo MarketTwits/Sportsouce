@@ -37,34 +37,20 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 
-@Composable
-internal fun ShopCartOrder(
-    modifier: Modifier = Modifier,
-    itemsCount: String,
-    discount: String,
-    totalCost: String,
-    isByCache: Boolean,
-    isByDelivery: Boolean,
-    isCreateOrderAvailable: Boolean,
-    onClickChangePaymentType: () -> Unit,
-    onClickChangeDeliveryWay : () -> Unit,
-    onClickCreateOrder: () -> Unit,
-) {
-    Column(modifier = modifier) {
-        PaymentTypeContent(
-            isByCache = isByCache,
-            isByDelivery = isByDelivery,
-            onClickChangePaymentType = onClickChangePaymentType,
-            onClickChangeDeliveryWay = onClickChangeDeliveryWay
-        )
-        OrderContent(
-            itemsCount = itemsCount,
-            discount = discount,
-            totalCost = totalCost
-        )
-        CreateOrderButton(onClick = onClickCreateOrder, isAvailable = isCreateOrderAvailable)
-    }
-}
+//@Composable
+//internal fun ShopCartOrder(
+//    modifier: Modifier = Modifier,
+//    itemsCount: String,
+//    isCreateOrderAvailable: Boolean,
+//    onClickChangePaymentType: () -> Unit,
+//    onClickChangeDeliveryWay : () -> Unit,
+//    onClickCreateOrder: () -> Unit,
+//) {
+//    Column(modifier = modifier) {
+//
+//        CreateOrderButton(onClickCreateOrder = onClickCreateOrder, isAvailable = isCreateOrderAvailable)
+//    }
+//}
 
 @Composable
 private fun OrderContent(
@@ -269,18 +255,24 @@ fun PaymentTypeItem(
 }
 
 @Composable
-private fun CreateOrderButton(
+fun CreateOrderButton(
     modifier: Modifier = Modifier,
     isAvailable: Boolean,
-    onClick: () -> Unit
+    onClickCreateOrder: () -> Unit,
+    onClickGoAuth : () -> Unit
 ) {
     Button(
         modifier = modifier
             .padding(10.dp)
             .height(55.dp)
             .fillMaxWidth(),
-        enabled = isAvailable,
-        onClick = onClick,
+       // enabled = isAvailable,
+        onClick = {
+            if (isAvailable)
+                onClickCreateOrder()
+            else
+                onClickGoAuth()
+        },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
             disabledContentColor = MaterialTheme.colorScheme.outline
@@ -290,16 +282,29 @@ private fun CreateOrderButton(
             defaultElevation = 4.dp
         ),
         content = {
-            Text(
-                modifier = Modifier.padding(2.dp),
-                text = "Оформить",
-                color = MaterialTheme.colorScheme.onSecondary,
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
-            )
+            if (isAvailable){
+                Text(
+                    modifier = Modifier.padding(2.dp),
+                    text = "Оформить",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
+                )
+            }else{
+                Text(
+                    modifier = Modifier.padding(2.dp),
+                    text = "Войдите в свой аккаунт",
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
+                )
+            }
         }
     )
 }

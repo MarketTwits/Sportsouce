@@ -44,12 +44,10 @@ class AuthorizedProfileExecutor(
         scope.launch {
             interactor.userProfile(forced)
                 .onStart { dispatch(Message.Loading) }
-                .catch {
-                    if (!it.isNetworkConnectionError()) exceptionTracker.reportException(
-                        it,
-                        "#UserProfile#launch"
-                    )
-                    dispatch(Message.LoadingFailed(networkExceptionHandler(it).message.toString()))
+                .catch { throwable ->
+                    if (!throwable.isNetworkConnectionError())
+                        exceptionTracker.reportException(throwable, "#UserProfile#launch")
+                    dispatch(Message.LoadingFailed(networkExceptionHandler(throwable).message.toString()))
                 }
                 .collect { dispatch(Message.LoadingSuccess(it)) }
         }

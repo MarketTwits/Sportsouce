@@ -19,6 +19,7 @@ import com.markettwits.start.root.RootStartScreen
 fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
 
     val childStack by component.childStack.subscribeAsState()
+
     val childSlot by component.childSlot.subscribeAsState()
 
     childSlot.child?.instance?.also { child ->

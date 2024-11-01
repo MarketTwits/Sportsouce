@@ -13,17 +13,20 @@ interface ShopCartComponent {
 
     fun onClickDecrease (item : ShopItemCart)
 
+    fun onClickDelete (item: ShopItemCart)
+
     fun onClickShopCartItem(item : ShopItemCart)
 
     fun onClickGoBack()
 
-    fun onClickChangePaymentType()
-
     fun onClickCreateOrder()
 
-    fun onClickChangeDeliveryWay()
+    fun onClickGoAuth()
+
 
     interface Outputs {
+
+        fun goAuth()
 
         fun goBack()
 

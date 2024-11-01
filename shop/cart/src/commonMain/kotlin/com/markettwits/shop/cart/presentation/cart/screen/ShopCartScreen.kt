@@ -7,11 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
+import com.markettwits.shop.cart.presentation.cart.components.CreateOrderButton
 import com.markettwits.shop.cart.presentation.cart.components.ShopCartItems
-import com.markettwits.shop.cart.presentation.cart.components.ShopCartOrder
 
 @Composable
 fun ShopCartScreen(
@@ -34,20 +33,14 @@ fun ShopCartScreen(
                 items = state.items,
                 onClickDecrease = component::onClickDecrease,
                 onClickIncrease = component::onClickIncrease,
-                onClickItem = component::onClickShopCartItem
+                onClickItem = component::onClickShopCartItem,
+                onClickDelete = component::onClickDelete
             )
             item{
-                ShopCartOrder(
-                    modifier = Modifier.padding(10.dp),
-                    itemsCount = state.order.itemsCount,
-                    discount = state.order.discount,
-                    totalCost = state.order.totalCost,
-                    isByCache = state.order.payByCache,
-                    isByDelivery = state.order.isDelivery,
-                    isCreateOrderAvailable = true,
-                    onClickChangePaymentType = component::onClickChangePaymentType,
+                CreateOrderButton(
                     onClickCreateOrder = component::onClickCreateOrder,
-                    onClickChangeDeliveryWay = component::onClickChangeDeliveryWay
+                    onClickGoAuth = component::onClickGoAuth,
+                    isAvailable = state.isAvailable
                 )
             }
         }

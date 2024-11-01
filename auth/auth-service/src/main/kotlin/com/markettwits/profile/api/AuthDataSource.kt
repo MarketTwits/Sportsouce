@@ -54,6 +54,8 @@ interface AuthDataSource {
      */
     suspend fun user(): Result<User>
 
+    suspend fun sharedUser() : Result<SharedUser>
+
     /**
      * Retrieves the authenticated user's ID data.
      *

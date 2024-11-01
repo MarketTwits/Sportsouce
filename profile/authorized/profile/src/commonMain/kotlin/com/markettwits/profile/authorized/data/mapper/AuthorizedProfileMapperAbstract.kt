@@ -35,10 +35,10 @@ abstract class AuthorizedProfileMapperAbstract(
 
     protected fun mapUserActivities(
         userRegistries: List<RemoteStartsUserItem>,
-        userMembers: ProfileMembers
+        userMembers: List<ProfileMembers.ProfileMember>
     ): UserProfile.Activity =
         UserProfile.Activity(
             userRegistry = userRegistrationsMapper.map(userRegistries),
-            userMemberCount = userMembers.count
+            userMemberCount = userMembers.size
         )
 }

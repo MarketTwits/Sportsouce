@@ -20,7 +20,9 @@ internal class StartsRepositoryBase(
     private val execute: ExecuteListWithCache,
     private val mapper: StartsCloudToUiMapper,
 ) : StartsRepository {
+
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
+
     override suspend fun starts(forced: Boolean) {
         runCatching {
             execute.executeListWithCache(

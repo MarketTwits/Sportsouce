@@ -23,8 +23,7 @@ class ShopCreateOrderComponentBase(
     private val storeFactory: ShopCreateOrderStoreFactory,
     private val outputs: ShopCreateOrderComponent.Outputs,
     private val option : Option
-) : ShopCreateOrderComponent,
-    CoroutineComponent(componentContext, CoroutineScope(Dispatchers.Main.immediate)) {
+) : ShopCreateOrderComponent, ComponentContext by componentContext{
 
     private val store = instanceKeeper.getStore {
         storeFactory.create(option.shopOrderItems)
@@ -42,7 +41,7 @@ class ShopCreateOrderComponentBase(
             when(it){
                 ShopCreateOrderStore.Label.GoBack -> outputs.goBack()
             }
-        }.launchIn(scope)
+        }.launchIn(componentScope)
     }
 
     @Serializable

@@ -8,7 +8,7 @@ internal object ShopCartReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.UpdateItemsInCart -> copy(items = msg.items)
-            is Message.UpdateOrder -> copy(order = msg.order)
+            is Message.UpdateCreateOrderAvailable -> copy(isAvailable = msg.boolean)
         }
     }
 }

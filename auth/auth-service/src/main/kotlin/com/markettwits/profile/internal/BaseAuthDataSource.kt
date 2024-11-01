@@ -7,6 +7,8 @@ import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.profile.api.AuthDataSource
+import com.markettwits.profile.api.SharedUser
+import com.markettwits.profile.api.mapToShared
 import com.markettwits.profile.internal.database.data.store.AuthCacheDataSource
 import com.markettwits.profile.internal.manager.TokenManager
 import com.markettwits.profile.internal.mapper.SignInRemoteToCacheMapper
@@ -61,6 +63,10 @@ internal class BaseAuthDataSource(
 
     override suspend fun user(): Result<User> = runCatching {
         userInfoCache.get() ?: auth().getOrThrow()
+    }
+
+    override suspend fun sharedUser(): Result<SharedUser> = user().mapCatching {
+        it.mapToShared()
     }
 
     override suspend fun userID(): Result<Int> = runCatching {

@@ -20,12 +20,12 @@ internal class ShopCartExecutor(
         when (intent) {
             is Intent.OnClickDecrease -> onClickDecrease(intent.item)
             is Intent.OnClickIncrease -> onClickIncrease(intent.item)
+            is Intent.OnClickDelete -> onClickDelete(intent.item)
             is Intent.OnClickItem -> publish(Label.GoToShopItem(intent.item))
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickChangePaymentType -> onClickChangePaymentType(getState())
             is Intent.OnClickCreateOrder -> publish(Label.GoOrderScreen(getState().items))
             is Intent.Init -> executeAction(Unit) { getState() }
-            is Intent.OnClickChangeDeliveryWay -> onClickChangeDeliveryWay(getState())
+            is Intent.OnClickGoAuth -> publish(Label.GoAuth)
         }
     }
 
@@ -33,6 +33,12 @@ internal class ShopCartExecutor(
         repository.observe().onEach {
             updateState(it, getState())
         }.launchIn(scope)
+    }
+
+    private fun onClickDelete(itemCart: ShopItemCart){
+        scope.launch {
+            repository.remove(itemCart)
+        }
     }
 
     private fun onClickDecrease(itemCart: ShopItemCart) {
@@ -49,59 +55,17 @@ internal class ShopCartExecutor(
         }
     }
 
-    private fun onClickChangePaymentType(state: State) {
-        val value = state.order.payByCache
-        dispatch(Message.UpdateOrder(state.order.copy(payByCache = !value)))
-    }
-
-    private fun onClickChangeDeliveryWay(state: State) {
-        val value = state.order.isDelivery
-        dispatch(
-            Message.UpdateOrder(
-                state.order.copy(
-                    isDelivery = !value,
-                    payByCache = value
-                )
-            )
-        )
-    }
-
     private fun updateState(items: List<ShopItemCart>, state: State) {
         if (items.isEmpty()) {
             publish(Label.GoBack)
         } else {
-            dispatch(Message.UpdateOrder(mapOrder(items, state)))
-            dispatch(Message.UpdateItemsInCart(items))
-        }
-    }
-
-    private fun mapOrder(items: List<ShopItemCart>, state: State): State.Order {
-
-        val totalCost = items.sumOf { item ->
-            item.numberPrice * item.count
-        }
-
-        val itemsCount = items.sumOf {
-            it.count
-        }.toString()
-
-        val value = state.order.copy(
-            itemsCount = itemsCount,
-            totalCost = totalCost.formatPrice(),
-            discount = calculateTotalDiscount(items)
-        )
-        return value
-    }
-
-    private fun calculateTotalDiscount(cart: List<ShopItemCart>): String {
-            var totalDiscount = 0
-            for (item in cart) {
-                if (item.numberPreviousPrice != null && item.numberPreviousPrice > item.numberPrice) {
-                    val discountPerItem = item.numberPreviousPrice - item.numberPrice
-                    totalDiscount += discountPerItem * item.count
-                }
+            scope.launch {
+               dispatch(Message.UpdateCreateOrderAvailable(
+                   repository.createOrderIsAvailable().isAvailable())
+               )
             }
-            return if (totalDiscount <= 0) "" else totalDiscount.toString()
+            dispatch(Message.UpdateItemsInCart(items = items, itemsCount = items.sumOf { it.count }))
+        }
     }
 
 }

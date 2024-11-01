@@ -38,8 +38,23 @@ class AuthorizedProfileRepositoryBase(
         val (user, members, registers) = coroutineScope {
             val user = auth.auth().getOrThrow()
             val token = auth.updateToken().getOrThrow()
-            val deferredMembers = async { remote.memberTemplate(user.id, token) }
-            val deferredRegisters = async { remote.userRegistries(user.id, token) }
+            val deferredMembers = async {
+                runCatching {
+                    remote.memberTemplate(user.id, token).rows
+                }.fold(onSuccess = {
+                    it
+                }, onFailure = {
+                    emptyList()
+                })
+
+            }
+            val deferredRegisters = async {
+                runCatching { remote.userRegistries(user.id, token) }.fold(onSuccess = {
+                    it
+                }, onFailure = {
+                    emptyList()
+                })
+            }
             Triple(user, deferredMembers.await(), deferredRegisters.await())
         }
         return mapper.map(user, registers, members)

@@ -22,6 +22,7 @@ class RootAuthFlowComponentBase(
     private val goProfile: () -> Unit,
     private val goBack: () -> Unit
 ) : RootAuthFlowComponent, ComponentContext by context {
+
     private val navigation = StackNavigation<RootAuthFlowComponent.Config>()
 
     private val koinContext = instanceKeeper.getOrCreate {

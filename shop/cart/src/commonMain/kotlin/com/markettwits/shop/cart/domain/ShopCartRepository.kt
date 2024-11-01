@@ -4,9 +4,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShopCartRepository{
 
+    suspend fun createOrderIsAvailable() : ShopCartResult
+
     suspend fun add(shopItemCart: ShopItemCart)
 
     suspend fun remove(shopItemCart: ShopItemCart)
+
+    suspend fun delete(shopItemCart: ShopItemCart)
 
     suspend fun fetchAll() : List<ShopItemCart>
 

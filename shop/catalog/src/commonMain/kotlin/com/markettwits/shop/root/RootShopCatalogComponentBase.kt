@@ -10,6 +10,7 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.getOrCreateKoinScope
+import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.shop.cart.di.shopCartModule
 import com.markettwits.shop.cart.domain.ShopItemCart
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
@@ -137,6 +138,14 @@ class RootShopCatalogComponentBase(
                     outputs = ShopOrderComponentOutputsImpl()
                 )
             )
+
+            is RootShopCatalogComponent.Config.AuthFlow -> RootShopCatalogComponent.Child.AuthFlow(
+                RootAuthFlowComponentBase(
+                    context = componentContext,
+                    goBack = stackNavigation::pop,
+                    goProfile = stackNavigation::pop
+                )
+            )
         }
 
     private fun createShopFilterComponent(componentContext: ComponentContext) : ShopFilterComponent =
@@ -204,6 +213,10 @@ class RootShopCatalogComponentBase(
     }
 
     private inner class ShopCartComponentOutputsImpl : ShopCartComponent.Outputs {
+        override fun goAuth() {
+            stackNavigation.push(RootShopCatalogComponent.Config.AuthFlow)
+        }
+
         override fun goBack() = stackNavigation.pop()
 
         override fun goShopItem(shopItemCart: ShopItemCart) {

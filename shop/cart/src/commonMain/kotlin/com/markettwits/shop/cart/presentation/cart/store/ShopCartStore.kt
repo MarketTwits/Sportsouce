@@ -10,35 +10,29 @@ interface ShopCartStore : Store<Intent, State, Label> {
 
     data class State(
         val items : List<ShopItemCart> = emptyList(),
-        val order : Order = Order(),
-    ){
-        data class Order(
-            val payByCache : Boolean = false,
-            val isDelivery : Boolean = false,
-            val itemsCount : String = "",
-            val totalCost : String = "",
-            val discount : String = ""
-        )
-    }
+        val itemsCount : Int = 0,
+        val isAvailable: Boolean = false,
+    )
 
     sealed interface Intent{
+        data class OnClickDelete(val item: ShopItemCart) : Intent
         data class OnClickIncrease(val item : ShopItemCart) : Intent
         data class OnClickDecrease(val item : ShopItemCart) : Intent
         data class OnClickItem(val item : ShopItemCart) : Intent
         data object OnClickGoBack : Intent
-        data object OnClickChangePaymentType : Intent
-        data object OnClickChangeDeliveryWay : Intent
+        data object OnClickGoAuth : Intent
         data object OnClickCreateOrder : Intent
         data object Init : Intent
     }
 
     sealed interface Message{
-        data class UpdateItemsInCart(val items : List<ShopItemCart>) : Message
-        data class UpdateOrder(val order: State.Order) : Message
+        data class UpdateItemsInCart(val items : List<ShopItemCart>,val itemsCount : Int) : Message
+        data class UpdateCreateOrderAvailable(val boolean: Boolean) : Message
     }
 
     sealed interface Label{
         data object GoBack : Label
+        data object GoAuth : Label
         data class GoOrderScreen(val items : List<ShopItemCart>) : Label
         data class GoToShopItem(val shopItemCart: ShopItemCart) : Label
     }

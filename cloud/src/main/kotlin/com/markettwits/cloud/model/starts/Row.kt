@@ -11,7 +11,6 @@ import kotlinx.serialization.Serializable
 data class Row(
     val afishaLinkFile: String?,
     val afisha_link: String?,
-    val age_counting: String,
     val archive_start_code: Int?,
     val city: City?,
     val city_id: Int?,
@@ -52,7 +51,7 @@ data class Row(
     val search_service: String?,
     val season: Season?,
     val season_id: Int?,
-    val select_kinds_sport: String,
+   // val select_kinds_sport: String?,
     val serial_number: String?,
     val short_name: String,
     val slug: String?,

@@ -9,15 +9,16 @@ import com.markettwits.cloud_shop.model.order.request.ShopOrderItem
 import com.markettwits.core_ui.items.result.flatMapCallback
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.shop.order.domain.ShopOrderRepository
+import com.markettwits.shop.order.domain.model.ShopRecipient
 
 class ShopOrderRepositoryBase(
     private val shopService: SportSauceShopApi,
-    private val authService : AuthDataSource
+    private val authService: AuthDataSource
 ) : ShopOrderRepository {
 
     override suspend fun createOrder() {
 
-        val user = authService.userID().getOrThrow()
+        val user = authService.sharedUser().getOrThrow()
 
         val items = mutableMapOf<String, Int>()
 
@@ -26,15 +27,20 @@ class ShopOrderRepositoryBase(
         }
 
         CreateShopOrderRequest(
-            userId = user,
+            userId = user.id,
             items = request.map {
-                ShopOrderItem(
-                    it.product,
-                    items[it.product.id] ?: throw NoSuchElementException()
-                )
+                ShopOrderItem(it.product, items[it.product.id] ?: throw NoSuchElementException())
             },
             paymentMethod = PaymentMethod.ONLINE,
             deliveryMethod = DeliveryMethod.PICKUP
+        )
+    }
+
+    override suspend fun getUserInfo(): ShopRecipient {
+        val user = authService.sharedUser().getOrThrow()
+        return ShopRecipient(
+            user.name,
+            user.phone
         )
     }
 }

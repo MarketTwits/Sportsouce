@@ -9,6 +9,6 @@ interface AuthorizedProfileMapper {
     fun map(
         user: User,
         userRegistries: List<RemoteStartsUserItem>,
-        userMembers: ProfileMembers
+        userMembers: List<ProfileMembers.ProfileMember>
     ): UserProfile
 }

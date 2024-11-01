@@ -18,11 +18,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +45,7 @@ import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.shop.cart.domain.ShopItemCart
 
 @Composable
@@ -47,6 +54,7 @@ internal fun ShopCartItem(
     shopCartItemCart: ShopItemCart,
     onClickIncrease: (ShopItemCart) -> Unit,
     onClickDecrease: (ShopItemCart) -> Unit,
+    onClickDelete : (ShopItemCart) -> Unit,
     onItemClick: (ShopItemCart) -> Unit,
 ) {
     Row(modifier = modifier
@@ -58,13 +66,15 @@ internal fun ShopCartItem(
         }) {
         ImageCard(
             modifier = Modifier
+                .weight(0.4f)
                 .padding(2.dp),
             image = shopCartItemCart.item.visual.imageUrl.firstOrNull() ?: "",
         )
-        Column {
+        Column(
+            modifier = Modifier.weight(0.7f)
+        ) {
             ShowCardPrice(
-                modifier = Modifier
-                    .padding(4.dp),
+                modifier = Modifier.padding(4.dp),
                 currentPrice = shopCartItemCart.item.price.currentPrice,
                 previousPrice = shopCartItemCart.item.price.previousPrice,
                 quantity = shopCartItemCart.item.quantity,
@@ -76,8 +86,40 @@ internal fun ShopCartItem(
                 onClickIncrease = { onClickIncrease(shopCartItemCart) }
             )
         }
+        Column(
+            modifier = Modifier.weight(0.1f)
+        ) {
+
+            var expanded by rememberSaveable { mutableStateOf(false) }
+
+            val intentAction  = rememberIntentActionByPlatform()
+
+            IconButton(
+                onClick = { expanded = true }
+            ) {
+                Icon(
+                    modifier = Modifier.padding(4.dp),
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "moreVert",
+                    tint = MaterialTheme.colorScheme.outline
+                )
+            }
+            ShopCartDropDownMenu(
+                expanded = expanded,
+                onClickDismiss = { expanded = false },
+                onClickDeleteItem = {
+                    onClickDelete(shopCartItemCart)
+                }, onClickShare = {
+                    intentAction.sharePlainText(shopCartItemCart.item.fullPathUrl)
+                },
+                onClickCopyArticul = {
+                    intentAction.copyToSystemBuffer(shopCartItemCart.item.fullPathUrl)
+                }
+            )
+        }
     }
 }
+
 
 @Composable
 private fun ImageCard(
@@ -101,8 +143,10 @@ private fun ImageCard(
                 Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
             },
             error = {
-                Box(modifier = Modifier
-                    .fillMaxSize()){
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
                     Icon(
                         modifier = Modifier
                             .size(40.dp)
@@ -126,7 +170,7 @@ private fun ShowCardPrice(
     modifier: Modifier,
     currentPrice: String,
     previousPrice: String?,
-    quantity : Int,
+    quantity: Int,
     title: String,
 ) {
     Column(
@@ -171,7 +215,7 @@ private fun ShowCardPrice(
             fontSize = 12.sp,
             fontFamily = FontNunito.semiBoldBold(),
         )
-        if (quantity < 10){
+        if (quantity < 10) {
             Text(
                 text = "Осталось всего $quantity товаров на складе",
                 color = MaterialTheme.colorScheme.error,
@@ -185,7 +229,6 @@ private fun ShowCardPrice(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun SubscriptionCounter(
     modifier: Modifier = Modifier,
@@ -239,7 +282,7 @@ private fun SubscriptionCounter(
         Box(
             modifier = Modifier
                 .clickable(onClick = onClickIncrease)
-                .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd =8.dp))
+                .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
         ) {
             Text(
                 modifier = Modifier

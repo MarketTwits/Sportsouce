@@ -3,6 +3,7 @@ package com.markettwits.shop.root
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.profile.api.root.RootAuthFlowComponent
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import com.markettwits.shop.cart.presentation.page.component.ShopCartPageComponent
@@ -22,6 +23,9 @@ interface RootShopCatalogComponent : ComponentContext {
 
     @Serializable
     sealed interface Config {
+
+        @Serializable
+        data object AuthFlow : Config
 
         @Serializable
         data object ShopCatalog : Config
@@ -63,5 +67,7 @@ interface RootShopCatalogComponent : ComponentContext {
         data class ShopCart(val component : ShopCartComponent) : Child
 
         data class ShopOrder(val component : ShopCreateOrderComponent) : Child
+
+        data class AuthFlow(val component : RootAuthFlowComponent) : Child
     }
 }

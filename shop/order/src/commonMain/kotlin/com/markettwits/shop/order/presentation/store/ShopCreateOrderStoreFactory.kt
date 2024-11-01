@@ -6,11 +6,15 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Intent
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.markettwits.shop.cart.domain.ShopItemCart
+import com.markettwits.shop.order.domain.ShopOrderRepository
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Label
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.State
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Message
 
-class ShopCreateOrderStoreFactory(private val storeFactory: StoreFactory) {
+class ShopCreateOrderStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val repository: ShopOrderRepository
+) {
 
     fun create(items : List<ShopItemCart>): ShopCreateOrderStore = ShopCreateOrderStoreImpl(items)
 
@@ -20,7 +24,7 @@ class ShopCreateOrderStoreFactory(private val storeFactory: StoreFactory) {
             name = "ShopCreateOrderStore",
             initialState = ShopCreateOrderStore.DEFAULT_SHOP_ORDER_STATE.copy(shopOrderItems = items),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { ShopCreateOrderExecutor() },
+            executorFactory = { ShopCreateOrderExecutor(repository) },
             reducer = ShopCreateOrderReducer
         )
 }

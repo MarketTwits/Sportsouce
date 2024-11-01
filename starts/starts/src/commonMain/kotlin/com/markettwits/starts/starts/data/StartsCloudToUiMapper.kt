@@ -18,13 +18,11 @@ interface StartsCloudToUiMapper {
         private val startsCloudToListMapper: StartsCloudToListMapper
     ) : StartsCloudToUiMapper {
 
-        override fun map(exception: Throwable): StartsUiState {
-            return StartsUiState.Failed(exception.message ?: "")
-        }
+        override fun map(exception: Throwable): StartsUiState =
+             StartsUiState.Failed(exception.message ?: "")
 
-        override fun mapSuccess(items: List<List<StartsListItem>>): StartsUiState {
-            return StartsUiState.Success(items)
-        }
+        override fun mapSuccess(items: List<List<StartsListItem>>): StartsUiState =
+             StartsUiState.Success(items)
 
         override fun mapAll(vararg items: List<Row>): StartsUiState {
             val resultLists = items.map { list ->

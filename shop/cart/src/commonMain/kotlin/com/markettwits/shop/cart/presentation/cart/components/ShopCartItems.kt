@@ -22,6 +22,7 @@ internal fun LazyListScope.ShopCartItems(
     onClickItem: (ShopItemCart) -> Unit,
     onClickIncrease: (ShopItemCart) -> Unit,
     onClickDecrease: (ShopItemCart) -> Unit,
+    onClickDelete : (ShopItemCart) -> Unit,
 ) {
     items(items, key = {it.item.id}) {
         AnimationBox(key = it.item.id){
@@ -30,7 +31,8 @@ internal fun LazyListScope.ShopCartItems(
                 shopCartItemCart = it,
                 onItemClick = onClickItem,
                 onClickIncrease = onClickIncrease,
-                onClickDecrease = onClickDecrease
+                onClickDecrease = onClickDecrease,
+                onClickDelete = onClickDelete
             )
         }
     }

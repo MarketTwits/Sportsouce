@@ -28,7 +28,7 @@ internal fun ShopOrderPriceContent(
     discount: String,
     totalCost: String
 ) {
-    ShopBasicSectorContent(modifier = modifier,title = "Ваш заказ"){
+    ShopBasicSectorContent(modifier = modifier, title = "Ваш заказ") {
         Column(modifier = Modifier.padding(10.dp)) {
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
@@ -40,48 +40,14 @@ internal fun ShopOrderPriceContent(
                 color = Color.LightGray
             )
             DiscountRow(title = "Скидка :", value = discount)
-            Row(
-                modifier = Modifier
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Итого : ",
-                    fontSize = 20.sp,
-                    fontFamily = FontNunito.bold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                AnimatedContent(
-                    targetState = totalCost,
-                    transitionSpec = {
-                        if (targetState > initialState) {
-                            slideInVertically { -it } togetherWith slideOutVertically { it }
-                        } else {
-                            slideInVertically { it } togetherWith slideOutVertically { -it }
-                        }
-                    }
-                ) { value ->
-                    Text(
-                        text = "$value ₽",
-                        fontSize = 20.sp,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
-
+            TotalRow(totalCost = totalCost)
         }
-        }
-
+    }
 }
 
 @Composable
 private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: String) {
-    AnimatedVisibility(visible = value.isNotEmpty()) {
+    AnimatedVisibility(visible = value.isNotEmpty() && value != "0") {
         Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
                 modifier = Modifier.padding(vertical = 10.dp),
@@ -101,6 +67,46 @@ private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: Str
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = SportSouceColor.SportSouceLightRed
+            )
+        }
+    }
+}
+
+@Composable
+private fun TotalRow(
+    modifier: Modifier = Modifier,
+    totalCost: String,
+) {
+    Row(
+        modifier = modifier
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Итого : ",
+            fontSize = 20.sp,
+            fontFamily = FontNunito.bold(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
+        AnimatedContent(
+            targetState = totalCost,
+            transitionSpec = {
+                if (targetState > initialState) {
+                    slideInVertically { -it } togetherWith slideOutVertically { it }
+                } else {
+                    slideInVertically { it } togetherWith slideOutVertically { -it }
+                }
+            }
+        ) { value ->
+            Text(
+                text = "$value ₽",
+                fontSize = 20.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

@@ -52,14 +52,14 @@ private fun ShopOrderCompositionItem(
             modifier = Modifier.padding(vertical = 4.dp),
             text = "$itemCount товар(а)",
             fontSize = 12.sp,
-            fontFamily = FontNunito.bold(),
+            fontFamily = FontNunito.medium(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.outline
         )
         AsyncImage(
             modifier = Modifier
-                .size(40.dp)
+                .size(60.dp)
                 .clip(Shapes.medium),
             model = imageUrl,
             contentDescription = null
@@ -68,10 +68,10 @@ private fun ShopOrderCompositionItem(
             modifier = Modifier.padding(vertical = 4.dp),
             text = "$totalPrice ₽",
             fontSize = 12.sp,
-            fontFamily = FontNunito.bold(),
+            fontFamily = FontNunito.medium(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.outline
         )
     }
 }

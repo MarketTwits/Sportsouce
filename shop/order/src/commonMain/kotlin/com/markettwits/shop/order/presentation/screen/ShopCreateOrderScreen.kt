@@ -16,6 +16,7 @@ fun ShopCreateOrderScreen(
     val state by component.state.collectAsState()
 
     ShopCreateOrderContent(
+        modifier = modifier,
         state = state,
         onClickDeliveryType = {
             component.obtainEvent(ShopCreateOrderStore.Intent.OnClickChangeDeliveryType(it))
@@ -25,6 +26,13 @@ fun ShopCreateOrderScreen(
         },
         onClickGoBack = {
             component.obtainEvent(ShopCreateOrderStore.Intent.OnClickGoBack)
+        },
+        onClickCreateOrder = {
+            component.obtainEvent(ShopCreateOrderStore.Intent.OnClickCreateOrder)
+        },
+        onChangeRecipient = {
+            component.obtainEvent(ShopCreateOrderStore.Intent.OnClickChangeRecipient(it))
         }
+
     )
 }

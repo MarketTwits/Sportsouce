@@ -30,6 +30,8 @@ interface ShopCreateOrderStore : Store<Intent, State, Label> {
         data object OnClickGoBack : Intent
         data class OnClickChangeDeliveryType(val deliveryType: ShopDeliveryType) : Intent
         data class OnClickChangePaymentType(val paymentType: ShopPaymentType) : Intent
+        data class OnClickChangeRecipient(val recipient: ShopRecipient) : Intent
+        data object OnClickCreateOrder : Intent
     }
 
     sealed interface Message{

@@ -24,6 +24,10 @@ class ShopCreateOrderExecutor(
             }
             is Intent.OnClickChangePaymentType -> onClickChangePaymentType(getState(),intent.paymentType)
             is Intent.OnClickGoBack -> publish(Label.GoBack)
+            is Intent.OnClickCreateOrder -> {
+                //TODO
+            }
+            is Intent.OnClickChangeRecipient -> onClickUpdateRecipient(getState(),intent.recipient)
         }
     }
 

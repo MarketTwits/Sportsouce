@@ -9,6 +9,7 @@ import com.markettwits.shop.order.domain.ShopOrderRepository
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
 import com.markettwits.shop.order.domain.model.ShopOrderPrice
 import com.markettwits.shop.order.domain.model.ShopPaymentType
+import com.markettwits.shop.order.domain.model.ShopRecipient
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Intent
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Label
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Message
@@ -35,6 +36,11 @@ abstract class ShopCreateOrderExecutorHandler(
             )
         )
     }
+
+    protected fun onClickUpdateRecipient(state : State, recipient: ShopRecipient){
+        dispatch(Message.UpdateOrderState(state.copy(shopRecipient = recipient)))
+    }
+
 
     protected fun obtainShopOrderPrice(state: State){
         val price = ShopOrderPrice(

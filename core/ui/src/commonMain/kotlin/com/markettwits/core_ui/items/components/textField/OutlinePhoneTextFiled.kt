@@ -35,7 +35,7 @@ fun OutlinePhoneTextFiled(
     ),
     onValueChange: (String) -> Unit
 ) {
-    var texts by remember { mutableStateOf(removeSpecialCharacters(value)) }
+    var texts by remember { mutableStateOf(mapFullRuPhoneNumberToSimple(value)) }
     OutlinedTextFieldBase(
         modifier = modifier,
         label = label,
@@ -93,7 +93,7 @@ class MaskVisualTransformation(private val mask: String) : VisualTransformation 
     }
 }
 
-private fun removeSpecialCharacters(input: String): String {
+fun mapFullRuPhoneNumberToSimple(input: String): String {
     var cleanedNumber = input
         .replace("(", "")
         .replace(")", "")
@@ -104,6 +104,13 @@ private fun removeSpecialCharacters(input: String): String {
         cleanedNumber = cleanedNumber.substring(1)
     }
     return cleanedNumber
+}
+
+fun mapSimpleRuPhoneNumberToFull(input: String) : String{
+    val formattedNumber = input
+        .replaceFirst("^(\\d{1})(\\d{3})(\\d{3})(\\d{2})(\\d{2})$"
+            .toRegex(), "+$1 ($2) $3-$4-$5")
+    return formattedNumber
 }
 
 object NumberDefaults {

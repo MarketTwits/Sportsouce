@@ -12,11 +12,14 @@ kotlin {
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
+            implementation(projects.core.errors)
             implementation(projects.shop.cloud)
             implementation(projects.shop.cart)
             implementation(projects.core.ui)
             implementation(projects.shop.domain)
             implementation(projects.coreKoin)
+            implementation(projects.intent.api)
+            implementation(projects.intent.impl)
             implementation(projects.auth.authService)
         }
     }

@@ -1,7 +1,6 @@
 package com.markettwits.shop.cart.presentation.cart.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -27,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -80,8 +80,9 @@ internal fun ShopCartItem(
                 quantity = shopCartItemCart.item.quantity,
                 title = shopCartItemCart.item.visual.displayName
             )
-            SubscriptionCounter(
-                monthOfCount = shopCartItemCart.count,
+            ShopItemCounter(
+                itemCount = shopCartItemCart.count,
+                isIncreaseAvailable = shopCartItemCart.isIncreaseAvailable(),
                 onClickDecrease = { onClickDecrease(shopCartItemCart) },
                 onClickIncrease = { onClickIncrease(shopCartItemCart) }
             )
@@ -230,9 +231,10 @@ private fun ShowCardPrice(
 }
 
 @Composable
-private fun SubscriptionCounter(
+private fun ShopItemCounter(
     modifier: Modifier = Modifier,
-    monthOfCount: Int,
+    itemCount: Int,
+    isIncreaseAvailable : Boolean,
     onClickIncrease: () -> Unit,
     onClickDecrease: () -> Unit
 ) {
@@ -257,11 +259,11 @@ private fun SubscriptionCounter(
                 text = "–",
                 fontSize = 25.sp,
                 fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.secondary
+                color = rememberCounterOperatorColor(true)
             )
         }
         AnimatedContent(
-            targetState = monthOfCount,
+            targetState = itemCount,
             transitionSpec = {
                 if (targetState > initialState) {
                     slideInVertically { -it } togetherWith slideOutVertically { it }
@@ -292,8 +294,16 @@ private fun SubscriptionCounter(
                 text = "+",
                 fontSize = 25.sp,
                 fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.secondary
+                color = rememberCounterOperatorColor(isIncreaseAvailable)
             )
         }
     }
 }
+
+@Composable
+internal fun rememberCounterOperatorColor(
+    isAvailable : Boolean
+) : Color = if (isAvailable)
+    MaterialTheme.colorScheme.secondary
+else
+    MaterialTheme.colorScheme.outline

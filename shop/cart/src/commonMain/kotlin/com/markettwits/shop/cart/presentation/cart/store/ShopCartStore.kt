@@ -26,7 +26,7 @@ interface ShopCartStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message{
-        data class UpdateItemsInCart(val items : List<ShopItemCart>,val itemsCount : Int) : Message
+       data class UpdateItemsInCart(val items : List<ShopItemCart>,val itemsCount : Int) : Message
         data class UpdateCreateOrderAvailable(val boolean: Boolean) : Message
     }
 

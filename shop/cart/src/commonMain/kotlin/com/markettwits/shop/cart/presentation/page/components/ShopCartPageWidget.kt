@@ -21,14 +21,18 @@ fun ShopCartItemWidget(
                 onClickAddToCart = component::onClickAddToCart
             )
         is ShopCartPageComponent.State.InCart ->
-            ShopCartItemExpanded(
-                modifier = modifier,
-                countInCart = (state as ShopCartPageComponent.State.InCart).count.toInt(),
-                quantity = (state as ShopCartPageComponent.State.InCart).quantity,
-                onClickCart = component::onClickCart,
-                onClickRemoveFromCart = component::onClickRemove,
-                onClickAddToCart = component::onClickAddToCart
-            )
+            state.apply {
+                ShopCartItemExpanded(
+                    modifier = modifier,
+                    countInCart = (state as ShopCartPageComponent.State.InCart).count.toInt(),
+                    quantity = (state as ShopCartPageComponent.State.InCart).quantity,
+                    isIncreaseAvailable = (state as ShopCartPageComponent.State.InCart).isIncreaseAvailable,
+                    onClickCart = component::onClickCart,
+                    onClickRemoveFromCart = component::onClickRemove,
+                    onClickAddToCart = component::onClickAddToCart
+                )
+            }
+
     }
 
 }

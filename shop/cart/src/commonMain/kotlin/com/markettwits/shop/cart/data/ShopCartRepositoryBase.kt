@@ -1,28 +1,20 @@
 package com.markettwits.shop.cart.data
 
 import com.markettwits.cahce.InStorageListCache
-import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.shop.cart.domain.ShopCartRepository
-import com.markettwits.shop.cart.domain.ShopCartResult
 import com.markettwits.shop.cart.domain.ShopItemCart
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 internal class ShopCartRepositoryBase(
     private val cacheDataSource : InStorageListCache<ShopItemCart>,
-    private val cloudDataSource : SportSauceShopApi,
     private val authDataSource: AuthDataSource
 ) : ShopCartRepository {
-    override suspend fun createOrderIsAvailable(): ShopCartResult =
-        authDataSource.sharedUser().fold(onSuccess = {
-            ShopCartResult.Available
-        }, onFailure = {
-            ShopCartResult.UnAvailable
-        })
+
+    override suspend fun createOrderAvailable(): Result<Unit> = runCatching {
+        authDataSource.sharedUser().getOrThrow()
+    }
 
     override suspend fun add(shopItemCart: ShopItemCart) {
         cacheDataSource.update {

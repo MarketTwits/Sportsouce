@@ -1,4 +1,4 @@
-package com.markettwits.shop.order.presentation.components
+package com.markettwits.shop.order.presentation.components.delivery
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

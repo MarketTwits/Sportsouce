@@ -26,6 +26,7 @@ interface RootReviewComponent {
 
     @Serializable
     sealed interface Config {
+
         @Serializable
         data object Review : Config
 

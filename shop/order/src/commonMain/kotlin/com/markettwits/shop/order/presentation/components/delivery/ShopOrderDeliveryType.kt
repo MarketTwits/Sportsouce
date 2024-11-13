@@ -1,4 +1,4 @@
-package com.markettwits.shop.order.presentation.components
+package com.markettwits.shop.order.presentation.components.delivery
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
+import com.markettwits.shop.order.presentation.components.common.ShopBasicSectorContent
 
 
 @Composable

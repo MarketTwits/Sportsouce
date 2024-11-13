@@ -38,7 +38,6 @@ fun RootReviewScreen(component: RootReviewComponent) {
                     }
                 }
             )
-
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
             is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)

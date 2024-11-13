@@ -37,20 +37,6 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 
-//@Composable
-//internal fun ShopCartOrder(
-//    modifier: Modifier = Modifier,
-//    itemsCount: String,
-//    isCreateOrderAvailable: Boolean,
-//    onClickChangePaymentType: () -> Unit,
-//    onClickChangeDeliveryWay : () -> Unit,
-//    onClickCreateOrder: () -> Unit,
-//) {
-//    Column(modifier = modifier) {
-//
-//        CreateOrderButton(onClickCreateOrder = onClickCreateOrder, isAvailable = isCreateOrderAvailable)
-//    }
-//}
 
 @Composable
 private fun OrderContent(

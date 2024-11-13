@@ -35,6 +35,7 @@ import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.shop.cart.presentation.cart.components.rememberCounterOperatorColor
 
 @Composable
 internal fun ShopCartItemEmpty(
@@ -67,6 +68,7 @@ internal fun ShopCartItemExpanded(
     modifier: Modifier = Modifier,
     countInCart: Int,
     quantity: Int,
+    isIncreaseAvailable : Boolean,
     onClickCart: () -> Unit,
     onClickAddToCart: () -> Unit,
     onClickRemoveFromCart: () -> Unit
@@ -120,6 +122,7 @@ internal fun ShopCartItemExpanded(
                 modifier = Modifier.weight(0.5f),
                 countInCart = countInCart,
                 quantity = quantity,
+                isIncreaseAvailable = isIncreaseAvailable,
                 onClickDecrease = onClickRemoveFromCart,
                 onClickIncrease = onClickAddToCart
             )
@@ -132,6 +135,7 @@ private fun SubscriptionCounter(
     modifier: Modifier = Modifier,
     countInCart: Int,
     quantity: Int,
+    isIncreaseAvailable : Boolean,
     onClickIncrease: () -> Unit,
     onClickDecrease: () -> Unit
 ) {
@@ -204,7 +208,7 @@ private fun SubscriptionCounter(
                 text = "+",
                 fontSize = 38.sp,
                 fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.secondary
+                color = rememberCounterOperatorColor(isIncreaseAvailable)
             )
         }
     }

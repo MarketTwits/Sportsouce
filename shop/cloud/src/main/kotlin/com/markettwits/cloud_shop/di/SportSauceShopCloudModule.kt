@@ -23,7 +23,7 @@ val sportSauceShopCloudModule = module {
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
                 clientEngine = OkHttp.create(),
-                baseUrl = devBaseUrl
+                baseUrl = baseUrl
             ),
             isLoggerEnabled = true //FIXME fetch from BuildConfig
         )
@@ -34,7 +34,7 @@ val sportSauceShopCloudModule = module {
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
                 clientEngine = OkHttp.create(),
-                baseUrl = devBaseUrl
+                baseUrl = baseUrl
             ),
             isLoggerEnabled = true //FIXME fetch from BuildConfig
         )

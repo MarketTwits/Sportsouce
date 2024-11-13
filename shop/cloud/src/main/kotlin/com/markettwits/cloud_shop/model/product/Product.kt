@@ -16,6 +16,7 @@ data class Product(
     val createdAt: String,
     val description: String,
     val discountPrice: Int?,
+    val purchasePrice : Double? = null,
     val id: String,
     val images: List<Image>? = null,
     val isHidden: Boolean,

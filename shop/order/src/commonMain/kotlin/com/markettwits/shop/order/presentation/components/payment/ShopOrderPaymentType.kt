@@ -1,4 +1,4 @@
-package com.markettwits.shop.order.presentation.components
+package com.markettwits.shop.order.presentation.components.payment
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke

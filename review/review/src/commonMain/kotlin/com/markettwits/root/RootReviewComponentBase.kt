@@ -36,6 +36,7 @@ import com.markettwits.start_search.root.RootStartsSearchComponentBase
 
 class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     ComponentContext by context {
+
     private val navigation = StackNavigation<RootReviewComponent.Config>()
     private val slotNavigation = SlotNavigation<RootReviewComponent.ConfigSlot>()
 

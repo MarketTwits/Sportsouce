@@ -2,45 +2,70 @@ package com.markettwits.shop.order.data
 
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.cloud_shop.api.SportSauceShopOrderApi
-import com.markettwits.cloud_shop.model.order.request.CreateShopOrderRequest
-import com.markettwits.cloud_shop.model.order.request.DeliveryMethod
-import com.markettwits.cloud_shop.model.order.request.PaymentMethod
-import com.markettwits.cloud_shop.model.order.request.ShopOrderItem
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.cloud_shop.model.order.response.CreateShopOrderResponse
 import com.markettwits.profile.api.AuthDataSource
+import com.markettwits.shop.cart.domain.ShopItemCart
+import com.markettwits.shop.order.data.mapper.mapCheckOrderRequest
+import com.markettwits.shop.order.data.mapper.mapCreateOrderRequest
+import com.markettwits.shop.order.data.mapper.mapCreateShopOrderResult
 import com.markettwits.shop.order.domain.ShopOrderRepository
+import com.markettwits.shop.order.domain.model.ShopDeliveryType
+import com.markettwits.shop.order.domain.model.ShopItemOrderResult
+import com.markettwits.shop.order.domain.model.ShopOrderResult
+import com.markettwits.shop.order.domain.model.ShopPaymentType
 import com.markettwits.shop.order.domain.model.ShopRecipient
 
 class ShopOrderRepositoryBase(
-    private val shopService: SportSauceShopApi,
+    private val shopServiceProductApi: SportSauceShopApi,
+    private val shopServiceOrderApi: SportSauceShopOrderApi,
     private val authService: AuthDataSource
 ) : ShopOrderRepository {
 
-    override suspend fun createOrder() {
+    override suspend fun createOrder(
+        deliveryType: ShopDeliveryType,
+        paymentType: ShopPaymentType,
+        shopItems: List<ShopItemCart>,
+        recipient: ShopRecipient
+    ): Result<ShopOrderResult> = runCatching {
 
         val user = authService.sharedUser().getOrThrow()
 
-        val items = mutableMapOf<String, Int>()
+        val token = authService.updateToken().getOrThrow()
 
-        val request = items.map {
-            shopService.product(it.key)
+        val cloudItems = shopItems.map {
+            shopServiceProductApi.product(it.item.id)
         }
 
-        CreateShopOrderRequest(
+        val request = mapCreateOrderRequest(
             userId = user.id,
-            items = request.map {
-                ShopOrderItem(it.product, items[it.product.id] ?: throw NoSuchElementException())
-            },
-            paymentMethod = PaymentMethod.ONLINE,
-            deliveryMethod = DeliveryMethod.PICKUP
+            products = cloudItems,
+            orderProducts = shopItems,
+            paymentType = paymentType,
+            deliveryType = deliveryType
         )
+
+        shopServiceOrderApi.createOrder(
+            request = request,
+            token = token
+        ).mapCreateShopOrderResult()
     }
+
+    override suspend fun checkOrder(shopItems: List<ShopItemCart>) : Result<List<ShopItemOrderResult>> = runCatching {
+        val token = authService.updateToken().getOrThrow()
+        shopServiceOrderApi.checkOrder(
+            request = shopItems.mapCheckOrderRequest {
+                shopServiceProductApi.product(it)
+            },
+            token = token
+        ).mapCheckOrderRequest(shopItems)
+    }
+
 
     override suspend fun getUserInfo(): ShopRecipient {
         val user = authService.sharedUser().getOrThrow()
         return ShopRecipient(
-            user.name,
-            user.phone
+            name = user.name,
+            phone = user.phone
         )
     }
 }

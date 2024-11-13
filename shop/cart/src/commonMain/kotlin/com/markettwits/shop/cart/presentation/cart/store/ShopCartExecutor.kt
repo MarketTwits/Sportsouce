@@ -3,7 +3,6 @@ package com.markettwits.shop.cart.presentation.cart.store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.shop.cart.domain.ShopCartRepository
 import com.markettwits.shop.cart.domain.ShopItemCart
-import com.markettwits.shop.cart.domain.formatPrice
 import com.markettwits.shop.cart.presentation.cart.store.ShopCartStore.Intent
 import com.markettwits.shop.cart.presentation.cart.store.ShopCartStore.Label
 import com.markettwits.shop.cart.presentation.cart.store.ShopCartStore.State
@@ -30,22 +29,22 @@ internal class ShopCartExecutor(
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
+        updateCreateOrderAvailable()
         repository.observe().onEach {
             updateState(it, getState())
         }.launchIn(scope)
     }
 
-    private fun onClickDelete(itemCart: ShopItemCart){
+    private fun onClickDelete(itemCart: ShopItemCart) =
         scope.launch {
-            repository.remove(itemCart)
+            repository.delete(itemCart)
         }
-    }
 
-    private fun onClickDecrease(itemCart: ShopItemCart) {
+
+    private fun onClickDecrease(itemCart: ShopItemCart) =
         scope.launch {
             repository.remove(itemCart)
         }
-    }
 
     private fun onClickIncrease(itemCart: ShopItemCart) {
         if (itemCart.item.quantity > itemCart.count) {
@@ -55,17 +54,19 @@ internal class ShopCartExecutor(
         }
     }
 
+    private fun updateCreateOrderAvailable(){
+        scope.launch {
+            val result = repository.createOrderAvailable()
+            dispatch(Message.UpdateCreateOrderAvailable(result.isSuccess))
+        }
+    }
+
     private fun updateState(items: List<ShopItemCart>, state: State) {
         if (items.isEmpty()) {
             publish(Label.GoBack)
         } else {
-            scope.launch {
-               dispatch(Message.UpdateCreateOrderAvailable(
-                   repository.createOrderIsAvailable().isAvailable())
-               )
-            }
+
             dispatch(Message.UpdateItemsInCart(items = items, itemsCount = items.sumOf { it.count }))
         }
     }
-
 }

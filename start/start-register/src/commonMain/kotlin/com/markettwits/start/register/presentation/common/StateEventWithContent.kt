@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 /**
  * This [StateEventWithContent] can have exactly 2 states like the
- * [StateEvent] but the triggered state holds a value of type [T].
+ * [StateEventWithContent] but the triggered state holds a value of type [T].
  */
 @Serializable
 @Immutable

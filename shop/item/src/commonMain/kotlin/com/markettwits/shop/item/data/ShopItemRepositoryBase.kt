@@ -14,8 +14,7 @@ class ShopItemRepositoryBase(
     private val mapper: ShopPageItemMapper,
 ) : ShopItemRepository {
 
-    override suspend fun item(id: String): Result<Pair<ShopItem, List<ShopExtraOptions>>> =
-        runCatching {
+    override suspend fun item(id: String): Result<Pair<ShopItem, List<ShopExtraOptions>>> = runCatching {
             val cacheValue = cache.fetch(id)
             if (cacheValue != null) {
                 cacheValue

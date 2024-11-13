@@ -11,8 +11,7 @@ class ShopCartPageComponentBase(
     private val storeFactory: ShopCartPageStoreFactory,
     private val outputs : ShopCartPageComponent.Outputs,
     private val shopItemCart: ShopItemCart?
-) : ShopCartPageComponent,
-    ComponentContext by componentContext {
+) : ShopCartPageComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getOrCreate { storeFactory.create(shopItemCart) }
 

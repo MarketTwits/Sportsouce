@@ -1,4 +1,4 @@
-package com.markettwits.shop.order.presentation.components
+package com.markettwits.shop.order.presentation.components.price
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.shop.order.presentation.components.common.ShopBasicSectorContent
 
 @Composable
 internal fun ShopOrderPriceContent(
@@ -28,19 +29,21 @@ internal fun ShopOrderPriceContent(
     discount: String,
     totalCost: String
 ) {
-    ShopBasicSectorContent(modifier = modifier, title = "Ваш заказ") {
-        Column(modifier = Modifier.padding(10.dp)) {
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp),
-                text = "Товаров : ($itemsCount)",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = Color.LightGray
-            )
-            DiscountRow(title = "Скидка :", value = discount)
-            TotalRow(totalCost = totalCost)
+    if (totalCost != "0"){
+        ShopBasicSectorContent(modifier = modifier, title = "Ваш заказ") {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    text = "Товаров : ($itemsCount)",
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.bold(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.LightGray
+                )
+                DiscountRow(title = "Скидка :", value = discount)
+                TotalRow(totalCost = totalCost)
+            }
         }
     }
 }

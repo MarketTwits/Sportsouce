@@ -35,7 +35,9 @@ import com.markettwits.start.register.presentation.order.presentation.store.Orde
 
 @Composable
 fun StartOrderScreen(component: OrderComponentComponent) {
+
     val state by component.model.collectAsState()
+
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }

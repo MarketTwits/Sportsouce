@@ -1,6 +1,7 @@
 package com.markettwits.cloud_shop.api
 
 import com.markettwits.cloud_shop.model.categories.ChildrenItem
+import com.markettwits.cloud_shop.model.common.OptionInfo
 import com.markettwits.cloud_shop.model.option.OptionRemote
 import com.markettwits.cloud_shop.model.order.request.CreateShopOrderRequest
 import com.markettwits.cloud_shop.model.order.response.CreateShopOrderResponse
@@ -32,5 +33,5 @@ interface SportSauceShopApi {
 
     suspend fun product(uuid: String): ProductRemote
 
-    suspend fun productOption(): OptionRemote
+    suspend fun productOption(): List<OptionInfo>
 }

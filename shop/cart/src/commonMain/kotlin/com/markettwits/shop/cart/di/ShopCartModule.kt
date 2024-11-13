@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.InStorageListCache
 import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
 import com.markettwits.profile.api.authDataSourceModule
-import com.markettwits.shop.cart.data.ShopCartCache
+import com.markettwits.shop.cart.data.cache.ShopCartCache
 import com.markettwits.shop.cart.data.ShopCartRepositoryBase
 import com.markettwits.shop.cart.domain.ShopCartRepository
 import com.markettwits.shop.cart.presentation.cart.store.ShopCartStoreFactory

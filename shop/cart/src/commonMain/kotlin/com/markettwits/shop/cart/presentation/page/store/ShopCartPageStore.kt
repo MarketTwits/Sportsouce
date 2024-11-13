@@ -87,7 +87,8 @@ private class ShopCartPageStoreBase(
                 item.fold(onSuccess = {
                     state.value = ShopCartPageComponent.State.InCart(
                         count = it.count.toString(),
-                        quantity = it.item.quantity
+                        quantity = it.item.quantity,
+                        isIncreaseAvailable = it.isIncreaseAvailable()
                     )
                 }, onFailure = {
                     state.value = ShopCartPageComponent.State.Empty

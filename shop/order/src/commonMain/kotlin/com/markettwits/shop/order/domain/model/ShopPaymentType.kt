@@ -13,4 +13,8 @@ sealed interface ShopPaymentType {
         override fun isAvailable(shopDeliveryType: ShopDeliveryType): Boolean = true
     }
 
+    interface Factory{
+        fun getShopPaymentType(value : String) : ShopPaymentType
+    }
+
 }

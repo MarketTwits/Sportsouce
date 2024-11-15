@@ -19,6 +19,7 @@ import com.markettwits.core_ui.items.base_screen.FullImageScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.authorized.presentation.components.members.MyMembersCard
+import com.markettwits.profile.authorized.presentation.components.orders.MyOrdersCard
 import com.markettwits.profile.authorized.presentation.components.statistics.UserStartStatistic
 import com.markettwits.profile.authorized.presentation.components.statistics.userStatisticMapper
 import com.markettwits.profile.authorized.presentation.components.top_bar.ProfileTopBar
@@ -31,6 +32,7 @@ import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileSt
 fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
 
     val state by component.state.collectAsState()
+
     var fullImageState by rememberSaveable { mutableStateOf(false) }
 
     state.user?.let { user ->
@@ -65,6 +67,13 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                                 component.obtainEvent(
                                     AuthorizedProfileStore.Intent.OnClickUserSocialNetwork(it)
                                 )
+                            }
+                        )
+                    }
+                    item{
+                        MyOrdersCard(
+                            onClick = {
+                                component.obtainOutput(AuthorizedProfileComponent.Output.UserOrders)
                             }
                         )
                     }

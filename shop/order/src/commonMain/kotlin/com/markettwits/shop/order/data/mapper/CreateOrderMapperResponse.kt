@@ -40,6 +40,7 @@ private fun Order.toCreateShopOrderResultOrder(): ShopOrder {
         internalId = this.internalId,
         paidOnline = this.paidOnline,
         createAt = this.createdAt,
+        status = this.status.shopOrderStatusMapper(),
         paymentMethod = ShopPaymentTypeFactory.getShopPaymentType(paymentMethod),
         shippingMethod = ShopDeliveryTypeFactory.getShopDeliveryType(shippingMethod)
     )

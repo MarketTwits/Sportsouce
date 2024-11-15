@@ -14,6 +14,7 @@ import com.markettwits.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBase
 import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponent
 import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponentBase
+import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponent
 import com.markettwits.shop.search.presentation.component.ShopSearchComponent
 import kotlinx.serialization.Serializable
 
@@ -45,6 +46,9 @@ interface RootShopCatalogComponent : ComponentContext {
         @Serializable
         data class ShopOrder(val option : ShopCreateOrderComponentBase.Option) : Config
 
+        @Serializable
+        data object ShopUserOrders : Config
+
     }
 
     sealed interface Child {
@@ -67,6 +71,8 @@ interface RootShopCatalogComponent : ComponentContext {
         data class ShopCart(val component : ShopCartComponent) : Child
 
         data class ShopOrder(val component : ShopCreateOrderComponent) : Child
+
+        data class ShopUserOrders(val component : ShopUserOrdersComponent) : Child
 
         data class AuthFlow(val component : RootAuthFlowComponent) : Child
     }

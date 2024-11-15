@@ -21,6 +21,7 @@ kotlin {
         implementation(projects.profile.authorized.editProfile)
         implementation(projects.profile.authorized.registrations)
         implementation(projects.profile.authorized.members)
+        implementation(projects.shop.orders)
         implementation(projects.cache)
         implementation(projects.intent.api)
         implementation(projects.intent.impl)

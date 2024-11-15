@@ -4,5 +4,5 @@ import com.markettwits.shop.order.domain.model.ShopOrder
 
 data class ShopUserOrder(
     val order : ShopOrder,
-    val items : List<ShopItemOrder>
+    val items : List<ShopUserItemOrder>
 )

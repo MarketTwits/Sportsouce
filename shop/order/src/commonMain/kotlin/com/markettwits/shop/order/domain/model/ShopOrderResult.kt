@@ -38,7 +38,3 @@ internal fun ShopOrderResult.getUrlAfterCreateOrder() : String{
     } else
         throw IllegalStateException("Ошибка формирвоания заказа")
 }
-
-internal fun ShopOrder.getOrderDetailUrl() : String =
-    "$BASE_ORDER_PAGE_URL=$internalId"
-

@@ -8,6 +8,7 @@ import com.markettwits.cloud_shop.model.order.response.CreateShopOrderResponse
 import com.markettwits.cloud_shop.model.orders.UserOrdersRemote
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -56,7 +57,7 @@ class SportSauceShopOrderApiBase(
         userId : Int,
         token: String
     ): List<Order> {
-        val response = client.post("order/user-history/$userId"){
+        val response = client.get("order/user-history/$userId"){
             parameters {
                 append("skipCount", skipCount.toString())
                 append("maxResultCount", maxResultCount.toString())

@@ -1,6 +1,7 @@
 package com.markettwits.cloud_shop.model.order.common
 
 import com.markettwits.cloud_shop.model.orders.OrderItemCompact
+import com.markettwits.cloud_shop.model.orders.OrderStatus
 import com.markettwits.cloud_shop.model.orders.UserRecipient
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,7 +17,7 @@ data class Order(
     @SerialName("payment_method") val paymentMethod: String,
     @SerialName("shipping_method") val shippingMethod: String,
     @SerialName("orderItems") val orderItems : List<OrderItemCompact>? = null,
-    @SerialName("status") val status : String? = null,
+    @SerialName("status") val status : OrderStatus? = null,
     @SerialName("updatedAt") val updatedAt: String,
     @SerialName("userId") val userId: Int,
     @SerialName("user") val user: UserRecipient? = null,

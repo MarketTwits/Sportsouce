@@ -13,6 +13,7 @@ import com.markettwits.registrations.detail.components.StartOrderProfileDialogSc
 import com.markettwits.registrations.list.presentation.screen.MyRegistrationsScreen
 import com.markettwits.registrations.root.RootRegistrationsScreen
 import com.markettwits.settings.root.RootSettingsScreen
+import com.markettwits.shop.orders.presentation.screen.ShopUserOrdersScreen
 import com.markettwits.start.root.RootStartScreen
 
 @Composable
@@ -51,6 +52,9 @@ fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
             is RootAuthorizedProfileComponent.Child.UserStarts -> MyRegistrationsScreen(component = child.component)
             is RootAuthorizedProfileComponent.Child.Members -> RootMembersScreen(component = child.component)
             is RootAuthorizedProfileComponent.Child.Settings -> RootSettingsScreen(component = child.component)
+            is RootAuthorizedProfileComponent.Child.ShopUserOrders -> ShopUserOrdersScreen(
+                component = child.component
+            )
         }
     }
 }

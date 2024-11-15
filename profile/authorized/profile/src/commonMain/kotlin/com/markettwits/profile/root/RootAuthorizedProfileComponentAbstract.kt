@@ -23,12 +23,15 @@ import com.markettwits.registrations.list.presentation.component.RegistrationsCo
 import com.markettwits.registrations.list.presentation.store.RegistrationsDataStoreFactory
 import com.markettwits.registrations.root.RootRegistrationsComponentBase
 import com.markettwits.settings.root.RootSettingsComponentBase
+import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponent
+import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
 
 abstract class RootAuthorizedProfileComponentAbstract(
     componentContext: ComponentContext,
     private val signOut: () -> Unit
 ) : ComponentContext by componentContext, RootAuthorizedProfileComponent {
+
     private val scope = getOrCreateKoinScope(
         listOf(rootProfileModule)
     )
@@ -44,7 +47,6 @@ abstract class RootAuthorizedProfileComponentAbstract(
             handleBackButton = true,
             childFactory = ::childSlot
         )
-
 
     override val childStack: Value<ChildStack<*, RootAuthorizedProfileComponent.Child>> =
         childStack(
@@ -141,6 +143,18 @@ abstract class RootAuthorizedProfileComponentAbstract(
             RootSettingsComponentBase(
                 componentContext = componentContext,
                 pop = navigation::pop,
+            )
+        )
+
+        is RootAuthorizedProfileComponent.Config.ShopUserOrders -> RootAuthorizedProfileComponent.Child.ShopUserOrders(
+            ShopUserOrdersComponentBase(
+                componentContext = componentContext,
+                storeFactory = scope.get(),
+                outputs = object : ShopUserOrdersComponent.Outputs{
+                    override fun goBack() {
+                        navigation.pop()
+                    }
+                }
             )
         )
     }

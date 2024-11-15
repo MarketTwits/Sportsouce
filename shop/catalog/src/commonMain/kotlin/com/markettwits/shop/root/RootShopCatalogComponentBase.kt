@@ -33,6 +33,9 @@ import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBas
 import com.markettwits.shop.order.di.shopOrderModule
 import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponent
 import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponentBase
+import com.markettwits.shop.orders.di.shopUserOrdersModule
+import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponent
+import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponentBase
 import com.markettwits.shop.search.presentation.component.ShopSearchComponent
 import com.markettwits.shop.search.presentation.component.ShopSearchComponentBase
 import com.markettwits.shop.search.presentation.store.ShopSearchStoreFactory
@@ -53,7 +56,8 @@ class RootShopCatalogComponentBase(
             shopCatalogModule,
             shopFilterModule,
             shopCartModule,
-            shopOrderModule
+            shopOrderModule,
+            shopUserOrdersModule
         )
     )
 
@@ -144,6 +148,14 @@ class RootShopCatalogComponentBase(
                     context = componentContext,
                     goBack = stackNavigation::pop,
                     goProfile = stackNavigation::pop
+                )
+            )
+
+            is RootShopCatalogComponent.Config.ShopUserOrders -> RootShopCatalogComponent.Child.ShopUserOrders(
+                ShopUserOrdersComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    outputs = ShopUserOrdersComponentOutputsImpl()
                 )
             )
         }
@@ -238,6 +250,10 @@ class RootShopCatalogComponentBase(
         override fun goBack() {
             stackNavigation.pop()
         }
+    }
+    private inner class ShopUserOrdersComponentOutputsImpl : ShopUserOrdersComponent.Outputs{
+        override fun goBack() = stackNavigation.pop()
+
     }
 }
 

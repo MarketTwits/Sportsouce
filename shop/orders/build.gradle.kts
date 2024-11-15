@@ -17,9 +17,9 @@ kotlin {
             implementation(projects.core.ui)
             implementation(projects.shop.domain)
             implementation(projects.coreKoin)
-            implementation(projects.intent.api)
-            implementation(projects.intent.impl)
+            implementation(projects.intent.composable)
             implementation(projects.shop.order)
+            implementation(projects.core.time)
             implementation(projects.auth.authService)
         }
     }

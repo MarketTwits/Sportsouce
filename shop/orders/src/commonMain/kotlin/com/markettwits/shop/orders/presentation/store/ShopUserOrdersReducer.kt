@@ -7,7 +7,19 @@ import com.markettwits.shop.orders.presentation.store.ShopUserOrdersStore.Messag
 object ShopUserOrdersReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            else -> TODO()
+            is Message.Error -> copy(
+                isLoading = false,
+                isSuccess = false,
+                sauceError = msg.sauceError,
+                items = emptyList()
+            )
+            is Message.Loaded -> copy(
+                items = msg.items,
+                isLoading = false,
+                isSuccess = true,
+                sauceError = null
+            )
+            is Message.Loading -> copy(isLoading = true, sauceError = null)
         }
     }
 }

@@ -25,9 +25,8 @@ fun CollapsingToolbarRefreshScaffold(
     ) {
         PullToRefreshScreen(
             isRefreshing = isRefreshing,
-            onRefresh = {
-                onRefresh()
-            }) {
+            onRefresh = onRefresh
+        ) {
             body(it)
         }
     }

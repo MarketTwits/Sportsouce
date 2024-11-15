@@ -2,6 +2,7 @@
 #plugins
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
+multiplatformLocale = "0.8.0"
 vk-compose-gradle-plugin = "0.4.2"
 kotlin = "2.0.0"
 kotlin-kmp-compose = "1.6.11"
@@ -62,6 +63,7 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
+multiplatform-locale = { module = "com.vanniktech:multiplatform-locale", version.ref = "multiplatformLocale" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRendererM3" }
 
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }

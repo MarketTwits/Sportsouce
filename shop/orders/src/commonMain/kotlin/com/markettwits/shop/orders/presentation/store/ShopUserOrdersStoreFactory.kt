@@ -23,7 +23,7 @@ class ShopUserOrdersStoreFactory(
         ShopUserOrdersStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ShopUserOrdersStore",
-            initialState = ShopUserOrdersStore.State,
+            initialState = ShopUserOrdersStore.State(),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { ShopUserOrdersExecutor(repository) },
             reducer = ShopUserOrdersReducer

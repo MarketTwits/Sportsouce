@@ -1,6 +1,6 @@
 package com.markettwits.shop.orders.domain.models
 
-data class ShopItemOrder(
+data class ShopUserItemOrder(
     val brand: String,
     val code: String,
     val description: String,
@@ -10,7 +10,7 @@ data class ShopItemOrder(
     val model: String,
     val name: String,
     val orderProduct: CostWithCount,
-    val price: Int
+    val price: String
 ){
     data class CostWithCount(
         val cost : String,

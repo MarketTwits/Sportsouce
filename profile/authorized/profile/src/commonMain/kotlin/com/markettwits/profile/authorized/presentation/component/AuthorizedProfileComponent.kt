@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 interface AuthorizedProfileComponent {
 
     val state: StateFlow<AuthorizedProfileStore.State>
+
     fun obtainEvent(intent: AuthorizedProfileStore.Intent)
+
     fun obtainOutput(outPut: Output)
 
     sealed interface Output {
@@ -19,5 +21,6 @@ interface AuthorizedProfileComponent {
         data object Members : Output
         data class Start(val startId: Int) : Output
         data object Settings : Output
+        data object UserOrders : Output
     }
 }

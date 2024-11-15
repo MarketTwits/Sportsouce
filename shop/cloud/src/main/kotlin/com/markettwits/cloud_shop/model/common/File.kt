@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class File(
-    val createdAt: String,
-    val extension: String,
+    val createdAt: String? = null,
+    val extension: String? = null,
     val fullPath: String,
     val id: Int,
-    val lastModified: String,
+    val lastModified: String? = null,
     val name: String,
     val path: String,
-    val updatedAt: String
+    val updatedAt: String? = null
 )

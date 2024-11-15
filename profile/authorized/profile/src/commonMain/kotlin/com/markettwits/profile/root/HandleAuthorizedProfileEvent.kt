@@ -3,6 +3,7 @@ package com.markettwits.profile.root
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 
@@ -44,6 +45,10 @@ internal fun handleAuthorizedProfileEvent(
 
         is AuthorizedProfileComponent.Output.Settings -> navigation.push(
             RootAuthorizedProfileComponent.Config.Settings
+        )
+
+        is AuthorizedProfileComponent.Output.UserOrders -> navigation.push(
+            RootAuthorizedProfileComponent.Config.ShopUserOrders
         )
     }
 }

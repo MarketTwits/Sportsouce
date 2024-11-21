@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core_ui.items.base_screen.CollapsingToolbarRefreshScaffold
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.shop.orders.domain.models.ShopUserOrder

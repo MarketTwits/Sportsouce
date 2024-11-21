@@ -12,7 +12,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.club.dashboard.di.clubDashboardModule
 import com.markettwits.club.dashboard.di.createDashboardComponent
-import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
+import com.markettwits.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.club.info.di.clubInfoModule
 import com.markettwits.club.info.di.createClubInfoComponent
 import com.markettwits.club.registration.di.createClubRegistrationComponent

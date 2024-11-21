@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class QuestionRemoteRow(
-    val count: Int,
-    val rows: List<QuestionRemote>
+    val answer: String,
+    val id: Int,
+    val question: String
 )

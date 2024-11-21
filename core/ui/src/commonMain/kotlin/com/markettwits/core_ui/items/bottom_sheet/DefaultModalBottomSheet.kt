@@ -20,13 +20,14 @@ import androidx.compose.ui.Modifier
 fun DefaultModalBottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
+    skipPartiallyExpanded : Boolean = true,
     dragHandle: @Composable () -> Unit = { ClosableDragHandle(dismiss = onDismissRequest) },
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
         modifier = modifier
             .padding(bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()),
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded),
         containerColor = MaterialTheme.colorScheme.primary,
         dragHandle = dragHandle,
         onDismissRequest = onDismissRequest,

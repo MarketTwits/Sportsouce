@@ -7,7 +7,7 @@ data class ScheduleRemoteRow(
     val address: String,
     val createdAt: String,
     val description: String,
-    val file_id: Int?,
+    val file_id: Int? = null,
     val id: Int,
     val kindOfSport: KindOfSport,
     val kindOfSportId: Int,
@@ -15,6 +15,6 @@ data class ScheduleRemoteRow(
     val trainers: List<Trainer>,
     val updatedAt: String,
     val weekday: String,
-    val workout: Workout,
-    val workout_id: Int
+    val workout: Workout? = null,
+    val workout_id: Int? = null
 )

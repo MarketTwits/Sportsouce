@@ -13,7 +13,7 @@ data class QuestionUi(
     fun onChecked() = this.copy(isSelected = !this.isSelected)
 }
 
-fun List<Question>.mapToQuestionUi(): List<QuestionUi> = map {
+internal fun List<Question>.mapToQuestionUi(): List<QuestionUi> = map {
     QuestionUi(
         isSelected = false,
         answer = it.answer,

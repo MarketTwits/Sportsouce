@@ -2,8 +2,8 @@ package com.markettwits.club.common.data
 
 import com.markettwits.club.cloud.api.SportSauceClubsApi
 import com.markettwits.club.common.domain.ClubRepository
-import com.markettwits.club.common.domain.mapper.ClubInfoMapper
-import com.markettwits.club.common.domain.mapper.SubscriptionMapper
+import com.markettwits.club.common.data.mapper.club_info.ClubInfoMapper
+import com.markettwits.club.common.data.mapper.subscription.SubscriptionMapper
 import com.markettwits.club.dashboard.domain.SubscriptionItems
 import com.markettwits.club.info.domain.models.ClubInfo
 import com.markettwits.club.info.domain.models.Question
@@ -11,6 +11,8 @@ import com.markettwits.club.info.domain.models.Schedule
 import com.markettwits.club.info.domain.models.Statistic
 import com.markettwits.club.info.domain.models.Trainer
 import com.markettwits.club.info.domain.models.Training
+import com.markettwits.club.registration.domain.WorkoutPrice
+import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.core_ui.items.base.fetchFifth
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +33,13 @@ class ClubRepositoryBase(
         runCatching {
             service.workoutRequest(subscriptionMapper.map(workoutRegistrationForm))
         }
+
+    override suspend fun workoutRegistrationPrice(
+        workoutPriceForm: WorkoutPriceForm
+    ): Result<WorkoutPrice> = runCatching {
+        val result = service.workoutRequestPrice(subscriptionMapper.map(workoutPriceForm))
+        subscriptionMapper.map(result)
+    }
 
     override suspend fun clubInfo(): Result<List<ClubInfo>> = runCatching {
         val cloud =

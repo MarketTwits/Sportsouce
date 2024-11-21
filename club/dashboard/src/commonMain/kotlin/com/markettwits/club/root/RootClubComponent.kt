@@ -3,7 +3,7 @@ package com.markettwits.club.root
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.club.dashboard.presentation.dashboard.component.ClubDashboardComponent
+import com.markettwits.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.club.info.presentation.component.ClubInfoComponent
 import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent

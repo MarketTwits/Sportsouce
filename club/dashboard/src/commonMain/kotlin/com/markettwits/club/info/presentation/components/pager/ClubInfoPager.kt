@@ -5,8 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,56 +21,74 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import com.markettwits.club.info.domain.models.ClubInfo
 import com.markettwits.club.info.presentation.components.comands.CommandContent
 import com.markettwits.club.info.presentation.components.questions.QuestionsContent
 import com.markettwits.club.info.presentation.components.questions.mapToQuestionUi
 import com.markettwits.club.info.presentation.components.statistics.StatisticsContent
 import com.markettwits.club.info.presentation.components.trainings.TrainingsContent
+import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ClubInfoPager(
+internal fun ClubInfoPager(
     modifier: Modifier = Modifier,
     startIndex: Int,
     clubInfo: List<ClubInfo>
 ) {
     val pagerState = rememberPagerState(startIndex, pageCount = { clubInfo.size - 1 })
     val coroutineScope = rememberCoroutineScope()
-    Box(
+    HorizontalPager(
         modifier = modifier
-            .wrapContentHeight()
-    ) {
-        HorizontalPager(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(bottom = 10.dp),
-            state = pagerState,
-        ) { page ->
-            when (val item = clubInfo[page]) {
-                is ClubInfo.Commands -> CommandContent(trainers = item.trainers)
-                is ClubInfo.Questions -> QuestionsContent(questions = item.questions.mapToQuestionUi())
-                is ClubInfo.Statistics -> StatisticsContent(statistics = item.statistics)
-                is ClubInfo.Trainings -> TrainingsContent(trainings = item.training)
-                is ClubInfo.Schedules -> {}
-            }
-        }
-        ClubInfoPageIndicator(
-            modifier = Modifier
-                .padding(10.dp)
-                .align(Alignment.BottomCenter),
-            pagerState = pagerState,
-            onClick = { index ->
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
+            .padding(bottom = 10.dp),
+        state = pagerState,
+    ) { page ->
+        Box(modifier = Modifier.graphicsLayer {
+            val pageOffset = (
+                    (pagerState.currentPage - page) + pagerState
+                        .currentPageOffsetFraction
+                    ).absoluteValue
+            alpha = lerp(
+                start = 0.5f,
+                stop = 1f,
+                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+            )
+        }) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(bottom = 30.dp)
+            ) {
+                when (val item = clubInfo[page]) {
+                    is ClubInfo.Commands -> CommandContent(trainers = item.trainers)
+                    is ClubInfo.Questions -> QuestionsContent(questions = item.questions.mapToQuestionUi())
+                    is ClubInfo.Statistics -> StatisticsContent(statistics = item.statistics)
+                    is ClubInfo.Trainings -> TrainingsContent(trainings = item.training)
+                    is ClubInfo.Schedules -> {}
                 }
             }
-        )
+            ClubInfoPageIndicator(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.BottomCenter),
+                pagerState = pagerState,
+                onClick = { index ->
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                }
+            )
+        }
     }
 }
 

@@ -28,7 +28,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.text.HtmlText
 
 @Composable
-fun QuestionsContent(
+internal fun QuestionsContent(
     modifier: Modifier = Modifier,
     questions: List<QuestionUi>
 ) {

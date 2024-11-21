@@ -9,5 +9,7 @@ data class Subscription(
     val id: Int,
     val name: String,
     val price: Int,
+    val priceDependsOnCount : Boolean,
+    val maxAmount : Int,
     val type: String,
 )

@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.club.cloud.di.clubCloudModule
-import com.markettwits.club.common.data.mapper.ClubInfoMapperBase
-import com.markettwits.club.common.domain.mapper.ClubInfoMapper
+import com.markettwits.club.common.data.mapper.club_info.ClubInfoMapperBase
+import com.markettwits.club.common.data.mapper.club_info.ClubInfoMapper
 import com.markettwits.club.info.domain.models.ClubInfo
 import com.markettwits.club.info.presentation.component.ClubInfoComponent
 import com.markettwits.club.info.presentation.component.ClubInfoComponentBase

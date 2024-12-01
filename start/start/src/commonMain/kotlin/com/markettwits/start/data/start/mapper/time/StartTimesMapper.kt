@@ -5,10 +5,10 @@ import com.markettwits.start.domain.StartItem
 internal interface StartTimesMapper {
 
     fun map(
-        beginningRegistry: String,
-        endRegistry: String,
+        beginningRegistry: String?,
+        endRegistry: String?,
         beginningStart: String,
-        endStart: String,
+        endStart: String?,
     ): StartItem.StartTimes
 
 }

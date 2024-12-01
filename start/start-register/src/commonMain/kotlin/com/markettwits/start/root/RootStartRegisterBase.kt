@@ -15,11 +15,16 @@ import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.di.startRegistrationModule
+import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponentBase
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponentBase
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponentBase
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponentBase
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponentBase
 
 /**
@@ -31,7 +36,7 @@ import com.markettwits.start.register.presentation.success.RegisterSuccessCompon
 class RootStartRegisterBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-    private val content: RootStartRegister.StartRegisterParams
+    private val content: StartRegistrationInput
 ) : ComponentContext by componentContext, RootStartRegister {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -42,17 +47,14 @@ class RootStartRegisterBase(
     )
 
     private val stackNavigation = StackNavigation<RootStartRegister.ConfigStack>()
+
     private val slotNavigation = SlotNavigation<RootStartRegister.ConfigSlot>()
+
     override val childStack: Value<ChildStack<*, RootStartRegister.ChildStack>> = childStack(
         source = stackNavigation,
         serializer = RootStartRegister.ConfigStack.serializer(),
-        initialConfiguration = RootStartRegister.ConfigStack.StartRegistration(
-            startId = content.startId,
-            distanceInfo = content.distanceItem,
-            paymentDisabled = content.isPaymentDisabled,
-            paymentType = content.paymentType,
-            startTitle = content.startTitle,
-            discounts = content.discounts
+        initialConfiguration = RootStartRegister.ConfigStack.StartRegistrationPage(
+            content
         ),
         handleBackButton = true,
         childFactory = ::childStack,
@@ -72,6 +74,7 @@ class RootStartRegisterBase(
             RegistrationPromoComponentBase(
                 componentContext = componentContext,
                 startId = config.startId,
+                distancesId = emptyList(),
                 promo = config.promo,
                 storeFactory = scope.get(),
                 applyPromo = { promo, percent ->
@@ -135,12 +138,13 @@ class RootStartRegisterBase(
                     pop = stackNavigation::pop,
                     membersProfile = config.profileMembers,
                     apply = { member, id ->
-                        stackNavigation.pop {
-                            (childStack.value.active.instance
-                                    as? RootStartRegister.ChildStack.StartOrder)?.component?.obtainEvent(
-                                OrderStore.Intent.UpdateMember(member, id)
-                            )
-                        }
+//                        stackNavigation.pop {
+//                            (childStack.value.active.instance
+//                                    as? RootStartRegister.ChildStack.StartRegistrationPage)?.component?.obtainEvent(
+//                                        StartRegistrationPageStore.Intent.ApplyStartMember(member)
+//                                )
+//                        }
+
                     }
                 )
             )
@@ -151,5 +155,35 @@ class RootStartRegisterBase(
                     next = pop::invoke
                 )
             )
+
+            is RootStartRegister.ConfigStack.StartRegistrationPage -> RootStartRegister.ChildStack.StartRegistrationPage(
+                StartRegistrationPageComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    input = config.input,
+                    output = StartRegistrationPageComponentOutputsImpl()
+                )
+            )
         }
+
+    private inner class StartRegistrationPageComponentOutputsImpl :
+        StartRegistrationPageComponent.Outputs{
+        override fun goBack() {
+            pop()
+        }
+
+        override fun onClickMember(
+            startStatement: StartStatement,
+            memberId: Int,
+            members: List<ProfileMember>
+        ) {
+            stackNavigation.push(
+                RootStartRegister.ConfigStack.StartRegistrationMember(
+                    memberId,
+                    members,
+                    startStatement,
+                )
+            )
+        }
+    }
 }

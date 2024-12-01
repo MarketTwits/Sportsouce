@@ -3,6 +3,7 @@ package com.markettwits.start.register.presentation.order.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,18 +22,21 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
-fun StartRegistrationTopBar(goBack: () -> Unit) {
-    Box(
+internal fun StartRegistrationTopBar(
+    startTitle : String,
+    goBack: () -> Unit
+) {
+    Row(
         Modifier
             .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
-            .background(Color.White)
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 10.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             modifier = Modifier
-                .align(Alignment.CenterStart)
+                .weight(0.1f)
                 .padding(10.dp)
                 .clickable {
                     goBack()
@@ -43,9 +47,10 @@ fun StartRegistrationTopBar(goBack: () -> Unit) {
         )
         Text(
             modifier = Modifier
-                .align(Alignment.Center)
-                .padding(start = 30.dp),
-            text = "Регистрация",
+                .weight(0.9f)
+                .padding(10.dp)
+            ,
+            text = startTitle,
             color = SportSouceColor.SportSouceBlue,
             fontFamily = FontNunito.bold(),
             fontSize = 18.sp

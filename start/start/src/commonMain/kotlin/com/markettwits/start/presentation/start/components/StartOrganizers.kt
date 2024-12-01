@@ -30,7 +30,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun StartOrganizers(
     modifier: Modifier = Modifier,
-    organizer: List<Organizer>,
+    organizer: List<com.markettwits.start_cloud.model.start.fields.Organizer>,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit
 ) {
@@ -44,7 +44,7 @@ internal fun StartOrganizers(
 @Composable
 private fun StartOrganizersContent(
     modifier: Modifier,
-    organizer: List<Organizer>,
+    organizer: List<com.markettwits.start_cloud.model.start.fields.Organizer>,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit
 ) {

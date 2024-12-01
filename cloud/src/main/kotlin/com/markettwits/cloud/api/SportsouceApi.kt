@@ -17,13 +17,8 @@ import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
-import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start.StartData
 import com.markettwits.cloud.model.start_album.StartAlbumRemote
-import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
-import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
-import com.markettwits.cloud.model.start_comments.response.CommentRow
-import com.markettwits.cloud.model.start_comments.response.Reply
-import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
@@ -60,14 +55,12 @@ interface SportsouceApi {
         token: String
     ): StartRegistrationResponse
     suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
-    suspend fun promo(value : String,startId: Int) : PromocodeRemote
+    suspend fun promo(value : String,startId: Int,distancesId : List<Int>) : PromocodeRemote
     //Start
-    suspend fun fetchStart(startId: Int): StartRemote
+    suspend fun fetchStart(startId: Int): StartData
     suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote
     suspend fun fetchStartMember(startId: Int): List<StartMemberItem>
-    suspend fun fetchStartComments(startId: Int): StartCommentsRemote
-    suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): CommentRow
-    suspend fun writeSubComment(subComment: StartSubCommentRequest, token: String): Reply
+
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
     //Auth
     suspend fun resetPassword(email: String): ResetPasswordResponse

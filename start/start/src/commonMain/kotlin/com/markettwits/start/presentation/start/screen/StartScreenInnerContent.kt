@@ -12,6 +12,7 @@ import com.markettwits.start.presentation.start.components.StartAlbums
 import com.markettwits.start.presentation.start.components.StartConditionPanel
 import com.markettwits.start.presentation.start.components.StartDescription
 import com.markettwits.start.presentation.start.components.StartDistances
+import com.markettwits.start.presentation.start.components.StartDistancesNew
 import com.markettwits.start.presentation.start.components.StartMembersPanel
 import com.markettwits.start.presentation.start.components.StartMembersStatistics
 import com.markettwits.start.presentation.start.components.StartOrganizers
@@ -19,6 +20,7 @@ import com.markettwits.start.presentation.start.components.StartResult
 import com.markettwits.start.presentation.start.components.StartStatus
 import com.markettwits.start.presentation.start.components.StartTimeProgram
 import com.markettwits.start.presentation.start.components.StartTitle
+import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -26,6 +28,7 @@ internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
     onClickDistance: (DistanceItem, Boolean, String) -> Unit,
+    onClickDistanceNew: (DistinctDistance) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
@@ -52,6 +55,21 @@ internal fun StartScreenInnerContent(
         StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
             onClickFullAlbum()
         })
+        //New distance
+        StartDistancesNew(
+            modifier = innerModifier,
+            distance = data.distanceInfoNew,
+            mapDistance = data.distanceMapNew,
+            startStatus = data.startStatus,
+            paymentDisabled = data.paymentDisabled,
+            paymentType = data.paymentType,
+            regLink = data.regLink,
+            onClick = {
+                onClickDistanceNew(it)
+            },
+            onClickUrl = onClickUrl
+        )
+        //Old distances
         StartDistances(
             modifier = innerModifier,
             distance = data.distanceInfo,

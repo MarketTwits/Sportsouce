@@ -1,9 +1,9 @@
 package com.markettwits.start.domain
 
 import com.markettwits.cloud.ext_model.DistanceItem
-import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start_cloud.model.start.fields.Distance
+import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
 data class StartItem(
     val id: Int,
@@ -18,8 +18,10 @@ data class StartItem(
     val paymentDisabled: Boolean,
     val regLink: String,
     val distanceInfo: List<DistanceItem>,
+    val distanceInfoNew : List<DistinctDistance>,
+    val distanceMapNew : List<Distance>,
     val paymentType: String,
-    val organizers: List<Organizer>,
+    val organizers: List<com.markettwits.start_cloud.model.start.fields.Organizer>,
     val membersUi: List<StartMembersUi>,
     val conditionFile: ConditionFile,
     val commentsRemote: Comments,
@@ -32,6 +34,11 @@ data class StartItem(
         data class Base(val url: String) : ConditionFile()
         data object Empty : ConditionFile()
     }
+
+    data class StartStatus(
+        val code : Int,
+        val name : String
+    )
 
     data class Album(
         val id: Int,

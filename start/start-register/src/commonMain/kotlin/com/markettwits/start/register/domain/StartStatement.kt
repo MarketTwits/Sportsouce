@@ -1,9 +1,14 @@
 package com.markettwits.start.register.domain
 
+import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.start_cloud.model.members.AdditionalFieldAnswer
+import com.markettwits.start_cloud.model.register.price.fields.StartRegisterAnswer
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartStatement(
+    val userId : UserId,
+    val stageId : Int?,
     val name: String,
     val surname: String,
     val birthday: String,
@@ -19,6 +24,8 @@ data class StartStatement(
     val cities: List<City>,
     val teams: List<Team>,
     val sexList: List<Sex>,
+    val members : List<ProfileMember>,
+   // val answers: List<StartRegisterAnswer>,
     val paymentDisabled: Boolean,
     val yearDiscountApplied: Boolean,
     val distanceTitle: String,
@@ -34,4 +41,18 @@ data class StartStatement(
 
     @Serializable
     data class Sex(val id: Int, val name: String)
+
+    @Serializable
+    sealed interface UserId{
+
+        val userId : String
+
+        @Serializable
+        data class WithId(override val userId: String) : UserId
+
+        @Serializable
+        data object WithoutId : UserId{
+            override val userId: String = "undefined"
+        }
+    }
 }

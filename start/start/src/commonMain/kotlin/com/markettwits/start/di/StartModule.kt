@@ -23,6 +23,7 @@ import com.markettwits.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.start.data.start.mapper.time.StartTimesMapperBase
 import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
+import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -30,6 +31,7 @@ import org.koin.dsl.module
 val startModule = module {
     includes(
         sportSouceNetworkModule,
+        sportSauceStartNetworkModule,
         timeApiNetworkModule,
         authDataSourceModule,
         crashlyticsModule,

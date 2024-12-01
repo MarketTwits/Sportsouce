@@ -2,14 +2,14 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
-import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponent
+import com.markettwits.start.presentation.comments.component.StartCommentsComponent
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.component.StartScreenComponent
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
 import com.markettwits.start_support.presentation.component.StartSupportComponent
 import kotlinx.serialization.Serializable
 
@@ -36,12 +36,7 @@ interface RootStartScreenComponent {
 
         @Serializable
         data class StartRegistration(
-            val startId: Int,
-            val startTitle: String,
-            val discounts: List<DistanceItem.Discount>,
-            val distanceInfo: DistanceItem,
-            val paymentDisabled: Boolean,
-            val paymentType: String
+            val input: StartRegistrationInput
         ) : Config()
 
         @Serializable

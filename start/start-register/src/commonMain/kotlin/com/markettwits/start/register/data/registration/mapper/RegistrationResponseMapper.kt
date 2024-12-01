@@ -7,6 +7,7 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 
 interface RegistrationResponseMapper {
+
     suspend fun flatMap(response: Result<StartRegistrationResponse>): StartRegistryResult
     fun map(response: StartRegistrationResponse): StartRegistryResult
     suspend fun map(response: Throwable): StartRegistryResult

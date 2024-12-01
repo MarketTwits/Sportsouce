@@ -29,6 +29,7 @@ import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.OnClick
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -36,7 +37,7 @@ import com.markettwits.start.presentation.common.OnClick
 internal fun StartDistances(
     modifier: Modifier = Modifier,
     distance: List<DistanceItem>,
-    startStatus: StartStatus,
+    startStatus: StartItem.StartStatus,
     paymentDisabled: Boolean,
     paymentType: String,
     regLink: String,
@@ -128,10 +129,16 @@ fun DistanceItemBase(
             )
             HorizontalDivider()
             val infinity = item.distance.infinitySlot ?: false
-            val slots = if (item.distance.slots.toInt() <= 0) 0 else item.distance.slots.toInt()
+            val currentSlots = if (item.distance.slots.isNotEmpty())
+                if (item.distance.slots.toInt() <= 0)
+                    0
+                else
+                    item.distance.slots.toInt()
+            else
+                0
             if (!infinity) {
                 Text(
-                    text = "Осталось слотов : $slots",
+                    text = "Осталось слотов : $currentSlots",
                     fontSize = 14.sp,
                     fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
@@ -158,7 +165,12 @@ fun DistanceItemBase(
                     color = MaterialTheme.colorScheme.tertiary
                 )
             }
-            val enabled = (item.distance.slots.toInt()) > 0 || infinity
+            val enabled = if (item.distance.slots.isNotEmpty()){
+                item.distance.slots.toInt() > 0 || infinity
+            }else{
+                false
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

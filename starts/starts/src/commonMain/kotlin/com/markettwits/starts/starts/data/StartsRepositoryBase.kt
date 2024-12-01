@@ -34,6 +34,9 @@ internal class StartsRepositoryBase(
                 },
             )
         }.onFailure {
+            println("""""")
+            println(it.message.toString())
+            println("""""")
             starts.value = mapper.map(networkExceptionHandler(it))
         }
     }

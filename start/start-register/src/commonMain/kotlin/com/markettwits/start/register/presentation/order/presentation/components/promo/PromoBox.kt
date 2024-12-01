@@ -53,8 +53,6 @@ fun PromoBox(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 )
             }
             Icon(
-                modifier = Modifier
-                    .clickable {},
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "back",
                 tint = MaterialTheme.colorScheme.tertiary,

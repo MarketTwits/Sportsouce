@@ -61,7 +61,9 @@ interface OrderStore : Store<OrderStore.Intent, OrderStore.State, OrderStore.Lab
         ) : Label
 
         data object GoBack : Label
+
         data class OnClickPromo(val promo: String) : Label
+
         data object GoSuccess : Label
     }
 

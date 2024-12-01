@@ -13,8 +13,8 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.start.di.startModule
 import com.markettwits.start.presentation.album.di.startAlbumModule
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
-import com.markettwits.start.presentation.comments.comments.component.StartCommentsComponentBase
-import com.markettwits.start.presentation.comments.comments.store.StartCommentsStoreFactory
+import com.markettwits.start.presentation.comments.component.StartCommentsComponentBase
+import com.markettwits.start.presentation.comments.store.StartCommentsStoreFactory
 import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
 import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
 import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
@@ -61,16 +61,17 @@ class RootStartScreenComponentBase(
                     startId = config.startId,
                     back = pop::invoke,
                     register = { distanceInfo, paymentDisabled, paymentType, startTitle, discounts ->
-                        navigation.push(
-                            RootStartScreenComponent.Config.StartRegistration(
-                                startId = startId,
-                                distanceInfo = distanceInfo,
-                                paymentDisabled = paymentDisabled,
-                                paymentType = paymentType,
-                                startTitle = startTitle,
-                                discounts = discounts
-                            )
-                        )
+//                        navigation.push(
+//                            RootStartScreenComponent.Config.StartRegistration(
+//                                input = StartRegistrationInput(
+//                                    startId,
+//                                    startTitle,
+//                                    paymentType,
+//                                    emptyList(),
+//                                    paymentDisabled,
+//                                )
+//                            )
+//                        )
                     },
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
@@ -78,6 +79,11 @@ class RootStartScreenComponentBase(
                     },
                     album = {
                         navigation.push(RootStartScreenComponent.Config.StartAlbum(it))
+                    },
+                    registerNew = {
+                        navigation.push(
+                            RootStartScreenComponent.Config.StartRegistration(it)
+                        )
                     }
                 ),
                 commentsComponent = StartCommentsComponentBase(
@@ -125,14 +131,7 @@ class RootStartScreenComponentBase(
                 RootStartRegisterBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    content = RootStartRegister.StartRegisterParams(
-                        config.startId,
-                        config.distanceInfo,
-                        config.discounts,
-                        config.paymentDisabled,
-                        config.paymentType,
-                        config.startTitle,
-                    )
+                    content = config.input
                 )
             )
 

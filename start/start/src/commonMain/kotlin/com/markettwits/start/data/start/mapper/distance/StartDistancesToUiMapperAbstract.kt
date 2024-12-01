@@ -2,19 +2,20 @@ package com.markettwits.start.data.start.mapper.distance
 
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.start_cloud.model.members.StartMember
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 internal abstract class StartDistancesToUiMapperAbstract : StartDistancesToUiMapper {
     protected fun mapDistanceInfo(
-        startMember: List<StartMemberItem>,
+        startMember: List<StartMember>,
         distanceInfo: DistanceItem.DistanceInfo,
         date: String
     ): DistanceItem.Distance {
         val newPriceValue = getPriceForDate(distanceInfo.distance, date)
         return distanceInfo.distance.copy(
             price = newPriceValue.toString(),
-            slots = calculateRemainingSlotsBase(distanceInfo, startMember).slots
+            slots = ""
         )
     }
 

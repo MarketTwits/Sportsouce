@@ -7,17 +7,17 @@ import com.markettwits.time.TimePattern
 internal class StartTimesMapperBase(private val timeMapper: TimeMapper) : StartTimesMapper {
 
     override fun map(
-        beginningRegistry: String,
-        endRegistry: String,
+        beginningRegistry: String?,
+        endRegistry: String?,
         beginningStart: String,
-        endStart: String
+        endStart: String?,
     ): StartItem.StartTimes =
 
         StartItem.StartTimes(
-            beginningRegistry = mapTime(beginningRegistry),
-            endRegistry = mapTime(endRegistry),
+            beginningRegistry = "",
+            endRegistry = "",
             beginningStart = mapTime(beginningStart),
-            endStart = mapTime(endStart)
+            endStart = ""
         )
 
     private fun mapTime(date: String): String = timeMapper.mapTime(TimePattern.Full, date)

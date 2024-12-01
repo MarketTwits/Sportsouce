@@ -2,6 +2,7 @@ package com.markettwits.start.data.start.mapper.members
 
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start_cloud.model.members.StartMember
 
 internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
 
@@ -52,7 +53,7 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
     private fun createTeam(teamMembers: List<StartMemberItem>): StartMembersUi.Team {
         val teamMemberList = teamMembers.map {
             StartMembersUi.TeamMember(
-                memberId = it.teamNumber ?: 0,
+                memberId = it.id ?: 0,
                 name = it.name,
                 surname = it.surname
             )

@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 class RegistrationPromoExecutor(
     private val startId: Int,
+    private val distancesId : List<Int>,
     private val repository: com.markettwits.start.register.data.registration.RegistrationStartRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
@@ -22,9 +23,10 @@ class RegistrationPromoExecutor(
     private fun applyPromo(promo: String, startId: Int) {
         scope.launch {
             dispatch(Message.ApplyPromoLoading)
-            repository.promo(promo, startId).fold(
+            repository.promo(promo, startId,distancesId).fold(
                 onSuccess = {
-                    publish(Label.ApplyPromo(promo, it.discountPercent))
+                    publish(Label.ApplyPromo(promo,it.discountPercent))
+                    publish(Label.Dismiss)
                 },
                 onFailure = {
                     dispatch(Message.ApplyPromoFailed("Не удалось применить промокод"))

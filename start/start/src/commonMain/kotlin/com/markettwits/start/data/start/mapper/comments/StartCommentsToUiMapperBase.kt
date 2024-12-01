@@ -1,16 +1,16 @@
 package com.markettwits.start.data.start.mapper.comments
 
-import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.start.domain.StartItem
+import com.markettwits.start_cloud.model.comments.response.Comment
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 
 internal class StartCommentsToUiMapperBase(
     private val timeMapper: TimeMapper
 ) : StartCommentsToUiMapper {
-    override fun map(commentsRemote: StartCommentsRemote): StartItem.Comments = StartItem.Comments(
-        id = commentsRemote.count,
-        rows = commentsRemote.rows.map {
+    override fun map(commentsRemote: List<Comment>): StartItem.Comments = StartItem.Comments(
+        id = commentsRemote.size,
+        rows = commentsRemote.map {
             StartItem.Comments.Row(
                 id = it.id,
                 comment = it.comment,

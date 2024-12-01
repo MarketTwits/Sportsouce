@@ -25,6 +25,7 @@ import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
 @Composable
 internal fun StartScreenContent(
@@ -33,6 +34,7 @@ internal fun StartScreenContent(
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
     onClickDistance: (DistanceItem, Boolean, String) -> Unit,
+    onClickDistanceNew : (DistinctDistance) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickImage: () -> Unit,
     onClickFullAlbum: () -> Unit,
@@ -79,6 +81,7 @@ internal fun StartScreenContent(
                             modifier = Modifier,
                             data = data,
                             onClickDistance = onClickDistance,
+                            onClickDistanceNew = onClickDistanceNew,
                             onClickMembers = onClickMembers,
                             onClickUrl = onClickUrl,
                             onClickPhone = onClickPhone,
@@ -98,6 +101,7 @@ internal fun StartScreenContent(
                         modifier = it,
                         data = data,
                         onClickDistance = onClickDistance,
+                        onClickDistanceNew = onClickDistanceNew,
                         onClickMembers = onClickMembers,
                         onClickUrl = onClickUrl,
                         onClickPhone = onClickPhone,

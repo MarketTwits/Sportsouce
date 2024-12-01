@@ -7,6 +7,7 @@ import com.markettwits.start.register.domain.StartRegistryResult
 import com.markettwits.start.register.presentation.order.domain.OrderStatement
 
 interface RegistrationStartRepository {
+
     suspend fun loadOrder(
         startTitle: String,
         distanceInfo: DistanceItem,
@@ -15,7 +16,7 @@ interface RegistrationStartRepository {
         paymentType: String,
     ): Result<OrderStatement>
 
-    suspend fun promo(value: String, startId: Int): Result<StartPromo>
+    suspend fun promo(value: String, startId: Int,distancesId : List<Int>): Result<StartPromo>
 
     suspend fun registry(
         withoutPayment: Boolean,

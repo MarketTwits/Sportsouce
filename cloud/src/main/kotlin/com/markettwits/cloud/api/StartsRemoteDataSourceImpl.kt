@@ -17,13 +17,8 @@ import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
-import com.markettwits.cloud.model.start.StartRemote
+import com.markettwits.cloud.model.start.StartData
 import com.markettwits.cloud.model.start_album.StartAlbumRemote
-import com.markettwits.cloud.model.start_comments.request.StartCommentRequest
-import com.markettwits.cloud.model.start_comments.request.StartSubCommentRequest
-import com.markettwits.cloud.model.start_comments.response.CommentRow
-import com.markettwits.cloud.model.start_comments.response.Reply
-import com.markettwits.cloud.model.start_comments.response.StartCommentsRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
@@ -40,6 +35,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -55,7 +51,7 @@ internal class StartsRemoteDataSourceImpl(
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(false)
+    private val client = httpClient.provide(true)
 
     override suspend fun teams(): TeamsRemote {
         val response = client.get("team")
@@ -172,13 +168,19 @@ internal class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body<String>())
     }
 
-    override suspend fun promo(value: String, startId: Int): PromocodeRemote {
-        val response = client.get("start/$startId/promocode?code=$value")
+    override suspend fun promo(value: String, startId: Int,distancesId : List<Int>): PromocodeRemote {
+
+        val response = client.get("start/$startId/promocode"){
+            url {
+                parameters.append("code", value)
+                parameters.append("distances", distancesId.joinToString(","))
+            }
+        }
         return json.decodeFromString(response.body<String>())
     }
 
-    override suspend fun fetchStart(startId: Int): StartRemote {
-        val serializer = StartRemote.serializer()
+    override suspend fun fetchStart(startId: Int): StartData {
+        val serializer = StartData.serializer()
         val response = client.get("start/$startId")
         return json.decodeFromString(serializer, response.body<String>())
     }
@@ -199,25 +201,6 @@ internal class StartsRemoteDataSourceImpl(
             }
         }
         return json.decodeFromString<List<StartMemberItem>>(response.body<String>())
-    }
-
-    override suspend fun fetchStartComments(startId: Int): StartCommentsRemote {
-        val response = client.get("comment/start/$startId")
-        return json.decodeFromString(response.body())
-    }
-
-    override suspend fun writeComment(
-        startCommentRequest: StartCommentRequest,
-        token: String
-    ): CommentRow {
-        val response = client.post("comment") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
-            setBody(startCommentRequest)
-        }
-        return json.decodeFromString(response.body())
     }
 
     override suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess {
@@ -333,20 +316,6 @@ internal class StartsRemoteDataSourceImpl(
 
     override suspend fun news(): NewsRemote {
         val response = client.get("news")
-        return json.decodeFromString(response.body())
-    }
-
-    override suspend fun writeSubComment(
-        subComment: StartSubCommentRequest,
-        token: String
-    ): Reply {
-        val response = client.post("comment/sub-comment") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
-            setBody(subComment)
-        }
         return json.decodeFromString(response.body())
     }
 

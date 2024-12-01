@@ -2,11 +2,12 @@ package com.markettwits.start.data.start.mapper.albums
 
 import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.start.domain.StartItem
+import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 
 internal class StartAlbumsToUiMapperBase : StartAlbumsToUiMapper {
 
-    override fun map(startAlbum: StartAlbumRemote, sorted: Boolean): List<StartItem.Album> {
-        val photos = startAlbum.rows.flatMap { row ->
+    override fun map(startAlbum: List<StartAlbum>, sorted: Boolean): List<StartItem.Album> {
+        val photos = startAlbum.flatMap { row ->
             row.photos.map { photoRemote ->
                 StartItem.Album.Photo(
                     id = photoRemote.id,
@@ -16,7 +17,7 @@ internal class StartAlbumsToUiMapperBase : StartAlbumsToUiMapper {
                 )
             }
         }
-        val albums = startAlbum.rows.map {
+        val albums = startAlbum.map {
             StartItem.Album(
                 id = it.id,
                 startId = it.start_id,

@@ -19,10 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.startStatusBackground
 
 @Composable
-internal fun StartStatus(modifier: Modifier = Modifier, status: StartStatus, date: String) {
+internal fun StartStatus(modifier: Modifier = Modifier, status: StartItem.StartStatus, date: String) {
     Column(modifier = modifier) {
         val color = startStatusBackground(status.code)
         Box(

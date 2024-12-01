@@ -1,7 +1,5 @@
 package com.markettwits.start.root
 
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.members.member_common.domain.ProfileMember
@@ -9,12 +7,15 @@ import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponent
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponent
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponent
 import kotlinx.serialization.Serializable
 
 interface RootStartRegister {
 
     val childStack: Value<com.arkivanov.decompose.router.stack.ChildStack<*, ChildStack>>
+
     val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<*, ChildSlot>>
 
     @Serializable
@@ -38,13 +39,18 @@ interface RootStartRegister {
 
         @Serializable
         data object StartRegistrationSuccess : ConfigStack()
+
+        @Serializable
+        data class StartRegistrationPage(
+            val input: StartRegistrationInput
+        ) : ConfigStack()
     }
 
     sealed interface ChildStack {
         data class StartOrder(val component: OrderComponentComponent) : ChildStack
-
         data class StartRegistrationMember(val component: RegistrationMemberComponent) : ChildStack
         data class StartRegistrationSuccess(val component: RegisterSuccessComponent) : ChildStack
+        data class StartRegistrationPage(val component: StartRegistrationPageComponent) : ChildStack
     }
 
     @Serializable

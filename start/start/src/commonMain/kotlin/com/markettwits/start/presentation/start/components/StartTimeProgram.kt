@@ -24,26 +24,34 @@ internal fun StartTimeProgram(
         label = "Программа соревнований",
     ) {
         Column(modifier = Modifier.padding(bottom = 10.dp)) {
-            StartTimeItemRowInfo(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                title = "Начало регистрации",
-                value = startTimes.beginningRegistry
-            )
-            StartTimeItemRowInfo(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                title = "Конец регистрации",
-                value = startTimes.endRegistry
-            )
-            StartTimeItemRowInfo(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                title = "Начало старта",
-                value = startTimes.beginningStart
-            )
-            StartTimeItemRowInfo(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                title = "Конец старта",
-                value = startTimes.endStart
-            )
+            if (startTimes.beginningRegistry.isNotEmpty()){
+                StartTimeItemRowInfo(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    title = "Начало регистрации",
+                    value = startTimes.beginningRegistry
+                )
+            }
+            if (startTimes.endRegistry.isNotEmpty()){
+                StartTimeItemRowInfo(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    title = "Конец регистрации",
+                    value = startTimes.endRegistry
+                )
+            }
+            if (startTimes.beginningStart.isNotEmpty()){
+                StartTimeItemRowInfo(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    title = "Начало старта",
+                    value = startTimes.beginningStart
+                )
+            }
+            if (startTimes.endStart.isNotEmpty()){
+                StartTimeItemRowInfo(
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    title = "Конец старта",
+                    value = startTimes.endStart
+                )
+            }
         }
 
     }

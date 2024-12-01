@@ -27,6 +27,13 @@ import com.markettwits.start.register.presentation.order.presentation.store.Orde
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStoreExecutorHandleBase
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStoreFactory
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStoreFactory
+import com.markettwits.start.register.presentation.registration.data.StartRegistrationRepositoryBase
+import com.markettwits.start.register.presentation.registration.data.mapper.StartRegisterPriceMapper
+import com.markettwits.start.register.presentation.registration.data.mapper.StartRegisterResultMapper
+import com.markettwits.start.register.presentation.registration.data.mapper.StartRegistrationPageMapper
+import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
+import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStoreFactory
+import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
 import com.markettwits.teams_city.di.teamsCityModule
 import com.markettwits.time.BaseTimeMapper
 import com.markettwits.time.TimeMapper
@@ -38,6 +45,7 @@ import org.koin.dsl.module
 val startRegistrationModule = module {
     includes(
         sportSouceNetworkModule,
+        sportSauceStartNetworkModule,
         timeApiNetworkModule,
         teamsCityModule,
         rootMembersModule,
@@ -60,5 +68,12 @@ val startRegistrationModule = module {
     singleOf(::RegistrationMapperBase) bind RegistrationMapper::class
     singleOf(::RegistrationResponseMapperBase) bind RegistrationResponseMapper::class
     singleOf(::RegistrationPromoMapperBase) bind RegistrationPromoMapper::class
+
+    //New Register
+    singleOf(::StartRegistrationPageStoreFactory)
+    singleOf(::StartRegistrationRepositoryBase) bind StartRegistrationRepository::class
+    singleOf(::StartRegisterPriceMapper)
+    singleOf(::StartRegistrationPageMapper)
+    singleOf(::StartRegisterResultMapper)
 
 }

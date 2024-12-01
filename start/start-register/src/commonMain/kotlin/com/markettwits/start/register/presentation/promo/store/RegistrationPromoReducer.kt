@@ -12,9 +12,8 @@ object RegistrationPromoReducer : Reducer<State, Message> {
                 isError = true,
                 message = msg.message
             )
-
             is Message.ApplyPromoLoading -> copy(isLoading = true)
-            is Message.ApplyPromoSuccess -> copy()
+            is Message.ApplyPromoSuccess -> copy(isLoading = false)
             is Message.OnPromoChanged -> copy(promo = msg.promo)
         }
     }

@@ -8,8 +8,10 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -18,14 +20,18 @@ class StartScreenComponentComponentBase(
     private val startId: Int,
     private val back: () -> Unit,
     private val register: (DistanceItem, Boolean, String, String, List<DistanceItem.Discount>) -> Unit,
+    private val registerNew : (StartRegistrationInput) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
     private val album: (List<String>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
+
     private val store = instanceKeeper.getStore {
         storeFactory.create(startId)
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val start: StateFlow<StartScreenStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: StartScreenStore.Intent) {
@@ -47,6 +53,16 @@ class StartScreenComponentComponentBase(
 
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
+                    is StartScreenStore.Label.OnClickDistanceNew -> registerNew(
+                        StartRegistrationInput(
+                            startId = it.startId,
+                            startTitle = it.startTitle,
+                            paymentType = it.paymentType,
+                            comboId = it.comboId,
+                            distances = it.distanceInfo,
+                            isPaymentDisabled = it.paymentDisabled
+                        )
+                    )
                 }
             }
         }

@@ -20,18 +20,22 @@ import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
 import com.markettwits.start.presentation.start.store.StartScreenStore.Label
 import com.markettwits.start.presentation.start.store.StartScreenStore.State
+import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import kotlinx.coroutines.launch
 
 interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
+
         data class OnClickDistance(
             val distanceInfo: DistanceItem,
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : Intent
-
+        data class OnClickDistanceNew(
+            val distance: DistinctDistance
+        ) : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
@@ -57,6 +61,15 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentType: String,
             val startTitle: String,
             val discount: List<DistanceItem.Discount>
+        ) : Label
+
+        data class OnClickDistanceNew(
+            val startId: Int,
+            val distanceInfo: List<DistinctDistance>,
+            val comboId : Int?,
+            val paymentDisabled: Boolean,
+            val paymentType: String,
+            val startTitle: String,
         ) : Label
 
         data object OnClickBack : Label
@@ -97,15 +110,15 @@ class StartScreenStoreFactory(
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
 
-                is Intent.OnClickDistance -> publish(
-                    Label.OnClickDistance(
-                        intent.distanceInfo,
-                        intent.paymentDisabled,
-                        intent.paymentType,
-                        getState().data?.title ?: "",
-                        getState().data?.discounts ?: emptyList()
-                    )
-                )
+                is Intent.OnClickDistance -> {}
+////                    Label.OnClickDistance(
+////                        intent.distanceInfo,
+////                        intent.paymentDisabled,
+////                        intent.paymentType,
+////                        getState().data?.title ?: "",
+////                        getState().data?.discounts ?: emptyList()
+////                    )
+//                )
 
                 is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
@@ -120,6 +133,30 @@ class StartScreenStoreFactory(
                 is Intent.TriggerEvent -> dispatch(Msg.TriggerEvent(intent.message, intent.status))
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
+                is Intent.OnClickDistanceNew -> {
+                    getState().data?.let {
+                        val matchingDistance = it.distanceMapNew.find { it.id == intent.distance.id }
+
+                        val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
+
+                        val b = if (matchingDistance?.combo != null) {
+                            // Если combo не null, ищем DistinctDistance по id в combo
+                           it. distanceInfoNew.filter { it.id in matchingDistance.combo!! }
+                        } else {
+                            // Если combo null, возвращаем выбранный DistinctDistance в виде списка
+                            listOf(intent.distance)
+                        }
+
+                        publish(StartScreenStore.Label.OnClickDistanceNew(
+                            startId = it.id,
+                            distanceInfo = b,
+                            paymentDisabled = it.paymentDisabled,
+                            paymentType = it.paymentType,
+                            comboId = comboId,
+                            startTitle = it.title
+                        ))
+                    }
+                }
             }
         }
 
@@ -136,6 +173,10 @@ class StartScreenStoreFactory(
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
                             exceptionTracker.reportException(it, "StartScreenStore#launch")
                         }
+                        println(""""""""")
+                        println("#StartScreenStore")
+                        println(it.localizedMessage)
+                        println(""""""""")
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },
                     onSuccess = {

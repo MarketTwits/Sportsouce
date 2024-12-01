@@ -23,12 +23,16 @@ import com.markettwits.start.register.presentation.member.components.MemberScree
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore
 
 @Composable
-fun MemberScreen(component: RegistrationMemberComponent) {
+fun MemberScreen(
+    modifier: Modifier = Modifier,
+    component: RegistrationMemberComponent
+) {
     val state by component.model.collectAsState()
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
     Scaffold(
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primary,
         topBar = {
             TopBarWithClip(title = "Регистрация") {

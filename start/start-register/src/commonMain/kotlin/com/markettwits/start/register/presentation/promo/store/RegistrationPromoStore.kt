@@ -6,6 +6,7 @@ import com.markettwits.start.register.presentation.promo.store.RegistrationPromo
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.State
 
 interface RegistrationPromoStore : Store<Intent, State, Label> {
+
     data class State(
         val isLoading: Boolean = false,
         val isError: Boolean = false,

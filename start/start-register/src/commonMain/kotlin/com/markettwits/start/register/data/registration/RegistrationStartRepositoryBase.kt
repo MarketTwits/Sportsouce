@@ -52,9 +52,9 @@ class RegistrationStartRepositoryBase(
         }
     }
 
-    override suspend fun promo(value: String, startId: Int): Result<StartPromo> =
+    override suspend fun promo(value: String, startId: Int,distancesId : List<Int>): Result<StartPromo> =
         runCatching {
-            promoMapper.map(service.promo(value, startId))
+            promoMapper.map(service.promo(value, startId,distancesId))
         }
 
     override suspend fun registry(

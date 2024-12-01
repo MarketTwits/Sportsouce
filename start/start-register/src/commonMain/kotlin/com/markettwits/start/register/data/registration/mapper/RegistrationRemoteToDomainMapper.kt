@@ -74,7 +74,11 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
             distanceTitle = when (distanceItem) {
                 is DistanceItem.DistanceCombo -> distanceItem.value
                 is DistanceItem.DistanceInfo -> distanceItem.value
-            }
+            },
+            userId = StartStatement.UserId.WithId(userId = user.id.toString()),
+            stageId = null,
+            members = emptyList(),
+            //answers = emptyList()
 
         )
     }
@@ -220,7 +224,11 @@ class RegistrationRemoteToDomainMapperBase(private val timeMapper: TimeMapper) :
                     sexList = mapSexToDomain(),
                     paymentDisabled = paymentDisabled,
                     yearDiscountApplied = false,
-                    distanceTitle = distanceItem.value
+                    distanceTitle = distanceItem.value,
+                    userId = StartStatement.UserId.WithoutId,
+                    stageId = null,
+                    members = emptyList(),
+                   // answers = emptyList()
                 )
             )
         }

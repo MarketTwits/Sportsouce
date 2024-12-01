@@ -4,13 +4,14 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start.Discount
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
+import com.markettwits.start_cloud.model.members.StartMember
 import kotlinx.serialization.json.Json
 
 internal class StartDistancesToUiMapperBase(
     private val exceptionTracker: ExceptionTracker
 ) : StartDistancesToUiMapperAbstract() {
     override fun mapDistanceInfoList(
-        startMember: List<StartMemberItem>,
+        startMember: List<StartMember>,
         distances: List<DistanceItem>,
         date: String
     ): List<DistanceItem> = distances.map { distanceInfo ->
@@ -48,7 +49,7 @@ internal class StartDistancesToUiMapperBase(
         kindOfSport: String
     ): List<DistanceItem> = mapKindOfSportsToDistanceItemListBase(startId, kindOfSport)
 
-    override fun mapDiscountCloud(discount: List<Discount>): List<DistanceItem.Discount> =
+    override fun mapDiscountCloud(discount: List<com.markettwits.start_cloud.model.start.fields.Discount>): List<DistanceItem.Discount> =
         discount.map {
             DistanceItem.Discount(
                 id = it.id,

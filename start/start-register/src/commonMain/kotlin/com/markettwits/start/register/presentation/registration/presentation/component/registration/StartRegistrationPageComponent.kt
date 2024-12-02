@@ -10,24 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface StartRegistrationPageComponent {
 
-//    @OptIn(ExperimentalDecomposeApi::class)
-//    val pages : Value<ChildPages<*, StartStageComponent>>
-
     val pages : Value<ChildStack<*, StartStageComponent>>
 
     val state : StateFlow<StartRegistrationPageStore.State>
 
     fun obtainEvent(intent : StartRegistrationPageStore.Intent)
 
-
-    interface Outputs{
-
-        fun goBack()
-
-        fun onClickMember(
-            startStatement: StartStatement,
-            memberId : Int,
-            members : List<ProfileMember>
-        )
-    }
 }

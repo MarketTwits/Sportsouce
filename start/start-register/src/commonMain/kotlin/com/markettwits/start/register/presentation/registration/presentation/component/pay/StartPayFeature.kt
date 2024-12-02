@@ -6,6 +6,8 @@ import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationInfo
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.getRegistrationsStage
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore.State
@@ -17,7 +19,6 @@ import kotlinx.coroutines.launch
 class StartPayFeature(
     private val repository: StartRegistrationRepository,
     private val intentAction: IntentAction,
-    private val currentState : State,
     private val onEventContent: (EventContent) -> Unit,
     private val onGoBack : () -> Unit,
     innerState : StartRegistrationStagePage.Pay
@@ -36,17 +37,33 @@ class StartPayFeature(
         getPrice()
     }
 
+    fun updatePromo(
+        value : String
+    ){
+        scope.launch {
+            state.emit(
+                state.value.copy(
+                    state = state.value.state.copy(
+                        startInfo = state.value.state.startInfo.copy(
+                            promo = value
+                        )
+                    )
+                )
+            )
+            onEventContent(EventContent(true,"Промокод успешно применен"))
+            getPrice()
+        }
+    }
+
     fun registerOnStart(isPayOnline : Boolean,){
         scope.launch {
             state.emit(state.value.copy(isLoading = true))
             repository.registerOnStart(
-                comboId = currentState.registrationInfo.comboId,
-                startId = currentState.registrationInfo.startId,
-                promo = currentState.registrationInfo.promo,
+                comboId = state.value.state.startInfo.comboId,
+                startId = state.value.state.startInfo.startId,
+                promo = state.value.state.startInfo.promo,
                 registrationWithoutPayment = !isPayOnline,
-                distances = currentState.stages.getRegistrationsStage().map {
-                    it.distance
-                },
+                distances = state.value.state.distances,
             ).fold(onSuccess = {
                 if (it.isSuccess){
                     if (it.paymentUrl.isNotEmpty()) {
@@ -72,12 +89,10 @@ class StartPayFeature(
         scope.launch {
             state.emit(state.value.copy(isLoading = true))
             repository.getStartPrice(
-                comboId = currentState.registrationInfo.comboId,
-                startId = currentState.registrationInfo.startId,
-                promo = currentState.registrationInfo.promo,
-                distances = currentState.stages.getRegistrationsStage().map {
-                    it.distance
-                },
+                comboId = state.value.state.startInfo.comboId,
+                startId = state.value.state.startInfo.startId,
+                promo = state.value.state.startInfo.promo,
+                distances = state.value.state.distances,
             ).fold(onSuccess = {
                 val payStage = state.value.copy(
                     state = state.value.state.copy(price = it)

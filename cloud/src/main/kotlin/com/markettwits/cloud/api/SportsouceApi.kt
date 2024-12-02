@@ -25,7 +25,8 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
-import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
+import com.markettwits.cloud.model.start_user.values.UserRegistrationOld
+import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import java.io.File
@@ -71,8 +72,8 @@ interface SportsouceApi {
     suspend fun uploadFile(file: File): UploadFileResponse
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
-    suspend fun userRegistries(userId: Int, token: String): List<RemoteStartsUserItem>
-
+    suspend fun userRegistries(userId: Int, token: String): List<UserRegistrationOld>
+    suspend fun userRegistriesNew(userId: Int, token: String) : List<UserRegistrationShared>
     //Member
     suspend fun memberTemplate(userId: Int, token: String): ProfileMembers
     suspend fun deleteMember(memberId: Int, token: String)

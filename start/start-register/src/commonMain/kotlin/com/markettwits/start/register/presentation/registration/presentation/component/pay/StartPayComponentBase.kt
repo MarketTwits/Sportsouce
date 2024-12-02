@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.StateFlow
 class StartPayComponentBase(
     componentContext: ComponentContext,
     innerState : StartRegistrationStagePage.Pay,
-    private val outerState : State,
     private val repository: StartRegistrationRepository,
     private val intentAction: IntentAction,
     private val goBack : (StartRegistrationStagePage) -> Unit,
@@ -33,7 +32,6 @@ class StartPayComponentBase(
     private val feature = instanceKeeper.getOrCreate {
         StartPayFeature(
             repository = repository,
-            currentState = outerState,
             onEventContent = onEventContent,
             intentAction = intentAction,
             onGoBack = { goBack(state.value) },
@@ -68,9 +66,9 @@ class StartPayComponentBase(
 
     override fun onClickPromo() {
         slotNavigation.activate(StartPayComponent.Config.StartRegistrationPromo(
-            startId = outerState.registrationInfo.startId,
-            distancesId = outerState.stages.getDistancesId(),
-            promo = outerState.registrationInfo.promo
+            startId = state.value.startInfo.startId,
+            distancesId = state.value.distances.getDistancesId(),
+            promo = state.value.startInfo.promo
         ))
     }
 
@@ -86,7 +84,7 @@ class StartPayComponentBase(
                 distancesId = config.distancesId,
                 storeFactory = scope.get(),
                 applyPromo = { string, int ->
-                    onEventContent(EventContent(true,"Промокод успешно применен"))
+                    feature.updatePromo(string)
                 },
                 dismiss = {
                     slotNavigation.dismiss()

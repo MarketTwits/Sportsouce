@@ -2,6 +2,7 @@ package com.markettwits.start.register.presentation.registration.domain
 
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
@@ -23,7 +24,7 @@ interface StartRegistrationRepository {
         startId : Int,
         promo: String,
         distances: List<StartRegistrationDistance>,
-    ) : Result<StartRegisterPriceResponse>
+    ) : Result<StartRegistrationPriceResult>
 
     suspend fun getStartDistances(distances : List<DistinctDistance>) : Result<List<StartRegistrationDistance>>
 

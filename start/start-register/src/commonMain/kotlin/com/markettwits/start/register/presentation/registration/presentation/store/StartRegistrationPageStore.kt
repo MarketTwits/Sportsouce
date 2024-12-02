@@ -6,6 +6,7 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationInfo
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
@@ -27,15 +28,6 @@ interface StartRegistrationPageStore : Store<Intent, State, Label> {
         val error: SauceError? = null
     )
 
-    data class StartRegistrationInfo(
-        val startId: Int,
-        val startTitle: String,
-        val comboId : Int? = null,
-        val paymentType: String,
-        val promo : String = "",
-        val isPaymentDisabled: Boolean,
-    )
-
     sealed interface Intent{
         data class OnApplyPromo(val promo: String) : Intent
         data object OnConsumedEvent : Intent
@@ -55,11 +47,6 @@ interface StartRegistrationPageStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object GoBack : Label
-        data class GoStartMember(
-            val startStatement: StartStatement,
-            val memberId : Int,
-            val members : List<ProfileMember>
-        ) : Label
         data class OnPageSelected(val items : List<StartRegistrationStagePage>, val pageIndex : Int) : Label
     }
 

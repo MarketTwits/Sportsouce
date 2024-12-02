@@ -48,7 +48,9 @@ class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, M
     override fun executeAction(action: Action, getState: () -> State) {
        when(action){
            is Action.Loaded -> {
-               val stages = action.distances.createStartStagesContent()
+               val stages = action.distances.createStartStagesContent(
+                   getState().registrationInfo
+               )
                dispatch(Message.UpdateStages(stages))
                publish(Label.OnPageSelected(stages,0))
            }

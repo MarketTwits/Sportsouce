@@ -3,15 +3,30 @@ package com.markettwits.start.register.presentation.registration.data.mapper
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationAdditionalField
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceRequest
+import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
 import com.markettwits.start_cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.start_cloud.model.register.price.fields.StartRegisterDistance
 import com.markettwits.start_cloud.model.register.price.fields.StartRegisterMember
 import com.markettwits.time.TimeMapper
 
 class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
+
+    fun mapPriceResponse(
+        priceResponse: StartRegisterPriceResponse
+    ) : StartRegistrationPriceResult{
+        return if (priceResponse.isPaymentRequired)
+            StartRegistrationPriceResult.Value(
+                additionalFieldsPrice = priceResponse.additionalFieldsPrice,
+                priceWithoutDiscount = priceResponse.priceWithoutDiscount,
+                totalPrice = priceResponse.totalPrice
+            )
+        else
+            StartRegistrationPriceResult.Free
+    }
 
     fun mapPrice(
         comboId : Int?,

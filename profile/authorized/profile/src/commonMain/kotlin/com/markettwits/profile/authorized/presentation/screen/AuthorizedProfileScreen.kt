@@ -40,7 +40,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background),
-            isRefreshing = state.isLoading, onRefresh = {
+            isRefreshing = false, onRefresh = {
                 component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
             },
             toolbar = {

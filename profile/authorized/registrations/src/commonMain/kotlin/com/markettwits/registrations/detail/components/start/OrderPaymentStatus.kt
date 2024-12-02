@@ -42,7 +42,7 @@ fun OrderPaymentStatus(modifier: Modifier = Modifier, payment: StartOrderInfo.Pa
 
 internal fun mapOrderStatus(payment: StartOrderInfo.PaymentStatus): Color {
     return when (payment) {
-        is StartOrderInfo.PaymentStatus.Failure ->
+        is StartOrderInfo.PaymentStatus.NotPaid ->
             SportSouceColor.SportSouceLightRed
 
         is StartOrderInfo.PaymentStatus.Free ->
@@ -53,5 +53,8 @@ internal fun mapOrderStatus(payment: StartOrderInfo.PaymentStatus): Color {
 
         is StartOrderInfo.PaymentStatus.Success ->
             SportSouceColor.SportSouceRegistryOpenGreen
+
+        is StartOrderInfo.PaymentStatus.WithoutStatus ->
+            SportSouceColor.SportSouceLighBlue
     }
 }

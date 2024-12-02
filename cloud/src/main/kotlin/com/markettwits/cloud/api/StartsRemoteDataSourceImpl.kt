@@ -25,7 +25,9 @@ import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
-import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
+import com.markettwits.cloud.model.start_user.values.UserRegistrationOld
+import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
+import com.markettwits.cloud.model.start_user.values.UserRegistrationsRemote
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_cloud.provider.HttpClientProvider
@@ -35,7 +37,6 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
-import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -262,7 +263,7 @@ internal class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun userRegistries(userId: Int, token: String): List<RemoteStartsUserItem> {
+    override suspend fun userRegistries(userId: Int, token: String): List<UserRegistrationOld> {
         val response = client.get("user/startsByUserId/$userId") {
             contentType(ContentType.Application.Json)
             headers {
@@ -270,6 +271,19 @@ internal class StartsRemoteDataSourceImpl(
             }
         }
         return json.decodeFromString(response.body())
+    }
+
+    override suspend fun userRegistriesNew(
+        userId: Int,
+        token: String
+    ): List<UserRegistrationShared> {
+        val response = client.get("user/startsByUserId/$userId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
+        return json.decodeFromString<UserRegistrationsRemote>(response.body()).rows
     }
 
     override suspend fun memberTemplate(userId: Int, token: String): ProfileMembers {

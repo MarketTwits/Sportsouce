@@ -10,6 +10,6 @@ data class StartRegistrationDistance(
     //val additionalFields: List<StartRegistrationAdditionalField>,
     val stages : List<StartRegistrationStageWithStatement>,
     val answers : List<StartRegistrationStatementAnswer>,
-    val price : StartRegistrationPrice,
+    val price : StartRegistrationFieldPrice,
     val format : String,
 )

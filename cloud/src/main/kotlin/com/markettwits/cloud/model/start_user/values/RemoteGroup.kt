@@ -1,4 +1,4 @@
-package com.markettwits.cloud.model.start_user
+package com.markettwits.cloud.model.start_user.values
 
 import kotlinx.serialization.Serializable
 

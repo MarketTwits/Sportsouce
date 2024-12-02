@@ -6,7 +6,7 @@ import com.markettwits.members.member_common.domain.emptyProfileMember
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationAdditionalField
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
-import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPrice
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationFieldPrice
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStage
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
@@ -235,9 +235,9 @@ class StartRegistrationPageMapper(
         }
     }
 
-    private fun mapStartRegistrationPrice(price: Int?): StartRegistrationPrice =
+    private fun mapStartRegistrationPrice(price: Int?): StartRegistrationFieldPrice =
         if (price == null || price < 1)
-            StartRegistrationPrice.Empty
-        else StartRegistrationPrice.Cost(price)
+            StartRegistrationFieldPrice.Empty
+        else StartRegistrationFieldPrice.Cost(price)
 }
 

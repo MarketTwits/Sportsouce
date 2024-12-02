@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -160,7 +161,7 @@ private fun DistanceItem(
                 )
             } else {
                 Text(
-                    text = "Цена : " + item.static_price + " ₽",
+                    text = "Цена : " + item.static_price.formatPrice() + " ₽",
                     fontSize = 14.sp,
                     fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,

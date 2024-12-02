@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationInfo
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
 import kotlinx.serialization.Serializable
 
@@ -135,7 +137,9 @@ sealed interface StartRegistrationStagePage {
         override val isNextPayPage: Boolean = false,
         override val isGoBackAvailable: Boolean = true,
         override val isGoNextAvailable: Boolean = false,
-        val price: StartRegisterPriceResponse
+        val price: StartRegistrationPriceResult,
+        val startInfo : StartRegistrationInfo,
+        val distances : List<StartRegistrationDistance>
     ) : StartRegistrationStagePage
 
     @Serializable
@@ -149,7 +153,9 @@ sealed interface StartRegistrationStagePage {
     }
 }
 
-internal fun List<StartRegistrationDistance>.createStartStagesContent(): List<StartRegistrationStagePage> {
+internal fun List<StartRegistrationDistance>.createStartStagesContent(
+    startInfo: StartRegistrationInfo
+): List<StartRegistrationStagePage> {
     val items: MutableList<StartRegistrationStagePage> = mapIndexed { index, item ->
         StartRegistrationStagePage.Registration(
             id = index,
@@ -164,7 +170,9 @@ internal fun List<StartRegistrationDistance>.createStartStagesContent(): List<St
         id = this.size + 1,
         title = "Оплата",
         description = "",
-        price = StartRegisterPriceResponse(0, false, 0, 0)
+        price = StartRegistrationPriceResult.Empty,
+        startInfo = startInfo,
+        distances = this
     )
     items.add(payStage)
     return items
@@ -176,8 +184,8 @@ internal fun List<StartRegistrationStagePage>.getRegistrationsStage(): List<Star
 internal fun List<StartRegistrationStagePage>.getPayStage(): StartRegistrationStagePage.Pay =
     filterIsInstance<StartRegistrationStagePage.Pay>().first()
 
-internal fun List<StartRegistrationStagePage>.getDistancesId() : List<Int> = getRegistrationsStage().flatMap{
-    it.distance.stages.map {
+internal fun List<StartRegistrationDistance>.getDistancesId() : List<Int> = flatMap {
+    it.stages.map {
         it.stage.distanceId
     }
 }

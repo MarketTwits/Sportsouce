@@ -18,6 +18,7 @@ import com.markettwits.start.register.presentation.registration.presentation.com
 import com.markettwits.start.register.presentation.registration.presentation.component.distance.StartDistanceComponentBase
 import com.markettwits.start.register.presentation.registration.presentation.component.pay.StartPayComponentBase
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
+import com.markettwits.start.register.presentation.registration.presentation.components.registration.getRegistrationsStage
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,7 @@ class StartRegistrationPageComponentBase(
     componentContext: ComponentContext,
     storeFactory: StartRegistrationPageStoreFactory,
     input: StartRegistrationInput,
-    output: StartRegistrationPageComponent.Outputs
+    output: StartRegistrationOutput
 ) : StartRegistrationPageComponent, ComponentContext by componentContext {
 
     private val scope = getOrCreateKoinScope(
@@ -62,11 +63,14 @@ class StartRegistrationPageComponentBase(
             is StartRegistrationStagePage.Pay -> {
                 StartPayComponentBase(
                     componentContext = componentContext,
-                    innerState = page,
+                    innerState = page.copy(
+                        distances = state.value.stages.getRegistrationsStage().map { it.distance },
+                        startInfo = state.value.registrationInfo
+                    ),
                     goBack = {
+                        store.accept(StartRegistrationPageStore.Intent.UpdateStagePage(it))
                         navigation.pop()
                     },
-                    outerState = state.value,
                     onEventContent = {
                         store.accept(StartRegistrationPageStore.Intent.OnSendEvent(it))
                     },
@@ -77,7 +81,9 @@ class StartRegistrationPageComponentBase(
             is StartRegistrationStagePage.Registration -> {
                 StartDistanceComponentBase(
                     componentContext = componentContext,
-                    innerState = page,
+                    innerState = page.copy(
+
+                    ),
                     onMessage = {
                         store.accept(StartRegistrationPageStore.Intent.OnSendEvent(it))
                     },
@@ -114,10 +120,6 @@ class StartRegistrationPageComponentBase(
         store.labels.onEach {
             when (it) {
                 is StartRegistrationPageStore.Label.GoBack -> output.goBack()
-
-                is StartRegistrationPageStore.Label.GoStartMember -> output.onClickMember(
-                    it.startStatement, it.memberId, it.members
-                )
 
                 is StartRegistrationPageStore.Label.OnPageSelected -> {
                     navigation.replaceAll(it.items[it.pageIndex])

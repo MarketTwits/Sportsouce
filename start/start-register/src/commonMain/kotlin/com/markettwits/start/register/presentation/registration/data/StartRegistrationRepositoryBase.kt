@@ -9,6 +9,7 @@ import com.markettwits.start.register.presentation.registration.data.mapper.Star
 import com.markettwits.start.register.presentation.registration.data.mapper.StartRegistrationPageMapper
 import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
@@ -46,10 +47,10 @@ class StartRegistrationRepositoryBase(
         startId : Int,
         promo: String,
         distances: List<StartRegistrationDistance>,
-    ): Result<StartRegisterPriceResponse> = runCatching {
+    ): Result<StartRegistrationPriceResult> = runCatching {
         val request = priceMapper.mapPrice(comboId, startId, promo, null, distances)
         val token = authService.updateToken().getOrThrow()
-        startRegistrationService.price(request, token)
+        priceMapper.mapPriceResponse(startRegistrationService.price(request, token))
     }
 
     override suspend fun getStartDistances(distances: List<DistinctDistance>): Result<List<StartRegistrationDistance>> =

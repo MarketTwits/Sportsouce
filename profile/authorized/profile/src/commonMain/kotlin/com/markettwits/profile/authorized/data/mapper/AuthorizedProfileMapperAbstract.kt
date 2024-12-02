@@ -2,7 +2,8 @@ package com.markettwits.profile.authorized.data.mapper
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.members.ProfileMembers
-import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
+import com.markettwits.cloud.model.start_user.values.UserRegistrationOld
+import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
 import com.markettwits.profile.authorized.domain.UserProfile
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.time.TimeMapper
@@ -12,6 +13,7 @@ abstract class AuthorizedProfileMapperAbstract(
     private val userRegistrationsMapper: UserRegistrationsMapper,
     private val timeMapper: TimeMapper
 ) : AuthorizedProfileMapper {
+
     protected fun mapUserInfo(user: User): UserProfile.UserInfo =
         UserProfile.UserInfo(
             name = user.name,
@@ -34,7 +36,7 @@ abstract class AuthorizedProfileMapperAbstract(
         )
 
     protected fun mapUserActivities(
-        userRegistries: List<RemoteStartsUserItem>,
+        userRegistries: List<UserRegistrationShared>,
         userMembers: List<ProfileMembers.ProfileMember>
     ): UserProfile.Activity =
         UserProfile.Activity(

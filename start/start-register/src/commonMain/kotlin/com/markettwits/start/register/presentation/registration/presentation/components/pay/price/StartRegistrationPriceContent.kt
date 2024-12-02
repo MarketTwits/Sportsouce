@@ -2,7 +2,9 @@ package com.markettwits.start.register.presentation.registration.presentation.co
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -23,17 +26,19 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.OnBackgroundCard
+import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.order.presentation.components.promo.PromoBox
 import com.markettwits.start.register.presentation.registration.domain.extension.formatPrice
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
 
 @Composable
 internal fun StartRegistrationPriceContent(
     modifier: Modifier = Modifier,
-    priceResponse: StartRegisterPriceResponse,
+    priceResponse: StartRegistrationPriceResult,
     isLoading: Boolean,
     onClickPromo: () -> Unit,
 ) {
@@ -41,14 +46,63 @@ internal fun StartRegistrationPriceContent(
         modifier = modifier.padding(10.dp),
     ) {
         PromoBox(onClick = onClickPromo)
+
         Spacer(modifier = Modifier.height(10.dp))
-        OrderPriceInfo(
-            modifier = if (isLoading) Modifier.shimmer() else Modifier,
-            defaultPrice = priceResponse.priceWithoutDiscount,
-            discountCount = priceResponse.priceWithoutDiscount - priceResponse.totalPrice,
-            optionsPrice = priceResponse.additionalFieldsPrice,
-            finalPrice = priceResponse.totalPrice
-        )
+
+        when(priceResponse){
+            StartRegistrationPriceResult.Empty -> {
+                OrderPriceInfoEmpty(
+                    modifier = if (isLoading) Modifier.shimmer() else Modifier
+                )
+            }
+            StartRegistrationPriceResult.Free -> {
+                OrderPriceInfo(
+                    modifier = if (isLoading) Modifier.shimmer() else Modifier,
+                    defaultPrice = 0,
+                    discountCount = 0,
+                    optionsPrice = 0,
+                    finalPrice = 0
+                )
+            }
+            is StartRegistrationPriceResult.Value -> {
+                OrderPriceInfo(
+                    modifier = if (isLoading) Modifier.shimmer() else Modifier,
+                    defaultPrice = priceResponse.priceWithoutDiscount,
+                    discountCount = priceResponse.priceWithoutDiscount - priceResponse.totalPrice,
+                    optionsPrice = priceResponse.additionalFieldsPrice,
+                    finalPrice = priceResponse.totalPrice
+                )
+            }
+        }
+    }
+}
+
+@Composable
+internal fun OrderPriceInfoEmpty(modifier: Modifier = Modifier){
+    OnBackgroundCard(modifier = modifier) {
+        Column(modifier = Modifier.padding(10.dp)) {
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = "Ваш заказ",
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            DiscountRowEmpty(title = "Изначальная стоимость :")
+            DiscountRowEmpty(title = "Сумма скидки :")
+            DiscountRowEmpty(title = "Дополнительные опции :",)
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = "Итого",
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -88,6 +142,29 @@ internal fun OrderPriceInfo(
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun DiscountRowEmpty(modifier: Modifier = Modifier, title: String) {
+    AnimatedVisibility(visible = true) {
+        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                text = title,
+                fontSize = 14.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.outline
+            )
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                .clip(Shapes.medium)
             )
         }
     }

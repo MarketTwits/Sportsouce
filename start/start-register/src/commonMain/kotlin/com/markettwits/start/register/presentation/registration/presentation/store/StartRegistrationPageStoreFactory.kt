@@ -3,9 +3,8 @@ package com.markettwits.start.register.presentation.registration.presentation.st
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore.Intent
-import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
+import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationInfo
 import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
-import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationDistance
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore.Label
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore.State
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
@@ -46,7 +45,7 @@ class StartRegistrationPageStoreFactory(
             name = "StartRegistrationPageStore",
             initialState = StartRegistrationPageStore.State(
                 stages = emptyList(),
-                registrationInfo = StartRegistrationPageStore.StartRegistrationInfo(
+                registrationInfo = StartRegistrationInfo(
                     startId = startId,
                     startTitle = startTitle,
                     comboId = comboId,

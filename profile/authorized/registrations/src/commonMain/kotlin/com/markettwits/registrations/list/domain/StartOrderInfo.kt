@@ -31,6 +31,7 @@ data class StartOrderInfo(
      */
     @Serializable
     sealed interface PaymentStatus {
+
         val payment: Boolean
         val title: String
 
@@ -47,7 +48,7 @@ data class StartOrderInfo(
         ) : PaymentStatus
 
         @Serializable
-        data class Failure(
+        data class NotPaid(
             override val payment: Boolean = false,
             override val title: String = "Не оплачено"
         ) : PaymentStatus
@@ -56,6 +57,12 @@ data class StartOrderInfo(
         data class PaymentCancelled(
             override val payment: Boolean = false,
             override val title: String = "Оплата отменена"
+        ) : PaymentStatus
+
+        @Serializable
+        data class WithoutStatus(
+            override val payment: Boolean = true,
+            override val title: String = "Без статуса"
         ) : PaymentStatus
     }
 }

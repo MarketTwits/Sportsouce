@@ -1,45 +1,85 @@
 package com.markettwits.registrations.list.data.mapper
 
 import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.cloud.model.start_user.RemoteGroup
-import com.markettwits.cloud.model.start_user.RemoteStartsUserItem
+import com.markettwits.cloud.model.start_user.values.RemoteGroup
+import com.markettwits.cloud.model.start_user.values.UserRegistrationOld
+import com.markettwits.cloud.model.start_user.values.UserRegistrationNew
+import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 import kotlinx.serialization.json.Json
+import java.text.NumberFormat
+import java.util.Locale
 
 class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegistrationsMapper {
-    override fun map(starts: List<RemoteStartsUserItem>): List<StartOrderInfo> {
-        val base = starts.map {
-            StartOrderInfo(
-                id = it.id,
-                startId = it.start_id,
-                name = it.name,
-                image = it.start.posterLinkFile?.fullPath ?: "",
+
+    override fun map(start: UserRegistrationNew): StartOrderInfo {
+        return StartOrderInfo(
+            id = start.id,
+            startId = start.start_id,
+            name = start.start.name,
+            image = start.start.posterLinkFile?.fullPath ?: "",
+            dateStartPreview = timeMapper.mapTime(
+                TimePattern.FullWithEmptySpace,
+                start.start.start_date
+            ),
+            dateStartCloud = start.start.start_date,
+            statusCode = StartStatus(
+                start.start.start_status?.code ?: 3,
+                start.start.start_status?.name ?: "Без статуса"
+            ),
+            ageGroup = start.members.first().group ?: "",
+            distance = start.members.first().distance ?: "",
+            member = start.members.first().surname + " " + start.members.first().name,
+            cost = if (start.price == null) "0" else start.price?.formatPrice().toString(),
+            team = start.members.first().team,
+            kindOfSport = start.members.first().format ?: "",
+            startTitle = start.start.name,
+            payment = StartOrderInfo.PaymentStatus.NotPaid(),
+        )
+    }
+
+    override fun map(
+        start: UserRegistrationOld
+    ): StartOrderInfo {
+            return StartOrderInfo(
+                id = start.id,
+                startId = start.start_id,
+                name = start.name,
+                image = start.start.posterLinkFile?.fullPath ?: "",
                 dateStartPreview = timeMapper.mapTime(
                     TimePattern.FullWithEmptySpace,
-                    it.start.start_date
+                    start.start.start_date
                 ),
-                dateStartCloud = it.start.start_date,
+                dateStartCloud = start.start.start_date,
                 statusCode = StartStatus(
-                    it.start.start_status.code,
-                    it.start.start_status.name
+                    start.start.start_status?.code ?: 3,
+                    start.start.start_status?.name ?: "Без статуса"
                 ),
-                ageGroup = mapStartGroup(it.group ?: ""),
-                distance = it.distance,
-                member = it.surname + " " + it.name,
-                cost = if (it.price == null) "0" else it.price.toString(),
-                team = it.team,
-                kindOfSport = it.format,
-                startTitle = it.start.name,
+                ageGroup = mapStartGroup(start.group ?: ""),
+                distance = start.distance,
+                member = start.surname + " " + start.name,
+                cost = if (start.price == null) "0" else start.price.toString(),
+                team = start.team,
+                kindOfSport = start.format,
+                startTitle = start.start.name,
                 payment = mapPayments(
-                    it.payment,
-                    it.start.isOpen,
-                    it.start.payment_disabled ?: false
+                    start.payment,
+                    start.start.isOpen ?: false,
+                    start.start.payment_disabled ?: false
                 ),
             )
+    }
+
+    override fun map(registrations: List<UserRegistrationShared>): List<StartOrderInfo> {
+        return registrations.map {
+            when(it){
+                is UserRegistrationNew -> map(it)
+                is UserRegistrationOld -> map(it)
+            }
         }
-        return base
     }
 
     private fun mapPayment(payment: Int?, isOpen: Boolean, paymentDisabled: Boolean): Boolean {
@@ -55,7 +95,7 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
         if (paymentDisabled || payment == 2)
             return StartOrderInfo.PaymentStatus.Free()
         if (payment == null)
-            return StartOrderInfo.PaymentStatus.Failure(
+            return StartOrderInfo.PaymentStatus.NotPaid(
                 mapPayment(
                     payment,
                     isOpen,
@@ -72,7 +112,8 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
             )
         if (payment == 1)
             return StartOrderInfo.PaymentStatus.Success()
-        else return StartOrderInfo.PaymentStatus.Failure(
+
+        else return StartOrderInfo.PaymentStatus.NotPaid(
             mapPayment(
                 payment,
                 isOpen,

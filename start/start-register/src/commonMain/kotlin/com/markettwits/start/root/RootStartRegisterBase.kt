@@ -23,6 +23,7 @@ import com.markettwits.start.register.presentation.order.presentation.component.
 import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponentBase
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationOutput
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponentBase
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponentBase
@@ -166,24 +167,9 @@ class RootStartRegisterBase(
             )
         }
 
-    private inner class StartRegistrationPageComponentOutputsImpl :
-        StartRegistrationPageComponent.Outputs{
+    private inner class StartRegistrationPageComponentOutputsImpl : StartRegistrationOutput {
         override fun goBack() {
             pop()
-        }
-
-        override fun onClickMember(
-            startStatement: StartStatement,
-            memberId: Int,
-            members: List<ProfileMember>
-        ) {
-            stackNavigation.push(
-                RootStartRegister.ConfigStack.StartRegistrationMember(
-                    memberId,
-                    members,
-                    startStatement,
-                )
-            )
         }
     }
 }

@@ -64,9 +64,8 @@ class RegistrationsDataStoreFactory(
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.LoadData -> {
-                    launch(getState())
+                    launch()
                 }
-
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
                 is Intent.OnClickFilter -> updateFilter(intent.item, getState())
@@ -74,14 +73,18 @@ class RegistrationsDataStoreFactory(
         }
 
         override fun executeAction(action: Unit, getState: () -> State) {
-            launch(getState())
+            launch()
         }
 
-        private fun launch(state: State) {
+        private fun launch() {
             scope.launch {
                 dispatch(Msg.Loading)
                 dataSource.registrations()
-                    .onFailure { dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString())) }
+                    .onFailure {
+                        //networkExceptionHandler(it).message.toString())
+
+                        dispatch(Msg.InfoFailed(it.message.toString()))
+                    }
                     .onSuccess { dispatch(Msg.InfoLoaded(starts = it, filter = createFilter(it))) }
             }
         }

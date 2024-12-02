@@ -70,7 +70,6 @@ fun OrderStartCard(
                 group = item.ageGroup,
                 kindOfSport = item.kindOfSport,
                 orderId = item.id,
-                paymentStatus = item.payment,
                 team = item.team,
                 distance = item.distance,
             )
@@ -89,7 +88,6 @@ private fun RegistrationsCardInfoStatusInfo(
     distance: String,
     kindOfSport: String,
     orderId: Int,
-    paymentStatus: StartOrderInfo.PaymentStatus,
     cost: String,
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
@@ -109,7 +107,6 @@ private fun RegistrationsCardInfoStatusInfo(
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
-        //   OrderPaymentStatus(modifier = Modifier.padding(vertical = 5.dp), payment = paymentStatus)
         RegistrationsCardInfoStatusInfoText(
             label = "Дата: ",
             value = date

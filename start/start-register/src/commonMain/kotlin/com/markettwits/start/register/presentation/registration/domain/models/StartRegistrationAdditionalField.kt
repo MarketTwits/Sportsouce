@@ -9,7 +9,7 @@ data class StartRegistrationAdditionalField(
     val type : Type,
     val title : String,
     val options : List<Option>,
-    val price : StartRegistrationPrice,
+    val price : StartRegistrationFieldPrice,
     val isOptional : Boolean,
     val dependentFields : List<StartRegistrationAdditionalField>
 ){

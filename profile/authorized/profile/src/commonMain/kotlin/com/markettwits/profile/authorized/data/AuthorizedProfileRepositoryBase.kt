@@ -7,6 +7,7 @@ import com.markettwits.profile.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.authorized.data.mapper.AuthorizedProfileMapper
 import com.markettwits.profile.authorized.domain.AuthorizedProfileRepository
 import com.markettwits.profile.authorized.domain.UserProfile
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,8 @@ class AuthorizedProfileRepositoryBase(
     private val executeWithCache: ExecuteWithCache,
     private val mapper: AuthorizedProfileMapper
 ) : AuthorizedProfileRepository {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun profile(forced: Boolean): Flow<UserProfile> =
         auth.observeUser().flatMapConcat {
             flow {
@@ -49,7 +52,7 @@ class AuthorizedProfileRepositoryBase(
 
             }
             val deferredRegisters = async {
-                runCatching { remote.userRegistries(user.id, token) }.fold(onSuccess = {
+                runCatching { remote.userRegistriesNew(user.id, token) }.fold(onSuccess = {
                     it
                 }, onFailure = {
                     emptyList()

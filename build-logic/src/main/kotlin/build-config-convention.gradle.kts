@@ -1,6 +1,3 @@
-
-import org.gradle.kotlin.dsl.buildConfigField
-
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.github.gmazzo.buildconfig")
@@ -9,11 +6,9 @@ plugins {
 buildConfig {
     val version = localLibs.findVersion("versionName").get().toString()
     generateAtSync = false
-    buildConfigField("APP_NAME", project.name)
     buildConfigField("APP_VERSION", version)
     buildConfigField("APP_VERSION_NUMBER", versionCode(version))
     buildConfigField("BUILD_TIME", System.currentTimeMillis())
-    buildConfigField("FEATURE_ENABLED", true)
 }
 
 fun versionCode(versionName: String): Int {

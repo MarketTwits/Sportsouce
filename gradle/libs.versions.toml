@@ -138,6 +138,7 @@ vk-compose-gradle-plugin = { id = "com.vk.vkompose:gradle-plugin", version.ref =
 kotlin-jvm-convention = {id = "kotlin-jvm-convention", version = "unspecified"}
 kotlin-kmp-convention = { id = "kotlin-multiplatform-convention", version = "unspecified" }
 kotlin-kmp-compose-convention = { id = "kotlin-multiplatform-compose-convetion", version = "unspecified" }
+build-konfig-convension = { id = "build-config-convention", version = "unspecified" }
 
 [bundles]
 decompose-compose = ["decompose-compose-extension", "decompose"]

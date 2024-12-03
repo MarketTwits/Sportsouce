@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application") apply false
     id("ru.ok.tracer")
@@ -7,11 +9,17 @@ fetchTracerToken().apply()
 
 fun fetchTracerToken(): TracerConfig {
 
-    val applicationToken = property("tracerApplicationToken")?.toString() ?: error(
-        exceptionMessage("tracerApplicationToken")
+    val secretKeyProperties by lazy {
+        val secretKeyPropertiesFile = rootProject.file("secrets.properties")
+        Properties().apply { secretKeyPropertiesFile.inputStream().use { secret -> load(secret) } }
+    }
+
+    val applicationToken = secretKeyProperties["tracer.application.token"]?.toString() ?: error(
+        exceptionMessage("tracer.application.token")
     )
-    val pluginToken = property("tracerPluginToken")?.toString() ?: error(
-        exceptionMessage("tracerPluginToken")
+
+    val pluginToken = secretKeyProperties["tracer.plugin.token"]?.toString() ?: error(
+        exceptionMessage("tracer.application.token")
     )
 
     return TracerConfig(applicationToken, pluginToken)

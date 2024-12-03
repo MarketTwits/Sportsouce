@@ -5,6 +5,7 @@ import ru.ok.tracer.Tracer
 import ru.ok.tracer.crash.report.TracerCrashReport
 
 internal class TracerExceptionTracker : ExceptionTracker {
+
     override fun reportException(exception: Throwable, key: String?) {
         TracerCrashReport.report(exception, key)
     }

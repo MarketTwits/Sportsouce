@@ -21,3 +21,8 @@ local.properties
 
 /app/release
 /app/debug
+
+# Project secrets config
+store
+secrets.properties
+/secrets.properties

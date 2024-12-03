@@ -35,7 +35,6 @@ import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun ClubDashboardScreen(
     component: ClubDashboardComponent

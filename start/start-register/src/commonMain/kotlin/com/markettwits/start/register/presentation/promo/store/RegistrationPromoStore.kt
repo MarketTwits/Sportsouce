@@ -30,7 +30,6 @@ interface RegistrationPromoStore : Store<Intent, State, Label> {
     sealed interface Label {
         data class ApplyPromo(val promo: String, val percent: Int) : Label
         data object Dismiss : Label
-        data object Empty : Label
     }
 
 }

@@ -7,13 +7,13 @@ import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Labe
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.State
 import com.markettwits.club.info.domain.models.ClubInfo
 import com.markettwits.club.registration.domain.RegistrationType
+import com.markettwits.core.errors.api.throwable.SauceError
 
 interface ClubDashboardStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoading: Boolean = false,
-        val isError: Boolean = false,
-        val message: String = "",
+        val error: SauceError? = null,
         val subscription: SubscriptionUiState = SubscriptionUiState(
             items = emptyList(),
             clubInfo = emptyList()
@@ -41,7 +41,7 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
-        data class Failed(val message: String) : Message
+        data class Failed(val error: SauceError) : Message
         data class Loaded(val items: SubscriptionUiState) : Message
         data class UpdateSubscriptionPanelState(val state : SubscriptionPanelState) : Message
         data class UpdateState(val state: SubscriptionUiState) : Message

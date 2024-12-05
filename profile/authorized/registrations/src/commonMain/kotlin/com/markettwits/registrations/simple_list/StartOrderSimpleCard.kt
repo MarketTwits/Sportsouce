@@ -55,7 +55,6 @@ fun StartOrderSimpleCard(
             ImageCardInfo(
                 modifier = Modifier.padding(start = 10.dp),
                 title = start.startTitle,
-                status = start.statusCode,
                 date = start.dateStartPreview,
                 payment = start.payment,
                 cost = start.cost,
@@ -105,7 +104,7 @@ private fun ImageCard(
 private fun ImageCardInfo(
     modifier: Modifier = Modifier,
     title: String,
-    status: StartStatus,
+   // status: StartStatus,
     payment: StartOrderInfo.PaymentStatus,
     cost: String,
     date: String,
@@ -125,19 +124,7 @@ private fun ImageCardInfo(
             fontSize = 14.sp,
             textAlign = TextAlign.Start
         )
-        if (payment.payment) {
-            Text(
-                modifier = modifier,
-                text = status.name,
-                lineHeight = 16.sp,
-                color = MaterialTheme.colorScheme.outline,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                fontFamily = FontNunito.medium(),
-                fontSize = 12.sp,
-                textAlign = TextAlign.Start
-            )
-        } else {
+        if (!payment.payment) {
             Text(
                 modifier = modifier,
                 text = "Слот не оплачен",

@@ -1,8 +1,14 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm.convention)
+    alias(libs.plugins.kotlin.kmp.convention)
 }
-
-dependencies{
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.multiplatform.locale)
+android{
+    namespace = "com.markettwits.core.time"
+}
+kotlin {
+    sourceSets {
+        commonMain.dependencies{
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.datetime.ext)
+        }
+    }
 }

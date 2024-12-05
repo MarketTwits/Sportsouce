@@ -48,10 +48,10 @@ fun StartOrderProfileDialogScreen(component: StartOrderComponent) {
                     component.obtainEvent(StartOrderStore.Intent.OnClickStart(it))
                 }
             )
-            OrderDialogStartStatus(
-                modifier = Modifier.padding(vertical = 4.dp),
-                startStatus = state.startOrderInfo.statusCode
-            )
+//            OrderDialogStartStatus(
+//                modifier = Modifier.padding(vertical = 4.dp),
+//                startStatus = state.startOrderInfo.statusCode
+//            )
             OrderDialogPaymentStatus(
                 modifier = Modifier.padding(vertical = 4.dp),
                 paymentStatus = state.startOrderInfo.payment.title

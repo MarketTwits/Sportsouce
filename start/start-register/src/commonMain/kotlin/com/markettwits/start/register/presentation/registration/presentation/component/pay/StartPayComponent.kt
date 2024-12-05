@@ -4,15 +4,14 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponent
 import com.markettwits.start.register.presentation.registration.presentation.component.StartStageComponent
+import com.markettwits.start.register.presentation.registration.presentation.component.pay.store.StartPayStore
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
 
 interface StartPayComponent : StartStageComponent {
 
-        override val state: StateFlow<StartRegistrationStagePage.Pay>
-
-        val newState : StateFlow<State>
+        val newState : StateFlow<StartPayStore.State>
 
         val childSlot: Value<ChildSlot<*, Child>>
 
@@ -21,12 +20,6 @@ interface StartPayComponent : StartStageComponent {
         fun onClickRegistry(isWithPay : Boolean)
 
         fun onClickPromo()
-
-
-        data class State(
-            val isLoading : Boolean,
-            val state : StartRegistrationStagePage.Pay
-        )
 
         @Serializable
         sealed interface Config {

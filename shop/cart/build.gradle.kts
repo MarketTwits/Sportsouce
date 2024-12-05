@@ -15,9 +15,9 @@ kotlin {
             implementation(libs.koin.core)
             implementation(projects.intent.composable)
             implementation(projects.shop.domain)
-            implementation(projects.cache)
+            implementation(projects.core.cache)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.shop.cloud)
             implementation(projects.auth.authService)
         }

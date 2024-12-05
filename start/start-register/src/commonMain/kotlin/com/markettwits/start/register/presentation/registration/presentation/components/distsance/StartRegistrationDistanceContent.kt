@@ -53,7 +53,9 @@ private fun StartRegistrationMemberContent(
     ) {
     Column(modifier = modifier) {
         Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 16.dp),
             text = title,
             color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.semiBoldBold(),

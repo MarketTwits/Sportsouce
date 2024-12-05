@@ -10,7 +10,7 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.settings.impl)
         implementation(projects.club.dashboard)
-        implementation(projects.cache)
+        implementation(projects.core.cache)
         implementation(projects.cloud)
         implementation(projects.news)
         implementation(projects.start.startSearch)
@@ -20,7 +20,7 @@ kotlin {
         implementation(projects.review.popular)
         implementation(projects.core.time)
         implementation(projects.core.ui)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(projects.intent.api)
         implementation(projects.intent.impl)
         implementation(projects.starts.startsCommon)

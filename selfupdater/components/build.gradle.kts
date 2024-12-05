@@ -21,7 +21,7 @@ kotlin {
             implementation(projects.core.ui)
             implementation(libs.multiplatform.markdown.renderer.m3)
             implementation(libs.koin.core)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(libs.bundles.mviKotlin)
         }
         commonTest.dependencies {

@@ -1,8 +1,14 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm.convention)
+    alias(libs.plugins.kotlin.kmp.convention)
 }
-
-dependencies {
-    implementation(projects.selfupdater.api)
-    implementation(libs.kotlinx.coroutines.core)
+android{
+    namespace = "com.markettwits.selfupdater.impl"
+}
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            implementation(projects.selfupdater.api)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+    }
 }

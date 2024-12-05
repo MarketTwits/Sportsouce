@@ -13,7 +13,7 @@ kotlin {
         implementation(projects.auth.authService)
         implementation(projects.cloud)
         implementation(projects.core.ui)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(libs.koin.core)
         implementation(compose.components.resources)
         implementation(libs.bundles.decompose.compose)

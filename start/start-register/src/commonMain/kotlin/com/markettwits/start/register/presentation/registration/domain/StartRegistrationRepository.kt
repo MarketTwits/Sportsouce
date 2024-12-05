@@ -11,6 +11,8 @@ import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
 interface StartRegistrationRepository {
 
+    suspend fun isRegisterAvailable() : Result<Unit>
+
     suspend fun registerOnStart(
         comboId : Int?,
         startId : Int,
@@ -26,6 +28,7 @@ interface StartRegistrationRepository {
         distances: List<StartRegistrationDistance>,
     ) : Result<StartRegistrationPriceResult>
 
-    suspend fun getStartDistances(distances : List<DistinctDistance>) : Result<List<StartRegistrationDistance>>
+    suspend fun getStartDistances(distances : List<DistinctDistance>) :
+            Result<List<StartRegistrationDistance>>
 
 }

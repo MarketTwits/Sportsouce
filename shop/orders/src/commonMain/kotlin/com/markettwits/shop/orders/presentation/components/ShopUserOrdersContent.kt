@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core.errors.api.throwable.SauceError
-import com.markettwits.core_ui.items.base_screen.CollapsingToolbarRefreshScaffold
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.shop.orders.domain.models.ShopUserOrder
@@ -38,22 +37,22 @@ fun ShopUserOrdersContent(
             isRefreshing = isLoading && items.isNotEmpty(),
             onRefresh = onClickRetry
         ) { innerModifier ->
-            if (isSuccess) {
-                Column(
-                    modifier = innerModifier
-                        .padding(top = paddingValues.calculateTopPadding())
-                        .padding(10.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
+            Column(
+                modifier = innerModifier
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(10.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (isSuccess) {
                     if (items.isNotEmpty()) {
                         ShopUserOrdersWithItemsContent(items = items)
                     } else {
                         ShopUserOrdersWithoutItemsContent()
                     }
                 }
+                ShopUserOrdersErrorContent(error = error, onClickRetry = onClickRetry)
+                ShopUserOrdersLoadingContent(isLoading = isLoading, isListEmpty = items.isEmpty())
             }
         }
-        ShopUserOrdersErrorContent(error = error, onClickRetry = onClickRetry)
-        ShopUserOrdersLoadingContent(isLoading = isLoading, isListEmpty = items.isEmpty())
     }
 }

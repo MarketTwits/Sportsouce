@@ -11,7 +11,7 @@ data class StartOrderInfo(
     val image: String,
     val dateStartPreview: String,
     val dateStartCloud: String,
-    val statusCode: StartStatus,
+    //val statusCode: StartStatus,
     val team: String,
     val payment: PaymentStatus,
     val ageGroup: String,
@@ -26,6 +26,7 @@ data class StartOrderInfo(
      * Описание различных состояний оплаты:
      * - Старт оплачен - payment: 1
      * - Участие бесплатно - payment: 2
+     * - Участие бесплатно по скидке - payment 4
      * - Старт не оплачен - payment null
      * - Оплата отменена - payment 0
      */
@@ -33,6 +34,7 @@ data class StartOrderInfo(
     sealed interface PaymentStatus {
 
         val payment: Boolean
+
         val title: String
 
         @Serializable

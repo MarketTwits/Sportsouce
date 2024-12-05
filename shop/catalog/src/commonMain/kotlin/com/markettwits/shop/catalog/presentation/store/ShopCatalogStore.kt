@@ -14,9 +14,6 @@ import kotlinx.coroutines.flow.Flow
 interface ShopCatalogStore : Store<Intent, State, Label> {
 
     data class State(
-        val isLoading: Boolean,
-        val isError: Boolean,
-        val message: String,
         val shopItems: Flow<PagingData<ShopItem>>,
         val queryState : String = "",
     )
@@ -32,10 +29,8 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message {
-        data object Loading : Message
         data class Loaded(val items: Flow<PagingData<ShopItem>>) : Message
         data class UpdateCategories(val id: Int) : Message
-        data class Failed(val message: String) : Message
         data class QueryApplied(val query: String) : Message
     }
 

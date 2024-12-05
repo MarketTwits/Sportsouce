@@ -4,4 +4,8 @@ interface StartRegistrationOutput{
 
     fun goBack()
 
+    fun goSuccess()
+
+    fun goAuth()
+
 }

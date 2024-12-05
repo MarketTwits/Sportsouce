@@ -33,7 +33,7 @@ class StartRegistrationPageComponentBase(
     componentContext: ComponentContext,
     storeFactory: StartRegistrationPageStoreFactory,
     input: StartRegistrationInput,
-    output: StartRegistrationOutput
+    private val output: StartRegistrationOutput
 ) : StartRegistrationPageComponent, ComponentContext by componentContext {
 
     private val scope = getOrCreateKoinScope(
@@ -74,7 +74,10 @@ class StartRegistrationPageComponentBase(
                     onEventContent = {
                         store.accept(StartRegistrationPageStore.Intent.OnSendEvent(it))
                     },
-                    repository = scope.get(), intentAction = scope.get()
+                    goSuccess = {
+                        output.goSuccess()
+                    },
+                    storeFactory = scope.get()
                 )
             }
 
@@ -100,7 +103,7 @@ class StartRegistrationPageComponentBase(
                 )
             }
 
-            StartRegistrationStagePage.Empty -> StartStageComponent.Empty
+            is StartRegistrationStagePage.Empty -> StartStageComponent.Empty
         }
     }
 
@@ -124,6 +127,8 @@ class StartRegistrationPageComponentBase(
                 is StartRegistrationPageStore.Label.OnPageSelected -> {
                     navigation.replaceAll(it.items[it.pageIndex])
                 }
+
+                is StartRegistrationPageStore.Label.GoAuth -> output.goAuth()
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }

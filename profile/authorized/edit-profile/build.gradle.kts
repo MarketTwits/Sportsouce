@@ -15,7 +15,7 @@ kotlin {
             implementation(projects.cloud)
             implementation(projects.auth.authService)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.teamsCity)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)

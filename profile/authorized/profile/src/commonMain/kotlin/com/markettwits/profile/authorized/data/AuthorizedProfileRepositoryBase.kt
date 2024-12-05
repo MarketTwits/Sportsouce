@@ -52,7 +52,7 @@ class AuthorizedProfileRepositoryBase(
 
             }
             val deferredRegisters = async {
-                runCatching { remote.userRegistriesNew(user.id, token) }.fold(onSuccess = {
+                runCatching { remote.userRegistriesNew2(user.id, token) }.fold(onSuccess = {
                     it
                 }, onFailure = {
                     emptyList()

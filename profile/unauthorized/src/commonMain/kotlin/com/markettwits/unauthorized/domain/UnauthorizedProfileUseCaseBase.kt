@@ -6,6 +6,7 @@ import com.markettwits.profile.api.AuthDataSource
 internal class UnauthorizedProfileUseCaseBase(
     private val authDataSource: AuthDataSource
 ) : UnauthorizedProfileUseCase {
+
     override suspend fun authorize(): Result<User> = authDataSource.user()
 
     override suspend fun exit() {

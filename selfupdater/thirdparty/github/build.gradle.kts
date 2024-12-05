@@ -12,7 +12,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.selfupdater.thirdparty.api)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(projects.coreCloud)
+            implementation(projects.core.cloud)
             implementation(libs.ktor.core)
             implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.logging)

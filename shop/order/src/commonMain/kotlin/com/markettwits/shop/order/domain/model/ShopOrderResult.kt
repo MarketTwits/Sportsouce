@@ -1,7 +1,5 @@
 package com.markettwits.shop.order.domain.model
 
-import com.markettwits.shop.order.domain.model.ShopOrderResult.Companion.BASE_ORDER_PAGE_URL
-
 
 data class ShopOrderResult(
     val errors: List<Error>,
@@ -29,12 +27,11 @@ data class ShopOrderResult(
     }
 }
 
-internal fun ShopOrderResult.getUrlAfterCreateOrder() : String{
+internal fun ShopOrderResult.getUrlAfterCreateOrder() : String {
     return if (order != null){
             if (order.paidOnline)
                  payment?.formUrl ?: order.getOrderDetailUrl()
             else
                  order.getOrderDetailUrl()
-    } else
-        throw IllegalStateException("Ошибка формирвоания заказа")
+    } else errors.firstOrNull()?.message ?: "Что то пошло не так"
 }

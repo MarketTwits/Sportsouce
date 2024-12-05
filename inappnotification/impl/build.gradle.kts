@@ -1,12 +1,10 @@
 
 plugins {
-
-    //  alias(libs.plugins.android.library.compose.convention)
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android.namespace = "com.flipperdevices.inappnotification.impl"
+android.namespace = "com.markettwits.inappnotification.impl"
 
 kotlin {
     sourceSets {
@@ -16,9 +14,3 @@ kotlin {
         }
     }
 }
-
-//dependencies {
-//    implementation(projects.inappnotification.api)
-//    implementation(libs.bundles.composeUiBundle)
-//    implementation(projects.core.ui)
-//}

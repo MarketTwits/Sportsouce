@@ -9,6 +9,7 @@ import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Stat
 import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.coroutines.flow.catch
@@ -88,7 +89,7 @@ internal class ClubDashboardExecutor(
         scope.launch {
             clubRepository.subscriptions()
                 .onStart { dispatch(Message.Loading) }
-                .catch { dispatch(Message.Failed(it.networkExceptionHandler().message.toString())) }
+                .catch { dispatch(Message.Failed(it.mapToSauceError()))}
                 .collect {
                     val newState = mapSubscriptionsInit(it, state.subscription)
                     dispatch(Message.Loaded(newState))
@@ -99,7 +100,6 @@ internal class ClubDashboardExecutor(
                             )
                         )
                     )
-
                     onCompletion(newState)
                 }
         }
@@ -152,9 +152,6 @@ internal class ClubDashboardExecutor(
                     )
                 )
             }, onFailure = {
-                println("""""""""""""""""")
-                println(it.message.toString())
-                println("""""""""""""""""")
                 dispatch(
                     Message.UpdateSubscriptionPanelState(
                         subscriptionStateUpdated(item)

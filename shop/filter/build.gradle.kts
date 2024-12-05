@@ -14,7 +14,7 @@ kotlin {
             implementation(libs.bundles.mviKotlin)
             implementation(projects.shop.cloud)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
         }
     }
 }

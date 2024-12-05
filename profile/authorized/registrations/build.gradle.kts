@@ -13,7 +13,7 @@ kotlin {
         implementation(projects.auth.authService)
         implementation(projects.core.ui)
         implementation(projects.start.start)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(projects.core.time)
         implementation(projects.intent.api)
         implementation(projects.intent.impl)

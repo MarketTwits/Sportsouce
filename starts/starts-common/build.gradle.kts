@@ -7,7 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.cloud)
-            implementation(projects.cache)
+            implementation(projects.core.cache)
             implementation(projects.core.ui)
             implementation(projects.core.time)
             implementation(libs.kotlinx.serialization.core)

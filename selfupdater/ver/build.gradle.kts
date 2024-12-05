@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
-    id("build-config-convention")
+    alias(libs.plugins.build.konfig.convension)
 }
 
 android.namespace = "com.markettwits.selfupdater.version"

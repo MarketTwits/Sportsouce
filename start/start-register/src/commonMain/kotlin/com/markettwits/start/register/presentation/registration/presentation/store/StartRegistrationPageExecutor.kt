@@ -38,10 +38,6 @@ class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, M
             is Intent.OnSendEvent -> {
                 dispatch(Message.UpdateEvent(triggered(intent.eventContent)))
             }
-
-            is Intent.OnApplyPromo -> {
-                dispatch(Message.UpdatePromo(intent.promo))
-            }
         }
     }
 
@@ -60,6 +56,7 @@ class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, M
            is Action.Loading -> {
                dispatch(Message.UpdateStageLoading)
            }
+           is Action.Unauthorized -> publish(Label.GoAuth)
        }
     }
 

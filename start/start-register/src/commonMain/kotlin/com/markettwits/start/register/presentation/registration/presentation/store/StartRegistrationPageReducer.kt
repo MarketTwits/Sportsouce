@@ -13,13 +13,9 @@ object StartRegistrationPageReducer : Reducer<State, Message> {
             )
             is Message.UpdateEvent -> copy(eventWithContent = msg.eventContent)
 
-            is Message.UpdatePromo -> copy(
-                registrationInfo = copy().registrationInfo.copy(promo = msg.promo)
-            )
             is Message.UpdateStageError -> copy(
                 pagesState = copy().pagesState.copy(
-                    isLoading = false, error = msg
-                        .error
+                    isLoading = false, error = msg.error
                 )
             )
 

@@ -15,7 +15,6 @@ class StartRegisterResultMapper {
         return StartRegistrationResult(
             isSuccess = true,
             isError = false,
-            message = "Вы успешо зарегестрировались, оплатите в личном кабинете",
             paymentUrl = payment
         )
     }

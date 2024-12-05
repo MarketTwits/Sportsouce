@@ -7,9 +7,9 @@ import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Mess
 internal object ClubDashboardReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Failed -> copy(isLoading = false, isError = true, message = msg.message)
-            is Message.Loaded -> copy(isLoading = false, isError = false, subscription = msg.items)
-            is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.Failed -> copy(isLoading = false, error = msg.error)
+            is Message.Loaded -> copy(isLoading = false, error = null, subscription = msg.items)
+            is Message.Loading -> copy(isLoading = true, error = null)
             is Message.UpdateState -> copy(subscription = msg.state)
             is Message.UpdateSubscriptionPanelState -> copy(subscriptionPanelState = msg.state)
         }

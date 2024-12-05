@@ -29,7 +29,6 @@ interface StartRegistrationPageStore : Store<Intent, State, Label> {
     )
 
     sealed interface Intent{
-        data class OnApplyPromo(val promo: String) : Intent
         data object OnConsumedEvent : Intent
         data class OnSendEvent(val eventContent: EventContent) : Intent
         data class OnPageSelected(val pageIndex : Int) : Intent
@@ -40,12 +39,12 @@ interface StartRegistrationPageStore : Store<Intent, State, Label> {
     sealed interface Message{
         data class UpdateStages(val stagePage: List<StartRegistrationStagePage>) : Message
         data class UpdateEvent(val eventContent: StateEventWithContent<EventContent>) : Message
-        data class UpdatePromo(val promo : String) : Message
         data object UpdateStageLoading : Message
         data class UpdateStageError(val error: SauceError) : Message
     }
 
     sealed interface Label {
+        data object GoAuth : Label
         data object GoBack : Label
         data class OnPageSelected(val items : List<StartRegistrationStagePage>, val pageIndex : Int) : Label
     }
@@ -54,6 +53,7 @@ interface StartRegistrationPageStore : Store<Intent, State, Label> {
         data object Loading : Action
         data class Failed(val error : SauceError) : Action
         data class Loaded(val distances : List<StartRegistrationDistance>) : Action
+        data object Unauthorized : Action
     }
 
 }

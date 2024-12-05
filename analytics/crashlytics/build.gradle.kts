@@ -7,6 +7,7 @@ android.namespace = "com.markettwits.analitics.crashlytics"
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            api(projects.core.log)
             implementation(libs.koin.core)
         }
         androidMain.dependencies {

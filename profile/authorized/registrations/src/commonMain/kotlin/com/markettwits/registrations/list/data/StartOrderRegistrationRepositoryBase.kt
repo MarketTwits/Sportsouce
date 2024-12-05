@@ -16,7 +16,7 @@ class StartOrderRegistrationRepositoryBase(
     override suspend fun registrations(): Result<List<StartOrderInfo>> = runCatching {
         val token = auth.updateToken()
         val user = auth.auth()
-        val result = service.userRegistriesNew(user.getOrThrow().id, token.getOrThrow())
+        val result = service.userRegistriesNew2(user.getOrThrow().id, token.getOrThrow())
         mapper.map(result)
     }
 

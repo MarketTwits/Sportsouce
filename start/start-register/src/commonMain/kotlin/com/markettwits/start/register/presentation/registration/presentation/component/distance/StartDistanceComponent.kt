@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 
 interface StartDistanceComponent : StartStageComponent {
 
-    override val state: StateFlow<StartRegistrationStagePage.Registration>
+    val state: StateFlow<StartRegistrationStagePage.Registration>
 
     val childSlot: Value<ChildSlot<*, Child>>
 

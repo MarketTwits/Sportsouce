@@ -14,7 +14,7 @@ kotlin {
         implementation(projects.intent.impl)
         implementation(projects.cloud)
         implementation(projects.core.ui)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.decompose)
         implementation(libs.koin.core)

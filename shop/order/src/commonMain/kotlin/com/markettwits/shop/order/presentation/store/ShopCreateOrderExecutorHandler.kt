@@ -211,7 +211,6 @@ abstract class ShopCreateOrderExecutorHandler(
                                 EventContent(
                                     success = false,
                                     message = it.message.toString()
-                                    // message =  it.networkExceptionHandler().message ?: "Что то пошло не так :("
                                 )
                             )
                         )
@@ -255,10 +254,6 @@ abstract class ShopCreateOrderExecutorHandler(
             }
         }
         return if (totalDiscount <= 0) 0 else totalDiscount
-    }
-
-    companion object{
-        const val BASE_URL = "https://sportsauce.ru/order/success?orderId=def46b0f-4966-4f95-b879-0cc095bd7e46"
     }
 }
 

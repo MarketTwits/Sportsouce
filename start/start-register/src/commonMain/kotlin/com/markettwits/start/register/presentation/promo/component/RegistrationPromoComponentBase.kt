@@ -31,8 +31,6 @@ class RegistrationPromoComponentBase(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<RegistrationPromoStore.State> = store.stateFlow
 
-    override val labels: Flow<RegistrationPromoStore.Label> = store.labels
-
     override fun obtainEvent(intent: RegistrationPromoStore.Intent) {
         store.accept(intent)
     }
@@ -43,7 +41,6 @@ class RegistrationPromoComponentBase(
                 when (it) {
                     is RegistrationPromoStore.Label.ApplyPromo -> applyPromo(it.promo, it.percent)
                     is RegistrationPromoStore.Label.Dismiss -> dismiss()
-                    is RegistrationPromoStore.Label.Empty -> {}
                 }
             }
         }

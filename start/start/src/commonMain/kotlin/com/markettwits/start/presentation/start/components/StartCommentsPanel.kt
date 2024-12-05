@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
@@ -42,7 +43,7 @@ import com.markettwits.start.presentation.start.component.CommentMode
 @Composable
 internal fun StartCommentsPanel(
     modifier: Modifier = Modifier,
-    commentsRemote: StartItem.Comments,
+    comments: StartItem.Comments,
     onClickReply: (String, Int) -> Unit,
 ) {
     StartContentBasePanel(
@@ -50,10 +51,11 @@ internal fun StartCommentsPanel(
         label = "Комментарии"
     ) {
         Column {
-            if (commentsRemote.rows.isNotEmpty()) {
-                commentsRemote.rows.forEach {
+            if (comments.rows.isNotEmpty()) {
+                comments.rows.forEach {
                     StartCommentCard(
                         modifier = modifier,
+                        userImageUrl = it.user.photo ?: "",
                         userName = "${it.user.surname} ${it.user.name}",
                         commentCreateDate = it.createdAt,
                         message = it.comment,
@@ -80,6 +82,7 @@ internal fun StartCommentsPanel(
 @Composable
 private fun StartCommentCard(
     modifier: Modifier = Modifier,
+    userImageUrl : String,
     userName: String,
     commentCreateDate: String,
     message: String,
@@ -91,12 +94,20 @@ private fun StartCommentCard(
         mutableStateOf(false)
     }
     Row(modifier = modifier) {
-        Box(
-            modifier = Modifier
+        if (userImageUrl.isNotEmpty())
+            AsyncImage(
+                modifier = Modifier
+                    .clip(Shapes.large)
+                    .size(40.dp),
+                model = userImageUrl,
+                contentDescription = userName
+            )
+        else
+            Box(modifier = Modifier
                 .clip(Shapes.large)
                 .size(40.dp)
                 .background(Color.Gray)
-        )
+            )
         Spacer(modifier = Modifier.padding(horizontal = 5.dp))
         Column(modifier = modifier) {
             Row {
@@ -161,6 +172,7 @@ private fun StartCommentCard(
                             userName = "${it.user.surname} ${it.user.name}",
                             commentCreateDate = it.createdAt,
                             message = it.comment,
+                            userImageUrl = it.user.photo ?: "",
                             isReply = true,
                             onClickReply = {}
                         )

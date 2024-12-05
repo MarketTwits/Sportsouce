@@ -3,7 +3,6 @@ package com.markettwits.start.register.presentation.registration.data
 import com.markettwits.members.member_common.data.ProfileMembersRepository
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.profile.api.AuthDataSource
-import com.markettwits.start.register.data.registration.mapper.RegistrationMapper
 import com.markettwits.start.register.presentation.registration.data.mapper.StartRegisterPriceMapper
 import com.markettwits.start.register.presentation.registration.data.mapper.StartRegisterResultMapper
 import com.markettwits.start.register.presentation.registration.data.mapper.StartRegistrationPageMapper
@@ -29,6 +28,10 @@ class StartRegistrationRepositoryBase(
     private val distancesMapper: StartRegistrationPageMapper,
     private val resultMapper: StartRegisterResultMapper,
 ) : StartRegistrationRepository {
+
+    override suspend fun isRegisterAvailable(): Result<Unit> = runCatching {
+        authService.sharedUser().getOrThrow()
+    }
 
     override suspend fun registerOnStart(
         comboId: Int?,

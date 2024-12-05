@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.textField.defaultOutlineTextFiledColors
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -76,71 +77,6 @@ fun ShopFilterPriceSlider(
                 isFrom = false,
                 onValueChange = onMaxPriceChange)
         }
-//        ShopFilterPriceSliderContent(
-//            activeStart = minPrice.toFloat(),
-//            activeEnd = maxPrice.toFloat(),
-//            range = Pair(100f, 188000f),
-//            onMaxPriceChange = {
-//                onMaxPriceChange(it.toInt())
-//            },
-//            onMinPriceChange = {
-//                onMinPriceChange(it.toInt())
-//            },
-//        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ShopFilterPriceSliderContent(
-    modifier: Modifier = Modifier,
-    activeStart: Float,
-    activeEnd: Float,
-    range: Pair<Float, Float>,
-    onMinPriceChange: (Float) -> Unit,
-    onMaxPriceChange: (Float) -> Unit,
-) {
-    val rangeSliderState = remember {
-        RangeSliderState(
-            activeRangeStart = activeStart,
-            activeRangeEnd = activeEnd,
-            valueRange = range.first..range.second,
-        )
-    }
-
-    onMinPriceChange(rangeSliderState.activeRangeStart)
-    onMaxPriceChange(rangeSliderState.activeRangeEnd)
-    val startInteractionSource = remember { MutableInteractionSource() }
-    val endInteractionSource = remember { MutableInteractionSource() }
-    val trackHeight = 4.dp
-    val thumbSize = DpSize(20.dp, 20.dp)
-
-    val thumbModifier =
-        Modifier.size(thumbSize)
-            .shadow(1.dp, CircleShape, clip = false)
-            .indication(
-                interactionSource = startInteractionSource,
-                indication = rememberRipple(bounded = false, radius = 20.dp)
-            )
-
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
-        val state by remember {
-            mutableStateOf(activeStart..activeEnd)
-        }
-        RangeSlider(
-            value = state,
-            onValueChange = { range ->
-                if (range.start != activeStart)
-                    onMinPriceChange(range.start)
-                if (range.endInclusive != activeEnd)
-                    onMinPriceChange(range.endInclusive)
-            },
-            valueRange = range.first..range.second,
-            onValueChangeFinished = {
-                // launch some business logic update with the state you hold
-                // viewModel.updateSelectedSliderValue(sliderPosition)
-            })
-
     }
 }
 
@@ -191,15 +127,31 @@ private fun PriceTextBox(
                     color = MaterialTheme.colorScheme.tertiary
                 )
             },
+            trailingIcon = {
+                Text(
+                    text = "₽",
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    lineHeight = 18.sp,
+                    softWrap = true,
+                    textAlign = TextAlign.Start,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            },
             colors = defaultOutlineTextFiledColors().copy(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            onValueChange = { text ->
-                if (text.all { it.isDigit() }) {
-                    onValueChange(text)
-                }
+            onValueChange = { price ->
+                if (price.trim().all { it.isDigit()})
+                    if (price.isEmpty())
+                        onValueChange(price.trim())
+                    else
+                        if (price.toLong() < Int.MAX_VALUE)
+                            onValueChange(price.trim())
             }
         )
     }

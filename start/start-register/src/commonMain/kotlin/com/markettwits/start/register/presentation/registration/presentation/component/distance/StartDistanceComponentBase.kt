@@ -72,6 +72,8 @@ class StartDistanceComponentBase(
         feature.onClickGoNext(onGoNext = onGoNext)
     }
 
+    override val value: StartRegistrationStagePage = innerState
+
 
     private fun childSlot(
         config: StartDistanceComponent.Config,
@@ -85,9 +87,8 @@ class StartDistanceComponentBase(
                 storeFactory = scope.get(),
                 membersProfile = config.profileMembers,
                 apply = { member, id ->
-                    feature.updateStartStatement(
-                        distance = state.value,
-                        updatedStatement = member
+                    feature.onChangeStartStatement(
+                        startStatement = member,
                     )
                     slotNavigation.dismiss()
                 },

@@ -2,7 +2,7 @@ package com.markettwits.profile.authorized.data.mapper
 
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.profile.members.ProfileMembers
-import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
+import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.profile.authorized.domain.UserProfile
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.time.TimeMapper
@@ -17,7 +17,7 @@ class AuthorizedProfileMapperBase(
 
     override fun map(
         user: User,
-        userRegistries: List<UserRegistrationShared>,
+        userRegistries: List<UserRegistration>,
         userMembers: List<ProfileMembers.ProfileMember>
     ): UserProfile = UserProfile(
         id = user.id,

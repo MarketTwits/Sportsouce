@@ -12,11 +12,11 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.analytics.crashlytics)
             implementation(projects.club.cloud)
-            implementation(projects.cache)
+            implementation(projects.core.cache)
             implementation(projects.bottombar)
             implementation(projects.core.ui)
             implementation(projects.core.time)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.intent.api)
             implementation(projects.intent.impl)
             implementation(projects.core.errors)

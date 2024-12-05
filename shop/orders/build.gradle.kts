@@ -16,7 +16,7 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.core.ui)
             implementation(projects.shop.domain)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.intent.composable)
             implementation(projects.shop.order)
             implementation(projects.core.time)

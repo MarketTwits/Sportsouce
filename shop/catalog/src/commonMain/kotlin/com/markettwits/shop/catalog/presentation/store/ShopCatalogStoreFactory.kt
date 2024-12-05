@@ -22,9 +22,6 @@ class ShopCatalogStoreFactory(
         ShopCatalogStore, Store<Intent, State, Label> by storeFactory.create(
         name = "ShopCatalogStore",
         initialState = State(
-            isLoading = false,
-            isError = false,
-            message = "",
             shopItems = emptyFlow()
         ),
         bootstrapper = SimpleBootstrapper(Unit),

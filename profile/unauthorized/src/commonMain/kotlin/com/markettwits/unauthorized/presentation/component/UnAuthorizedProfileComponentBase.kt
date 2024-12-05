@@ -2,6 +2,7 @@ package com.markettwits.unauthorized.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.markettwits.unauthorized.domain.UnauthorizedProfileUseCase
 import com.markettwits.unauthorized.presentation.components.UnAuthorizedProfileUiState
 import kotlinx.coroutines.CoroutineScope
@@ -26,10 +27,9 @@ class UnAuthorizedProfileComponentBase(
 
 
     init {
-        // lifecycle.doOnCreate {
-        check()
-        // }
-
+        lifecycle.doOnResume {
+            check()
+        }
         stateKeeper.register(
             key = "PROFILE_STATE",
             UnAuthorizedProfileUiState.serializer()

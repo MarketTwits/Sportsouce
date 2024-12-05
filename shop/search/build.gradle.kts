@@ -13,7 +13,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
         }
     }
 }

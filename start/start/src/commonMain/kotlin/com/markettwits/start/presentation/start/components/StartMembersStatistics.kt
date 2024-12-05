@@ -128,9 +128,9 @@ private fun ImmutableList<StartMembersUi>.mapToRegistrationDistance(): Immutable
 @Composable
 private fun mapColor(index: Int): Color =
     when (index) {
-        0 -> SportSouceColor.SportSouceLightRed
-        1 -> SportSouceColor.SportSouceStartEndedPink
-        2 -> SportSouceColor.SportSouceBlue
+        0 -> SportSouceColor.SportSouceLighBlue
+        1 -> SportSouceColor.SportSouceBlue
+        2 -> SportSouceColor.SportSouceStartEndedPink
         3 -> SportSouceColor.OnSecondaryContainer
         4 -> SportSouceColor.VkIcon
         5 -> SportSouceColor.WhatsappIcon

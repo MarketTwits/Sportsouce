@@ -12,7 +12,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.ui)
             implementation(libs.koin.core)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.settings.api)
             implementation(libs.bundles.decompose.compose)
         }

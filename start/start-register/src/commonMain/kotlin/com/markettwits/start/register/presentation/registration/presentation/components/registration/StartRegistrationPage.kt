@@ -23,16 +23,14 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core.errors.api.SauceComposableErrorRender
-import com.markettwits.core.errors.impl.rememberSauceErrorRender
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.start.register.presentation.order.presentation.components.extra.StartRegistrationTopBar
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.registration.presentation.component.distance.StartDistanceComponent
 import com.markettwits.start.register.presentation.registration.presentation.component.pay.StartPayComponent
+import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.registration.presentation.components.distsance.StartStage
 import com.markettwits.start.register.presentation.registration.presentation.components.pay.StartPay
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStore
@@ -57,10 +55,8 @@ fun StartRegistrationPage(
     Scaffold(
         modifier = modifier,
         topBar = {
-            Column {
-                StartRegistrationTopBar(startTitle = state.registrationInfo.startTitle) {
-                    component.obtainEvent(StartRegistrationPageStore.Intent.OnClickGoBack)
-                }
+            StartRegistrationTopBar(title = state.registrationInfo.startTitle) {
+                component.obtainEvent(StartRegistrationPageStore.Intent.OnClickGoBack)
             }
         },
         snackbarHost = {
@@ -80,33 +76,29 @@ fun StartRegistrationPage(
                 .padding(top = paddingValues.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
         ) {
-            if (state.pagesState.isLoading){
+            if (state.pagesState.isLoading) {
                 LoadingFullScreen(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxSize()
                 )
             }
-            if (state.pagesState.error != null){
-                rememberSauceErrorRender().ComposableThrowableError(
-                    modifier = Modifier,
-                    throwable = state.pagesState.error!!,
-                    onClickGoBack = {},
-                    onClickRetry = {}
-                )
-            }
+
+            state.pagesState.error?.SauceErrorScreen()
+
             Children(
                 stack = pages,
                 animation = stackAnimation(animator = slide())
-            ){ child ->
-                when(val page = child.instance){
-                    is StartPayComponent ->{
+            ) { child ->
+                when (val page = child.instance) {
+                    is StartPayComponent -> {
                         StartPay(
                             modifier = Modifier,
                             component = page
                         )
                     }
-                    is StartDistanceComponent ->{
+
+                    is StartDistanceComponent -> {
                         StartStage(
                             modifier = Modifier,
                             component = page
@@ -116,7 +108,7 @@ fun StartRegistrationPage(
             }
             StartStagesIndicatorContent(
                 modifier = Modifier.padding(10.dp),
-                currentIndex = pages.active.instance.state.value.id,
+                currentIndex = pages.active.instance.value.id,
                 startRegistrationStage = state.stages
             )
         }

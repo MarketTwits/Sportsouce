@@ -2,6 +2,7 @@ package com.markettwits.start.register.presentation.registration.presentation.co
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.domain.RegistrationMemberValidatorBase
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationAdditionalField
@@ -52,7 +53,7 @@ class StartDistanceFeature(
         }
     }
 
-    fun updateStartStatement(
+    private fun updateStartStatement(
         distance: StartRegistrationStagePage.Registration,
         updatedStatement: StartStatement
     ): StartRegistrationStagePage.Registration {

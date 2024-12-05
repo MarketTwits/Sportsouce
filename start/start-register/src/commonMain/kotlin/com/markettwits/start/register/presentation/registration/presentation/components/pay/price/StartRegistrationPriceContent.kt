@@ -1,7 +1,6 @@
 package com.markettwits.start.register.presentation.registration.presentation.components.pay.price
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,11 +25,8 @@ import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.start.register.presentation.order.presentation.components.promo.PromoBox
 import com.markettwits.start.register.presentation.registration.domain.extension.formatPrice
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
-import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
 
 @Composable
 internal fun StartRegistrationPriceContent(

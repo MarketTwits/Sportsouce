@@ -4,7 +4,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 fun Int?.formatPrice(): String =
-    kotlin.runCatching {
+    runCatching {
         val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
             if (this == null) "0"
         else

@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
+
 }
 tasks.withType<Jar> {
     manifest {
@@ -26,12 +27,12 @@ kotlin {
         implementation(compose.desktop.currentOs)
         implementation(projects.core.ui)
         implementation(libs.koin.core)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(compose.desktop.common)
         implementation(projects.root)
         implementation(projects.core.theme)
         implementation(libs.bundles.decompose.compose)
-        implementation(projects.cache)
+        implementation(projects.core.cache)
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
         implementation("com.badoo.reaktive:reaktive:1.2.3")
         implementation("com.badoo.reaktive:coroutines-interop:1.2.3")

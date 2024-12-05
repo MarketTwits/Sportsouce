@@ -1,21 +1,27 @@
 package com.markettwits.registrations.list.data.mapper
 
-import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.cloud.model.start_user.values.RemoteGroup
-import com.markettwits.cloud.model.start_user.values.UserRegistrationOld
-import com.markettwits.cloud.model.start_user.values.UserRegistrationNew
-import com.markettwits.cloud.model.start_user.values.UserRegistrationShared
+import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 import kotlinx.serialization.json.Json
-import java.text.NumberFormat
-import java.util.Locale
 
-class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegistrationsMapper {
+class UserRegistrationsMapperBase(
+    private val timeMapper: TimeMapper
+) : UserRegistrationsMapper {
 
-    override fun map(start: UserRegistrationNew): StartOrderInfo {
+    override fun map(start: UserRegistration): StartOrderInfo {
+
+        val member = start.members.first()
+
+        val ageGroup = member.age_group?.name ?: mapStartGroup(member.group)
+
+        val distance = member.distance_relation?.name ?: member.distance ?: ""
+
+        val format = member.distance_relation?.format ?: member.format ?: ""
+
         return StartOrderInfo(
             id = start.id,
             startId = start.start_id,
@@ -26,109 +32,41 @@ class UserRegistrationsMapperBase(private val timeMapper: TimeMapper) : UserRegi
                 start.start.start_date
             ),
             dateStartCloud = start.start.start_date,
-            statusCode = StartStatus(
-                start.start.start_status?.code ?: 3,
-                start.start.start_status?.name ?: "Без статуса"
-            ),
-            ageGroup = start.members.first().group ?: "",
-            distance = start.members.first().distance ?: "",
-            member = start.members.first().surname + " " + start.members.first().name,
+            ageGroup = ageGroup,
+            distance = distance,
+            member = member.surname + " " + member.name,
             cost = if (start.price == null) "0" else start.price?.formatPrice().toString(),
-            team = start.members.first().team,
-            kindOfSport = start.members.first().format ?: "",
+            team = member.team,
+            kindOfSport = format,
             startTitle = start.start.name,
-            payment = StartOrderInfo.PaymentStatus.NotPaid(),
+            payment = mapPayments(payment = start.payment),
         )
     }
 
-    override fun map(
-        start: UserRegistrationOld
-    ): StartOrderInfo {
-            return StartOrderInfo(
-                id = start.id,
-                startId = start.start_id,
-                name = start.name,
-                image = start.start.posterLinkFile?.fullPath ?: "",
-                dateStartPreview = timeMapper.mapTime(
-                    TimePattern.FullWithEmptySpace,
-                    start.start.start_date
-                ),
-                dateStartCloud = start.start.start_date,
-                statusCode = StartStatus(
-                    start.start.start_status?.code ?: 3,
-                    start.start.start_status?.name ?: "Без статуса"
-                ),
-                ageGroup = mapStartGroup(start.group ?: ""),
-                distance = start.distance,
-                member = start.surname + " " + start.name,
-                cost = if (start.price == null) "0" else start.price.toString(),
-                team = start.team,
-                kindOfSport = start.format,
-                startTitle = start.start.name,
-                payment = mapPayments(
-                    start.payment,
-                    start.start.isOpen ?: false,
-                    start.start.payment_disabled ?: false
-                ),
-            )
-    }
-
-    override fun map(registrations: List<UserRegistrationShared>): List<StartOrderInfo> {
+    override fun map(registrations: List<UserRegistration>): List<StartOrderInfo> {
         return registrations.map {
-            when(it){
-                is UserRegistrationNew -> map(it)
-                is UserRegistrationOld -> map(it)
-            }
+            map(it)
         }
-    }
-
-    private fun mapPayment(payment: Int?, isOpen: Boolean, paymentDisabled: Boolean): Boolean {
-        val pay = payment == null || payment == 0
-        return !(pay && isOpen && !paymentDisabled)
     }
 
     private fun mapPayments(
         payment: Int?,
-        isOpen: Boolean,
-        paymentDisabled: Boolean
     ): StartOrderInfo.PaymentStatus {
-        if (paymentDisabled || payment == 2)
-            return StartOrderInfo.PaymentStatus.Free()
-        if (payment == null)
-            return StartOrderInfo.PaymentStatus.NotPaid(
-                mapPayment(
-                    payment,
-                    isOpen,
-                    paymentDisabled
-                )
-            )
-        if (payment == 0)
-            return StartOrderInfo.PaymentStatus.PaymentCancelled(
-                mapPayment(
-                    payment,
-                    isOpen,
-                    paymentDisabled
-                )
-            )
-        if (payment == 1)
-            return StartOrderInfo.PaymentStatus.Success()
-
-        else return StartOrderInfo.PaymentStatus.NotPaid(
-            mapPayment(
-                payment,
-                isOpen,
-                paymentDisabled
-            )
-        )
+        return when(payment){
+            0 -> StartOrderInfo.PaymentStatus.NotPaid()
+            1 -> StartOrderInfo.PaymentStatus.Success()
+            2 -> StartOrderInfo.PaymentStatus.Free()
+            4 -> StartOrderInfo.PaymentStatus.Free()
+            else -> StartOrderInfo.PaymentStatus.NotPaid()
+        }
     }
 
-    private fun mapStartGroup(group: String): String {
+    private fun mapStartGroup(group: String?): String {
         val json = Json {
             ignoreUnknownKeys = true
         }
         return try {
-            val group = json.decodeFromString<RemoteGroup>(group)
-            group.name
+            json.decodeFromString<DistanceItem.Group>(group ?: "").name
         } catch (e: Exception) {
             ""
         }

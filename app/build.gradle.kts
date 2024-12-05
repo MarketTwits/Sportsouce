@@ -48,7 +48,7 @@ dependencies {
     implementation(projects.core.theme)
     implementation(projects.core.ui)
     implementation(projects.root)
-    implementation(projects.cache)
+    implementation(projects.core.cache)
     implementation(projects.analytics.crashlytics)
     implementation(projects.core.activityholder)
     implementation(libs.androidx.core.splashscreen)
@@ -56,5 +56,5 @@ dependencies {
     implementation(libs.bundles.decompose.compose)
     implementation(libs.tracer.crash.report)
     implementation(libs.koin.android)
-    implementation(projects.coreKoin)
+    implementation(projects.core.koin)
 }

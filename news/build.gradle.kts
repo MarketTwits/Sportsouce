@@ -13,7 +13,7 @@ kotlin {
             implementation(projects.cloud)
             implementation(projects.core.ui)
             implementation(projects.core.time)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)

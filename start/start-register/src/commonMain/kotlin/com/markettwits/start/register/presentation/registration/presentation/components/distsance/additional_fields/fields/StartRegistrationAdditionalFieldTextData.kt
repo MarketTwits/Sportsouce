@@ -20,7 +20,7 @@ internal fun StartRegistrationAdditionalFieldTextData(
     val timeMapper = BaseTimeMapper()
     val date = field.answer?.date ?: ""
     val text = if (date.isNotEmpty())
-        timeMapper.mapTime(time = date, formatter = TimePattern.FullWithDots)
+        timeMapper.mapTime(time = date, timePattern = TimePattern.FullWithDots)
     else
         ""
 

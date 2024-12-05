@@ -1,16 +1,11 @@
 package com.markettwits.club.dashboard.presentation.screen
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -21,17 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
 import com.markettwits.club.dashboard.presentation.component.ClubDashboardComponent
+import com.markettwits.club.dashboard.presentation.components.menu.ClubMenuContent
 import com.markettwits.club.dashboard.presentation.components.schedule.ScheduleContent
 import com.markettwits.club.dashboard.presentation.components.subscriptions.SubscriptionBottomPanel
 import com.markettwits.club.dashboard.presentation.components.subscriptions.SubscriptionCategoriesContent
 import com.markettwits.club.dashboard.presentation.components.subscriptions.SubscriptionsContent
 import com.markettwits.club.dashboard.presentation.components.title.MainDashboardContent
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore
-import com.markettwits.club.dashboard.presentation.components.menu.ClubMenuContent
 import com.markettwits.club.dashboard.presentation.store.getSelectedSubscriptionUi
 import com.markettwits.club.info.domain.models.findFirstSchedule
 import com.markettwits.club.registration.domain.RegistrationType
-import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 
@@ -55,13 +50,11 @@ fun ClubDashboardScreen(
             if (state.isLoading) {
                 LoadingFullScreen()
             }
-            if (state.isError) {
-                FailedScreen(
-                    message = state.message
-                ) {
-                    component.obtainEvent(ClubDashboardStore.Intent.RetryRequest)
-                }
-            }
+
+            state.error?.SauceErrorSimpleContent(onClickRetry = {
+                component.obtainEvent(ClubDashboardStore.Intent.RetryRequest)
+            })
+
             if (state.subscription.items.isNotEmpty()) {
                 SubscriptionCategoriesContent(
                     subscriptions = state.subscription.items,
@@ -80,7 +73,11 @@ fun ClubDashboardScreen(
                             .filter { it.isSelected }
                             .flatMap { it.subscriptions },
                         onClick = {
-                            component.obtainEvent(ClubDashboardStore.Intent.OnClickSubscriptionItem(it))
+                            component.obtainEvent(
+                                ClubDashboardStore.Intent.OnClickSubscriptionItem(
+                                    it
+                                )
+                            )
                         })
                 }
 

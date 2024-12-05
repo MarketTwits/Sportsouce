@@ -9,10 +9,10 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.cache)
+            implementation(projects.core.cache)
             implementation(projects.cloud)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.start.start)
             implementation(projects.starts.startsCommon)
             implementation(libs.koin.core)

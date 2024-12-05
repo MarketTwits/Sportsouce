@@ -1,10 +1,16 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm.convention)
+    alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.serialization)
 }
-
-dependencies {
-    implementation(projects.cloud)
-    implementation(projects.cache)
-    implementation(libs.koin.core)
+android{
+    namespace = "com.markettwits.auth.auth_service"
+}
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            implementation(projects.cloud)
+            implementation(projects.core.cache)
+            implementation(libs.koin.core)
+        }
+    }
 }

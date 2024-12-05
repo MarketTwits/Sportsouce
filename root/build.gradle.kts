@@ -16,8 +16,7 @@ kotlin {
             implementation(projects.profile.rootProfile)
             implementation(projects.review.review)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
         }

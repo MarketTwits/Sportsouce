@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -45,6 +46,7 @@ fun TopBarWithClip(modifier: Modifier = Modifier, title: String, goBack: () -> U
                 .align(Alignment.Center)
                 .padding(start = 30.dp),
             text = title,
+            overflow = TextOverflow.Visible,
             color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.bold(),
             fontSize = 18.sp

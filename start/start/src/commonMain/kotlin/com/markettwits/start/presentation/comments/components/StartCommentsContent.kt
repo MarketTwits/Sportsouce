@@ -27,7 +27,7 @@ fun StartCommentsContent(
         Column(modifier = Modifier.align(Alignment.Center)) {
             StartCommentsPanel(
                 modifier = modifier.padding(horizontal = 5.dp),
-                commentsRemote = state.comments,
+                comments = state.comments,
                 onClickReply = { name: String, id: Int ->
                     component.obtainEvent(
                         StartCommentsStore.Intent.OnClickReply(

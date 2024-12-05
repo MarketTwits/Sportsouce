@@ -11,8 +11,9 @@ kotlin {
         implementation(projects.cloud)
         implementation(projects.core.ui)
         implementation(projects.core.errors)
-        implementation(projects.coreKoin)
+        implementation(projects.core.koin)
         implementation(projects.auth.authService)
+        implementation(projects.auth.authFlow)
         implementation(projects.teamsCity)
         implementation(projects.start.startCloud)
         implementation(projects.core.time)
@@ -22,5 +23,6 @@ kotlin {
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)
+        implementation(projects.analytics.crashlytics)
     }
 }

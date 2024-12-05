@@ -1,30 +1,18 @@
 package com.markettwits.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
-import com.arkivanov.decompose.router.stack.replaceCurrent
+import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
-import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
-import com.markettwits.start.register.domain.StartStatement
-import com.markettwits.start.register.presentation.member.component.RegistrationMemberComponentBase
-import com.markettwits.start.register.presentation.order.presentation.component.OrderComponentComponentBase
-import com.markettwits.start.register.presentation.order.presentation.store.OrderStore
-import com.markettwits.start.register.presentation.promo.component.RegistrationPromoComponentBase
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationOutput
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponentBase
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponentBase
 
@@ -47,117 +35,32 @@ class RootStartRegisterBase(
         listOf(startRegistrationModule)
     )
 
-    private val stackNavigation = StackNavigation<RootStartRegister.ConfigStack>()
+    private val stackNavigation = StackNavigation<RootStartRegister.Config>()
 
-    private val slotNavigation = SlotNavigation<RootStartRegister.ConfigSlot>()
-
-    override val childStack: Value<ChildStack<*, RootStartRegister.ChildStack>> = childStack(
+    override val childStack: Value<ChildStack<*, RootStartRegister.Child>> = childStack(
         source = stackNavigation,
-        serializer = RootStartRegister.ConfigStack.serializer(),
-        initialConfiguration = RootStartRegister.ConfigStack.StartRegistrationPage(
+        serializer = RootStartRegister.Config.serializer(),
+        initialConfiguration = RootStartRegister.Config.StartRegistrationPage(
             content
         ),
         handleBackButton = true,
         childFactory = ::childStack,
     )
-    override val childSlot: Value<ChildSlot<*, RootStartRegister.ChildSlot>> = childSlot(
-        serializer = RootStartRegister.ConfigSlot.serializer(),
-        source = slotNavigation,
-        handleBackButton = true,
-        childFactory = ::childSlot
-    )
-
-    private fun childSlot(
-        config: RootStartRegister.ConfigSlot,
-        componentContext: ComponentContext
-    ): RootStartRegister.ChildSlot = when (config) {
-        is RootStartRegister.ConfigSlot.StartPromo -> RootStartRegister.ChildSlot.StartPromo(
-            RegistrationPromoComponentBase(
-                componentContext = componentContext,
-                startId = config.startId,
-                distancesId = emptyList(),
-                promo = config.promo,
-                storeFactory = scope.get(),
-                applyPromo = { promo, percent ->
-                    slotNavigation.dismiss()
-                    (childStack.value.active.instance
-                            as? RootStartRegister.ChildStack.StartOrder)?.component?.obtainEvent(
-                        OrderStore.Intent.ApplyPromo(promo, percent)
-                    )
-                },
-                dismiss = { slotNavigation.dismiss() }
-            )
-        )
-    }
 
     private fun childStack(
-        config: RootStartRegister.ConfigStack,
+        config: RootStartRegister.Config,
         componentContext: ComponentContext,
-    ): RootStartRegister.ChildStack =
+    ): RootStartRegister.Child =
         when (config) {
-            is RootStartRegister.ConfigStack.StartRegistration ->
-                RootStartRegister.ChildStack.StartOrder(
-                    OrderComponentComponentBase(
-                        componentContext = componentContext,
-                        startId = config.startId,
-                        paymentDisabled = config.paymentDisabled,
-                        distanceInfo = config.distanceInfo,
-                        discounts = config.discounts,
-                        paymentType = config.paymentType,
-                        startTitle = config.startTitle,
-                        storeFactory = scope.get(),
-                        pop = pop::invoke,
-                        onClickPromo = { startId, promo ->
-                            slotNavigation.activate(
-                                RootStartRegister.ConfigSlot.StartPromo(
-                                    startId,
-                                    promo
-                                )
-                            )
-                        },
-                        onClickMember = { member, id, members ->
-                            stackNavigation.push(
-                                RootStartRegister.ConfigStack.StartRegistrationMember(
-                                    id,
-                                    members,
-                                    member,
-                                )
-                            )
-                        },
-                        openSuccess = {
-                            stackNavigation.replaceCurrent(RootStartRegister.ConfigStack.StartRegistrationSuccess)
-                        }
-                    )
-                )
 
-            is RootStartRegister.ConfigStack.StartRegistrationMember -> RootStartRegister.ChildStack.StartRegistrationMember(
-                RegistrationMemberComponentBase(
-                    componentContext = componentContext,
-                    startStatement = config.startStatement,
-                    memberId = config.memberId,
-                    storeFactory = scope.get(),
-                    pop = stackNavigation::pop,
-                    membersProfile = config.profileMembers,
-                    apply = { member, id ->
-//                        stackNavigation.pop {
-//                            (childStack.value.active.instance
-//                                    as? RootStartRegister.ChildStack.StartRegistrationPage)?.component?.obtainEvent(
-//                                        StartRegistrationPageStore.Intent.ApplyStartMember(member)
-//                                )
-//                        }
-
-                    }
-                )
-            )
-
-            RootStartRegister.ConfigStack.StartRegistrationSuccess -> RootStartRegister.ChildStack.StartRegistrationSuccess(
+            RootStartRegister.Config.StartRegistrationSuccess -> RootStartRegister.Child.StartRegistrationSuccess(
                 RegisterSuccessComponentBase(
                     componentComponent = componentContext,
                     next = pop::invoke
                 )
             )
 
-            is RootStartRegister.ConfigStack.StartRegistrationPage -> RootStartRegister.ChildStack.StartRegistrationPage(
+            is RootStartRegister.Config.StartRegistrationPage -> RootStartRegister.Child.StartRegistrationPage(
                 StartRegistrationPageComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
@@ -165,11 +68,33 @@ class RootStartRegisterBase(
                     output = StartRegistrationPageComponentOutputsImpl()
                 )
             )
+
+            is RootStartRegister.Config.AuthFlow -> RootStartRegister.Child.AuthFlow(
+                RootAuthFlowComponentBase(
+                    context = componentContext,
+                    goBack = pop::invoke,
+                    goProfile = {
+                        stackNavigation.replaceAll(
+                            RootStartRegister.Config.StartRegistrationPage(
+                                content
+                            )
+                        )
+                    }
+                )
+            )
         }
 
     private inner class StartRegistrationPageComponentOutputsImpl : StartRegistrationOutput {
         override fun goBack() {
             pop()
+        }
+
+        override fun goSuccess() {
+            stackNavigation.replaceAll(RootStartRegister.Config.StartRegistrationSuccess)
+        }
+
+        override fun goAuth() {
+            stackNavigation.replaceAll(RootStartRegister.Config.AuthFlow)
         }
     }
 }

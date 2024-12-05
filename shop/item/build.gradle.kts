@@ -20,7 +20,7 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.shop.cart)
             implementation(projects.core.ui)
-            implementation(projects.coreKoin)
+            implementation(projects.core.koin)
             implementation(projects.intent.api)
             implementation(projects.intent.impl)
         }

@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface StartStageComponent {
 
-    val state: StateFlow<StartRegistrationStagePage>
+    val value : StartRegistrationStagePage
+
 
     data object Empty : StartStageComponent {
-        override val state: StateFlow<StartRegistrationStagePage> = MutableStateFlow(
-            StartRegistrationStagePage.Empty)
+        override val value: StartRegistrationStagePage = StartRegistrationStagePage.Empty
     }
 }

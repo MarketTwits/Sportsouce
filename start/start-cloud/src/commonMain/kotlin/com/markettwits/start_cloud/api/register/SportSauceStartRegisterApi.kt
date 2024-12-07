@@ -3,6 +3,7 @@ package com.markettwits.start_cloud.api.register
 import com.markettwits.start_cloud.model.register.on_start.StartRegistrationResponse
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceRequest
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
+import com.markettwits.start_cloud.model.register.promocode.PromocodeResponse
 
 interface SportSauceStartRegisterApi {
 
@@ -15,5 +16,7 @@ interface SportSauceStartRegisterApi {
         request: StartRegisterPriceRequest,
         token : String
     ) : StartRegistrationResponse
+
+    suspend fun promo(value : String,startId: Int,distancesId : List<Int>) : PromocodeResponse
 
 }

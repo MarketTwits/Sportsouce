@@ -22,6 +22,7 @@ internal class BaseAuthDataSource(
     private val tokenManager: TokenManager,
     private val authCache: AuthCacheDataSource
 ) : AuthDataSource {
+
     override suspend fun register(signUpRequest: SignUpRequest): Result<Unit> =
         runCatching {
             remoteService.register(signUpRequest)

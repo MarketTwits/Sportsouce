@@ -5,10 +5,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Intent
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Label
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.State
+import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
 
 class RegistrationPromoStoreFactory(
     private val storeFactory: StoreFactory,
-    private val repository: com.markettwits.start.register.data.registration.RegistrationStartRepository,
+    private val repository: StartRegistrationRepository,
 ) {
 
     fun create(

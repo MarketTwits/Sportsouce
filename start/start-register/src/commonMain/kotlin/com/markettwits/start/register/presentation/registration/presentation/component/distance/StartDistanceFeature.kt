@@ -89,10 +89,8 @@ class StartDistanceFeature(
         val updatedAnswers = distance.distance.answers.map { existingAnswer ->
             if (existingAnswer.field.id == startRegisterAnswer.field.id) {
                 if (isAnswerEmpty) {
-                    // Удаляем только answer, оставляя StartRegistrationStatementAnswer
                     existingAnswer.copy()
                 } else {
-                    // Обновляем answer
                     startRegisterAnswer
                 }
             } else {
@@ -134,7 +132,7 @@ class StartDistanceFeature(
                     StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
                     StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
                     StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.date.isNullOrBlank() // Возможно нужно отдельное поле для времени
+                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank() // Возможно нужно отдельное поле для времени
                     StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
                     StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
                 }

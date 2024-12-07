@@ -13,7 +13,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.bottombar)
             implementation(projects.starts.starts)
-            implementation(projects.profile.rootProfile)
+            implementation(projects.profile.root)
             implementation(projects.review.review)
             implementation(projects.core.ui)
             implementation(projects.core.koin)

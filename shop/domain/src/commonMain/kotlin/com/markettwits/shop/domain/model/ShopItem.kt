@@ -28,5 +28,9 @@ data class ShopItem(
     )
 
     @Serializable
-    data class Option(val id: String, val optionTitle: String, val optionValue: String)
+    data class Option(
+        val id: String,
+        val optionTitle: String,
+        val optionValue: String
+    )
 }

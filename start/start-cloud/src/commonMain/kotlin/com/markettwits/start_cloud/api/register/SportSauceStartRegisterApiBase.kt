@@ -4,7 +4,9 @@ import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.start_cloud.model.register.on_start.StartRegistrationResponse
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceRequest
 import com.markettwits.start_cloud.model.register.price.StartRegisterPriceResponse
+import com.markettwits.start_cloud.model.register.promocode.PromocodeResponse
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -41,6 +43,20 @@ class SportSauceStartRegisterApiBase(
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
             setBody(request)
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun promo(
+        value: String,
+        startId: Int,
+        distancesId: List<Int>
+    ): PromocodeResponse {
+        val response = client.get("start/$startId/promocode"){
+            url {
+                parameters.append("code", value)
+                parameters.append("distances", distancesId.joinToString(","))
+            }
         }
         return json.decodeFromString(response.body<String>())
     }

@@ -20,7 +20,7 @@ class ExtendedTimeMapper : TimeMapper {
             locale = Locale.default()
         )
 
-        val localDateTime = Instant.parse(time).toLocalDateTime(TimeZone.currentSystemDefault())
+        val localDateTime = Instant.parse(time).toLocalDateTime(TimeZone.UTC)
 
         return formatter.format(localDateTime)
     }
@@ -44,7 +44,7 @@ class ExtendedTimeMapper : TimeMapper {
             else -> throw IllegalArgumentException("Unsupported pattern for input")
         }
 
-        val instant = localDateTime.toInstant(TimeZone.currentSystemDefault())
+        val instant = localDateTime.toInstant(TimeZone.UTC)
 
         return instant.toString()
     }

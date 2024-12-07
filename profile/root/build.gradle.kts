@@ -18,5 +18,5 @@ kotlin {
     }
 }
 android {
-    namespace = "com.markettwits.root_profile"
+    namespace = "com.markettwits.profile.root"
 }

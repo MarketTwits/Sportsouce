@@ -25,11 +25,9 @@ kotlin {
             implementation(libs.bundles.mviKotlin)
         }
         commonTest.dependencies {
+            implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlin.test)
             implementation(libs.junit)
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1") {
-                exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
-            }
         }
     }
 }

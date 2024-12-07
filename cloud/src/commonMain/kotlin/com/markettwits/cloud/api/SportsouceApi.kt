@@ -34,17 +34,26 @@ import java.io.File
 interface SportsouceApi {
     //Common
     suspend fun teams() : TeamsRemote
+
     suspend fun cities(withStarts : Boolean = false) : CityRemote
+
     suspend fun kindOfSports() : KindOfSportRemote
+
     suspend fun seasons() : StartSeasonsRemote
-    suspend fun startWithFilter(request : Map<String, String>) : StartsRemote
+
     //Starts
+    suspend fun startWithFilter(request : Map<String, String>) : StartsRemote
+
     suspend fun fetchActualStarts(): StartsRemote
+
     suspend fun fetchPasteStarts(): StartsRemote
+
     suspend fun fetchPreview(): StartsRemote
+
     suspend fun fetchStartMain(): StartsRemote
     //Start registry
     suspend fun repay(id : Int, token: String) : StartRegistrationResponse
+
     suspend fun registerOnStartBase(
         request: StartRegisterRequest,
         token: String
@@ -55,29 +64,39 @@ interface SportsouceApi {
         token: String
     ): StartRegistrationResponse
     suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
+
     suspend fun promo(value : String,startId: Int,distancesId : List<Int>) : PromocodeRemote
     //Start
     suspend fun fetchStart(startId: Int): StartData
+
     suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote
+
     suspend fun fetchStartMember(startId: Int): List<StartMemberItem>
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
     //Auth
     suspend fun resetPassword(email: String): ResetPasswordResponse
+
     suspend fun register(signUpRequest: SignUpRequest) : SignUpResponse
+
     suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess
+
     suspend fun auth(token: String): User
     //Profile
     suspend fun uploadFile(file: File): UploadFileResponse
+
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
+
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse
-//    suspend fun userRegistries(userId: Int, token: String): List<UserRegistrationOld>
-//    suspend fun userRegistriesNew(userId: Int, token: String) : List<UserRegistrationShared>
+
     suspend fun userRegistriesNew2(userId: Int, token : String) : List<UserRegistration>
     //Member
     suspend fun memberTemplate(userId: Int, token: String): ProfileMembers
+
     suspend fun deleteMember(memberId: Int, token: String)
+
     suspend fun updateMember(memberId: Int, request: ProfileMemberRequest, token: String)
+
     suspend fun addMember(request: ProfileMemberRequest, token: String)
     //News
     suspend fun news() : NewsRemote

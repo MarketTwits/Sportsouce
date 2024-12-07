@@ -54,6 +54,11 @@ interface AuthDataSource {
      */
     suspend fun user(): Result<User>
 
+    /**
+     * Return current shared user
+     *
+     * @return a Result object containing the user data
+     */
     suspend fun sharedUser() : Result<SharedUser>
 
     /**

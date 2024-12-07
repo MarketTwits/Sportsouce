@@ -5,12 +5,13 @@ import com.markettwits.start.register.presentation.promo.store.RegistrationPromo
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Label
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Message
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.State
+import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
 import kotlinx.coroutines.launch
 
 class RegistrationPromoExecutor(
     private val startId: Int,
     private val distancesId : List<Int>,
-    private val repository: com.markettwits.start.register.data.registration.RegistrationStartRepository
+    private val repository: StartRegistrationRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent, getState: () -> State) {
         when (intent) {
@@ -23,7 +24,7 @@ class RegistrationPromoExecutor(
     private fun applyPromo(promo: String, startId: Int) {
         scope.launch {
             dispatch(Message.ApplyPromoLoading)
-            repository.promo(promo, startId,distancesId).fold(
+            repository.getStartPromo(promo, startId,distancesId).fold(
                 onSuccess = {
                     publish(Label.ApplyPromo(promo,it.discountPercent))
                     publish(Label.Dismiss)

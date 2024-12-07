@@ -59,8 +59,6 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
                 onSuccess = {
                     dispatch(Message.UpdateOptionsAndRestrictionPrice(it.first, it.second))
                 }, onFailure = {
-                    println("FAILURE")
-                    println(it.message.toString())
                     publish(Label.GoBack)
                 })
         }

@@ -8,6 +8,7 @@ import com.markettwits.profile.internal.sign_up.presentation.component.SignUpCom
 import kotlinx.serialization.Serializable
 
 interface RootAuthFlowComponent {
+
     val childStack: Value<ChildStack<*, Child>>
 
     @Serializable
@@ -23,8 +24,11 @@ interface RootAuthFlowComponent {
     }
 
     sealed interface Child {
+
         data class SignIn(val component: SignInScreenComponent) : Child
+
         data class SignUp(val component: SignUpComponent) : Child
+
         data class ForgotPassword(val component: ForgotPasswordComponent) : Child
     }
 }

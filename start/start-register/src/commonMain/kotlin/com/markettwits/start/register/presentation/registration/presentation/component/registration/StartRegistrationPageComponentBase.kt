@@ -65,7 +65,6 @@ class StartRegistrationPageComponentBase(
                     componentContext = componentContext,
                     innerState = page.copy(
                         distances = state.value.stages.getRegistrationsStage().map { it.distance },
-                        startInfo = state.value.registrationInfo
                     ),
                     goBack = {
                         store.accept(StartRegistrationPageStore.Intent.UpdateStagePage(it))
@@ -84,9 +83,7 @@ class StartRegistrationPageComponentBase(
             is StartRegistrationStagePage.Registration -> {
                 StartDistanceComponentBase(
                     componentContext = componentContext,
-                    innerState = page.copy(
-
-                    ),
+                    innerState = page,
                     onMessage = {
                         store.accept(StartRegistrationPageStore.Intent.OnSendEvent(it))
                     },

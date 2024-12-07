@@ -1,6 +1,7 @@
 package com.markettwits.root_profile
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
@@ -37,6 +38,7 @@ class RootProfileComponentBase(
             childFactory = ::child,
         )
 
+    @OptIn(DelicateDecomposeApi::class)
     private fun child(
         config: RootProfileComponent.Config,
         componentContext: ComponentContext,

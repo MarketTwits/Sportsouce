@@ -18,11 +18,9 @@ interface RootStartScreenComponent {
 
     @Serializable
     sealed class Config {
+
         @Serializable
-        data class Start(
-            val startId: Int,
-            val isBackEnabled: Boolean,
-        ) : Config()
+        data class Start(val startId: Int, val isBackEnabled: Boolean, ) : Config()
 
         @Serializable
         data class StartMembers(
@@ -35,17 +33,14 @@ interface RootStartScreenComponent {
         data class StartMembersFilter(val items: List<MembersFilterGroup>) : Config()
 
         @Serializable
-        data class StartRegistration(
-            val input: StartRegistrationInput
-        ) : Config()
+        data class StartRegistration(val input: StartRegistrationInput) : Config()
 
         @Serializable
-        data class StartAlbum(
-            val images: List<String>
-        ) : Config()
+        data class StartAlbum(val images: List<String>) : Config()
     }
 
     sealed class Child {
+
         data class Start(
             val component: StartScreenComponent,
             val commentsComponent: StartCommentsComponent,
@@ -53,8 +48,11 @@ interface RootStartScreenComponent {
         ) : Child()
 
         data class StartAlbum(val component: StartAlbumComponent) : Child()
+
         data class StartRegistration(val component: RootStartRegister) : Child()
+
         data class StartMembers(val component: StartMembersScreenComponent) : Child()
+
         data class StartMembersFilter(val component: StartMembersFilterScreen) : Child()
     }
 }

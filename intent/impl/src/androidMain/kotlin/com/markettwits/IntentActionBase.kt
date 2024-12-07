@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 
 class IntentActionBase(
     private val context: Context,
@@ -40,6 +41,7 @@ class IntentActionBase(
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
+        Toast.makeText(context, "Скопировано в буфер обмена",Toast.LENGTH_SHORT).show()
     }
 
     override fun sharePlainText(text: String) {

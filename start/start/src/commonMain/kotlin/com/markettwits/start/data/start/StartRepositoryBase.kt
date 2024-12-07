@@ -73,12 +73,20 @@ internal class StartRepositoryBase(
             val userId = authService.auth().getOrThrow().id
             if (subComment)
                 startService.writeSubComment(
-                    subComment = StartSubCommentRequest(comment, id, userId.toString()),
+                    subComment = StartSubCommentRequest(
+                        comment = comment,
+                        parentCommentId = id,
+                        personId = userId.toString()
+                    ),
                     token = token
                 )
             else
                 startService.writeComment(
-                    startCommentRequest = StartCommentRequest(comment, id, userId.toString()),
+                    startCommentRequest = StartCommentRequest(
+                        comment = comment,
+                        startId = id,
+                        personId = userId.toString()
+                    ),
                     token = token
                 )
             CommentUiState.Success

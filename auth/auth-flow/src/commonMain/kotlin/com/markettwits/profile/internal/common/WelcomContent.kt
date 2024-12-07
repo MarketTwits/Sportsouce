@@ -12,7 +12,7 @@ import sportsouce.auth.auth_flow.generated.resources.im_welcom_image
 
 
 @Composable
-internal fun WelcomeContent(content: String = "Добро пожаловать на SportSouce !") {
+internal fun WelcomeContent(content: String = "Добро пожаловать в SportSouce !") {
     Image(
         painter = painterResource(Res.drawable.im_welcom_image),
         contentDescription = "welcom image"

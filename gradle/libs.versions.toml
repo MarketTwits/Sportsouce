@@ -3,8 +3,6 @@
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
 vk-compose-gradle-plugin = "0.4.2"
-kotlin = "2.0.0"
-kotlin-kmp-compose = "1.6.11"
 gradle = "8.5.0"
 
 #SDK
@@ -19,26 +17,29 @@ jvm = "11"
 jvm-dot = "11"
 
 koin = "3.5.3"
-compose-activity = "1.9.0"
-compose-preview = "1.6.7"
+compose-activity = "1.9.3"
+compose-preview = "1.7.5"
 lazytable = "1.6.0"
 junit = "4.13.2"
 
-ktor = "3.0.0"
+ktor = "3.0.1"
 #UI
 appcompat = "1.7.0"
 
-#Kotlin Utils
-kotlinx-serialization = "1.6.3"
-kotlinx-coroutines = "1.8.0"
-kotlinx-datetime = "0.5.0"
+#Kotlin
+kotlin = "2.0.21"
+kotlin-kmp-compose = "1.7.1"
+
+kotlinx-serialization = "1.7.3"
+kotlinx-coroutines = "1.9.0"
+kotlinx-datetime = "0.6.1"
 kotlinx-datetime-ext = "1.3.1"
 
 #Database
 kstore = "0.8.0"
 
 #Decompose
-decompose = "3.0.0-alpha04"
+decompose = "3.2.2"
 
 #MVIKotlin
 mvikotlin = "3.3.0"
@@ -47,13 +48,11 @@ org-jetbrains-kotlin-jvm = "1.9.23"
 
 #Tracer
 tracer = "0.2.15"
-kotlinx-collections-immutable = "0.3.7"
+kotlinx-collections-immutable = "0.3.8"
 
 #Kermit Logger
 kermit = "2.0.4"
-coreKtx = "1.13.1"
-junitVersion = "1.2.1"
-espressoCore = "3.5.1"
+coreKtx = "1.15.0"
 material = "1.12.0"
 
 [libraries]
@@ -77,6 +76,7 @@ kotlinx-serialization-gradle-plugin = { group = "org.jetbrains.kotlin", name = "
 kotlinx-serialization-core = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization"}
 kotlinx-serialization-json = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name =  "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-datetime-ext = {group = "com.raedghazal", name = "kotlinx_datetime_ext", version.ref = "kotlinx-datetime-ext"}
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
@@ -118,8 +118,6 @@ org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetb
 buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.ref = "buildConfigPlugin" }
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]

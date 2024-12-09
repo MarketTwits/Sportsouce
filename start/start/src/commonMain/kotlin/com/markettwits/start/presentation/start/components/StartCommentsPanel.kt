@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -100,7 +101,8 @@ private fun StartCommentCard(
                     .clip(Shapes.large)
                     .size(40.dp),
                 model = userImageUrl,
-                contentDescription = userName
+                contentDescription = userName,
+                contentScale = ContentScale.Crop
             )
         else
             Box(modifier = Modifier
@@ -274,7 +276,9 @@ fun CommentTextField(
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.primary,
             focusedContainerColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.tertiary
+            cursorColor = MaterialTheme.colorScheme.tertiary,
+            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedTextColor = MaterialTheme.colorScheme.outline
         ),
         placeholder = {
             Text(

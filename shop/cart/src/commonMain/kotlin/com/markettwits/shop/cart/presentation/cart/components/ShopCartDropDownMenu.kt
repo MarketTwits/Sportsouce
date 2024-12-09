@@ -47,6 +47,7 @@ private fun ShopItemsOptionMenu(
         modifier = modifier,
         expanded = isShow,
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.background,
         content = {
             items.forEach {
                 DropdownMenuItem(text = {

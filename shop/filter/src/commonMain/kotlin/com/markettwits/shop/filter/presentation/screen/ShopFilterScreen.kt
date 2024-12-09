@@ -38,6 +38,9 @@ fun ShopFilterScreen(
         },
         onClickApplyFilter = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickApplyFilter)
+        },
+        onClickRetry = {
+            component.obtainEvent(ShopFilterStore.Intent.OnClickRetry)
         }
     )
 }

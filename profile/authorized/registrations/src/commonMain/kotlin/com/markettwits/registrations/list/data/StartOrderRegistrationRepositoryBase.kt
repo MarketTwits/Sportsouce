@@ -1,11 +1,13 @@
 package com.markettwits.registrations.list.data
 
 import com.markettwits.cloud.api.SportsouceApi
+import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.registrations.list.domain.StartOrderInfo
+import com.markettwits.registrations.list.domain.StartOrderPrice
 
 class StartOrderRegistrationRepositoryBase(
     private val service: SportsouceApi,
@@ -30,5 +32,19 @@ class StartOrderRegistrationRepositoryBase(
                 else -> ""
             }
         }
+    }
+
+    override suspend fun getPrice(
+        orderId: Int,
+        orderDistancesId: List<String>,
+        startId: Int
+    ): Result<StartOrderPrice> = runCatching {
+        val token = auth.updateToken().getOrThrow()
+        val result = service.checkStartPrice(
+            startPriceRequest = StartPriceRequest(orderId, orderDistancesId, startId),
+            orderId,
+            token
+        )
+        mapper.mapPrice(result)
     }
 }

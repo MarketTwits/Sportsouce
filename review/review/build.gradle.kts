@@ -27,6 +27,7 @@ kotlin {
         implementation(projects.selfupdater.components)
         implementation(projects.inappnotification.api)
         implementation(projects.shop.catalog)
+        implementation(projects.core.log)
         implementation(libs.koin.core)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.bundles.mviKotlin)

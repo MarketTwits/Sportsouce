@@ -28,6 +28,7 @@ internal class ClubDashboardComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(listener)
     }
+
     override val popInner = { output(ClubDashboardComponent.Output.Dismiss) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -51,6 +52,7 @@ internal class ClubDashboardComponentBase(
                 )
             }
         }.launchIn(scope)
+
         backHandler.register(bottomBarBackHandler)
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.cloud_shop.model.common.OptionInfo
+import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore
@@ -21,6 +22,7 @@ internal fun ShopFilterContent(
     modifier: Modifier = Modifier,
     state: ShopFilterStore.State,
     onClickGoBack: () -> Unit,
+    onClickRetry : () -> Unit,
     onClickReset: () -> Unit,
     onMaxPriceChange: (String) -> Unit,
     onMinPriceChange: (String) -> Unit,
@@ -32,7 +34,8 @@ internal fun ShopFilterContent(
         modifier = modifier,
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            ShopFilterApplyButton(onClickApply = onClickApplyFilter, onClickReset = onClickReset)
+            if (!state.isError)
+                ShopFilterApplyButton(onClickApply = onClickApplyFilter, onClickReset = onClickReset)
         },
         topBar = {
             ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)
@@ -66,5 +69,10 @@ internal fun ShopFilterContent(
             )
         }
     }
+    ShopFilterError(
+        isError = state.isError,
+        message = state.message,
+        onClickRetry = onClickRetry
+    )
     ShopFilterLoading(state.isLoading)
 }

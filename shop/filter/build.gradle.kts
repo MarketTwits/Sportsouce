@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.core.ui)
             implementation(projects.core.koin)
+            implementation(projects.core.errors)
         }
     }
 }

@@ -1,9 +1,11 @@
 package com.markettwits.registrations.list.data.mapper
 
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.registrations.list.domain.StartOrderInfo
+import com.markettwits.registrations.list.domain.StartOrderPrice
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 import kotlinx.serialization.json.Json
@@ -13,14 +15,6 @@ class UserRegistrationsMapperBase(
 ) : UserRegistrationsMapper {
 
     override fun map(start: UserRegistration): StartOrderInfo {
-
-        val member = start.members.first()
-
-        val ageGroup = member.age_group?.name ?: mapStartGroup(member.group)
-
-        val distance = member.distance_relation?.name ?: member.distance ?: ""
-
-        val format = member.distance_relation?.format ?: member.format ?: ""
 
         return StartOrderInfo(
             id = start.id,
@@ -32,12 +26,23 @@ class UserRegistrationsMapperBase(
                 start.start.start_date
             ),
             dateStartCloud = start.start.start_date,
-            ageGroup = ageGroup,
-            distance = distance,
-            member = member.surname + " " + member.name,
-            cost = if (start.price == null) "0" else start.price?.formatPrice().toString(),
-            team = member.team,
-            kindOfSport = format,
+            members = start.members.map { member ->
+                val ageGroup = member.age_group?.name ?: mapStartGroup(member.group)
+
+                val distance = member.distance_relation?.name ?: member.distance ?: ""
+
+                val format = member.distance_relation?.format ?: member.format ?: ""
+                StartOrderInfo.Member(
+                    name = member.name,
+                    surname = member.surname,
+                    teamName = member.team,
+                    ageGroupName = ageGroup,
+                    distanceName = distance,
+                    genderName = member.gender,
+                    formatName = format
+                )
+            },
+            cost = start.price.formatPrice(),
             startTitle = start.start.name,
             payment = mapPayments(payment = start.payment),
         )
@@ -48,6 +53,13 @@ class UserRegistrationsMapperBase(
             map(it)
         }
     }
+
+    override fun mapPrice(priceResponse: StartPriceResponse): StartOrderPrice  =
+        StartOrderPrice(
+            additionalPrice = priceResponse.additionalFieldsPrice.formatPrice(),
+            totalPrice = priceResponse.totalPrice.formatPrice(),
+            isRequired = priceResponse.isPaymentRequired
+        )
 
     private fun mapPayments(
         payment: Int?,

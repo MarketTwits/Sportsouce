@@ -1,7 +1,6 @@
 package com.markettwits.start.register.presentation.registration.presentation.component.registration
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-@OptIn(ExperimentalDecomposeApi::class)
 class StartRegistrationPageComponentBase(
     componentContext: ComponentContext,
     storeFactory: StartRegistrationPageStoreFactory,

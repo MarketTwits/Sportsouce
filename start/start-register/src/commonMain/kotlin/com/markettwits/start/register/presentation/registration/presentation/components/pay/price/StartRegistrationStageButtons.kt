@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
 
@@ -94,7 +95,7 @@ private fun StartRegistrationStageButton(
 ) {
     ButtonContentBase(
         modifier = modifier.padding(4.dp),
-        containerColor = MaterialTheme.colorScheme.secondary,
+        containerColor = SportSouceColor.SportSouceLighBlue,
         shape = Shapes.medium,
         textColor = MaterialTheme.colorScheme.onSecondary,
         title = title,

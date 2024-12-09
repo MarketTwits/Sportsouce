@@ -22,6 +22,8 @@ import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_price.StartPriceRequest
+import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
@@ -111,7 +113,7 @@ internal class StartsRemoteDataSourceImpl(
     }
 
     override suspend fun fetchStartMain(): StartsRemote {
-        val response = client.get("start?mainPage=true")
+        val response = client.get("start?mainPage=true&openFirst=true")
         return json.decodeFromString(response.body<String>())
     }
 
@@ -123,6 +125,21 @@ internal class StartsRemoteDataSourceImpl(
             }
         }
         return json.decodeFromString(response.body())
+    }
+
+    override suspend fun checkStartPrice(
+        startPriceRequest: StartPriceRequest,
+        id : Int,
+        token: String
+    ): StartPriceResponse {
+        val response = client.post("member-start/$id/price") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(startPriceRequest)
+        }
+        return json.decodeFromString(StartPriceResponse.serializer(), response.body())
     }
 
     override suspend fun registerOnStartBase(

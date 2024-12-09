@@ -23,11 +23,15 @@ class RegistrationMemberComponentBase(
     private val pop: () -> Unit,
     private val apply: (StartStatement, Int) -> Unit
 ) : RegistrationMemberComponent, ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create(memberId, startStatement, membersProfile)
     }
+
     override val model: StateFlow<RegistrationMemberStore.State> = store.stateFlow
+
     override fun obtainEvent(event: RegistrationMemberStore.Intent) {
         store.accept(event)
     }

@@ -1,6 +1,5 @@
 package com.markettwits.shop.filter.presentation.store
 
-import com.arkivanov.decompose.errorhandler.onDecomposeError
 import com.markettwits.shop.filter.domain.ShopFilterRepository
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.Intent
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore.State
@@ -36,12 +35,14 @@ class ShopFilterExecutor(
             }
 
             is Intent.OnClickResetCategory -> onClickResetCategory()
+
+            is Intent.OnClickRetry -> launch()
         }
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
         if (getState().categories.isEmpty())
-            firstLaunch()
+            launch()
     }
 
 }

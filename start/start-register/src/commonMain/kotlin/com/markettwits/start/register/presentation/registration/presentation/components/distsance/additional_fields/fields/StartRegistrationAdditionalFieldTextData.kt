@@ -38,13 +38,13 @@ internal fun StartRegistrationAdditionalFieldTextData(
             )
         },
         onValueChanged = {
-            val sended = if (it.isNotEmpty()) timeMapper.mapTimeToCloud(time = it)
+            val sent = if (it.isNotEmpty()) timeMapper.mapTimeToCloud(time = it)
                 else
                     null
             onFieldChanged(
                 field.copy(
                     answer = field.answer.copy(
-                        date = sended,
+                        date = sent,
                     )
                 )
             )

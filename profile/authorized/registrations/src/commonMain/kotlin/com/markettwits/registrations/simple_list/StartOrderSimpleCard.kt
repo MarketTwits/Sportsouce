@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -55,10 +57,8 @@ fun StartOrderSimpleCard(
             ImageCardInfo(
                 modifier = Modifier.padding(start = 10.dp),
                 title = start.startTitle,
-                date = start.dateStartPreview,
-                payment = start.payment,
-                cost = start.cost,
-                onClick = { onItemClick(start) }
+                dateStart = start.dateStartPreview,
+                kindOfSport = start.payment.title
             )
         }
     }
@@ -104,11 +104,8 @@ private fun ImageCard(
 private fun ImageCardInfo(
     modifier: Modifier = Modifier,
     title: String,
-   // status: StartStatus,
-    payment: StartOrderInfo.PaymentStatus,
-    cost: String,
-    date: String,
-    onClick: () -> Unit,
+    dateStart : String,
+    kindOfSport : String,
 ) {
     Column(
         modifier = Modifier
@@ -124,35 +121,29 @@ private fun ImageCardInfo(
             fontSize = 14.sp,
             textAlign = TextAlign.Start
         )
-        if (!payment.payment) {
-            Text(
-                modifier = modifier,
-                text = "Слот не оплачен",
-                lineHeight = 14.sp,
-                color = SportSouceColor.SportSouceLightRed,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                fontFamily = FontNunito.bold(),
-                fontSize = 12.sp,
-                textAlign = TextAlign.Start
-            )
-            Button(
-                shape = Shapes.medium,
-                modifier = modifier,
-                onClick = { onClick() },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-                contentPadding = PaddingValues(4.dp)
-            ) {
-                Text(
-                    text = "Оплатить $cost ₽",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Start
-                )
-            }
-        }
+        Spacer(Modifier.height(4.dp))
+        Text(
+            modifier = modifier,
+            text = dateStart,
+            color = MaterialTheme.colorScheme.outline,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            lineHeight = 14.sp,
+            fontFamily = FontNunito.medium(),
+            fontSize = 12.sp,
+            textAlign = TextAlign.Start
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            modifier = modifier,
+            text = kindOfSport,
+            color = MaterialTheme.colorScheme.outline,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
+            lineHeight = 14.sp,
+            fontFamily = FontNunito.medium(),
+            fontSize = 12.sp,
+            textAlign = TextAlign.Start
+        )
     }
 }

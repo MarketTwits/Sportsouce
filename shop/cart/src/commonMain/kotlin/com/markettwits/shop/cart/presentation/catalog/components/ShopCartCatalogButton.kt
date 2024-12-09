@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 internal fun ShopCartCatalogButton(
@@ -36,13 +37,13 @@ internal fun ShopCartCatalogButton(
             Icon(
                 modifier = Modifier.padding(4.dp),
                 imageVector = Icons.Default.ShoppingCart,
-                tint = MaterialTheme.colorScheme.secondary,
+                tint = SportSouceColor.SportSouceLighBlue,
                 contentDescription = "shopping cart"
             )
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = "$price ₽",
-                color = MaterialTheme.colorScheme.secondary,
+                color = SportSouceColor.SportSouceLighBlue,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,

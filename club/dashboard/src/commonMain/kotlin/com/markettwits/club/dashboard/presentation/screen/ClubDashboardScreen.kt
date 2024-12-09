@@ -35,18 +35,16 @@ fun ClubDashboardScreen(
     component: ClubDashboardComponent
 ) {
     val state by component.state.collectAsState()
+
     Box {
         Column(
             modifier = Modifier
-                .nestedScroll(
-                    rememberBottomBarNestedScroll(
-                        bottomBarStorage = state.bottomBarVisibilityListener
-                    )
-                )
+                .nestedScroll(rememberBottomBarNestedScroll(bottomBarStorage = state.bottomBarVisibilityListener))
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             MainDashboardContent()
+
             if (state.isLoading) {
                 LoadingFullScreen()
             }

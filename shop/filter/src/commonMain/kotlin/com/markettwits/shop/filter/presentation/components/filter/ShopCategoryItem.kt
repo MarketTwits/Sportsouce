@@ -44,6 +44,7 @@ internal fun ShopFilterSelectedParams(
         } else {
             null
         }
+
     val isShow = selectedCategoriesPath.isNotEmpty() || selectedOptions.isNotEmpty()
 
     if (isShow) {
@@ -112,6 +113,5 @@ private fun ShopCategoryItem(
                 contentDescription = "close $title"
             )
         }
-
     }
 }

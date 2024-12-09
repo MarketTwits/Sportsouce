@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
@@ -27,7 +28,7 @@ internal fun StartRegistrationAdditionalFieldMultiselect(
 ) {
     val options = field.field.options
 
-    val selectedOptions =  field.answer?.multiSelect?.toMutableList() ?: emptyList<Int>().toMutableList()
+    val selectedOptions =  field.answer.multiSelect?.toMutableList() ?: emptyList<Int>().toMutableList()
 
     Column(modifier = modifier.fillMaxWidth()) {
         StartRegistrationAdditionalFiledTitle(field = field.field)
@@ -48,7 +49,7 @@ internal fun StartRegistrationAdditionalFieldMultiselect(
                     }
                 )
                 val text = if (option.price != null )
-                    "${option.title} + ( ${option.price} )"
+                    "${option.title} + (${option.price.formatPrice()} ₽)"
                 else
                     option.title
                 Text(

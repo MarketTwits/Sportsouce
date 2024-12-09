@@ -30,6 +30,7 @@ interface ShopCreateOrderStore : Store<Intent, State, Label> {
             val selectedOption : T,
             val options : List<T>
         )
+
         data class ShopRecipientState(
             val isExpanded : Boolean,
             val isAvailable : Boolean,
@@ -37,6 +38,7 @@ interface ShopCreateOrderStore : Store<Intent, State, Label> {
             val mutableShopRecipient : ShopRecipient,
             val message : String,
         )
+
         data class ShopCreateOrderButtonState(
             val isLoading: Boolean,
             val isAvailable : Boolean,

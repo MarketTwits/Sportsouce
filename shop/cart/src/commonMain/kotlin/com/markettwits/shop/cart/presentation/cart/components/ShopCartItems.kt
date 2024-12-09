@@ -29,7 +29,7 @@ internal fun LazyListScope.ShopCartItems(
     itemsIndexed(items = items, itemContent = { index,item ->
         AnimationBox(key = index){
             ShopCartItem(
-                modifier = modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                 shopCartItemCart = item,
                 onItemClick = onClickItem,
                 onClickIncrease = onClickIncrease,

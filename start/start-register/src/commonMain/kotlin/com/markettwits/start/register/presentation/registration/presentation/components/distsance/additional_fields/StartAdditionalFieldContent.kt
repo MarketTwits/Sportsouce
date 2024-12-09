@@ -26,7 +26,6 @@ import com.markettwits.start.register.presentation.registration.presentation.com
 internal fun RenderAdditionalFields(
     modifier: Modifier = Modifier,
     fields : List<StartRegistrationStatementAnswer>,
-    //additionalFields: List<StartRegistrationAdditionalField>,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
     Column(
@@ -44,9 +43,6 @@ internal fun RenderAdditionalFields(
                         overflow = TextOverflow.Ellipsis
                     )
                     fields.forEach { field ->
-    //                    field.field.dependentFields.forEach {
-    //                        RenderAdditionalField(it, {  })
-    //                    }
                         RenderAdditionalField(
                             field = field,
                             onFieldChanged = onFieldChanged

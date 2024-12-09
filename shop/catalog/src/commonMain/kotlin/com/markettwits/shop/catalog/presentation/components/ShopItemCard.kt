@@ -40,6 +40,7 @@ import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.shop.domain.model.ShopItem
 
 
@@ -138,7 +139,6 @@ private fun ImageCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ShopImagePageIndicator(
     modifier: Modifier = Modifier,
@@ -184,7 +184,7 @@ private fun ShowCardPrice(
         ) {
             Text(
                 text = "$currentPrice ₽",
-                color = MaterialTheme.colorScheme.secondary,
+                color = SportSouceColor.SportSouceLighBlue,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -208,7 +208,7 @@ private fun ShowCardPrice(
         if (!previousPrice.isNullOrEmpty()) {
             Text(
                 text = "-$discount%",
-                color = MaterialTheme.colorScheme.secondary,
+                color = SportSouceColor.SportSouceLighBlue,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

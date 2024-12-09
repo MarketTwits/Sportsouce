@@ -15,6 +15,7 @@ kotlin {
         implementation(projects.start.start)
         implementation(projects.core.koin)
         implementation(projects.core.time)
+        implementation(projects.core.log)
         implementation(projects.intent.api)
         implementation(projects.intent.impl)
         implementation(libs.koin.core)

@@ -60,8 +60,12 @@ class StartDistanceComponentBase(
         feature.onChangeStartStatement(startStatement)
     }
 
-    override fun onChangeAnswer(startRegisterAnswer: StartRegistrationStatementAnswer) {
-        feature.onChangeAnswer(startRegisterAnswer)
+    override fun onChangeDistanceAnswer(startRegisterAnswer: StartRegistrationStatementAnswer) {
+        feature.onChangeAnswer(startRegisterAnswer,true)
+    }
+
+    override fun onChangeStatementAnswer(startRegisterAnswer: StartRegistrationStatementAnswer) {
+        feature.onChangeAnswer(startRegisterAnswer,false)
     }
 
     override fun onClickGoBack() {

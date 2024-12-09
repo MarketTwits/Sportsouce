@@ -22,6 +22,8 @@ import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
+import com.markettwits.cloud.model.start_price.StartPriceRequest
+import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
@@ -53,6 +55,12 @@ interface SportsouceApi {
     suspend fun fetchStartMain(): StartsRemote
     //Start registry
     suspend fun repay(id : Int, token: String) : StartRegistrationResponse
+
+    suspend fun checkStartPrice(
+        startPriceRequest: StartPriceRequest,
+        id : Int,
+        token: String
+    ) : StartPriceResponse
 
     suspend fun registerOnStartBase(
         request: StartRegisterRequest,

@@ -1,7 +1,8 @@
 package com.markettwits.shop.filter.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud_shop.model.common.OptionInfo
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.shop.filter.domain.ShopFilterRepository
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopFilterPrice
@@ -90,13 +91,13 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
         dispatch(Message.UpdateCurrentPath(emptyList()))
     }
 
-    fun firstLaunch() {
+    fun launch() {
         scope.launch {
             dispatch(Message.Loading)
             repository.filter().onSuccess {
                 dispatch(Message.FilterLoaded(it, ShopFilterPrice.EMPTY))
             }.onFailure {
-                publish(Label.GoBack)
+                dispatch(Message.Failed(it.mapToSauceError().mapToString()))
             }
         }
     }

@@ -12,15 +12,15 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
             implementation(libs.decompose)
-            implementation(projects.core.errors)
-            implementation(projects.shop.cloud)
             implementation(projects.core.ui)
-            implementation(projects.shop.domain)
-            implementation(projects.core.koin)
-            implementation(projects.intent.composable)
-            implementation(projects.shop.order)
+            implementation(projects.core.errors)
             implementation(projects.core.time)
+            implementation(projects.core.koin)
+            implementation(projects.shop.cloud)
+            implementation(projects.shop.domain)
+            implementation(projects.shop.order)
             implementation(projects.auth.authService)
+            implementation(projects.intent.composable)
         }
     }
 }

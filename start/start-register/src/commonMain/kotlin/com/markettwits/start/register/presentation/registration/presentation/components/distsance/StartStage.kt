@@ -50,8 +50,11 @@ internal fun StartStage(
             onClickStartStatement = {
                 component.onClickStartMember(it)
             },
-            onChangeAdditionalField = {
-                component.onChangeAnswer(it)
+            onChangeStatementField = {
+                component.onChangeStatementAnswer(it)
+            },
+            onChangeDistanceField = {
+                component.onChangeDistanceAnswer(it)
             },
         )
         state.ButtonContent(

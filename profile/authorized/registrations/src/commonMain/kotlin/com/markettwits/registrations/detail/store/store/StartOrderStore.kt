@@ -22,6 +22,7 @@ interface StartOrderStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
+        data class UpdatePrice(val newPrice : String) : Message
         data class Success(val paymentUrl: String) : Message
         data class Failed(val message: String) : Message
     }

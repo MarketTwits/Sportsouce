@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.shop.domain.model.ShopItem
 
 @Composable
@@ -29,7 +30,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Pri
         ) {
             Text(
                 text = "${price.currentPrice} ₽",
-                color = MaterialTheme.colorScheme.secondary,
+                color = SportSouceColor.SportSouceLighBlue,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontFamily = FontNunito.bold(),
@@ -48,7 +49,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Pri
                 Spacer(modifier = Modifier.padding(horizontal = 2.dp))
                 Text(
                     text = "- ${price.discount}%",
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = SportSouceColor.SportSouceLighBlue,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     fontFamily = FontNunito.light(),

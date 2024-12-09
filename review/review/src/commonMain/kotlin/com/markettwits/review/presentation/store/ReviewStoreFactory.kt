@@ -7,6 +7,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.review.domain.Review
 import com.markettwits.review.domain.ReviewRepository
 import kotlinx.coroutines.flow.catch
@@ -37,7 +39,10 @@ class ReviewStoreFactory(
 
     private inner class ExecutorImpl(
         private val intentAction: IntentAction
-    ) : CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>() {
+    ) : CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>(), LogTagProvider {
+
+        override val tag: String = "ReviewStoreFactory"
+
         override fun executeIntent(intent: ReviewStore.Intent, getState: () -> ReviewStore.State) {
             when (intent) {
                 is ReviewStore.Intent.Launch -> launch(intent.forced)
@@ -62,6 +67,7 @@ class ReviewStoreFactory(
                         dispatch(Msg.Loading)
                     }
                     .catch {
+                        errorLog(it) { "Failed when launch review content" }
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     }
                     .collect { result ->
@@ -77,19 +83,20 @@ class ReviewStoreFactory(
     }
 
     private object ReducerImpl : Reducer<ReviewStore.State, Msg> {
-        override fun ReviewStore.State.reduce(message: Msg): ReviewStore.State =
-            when (message) {
+        override fun ReviewStore.State.reduce(msg: Msg): ReviewStore.State =
+            when (msg) {
                 is Msg.InfoFailed -> copy(
                     isError = true,
                     isLoading = false,
-                    message = message.message
+                    message = msg.message
                 )
 
                 is Msg.Loading -> copy(isLoading = true, isError = false)
+
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,
                     isError = false,
-                    review = message.review
+                    review = msg.review
                 )
             }
     }

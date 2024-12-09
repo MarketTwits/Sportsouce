@@ -2,6 +2,8 @@ package com.markettwits.shop.order.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
@@ -110,7 +112,7 @@ abstract class ShopCreateOrderExecutorHandler(
         dispatch(Message.UpdateOrderState(state.copy(shopOrderPrice = price)))
     }
 
-    protected fun obtainCheckOrder(state: State) {
+    protected fun obtainCheckOrder(state: State, onGetPrice : () -> Unit) {
         scope.launch {
             dispatch(
                 Message.UpdateCreateOrderStatus(
@@ -139,6 +141,7 @@ abstract class ShopCreateOrderExecutorHandler(
                         )
                     )
                     dispatch(Message.UpdateShopOrderResultItems(it))
+                    onGetPrice()
                 },
                 onFailure = {
                     dispatch(
@@ -155,11 +158,12 @@ abstract class ShopCreateOrderExecutorHandler(
                             triggered(
                                 EventContent(
                                     success = false,
-                                    message = it.message.toString()
+                                    message = it.mapToSauceError().mapToString()
                                 )
                             )
                         )
                     )
+                    onGetPrice()
                 }
             )
         }

@@ -2,6 +2,8 @@
 #plugins
 compottie = "1.1.2"
 coreSplashscreen = "1.0.1"
+htmlconverter = "0.9.5"
+pullrefresh = "1.4.0-beta02"
 vk-compose-gradle-plugin = "0.4.2"
 gradle = "8.5.0"
 
@@ -56,11 +58,13 @@ coreKtx = "1.15.0"
 material = "1.12.0"
 
 [libraries]
+
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
+htmlconverter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", version.ref = "htmlconverter" }
 lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRendererM3" }
 
@@ -91,6 +95,10 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-content-negotiation= { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+#Coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "ktor"}
+coil-network = {group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "ktor"}
+
 #Decompose
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-compose-extension = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
@@ -101,6 +109,7 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 
 #Tracer
+pullrefresh = { module = "dev.materii.pullrefresh:pullrefresh", version.ref = "pullrefresh" }
 tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", version.ref = "tracer" }
 tracer-heap-dump = { group = "ru.ok.tracer", name = "tracer-heap-dumps", version.ref = "tracer" }
 tracer-disk-usage = { group = "ru.ok.tracer", name = "tracer-disk-usage", version.ref = "tracer" }

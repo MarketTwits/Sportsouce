@@ -28,11 +28,11 @@ class StartRegistrationPageMapper(
 
     fun mapToStartRegistrationDistance(
         user: User,
-        distinctDistances : List<DistinctDistance>,
+        distinctDistances: List<DistinctDistance>,
         cities: List<City>,
         teams: List<Team>,
         members: List<ProfileMember>,
-        ): List<StartRegistrationDistance> {
+    ): List<StartRegistrationDistance> {
         return distinctDistances.map {
             StartRegistrationDistance(
                 id = it.id,
@@ -48,7 +48,7 @@ class StartRegistrationPageMapper(
                 ),
                 price = mapStartRegistrationPrice(it.static_price),
                 format = it.format ?: "",
-                answers =  mapStartAdditionalFields(it.additional_fields ?: emptyList()).map {
+                answers = mapStartAdditionalFields(it.additional_fields ?: emptyList()).map {
                     StartRegistrationStatementAnswer(
                         field = it,
                         answer = StartRegisterAnswer(
@@ -63,15 +63,15 @@ class StartRegistrationPageMapper(
     }
 
     private fun mapStartStatement(
-        stageId : Int,
+        stageId: Int,
         user: User,
-        profileMembers : List<ProfileMember>,
+        profileMembers: List<ProfileMember>,
         cities: List<City>,
         teams: List<Team>
-    ) : StartStatement {
+    ): StartStatement {
         val birthday = calculateBirthday(user.birthday)
         return StartStatement(
-            name =  user.name,
+            name = user.name,
             surname = user.surname,
             birthday = birthday,
             age = calculateAge(birthday).toString(),
@@ -96,15 +96,15 @@ class StartRegistrationPageMapper(
     }
 
     private fun mapStartStatement(
-        stageId : Int,
+        stageId: Int,
         profileMember: ProfileMember,
-        profileMembers : List<ProfileMember>,
+        profileMembers: List<ProfileMember>,
         cities: List<City>,
         teams: List<Team>
-    ) : StartStatement{
+    ): StartStatement {
         val birthday = calculateBirthday(profileMember.birthday)
         return StartStatement(
-            name =  profileMember.name,
+            name = profileMember.name,
             surname = profileMember.surname,
             birthday = birthday,
             age = calculateAge(birthday).toString(),
@@ -121,20 +121,20 @@ class StartRegistrationPageMapper(
             paymentDisabled = false,
             yearDiscountApplied = false,
             distanceTitle = "",
-            userId = if (profileMember.userId == 0 )
+            userId = if (profileMember.userId == 0)
                 StartStatement.UserId.WithoutId
-                     else
+            else
                 StartStatement.UserId.WithId(userId = profileMember.userId.toString()),
             stageId = stageId,
             members = profileMembers,
-           // answers = emptyList()
+            // answers = emptyList()
         )
     }
 
-    private fun calculateBirthday(birthdayRemote : String) : String{
+    private fun calculateBirthday(birthdayRemote: String): String {
         return try {
             timeMapper.mapTime(TimePattern.FullWithDots, birthdayRemote)
-        }catch (e : Exception){
+        } catch (e: Exception) {
             ""
         }
     }
@@ -145,7 +145,7 @@ class StartRegistrationPageMapper(
             val birthLocalDate = LocalDate.parse(birthdaySimple, dateFormatter)
             val currentDate = LocalDate.now()
             ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             0
         }
     }
@@ -174,7 +174,7 @@ class StartRegistrationPageMapper(
         cities: List<City>,
         teams: List<Team>
     ): List<StartRegistrationStageWithStatement> {
-        return stages.mapIndexed{ index, stage ->
+        return stages.mapIndexed { index, stage ->
             StartRegistrationStageWithStatement(
                 statement = if (index != 0)
                     mapStartStatement(
@@ -200,7 +200,16 @@ class StartRegistrationPageMapper(
                     sex = stage.sex ?: "",
                     additionalFields = mapStartAdditionalFields(
                         stage.additional_fields ?: emptyList()
-                    )
+                    ).map {
+                        StartRegistrationStatementAnswer(
+                            field = it,
+                            answer = StartRegisterAnswer(
+                                additionalFieldId = it.id,
+                                isOptional = it.isOptional,
+                                type = it.type.value
+                            )
+                        )
+                    }
                 )
             )
         }

@@ -16,6 +16,6 @@ class UserProfileInteractorBase(private val repository: AuthorizedProfileReposit
     private fun sortUserRegistry(userRegistry: List<StartOrderInfo>): List<StartOrderInfo> {
         val sortedItems = userRegistry.filterNot { it.payment.payment }
         val unsortedItems = userRegistry.filter { it.payment.payment }
-        return sortedItems + unsortedItems
+        return userRegistry
     }
 }

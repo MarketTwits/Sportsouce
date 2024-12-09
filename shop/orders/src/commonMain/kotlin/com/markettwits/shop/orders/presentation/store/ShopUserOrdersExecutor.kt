@@ -32,9 +32,6 @@ class ShopUserOrdersExecutor(
             repository.getUserOrders(forced)
                 .catch {
                     dispatch(Message.Error(it.mapToSauceError()))
-                    println("---------------------")
-                    println(it.message.toString())
-                    println("---------------------")
                 }
                 .collect {
                     dispatch(Message.Loaded(it))

@@ -9,5 +9,5 @@ data class StartRegistrationStage(
     val name : String,
     val length : String,
     val sex : String,
-    val additionalFields : List<StartRegistrationAdditionalField>
+    val additionalFields : List<StartRegistrationStatementAnswer>
 )

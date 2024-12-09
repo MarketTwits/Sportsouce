@@ -18,8 +18,7 @@ class ReviewRepositoryBase(
     private val reviewMapper: ReviewMapper,
     private val executor: ExecuteWithCache,
 ) : ReviewRepository {
-    override suspend fun review(forced: Boolean): Flow<Review> =
-        executor.executeWithCache(
+    override suspend fun review(forced: Boolean): Flow<Review> = executor.executeWithCache(
             forced = forced,
             cache = cache,
             launch = this::launch,
@@ -28,7 +27,7 @@ class ReviewRepositoryBase(
     private suspend fun launch(): Review {
         val (actual, archive, news) = coroutineScope {
             withContext(Dispatchers.IO) {
-                val deferredActual = async { service.fetchActualStarts() }
+                val deferredActual = async { service.fetchStartMain() }
                 val deferredPaste = async { service.fetchPasteStarts() }
                 val deferredNews = async { service.news() }
                 Triple(deferredActual.await(), deferredPaste.await(), deferredNews.await())

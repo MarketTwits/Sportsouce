@@ -23,7 +23,8 @@ internal fun StartRegistrationDistanceContent(
     modifier: Modifier = Modifier,
     distance: StartRegistrationDistance,
     onClickStartStatement: (StartStatement) -> Unit,
-    onChangeAdditionalField: (StartRegistrationStatementAnswer) -> Unit,
+    onChangeStatementField: (StartRegistrationStatementAnswer) -> Unit,
+    onChangeDistanceField : (StartRegistrationStatementAnswer) -> Unit
 ) {
     Column(modifier = modifier) {
         distance.stages.forEach {
@@ -31,13 +32,14 @@ internal fun StartRegistrationDistanceContent(
                 title = it.stage.name,
                 additionalFields = it.stage.additionalFields,
                 startStatement = it.statement,
-                onClickStartStatement = onClickStartStatement
+                onClickStartStatement = onClickStartStatement,
+                onChangeAdditionalField = onChangeStatementField
             )
         }
         RenderAdditionalFields(
             modifier = Modifier.padding(10.dp),
             fields = distance.answers,
-            onFieldChanged = onChangeAdditionalField
+            onFieldChanged = onChangeDistanceField
         )
     }
 }
@@ -47,8 +49,9 @@ private fun StartRegistrationMemberContent(
     modifier: Modifier = Modifier,
     title: String,
     startStatement: StartStatement,
-    additionalFields: List<StartRegistrationAdditionalField>,
+    additionalFields: List<StartRegistrationStatementAnswer>,
     onClickStartStatement: (StartStatement) -> Unit,
+    onChangeAdditionalField: (StartRegistrationStatementAnswer) -> Unit
 
     ) {
     Column(modifier = modifier) {
@@ -66,12 +69,10 @@ private fun StartRegistrationMemberContent(
             startStatement = startStatement,
             onClickStartStatement = onClickStartStatement
         )
-
-//        StartAdditionalFieldContent(
-//            additionalFields = additionalFields,
-//            onFieldChanged = { newAnswer ->
-//               // onChangeStartStatement(startStatement.addStartStatementAnswer(newAnswer))
-//            }
-//        )
+        RenderAdditionalFields(
+            modifier = Modifier.padding(10.dp),
+            fields = additionalFields,
+            onFieldChanged = onChangeAdditionalField
+        )
     }
 }

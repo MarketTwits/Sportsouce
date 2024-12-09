@@ -45,6 +45,7 @@ import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.shop.cart.domain.ShopItemCart
 
@@ -184,7 +185,7 @@ private fun ShowCardPrice(
         ) {
             Text(
                 text = "$currentPrice ₽",
-                color = MaterialTheme.colorScheme.secondary,
+                color = SportSouceColor.SportSouceLighBlue,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -304,6 +305,6 @@ private fun ShopItemCounter(
 internal fun rememberCounterOperatorColor(
     isAvailable : Boolean
 ) : Color = if (isAvailable)
-    MaterialTheme.colorScheme.secondary
+    SportSouceColor.SportSouceLighBlue
 else
     MaterialTheme.colorScheme.outline

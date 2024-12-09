@@ -1,17 +1,13 @@
 package com.markettwits.shop.order.presentation.store
 
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.shop.cart.domain.ShopCartRepository
 import com.markettwits.shop.order.domain.ShopOrderRepository
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
 import com.markettwits.shop.order.domain.model.ShopPaymentType
-import com.markettwits.shop.order.domain.model.ShopRecipient
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Intent
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Label
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.State
-import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore.Message
 
 class ShopCreateOrderExecutor(
     orderRepository: ShopOrderRepository,
@@ -59,8 +55,9 @@ class ShopCreateOrderExecutor(
     }
 
     override fun executeAction(action: Unit, getState: () -> State) {
-        obtainShopOrderPrice(getState())
         obtainShopRecipient(getState())
-        obtainCheckOrder(getState())
+        obtainCheckOrder(getState()){
+            obtainShopOrderPrice(getState())
+        }
     }
 }

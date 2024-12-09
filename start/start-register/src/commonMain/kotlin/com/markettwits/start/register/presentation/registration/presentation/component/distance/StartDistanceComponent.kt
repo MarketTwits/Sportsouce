@@ -21,7 +21,9 @@ interface StartDistanceComponent : StartStageComponent {
 
     fun onChangeStartStatement(startStatement: StartStatement)
 
-    fun onChangeAnswer(startRegisterAnswer: StartRegistrationStatementAnswer)
+    fun onChangeDistanceAnswer(startRegisterAnswer: StartRegistrationStatementAnswer)
+
+    fun onChangeStatementAnswer(startRegisterAnswer: StartRegistrationStatementAnswer)
 
     fun onClickGoBack()
 

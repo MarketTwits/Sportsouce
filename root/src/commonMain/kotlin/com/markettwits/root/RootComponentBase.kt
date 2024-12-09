@@ -77,15 +77,11 @@ class RootComponentBase(
                 BottomBarComponentBase(
                     componentContext = componentContext,
                     navigationComponentHandle = object : BottomBarComponentHandle {
-
                         override fun navigateTo(configuration: Configuration) {
                             stackNavigation.bringToFront(
-                                BottomBarConfigurationMapper.map(
-                                    configuration
-                                )
+                                BottomBarConfigurationMapper.map(configuration)
                             )
                         }
-
                         override fun getActiveConfiguration(observer: (Configuration) -> Unit) {
                             childStack.subscribe {
                                 observer(

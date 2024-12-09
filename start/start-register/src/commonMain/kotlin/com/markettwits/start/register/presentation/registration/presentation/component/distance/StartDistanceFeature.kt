@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class StartDistanceFeature(
-    private val innerState : StartRegistrationStagePage.Registration,
+    innerState : StartRegistrationStagePage.Registration,
     private val onMessage: (EventContent) -> Unit,
 ) : InstanceKeeper.Instance {
 
@@ -30,9 +30,15 @@ class StartDistanceFeature(
         }
     }
 
-    fun onChangeAnswer(startRegisterAnswer: StartRegistrationStatementAnswer) {
+    fun onChangeAnswer(
+        startRegisterAnswer: StartRegistrationStatementAnswer,
+        isDistanceAnswer : Boolean
+    ) {
         coroutineScope.launch {
-            val newState = updateAnswer(state.value, startRegisterAnswer)
+            val newState = if (isDistanceAnswer)
+                    updateDistanceAnswers(startRegisterAnswer)
+                else
+                    updateStageAdditionalFields(startRegisterAnswer)
             state.emit(newState)
         }
     }
@@ -73,10 +79,113 @@ class StartDistanceFeature(
         return distance.copy(distance = distance.distance.copy(stages = updatedStages))
     }
 
-    private fun updateAnswer(
-        distance: StartRegistrationStagePage.Registration,
+//    private fun updateAnswer(
+//        distance: StartRegistrationStagePage.Registration,
+//        startRegisterAnswer: StartRegistrationStatementAnswer
+//    ): StartRegistrationStagePage.Registration {
+//        val isAnswerEmpty = startRegisterAnswer.answer.let { answer ->
+//            answer.string.isNullOrEmpty() &&
+//                    answer.number == null &&
+//                    answer.bool == null &&
+//                    answer.date.isNullOrEmpty() &&
+//                    answer.multiSelect.isNullOrEmpty() &&
+//                    answer.singleSelect == null
+//        } ?: true // Если answer == null, то он считается пустым
+//
+//        val updatedAnswers = distance.distance.answers.map { existingAnswer ->
+//            if (existingAnswer.field.id == startRegisterAnswer.field.id) {
+//                if (isAnswerEmpty) {
+//                    existingAnswer.copy()
+//                } else {
+//                    startRegisterAnswer
+//                }
+//            } else {
+//                existingAnswer // Оставляем без изменений
+//            }
+//        }.let { answers ->
+//            // Если ответ с таким ID не найден и он не пустой, добавляем новый StartRegistrationStatementAnswer
+//            if (!isAnswerEmpty && answers.none { it.field .id == startRegisterAnswer.field.id }) {
+//                answers + startRegisterAnswer
+//            } else {
+//                answers
+//            }
+//        }
+//
+//        // Возвращаем новый объект Registration с обновленным distance
+//        return distance.copy(
+//            distance = distance.distance.copy(
+//                answers = updatedAnswers
+//            )
+//        )
+//    }
+
+    fun updateStageAdditionalFields(
         startRegisterAnswer: StartRegistrationStatementAnswer
     ): StartRegistrationStagePage.Registration {
+        val registration = state.value
+
+        // Создаем обновленную копию стадий
+        val updatedStages = registration.distance.stages.map { stageWithStatement ->
+            // Проверяем, нужно ли обновлять текущую стадию
+            val needsUpdate = stageWithStatement.stage.additionalFields.any {
+                it.field.id == startRegisterAnswer.field.id
+            }
+
+            // Если нужно обновлять, создаем копию с обновленными additionalFields
+            if (needsUpdate) {
+                val updatedStage = stageWithStatement.stage.copy(
+                    additionalFields = updateAnswers(stageWithStatement.stage.additionalFields, startRegisterAnswer)
+                )
+                stageWithStatement.copy(stage = updatedStage)
+            } else {
+                stageWithStatement // Если не нужно обновлять, оставляем без изменений
+            }
+        }
+
+        // Возвращаем новую копию registration с обновленными stages
+        return registration.copy(
+            distance = registration.distance.copy(
+                stages = updatedStages
+            )
+        )
+    }
+
+    fun updateDistanceAnswers(
+        startRegisterAnswer: StartRegistrationStatementAnswer
+    ): StartRegistrationStagePage.Registration {
+        val registration = state.value
+        val updatedAnswers = updateAnswers(registration.distance.answers, startRegisterAnswer)
+        return registration.copy(
+            distance = registration.distance.copy(
+                answers = updatedAnswers
+            )
+        )
+    }
+
+//    fun updateDistanceAnswer(
+//        registration: StartRegistrationStagePage.Registration,
+//        startRegisterAnswer: StartRegistrationStatementAnswer
+//    ): StartRegistrationStagePage.Registration {
+//        return when {
+//            // Проверяем, нужно ли обновить distance.answers
+//            registration.distance.answers.any { it.field.id == startRegisterAnswer.field.id } -> {
+//                updateDistanceAnswers(registration, startRegisterAnswer)
+//            }
+//            // Проверяем, нужно ли обновить stages.stage.additionalFields
+//            registration.distance.stages.any { stage ->
+//                stage.stage.additionalFields.any { it.field.id == startRegisterAnswer.field.id }
+//            } -> {
+//                updateStageAdditionalFields(registration, startRegisterAnswer)
+//            }
+//            // Если ни в одной из коллекций не найден ответ, возвращаем объект без изменений
+//            else -> registration
+//        }
+//    }
+
+    private fun updateAnswers(
+        answers: List<StartRegistrationStatementAnswer>,
+        startRegisterAnswer: StartRegistrationStatementAnswer
+    ): List<StartRegistrationStatementAnswer> {
         val isAnswerEmpty = startRegisterAnswer.answer.let { answer ->
             answer.string.isNullOrEmpty() &&
                     answer.number == null &&
@@ -86,45 +195,48 @@ class StartDistanceFeature(
                     answer.singleSelect == null
         } ?: true // Если answer == null, то он считается пустым
 
-        val updatedAnswers = distance.distance.answers.map { existingAnswer ->
+        return answers.map { existingAnswer ->
             if (existingAnswer.field.id == startRegisterAnswer.field.id) {
                 if (isAnswerEmpty) {
-                    existingAnswer.copy()
+                    existingAnswer.copy() // Создаем копию даже для пустых значений
                 } else {
-                    startRegisterAnswer
+                    startRegisterAnswer.copy() // Создаем новую копию переданного ответа
                 }
             } else {
-                existingAnswer // Оставляем без изменений
+                existingAnswer.copy() // Убедимся, что возвращаем независимую копию
             }
-        }.let { answers ->
-            // Если ответ с таким ID не найден и он не пустой, добавляем новый StartRegistrationStatementAnswer
-            if (!isAnswerEmpty && answers.none { it.field .id == startRegisterAnswer.field.id }) {
-                answers + startRegisterAnswer
+        }.let { updatedAnswers ->
+            if (!isAnswerEmpty && updatedAnswers.none { it.field.id == startRegisterAnswer.field.id }) {
+                updatedAnswers + startRegisterAnswer.copy() // Добавляем копию ответа
             } else {
-                answers
+                updatedAnswers
             }
         }
-
-        // Возвращаем новый объект Registration с обновленным distance
-        return distance.copy(
-            distance = distance.distance.copy(
-                answers = updatedAnswers
-            )
-        )
     }
 
     private fun validateAnswers(
         page: StartRegistrationStagePage.Registration,
         onSuccess: () -> Unit,
-        onMessage: (EventContent) -> Unit // Добавлено для вызова сообщения
+        onMessage: (EventContent) -> Unit // Для вызова сообщения
     ) {
-        val requiredFieldIds = page.distance.answers
+        // Получаем все обязательные поля из distance.answers
+        val requiredFieldIdsFromDistance = page.distance.answers
             .map { it.field }
-            .filter { !it.isOptional } // Отфильтровываем обязательные поля
+            .filter { !it.isOptional }
             .map { it.id }
 
-        // Получаем ID полей, на которые есть ответы
-        val providedAnswerIds = page.distance.answers
+        // Получаем все обязательные поля из stages.stage.additionalFields
+        val requiredFieldIdsFromStages = page.distance.stages
+            .flatMap { it.stage.additionalFields }
+            .map { it.field }
+            .filter { !it.isOptional }
+            .map { it.id }
+
+        // Объединяем обязательные поля
+        val requiredFieldIds = requiredFieldIdsFromDistance + requiredFieldIdsFromStages
+
+        // Получаем ID полей, на которые есть ответы, из distance.answers
+        val providedAnswerIdsFromDistance = page.distance.answers
             .filter { answer ->
                 val field = answer.field
                 when (field.type) {
@@ -132,12 +244,32 @@ class StartDistanceFeature(
                     StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
                     StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
                     StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank() // Возможно нужно отдельное поле для времени
+                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank()
                     StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
                     StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
                 }
             }
             .map { it.field.id }
+
+        // Получаем ID полей, на которые есть ответы, из stages.stage.additionalFields
+        val providedAnswerIdsFromStages = page.distance.stages
+            .flatMap { it.stage.additionalFields }
+            .filter { answer ->
+                val field = answer.field
+                when (field.type) {
+                    StartRegistrationAdditionalField.Type.TEXT -> !answer.answer.string.isNullOrBlank()
+                    StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
+                    StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
+                    StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
+                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank()
+                    StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
+                    StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
+                }
+            }
+            .map { it.field.id }
+
+        // Объединяем заполненные ответы
+        val providedAnswerIds = providedAnswerIdsFromDistance + providedAnswerIdsFromStages
 
         // Проверяем, что все обязательные поля есть в списке заполненных
         if (requiredFieldIds.all { it in providedAnswerIds }) {
@@ -146,6 +278,40 @@ class StartDistanceFeature(
             onMessage(EventContent(false, "Заполните обязательные дополнительные поля"))
         }
     }
+
+//    private fun validateAnswers(
+//        page: StartRegistrationStagePage.Registration,
+//        onSuccess: () -> Unit,
+//        onMessage: (EventContent) -> Unit // Добавлено для вызова сообщения
+//    ) {
+//        val requiredFieldIds = page.distance.answers
+//            .map { it.field }
+//            .filter { !it.isOptional } // Отфильтровываем обязательные поля
+//            .map { it.id }
+//
+//        // Получаем ID полей, на которые есть ответы
+//        val providedAnswerIds = page.distance.answers
+//            .filter { answer ->
+//                val field = answer.field
+//                when (field.type) {
+//                    StartRegistrationAdditionalField.Type.TEXT -> !answer.answer.string.isNullOrBlank()
+//                    StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
+//                    StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
+//                    StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
+//                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank() // Возможно нужно отдельное поле для времени
+//                    StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
+//                    StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
+//                }
+//            }
+//            .map { it.field.id }
+//
+//        // Проверяем, что все обязательные поля есть в списке заполненных
+//        if (requiredFieldIds.all { it in providedAnswerIds }) {
+//            onSuccess()
+//        } else {
+//            onMessage(EventContent(false, "Заполните обязательные дополнительные поля"))
+//        }
+//    }
 
     private fun validateStartStatements(
         page : StartRegistrationStagePage.Registration,

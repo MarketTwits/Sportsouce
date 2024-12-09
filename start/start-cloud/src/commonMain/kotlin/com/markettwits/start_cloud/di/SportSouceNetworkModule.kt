@@ -1,5 +1,6 @@
 package com.markettwits.start_cloud.di
 
+import Sportsouce.start.start_cloud.BuildConfig
 import com.markettwits.start_cloud.api.start.SportSauceStartApi
 import com.markettwits.start_cloud.api.start.SportSauceStartApiBase
 import com.markettwits.core_cloud.provider.HttpClientProvider
@@ -26,9 +27,7 @@ val sportSauceStartNetworkModule = module {
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
             clientEngine = OkHttp.create(),
-            baseUrl = sportsouceApiBaseUrl
+            baseUrl = BuildConfig.SPORTSAUCE_API_PATH
         )
     }
 }
-internal val sportsouceApiBaseUrl = "https://sport-73zoq.ondigitalocean.app"
-internal val sportsouceApiDevUrl = "https://dev-sportsauce-api-b7xxf.ondigitalocean.app"

@@ -1,5 +1,6 @@
 package com.markettwits.core.errors.api.throwable
 
+
 sealed class SauceError(private val throwable: Throwable) : Throwable(throwable){
 
     data class Connection(val exception : Throwable) : SauceError(exception)

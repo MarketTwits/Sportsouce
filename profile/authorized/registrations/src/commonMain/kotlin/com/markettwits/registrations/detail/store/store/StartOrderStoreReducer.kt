@@ -10,6 +10,10 @@ object StartOrderStoreReducer : Reducer<State, Message> {
             is Message.Failed -> copy(isLoading = false, isFailed = true, message = msg.message)
             is Message.Success -> copy(isLoading = false)
             is Message.Loading -> copy(isLoading = true)
+            is Message.UpdatePrice -> copy(
+                isLoading = false,
+                startOrderInfo = startOrderInfo.copy(cost = msg.newPrice)
+            )
         }
     }
 }

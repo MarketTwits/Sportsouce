@@ -4,6 +4,8 @@ import com.markettwits.start.register.presentation.member.store.RegistrationMemb
 import kotlinx.coroutines.flow.StateFlow
 
 interface RegistrationMemberComponent {
+
     val model: StateFlow<RegistrationMemberStore.State>
+
     fun obtainEvent(event: RegistrationMemberStore.Intent)
 }

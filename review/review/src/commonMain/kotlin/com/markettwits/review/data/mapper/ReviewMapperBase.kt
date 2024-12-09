@@ -21,8 +21,5 @@ class ReviewMapperBase(
     private fun sortArchive(archive: StartsRemote): List<StartsListItem> {
         val items = startsMapper.mapSingle(archive.rows)
         return items.reversed()
-//        val sortedList = items.sortedByDescending { it.statusCode.id }
-//        val filteredList = sortedList.filter { it.statusCode.id == 6 }
-//        return filteredList + sortedList.filter { it.statusCode.id != 6 }
     }
 }

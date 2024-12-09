@@ -17,13 +17,15 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun RegistrationButton(
+internal fun RegistrationButton(
     modifier: Modifier = Modifier,
     title: String,
     isLoading: Boolean,
+    isError : Boolean,
     onClick: () -> Unit
 ) {
     Button(
+        enabled = !isLoading && !isError,
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.textButtonColors(
             containerColor = MaterialTheme.colorScheme.secondary,

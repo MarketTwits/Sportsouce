@@ -4,15 +4,8 @@ plugins {
 }
 android {
     namespace = "org.markettwits.core.core.ui"
-
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toString().toInt()
-        targetSdk = libs.versions.targetSdk.get().toString().toInt()
-        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
-    }
 }
+
 kotlin {
     sourceSets {
 
@@ -24,22 +17,24 @@ kotlin {
 
         androidMain.dependencies {
             api(libs.compose.ui.tooling.preview)
-            api("io.ktor:ktor-client-okhttp:2.3.7")
+            api(libs.ktor.client.okhttp)
         }
+
         commonMain.dependencies {
             api(compose.runtime)
             api(compose.foundation)
             api(compose.material3)
             api(compose.materialIconsExtended)
-            api(compose.ui)
-            implementation(compose.components.resources)
             api(compose.components.uiToolingPreview)
-            api("dev.materii.pullrefresh:pullrefresh:1.4.0-beta02")
-            api("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
-            api("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
-            api("be.digitalia.compose.htmlconverter:htmlconverter:0.9.5")
+            api(compose.ui)
+            api(libs.pullrefresh)
+            api(libs.coil.compose)
+            api(libs.coil.network)
+            api(libs.htmlconverter)
             api(libs.kotlinx.collections.immutable)
+            implementation(compose.components.resources)
         }
+        
         jvmMain.dependencies {
             api(compose.animation)
             api(libs.compose.ui.tooling.preview)

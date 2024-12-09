@@ -6,7 +6,10 @@ import com.markettwits.bottom_bar.model.Configuration
 import kotlinx.coroutines.flow.StateFlow
 
 interface BottomBarStorage : BottomBarVisibilityListener {
+
     val state: StateFlow<BottomBarState>
+
     fun onSelectTab(configuration: Configuration)
+
 }
 

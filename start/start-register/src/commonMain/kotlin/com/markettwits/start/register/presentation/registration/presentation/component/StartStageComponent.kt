@@ -8,7 +8,6 @@ interface StartStageComponent {
 
     val value : StartRegistrationStagePage
 
-
     data object Empty : StartStageComponent {
         override val value: StartRegistrationStagePage = StartRegistrationStagePage.Empty
     }

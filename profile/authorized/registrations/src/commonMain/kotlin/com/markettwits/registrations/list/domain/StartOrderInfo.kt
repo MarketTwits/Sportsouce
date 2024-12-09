@@ -11,16 +11,22 @@ data class StartOrderInfo(
     val image: String,
     val dateStartPreview: String,
     val dateStartCloud: String,
-    //val statusCode: StartStatus,
-    val team: String,
     val payment: PaymentStatus,
-    val ageGroup: String,
-    val distance: String,
-    val member: String,
-    val kindOfSport: String,
+    val members: List<Member>,
     val startTitle: String,
     val cost: String,
 ) {
+
+    @Serializable
+    data class Member(
+        val name : String,
+        val surname : String,
+        val teamName : String,
+        val ageGroupName: String,
+        val distanceName : String,
+        val genderName : String,
+        val formatName : String,
+    )
 
     /**
      * Описание различных состояний оплаты:

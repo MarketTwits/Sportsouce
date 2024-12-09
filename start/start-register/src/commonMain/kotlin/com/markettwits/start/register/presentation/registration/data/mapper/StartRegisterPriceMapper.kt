@@ -47,13 +47,14 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
     private fun mapDistances(
         distances: List<StartRegistrationDistance>,
     ) : List<StartRegisterDistance>{
-        return distances.map {
+        return distances.map { distance ->
             StartRegisterDistance(
-                distance_id = it.id,
-                member = it.stages.map { stage ->
+                distance_id = distance.id,
+                member = distance.stages.map { stage ->
                     stage.statement.mapToStartRegisterMember(
                         stageId = stage.stage.id,
-                        answer = it.answers
+                        commonAnswers = distance.answers,
+                        statementAnswers = stage.stage.additionalFields
                     )
                 }
             )
@@ -61,23 +62,42 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
     }
     private fun StartStatement.mapToStartRegisterMember(
         stageId : Int,
-        answer: List<StartRegistrationStatementAnswer>
-    ) : StartRegisterMember = StartRegisterMember(
-        answers = mapAnswers(answer),
-        birthday = timeMapper.mapTimeToCloud(time = birthday),
-        city = city,
-        email = email,
-        gender = sex,
-        name = name,
-        phone = phone,
-        stage_id = stageId,
-        surname = surname,
-        team = team,
-        user_id = userId.userId
-    )
+        commonAnswers: List<StartRegistrationStatementAnswer>,
+        statementAnswers : List<StartRegistrationStatementAnswer>,
+    ) : StartRegisterMember {
+        val items : MutableList<StartRegistrationStatementAnswer>
+                = emptyList<StartRegistrationStatementAnswer>().toMutableList()
+
+        statementAnswers.forEach { value ->
+            items.add(value)
+        }
+
+        commonAnswers.forEach { value ->
+            items.add(value)
+        }
+
+        val member = StartRegisterMember(
+            answers = mapAnswers(items),
+            birthday = timeMapper.mapTimeToCloud(time = birthday),
+            city = city,
+            email = email,
+            gender = sex,
+            name = name,
+            phone = phone,
+            stage_id = stageId,
+            surname = surname,
+            team = team,
+            user_id = userId.userId
+        )
+
+        return member
+    }
+
     private fun mapAnswers(answers: List<StartRegistrationStatementAnswer>) : List<StartRegisterAnswer>{
         return answers.filter { statementAnswer ->
+
             val field = statementAnswer.field
+
             val answer = statementAnswer.answer
 
             // Если поле обязательное, всегда оставляем

@@ -25,7 +25,6 @@ data class StartStatement(
     val teams: List<Team>,
     val sexList: List<Sex>,
     val members : List<ProfileMember>,
-   // val answers: List<StartRegisterAnswer>,
     val paymentDisabled: Boolean,
     val yearDiscountApplied: Boolean,
     val distanceTitle: String,

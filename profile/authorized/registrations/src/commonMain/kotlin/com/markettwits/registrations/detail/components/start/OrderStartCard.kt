@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,7 +50,7 @@ fun OrderStartCard(
                 .clip(Shapes.medium)
                 .padding(10.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+          //  verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.width(width = 130.dp)) {
                 RegistrationsCardImageCard(
@@ -65,13 +67,8 @@ fun OrderStartCard(
             RegistrationsCardInfoStatusInfo(
                 title = item.startTitle,
                 cost = item.cost,
-                date = item.dateStartPreview,
-                fullName = item.member,
-                group = item.ageGroup,
-                kindOfSport = item.kindOfSport,
                 orderId = item.id,
-                team = item.team,
-                distance = item.distance,
+                members = item.members
             )
         }
     }
@@ -80,15 +77,10 @@ fun OrderStartCard(
 @Composable
 private fun RegistrationsCardInfoStatusInfo(
     modifier: Modifier = Modifier,
-    title: String,
-    date: String,
-    fullName: String,
-    group: String,
-    team: String,
-    distance: String,
-    kindOfSport: String,
     orderId: Int,
+    title: String,
     cost: String,
+    members: List<StartOrderInfo.Member>,
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
         Text(
@@ -107,9 +99,45 @@ private fun RegistrationsCardInfoStatusInfo(
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
+
         RegistrationsCardInfoStatusInfoText(
-            label = "Дата: ",
-            value = date
+            label = "Цена : ",
+            value = "$cost ₽"
+        )
+
+        Column {
+            members.forEachIndexed { index, member ->
+                Spacer(modifier = Modifier.height(8.dp))
+                RegistrationsCardMemberInfo(
+                    index = index + 1,
+                    fullName = member.surname  + " " + member.name,
+                    group = member.ageGroupName,
+                    distance = member.distanceName,
+                    kindOfSport = member.formatName,
+                    team = member.teamName,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+
+    }
+}
+
+@Composable
+private fun RegistrationsCardMemberInfo(
+    modifier: Modifier = Modifier,
+    index : Int,
+    fullName: String,
+    group: String,
+    team: String,
+    distance: String,
+    kindOfSport: String,
+) {
+    Column(modifier = modifier) {
+        RegistrationsCardInfoStatusInfoText(
+            modifier = Modifier.padding(start = 4.dp),
+            label = "Участник : ",
+            value = index.toString()
         )
         RegistrationsCardInfoStatusInfoText(
             label = "ФИО : ",
@@ -130,10 +158,6 @@ private fun RegistrationsCardInfoStatusInfo(
         RegistrationsCardInfoStatusInfoText(
             label = "Формат : ",
             value = kindOfSport
-        )
-        RegistrationsCardInfoStatusInfoText(
-            label = "Цена : ",
-            value = "$cost ₽"
         )
     }
 }

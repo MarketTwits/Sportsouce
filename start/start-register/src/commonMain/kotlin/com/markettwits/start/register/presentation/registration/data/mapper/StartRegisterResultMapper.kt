@@ -1,6 +1,5 @@
 package com.markettwits.start.register.presentation.registration.data.mapper
 
-import com.markettwits.start.register.domain.StartRegistryResult
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationResult
 import com.markettwits.start_cloud.model.register.on_start.StartRegistrationResponse
 

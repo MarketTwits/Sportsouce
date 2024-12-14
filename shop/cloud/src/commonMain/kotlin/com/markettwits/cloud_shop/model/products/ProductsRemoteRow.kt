@@ -1,11 +1,5 @@
 package com.markettwits.cloud_shop.model.products
 
-import com.markettwits.cloud_shop.model.common.Category
-import com.markettwits.cloud_shop.model.common.Code
-import com.markettwits.cloud_shop.model.common.Image
-import com.markettwits.cloud_shop.model.common.ProductOption
-import kotlinx.serialization.Serializable
-
 //@Serializable
 //data class ProductsRemoteRow(
 //    val assortmentId: String?,

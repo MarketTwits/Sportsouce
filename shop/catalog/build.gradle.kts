@@ -24,8 +24,8 @@ kotlin {
             implementation(projects.shop.orders)
             implementation(projects.core.ui)
             implementation(projects.core.koin)
-            implementation("app.cash.paging:paging-common:3.3.0-alpha02-0.4.0")
-            implementation("app.cash.paging:paging-compose-common:3.3.0-alpha02-0.5.1")
+            implementation(libs.paging.common)
+            implementation(libs.paging.compose.common)
         }
     }
 }

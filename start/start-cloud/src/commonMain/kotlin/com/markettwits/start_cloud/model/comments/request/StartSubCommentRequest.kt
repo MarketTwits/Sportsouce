@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 class StartSubCommentRequest(
     val comment : String,
     val parentCommentId : Int,
-    val personId : String
+    val personId : String,
+    val startId : Int
 )

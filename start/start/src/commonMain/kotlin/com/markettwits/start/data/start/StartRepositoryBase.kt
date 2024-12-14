@@ -64,6 +64,7 @@ internal class StartRepositoryBase(
     }
 
     override suspend fun writeComment(
+        startId : Int,
         comment: String,
         id: Int,
         subComment: Boolean
@@ -76,7 +77,8 @@ internal class StartRepositoryBase(
                     subComment = StartSubCommentRequest(
                         comment = comment,
                         parentCommentId = id,
-                        personId = userId.toString()
+                        personId = userId.toString(),
+                        startId = startId
                     ),
                     token = token
                 )

@@ -19,86 +19,100 @@ class ShopPageItemMapperBase(
 }
 
 private fun calculateExtras(products: ProductRemote): List<ShopExtraOptions> {
+    val categories = listOf(
+        Category(
+            title = "Жесткость",
+            list = products.firmnessList?.map {
+                ShopExtraOptions.OptionValue(
+                    id = it.product.id,
+                    optionValue = it.firmness,
+                    isProductsValue = false
+                )
+            },
+            currentValue = products.firmnessValue?.let {
+                ShopExtraOptions.OptionValue(
+                    id = products.product.id,
+                    optionValue = it.name,
+                    isProductsValue = true
+                )
+            }
+        ),
+        Category(
+            title = "Размер",
+            list = products.sizeList?.map {
+                ShopExtraOptions.OptionValue(
+                    id = it.product.id,
+                    optionValue = it.size,
+                    isProductsValue = false
+                )
+            },
+            currentValue = products.sizeValue?.name?.let {
+                ShopExtraOptions.OptionValue(
+                    id = products.product.id,
+                    optionValue = it,
+                    isProductsValue = true
+                )
+            }
+        ),
+        Category(
+            title = "Вкус/Цвет",
+            list = products.colorTasteList?.map {
+                ShopExtraOptions.OptionValue(
+                    id = it.product.id,
+                    optionValue = it.colorTaste,
+                    isProductsValue = false
+                )
+            },
+            currentValue = products.productColorTasteValue?.let {
+                ShopExtraOptions.OptionValue(
+                    id = products.product.id,
+                    optionValue = it,
+                    isProductsValue = true
+                )
+            }
+        ),
+        Category(
+            title = "Пол",
+            list = products.genderList?.map {
+                ShopExtraOptions.OptionValue(
+                    id = it.product.id,
+                    optionValue = it.gender,
+                    isProductsValue = false
+                )
+            },
+            currentValue = products.productGenderValue?.let {
+                ShopExtraOptions.OptionValue(
+                    id = products.product.id,
+                    optionValue = it,
+                    isProductsValue = true
+                )
+            }
+        )
+    )
 
-    val size = products.sizeList?.map {
-        ShopExtraOptions.OptionValue(
-            id = it.product.id,
-            optionValue = it.size,
-            isProductsValue = false
-        )
-    }?.toMutableList()
-    val colorColorTaste = products.colorTasteList?.map {
-        ShopExtraOptions.OptionValue(
-            id = it.product.id,
-            optionValue = it.colorTaste,
-            isProductsValue = false
-        )
-    }?.toMutableList() ?: emptyList<ShopExtraOptions.OptionValue>().toMutableList()
-    val sex = products.genderList?.map {
-        ShopExtraOptions.OptionValue(
-            id = it.product.id,
-            optionValue = it.gender,
-            isProductsValue = false
-        )
-    }?.toMutableList()
-    val currentSize = products.sizeValue?.name?.let {
-        ShopExtraOptions.OptionValue(
-            id = products.product.id,
-            optionValue = it,
-            isProductsValue = true
-        )
+    return categories.mapNotNull { category ->
+        category.toShopExtraOptions()
     }
-    val currentColorTaste = products.productColorTasteValue?.let {
-        ShopExtraOptions.OptionValue(
-            id = products.product.id,
-            optionValue = it,
-            isProductsValue = true
-        )
+}
+
+
+private data class Category(
+    val title: String,
+    val list: List<ShopExtraOptions.OptionValue>?,
+    val currentValue: ShopExtraOptions.OptionValue?
+) {
+    fun toShopExtraOptions(): ShopExtraOptions? {
+        val allItems = list?.toMutableList() ?: mutableListOf()
+        currentValue?.let { current ->
+            if (allItems.none { it.optionValue == current.optionValue }) {
+                allItems.add(0, current) // Добавляем в начало
+            }
+        }
+        return if (allItems.isNotEmpty()) {
+            ShopExtraOptions(title = title, items = allItems)
+        } else {
+            null
+        }
     }
-
-    val currentSex = products.productGenderValue?.let {
-        ShopExtraOptions.OptionValue(
-            id = products.product.id,
-            optionValue = it,
-            isProductsValue = true
-        )
-    }
-
-    val optionsList = mutableListOf<ShopExtraOptions>()
-
-    if (currentSize != null) {
-        size?.add(currentSize)
-        size?.reverse()
-        optionsList.add(
-            ShopExtraOptions(
-                title = "Размер",
-                items = size ?: emptyList()
-            )
-        )
-    }
-
-    if (currentColorTaste != null) {
-        colorColorTaste.add(currentColorTaste)
-        colorColorTaste.reverse()
-        optionsList.add(
-            ShopExtraOptions(
-                title = "Вкус/Цвет",
-                items = colorColorTaste
-            )
-        )
-    }
-
-    if (currentSex != null) {
-        sex?.add(currentSex)
-        sex?.reverse()
-        optionsList.add(
-            ShopExtraOptions(
-                title = "Пол",
-                items = sex ?: emptyList()
-            )
-        )
-    }
-
-    return optionsList
 }
 

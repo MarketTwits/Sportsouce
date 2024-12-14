@@ -2,9 +2,6 @@ package com.markettwits.shop.paging
 
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.cloud_shop.model.product.Product
-import com.markettwits.cloud_shop.model.product.ProductRemote
-import com.markettwits.shop.filter.domain.models.ShopFilterPrice
-
 
 internal const val SHOP_ITEMS_PAGE_SIZE = 30
 

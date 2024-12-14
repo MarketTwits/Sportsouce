@@ -28,10 +28,7 @@ interface StartCommentsStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val comments: StartItem.Comments = StartItem.Comments(
-            0,
-            emptyList()
-        ),
+        val comments: StartItem.Comments = StartItem.Comments(0, emptyList()),
         val mode: CommentMode = CommentMode.Base,
         val comment: String = "",
         val isLoading: Boolean = false,
@@ -101,6 +98,7 @@ class StartCommentsStoreFactory(
                 val value = if (mode is CommentMode.Reply) {
                     service.writeComment(
                         comment = comment,
+                        startId = startId,
                         id = mode.messageId,
                         subComment = true
                     )
@@ -109,6 +107,7 @@ class StartCommentsStoreFactory(
                     service.writeComment(
                         comment = comment,
                         id = startId,
+                        startId = startId,
                         subComment = false
                     )
                 }

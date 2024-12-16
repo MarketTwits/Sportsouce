@@ -183,6 +183,7 @@ class RootShopCatalogComponentBase(
     }
 
     private inner class ShopItemComponentOutputsImpl : ShopItemPageComponent.Output {
+
         override fun goBack() = stackNavigation.pop()
 
         override fun updateItem(item: ShopItem) {
@@ -235,6 +236,7 @@ class RootShopCatalogComponentBase(
             stackNavigation.bringToFront(
                 RootShopCatalogComponent.Config.ShopItem(
                     ShopItemPageComponentBase.Options(
+                        shopItem = shopItemCart.item,
                         productId = shopItemCart.item.id
                     )
                 )

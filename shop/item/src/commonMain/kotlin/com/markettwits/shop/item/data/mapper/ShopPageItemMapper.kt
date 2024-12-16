@@ -8,4 +8,9 @@ interface ShopPageItemMapper {
 
     fun map(products: ProductRemote): Pair<ShopItem,List<ShopExtraOptions>>
 
+    fun mapWithPrevOptions(
+        newValue : Pair<ShopItem,List<ShopExtraOptions>>,
+        prevValue: Pair<ShopItem,List<ShopExtraOptions>>
+    ) : Pair<ShopItem, List<ShopExtraOptions>>
+
 }

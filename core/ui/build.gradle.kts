@@ -25,6 +25,7 @@ kotlin {
             api(compose.foundation)
             api(compose.material3)
             api(compose.materialIconsExtended)
+            api(compose.material3AdaptiveNavigationSuite)
             api(compose.components.uiToolingPreview)
             api(compose.ui)
             api(libs.pullrefresh)

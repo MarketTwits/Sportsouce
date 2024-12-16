@@ -56,6 +56,12 @@ data class StartOrderInfo(
         ) : PaymentStatus
 
         @Serializable
+        data class OnPlace(
+            override val payment: Boolean = true,
+            override val title: String = "На месте старта"
+        ) : PaymentStatus
+
+        @Serializable
         data class NotPaid(
             override val payment: Boolean = false,
             override val title: String = "Не оплачено"

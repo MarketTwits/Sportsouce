@@ -14,14 +14,12 @@ class ShopItemRepositoryBase(
     private val mapper: ShopPageItemMapper,
 ) : ShopItemRepository {
 
-    override suspend fun item(id: String): Result<Pair<ShopItem, List<ShopExtraOptions>>> = runCatching {
-            val cacheValue = cache.fetch(id)
-            if (cacheValue != null) {
-                cacheValue
-            } else {
-                val cloud = mapper.map(cloudService.product(id))
-                cache.add(cloud.first, cloud.second)
-                cloud
-            }
+    override suspend fun item(id: String): Result<Pair<ShopItem, List<ShopExtraOptions>>> =
+        runCatching {
+            val newItem = mapper.map(cloudService.product(id))
+            val prevItem = cache.fetch(id) ?: newItem
+            val sortedItem = mapper.mapWithPrevOptions(newItem, prevItem)
+            cache.add(sortedItem.first, sortedItem.second)
+            sortedItem
         }
 }

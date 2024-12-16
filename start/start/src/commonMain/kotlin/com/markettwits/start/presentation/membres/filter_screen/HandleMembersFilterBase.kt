@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.membres.filter_screen
 
 class HandleMembersFilterBase : HandleMembersFilter {
+
     override fun changeState(
         currentValue: List<MembersFilterGroup>,
         categoryIndex: Int,

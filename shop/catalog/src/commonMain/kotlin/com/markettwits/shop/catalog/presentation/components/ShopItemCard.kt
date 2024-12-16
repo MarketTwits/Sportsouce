@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -52,10 +53,10 @@ fun ShopItemCard(
 ) {
     Box(
         modifier = modifier
-            .width(140.dp)
+            .clip(Shapes.large)
+            .width(130.dp)
             .height(260.dp)
             .padding(4.dp)
-            .clip(Shapes.large)
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
                 onItemClick(shopItem)
@@ -67,7 +68,9 @@ fun ShopItemCard(
                     .clip(Shapes.large)
                     .padding(2.dp)
                     .align(Alignment.CenterHorizontally)
-                    .weight(0.7f),
+                    .weight(0.7f)
+                    .background(Color.White)
+                ,
                 image = shopItem.visual.imageUrl,
             )
             ShowCardPrice(
@@ -85,7 +88,6 @@ fun ShopItemCard(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ImageCard(
     modifier: Modifier = Modifier,
@@ -95,8 +97,8 @@ private fun ImageCard(
         val pagerState = rememberPagerState(initialPage = 0, pageCount = { image.size })
         HorizontalPager(
             modifier = Modifier
-                .weight(0.9f)
                 .clip(Shapes.large)
+                .weight(0.9f)
                 .padding(2.dp)
                 .fillMaxSize(),
             state = pagerState
@@ -188,7 +190,7 @@ private fun ShowCardPrice(
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
             )
             Spacer(modifier = Modifier.padding(horizontal = 4.dp))
@@ -200,7 +202,7 @@ private fun ShowCardPrice(
                     maxLines = 1,
                     textDecoration = TextDecoration.LineThrough,
                     overflow = TextOverflow.Ellipsis,
-                    fontSize = 10.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontNunito.medium(),
                 )
             }
@@ -212,7 +214,7 @@ private fun ShowCardPrice(
                 textAlign = TextAlign.Start,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontSize = 10.sp,
+                fontSize = 14.sp,
                 lineHeight = 12.sp,
                 fontFamily = FontNunito.medium(),
             )
@@ -225,7 +227,7 @@ private fun ShowCardPrice(
             lineHeight = 14.sp,
             softWrap = true,
             textAlign = TextAlign.Start,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             fontFamily = FontNunito.semiBoldBold(),
         )
     }

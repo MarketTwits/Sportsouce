@@ -30,7 +30,7 @@ internal fun ShopItemActionRow(
     ) {
         BackFloatingActionButton(back = onClickGoBack)
         Row {
-            AddToFavoriteActionButton(onClick = onClickAddToFavorite)
+            //AddToFavoriteActionButton(onClick = onClickAddToFavorite)
             ShareActionButton(onClick = onClickShare)
         }
     }

@@ -4,9 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartMember(
-    val createdAt: String,
-    val distance_id: Int?,
     val id: Int,
+    val distance_id: Int?,
     val is_refunded: Boolean,
     val member_start_group_id: Int,
     val members: List<Member>,

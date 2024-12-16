@@ -1,5 +1,11 @@
 package com.markettwits.start.presentation.start.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.markettwits.core_ui.items.base_screen.FullImageScreen
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
@@ -94,12 +101,24 @@ private fun StartCommentCard(
     var showReply by rememberSaveable {
         mutableStateOf(false)
     }
-    Row(modifier = modifier) {
+
+    var isShowAvatarDialog by rememberSaveable{
+        mutableStateOf(false)
+    }
+
+    if (isShowAvatarDialog){
+        FullImageScreen(image = userImageUrl){
+            isShowAvatarDialog = false
+        }
+    }
+
+    Row(modifier = modifier.padding(vertical = 10.dp)) {
         if (userImageUrl.isNotEmpty())
             AsyncImage(
                 modifier = Modifier
                     .clip(Shapes.large)
-                    .size(40.dp),
+                    .size(40.dp)
+                    .clickable { isShowAvatarDialog = true },
                 model = userImageUrl,
                 contentDescription = userName,
                 contentScale = ContentScale.Crop
@@ -167,29 +186,35 @@ private fun StartCommentCard(
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
-                if (showReply) {
-                    replies.forEach {
-                        StartCommentCard(
-                            modifier = modifier,
-                            userName = "${it.user.surname} ${it.user.name}",
-                            commentCreateDate = it.createdAt,
-                            message = it.comment,
-                            userImageUrl = it.user.photo ?: "",
-                            isReply = true,
-                            onClickReply = {}
+                AnimatedVisibility(
+                    visible = showReply,
+                    enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                    exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300))
+                ) {
+                    Column {
+                        replies.forEach {
+                            StartCommentCard(
+                                modifier = modifier,
+                                userName = "${it.user.surname} ${it.user.name}",
+                                commentCreateDate = it.createdAt,
+                                message = it.comment,
+                                userImageUrl = it.user.photo ?: "",
+                                isReply = true,
+                                onClickReply = {}
+                            )
+                        }
+                        Text(
+                            modifier = Modifier.clickable {
+                                showReply = !showReply
+                            },
+                            text = "Скрыть",
+                            fontSize = 12.sp,
+                            fontFamily = FontNunito.bold(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     }
-                    Text(
-                        modifier = Modifier.clickable {
-                            showReply = !showReply
-                        },
-                        text = "Скрыть",
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
                 }
             }
         }

@@ -67,7 +67,7 @@ class UserRegistrationsMapperBase(
         return when(payment){
             0 -> StartOrderInfo.PaymentStatus.NotPaid()
             1 -> StartOrderInfo.PaymentStatus.Success()
-            2 -> StartOrderInfo.PaymentStatus.Free()
+            2 -> StartOrderInfo.PaymentStatus.OnPlace()
             4 -> StartOrderInfo.PaymentStatus.Free()
             else -> StartOrderInfo.PaymentStatus.NotPaid()
         }

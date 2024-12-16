@@ -13,5 +13,6 @@ class Trainer(
     val kindOfSports: List<String>
 ) {
     fun fullName(): String = "$name $surname"
+
     fun sports(): String = kindOfSports.joinToString(separator = " ") { "#$it" }
 }

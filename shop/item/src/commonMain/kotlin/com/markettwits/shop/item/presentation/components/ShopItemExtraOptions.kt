@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.shop.item.domain.models.ShopExtraOptions
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -54,24 +55,26 @@ internal fun ShopItemExtraOptions(
     ) {
         Column {
             extraOption.forEach { options ->
-                Text(
-                    text = options.title,
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.medium(),
-                )
-                FlowRow(
-                    modifier = Modifier.horizontalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.Center,
-                    maxItemsInEachRow = 3,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    options.items.forEach { (id, value, isSelected) ->
-                        ShopItemExtraOptionButton(
-                            isSelected = isSelected,
-                            value = value,
-                            onClick = { onClickOption(id) })
+                AnimatedContent(options) {
+                    Text(
+                        text = options.title,
+                        color = MaterialTheme.colorScheme.outline,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp,
+                        fontFamily = FontNunito.medium(),
+                    )
+                    FlowRow(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.Center,
+                        maxItemsInEachRow = 3,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        options.items.forEach { (id, value, isSelected) ->
+                            ShopItemExtraOptionButton(
+                                isSelected = isSelected,
+                                value = value,
+                                onClick = { onClickOption(id) })
+                        }
                     }
                 }
             }
@@ -87,12 +90,12 @@ private fun ShopItemExtraOptionButton(
     onClick: () -> Unit,
 ) {
     val borderColors =
-        if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
+        if (isSelected) SportSouceColor.SportSouceLighBlue else MaterialTheme.colorScheme.outline
     Button(
-        modifier = modifier.defaultMinSize(minHeight = 40.dp) // set to atleast 40dp
+        modifier = modifier.defaultMinSize(minHeight = 40.dp)
             .wrapContentHeight(Alignment.CenterVertically),
         onClick = onClick,
-        border = BorderStroke(if (isSelected) 2.dp else 1.dp, borderColors),
+        border = BorderStroke(if (isSelected) 3.dp else 1.dp, borderColors),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             disabledContainerColor = MaterialTheme.colorScheme.primary
@@ -105,7 +108,7 @@ private fun ShopItemExtraOptionButton(
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
             fontSize = 12.sp,
-            fontFamily = FontNunito.semiBoldBold(),
+            fontFamily = if (isSelected) FontNunito.bold() else FontNunito.semiBoldBold(),
         )
     }
 }

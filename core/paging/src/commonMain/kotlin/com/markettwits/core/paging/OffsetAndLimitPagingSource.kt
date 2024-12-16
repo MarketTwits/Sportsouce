@@ -1,4 +1,4 @@
-package com.markettwits.shop.paging
+package com.markettwits.core.paging
 
 private const val INITIAL_LOAD_SIZE = 0
 

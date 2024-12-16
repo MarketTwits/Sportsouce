@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 data class ScreenSizeInfo(val hPX: Int, val wPX: Int, val hDP: Dp, val wDP: Dp) {
+
     fun isPortrait() = wDP <= MAX_PORTRAIT_DP
 
     private companion object {

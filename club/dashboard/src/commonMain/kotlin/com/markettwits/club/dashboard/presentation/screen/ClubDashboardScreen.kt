@@ -39,7 +39,7 @@ fun ClubDashboardScreen(
     Box {
         Column(
             modifier = Modifier
-                .nestedScroll(rememberBottomBarNestedScroll(bottomBarStorage = state.bottomBarVisibilityListener))
+                .nestedScroll(rememberBottomBarNestedScroll(state.bottomBarVisibilityListener))
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

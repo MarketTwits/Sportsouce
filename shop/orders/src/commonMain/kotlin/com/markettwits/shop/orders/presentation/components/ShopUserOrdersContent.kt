@@ -13,6 +13,7 @@ import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.shop.orders.domain.models.ShopUserOrder
 import com.markettwits.shop.orders.presentation.components.states.ShopUserOrdersErrorContent
+import com.markettwits.shop.orders.presentation.components.states.ShopUserOrdersItemsContent
 import com.markettwits.shop.orders.presentation.components.states.ShopUserOrdersLoadingContent
 import com.markettwits.shop.orders.presentation.components.states.ShopUserOrdersWithItemsContent
 import com.markettwits.shop.orders.presentation.components.states.ShopUserOrdersWithoutItemsContent
@@ -37,22 +38,22 @@ fun ShopUserOrdersContent(
             isRefreshing = isLoading && items.isNotEmpty(),
             onRefresh = onClickRetry
         ) { innerModifier ->
-            Column(
-                modifier = innerModifier
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(10.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (isSuccess) {
-                    if (items.isNotEmpty()) {
-                        ShopUserOrdersWithItemsContent(items = items)
-                    } else {
-                        ShopUserOrdersWithoutItemsContent()
-                    }
-                }
-                ShopUserOrdersErrorContent(error = error, onClickRetry = onClickRetry)
-                ShopUserOrdersLoadingContent(isLoading = isLoading, isListEmpty = items.isEmpty())
-            }
+            ShopUserOrdersItemsContent(
+                modifier = innerModifier,
+                paddingValues = paddingValues,
+                isSuccess = isSuccess,
+                items = items
+            )
+            ShopUserOrdersErrorContent(
+                modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
+                error = error,
+                onClickRetry = onClickRetry
+            )
+            ShopUserOrdersLoadingContent(
+                modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
+                isLoading = isLoading,
+                isListEmpty = items.isEmpty()
+            )
         }
     }
 }

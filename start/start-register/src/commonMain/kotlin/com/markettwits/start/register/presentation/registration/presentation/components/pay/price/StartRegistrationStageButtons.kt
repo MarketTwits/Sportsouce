@@ -1,7 +1,5 @@
 package com.markettwits.start.register.presentation.registration.presentation.components.pay.price
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationPriceResult
 import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationStagePage
 
@@ -95,7 +92,7 @@ private fun StartRegistrationStageButton(
 ) {
     ButtonContentBase(
         modifier = modifier.padding(4.dp),
-        containerColor = SportSouceColor.SportSouceLighBlue,
+        containerColor = MaterialTheme.colorScheme.secondary,
         shape = Shapes.medium,
         textColor = MaterialTheme.colorScheme.onSecondary,
         title = title,

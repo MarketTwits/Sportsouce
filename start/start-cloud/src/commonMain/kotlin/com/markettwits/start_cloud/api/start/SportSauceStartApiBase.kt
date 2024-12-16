@@ -41,7 +41,7 @@ internal class SportSauceStartApiBase(
     }
 
     override suspend fun membersNew(startId: Int): List<StartMember> {
-        val response = client.get("member-start/payed"){
+        val response = client.get("member-start/paid"){
             parameter("start_id", startId)
         }
         return json.decodeFromString<StartMembersRemote>(response.body<String>()).rows

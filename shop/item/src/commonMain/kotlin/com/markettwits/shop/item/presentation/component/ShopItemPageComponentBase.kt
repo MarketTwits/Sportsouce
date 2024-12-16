@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.shop.domain.model.ShopItem
+import com.markettwits.shop.item.domain.models.ShopExtraOptions
 import com.markettwits.shop.item.presentation.store.ShopItemPageStore
 import com.markettwits.shop.item.presentation.store.ShopItemPageStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,7 @@ class ShopItemPageComponentBase(
     @Serializable
     data class Options(
         val productId: String,
-        val shopItem: ShopItem? = null
+        val shopItem: ShopItem? = null,
     )
 
 }

@@ -1,6 +1,7 @@
 package com.markettwits.bottom_bar.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -9,7 +10,7 @@ import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 
 @Composable
 fun rememberBottomBarNestedScroll(
-    bottomBarStorage: BottomBarVisibilityListener
+    bottomBarStorage: BottomBarVisibilityListener,
 ): NestedScrollConnection = remember {
     object : NestedScrollConnection {
         private var accumulatedScroll = 0f
@@ -25,4 +26,8 @@ fun rememberBottomBarNestedScroll(
             return Offset.Zero
         }
     }
+}
+
+val LocalBottomBarVisibilityListener = compositionLocalOf<BottomBarVisibilityListener> {
+    error("No BottomBarVisibilityListener provided")
 }

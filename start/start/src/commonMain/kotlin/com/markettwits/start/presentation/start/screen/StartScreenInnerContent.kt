@@ -37,6 +37,7 @@ internal fun StartScreenInnerContent(
     donations: @Composable (Modifier) -> Unit
 ) {
     val innerModifier = Modifier.padding(8.dp)
+
     Column(modifier = modifier) {
         StartTitle(
             modifier = innerModifier,

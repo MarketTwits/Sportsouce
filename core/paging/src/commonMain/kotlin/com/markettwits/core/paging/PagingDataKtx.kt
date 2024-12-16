@@ -1,4 +1,4 @@
-package com.markettwits.shop.paging
+package com.markettwits.core.paging
 
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
@@ -7,8 +7,8 @@ import androidx.paging.compose.LazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-fun <T : Any> loadingPagingDataFlow(): Flow<PagingData<T>> {
-    return flowOf(
+fun <T : Any> loadingPagingDataFlow(): Flow<PagingData<T>> =
+     flowOf(
         PagingData.from(
             emptyList(),
             LoadStates(
@@ -18,7 +18,6 @@ fun <T : Any> loadingPagingDataFlow(): Flow<PagingData<T>> {
             )
         )
     )
-}
 
 inline fun <T : Any> LazyPagingItems<T>.isPagingDataFailed(throwable: (Throwable) -> Unit) {
     if (this.loadState.refresh is LoadState.Error)

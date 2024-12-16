@@ -18,7 +18,6 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class StartRemoteNew(
-    //val afishaLinkFile: ConditionFile?,
     val conditionFile: ConditionFile?,
     val condition_short: String?,
     val coordinates: String?,

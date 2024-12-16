@@ -10,6 +10,9 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.markettwits.ComponentKoinContext
+import com.markettwits.bottom_bar.di.bottomBarModule
 import com.markettwits.club.dashboard.di.clubDashboardModule
 import com.markettwits.club.dashboard.di.createDashboardComponent
 import com.markettwits.club.dashboard.presentation.component.ClubDashboardComponent
@@ -25,8 +28,17 @@ class RootClubComponentBase(
     private val pop: () -> Unit,
 ) : ComponentContext by componentContext, RootClubComponent {
 
-    private val scope = getOrCreateKoinScope(
-        listOf(clubDashboardModule, clubInfoModule, workoutRegistrationModule)
+    private val koinContext = instanceKeeper.getOrCreate {
+        ComponentKoinContext()
+    }
+
+    private val scope = koinContext.getOrCreateKoinScope(
+        listOf(
+            clubDashboardModule,
+            clubInfoModule,
+            bottomBarModule,
+            workoutRegistrationModule
+        )
     )
 
     private val stackNavigation = StackNavigation<RootClubComponent.StackConfig>()

@@ -1,7 +1,8 @@
-package com.markettwits.shop.paging
+package com.markettwits.shop.catalog.domain
 
 import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.cloud_shop.model.product.Product
+import com.markettwits.core.paging.OffsetAndLimitPagingSource
 
 internal const val SHOP_ITEMS_PAGE_SIZE = 30
 
@@ -32,17 +33,3 @@ class ShopCatalogPagingSource(
 }
 
 
-sealed interface ShopCatalogParams {
-
-    data class WithFilter(
-        val categoryId: Int? = null,
-        val options: List<String>? = null,
-        val maxPrice: Int? = null,
-        val minPrice : Int? = null,
-    ) : ShopCatalogParams
-
-    data class WithQuery(
-        val query: String
-    ) : ShopCatalogParams
-
-}

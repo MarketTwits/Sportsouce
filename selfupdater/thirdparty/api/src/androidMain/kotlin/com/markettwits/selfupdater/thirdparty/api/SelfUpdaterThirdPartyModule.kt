@@ -10,20 +10,10 @@ actual val selfUpdaterThirdPartyModule = module {
 
     val context: Context by KoinJavaComponent.inject(Context::class.java)
 
-//    SelfUpdaterGooglePlay(
-//        context = context,
-//        inAppNotificationStorage = get()
-//    )
-
     single<SelfUpdaterSourceApi> {
         SelfUpdaterGooglePlay(
             context = context,
             inAppNotificationStorage = get()
         )
-//        SelfUpdaterThirdParty(
-//            context = context,
-//            updateParser = get(),
-//            inAppNotificationStorage = get()
-//        )
     }
 }

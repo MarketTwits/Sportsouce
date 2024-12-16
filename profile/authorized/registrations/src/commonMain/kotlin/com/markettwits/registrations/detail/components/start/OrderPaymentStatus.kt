@@ -56,5 +56,8 @@ internal fun mapOrderStatus(payment: StartOrderInfo.PaymentStatus): Color {
 
         is StartOrderInfo.PaymentStatus.WithoutStatus ->
             SportSouceColor.SportSouceLighBlue
+
+        is StartOrderInfo.PaymentStatus.OnPlace ->
+            SportSouceColor.SportSouceLighBlue
     }
 }

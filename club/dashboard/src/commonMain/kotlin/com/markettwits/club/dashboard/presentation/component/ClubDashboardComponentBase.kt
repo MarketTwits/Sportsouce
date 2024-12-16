@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.bottom_bar.component.component.BottomBarSideEffectHandlerAbstract
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 import com.markettwits.bottom_bar.component.storage.BottomBarStorage
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStoreFactory
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.onEach
 internal class ClubDashboardComponentBase(
     private val componentContext: ComponentContext,
     private val storeFactory: ClubDashboardStoreFactory,
-    private val listener: BottomBarStorage,
+    private val listener: BottomBarVisibilityListener,
     private val output: (ClubDashboardComponent.Output) -> Unit,
 ) : ClubDashboardComponent, BottomBarSideEffectHandlerAbstract(listener),
     ComponentContext by componentContext {

@@ -16,6 +16,30 @@ class ShopPageItemMapperBase(
             first = shopProductsMapper.map(products.product),
             second = calculateExtras(products),
         )
+
+    override fun mapWithPrevOptions(
+        newValue: Pair<ShopItem, List<ShopExtraOptions>>,
+        prevValue: Pair<ShopItem, List<ShopExtraOptions>>
+    ) : Pair<ShopItem, List<ShopExtraOptions>> {
+        val (newShopItem, newOptions) = newValue
+        val (_, prevOptions) = prevValue
+
+        val sortedOptions = newOptions.map { newCategory ->
+            val prevCategory = prevOptions.find { it.title == newCategory.title }
+
+            if (prevCategory != null) {
+                val prevOrder = prevCategory.items.map { it.optionValue }
+                val sortedItems = newCategory.items.sortedWith(compareBy {
+                    prevOrder.indexOf(it.optionValue).takeIf { it >= 0 } ?: Int.MAX_VALUE
+                })
+                newCategory.copy(items = sortedItems)
+            } else {
+                newCategory
+            }
+        }
+
+        return newShopItem to sortedOptions
+    }
 }
 
 private fun calculateExtras(products: ProductRemote): List<ShopExtraOptions> {
@@ -103,13 +127,18 @@ private data class Category(
 ) {
     fun toShopExtraOptions(): ShopExtraOptions? {
         val allItems = list?.toMutableList() ?: mutableListOf()
+
         currentValue?.let { current ->
-            if (allItems.none { it.optionValue == current.optionValue }) {
-                allItems.add(0, current) // Добавляем в начало
+            val existingItemIndex = allItems.indexOfFirst { it.optionValue == current.optionValue }
+            if (existingItemIndex != -1) {
+                allItems[existingItemIndex] = allItems[existingItemIndex].copy(isProductsValue = true)
+            } else {
+                allItems.add(current)
             }
         }
+
         return if (allItems.isNotEmpty()) {
-            ShopExtraOptions(title = title, items = allItems)
+            ShopExtraOptions(title = title, items = allItems.sortedBy { it.optionValue })
         } else {
             null
         }

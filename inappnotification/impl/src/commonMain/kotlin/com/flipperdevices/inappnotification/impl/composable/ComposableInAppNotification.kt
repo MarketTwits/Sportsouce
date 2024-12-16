@@ -46,18 +46,13 @@ private fun ComposableInAppNotificationCard(
     modifier: Modifier = Modifier
 ) {
     var visibleState by remember { mutableStateOf(false) }
+
     var actionClicked by remember { mutableStateOf(false) }
+
     LaunchedEffect(notification) {
         visibleState = true
     }
 
-    val onClickAction = remember(onNotificationHidden) {
-        {
-            visibleState = false
-            actionClicked = true
-            onNotificationHidden()
-        }
-    }
 
     Card(
         modifier = Modifier
@@ -74,52 +69,20 @@ private fun ComposableInAppNotificationCard(
             }
 
             is InAppNotification.SelfUpdateError -> {
-                // ComposableInAppNotificationSelfUpdateError()
+
             }
 
             is InAppNotification.SelfUpdateStarted -> {
-                //ComposableInAppNotificationSelfUpdateStarted()
+
             }
 
             is InAppNotification.HiddenApp -> {
-//                ComposableInAppNotificationHideApp(
-//                    notification = notification,
-//                    onClickAction = onClickAction
-//                )
+
             }
 
             is InAppNotification.Error -> {
-//                ComposableInAppNotificationError(
-//                    notification,
-//                    onClickAction
-//                )
+
             }
         }
-        //   }
     }
-//    DisposableEffect(notification) {
-//        val handler = Handler(Looper.getMainLooper())
-//        val fadeOutRunnable = {
-//            visibleState = false
-//        }
-//        val hiddenRunnable = {
-//            if (!actionClicked) {
-//                onNotificationHidden()
-//            }
-//        }
-//
-//        handler.postDelayed(
-//            fadeOutRunnable,
-//            max(0L, notification.durationMs - VISIBLE_ANIMATION_MS)
-//        )
-//        handler.postDelayed(
-//            hiddenRunnable,
-//            notification.durationMs
-//        )
-//
-//        onDispose {
-//            handler.removeCallbacks(fadeOutRunnable)
-//            handler.removeCallbacks(hiddenRunnable)
-//        }
-//    }
 }

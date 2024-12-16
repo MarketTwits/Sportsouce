@@ -8,12 +8,9 @@ import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
 import com.markettwits.shop.domain.mapper.ShopProductsMapper
 import com.markettwits.shop.domain.model.ShopItem
-import com.markettwits.shop.filter.data.mapper.ShopProductsCategoriesMapper
-import com.markettwits.shop.filter.domain.models.ShopCategoryItem
-import com.markettwits.shop.filter.domain.models.ShopFilterPrice
-import com.markettwits.shop.paging.SHOP_ITEMS_PAGE_SIZE
-import com.markettwits.shop.paging.ShopCatalogPagingSource
-import com.markettwits.shop.paging.ShopCatalogParams
+import com.markettwits.shop.catalog.domain.SHOP_ITEMS_PAGE_SIZE
+import com.markettwits.shop.catalog.domain.ShopCatalogPagingSource
+import com.markettwits.shop.catalog.domain.ShopCatalogParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

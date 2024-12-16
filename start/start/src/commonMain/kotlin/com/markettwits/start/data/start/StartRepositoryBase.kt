@@ -1,9 +1,10 @@
 package com.markettwits.start.data.start
 
-import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.model.time.TimeRemote
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.base.fetchFifth
 import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
@@ -20,13 +21,14 @@ import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 
 internal class StartRepositoryBase(
-    private val service: SportsouceApi,
     private val startService : SportSauceStartApi,
     private val timeService: TimeApi,
     private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper,
     private val cache: StartMemoryCache
-) : StartRepository {
+) : StartRepository, LogTagProvider {
+
+    override val tag: String = "StartRepository"
 
     override suspend fun start(
         startId: Int,
@@ -100,6 +102,10 @@ internal class StartRepositoryBase(
     private suspend fun safeCallStartMembers(startId: Int) : List<StartMember> {
         return kotlin.runCatching {
             startService.membersNew(startId)
-        }.fold(onSuccess = {it}, onFailure = { emptyList() })
+        }.fold(onSuccess = {it}
+        ) {
+            errorLog(it) { "Fail to launch startMembers start id $startId" }
+            emptyList()
+        }
     }
 }

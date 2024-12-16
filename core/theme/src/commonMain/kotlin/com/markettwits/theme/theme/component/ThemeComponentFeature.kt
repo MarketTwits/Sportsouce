@@ -17,6 +17,7 @@ class ThemeComponentFeature(
     private val scope = CoroutineScope(Dispatchers.Main)
 
     private val theme = MutableStateFlow<ColorTheme>(ColorTheme.System)
+
     override fun getAppTheme(): StateFlow<ColorTheme> = theme
 
     init {

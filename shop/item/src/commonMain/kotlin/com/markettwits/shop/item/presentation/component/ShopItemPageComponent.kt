@@ -11,7 +11,9 @@ interface ShopItemPageComponent {
     fun obtainEvent(intent: ShopItemPageStore.Intent)
 
     interface Output {
+
         fun goBack()
+
         fun updateItem(item : ShopItem)
     }
 

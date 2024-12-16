@@ -64,24 +64,26 @@ private fun StartOrganizersContent(
                     fontSize = 14.sp
                 )
             }
-            if (it.phone.isNotEmpty()) {
-                Row(modifier = modifier) {
-                    Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = "icon",
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                    Text(
-                        modifier = modifier.clickable {
-                            onClickPhone(it.phone)
-                        },
-                        text = it.phone,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.regular(),
-                        fontSize = 14.sp
-                    )
-                }
+            it.phone?.let {
+                if (it.isNotEmpty())
+                    Row(modifier = modifier) {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = "icon",
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                        Text(
+                            modifier = modifier.clickable {
+                                onClickPhone(it)
+                            },
+                            text = it,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = FontNunito.regular(),
+                            fontSize = 14.sp
+                        )
+                    }
             }
+
             Row(modifier = modifier) {
                 it.social_networks?.forEach {
                     if (it.url != null) {

@@ -57,6 +57,8 @@ kotlinx-collections-immutable = "0.3.8"
 kermit = "2.0.4"
 coreKtx = "1.15.0"
 material = "1.12.0"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 
 [libraries]
 
@@ -131,6 +133,8 @@ buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.r
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 [plugins]
 

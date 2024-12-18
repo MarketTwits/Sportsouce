@@ -1,6 +1,5 @@
 package com.markettwits.cloud.model.starts
 
-import com.markettwits.sportsourcedemo.all.Row
 import kotlinx.serialization.Serializable
 
 @Serializable

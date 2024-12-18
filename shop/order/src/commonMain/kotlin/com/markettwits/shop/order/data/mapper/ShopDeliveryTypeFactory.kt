@@ -8,7 +8,7 @@ object ShopDeliveryTypeFactory : ShopDeliveryType.Factory {
          when (value.lowercase()) {
             DeliveryMethod.DELIVERY.name.lowercase() -> ShopDeliveryType.Delivery
             DeliveryMethod.PICKUP.name.lowercase() -> ShopDeliveryType.Pickup
-            else -> throw IllegalArgumentException("Unknown ShopPaymentType for value: $value")
+            else -> ShopDeliveryType.Pickup
     }
 
     override fun getTitle(shopDeliveryType: ShopDeliveryType): String  =

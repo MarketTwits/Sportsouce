@@ -6,6 +6,7 @@ import ru.ok.tracer.crash.report.CrashFreeConfiguration
 import ru.ok.tracer.crash.report.CrashReportConfiguration
 import ru.ok.tracer.disk.usage.DiskUsageConfiguration
 import ru.ok.tracer.heap.dumps.HeapDumpConfiguration
+import ru.ok.tracer.profiler.sampling.SamplingProfilerConfiguration
 
 abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
 
@@ -14,6 +15,7 @@ abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
             CoreTracerConfiguration.build {},
             CrashReportConfiguration.build {},
             CrashFreeConfiguration.build {},
+            SamplingProfilerConfiguration.build {},
             HeapDumpConfiguration.build {},
             DiskUsageConfiguration.build {},
         )

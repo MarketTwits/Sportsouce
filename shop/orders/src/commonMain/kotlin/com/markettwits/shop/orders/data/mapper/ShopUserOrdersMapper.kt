@@ -24,7 +24,7 @@ internal class ShopUserOrdersMapper(private val timeMapper: TimeMapper){
                 paidOnline = it.paidOnline,
                 createAt = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.createdAt),
                 paymentMethod = ShopPaymentTypeFactory.getShopPaymentType(it.paymentMethod),
-                shippingMethod = ShopDeliveryTypeFactory.getShopDeliveryType(it.shippingMethod),
+                shippingMethod = ShopDeliveryTypeFactory.getShopDeliveryType(it.shippingMethod?: ""),
                 status = it.status.shopOrderStatusMapper()
             ),
             items = it.orderItems?.map { item ->

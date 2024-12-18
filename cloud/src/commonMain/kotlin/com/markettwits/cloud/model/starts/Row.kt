@@ -1,10 +1,12 @@
-package com.markettwits.sportsourcedemo.all
+package com.markettwits.cloud.model.starts
 
 
 import com.markettwits.cloud.model.common.KindOfSport
 import com.markettwits.cloud.model.common.Season
 import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.cloud.model.starts.Result
+import com.markettwits.sportsourcedemo.all.City
+import com.markettwits.sportsourcedemo.all.ConditionFile
+import com.markettwits.sportsourcedemo.all.PosterLinkFile
 import kotlinx.serialization.Serializable
 
 @Serializable

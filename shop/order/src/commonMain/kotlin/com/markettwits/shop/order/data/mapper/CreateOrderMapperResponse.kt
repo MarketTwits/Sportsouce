@@ -42,7 +42,7 @@ private fun Order.toCreateShopOrderResultOrder(): ShopOrder {
         createAt = this.createdAt,
         status = this.status.shopOrderStatusMapper(),
         paymentMethod = ShopPaymentTypeFactory.getShopPaymentType(paymentMethod),
-        shippingMethod = ShopDeliveryTypeFactory.getShopDeliveryType(shippingMethod)
+        shippingMethod = ShopDeliveryTypeFactory.getShopDeliveryType(shippingMethod ?: "")
     )
 }
 

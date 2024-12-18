@@ -15,5 +15,4 @@ data class OrderItemCompact(
     val name: String,
     val orderProduct: OrderProductCostWithCount,
     val price: Int,
-    val purchasePrice: Int
 )

@@ -3,6 +3,7 @@ package com.markettwits.shop.orders.di
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud_shop.di.sportSauceShopCloudModule
+import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.shop.orders.data.ShopUserOrdersRepositoryBase
 import com.markettwits.shop.orders.data.mapper.ShopUserOrdersMapper
@@ -15,7 +16,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val shopUserOrdersModule = module {
-    includes(authDataSourceModule, sportSauceShopCloudModule)
+    includes(authDataSourceModule, sportSauceShopCloudModule,crashlyticsModule)
 
     singleOf(::ShopUserOrdersRepositoryBase) bind ShopUserOrdersRepository::class
     singleOf(::ShopUserOrdersStoreFactory)

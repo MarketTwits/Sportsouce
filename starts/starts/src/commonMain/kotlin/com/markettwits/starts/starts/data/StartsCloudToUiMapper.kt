@@ -1,6 +1,6 @@
 package com.markettwits.starts.starts.data
 
-import com.markettwits.sportsourcedemo.all.Row
+import com.markettwits.cloud.model.starts.Row
 import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.domain.StartsListItem

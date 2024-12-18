@@ -63,7 +63,7 @@ fun StartRegistrationStagePage.Pay.ButtonContent(
             is StartRegistrationPriceResult.Free -> {
                 StartRegistrationStageButton(
                     modifier = Modifier.weight(1f),
-                    title = "Сохранить",
+                    title = "Зарегистрироваться",
                     onClick = onClickSave
                 )
             }
@@ -74,6 +74,7 @@ fun StartRegistrationStagePage.Pay.ButtonContent(
                     title = "Оплатить",
                     onClick = onClickPay
                 )
+
                 StartRegistrationStageButton(
                     modifier = Modifier.weight(1f),
                     title = "Сохранить",

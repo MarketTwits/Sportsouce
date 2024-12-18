@@ -19,6 +19,7 @@ kotlin {
             implementation(projects.shop.cloud)
             implementation(projects.shop.domain)
             implementation(projects.shop.order)
+            implementation(projects.analytics.crashlytics)
             implementation(projects.auth.authService)
             implementation(projects.intent.composable)
         }

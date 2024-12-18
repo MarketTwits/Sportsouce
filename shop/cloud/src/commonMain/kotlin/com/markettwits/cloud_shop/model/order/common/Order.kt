@@ -15,7 +15,7 @@ data class Order(
     @SerialName("internalId") val internalId: String,
     @SerialName("paid_online") val paidOnline: Boolean,
     @SerialName("payment_method") val paymentMethod: String,
-    @SerialName("shipping_method") val shippingMethod: String,
+    @SerialName("shipping_method") val shippingMethod: String?,
     @SerialName("orderItems") val orderItems : List<OrderItemCompact>? = null,
     @SerialName("status") val status : OrderStatus? = null,
     @SerialName("updatedAt") val updatedAt: String,

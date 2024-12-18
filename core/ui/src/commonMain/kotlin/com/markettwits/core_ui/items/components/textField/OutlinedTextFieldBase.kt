@@ -71,6 +71,7 @@ fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
     unfocusedLabelColor = Color.Gray,
     focusedTextColor = MaterialTheme.colorScheme.tertiary,
     unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+    errorTextColor = MaterialTheme.colorScheme.error,
     errorIndicatorColor = SportSouceColor.SportSouceLightRed,
     errorContainerColor = Color.Transparent,
     errorLabelColor = SportSouceColor.SportSouceLightRed,

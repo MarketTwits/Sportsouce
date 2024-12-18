@@ -25,9 +25,6 @@ data class StartRemoteNew(
     val distances: List<Distance>,
     val distinctDistances: Map<Int, DistinctDistance>,
     val id: Int,
-    @Serializable(with = BooleanAsStringOrBooleanSerializer::class)
-    @SerialName("isOpen")
-    val isOpen: Boolean,
     val name: String,
     val organizers: List<Organizer>,
     val payment_disabled: Boolean?,
@@ -43,6 +40,7 @@ data class StartRemoteNew(
     val useful_links: List<UsefulLinks>?
 ) : StartRemote{
 
+    @Deprecated("Use for isOpen field, don't use now")
     object BooleanAsStringOrBooleanSerializer : KSerializer<Boolean> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("BooleanAsStringOrBoolean", PrimitiveKind.STRING)
         override fun deserialize(decoder: Decoder): Boolean {

@@ -9,7 +9,6 @@ data class Comment(
     val countSub: Int,
     val createdAt: String,
     val id: Int,
-    val newsId: Int?,
     val personId: String,
     val replies: List<Reply>? = null,
     val startId: Int,

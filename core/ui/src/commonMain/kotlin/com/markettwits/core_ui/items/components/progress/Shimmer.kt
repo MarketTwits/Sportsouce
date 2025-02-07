@@ -55,19 +55,23 @@ fun Modifier.shimmer(
         ),
         label = "shimmer translate animation"
     )
-    val radians = Math.toRadians(tiltAngle.toDouble()).toFloat()
+   // val radians = Math.toRadians(tiltAngle.toDouble()).toFloat()
 
     return this then drawWithContent {
         with(drawContext.canvas) {
             val brush = Brush.linearGradient(
                 colors = gradientColors,
                 start = Offset(
-                    size.width * translateAnimation * cos(radians),
-                    size.height * translateAnimation * sin(radians)
+                    0.0f,
+                    0.0f
+//                    size.width * translateAnimation * cos(radians),
+//                    size.height * translateAnimation * sin(radians)
                 ),
                 end = Offset(
-                    2 * size.width * translateAnimation * cos(radians),
-                    2 * size.height * translateAnimation * sin(radians)
+                    0.0f,
+                    0.0f
+//                    2 * size.width * translateAnimation * cos(radians),
+//                    2 * size.height * translateAnimation * sin(radians)
                 )
             )
             withSaveLayer(

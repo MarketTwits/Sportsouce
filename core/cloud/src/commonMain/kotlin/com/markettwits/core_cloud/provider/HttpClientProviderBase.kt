@@ -20,11 +20,11 @@ import kotlinx.serialization.json.Json
 
 class HttpClientProviderBase(
     private val json: Json,
-    private val clientEngine: HttpClientEngine,
+    private val clientEngine: HttpClientEngine? = null,
     private val baseUrl: String,
 ) : HttpClientProvider {
 
-    override fun provide(loggerEnabled: Boolean) = HttpClient(clientEngine) {
+    override fun provide(loggerEnabled: Boolean) = HttpClient {
         expectSuccess = true
         install(ContentNegotiation) {
             json(json)

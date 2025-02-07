@@ -15,12 +15,12 @@ class WorkoutRegistrationExecutor(
     private val workoutRegistrationUseCase: WorkoutRegistrationUseCase,
     private val intentAction: IntentAction
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnValueChanged -> dispatch(Message.OnValueChanged(intent.workoutRegistrationForm))
             is Intent.OnClickRegistration -> {
-                onClickRegistration(getState().form)
+                onClickRegistration(state().form)
             }
             is Intent.OnClickPhone -> intentAction.openPhone(intent.phone)
             is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)

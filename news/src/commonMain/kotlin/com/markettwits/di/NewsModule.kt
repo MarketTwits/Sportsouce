@@ -6,7 +6,7 @@ import com.markettwits.news_list.data.NewsDataSource
 import com.markettwits.news_list.data.NewsDataSourceBase
 import com.markettwits.news_list.data.NewsRemoteToDomainMapper
 import com.markettwits.news_list.presentation.store.NewsStoreFactory
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import org.koin.dsl.module
 
 val newsModule = module(createdAtStart = true) {
@@ -18,7 +18,7 @@ val newsModule = module(createdAtStart = true) {
         )
     }
     single<NewsRemoteToDomainMapper> {
-        NewsRemoteToDomainMapper.Base(BaseTimeMapper())
+        NewsRemoteToDomainMapper.Base(ExtendedTimeMapper())
     }
     single<NewsStoreFactory> {
         NewsStoreFactory(

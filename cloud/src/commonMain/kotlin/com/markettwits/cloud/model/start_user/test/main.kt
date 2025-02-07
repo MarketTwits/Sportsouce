@@ -3,13 +3,11 @@ package com.markettwits.cloud.model.start_user.test
 import com.markettwits.cloud.api.StartsRemoteDataSourceImpl
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase
-import kotlinx.coroutines.runBlocking
 
 fun main() {
     val service = StartsRemoteDataSourceImpl(
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
-            clientEngine = io.ktor.client.engine.okhttp.OkHttp.create(),
             baseUrl = sportsouceApiDevUrl
         )
     )

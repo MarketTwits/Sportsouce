@@ -12,16 +12,17 @@ import kotlinx.coroutines.launch
 
 class EditProfileSocialNetworkExecutor(private val interactor: ProfileSocialNetworkInteractor) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.GoBack -> publish(Label.GoBack)
-            is Intent.OnCLickUpdate -> getState().data?.let { update(it) }
+            is Intent.OnCLickUpdate -> state().data?.let { update(it) }
             is Intent.UpdateState -> dispatch(Message.UpdateFiled(intent.userSocialNetwork))
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch()
     }
 

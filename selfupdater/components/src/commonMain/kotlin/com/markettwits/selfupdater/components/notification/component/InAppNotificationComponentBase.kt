@@ -12,6 +12,7 @@ import com.markettwits.selfupdater.components.notification.store.InAppNotificati
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,7 @@ class InAppNotificationComponentBase(
     private val openFullScreen: (NewAppVersion) -> Unit,
 ) : ComponentContext by componentContext, InAppNotificationComponent {
 
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private val store = instanceKeeper.getStore {
         storeFactory.create()
@@ -42,6 +43,7 @@ class InAppNotificationComponentBase(
         )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<InAppNotificationStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: InAppNotificationStore.Intent) {

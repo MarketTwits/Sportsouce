@@ -30,8 +30,6 @@ import com.markettwits.cloud.model.start_registration.StartRegistrationResponseW
 import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
-import java.io.File
-
 
 interface SportsouceApi {
     //Common
@@ -91,7 +89,7 @@ interface SportsouceApi {
 
     suspend fun auth(token: String): User
     //Profile
-    suspend fun uploadFile(file: File): UploadFileResponse
+  //  suspend fun uploadFile(file: File): UploadFileResponse
 
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
 

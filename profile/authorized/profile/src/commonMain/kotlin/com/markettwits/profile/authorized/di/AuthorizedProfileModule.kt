@@ -13,7 +13,7 @@ import com.markettwits.profile.authorized.data.mapper.AuthorizedProfileMapperBas
 import com.markettwits.profile.authorized.domain.UserProfileInteractorBase
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStoreFactory
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -33,8 +33,8 @@ val authorizedProfileModule = module {
                     auth = get(),
                     remote = get(),
                     mapper = AuthorizedProfileMapperBase(
-                        UserRegistrationsMapperBase(BaseTimeMapper()),
-                        BaseTimeMapper()
+                        UserRegistrationsMapperBase(ExtendedTimeMapper()),
+                        ExtendedTimeMapper()
                     ),
                     cache = UserProfileCache(),
                     executeWithCache = ExecuteWithCacheBase()

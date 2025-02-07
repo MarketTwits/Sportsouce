@@ -25,8 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
-
 /**
  * Simple Text composable to show the text with html styling from string
  * resources. Supported are:
@@ -61,9 +59,10 @@ fun HtmlText(
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    val annotatedString = htmlToAnnotatedString(
+    val annotatedString = htmlToAnnotatedStringInner(
         html = text,
     )
+
     HtmlText(
         modifier = modifier,
         annotatedString = annotatedString,

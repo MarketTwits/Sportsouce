@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.markettwits.core_ui.items.base_extensions.mapDateToString
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +32,7 @@ fun CalendarTextFiled(
 
     if (openDialog) {
         val datePickerState = rememberDatePickerState(
-            yearRange = IntRange(1900, LocalDate.now().year)
+           // yearRange = IntRange(1900, LocalDate.now().year)
         )
         val confirmEnabled by remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }

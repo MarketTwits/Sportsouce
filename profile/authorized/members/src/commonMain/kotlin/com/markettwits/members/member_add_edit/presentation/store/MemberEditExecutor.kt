@@ -17,17 +17,18 @@ class MemberEditExecutor(
     private val addUseCase: MemberAddUseCase,
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnValueChanged -> dispatch(Message.OnValueChanged(intent.member))
-            is Intent.Save -> execute(getState().member, getState().mode)
+            is Intent.Save -> execute(state().member, state().mode)
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
             is Intent.Retry -> launch()
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch()
     }
 

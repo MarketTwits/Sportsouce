@@ -7,8 +7,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
+import androidx.compose.ui.unit.dp
+
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.shop.domain.model.ShopItem
@@ -17,7 +17,7 @@ import com.markettwits.shop.domain.model.ShopItem
 fun ShopItemsBase(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
-    items: LazyPagingItems<ShopItem>,
+  //  items: LazyPagingItems<ShopItem>,
     onClickItem: (ShopItem) -> Unit,
 ) {
     val backgroundColor =
@@ -25,22 +25,22 @@ fun ShopItemsBase(
 
     PullToRefreshScreen(
         isRefreshing = isRefreshing,
-        onRefresh = items::refresh
+        onRefresh = {}
     ) {
         LazyVerticalGrid(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundColor),
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Adaptive(150.dp),
         ) {
-            items(
-                count = items.itemCount,
-                key = items.itemKey { it.id },
-            ) { index ->
-                items[index]?.let {
-                    ShopItemCard(shopItem = it, onItemClick = onClickItem)
-                }
-            }
+//            items(
+//                count = items.itemCount,
+//                key = items.itemKey { it.id },
+//            ) { index ->
+//                items[index]?.let {
+//                    ShopItemCard(shopItem = it, onItemClick = onClickItem)
+//                }
+//            }
 
         }
     }

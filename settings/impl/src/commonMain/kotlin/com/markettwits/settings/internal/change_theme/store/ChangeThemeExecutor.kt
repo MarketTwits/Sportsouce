@@ -15,7 +15,6 @@ class ChangeThemeExecutor(
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(
         intent: Intent,
-        getState: () -> State
     ) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
@@ -23,7 +22,7 @@ class ChangeThemeExecutor(
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         observeSettings()
     }
 

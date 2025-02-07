@@ -28,6 +28,7 @@ fun ReviewScreen(
     notification: @Composable ((Modifier) -> Unit),
 ) {
     val state by component.value.collectAsState()
+
     CollapsingToolbarScaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.primary),
         state = rememberCollapsingToolbarScaffoldState(),

@@ -29,7 +29,7 @@ internal class StartFilterRepositoryBase(
             cached
         else {
             val (kindOfSport, seasons, cities) = coroutineScope {
-                withContext(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
                     val deferredKindOfSports = async { service.kindOfSports() }
                     val deferredSeasons = async { service.seasons() }
                     val deferredCities = async { service.cities(true) }

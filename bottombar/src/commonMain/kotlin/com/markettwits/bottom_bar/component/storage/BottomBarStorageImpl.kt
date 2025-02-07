@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 
 data class BottomBarStorageImpl(private val repository: SettingsRepository) : BottomBarStorage {
 
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     init {
         repository.observeSettings().onEach { settings ->

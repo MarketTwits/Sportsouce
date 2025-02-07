@@ -8,14 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import app.cash.paging.compose.collectAsLazyPagingItems
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import com.markettwits.shop.cart.presentation.catalog.components.ShopCartCatalogWidget
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
-import com.markettwits.shop.catalog.presentation.components.ShopItemsContent
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.shop.filter.presentation.components.api.SelectedFilterParams
@@ -32,7 +30,7 @@ fun ShopCatalogScreen(
 
     val state by catalogComponent.state.collectAsState()
 
-    val shopItems = state.shopItems.collectAsLazyPagingItems()
+   // val shopItems = state.shopItems.collectAsLazyPagingItems()
 
     Scaffold(
         modifier = modifier,
@@ -64,9 +62,9 @@ fun ShopCatalogScreen(
         ) {
             Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
                 SelectedFilterParams(component = filterComponent)
-                ShopItemsContent(items = shopItems, onClickItem = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
-                })
+//                ShopItemsContent(items = shopItems, onClickItem = {
+//                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
+//                })
             }
         }
     }

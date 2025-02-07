@@ -36,10 +36,7 @@ internal class StartFilerStoreFactory(
 
     private inner class ExecutorImpl :
         CoroutineExecutor<StartFilterStore.Intent, Unit, StartFilterStore.State, Msg, StartFilterStore.Label>() {
-        override fun executeIntent(
-            intent: StartFilterStore.Intent,
-            getState: () -> StartFilterStore.State
-        ) {
+        override fun executeIntent(intent: StartFilterStore.Intent, ) {
             when (intent) {
                 is StartFilterStore.Intent.Launch -> launch()
                 is StartFilterStore.Intent.GoBack -> publish(StartFilterStore.Label.GoBack)
@@ -48,7 +45,7 @@ internal class StartFilerStoreFactory(
                         updateState3(
                             item = intent.startFilter,
                             index = intent.index,
-                            currentState = getState().filter,
+                            currentState = state().filter,
                             singleChoice = intent.singleChoice
                         )
                     )
@@ -56,18 +53,18 @@ internal class StartFilerStoreFactory(
 
                 StartFilterStore.Intent.Apply -> publish(
                     StartFilterStore.Label.Apply(
-                        getState().filter,
+                        state().filter,
                         StartFilter.Sorted.Popular
                     )
                 )
 
                 StartFilterStore.Intent.Reset -> dispatch(
-                    Msg.ChangeFilter(reset(getState().filter))
+                    Msg.ChangeFilter(reset(state().filter))
                 )
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> StartFilterStore.State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 

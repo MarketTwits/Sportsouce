@@ -13,15 +13,16 @@ class EditProfileAboutExecutor(
     private val repository: EditProfileAboutRepository,
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnValueChanged -> handleTextFiled(getState(), intent.value)
-            Intent.Apply -> apply(getState())
+            is Intent.OnValueChanged -> handleTextFiled(state(), intent.value)
+            Intent.Apply -> apply(state())
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch()
     }
 

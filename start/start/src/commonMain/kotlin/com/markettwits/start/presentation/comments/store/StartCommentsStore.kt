@@ -65,7 +65,7 @@ class StartCommentsStoreFactory(
 
     private inner class ExecutorImpl(private val startId: Int) :
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickCloseReply -> dispatch(Msg.OnClickCloseReply)
                 is Intent.OnClickReply -> dispatch(
@@ -75,12 +75,12 @@ class StartCommentsStoreFactory(
                     )
                 )
 
-                is Intent.OnClickSendComment -> sendComment(getState().mode, intent.value, startId)
+                is Intent.OnClickSendComment -> sendComment(state().mode, intent.value, startId)
                 is Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch(startId)
         }
 

@@ -13,7 +13,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.log)
             api(libs.ktor.client.json)
-            api(libs.ktor.client.okhttp)
+           // api(libs.ktor.client.okhttp)
             implementation(projects.core.koin)
             implementation(libs.ktor.core)
             implementation(libs.ktor.client.logging)

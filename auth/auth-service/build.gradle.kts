@@ -11,6 +11,7 @@ kotlin{
             implementation(projects.cloud)
             implementation(projects.core.cache)
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

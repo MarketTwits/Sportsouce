@@ -20,36 +20,36 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
 
     private val debounce by CoroutineDebounceBase(scope)
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
-            is Intent.ChangeTextFiled -> onValueChanged(getState(), intent.value)
+            is Intent.ChangeTextFiled -> onValueChanged(state(), intent.value)
             is Intent.OnClickBack -> publish(Label.OnClickBack)
-            is Intent.OnClickBrushText -> onClickBrush(getState())
-            is Intent.OnClickFilter -> publish(Label.OnClickFilter(getState().filter))
+            is Intent.OnClickBrushText -> onClickBrush(state())
+            is Intent.OnClickFilter -> publish(Label.OnClickFilter(state().filter))
             is Intent.OnClickStart -> onClickStart(intent.id, intent.startTitle)
             is Intent.OnClickHistoryItem -> {
-                onValueChanged(getState(), intent.value)
+                onValueChanged(state(), intent.value)
             }
 
             is Intent.OnFilterApply -> {
                 dispatch(Message.FilterApply(intent.filter, intent.sorted))
                 starts(
-                    getState().sorted,
-                    getState().filter,
-                    getState().query,
+                    state().sorted,
+                    state().filter,
+                    state().query,
                 )
             }
 
-            is Intent.OnClickRemoveFilter -> onClickRemoveFilter(getState())
+            is Intent.OnClickRemoveFilter -> onClickRemoveFilter(state())
             is Intent.OnClickRetry -> starts(
-                getState().sorted,
-                getState().filter,
-                getState().query,
+                state().sorted,
+                state().filter,
+                state().query,
             )
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         scope.launch {
             repository.history().collect {
                 dispatch(Message.InfoLoaded(StartsSearch(it, emptyList())))
@@ -101,13 +101,11 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
 
     private fun onValueChanged(state: State, newValue: String) {
         dispatch(Message.ChangeTextFiled(newValue))
-        //debounce.debounce(newValue, delay = 500L){
         starts(
             sorted = state.sorted,
             filterUi = state.filter,
             value = newValue,
         )
-        // }
     }
 
     private fun starts(

@@ -54,7 +54,7 @@ internal class StartRandomStoreFactory(
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
 
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when(intent){
                 Intent.Retry -> launch()
                 Intent.GoBack -> publish(Label.Pop)
@@ -71,7 +71,7 @@ internal class StartRandomStoreFactory(
                 }
             }
         }
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 

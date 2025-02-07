@@ -30,14 +30,13 @@ class NewsEventStoreFactory(
         CoroutineExecutor<NewsEventStore.Intent, Unit, NewsEventStore.State, Msg, NewsEventStore.Label>() {
         override fun executeIntent(
             intent: NewsEventStore.Intent,
-            getState: () -> NewsEventStore.State
         ) {
             when (intent) {
                 NewsEventStore.Intent.Pop -> publish(NewsEventStore.Label.Pop)
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> NewsEventStore.State) = Unit
+        override fun executeAction(action: Unit) = Unit
     }
 
     private object ReducerImpl : Reducer<NewsEventStore.State, Msg> {

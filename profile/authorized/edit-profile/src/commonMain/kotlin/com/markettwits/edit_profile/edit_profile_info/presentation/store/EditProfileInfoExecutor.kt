@@ -13,17 +13,18 @@ import kotlinx.coroutines.launch
 
 class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.GoBack -> publish(Label.GoBack)
-            is Intent.OnClickUpdate -> getState().userData?.let { update(it) }
+            is Intent.OnClickUpdate -> state().userData?.let { update(it) }
             is Intent.UpdateState -> dispatch(Message.UpdateFiled(intent.userData))
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
             is Intent.Retry -> launch()
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch()
     }
 

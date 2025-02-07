@@ -13,14 +13,14 @@ class SettingsExecutor(
     private val intentAction: IntentAction,
     private val versionManager: ApplicationVersionManager
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.GoBack -> publish(Label.GoBack)
             is Intent.OnClickItemMenu -> obtainMenu(intent.itemId)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         dispatch(Message.CurrentVersion(versionManager.currentDistribution()))
     }
 

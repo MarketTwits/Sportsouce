@@ -19,5 +19,5 @@ object InStorageCacheDirectory {
  * ```
  */
 object InStorageFileDirectory {
-    var path = ""
+    var path : String = ""
 }

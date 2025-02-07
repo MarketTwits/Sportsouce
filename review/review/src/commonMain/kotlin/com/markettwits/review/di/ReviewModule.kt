@@ -11,7 +11,7 @@ import com.markettwits.review.data.mapper.ReviewMapperBase
 import com.markettwits.review.domain.ReviewRepository
 import com.markettwits.review.presentation.store.ReviewStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import org.koin.dsl.module
 
 val reviewModule = module(createdAtStart = true) {
@@ -30,10 +30,10 @@ val reviewModule = module(createdAtStart = true) {
             executor = ExecuteWithCacheBase(),
             reviewMapper = ReviewMapperBase(
                 startsMapper = StartsCloudToListMapperBase(
-                    BaseTimeMapper()
+                   ExtendedTimeMapper()
                 ),
                 newsMapper = NewsRemoteToDomainMapper.Base(
-                    BaseTimeMapper()
+                    ExtendedTimeMapper()
                 )
             ),
         )

@@ -61,18 +61,18 @@ class RegistrationsDataStoreFactory(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.LoadData -> {
                     launch()
                 }
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
-                is Intent.OnClickFilter -> updateFilter(intent.item, getState())
+                is Intent.OnClickFilter -> updateFilter(intent.item, state())
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 

@@ -15,23 +15,23 @@ internal class ShopCartExecutor(
     private val repository: ShopCartRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickDecrease -> onClickDecrease(intent.item)
             is Intent.OnClickIncrease -> onClickIncrease(intent.item)
             is Intent.OnClickDelete -> onClickDelete(intent.item)
             is Intent.OnClickItem -> publish(Label.GoToShopItem(intent.item))
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickCreateOrder -> publish(Label.GoOrderScreen(getState().items))
-            is Intent.Init -> executeAction(Unit) { getState() }
+            is Intent.OnClickCreateOrder -> publish(Label.GoOrderScreen(state().items))
+            is Intent.Init -> executeAction(Unit)
             is Intent.OnClickGoAuth -> publish(Label.GoAuth)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         updateCreateOrderAvailable()
         repository.observe().onEach {
-            updateState(it, getState())
+            updateState(it, state())
         }.launchIn(scope)
     }
 

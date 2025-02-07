@@ -15,7 +15,6 @@ internal class AppearanceExecutor(
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(
         intent: Intent,
-        getState: () -> State
     ) {
         when (intent) {
             is Intent.OnClickGoBack -> publish(Label.GoBack)
@@ -23,7 +22,7 @@ internal class AppearanceExecutor(
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         observeSettings()
     }
 

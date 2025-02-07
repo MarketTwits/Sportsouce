@@ -27,14 +27,14 @@ class ShopUserOrdersExecutor(
 
     override val tag: String = "ShopUserOrdersExecutor"
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickGoBack -> publish(Label.GoBack)
             is Intent.OnClickRetry -> launch(true)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch(false)
     }
 

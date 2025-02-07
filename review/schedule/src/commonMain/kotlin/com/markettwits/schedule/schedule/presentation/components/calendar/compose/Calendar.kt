@@ -22,7 +22,6 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.Week
 import com.kizitonwose.calendar.core.WeekDay
-import java.time.DayOfWeek
 
 /**
  * A horizontally scrolling calendar.
@@ -303,23 +302,23 @@ fun WeekCalendar(
  * @param monthHeader a composable block which describes the month header
  *     content. The header is placed above each month on the calendar.
  */
-@Composable
-fun HeatMapCalendar(
-    modifier: Modifier = Modifier,
-    state: HeatMapCalendarState = rememberHeatMapCalendarState(),
-    weekHeaderPosition: HeatMapWeekHeaderPosition = HeatMapWeekHeaderPosition.Start,
-    userScrollEnabled: Boolean = true,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-    dayContent: @Composable ColumnScope.(day: CalendarDay, week: HeatMapWeek) -> Unit,
-    weekHeader: (@Composable ColumnScope.(DayOfWeek) -> Unit)? = null,
-    monthHeader: (@Composable ColumnScope.(CalendarMonth) -> Unit)? = null,
-) = HeatMapCalendarImpl(
-    modifier = modifier,
-    state = state,
-    weekHeaderPosition = weekHeaderPosition,
-    userScrollEnabled = userScrollEnabled,
-    dayContent = dayContent,
-    weekHeader = weekHeader,
-    monthHeader = monthHeader,
-    contentPadding = contentPadding,
-)
+//@Composable
+//fun HeatMapCalendar(
+//    modifier: Modifier = Modifier,
+//    state: HeatMapCalendarState = rememberHeatMapCalendarState(),
+//    weekHeaderPosition: HeatMapWeekHeaderPosition = HeatMapWeekHeaderPosition.Start,
+//    userScrollEnabled: Boolean = true,
+//    contentPadding: PaddingValues = PaddingValues(0.dp),
+//    dayContent: @Composable ColumnScope.(day: CalendarDay, week: HeatMapWeek) -> Unit,
+//    weekHeader: (@Composable ColumnScope.(DayOfWeek) -> Unit)? = null,
+//    monthHeader: (@Composable ColumnScope.(CalendarMonth) -> Unit)? = null,
+//) = HeatMapCalendarImpl(
+//    modifier = modifier,
+//    state = state,
+//    weekHeaderPosition = weekHeaderPosition,
+//    userScrollEnabled = userScrollEnabled,
+//    dayContent = dayContent,
+//    weekHeader = weekHeader,
+//    monthHeader = monthHeader,
+//    contentPadding = contentPadding,
+//)

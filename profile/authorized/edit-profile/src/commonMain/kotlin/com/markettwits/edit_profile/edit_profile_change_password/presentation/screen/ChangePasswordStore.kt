@@ -70,7 +70,7 @@ class ChangePasswordStoreFactory(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.ChangeCurrentPassword -> {
                     dispatch(Msg.ChangePassword(intent.value))
@@ -93,7 +93,7 @@ class ChangePasswordStoreFactory(
                 }
 
                 is Intent.ChangePassword -> {
-                    val state = getState()
+                    val state = state()
                     scope.launch {
                         val validResult = validation.changePassword(
                             oldPassword = state.currentPassword,

@@ -27,7 +27,3 @@ fun rememberBottomBarNestedScroll(
         }
     }
 }
-
-val LocalBottomBarVisibilityListener = compositionLocalOf<BottomBarVisibilityListener> {
-    error("No BottomBarVisibilityListener provided")
-}

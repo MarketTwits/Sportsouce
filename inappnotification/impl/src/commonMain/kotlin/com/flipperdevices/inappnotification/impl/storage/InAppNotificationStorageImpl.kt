@@ -6,8 +6,6 @@ import com.markettwits.inappnotification.api.InAppNotificationStorage
 import com.markettwits.inappnotification.api.model.InAppNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.runBlocking
-import java.util.Stack
 import kotlin.time.Duration.Companion.seconds
 
 private val TIMER_DELAY = 1.seconds
@@ -22,7 +20,7 @@ class InAppNotificationStorageImpl :
         block = { invalidate() }
     )
 
-    private val pendingNotification = Stack<InAppNotification>()
+  //  private val pendingNotification = Stack<InAppNotification>()
     private var listener: InAppNotificationListener? = null
     private var nextNotificationTime = 0L
 
@@ -40,29 +38,27 @@ class InAppNotificationStorageImpl :
         timerTask.shutdown()
     }
 
-    @Synchronized
     override fun addNotification(notification: InAppNotification) {
-        pendingNotification.push(notification)
+       // pendingNotification.push(notification)
         invalidate()
     }
 
-    @Synchronized
     private fun invalidate() {
-        val notificationListener = listener ?: return
-
-        val currentTime = System.currentTimeMillis()
-        if (currentTime < nextNotificationTime) {
-            return
-        }
-
-        if (pendingNotification.empty()) {
-            return
-        }
-
-        val notificationToShown = pendingNotification.pop()
-        runBlocking {
-            notificationListener.onNewNotification(notificationToShown)
-        }
-        nextNotificationTime = System.currentTimeMillis()
+//        val notificationListener = listener ?: return
+//
+//        val currentTime = System.currentTimeMillis()
+//        if (currentTime < nextNotificationTime) {
+//            return
+//        }
+//
+//        if (pendingNotification.empty()) {
+//            return
+//        }
+//
+//        val notificationToShown = pendingNotification.pop()
+//        runBlocking {
+//            notificationListener.onNewNotification(notificationToShown)
+//        }
+//        nextNotificationTime = System.currentTimeMillis()
     }
 }

@@ -17,7 +17,6 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
 import com.markettwits.core_ui.items.components.BaseDivider
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.news_list.domain.NewsInfo

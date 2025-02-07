@@ -9,7 +9,6 @@ import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProvider
 import com.markettwits.core_cloud.provider.JsonProviderBase
-import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -24,7 +23,6 @@ val sportSauceShopCloudModule = module {
         SportSauceShopApiBase(
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                clientEngine = OkHttp.create(),
                 baseUrl = BuildConfig.SPORTSAUCE_API_PATH
             ),
         )
@@ -34,7 +32,6 @@ val sportSauceShopCloudModule = module {
         SportSauceShopOrderApiBase(
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                clientEngine = OkHttp.create(),
                 baseUrl = BuildConfig.SPORTSAUCE_API_PATH
             ),
         )

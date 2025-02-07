@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class InAppNotificationExecutor(
     private val selfUpdaterApi: SelfUpdaterApi
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnNewNotification -> {
                 dispatch(Message.UpdateState(State.ShownNotification(intent.notification)))
@@ -28,12 +28,6 @@ class InAppNotificationExecutor(
                 if (intent.notification is InAppNotification.SelfUpdateReady)
                     publish(Label.OpenUpdateAppScreen(mapSelfUpdateToShared(intent.notification)))
             }
-        }
-    }
-
-    override fun executeAction(action: Unit, getState: () -> State) {
-        scope.launch {
-            val result = selfUpdaterApi.startCheckUpdate(false)
         }
     }
 

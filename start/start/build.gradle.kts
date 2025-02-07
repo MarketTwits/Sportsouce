@@ -24,6 +24,6 @@ kotlin {
         implementation(libs.koin.core)
         implementation(projects.intent.api)
         implementation(projects.intent.impl)
-        implementation(libs.lazytable)
+       // implementation(libs.lazytable)
     }
 }

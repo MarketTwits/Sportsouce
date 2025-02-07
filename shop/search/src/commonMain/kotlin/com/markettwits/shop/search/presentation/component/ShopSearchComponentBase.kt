@@ -7,6 +7,7 @@ import com.markettwits.shop.search.presentation.store.ShopSearchStore
 import com.markettwits.shop.search.presentation.store.ShopSearchStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,6 +21,7 @@ class ShopSearchComponentBase(
 
     private val store = storeFactory.create(query)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ShopSearchStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: ShopSearchStore.Intent) {

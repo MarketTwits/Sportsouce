@@ -15,7 +15,7 @@ import com.markettwits.start_search.filter.domain.StartFilterRepository
 import com.markettwits.start_search.filter.presentation.store.StartFilerStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -33,7 +33,7 @@ internal val startFilterModule = module {
     single<StartFilterDomainToRemoteMapper> {
         StartFilterDomainToRemoteMapper.Base()
     }
-    singleOf(::BaseTimeMapper) bind TimeMapper::class
+    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
     singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
     single<StartFilerStoreFactory> {
         StartFilerStoreFactory(

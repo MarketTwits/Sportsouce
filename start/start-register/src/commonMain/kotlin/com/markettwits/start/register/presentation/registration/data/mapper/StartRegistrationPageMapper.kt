@@ -18,10 +18,6 @@ import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-
 class StartRegistrationPageMapper(
     private val timeMapper: TimeMapper
 ) {
@@ -140,14 +136,15 @@ class StartRegistrationPageMapper(
     }
 
     private fun calculateAge(birthdaySimple: String): Int {
-        return try {
-            val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-            val birthLocalDate = LocalDate.parse(birthdaySimple, dateFormatter)
-            val currentDate = LocalDate.now()
-            ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
-        } catch (e: Exception) {
-            0
-        }
+//        return try {
+//            val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+//            val birthLocalDate = LocalDate.parse(birthdaySimple, dateFormatter)
+//            val currentDate = LocalDate.now()
+//            ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
+//        } catch (e: Exception) {
+//            0
+//        }
+        return 0
     }
 
     private fun mapCitiesToStartStatement(city: List<City>): List<StartStatement.City> =

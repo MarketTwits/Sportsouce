@@ -44,7 +44,7 @@ internal class StartsRepositoryBase(
     private suspend fun launch(): List<List<StartsListItem>> {
         StartSeasonsRemote
         val (actual, paste, preview, main) = coroutineScope {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
                 val deferredActual = async { service.fetchActualStarts() }
                 val deferredPaste = async { service.fetchPasteStarts().rows.reversed() }
                 val deferredPreview = async { service.fetchPreview() }

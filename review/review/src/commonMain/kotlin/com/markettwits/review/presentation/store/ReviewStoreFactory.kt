@@ -43,7 +43,7 @@ class ReviewStoreFactory(
 
         override val tag: String = "ReviewStoreFactory"
 
-        override fun executeIntent(intent: ReviewStore.Intent, getState: () -> ReviewStore.State) {
+        override fun executeIntent(intent: ReviewStore.Intent) {
             when (intent) {
                 is ReviewStore.Intent.Launch -> launch(intent.forced)
                 is ReviewStore.Intent.OnClickItem -> publish(ReviewStore.Label.OnClickItem(intent.item))
@@ -56,7 +56,7 @@ class ReviewStoreFactory(
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> ReviewStore.State) {
+        override fun executeAction(action: Unit) {
             launch(false)
         }
 

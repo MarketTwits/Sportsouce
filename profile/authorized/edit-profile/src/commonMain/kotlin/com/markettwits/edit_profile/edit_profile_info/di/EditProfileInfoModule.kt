@@ -9,7 +9,7 @@ import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepo
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStoreFactory
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.teams_city.di.teamsCityModule
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -21,5 +21,5 @@ val editProfileInfoModule = module {
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::EditProfileInfoRepositoryBase) bind EditProfileInfoRepository::class
     singleOf(::EditProfileInfoCloudMapperBase) bind EditProfileInfoCloudMapper::class
-    singleOf(::BaseTimeMapper) bind TimeMapper::class
+    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimePattern
 
 @Composable
@@ -17,7 +17,7 @@ internal fun StartRegistrationAdditionalFieldTextData(
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
-    val timeMapper = BaseTimeMapper()
+    val timeMapper = ExtendedTimeMapper()
 
     val date = field.answer.date ?: ""
 

@@ -16,9 +16,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.text.HtmlText
-import eu.wewox.lazytable.LazyTable
-import eu.wewox.lazytable.LazyTableItem
+//import com.markettwits.core_ui.items.text.HtmlText
+//import eu.wewox.lazytable.LazyTable
+
+//import eu.wewox.lazytable.LazyTable
+//import eu.wewox.lazytable.LazyTableItem
 
 @Composable
 fun ScheduleContent(
@@ -34,108 +36,108 @@ fun ScheduleContent(
             fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.onPrimary
         )
-        ScheduleContentTable(
-            modifier = Modifier,
-            items = schedule
-        )
+//        ScheduleContentTable(
+//            modifier = Modifier,
+//            items = schedule
+//        )
 
     }
 }
 
-@Composable
-fun ScheduleContentTable(
-    modifier: Modifier = Modifier,
-    items: List<ScheduleUi>
-) {
-    val columns = 5
-    val rows = items.size
-    if (items.isNotEmpty()) {
-        LazyTable(
-            modifier = modifier
-        ) {
-            items(
-                count = columns * rows,
-                layoutInfo = {
-                    LazyTableItem(
-                        column = it % columns,
-                        row = it / columns + 1,
-                    )
-                }
-            ) { index ->
-                Cell(pokemon = items[index / columns], column = index % columns)
-            }
-            items(
-                count = columns,
-                layoutInfo = {
-                    LazyTableItem(
-                        column = it % columns,
-                        row = 0,
-                    )
-                },
-            ) {
-                HeaderCell(column = it)
-            }
-        }
-    }
-}
-
-@Composable
-private fun Cell(
-    pokemon: ScheduleUi,
-    column: Int,
-) {
-    if (pokemon is ScheduleUi.Row) {
-        val content = when (column) {
-            0 -> pokemon.kindOfSport
-            1 -> pokemon.address
-            2 -> pokemon.trainerFullName
-            3 -> pokemon.startDate
-            4 -> pokemon.description
-            else -> error("Unknown column index: $column")
-        }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth()
-                .border(1.dp, MaterialTheme.colorScheme.outline)
-                .background(MaterialTheme.colorScheme.primary)
-        ) {
-            HtmlText(
-                modifier = Modifier.padding(2.dp),
-                text = content,
-                color = MaterialTheme.colorScheme.outline,
-                textAlign = TextAlign.Center,
-                fontFamily = FontNunito.bold(),
-                fontSize = 12.sp,
-                overflow = TextOverflow.Visible
-            )
-        }
-    }
-}
-
-@Composable
-private fun HeaderCell(column: Int) {
-    val content = when (column) {
-        0 -> "Вид спорта"
-        1 -> "Место проведения"
-        2 -> "Тренер"
-        3 -> "Дата и время"
-        4 -> "Описание"
-        else -> error("")
-    }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline)
-            .background(MaterialTheme.colorScheme.secondary)
-    ) {
-        Text(
-            modifier = Modifier.padding(2.dp),
-            text = content,
-            color = MaterialTheme.colorScheme.onSecondary,
-            textAlign = TextAlign.Center,
-            fontFamily = FontNunito.bold(),
-            fontSize = 12.sp,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
+//@Composable
+//fun ScheduleContentTable(
+//    modifier: Modifier = Modifier,
+//    items: List<ScheduleUi>
+//) {
+//    val columns = 5
+//    val rows = items.size
+//    if (items.isNotEmpty()) {
+//        LazyTable(
+//            modifier = modifier
+//        ) {
+//            items(
+//                count = columns * rows,
+//                layoutInfo = {
+////                    LazyTableItem(
+////                        column = it % columns,
+////                        row = it / columns + 1,
+////                    )
+//                }
+//            ) { index ->
+//                Cell(pokemon = items[index / columns], column = index % columns)
+//            }
+//            items(
+//                count = columns,
+//                layoutInfo = {
+////                    LazyTableItem(
+////                        column = it % columns,
+////                        row = 0,
+////                    )
+//                },
+//            ) {
+//                HeaderCell(column = it)
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun Cell(
+//    pokemon: ScheduleUi,
+//    column: Int,
+//) {
+//    if (pokemon is ScheduleUi.Row) {
+//        val content = when (column) {
+//            0 -> pokemon.kindOfSport
+//            1 -> pokemon.address
+//            2 -> pokemon.trainerFullName
+//            3 -> pokemon.startDate
+//            4 -> pokemon.description
+//            else -> error("Unknown column index: $column")
+//        }
+//        Box(
+//            contentAlignment = Alignment.Center,
+//            modifier = Modifier.fillMaxWidth()
+//                .border(1.dp, MaterialTheme.colorScheme.outline)
+//                .background(MaterialTheme.colorScheme.primary)
+//        ) {
+//            HtmlText(
+//                modifier = Modifier.padding(2.dp),
+//                text = content,
+//                color = MaterialTheme.colorScheme.outline,
+//                textAlign = TextAlign.Center,
+//                fontFamily = FontNunito.bold(),
+//                fontSize = 12.sp,
+//                overflow = TextOverflow.Visible
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun HeaderCell(column: Int) {
+//    val content = when (column) {
+//        0 -> "Вид спорта"
+//        1 -> "Место проведения"
+//        2 -> "Тренер"
+//        3 -> "Дата и время"
+//        4 -> "Описание"
+//        else -> error("")
+//    }
+//    Box(
+//        contentAlignment = Alignment.Center,
+//        modifier = Modifier.fillMaxWidth()
+//            .border(1.dp, MaterialTheme.colorScheme.outline)
+//            .background(MaterialTheme.colorScheme.secondary)
+//    ) {
+//        Text(
+//            modifier = Modifier.padding(2.dp),
+//            text = content,
+//            color = MaterialTheme.colorScheme.onSecondary,
+//            textAlign = TextAlign.Center,
+//            fontFamily = FontNunito.bold(),
+//            fontSize = 12.sp,
+//            overflow = TextOverflow.Ellipsis
+//        )
+//    }
+//}

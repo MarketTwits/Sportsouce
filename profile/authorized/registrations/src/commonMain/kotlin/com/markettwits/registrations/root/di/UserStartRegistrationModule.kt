@@ -9,7 +9,7 @@ import com.markettwits.registrations.list.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.list.data.StartOrderRegistrationRepositoryBase
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import org.koin.dsl.module
 
 val userStartRegistrationModule = module {
@@ -27,7 +27,7 @@ val userStartRegistrationModule = module {
         )
     }
     single<UserRegistrationsMapper> {
-        UserRegistrationsMapperBase(BaseTimeMapper())
+        UserRegistrationsMapperBase(ExtendedTimeMapper())
     }
     single<StartOrderStoreFactory> {
         StartOrderStoreFactory(

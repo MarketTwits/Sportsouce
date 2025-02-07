@@ -3,8 +3,6 @@ package com.markettwits.start.data.start.mapper.distance
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start_cloud.model.members.StartMember
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 internal abstract class StartDistancesToUiMapperAbstract : StartDistancesToUiMapper {
     protected fun mapDistanceInfo(
@@ -52,28 +50,30 @@ internal abstract class StartDistancesToUiMapperAbstract : StartDistancesToUiMap
         distance: DistanceItem.Distance,
         date: String
     ): Int {
-        if (distance.prices.isEmpty()) {
-            return distance.price.toInt()
-        }
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
-        val targetDate = dateFormat.parse(date) ?: return 0 // handle date parsing failure
-
-        for (price in distance.prices) {
-            val from = dateFormat.parse(price.c_from) ?: continue // skip on parsing failure
-            val to = dateFormat.parse(price.c_to) ?: continue // skip on parsing failure
-
-            if (targetDate in from..to) {
-                return price.value
-            }
-        }
-        return 1 // or whatever default value you want to return when no interval matches
+//        if (distance.prices.isEmpty()) {
+//            return distance.price.toInt()
+//        }
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
+//        val targetDate = dateFormat.parse(date) ?: return 0 // handle date parsing failure
+//
+//        for (price in distance.prices) {
+//            val from = dateFormat.parse(price.c_from) ?: continue // skip on parsing failure
+//            val to = dateFormat.parse(price.c_to) ?: continue // skip on parsing failure
+//
+//            if (targetDate in from..to) {
+//                return price.value
+//            }
+//        }
+//        return 1 // or whatever default value you want to return when no interval matches
+        return 1
     }
 
     protected fun mapCurrentTime(time: String): String {
-        val inputDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
-        val date = inputDateFormat.parse(time)
-        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
-        return outputDateFormat.format(date)
+//        val inputDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+//        val date = inputDateFormat.parse(time)
+//        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+       // return outputDateFormat.format(date)
+        return ""
     }
 
 }

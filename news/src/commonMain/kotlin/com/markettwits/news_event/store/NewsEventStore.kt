@@ -12,9 +12,7 @@ interface NewsEventStore : Store<Intent, State, Label> {
         data object Pop : Intent
     }
 
-    data class State(
-        val news: NewsInfo
-    )
+    data class State(val news: NewsInfo)
 
     sealed interface Label {
         data object Pop : Label

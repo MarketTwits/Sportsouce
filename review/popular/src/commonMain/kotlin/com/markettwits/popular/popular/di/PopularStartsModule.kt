@@ -10,7 +10,8 @@ import com.markettwits.popular.popular.domain.StartsPopularRepository
 import com.markettwits.popular.popular.presentation.store.StartsPopularStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
+
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -22,6 +23,6 @@ internal val popularStartsModule = module {
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::StartsPopularRepositoryBase) bind StartsPopularRepository::class
     singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
-    singleOf(::BaseTimeMapper) bind TimeMapper::class
+    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
     singleOf(::RecentStartsFilterBase) bind RecentStartsFilter::class
 }

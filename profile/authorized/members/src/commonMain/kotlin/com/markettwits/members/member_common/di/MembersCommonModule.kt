@@ -13,7 +13,6 @@ import com.markettwits.members.member_common.data.mapper.MembersMapper
 import com.markettwits.members.member_common.data.mapper.MembersMapperBase
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.profile.api.authDataSourceModule
-import com.markettwits.time.BaseTimeMapper
 import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf

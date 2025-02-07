@@ -23,6 +23,6 @@ fun StartMembers(modifier: Modifier = Modifier, members: List<StartMembersUi>) {
             fontFamily = FontNunito.bold(),
             fontSize = 16.sp
         )
-        TestTable(members)
+       // TestTable(members)
     }
 }

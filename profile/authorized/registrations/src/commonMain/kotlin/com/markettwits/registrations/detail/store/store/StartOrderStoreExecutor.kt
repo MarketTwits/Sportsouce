@@ -19,7 +19,7 @@ class StartOrderStoreExecutor(
 
     override val tag: String = "StartOrderStoreExecutor (Detail)"
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnClickPay -> repay(intent.orderId)
@@ -27,8 +27,8 @@ class StartOrderStoreExecutor(
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
-        getActualPrice(getState().startOrderInfo)
+    override fun executeAction(action: Unit) {
+        getActualPrice(state().startOrderInfo)
     }
 
     private fun getActualPrice(orderInfo: StartOrderInfo){

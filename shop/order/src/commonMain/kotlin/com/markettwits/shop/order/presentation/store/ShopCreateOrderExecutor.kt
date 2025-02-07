@@ -15,49 +15,49 @@ class ShopCreateOrderExecutor(
     intentAction: IntentAction
 ) : ShopCreateOrderExecutorHandler(orderRepository,cartRepository,intentAction) {
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.ShopOrderOptionsIntent.OnClickChangeDeliveryType -> {
                 if (intent.deliveryType is ShopDeliveryType.Delivery) {
                     onClickChangePaymentType(
-                        state = getState(),
+                        state = state(),
                         paymentType = ShopPaymentType.Online
                     )
                 }
                 onClickChangeDeliveryType(
-                    state = getState(),
+                    state = state(),
                     deliveryType = intent.deliveryType
                 )
             }
 
             is Intent.ShopOrderOptionsIntent.OnClickChangePaymentType -> onClickChangePaymentType(
-                state = getState(),
+                state = state(),
                 paymentType = intent.paymentType
             )
 
             is Intent.OnClickGoBack -> publish(Label.GoBack)
 
             is Intent.ShopCreateOrderIntent.OnClickCreateOrder ->
-                onClickCreateOrder(getState())
+                onClickCreateOrder(state())
 
             is Intent.ShopCreateOrderIntent.OnConsumedMessage ->
-                onConsumedCreateOrderMessage(getState())
+                onConsumedCreateOrderMessage(state())
 
             is Intent.ShopRecipientIntent.OnClickChangeRecipient ->
-                onClickUpdateRecipient(state = getState().shopRecipientState)
+                onClickUpdateRecipient(state = state().shopRecipientState)
 
             is Intent.ShopRecipientIntent.OnClickChangeRecipientBottomSheetState ->
-                onClickChangeRecipientBottomSheetState(getState().shopRecipientState)
+                onClickChangeRecipientBottomSheetState(state().shopRecipientState)
 
             is Intent.ShopRecipientIntent.OnChangeShopRecipientFields ->
-                onChangeShopRecipientFields(getState().shopRecipientState,intent.recipient)
+                onChangeShopRecipientFields(state().shopRecipientState,intent.recipient)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
-        obtainShopRecipient(getState())
-        obtainCheckOrder(getState()){
-            obtainShopOrderPrice(getState())
+    override fun executeAction(action: Unit) {
+        obtainShopRecipient(state())
+        obtainCheckOrder(state()){
+            obtainShopOrderPrice(state())
         }
     }
 }

@@ -3,8 +3,8 @@ package com.markettwits.shop.domain.mapper
 import com.markettwits.cloud_shop.model.product.Product
 import com.markettwits.cloud_shop.model.product.ProductRemote
 import com.markettwits.shop.domain.model.ShopItem
-import java.text.NumberFormat
-import java.util.Locale
+//import java.text.NumberFormat
+//import java.util.Locale
 
 class ShopProductsMapperBase : ShopProductsMapper {
 
@@ -69,8 +69,9 @@ class ShopProductsMapperBase : ShopProductsMapper {
     }
 
     private fun formatPrice(price: Int): String {
-        val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
-        return formatter.format(price)
+//        val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
+//        return formatter.format(price)
+        return ""
     }
 
     private companion object{

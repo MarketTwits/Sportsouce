@@ -33,7 +33,7 @@ class RootComponentBase(
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = stackNavigation,
         serializer = RootComponent.Configuration.serializer(),
-        initialStack = { listOf(RootComponent.Configuration.Review) },
+        initialStack = { listOf(RootComponent.Configuration.Starts) },
         childFactory = ::createChild,
     )
 

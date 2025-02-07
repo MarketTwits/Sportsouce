@@ -4,6 +4,7 @@ plugins {
 }
 
 android.namespace = "com.markettwits.analitics.crashlytics"
+
 kotlin {
     sourceSets {
         commonMain.dependencies {

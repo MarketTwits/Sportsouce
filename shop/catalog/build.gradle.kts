@@ -24,7 +24,7 @@ kotlin {
             implementation(projects.shop.orders)
             implementation(projects.core.ui)
             implementation(projects.core.koin)
-            implementation(projects.core.paging)
+           // implementation(projects.core.paging)
         }
     }
 }

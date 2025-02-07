@@ -23,7 +23,6 @@ import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
 import com.markettwits.review.presentation.component.ReviewComponentBase
 import com.markettwits.root.di.reviewRootModule
-import com.markettwits.schedule.root.RootStartsScheduleComponentBase
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
@@ -121,13 +120,13 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 )
             )
 
-            is RootReviewComponent.Config.Schedule -> RootReviewComponent.Child.Schedule(
-                RootStartsScheduleComponentBase(
-                    context = componentContext,
-                    dependencies = scope.get(),
-                    pop = navigation::pop
-                )
-            )
+//            is RootReviewComponent.Config.Schedule -> RootReviewComponent.Child.Schedule(
+//                RootStartsScheduleComponentBase(
+//                    context = componentContext,
+//                    dependencies = scope.get(),
+//                    pop = navigation::pop
+//                )
+//            )
 
             is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
                 RootStartsPopularComponentBase(
@@ -204,7 +203,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
-            1 -> RootReviewComponent.Config.Schedule
+            //1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Shop

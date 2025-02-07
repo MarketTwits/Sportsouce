@@ -20,7 +20,7 @@ import com.markettwits.start.register.presentation.registration.presentation.com
 import com.markettwits.start.register.presentation.registration.presentation.store.StartRegistrationPageStoreFactory
 import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
 import com.markettwits.teams_city.di.teamsCityModule
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -42,7 +42,7 @@ val startRegistrationModule = module {
     //Repository
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::RegistrationMemberValidatorBase) bind RegistrationMemberValidator::class
-    singleOf(::BaseTimeMapper) bind TimeMapper::class
+    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
 
     //New Register
     singleOf(::StartRegistrationPageStoreFactory)

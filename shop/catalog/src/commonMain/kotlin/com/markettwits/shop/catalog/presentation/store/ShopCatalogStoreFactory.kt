@@ -22,7 +22,7 @@ class ShopCatalogStoreFactory(
         ShopCatalogStore, Store<Intent, State, Label> by storeFactory.create(
         name = "ShopCatalogStore",
         initialState = State(
-            shopItems = emptyFlow()
+          //  shopItems = emptyFlow()
         ),
         bootstrapper = SimpleBootstrapper(Unit),
         executorFactory = { ShopCatalogExecutor(repository) },

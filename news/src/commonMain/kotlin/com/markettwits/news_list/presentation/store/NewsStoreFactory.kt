@@ -33,7 +33,7 @@ class NewsStoreFactory(
 
     private inner class ExecutorImpl :
         CoroutineExecutor<NewsStore.Intent, Unit, NewsStore.State, Msg, NewsStore.Label>() {
-        override fun executeIntent(intent: NewsStore.Intent, getState: () -> NewsStore.State) {
+        override fun executeIntent(intent: NewsStore.Intent) {
             when (intent) {
                 is NewsStore.Intent.Launch -> {
                     launch()
@@ -42,7 +42,7 @@ class NewsStoreFactory(
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> NewsStore.State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 

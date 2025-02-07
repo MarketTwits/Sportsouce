@@ -11,13 +11,15 @@ kotlin {
     jvmToolchain(localLibs.findVersion("jvm-dot").get().toString().toInt())
     androidTarget()
 
+    js{
+        browser()
+        nodejs()
+        binaries.executable()
+    }
+
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
-        freeCompilerArgs.addAll(suppressException())
+       // freeCompilerArgs.addAll(suppressException())
     }
-}
 
-fun suppressException(): List<String> = listOf(
-    "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-    "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"
-)
+}

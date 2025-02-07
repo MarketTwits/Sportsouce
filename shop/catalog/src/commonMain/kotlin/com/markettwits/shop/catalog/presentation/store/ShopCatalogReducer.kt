@@ -8,7 +8,7 @@ import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 internal object ShopCatalogReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Loaded -> copy(shopItems = msg.items)
+           // is Message.Loaded -> copy(shopItems = msg.items)
             is Message.UpdateCategories -> copy()
             is Message.QueryApplied -> copy(queryState = msg.query)
         }

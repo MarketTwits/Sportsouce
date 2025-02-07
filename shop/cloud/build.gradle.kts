@@ -11,7 +11,7 @@ kotlin{
     sourceSets{
         commonMain.dependencies {
             api(libs.ktor.client.json)
-            api(libs.ktor.client.okhttp)
+           // api(libs.ktor.client.okhttp)
             implementation(libs.ktor.core)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)

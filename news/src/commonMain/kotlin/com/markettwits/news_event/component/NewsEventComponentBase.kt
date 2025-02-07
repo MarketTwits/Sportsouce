@@ -19,11 +19,15 @@ class NewsEventComponentBase(
     private val pop: () -> Unit,
 ) : NewsEventComponent,
     ComponentContext by context {
+
     private val store = instanceKeeper.getStore {
         storeFactory.create(item)
     }
+
     override val state: StateFlow<NewsEventStore.State> = store.stateFlow
+
     private val scope = CoroutineScope(Dispatchers.Main)
+
     override fun obtainEvent(event: NewsEventStore.Intent) {
         store.accept(event)
     }

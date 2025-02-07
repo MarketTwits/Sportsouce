@@ -14,7 +14,7 @@ import com.markettwits.start_search.search.domain.SearchHistory
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
-import com.markettwits.time.BaseTimeMapper
+import com.markettwits.time.ExtendedTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -28,7 +28,7 @@ val startsSearchModule = module {
     singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
     singleOf(::StartsSearchToUiMapperBase) bind StartsSearchToUiMapper::class
     singleOf(::StartsSearchRepositoryBase) bind StartsSearchRepository::class
-    singleOf(::BaseTimeMapper) bind TimeMapper::class
+    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
     single<ObservableListCache<SearchHistory>> {
         SearchHistoryCache()
     }

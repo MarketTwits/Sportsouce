@@ -9,10 +9,10 @@ class ShopFilterExecutor(
 ) : ShopFilterExecutorHandler(shopFilterRepository) {
 
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickApplyFilter -> {
-                val state = getState()
+                val state = state()
                 onClickApplyFilter(state)
             }
             is Intent.OnClickGoBack -> onClickGoBack()
@@ -21,17 +21,17 @@ class ShopFilterExecutor(
 
             is Intent.OnClickOption -> onClickUpdateOption(
                 option = intent.option,
-                options = getState().selectedOptionUID
+                options = state().selectedOptionUID
             )
 
             is Intent.OnUpdatePrice -> onClickUpdatePrice(
                 isMin = intent.isMin,
                 value = intent.value,
-                previousPrice = getState().selectedPrice
+                previousPrice = state().selectedPrice
             )
 
             is Intent.OnClickCategory -> {
-                onClickCategory(getState().selectedCategoryPath, intent.category)
+                onClickCategory(state().selectedCategoryPath, intent.category)
             }
 
             is Intent.OnClickResetCategory -> onClickResetCategory()
@@ -40,8 +40,8 @@ class ShopFilterExecutor(
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
-        if (getState().categories.isEmpty())
+    override fun executeAction(action: Unit) {
+        if (state().categories.isEmpty())
             launch()
     }
 

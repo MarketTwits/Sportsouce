@@ -6,7 +6,6 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
-import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
@@ -34,18 +33,14 @@ import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
-import io.ktor.client.request.forms.formData
-import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import java.io.File
 
 internal class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
@@ -238,18 +233,18 @@ internal class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun uploadFile(file: File): UploadFileResponse {
-        val response = client.submitFormWithBinaryData(
-            url = "file/upload",
-            formData = formData {
-                append("file", file.readBytes(), Headers.build {
-                    append(HttpHeaders.ContentDisposition, "filename=${file.name}")
-                })
-                append("lastModified", file.lastModified())
-            }
-        )
-        return json.decodeFromString(response.body())
-    }
+//    override suspend fun uploadFile(file: File): UploadFileResponse {
+//        val response = client.submitFormWithBinaryData(
+//            url = "file/upload",
+//            formData = formData {
+//                append("file", file.readBytes(), Headers.build {
+//                    append(HttpHeaders.ContentDisposition, "filename=${file.name}")
+//                })
+//                append("lastModified", file.lastModified())
+//            }
+//        )
+//        return json.decodeFromString(response.body())
+//    }
 
     override suspend fun changeProfileInfo(
         profile: ChangeProfileInfoRequest,

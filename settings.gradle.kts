@@ -3,26 +3,29 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-       // maven("https://jitpack.io")
-        maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
         gradlePluginPortal()
+        maven("https://jitpack.io")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-       // maven("https://jitpack.io")
+        gradlePluginPortal()
+        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
 rootProject.name = "Sportsouce"
 includeBuild("build-logic")
 include(":app")
+include("browser")
 include(":desktop")
 include(":starts:starts")
 include(":start:start")
@@ -88,4 +91,4 @@ include(":selfupdater:googleplay")
 include(":composable")
 include(":shop:orders")
 include(":start:start-cloud")
-include(":core:paging")
+//include(":core:paging")

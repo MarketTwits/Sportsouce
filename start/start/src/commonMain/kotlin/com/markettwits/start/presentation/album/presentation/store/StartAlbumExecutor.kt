@@ -7,7 +7,8 @@ import com.markettwits.start.presentation.album.presentation.store.StartAlbumSto
 import com.markettwits.start.presentation.album.presentation.store.StartAlbumStore.State
 
 class StartAlbumExecutor : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             Intent.GoBack -> publish(Label.GoBack)
         }

@@ -20,17 +20,17 @@ import kotlinx.coroutines.launch
 
 class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, Message, Label>() {
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
 
             is Intent.OnClickGoBack -> publish(Label.GoBack)
 
             is Intent.UpdateStagePage -> {
-                val newPages = replaceStagePage(getState().stages,intent.stagePage)
+                val newPages = replaceStagePage(state().stages,intent.stagePage)
                 dispatch(Message.UpdateStages(newPages))
             }
             is Intent.OnPageSelected -> {
-                publish(Label.OnPageSelected(getState().stages,intent.pageIndex))
+                publish(Label.OnPageSelected(state().stages,intent.pageIndex))
             }
             is Intent.OnConsumedEvent -> {
                 dispatch(Message.UpdateEvent(consumed()))
@@ -41,11 +41,11 @@ class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, M
         }
     }
 
-    override fun executeAction(action: Action, getState: () -> State) {
+    override fun executeAction(action: Action) {
        when(action){
            is Action.Loaded -> {
                val stages = action.distances.createStartStagesContent(
-                   getState().registrationInfo
+                   state().registrationInfo
                )
                dispatch(Message.UpdateStages(stages))
                publish(Label.OnPageSelected(stages,0))

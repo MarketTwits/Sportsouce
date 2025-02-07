@@ -16,7 +16,7 @@ kotlin {
         implementation(projects.start.startSearch)
         implementation(projects.start.start)
         implementation(projects.review.random)
-        implementation(projects.review.schedule)
+        //implementation(projects.review.schedule)
         implementation(projects.review.popular)
         implementation(projects.core.time)
         implementation(projects.core.ui)

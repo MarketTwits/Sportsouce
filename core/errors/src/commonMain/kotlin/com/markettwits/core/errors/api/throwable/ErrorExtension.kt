@@ -1,29 +1,22 @@
 package com.markettwits.core.errors.api.throwable
 
 import io.ktor.client.call.body
+import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
-import sportsouce.core.errors.generated.resources.Res
-import java.net.ConnectException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import java.util.concurrent.TimeoutException
 
 fun Throwable.mapToSauceError(): SauceError = when (this) {
-    is UnknownHostException -> SauceError.Connection(this)
+ //   is UnknownHostException -> SauceError.Connection(this)
     is HttpRequestTimeoutException -> SauceError.Connection(this)
     is SocketTimeoutException -> SauceError.Connection(this)
     is ResponseException -> {
-        val message = runBlocking { this@mapToSauceError.response.body<ResponseError>().message }
+       // val message = runBlocking { this@mapToSauceError.response.body<ResponseError>().message }
         SauceError.WrongRequest(Exception(message))
     }
     is SerializationException -> SauceError.JsonConverter(this)
     else -> SauceError.General(this)
 }
-
 
 fun SauceError.mapToString() : String = when(this){
     is SauceError.Connection -> NETWORK_EXCEPTION_MESSAGE
@@ -35,7 +28,7 @@ fun SauceError.mapToString() : String = when(this){
 }
 
 suspend fun Throwable.networkExceptionHandler(): Exception = when (this) {
-    is UnknownHostException -> Exception(NETWORK_EXCEPTION_MESSAGE)
+   // is UnknownHostException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is HttpRequestTimeoutException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is SocketTimeoutException -> Exception(TIMEOUT_EXCEPTION_MESSAGE)
     is ResponseException -> Exception(response.body<ResponseError>().message)

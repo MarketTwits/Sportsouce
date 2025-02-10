@@ -3,7 +3,6 @@ package com.markettwits.start.root
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
@@ -11,9 +10,9 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationOutput
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponentBase
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationOutput
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationPageComponentBase
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponentBase
 
 /**

@@ -70,7 +70,7 @@ class ChangePasswordStoreFactory(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.ChangeCurrentPassword -> {
                     dispatch(Msg.ChangePassword(intent.value))
@@ -93,7 +93,7 @@ class ChangePasswordStoreFactory(
                 }
 
                 is Intent.ChangePassword -> {
-                    val state = getState()
+                    val state = state()
                     scope.launch {
                         val validResult = validation.changePassword(
                             oldPassword = state.currentPassword,
@@ -125,21 +125,21 @@ class ChangePasswordStoreFactory(
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(message: Msg): State =
-            when (message) {
-                is Msg.ChangePassword -> copy(currentPassword = message.password)
-                is Msg.ChangeNewPassword -> copy(newPassword = message.password)
-                is Msg.ChangeNewRepeatPassword -> copy(newRepeatPassword = message.password)
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.ChangePassword -> copy(currentPassword = msg.password)
+                is Msg.ChangeNewPassword -> copy(newPassword = msg.password)
+                is Msg.ChangeNewRepeatPassword -> copy(newRepeatPassword = msg.password)
                 is Msg.Loading -> copy(isLoading = true)
                 is Msg.UpdateFailed -> copy(
-                    message = message.message,
+                    message = msg.message,
                     isLoading = false,
-                    downloadFailedEvent = triggered(message.message)
+                    downloadFailedEvent = triggered(msg.message)
                 )
 
                 is Msg.UpdateSuccess -> copy(
                     isLoading = false,
-                    downloadSucceededEvent = triggered(message.message)
+                    downloadSucceededEvent = triggered(msg.message)
                 )
 
                 is Msg.OnConsumedFailedEvent -> copy(downloadFailedEvent = consumed())

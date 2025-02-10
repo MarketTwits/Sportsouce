@@ -11,10 +11,10 @@ import kotlinx.coroutines.launch
 
 class MemberDetailExecutor(private val useCase: MemberDetailUseCase) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnClickDelete -> deleteMember(getState().member.id)
+            is Intent.OnClickDelete -> deleteMember(state().member.id)
             is Intent.OnClickEdit -> publish(Label.OnClickEdit)
         }
     }

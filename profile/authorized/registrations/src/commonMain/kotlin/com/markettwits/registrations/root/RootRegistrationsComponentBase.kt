@@ -38,11 +38,6 @@ class RootRegistrationsComponentBase(
             childFactory = ::child,
         )
 
-    override fun dismissSlotChild() {
-        // slotNavigation.dismiss()
-    }
-
-
     private fun child(
         configStack: RootRegistrationsComponent.ConfigStack,
         componentContext: ComponentContext
@@ -64,9 +59,7 @@ class RootRegistrationsComponentBase(
                         dataSource = scope.get()
                     ),
                     pop = pop::invoke,
-                    onItemClick = {
-                        //  stackNavigation.push(RootRegistrationsComponent.ConfigStack.Start(it))
-                    },
+                    onItemClick = {},
                 )
             )
         }

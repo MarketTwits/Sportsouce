@@ -1,12 +1,7 @@
 package com.markettwits.profile.api.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.DelicateDecomposeApi
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -59,11 +54,11 @@ class RootAuthFlowComponentBase(
                 SignInScreenComponent(
                     context = componentContext,
                     signInInstanceKeeper = scope.get(),
-                    toSignUp = { navigation.push(RootAuthFlowComponent.Config.SignUp) },
+                    toSignUp = { navigation.pushNew(RootAuthFlowComponent.Config.SignUp) },
                     toProfile = { goProfile() },
                     toBack = { goBack() },
                     toForgotPassword = {
-                        navigation.push(RootAuthFlowComponent.Config.ForgotPassword)
+                        navigation.pushNew(RootAuthFlowComponent.Config.ForgotPassword)
                     }
                 )
             )

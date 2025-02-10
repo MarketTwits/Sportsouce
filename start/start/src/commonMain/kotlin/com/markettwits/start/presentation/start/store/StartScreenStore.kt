@@ -106,25 +106,18 @@ class StartScreenStoreFactory(
         private val intentAction: IntentAction
     ) :
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
 
                 is Intent.OnClickDistance -> {}
-////                    Label.OnClickDistance(
-////                        intent.distanceInfo,
-////                        intent.paymentDisabled,
-////                        intent.paymentType,
-////                        getState().data?.title ?: "",
-////                        getState().data?.discounts ?: emptyList()
-////                    )
-//                )
+
 
                 is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
                 is Intent.OnClickFullAlbum -> {
                     val images =
-                        getState().data?.startAlbum?.flatMap { it.photos.map { it.imageUrl } }
+                        state().data?.startAlbum?.flatMap { it.photos.map { it.imageUrl } }
                     if (!images.isNullOrEmpty())
                         publish(Label.OnClickFullAlbum(images))
                 }
@@ -134,7 +127,7 @@ class StartScreenStoreFactory(
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickDistanceNew -> {
-                    getState().data?.let {
+                    state().data?.let {
                         val matchingDistance = it.distanceMapNew.find { it.id == intent.distance.id }
 
                         val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
@@ -147,7 +140,7 @@ class StartScreenStoreFactory(
                             listOf(intent.distance)
                         }
 
-                        publish(StartScreenStore.Label.OnClickDistanceNew(
+                        publish(Label.OnClickDistanceNew(
                             startId = it.id,
                             distanceInfo = b,
                             paymentDisabled = it.paymentDisabled,
@@ -160,7 +153,7 @@ class StartScreenStoreFactory(
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch(startId = startId, false)
         }
 

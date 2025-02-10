@@ -12,7 +12,7 @@ import java.io.File
 
 class EditProfileImageExecutor(private val repository: EditProfileImageRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.UpdateImage -> uploadImage(intent.file)

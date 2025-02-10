@@ -54,7 +54,7 @@ internal class StartRandomStoreFactory(
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
 
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when(intent){
                 Intent.Retry -> launch()
                 Intent.GoBack -> publish(Label.Pop)
@@ -71,17 +71,17 @@ internal class StartRandomStoreFactory(
                 }
             }
         }
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(message: Msg): State =
-            when (message) {
-               is Msg.InfoFailed -> State(isError = true, message = message.message)
-                is Msg.InfoLoaded -> State(data = message.id)
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+               is Msg.InfoFailed -> State(isError = true, message = msg.message)
+                is Msg.InfoLoaded -> State(data = msg.id)
                 is Msg.Loading -> State(isLoading = true)
             }
     }

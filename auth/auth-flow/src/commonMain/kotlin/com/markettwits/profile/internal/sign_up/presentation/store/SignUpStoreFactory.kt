@@ -38,10 +38,10 @@ internal class SignUpStoreFactory(
 
     private inner class ExecutorImpl :
         CoroutineExecutor<SignUpStore.Intent, Unit, SignUpStore.State, Msg, SignUpStore.Label>() {
-        override fun executeIntent(intent: SignUpStore.Intent, getState: () -> SignUpStore.State) {
+        override fun executeIntent(intent: SignUpStore.Intent) {
             when (intent) {
                 is SignUpStore.Intent.OnClickBack -> publish(SignUpStore.Label.OnClickBack)
-                is SignUpStore.Intent.OnClickRegister -> register(getState().statement)
+                is SignUpStore.Intent.OnClickRegister -> register(state().statement)
                 is SignUpStore.Intent.ChangeValue -> dispatch(Msg.OnValueChanged(intent.statement))
                 is SignUpStore.Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
             }

@@ -14,10 +14,10 @@ internal class StartSupportExecutor(
     private val useCase: StartSupportUseCase,
     private val startId: Int
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnChangeValue -> dispatch(Message.OnValueChanged(intent.value))
-            is Intent.OnClickSupport -> launch(getState().cost)
+            is Intent.OnClickSupport -> launch(state().cost)
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
         }
     }

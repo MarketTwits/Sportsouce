@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 internal class StartsPopularExecutor(
     private val repository: StartsPopularRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickStart -> publish(Label.OnClickStart(intent.id))
             is Intent.Retry -> launch()
@@ -21,7 +21,7 @@ internal class StartsPopularExecutor(
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch()
     }
 

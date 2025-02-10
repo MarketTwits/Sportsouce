@@ -1,16 +1,8 @@
 package com.markettwits.schedule.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -24,7 +16,7 @@ import com.markettwits.start.root.RootStartScreenComponentBase
 
 class RootStartsScheduleComponentBase(
     context: ComponentContext,
-    private val dependencies: StartScheduleComponentDependencies,
+    dependencies: StartScheduleComponentDependencies,
     private val pop: () -> Unit
 ) : RootStartsScheduleComponent,
     ComponentContext by context {
@@ -97,7 +89,7 @@ class RootStartsScheduleComponentBase(
                     back = slotNavigation::dismiss,
                     onClickStart = {
                         slotNavigation.dismiss()
-                        navigation.push(RootStartsScheduleComponent.Config.Start(it))
+                        navigation.pushNew(RootStartsScheduleComponent.Config.Start(it))
                     }
                 )
             )

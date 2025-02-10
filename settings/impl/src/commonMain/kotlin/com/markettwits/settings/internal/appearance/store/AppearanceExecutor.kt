@@ -13,17 +13,14 @@ import kotlinx.coroutines.launch
 internal class AppearanceExecutor(
     private val settingsRepository: MutableSettingsRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(
-        intent: Intent,
-        getState: () -> State
-    ) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickGoBack -> publish(Label.GoBack)
             is Intent.OnClickItem -> changeSettings(intent.item)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         observeSettings()
     }
 

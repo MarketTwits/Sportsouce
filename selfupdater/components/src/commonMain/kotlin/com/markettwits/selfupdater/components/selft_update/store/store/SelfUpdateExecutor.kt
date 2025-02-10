@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class SelfUpdateExecutor(private val selfUpdaterApi: SelfUpdaterApi) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickUpdate -> {
                 startCheck(true)
@@ -23,9 +23,9 @@ class SelfUpdateExecutor(private val selfUpdaterApi: SelfUpdaterApi) :
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         observeProgress()
-        action(getState())
+        action(state())
     }
 
     private fun observeProgress() {

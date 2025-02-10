@@ -7,9 +7,9 @@ import com.markettwits.edit_profile.edit_menu.presentation.store.EditProfileMenu
 import com.markettwits.edit_profile.edit_menu.presentation.store.EditProfileMenuStore.State
 
 class EditProfileMenuExecutor : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
-            else -> TODO()
+            else -> {}
         }
     }
 }

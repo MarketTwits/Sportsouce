@@ -5,13 +5,10 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.registrations.list.data.StartOrderRegistrationRepository
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import com.markettwits.registrations.list.presentation.components.filter.FilterItem
-import com.markettwits.registrations.list.presentation.store.RegistrationsStore.Intent
-import com.markettwits.registrations.list.presentation.store.RegistrationsStore.Label
-import com.markettwits.registrations.list.presentation.store.RegistrationsStore.State
+import com.markettwits.registrations.list.presentation.store.RegistrationsStore.*
 import kotlinx.coroutines.launch
 
 interface RegistrationsStore : Store<Intent, State, Label> {
@@ -61,18 +58,18 @@ class RegistrationsDataStoreFactory(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.LoadData -> {
                     launch()
                 }
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
-                is Intent.OnClickFilter -> updateFilter(intent.item, getState())
+                is Intent.OnClickFilter -> updateFilter(intent.item, state())
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 

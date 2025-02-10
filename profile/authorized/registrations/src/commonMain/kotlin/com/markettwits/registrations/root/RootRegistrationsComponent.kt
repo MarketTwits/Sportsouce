@@ -8,8 +8,6 @@ import kotlinx.serialization.Serializable
 interface RootRegistrationsComponent {
     val childStack: Value<com.arkivanov.decompose.router.stack.ChildStack<*, ChildStack>>
 
-    fun dismissSlotChild()
-
     @Serializable
     sealed class ConfigStack {
         @Serializable

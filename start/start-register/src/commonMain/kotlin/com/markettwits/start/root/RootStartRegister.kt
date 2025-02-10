@@ -2,8 +2,8 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.value.Value
 import com.markettwits.profile.api.root.RootAuthFlowComponent
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationPageComponent
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponent
 import kotlinx.serialization.Serializable
 

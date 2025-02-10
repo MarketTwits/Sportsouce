@@ -14,20 +14,20 @@ class ShopItemPageExecutor(
     private val intentAction: IntentAction,
     private val productId: String,
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickOption -> launch(intent.itemId)
             is Intent.OnClickGoBack -> publish(Label.GoBack)
-            is Intent.OnClickRetry -> launch(getState().shopItem?.id)
+            is Intent.OnClickRetry -> launch(state().shopItem?.id)
             is Intent.OnClickAddToFavorite -> TODO()
-            is Intent.OnClickShare -> getState().shopItem?.let {
+            is Intent.OnClickShare -> state().shopItem?.let {
                 intentAction.sharePlainText(it.fullPathUrl)
             }
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
-        val item = getState().shopItem
+    override fun executeAction(action: Unit) {
+        val item = state().shopItem
         if (item != null){
             Message.Loaded(item = item, emptyList())
         }

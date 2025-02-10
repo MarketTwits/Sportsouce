@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Intent
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Label
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.State
-import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
+import com.markettwits.start.register.presentation.registration.common.domain.StartRegistrationRepository
 
 class RegistrationPromoStoreFactory(
     private val storeFactory: StoreFactory,

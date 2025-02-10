@@ -7,7 +7,7 @@ import com.markettwits.schedule.schedule.presentation.components.detail.store.St
 import com.markettwits.schedule.schedule.presentation.components.detail.store.StartDetailScheduleStore.State
 
 class StartDetailScheduleExecutor : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickBack -> publish(Label.OnClickBack)
             is Intent.OnClickItem -> publish(Label.OnClickItem(intent.id))

@@ -9,7 +9,7 @@ import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilt
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.component.StartScreenComponent
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.start_support.presentation.component.StartSupportComponent
 import kotlinx.serialization.Serializable
 

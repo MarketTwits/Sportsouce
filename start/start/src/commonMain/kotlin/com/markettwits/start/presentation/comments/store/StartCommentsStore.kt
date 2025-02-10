@@ -65,7 +65,7 @@ class StartCommentsStoreFactory(
 
     private inner class ExecutorImpl(private val startId: Int) :
         CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickCloseReply -> dispatch(Msg.OnClickCloseReply)
                 is Intent.OnClickReply -> dispatch(
@@ -75,12 +75,12 @@ class StartCommentsStoreFactory(
                     )
                 )
 
-                is Intent.OnClickSendComment -> sendComment(getState().mode, intent.value, startId)
+                is Intent.OnClickSendComment -> sendComment(state().mode, intent.value, startId)
                 is Intent.OnConsumedEvent -> dispatch(Msg.OnConsumedEvent)
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> State) {
+        override fun executeAction(action: Unit) {
             launch(startId)
         }
 
@@ -128,14 +128,14 @@ class StartCommentsStoreFactory(
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(message: Msg): State =
-            when (message) {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
                 is Msg.Loading -> copy(isLoading = true)
                 is Msg.OnClickCloseReply -> copy(mode = CommentMode.Base)
                 is Msg.OnClickReply -> copy(
                     mode = CommentMode.Reply(
-                        replier = message.replier,
-                        messageId = message.commentId
+                        replier = msg.replier,
+                        messageId = msg.commentId
                     )
                 )
 
@@ -143,14 +143,14 @@ class StartCommentsStoreFactory(
                 is Msg.ShowEvent -> copy(
                     event = triggered(
                         EventContent(
-                            success = message.success,
-                            message.message
+                            success = msg.success,
+                            message = msg.message
                         )
                     ),
                     isLoading = false
                 )
 
-                is Msg.Loaded -> copy(comments = message.state, isLoading = false, isError = false)
+                is Msg.Loaded -> copy(comments = msg.state, isLoading = false, isError = false)
                 is Msg.OnConsumedEvent -> copy(event = consumed())
             }
     }

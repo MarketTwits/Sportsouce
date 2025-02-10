@@ -2,15 +2,11 @@ package com.markettwits.club.dashboard.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.club.common.domain.ClubRepository
-import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Intent
-import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Label
-import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.Message
-import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.State
+import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore.*
 import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.errors.api.throwable.mapToSauceError
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -20,16 +16,16 @@ internal class ClubDashboardExecutor(
     private val clubRepository: ClubRepository,
     private val exceptionTracker: ExceptionTracker
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickBack -> publish(Label.GoBack)
 
-            is Intent.RetryRequest -> launchDashboard(getState()) {
+            is Intent.RetryRequest -> launchDashboard(state()) {
                 launchClubInfo(it)
             }
 
             is Intent.OnClickKindOfSport -> {
-                val newState = onClickKindOfSport(getState().subscription, intent.subscriptionsUi)
+                val newState = onClickKindOfSport(state().subscription, intent.subscriptionsUi)
                 dispatch(Message.UpdateState(newState))
                 dispatch(Message.UpdateSubscriptionPanelState(
                     subscriptionStateUpdated(newState.getSelectedSubscriptionUi())
@@ -37,7 +33,7 @@ internal class ClubDashboardExecutor(
             }
 
             is Intent.OnClickSubscriptionItem -> {
-                val newItem = onClickSubscription(getState().subscription, intent.subscriptionUi)
+                val newItem = onClickSubscription(state().subscription, intent.subscriptionUi)
                 dispatch(Message.UpdateState(newItem))
                 dispatch(Message.UpdateSubscriptionPanelState(
                     subscriptionStateUpdated(newItem.getSelectedSubscriptionUi())
@@ -45,28 +41,28 @@ internal class ClubDashboardExecutor(
             }
 
             is Intent.OnClickDecrease -> {
-                launchUpdatePrice(getState(), false)
+                launchUpdatePrice(state(), false)
             }
 
             is Intent.OnClickIncrease -> {
-                launchUpdatePrice(getState(), true)
+                launchUpdatePrice(state(), true)
             }
 
             is Intent.OnClickInfo -> publish(
                 Label.OnClickInfo(
                     index = intent.index,
-                    items = getState().subscription.clubInfo
+                    items = state().subscription.clubInfo
                 )
             )
 
             is Intent.OnClickRegistration -> publish(Label.OnClickRegistration(intent.type))
 
-            is Intent.OnClickRegistrationSubscription -> onClickRegistrationSubscription(getState().subscription)
+            is Intent.OnClickRegistrationSubscription -> onClickRegistrationSubscription(state().subscription)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
-        launchDashboard(getState()) {
+    override fun executeAction(action: Unit) {
+        launchDashboard(state()) {
             launchClubInfo(it)
         }
     }

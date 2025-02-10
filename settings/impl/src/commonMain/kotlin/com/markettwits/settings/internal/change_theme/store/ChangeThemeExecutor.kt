@@ -13,19 +13,18 @@ import kotlinx.coroutines.launch
 class ChangeThemeExecutor(
     private val settingsRepository: MutableSettingsRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(
-        intent: Intent,
-        getState: () -> State
-    ) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnClickTheme -> changeSettings(intent.themeUi)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         observeSettings()
     }
+
+
 
     private fun changeSettings(colorThemeUi: ColorThemeUi) {
         scope.launch {

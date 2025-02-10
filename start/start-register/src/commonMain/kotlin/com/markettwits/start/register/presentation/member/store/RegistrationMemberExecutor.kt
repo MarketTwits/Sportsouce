@@ -13,11 +13,11 @@ import java.time.temporal.ChronoUnit
 
 class RegistrationMemberExecutor(private val validation: RegistrationMemberValidator) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement.updateAge()))
-            is Intent.OnClickContinue -> apply(getState().value)
-            is Intent.Pop -> onClickPop(getState())
+            is Intent.OnClickContinue -> apply(state().value)
+            is Intent.Pop -> onClickPop(state())
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
             is Intent.OnClickCloseDialog -> closeDialog()
         }

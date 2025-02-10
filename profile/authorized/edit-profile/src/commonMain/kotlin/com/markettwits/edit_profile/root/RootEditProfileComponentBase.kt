@@ -1,16 +1,8 @@
 package com.markettwits.edit_profile.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -146,15 +138,15 @@ class RootEditProfileComponentBase(
     override fun obtainOutPut(output: EditProfileMenuComponentComponent.OutPut) {
         when (output) {
             is EditProfileMenuComponentComponent.OutPut.GoBack -> pop()
-            is EditProfileMenuComponentComponent.OutPut.GoChangePassword -> navigation.push(
+            is EditProfileMenuComponentComponent.OutPut.GoChangePassword -> navigation.pushNew(
                 RootEditProfileComponent.ConfigStack.ChangePassword
             )
 
-            is EditProfileMenuComponentComponent.OutPut.GoSocialNetwork -> navigation.push(
+            is EditProfileMenuComponentComponent.OutPut.GoSocialNetwork -> navigation.pushNew(
                 RootEditProfileComponent.ConfigStack.SocialNetwork
             )
 
-            is EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo -> navigation.push(
+            is EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo -> navigation.pushNew(
                 RootEditProfileComponent.ConfigStack.EditProfileInfo
             )
 

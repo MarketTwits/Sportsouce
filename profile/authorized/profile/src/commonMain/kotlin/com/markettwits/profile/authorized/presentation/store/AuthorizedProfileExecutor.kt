@@ -22,14 +22,14 @@ class AuthorizedProfileExecutor(
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Retry -> launch(true)
             is Intent.OnClickUserSocialNetwork -> handleUserSocialNetwork(intent.intent)
         }
     }
 
-    override fun executeAction(action: Unit, getState: () -> State) {
+    override fun executeAction(action: Unit) {
         launch(false)
     }
 

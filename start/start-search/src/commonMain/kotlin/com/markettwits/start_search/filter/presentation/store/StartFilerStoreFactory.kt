@@ -42,10 +42,7 @@ internal class StartFilerStoreFactory(
 
     private inner class ExecutorImpl :
         CoroutineExecutor<StartFilterStore.Intent, Unit, StartFilterStore.State, Msg, StartFilterStore.Label>() {
-        override fun executeIntent(
-            intent: StartFilterStore.Intent,
-            getState: () -> StartFilterStore.State
-        ) {
+        override fun executeIntent(intent: StartFilterStore.Intent, ) {
             when (intent) {
                 is StartFilterStore.Intent.Launch -> launch()
                 is StartFilterStore.Intent.GoBack -> publish(StartFilterStore.Label.GoBack)
@@ -54,7 +51,7 @@ internal class StartFilerStoreFactory(
                         updateState3(
                             item = intent.startFilter,
                             index = intent.index,
-                            currentState = getState().filter,
+                            currentState = state().filter,
                             singleChoice = intent.singleChoice
                         )
                     )
@@ -63,20 +60,20 @@ internal class StartFilerStoreFactory(
                 StartFilterStore.Intent.Apply -> {
                     publish(
                         StartFilterStore.Label.Apply(
-                            getState().filter,
+                            state().filter,
                             StartFilter.Sorted.Popular
                         )
                     )
                 }
 
                 StartFilterStore.Intent.Reset -> dispatch(
-                    Msg.ChangeFilter(reset(getState().filter))
+                    Msg.ChangeFilter(reset(state().filter))
                 )
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> StartFilterStore.State) {
-            if (getState().filter.items.isEmpty())
+        override fun executeAction(action: Unit) {
+            if (state().filter.items.isEmpty())
                 launch()
         }
 
@@ -128,8 +125,8 @@ internal class StartFilerStoreFactory(
     }
 
     private object ReducerImpl : Reducer<StartFilterStore.State, Msg> {
-        override fun StartFilterStore.State.reduce(message: Msg): StartFilterStore.State =
-            when (message) {
+        override fun StartFilterStore.State.reduce(msg: Msg): StartFilterStore.State =
+            when (msg) {
                 is Msg.InfoFailed -> copy(
                     isLoading = false,
                     filter = StartFilterUi(emptyList())
@@ -142,12 +139,12 @@ internal class StartFilerStoreFactory(
 
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,
-                    filter = message.startFilter.uiFilter()
+                    filter = msg.startFilter.uiFilter()
                 )
 
                 is Msg.ChangeFilter -> copy(
                     isLoading = false,
-                    filter = message.filter
+                    filter = msg.filter
                 )
             }
     }

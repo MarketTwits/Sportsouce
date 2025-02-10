@@ -86,15 +86,15 @@ internal class StartsFilteredStoreFactory(
     private inner class ExecutorImpl(
         private val state: StartFilterUi,
     ) : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent, getState: () -> State) {
+        override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
                 is Intent.OnItemClick -> publish(Label.OnItemClick(intent.itemId))
-                is Intent.Launch -> launch(state, getState().sorted)
+                is Intent.Launch -> launch(state, state().sorted)
             }
         }
 
-        override fun executeAction(action: Action, getState: () -> State) {
+        override fun executeAction(action: Action) {
             when (action) {
                 is Action.InfoFailed -> dispatch(Msg.InfoFailed(action.message))
                 is Action.InfoLoaded -> dispatch(Msg.InfoLoaded(action.starts))
@@ -121,15 +121,15 @@ internal class StartsFilteredStoreFactory(
 
 
     private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(message: Msg): State =
-            when (message) {
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
                 is Msg.InfoFailed -> copy(
                     isError = true,
                     isLoading = false,
-                    message = message.message
+                    message = msg.message
                 )
 
-                is Msg.InfoLoaded -> copy(isLoading = false, starts = message.starts)
+                is Msg.InfoLoaded -> copy(isLoading = false, starts = msg.starts)
                 is Msg.Loading -> copy(isLoading = true)
             }
     }

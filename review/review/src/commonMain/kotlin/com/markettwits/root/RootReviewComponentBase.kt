@@ -4,11 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -81,26 +77,26 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     context = componentContext,
                     storeFactory = scope.get(),
                     onStartClick = {
-                        navigation.push(RootReviewComponent.Config.Start(it))
+                        navigation.pushNew(RootReviewComponent.Config.Start(it))
                     },
                     onClickMenu = {
-                        navigation.push(handleMenu(it))
+                        navigation.pushNew(handleMenu(it))
                     },
                     onClickSearch = {
-                        navigation.push(RootReviewComponent.Config.Search)
+                        navigation.pushNew(RootReviewComponent.Config.Search)
                     },
                     onClickNews = {
-                        navigation.push(RootReviewComponent.Config.NewsEvent(it))
+                        navigation.pushNew(RootReviewComponent.Config.NewsEvent(it))
                     },
                     onClickSettings = {
-                        navigation.push(RootReviewComponent.Config.Settings)
+                        navigation.pushNew(RootReviewComponent.Config.Settings)
                     }
                 ),
                 newsComponent = NewsComponentBase(
                     context = componentContext,
                     storeFactory = scope.get(),
                     onItemClick = {
-                        navigation.push(RootReviewComponent.Config.NewsEvent(it))
+                        navigation.pushNew(RootReviewComponent.Config.NewsEvent(it))
                     }
                 )
             )
@@ -194,7 +190,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 notificationStorage = scope.get(),
                 storeFactory = scope.get(),
                 openFullScreen = {
-                    navigation.push(RootReviewComponent.Config.Notification(it))
+                    navigation.pushNew(RootReviewComponent.Config.Notification(it))
                 }
             ),
             render = scope.get()

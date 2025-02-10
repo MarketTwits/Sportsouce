@@ -6,7 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.profile.api.root.RootAuthFlowScreen
-import com.markettwits.start.register.presentation.registration.presentation.components.registration.StartRegistrationPage
+import com.markettwits.start.register.presentation.registration.registration.components.StartRegistrationPage
 import com.markettwits.start.register.presentation.success.RegisterSuccessScreen
 
 @Composable

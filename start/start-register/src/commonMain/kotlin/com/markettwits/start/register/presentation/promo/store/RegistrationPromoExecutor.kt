@@ -5,7 +5,7 @@ import com.markettwits.start.register.presentation.promo.store.RegistrationPromo
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Label
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.Message
 import com.markettwits.start.register.presentation.promo.store.RegistrationPromoStore.State
-import com.markettwits.start.register.presentation.registration.domain.StartRegistrationRepository
+import com.markettwits.start.register.presentation.registration.common.domain.StartRegistrationRepository
 import kotlinx.coroutines.launch
 
 class RegistrationPromoExecutor(
@@ -13,10 +13,10 @@ class RegistrationPromoExecutor(
     private val distancesId : List<Int>,
     private val repository: StartRegistrationRepository
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnClickPromo -> applyPromo(getState().promo, startId)
+            is Intent.OnClickPromo -> applyPromo(state().promo, startId)
             is Intent.OnPromoChanged -> dispatch(Message.OnPromoChanged(intent.promo))
         }
     }

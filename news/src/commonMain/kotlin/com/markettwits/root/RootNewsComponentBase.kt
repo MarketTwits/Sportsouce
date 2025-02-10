@@ -1,11 +1,7 @@
 package com.markettwits.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
@@ -40,7 +36,7 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
                     context = componentContext,
                     storeFactory = scope.get(),
                     onItemClick = {
-                        navigation.push(RootNewsComponent.Config.NewsEvent(it))
+                        navigation.pushNew(RootNewsComponent.Config.NewsEvent(it))
                     }
                 )
             )

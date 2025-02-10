@@ -1,12 +1,7 @@
 package com.markettwits.shop.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.getOrCreateKoinScope
@@ -39,7 +34,6 @@ import com.markettwits.shop.orders.presentation.component.ShopUserOrdersComponen
 import com.markettwits.shop.search.presentation.component.ShopSearchComponent
 import com.markettwits.shop.search.presentation.component.ShopSearchComponentBase
 import com.markettwits.shop.search.presentation.store.ShopSearchStoreFactory
-import kotlin.random.Random
 
 
 class RootShopCatalogComponentBase(
@@ -84,7 +78,7 @@ class RootShopCatalogComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     onClickCartHolder = {
-                        stackNavigation.push(RootShopCatalogComponent.Config.ShopCart)
+                        stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopCart)
                     }
                 ),
                 componentFilter = createShopFilterComponent(componentContext)
@@ -170,15 +164,15 @@ class RootShopCatalogComponentBase(
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
         override fun onClickShopItem(item: ShopItem) =
-            stackNavigation.push(RootShopCatalogComponent.Config.ShopItem(ShopItemPageComponentBase.Options(item.id,item)))
+            stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopItem(ShopItemPageComponentBase.Options(item.id,item)))
 
         override fun goBack() = pop.invoke()
 
         override fun goFilter() =
-            stackNavigation.push(RootShopCatalogComponent.Config.ShopFilter)
+            stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopFilter)
 
         override fun goSearch(query: String) {
-            stackNavigation.push(RootShopCatalogComponent.Config.ShopSearch(query))
+            stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopSearch(query))
         }
     }
 
@@ -227,7 +221,7 @@ class RootShopCatalogComponentBase(
 
     private inner class ShopCartComponentOutputsImpl : ShopCartComponent.Outputs {
         override fun goAuth() {
-            stackNavigation.push(RootShopCatalogComponent.Config.AuthFlow)
+            stackNavigation.pushNew(RootShopCatalogComponent.Config.AuthFlow)
         }
 
         override fun goBack() = stackNavigation.pop()
@@ -245,7 +239,7 @@ class RootShopCatalogComponentBase(
 
         override fun goOrder(items : List<ShopItemCart>) {
             val option = ShopCreateOrderComponentBase.Option(items)
-            stackNavigation.push(RootShopCatalogComponent.Config.ShopOrder(option))
+            stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopOrder(option))
         }
     }
     private inner class ShopOrderComponentOutputsImpl : ShopCreateOrderComponent.Outputs{

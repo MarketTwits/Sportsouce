@@ -45,7 +45,7 @@ kstore = "0.8.0"
 decompose = "3.2.2"
 
 #MVIKotlin
-mvikotlin = "3.3.0"
+mvikotlin = "4.0.0"
 
 org-jetbrains-kotlin-jvm = "1.9.23"
 

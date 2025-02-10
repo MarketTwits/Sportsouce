@@ -33,7 +33,7 @@ class NewsStoreFactory(
 
     private inner class ExecutorImpl :
         CoroutineExecutor<NewsStore.Intent, Unit, NewsStore.State, Msg, NewsStore.Label>() {
-        override fun executeIntent(intent: NewsStore.Intent, getState: () -> NewsStore.State) {
+        override fun executeIntent(intent: NewsStore.Intent) {
             when (intent) {
                 is NewsStore.Intent.Launch -> {
                     launch()
@@ -42,7 +42,7 @@ class NewsStoreFactory(
             }
         }
 
-        override fun executeAction(action: Unit, getState: () -> NewsStore.State) {
+        override fun executeAction(action: Unit) {
             launch()
         }
 
@@ -61,10 +61,10 @@ class NewsStoreFactory(
     }
 
     private object ReducerImpl : Reducer<NewsStore.State, Msg> {
-        override fun NewsStore.State.reduce(message: Msg): NewsStore.State =
-            when (message) {
-                is Msg.InfoFailed -> NewsStore.State(message = message.message, isError = true)
-                is Msg.InfoLoaded -> NewsStore.State(news = message.data)
+        override fun NewsStore.State.reduce(msg: Msg): NewsStore.State =
+            when (msg) {
+                is Msg.InfoFailed -> NewsStore.State(message = msg.message, isError = true)
+                is Msg.InfoLoaded -> NewsStore.State(news = msg.data)
                 is Msg.Loading -> NewsStore.State(isLoading = true)
             }
     }

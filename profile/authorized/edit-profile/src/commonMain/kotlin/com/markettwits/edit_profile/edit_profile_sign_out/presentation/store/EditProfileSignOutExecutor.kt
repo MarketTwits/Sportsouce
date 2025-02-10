@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class EditProfileSignOutExecutor(private val useCase: SignOutUseCase) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
-    override fun executeIntent(intent: Intent, getState: () -> State) {
+    override fun executeIntent(intent: Intent) {
         when (intent) {
             Intent.Dismiss -> publish(Label.Dismiss)
             Intent.SignOut -> signOut()

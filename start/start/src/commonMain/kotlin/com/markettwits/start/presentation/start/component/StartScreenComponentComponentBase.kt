@@ -8,7 +8,7 @@ import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
-import com.markettwits.start.register.presentation.registration.presentation.component.registration.StartRegistrationInput
+import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

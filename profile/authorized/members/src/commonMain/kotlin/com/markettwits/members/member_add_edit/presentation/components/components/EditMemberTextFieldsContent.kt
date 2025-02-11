@@ -15,18 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
-import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
-import com.markettwits.core_ui.items.components.textField.DropDownSpinner
-import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
-import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.*
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.teams_city.domain.Team
-import kotlinx.collections.immutable.persistentListOf
 
 @Suppress("NonSkippableComposable")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMemberTextFieldsContent(
     modifier: Modifier = Modifier,
@@ -76,7 +70,7 @@ fun EditMemberTextFieldsContent(
                     onMemberChange(member.copy(birthday = it))
                 }
             )
-            val sexList = persistentListOf("Мужской", "Женский")
+            val sexList = listOf("Мужской", "Женский")
             DropDownSpinner(
                 modifier = modifierInner,
                 itemList = sexList,
@@ -102,7 +96,7 @@ fun EditMemberTextFieldsContent(
             ) { newValue -> onMemberChange(member.copy(team = newValue)) }
 
             val typeList = remember {
-                persistentListOf("Родственник", "Друг", "Партнер по команде")
+                listOf("Родственник", "Друг", "Партнер по команде")
             }
             DropDownSpinner(
                 modifier = modifierInner,

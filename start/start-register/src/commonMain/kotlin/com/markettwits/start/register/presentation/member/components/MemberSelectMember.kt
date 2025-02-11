@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.members.member_common.domain.ProfileMember
-import kotlinx.collections.immutable.toImmutableList
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -25,7 +24,7 @@ fun MemberSelectMember(
             onItemSelected = { index, user ->
                 if (user != null) onMemberSelected(members[index])
             },
-            itemList = members.map { it.surname + " " + it.name }.toImmutableList(),
+            itemList = members.map { it.surname + " " + it.name },
         ) {
             Text(
                 text = "Выберите участника",

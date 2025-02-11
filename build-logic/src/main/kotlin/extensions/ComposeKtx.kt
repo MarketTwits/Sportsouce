@@ -1,17 +1,6 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+package extensions
 
-plugins {
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
-    id("kotlin-multiplatform-convention")
-}
-
-kotlin {
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.addAll(stabilityConfiguration())
-    }
-}
+import org.gradle.api.Project
 
 fun Project.stabilityConfiguration() = listOf(
     "-P",

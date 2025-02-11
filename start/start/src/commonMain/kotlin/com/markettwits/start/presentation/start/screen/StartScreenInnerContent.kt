@@ -21,7 +21,6 @@ import com.markettwits.start.presentation.start.components.StartStatus
 import com.markettwits.start.presentation.start.components.StartTimeProgram
 import com.markettwits.start.presentation.start.components.StartTitle
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun StartScreenInnerContent(
@@ -85,7 +84,7 @@ internal fun StartScreenInnerContent(
         )
         StartMembersStatistics(
             modifier = innerModifier,
-            membersUi = data.membersUi.toImmutableList()
+            membersUi = data.membersUi
         )
         StartOrganizers(
             modifier = innerModifier,

@@ -19,4 +19,7 @@ dependencies {
     implementation(libs.org.jetbrains.kotlin.multiplatform.gradle.plugin)
     implementation(libs.org.jetbrains.kotlin.plugin.compose.gradle.plugin)
     implementation(libs.buildConfigPlugin)
+
+    // Workaround for https://github.com/gradle/gradle/issues/15383
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }

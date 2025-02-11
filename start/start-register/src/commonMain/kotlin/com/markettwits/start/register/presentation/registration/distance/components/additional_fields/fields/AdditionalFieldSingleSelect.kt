@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun AdditionalFieldSingleSelect(
@@ -35,8 +34,7 @@ internal fun AdditionalFieldSingleSelect(
 
         DropDownSpinner(
             itemList = options
-                .map { it.title }
-                .toImmutableList(),
+                .map { it.title },
             selectedItem = field.answer.singleSelect,
             onItemSelected = { id, item ->
                 onFieldChanged(

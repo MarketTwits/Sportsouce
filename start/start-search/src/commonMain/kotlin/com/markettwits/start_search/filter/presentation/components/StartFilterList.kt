@@ -12,7 +12,6 @@ import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start_search.filter.presentation.component.StartFilterUi
 import com.markettwits.start_search.filter.presentation.components.dialog.BottomScreenContent
-import kotlinx.collections.immutable.toImmutableList
 
 
 @Composable
@@ -52,7 +51,7 @@ fun StartFilterList(
                 is StartFilterUi.FilterStartType.DropDown -> {
                     DropDownSpinner(
                         modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                        itemList = item.list.toImmutableList(),
+                        itemList = item.list,
                         selectedItem = item.selected.joinToString(", "),
                         onItemSelected = { id, item ->
                             onEvent(item, index, true)

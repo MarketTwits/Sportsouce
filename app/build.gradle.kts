@@ -1,11 +1,13 @@
+import sources.ApkConfig
+
 plugins {
-    id("android-application-convention")
-    id("android-application-crashlytics-convention")
+    id("android.application.convention")
+    id("android.application.crashlytics.convention")
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
-    namespace = libs.versions.namespace.get()
+    namespace = ApkConfig.APPLICATION_ID
 
     packaging {
         resources {
@@ -17,28 +19,7 @@ android {
         defaultConfig {
             resourceConfigurations.addAll(setOf("en", "ru"))
         }
-        debug {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            isDebuggable = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            isDebuggable = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
-            )
-        }
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
-        }
+
         kotlinOptions {
             jvmTarget = "11"
         }

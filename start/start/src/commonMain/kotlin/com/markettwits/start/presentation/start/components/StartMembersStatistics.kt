@@ -1,15 +1,7 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,14 +18,12 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlin.random.Random
 
 @Composable
 internal fun StartMembersStatistics(
     modifier: Modifier = Modifier,
-    membersUi: ImmutableList<StartMembersUi>
+    membersUi: List<StartMembersUi>
 ) {
     if (membersUi.isNotEmpty()) {
         StartContentBasePanel(
@@ -57,7 +47,7 @@ internal fun StartMembersStatistics(
 @Composable
 private fun ColorPalette(
     modifier: Modifier = Modifier,
-    members: ImmutableList<StartRegistrationDistanceStatistics>
+    members: List<StartRegistrationDistanceStatistics>
 ) {
     Row(
         modifier = modifier
@@ -114,7 +104,7 @@ private fun BarChartItem(
 }
 
 @Composable
-private fun ImmutableList<StartMembersUi>.mapToRegistrationDistance(): ImmutableList<StartRegistrationDistanceStatistics> {
+private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistrationDistanceStatistics> {
     val b = this.groupBy { it.distance }.toList().mapIndexed { index, pair ->
         StartRegistrationDistanceStatistics(
             count = pair.second.size,
@@ -122,7 +112,7 @@ private fun ImmutableList<StartMembersUi>.mapToRegistrationDistance(): Immutable
             color = mapColor(index)
         )
     }
-    return b.toImmutableList()
+    return b
 }
 
 @Composable

@@ -2,8 +2,6 @@ package com.markettwits.club.info.presentation.components.schedule
 
 import androidx.compose.runtime.Immutable
 import com.markettwits.club.info.domain.models.Schedule
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 @Immutable
 sealed interface ScheduleUi {
@@ -26,7 +24,7 @@ sealed interface ScheduleUi {
     ) : ScheduleUi
 }
 
-internal fun List<Schedule>.mapScheduleToBaseTable(): ImmutableList<ScheduleUi> {
+internal fun List<Schedule>.mapScheduleToBaseTable(): List<ScheduleUi> {
     val item: List<ScheduleUi> = this.map {
         ScheduleUi.Row(
             id = it.id,
@@ -49,6 +47,6 @@ internal fun List<Schedule>.mapScheduleToBaseTable(): ImmutableList<ScheduleUi> 
             ScheduleUi.Header(5, "Записаться на пробную"),
         )
     )
-    return item.toImmutableList()
+    return item
 }
 

@@ -32,7 +32,6 @@ kotlin {
             api(libs.coil.compose)
             api(libs.coil.network)
             api(libs.htmlconverter)
-            api(libs.kotlinx.collections.immutable)
             implementation(compose.components.resources)
         }
         

@@ -1,3 +1,5 @@
+import extensions.PROJECT_VERSION_CODE
+import extensions.PROJECT_VERSION_NAME
 import java.util.Properties
 
 plugins {
@@ -7,7 +9,8 @@ plugins {
 
 buildConfig {
 
-    val version = localLibs.findVersion("versionName").get().toString()
+    val versionName = project.PROJECT_VERSION_NAME
+    val versionCode = project.PROJECT_VERSION_CODE
 
     val secretKeyProperties by lazy {
         val secretKeyPropertiesFile = rootProject.file("secrets.properties")
@@ -24,22 +27,11 @@ buildConfig {
 
     generateAtSync = false
 
-    buildConfigField("APP_VERSION", version)
-    buildConfigField("APP_VERSION_NUMBER", versionCode(version))
+    buildConfigField("APP_VERSION", versionName)
+    buildConfigField("APP_VERSION_NUMBER", versionCode)
     buildConfigField("BUILD_TIME", System.currentTimeMillis())
     buildConfigField("SPORTSAUCE_API_PATH", apiProdPath)
 
-}
-
-fun versionCode(versionName: String): Int {
-    val components = versionName.split(".")
-    val major = components.getOrNull(0)?.toIntOrNull()
-        ?: throw IllegalArgumentException("major version in version name not found")
-    val minor = components.getOrNull(1)?.toIntOrNull()
-        ?: throw IllegalArgumentException("minor version in version name not found")
-    val patch = components.getOrNull(2)?.toIntOrNull()
-        ?: throw IllegalArgumentException("patch version in version name not found")
-    return major * 10000 + minor * 100 + patch
 }
 
 fun exceptionMessage(propertyName: String) =

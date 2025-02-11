@@ -33,7 +33,7 @@ class SelfUpdaterThirdParty(
 
     override suspend fun checkUpdate(manual: Boolean): SelfUpdateResult {
         val lastReleaseResult =
-            runCatching { processCheckUpdate(context.getPackageInfo().versionName) }
+            runCatching { processCheckUpdate(context.getPackageInfo().versionName ?: "") }
         val lastReleaseException = lastReleaseResult.exceptionOrNull()
         if (lastReleaseException != null) {
             if (manual) {

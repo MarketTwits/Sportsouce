@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 
 internal fun handleAuthorizedProfileEvent(
@@ -13,19 +14,19 @@ internal fun handleAuthorizedProfileEvent(
     slotNavigation: SlotNavigation<RootAuthorizedProfileComponent.SlotConfig>
 ) {
     when (outPut) {
-        is AuthorizedProfileComponent.Output.EditProfile -> navigation.push(
+        is AuthorizedProfileComponent.Output.EditProfile -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.EditProfileMenu
         )
 
-        is AuthorizedProfileComponent.Output.MyRegistries -> navigation.push(
+        is AuthorizedProfileComponent.Output.MyRegistries -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.MyRegistries
         )
 
-        is AuthorizedProfileComponent.Output.SocialNetwork -> navigation.push(
+        is AuthorizedProfileComponent.Output.SocialNetwork -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.SocialNetwork
         )
 
-        is AuthorizedProfileComponent.Output.Start -> navigation.push(
+        is AuthorizedProfileComponent.Output.Start -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.Start(outPut.startId)
         )
 
@@ -35,11 +36,11 @@ internal fun handleAuthorizedProfileEvent(
             )
         )
 
-        is AuthorizedProfileComponent.Output.AllRegistries -> navigation.push(
+        is AuthorizedProfileComponent.Output.AllRegistries -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.UserStarts
         )
 
-        is AuthorizedProfileComponent.Output.Members -> navigation.push(
+        is AuthorizedProfileComponent.Output.Members -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.Members
         )
 

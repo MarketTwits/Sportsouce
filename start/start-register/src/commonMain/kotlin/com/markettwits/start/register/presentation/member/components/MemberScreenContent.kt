@@ -32,9 +32,8 @@ import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.start.register.domain.StartStatement
-import kotlinx.collections.immutable.toImmutableList
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MemberScreenContent(
     modifier: Modifier = Modifier,
@@ -130,7 +129,7 @@ fun MemberScreenContent(
             modifier = Modifier.padding(vertical = 5.dp),
             selectedItem = statement.sex, onItemSelected = { id, value ->
                 onValueChanged(statement.copy(sex = value))
-            }, itemList = statement.sexList.map { it.name }.toImmutableList()
+            }, itemList = statement.sexList.map { it.name }
         ) {
             OutlinedTextFieldBase(
                 label = "Пол",

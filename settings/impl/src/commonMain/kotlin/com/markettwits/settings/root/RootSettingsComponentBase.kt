@@ -6,11 +6,7 @@ import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -111,7 +107,7 @@ class RootSettingsComponentBase(
     }
 
     override fun openCheckUpdatesScreen() {
-        stackNavigation.push(RootSettingsComponent.StackConfig.SelfUpdate)
+        stackNavigation.pushNew(RootSettingsComponent.StackConfig.SelfUpdate)
     }
 
     override fun openAppearanceContent() {

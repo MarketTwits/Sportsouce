@@ -15,9 +15,8 @@ import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
-import kotlinx.collections.immutable.toImmutableList
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun EditProfileInfoFieldsContent(
     modifier: Modifier = Modifier,
@@ -61,7 +60,7 @@ fun EditProfileInfoFieldsContent(
                 onValueChange = { newValue -> onUserChange(user.copy(phoneNumber = newValue)) },
                 label = "Номер телефона"
             )
-            val sexList = listOf("Мужской", "Женский").toImmutableList()
+            val sexList = listOf("Мужской", "Женский")
             DropDownSpinner(
                 modifier = modifierInner,
                 itemList = sexList,

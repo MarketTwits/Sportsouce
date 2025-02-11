@@ -18,19 +18,3 @@ inline fun Modifier.noRippleClickable(
         onClick()
     }
 }
-
-fun String.extractSiteName(): String {
-    return try {
-        val uri =
-            URI(if (this.startsWith("http://") || this.startsWith("https://")) this else "http://$this")
-        var host = uri.host
-        if (host != null) {
-            host = if (host.startsWith("www.")) host.substring(4) else host
-            host = host.substringBefore('.')
-        }
-        host
-    } catch (e: Exception) {
-        ""
-    }
-}
-

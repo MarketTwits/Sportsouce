@@ -12,7 +12,7 @@ class ApplicationVersionManagerAndroid(
 
     override fun currentDistribution(): ApplicationVersion =
         ApplicationVersion(
-            versionName = packageInfo.versionName,
+            versionName = packageInfo.versionName ?: "",
             versionBuildNumber = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                 packageInfo.longVersionCode.toString()
             else

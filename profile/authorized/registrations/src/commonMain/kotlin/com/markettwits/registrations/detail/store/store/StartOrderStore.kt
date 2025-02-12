@@ -7,12 +7,18 @@ import com.markettwits.registrations.detail.store.store.StartOrderStore.State
 import com.markettwits.registrations.list.domain.StartOrderInfo
 
 interface StartOrderStore : Store<Intent, State, Label> {
+
     data class State(
-        val isLoading: Boolean = false,
-        val isFailed: Boolean = false,
-        val message: String = "",
+        val startPriceResult: StartPriceResult = StartPriceResult.Loading,
         val startOrderInfo: StartOrderInfo
     )
+
+    sealed interface StartPriceResult {
+        data object Loading : StartPriceResult
+        data object Free : StartPriceResult
+        data class Failed(val message: String) : StartPriceResult
+        data class Success(val price: String) : StartPriceResult
+    }
 
     sealed interface Intent {
         data object Dismiss : Intent
@@ -21,10 +27,10 @@ interface StartOrderStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message {
-        data object Loading : Message
-        data class UpdatePrice(val newPrice : String) : Message
-        data class Success(val paymentUrl: String) : Message
-        data class Failed(val message: String) : Message
+        data object GetPriceLoading : Message
+        data class GetPriceSuccess(val newPrice: String) : Message
+        data class GetPriceFailed(val message: String) : Message
+        data object GetPriceDontRequired : Message
     }
 
     sealed interface Label {

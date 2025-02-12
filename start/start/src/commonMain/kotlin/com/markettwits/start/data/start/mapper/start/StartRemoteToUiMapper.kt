@@ -17,7 +17,6 @@ interface StartRemoteToUiMapper {
         startMember: List<StartMember>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,
-        timeRemote: TimeRemote
     ): StartItem
 
     fun map(e: Exception): String

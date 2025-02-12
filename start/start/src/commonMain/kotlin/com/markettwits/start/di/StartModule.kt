@@ -13,8 +13,6 @@ import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapperBase
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapperBase
-import com.markettwits.start.data.start.mapper.distance.StartDistancesToUiMapper
-import com.markettwits.start.data.start.mapper.distance.StartDistancesToUiMapperBase
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapperBase
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
@@ -43,7 +41,6 @@ val startModule = module {
     singleOf(::StartAlbumsToUiMapperBase) bind StartAlbumsToUiMapper::class
     singleOf(::StartMembersToUiMapperBase) bind StartMembersToUiMapper::class
     singleOf(::StartCommentsToUiMapperBase) bind StartCommentsToUiMapper::class
-    singleOf(::StartDistancesToUiMapperBase) bind StartDistancesToUiMapper::class
     singleOf(::StartRemoteToUiMapperBase) bind StartRemoteToUiMapper::class
     singleOf(::StartTimesMapperBase) bind StartTimesMapper::class
     singleOf(::StartMemoryCache)

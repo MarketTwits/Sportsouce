@@ -44,7 +44,7 @@ fun StartCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(height = 180.dp)
+            .height(height = 190.dp)
             .padding(10.dp)
             .clip(Shapes.medium)
             .clickable {
@@ -76,9 +76,9 @@ private fun ImageCard(
 ) {
     Box(
         modifier = modifier
-            .size(width = 120.dp, height = 170.dp)
-            .clip(Shapes.medium)
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), Shapes.medium)
+            .size(width = 130.dp, height = 190.dp)
+            .clip(Shapes.large)
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), Shapes.large)
     ) {
         Box(modifier = modifier.fillMaxSize()) {
             SubcomposeAsyncImage(
@@ -104,7 +104,7 @@ private fun ImageCard(
                 }
             )
             Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-                ImageCardInfoStroke(date)
+                // ImageCardInfoStroke(date)
                 ImageCardInfoStatus(status)
             }
         }
@@ -134,15 +134,18 @@ private fun ImageCardInfoStroke(title: String) {
 private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
-            .background(startStatusBackground(status.id))
+            .padding(4.dp)
+            .clip(Shapes.large)
+            .background(startStatusBackground(status.id).copy(alpha = 0.8f))
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = status.message,
+            modifier = Modifier
+                .padding(2.dp)
+                .fillMaxWidth(),
+            text = startStatusCompactMessage(status.id),
             color = Color.White,
             fontFamily = FontNunito.bold(),
-            fontSize = 10.sp,
+            fontSize = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Center
@@ -176,11 +179,12 @@ private fun ImageCardInfo(
             fontFamily = FontNunito.medium(),
             fontSize = 12.sp
         )
-        Spacer(modifier = Modifier.padding(4.dp))
+        Spacer(modifier = Modifier.padding(2.dp))
         HtmlText(
             text = distance,
             fontSize = 12.sp,
             lineHeight = 14.sp,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             fontFamily = FontNunito.medium(),
             color = MaterialTheme.colorScheme.outline

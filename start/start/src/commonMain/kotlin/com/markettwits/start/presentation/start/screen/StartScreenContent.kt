@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.FullImageContent
@@ -33,7 +32,6 @@ internal fun StartScreenContent(
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
-    onClickDistance: (DistanceItem, Boolean, String) -> Unit,
     onClickDistanceNew : (DistinctDistance) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickImage: () -> Unit,
@@ -80,7 +78,6 @@ internal fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
-                            onClickDistance = onClickDistance,
                             onClickDistanceNew = onClickDistanceNew,
                             onClickMembers = onClickMembers,
                             onClickUrl = onClickUrl,
@@ -100,7 +97,6 @@ internal fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = it,
                         data = data,
-                        onClickDistance = onClickDistance,
                         onClickDistanceNew = onClickDistanceNew,
                         onClickMembers = onClickMembers,
                         onClickUrl = onClickUrl,

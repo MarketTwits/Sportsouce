@@ -7,11 +7,20 @@ import com.markettwits.registrations.detail.store.store.StartOrderStore.State
 object StartOrderStoreReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Failed -> copy(isLoading = false, isFailed = true, message = msg.message)
-            is Message.Success -> copy(isLoading = false)
-            is Message.Loading -> copy(isLoading = true)
-            is Message.UpdatePrice -> copy(
-                isLoading = false,
+            is Message.GetPriceDontRequired -> copy(
+                startPriceResult = StartOrderStore.StartPriceResult.Free
+            )
+
+            is Message.GetPriceFailed -> copy(
+                startPriceResult = StartOrderStore.StartPriceResult.Failed(msg.message)
+            )
+
+            is Message.GetPriceLoading -> copy(
+                startPriceResult = StartOrderStore.StartPriceResult.Loading
+            )
+
+            is Message.GetPriceSuccess -> copy(
+                startPriceResult = StartOrderStore.StartPriceResult.Success(msg.newPrice),
                 startOrderInfo = startOrderInfo.copy(cost = msg.newPrice)
             )
         }

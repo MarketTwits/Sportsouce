@@ -75,3 +75,19 @@ suspend inline fun <reified T1, reified T2, reified T3, reified T4, reified T5> 
     )
 }
 
+suspend inline fun <reified T1, reified T2, reified T3> fetchTriple(
+    vararg methods: suspend () -> Any,
+    coroutineContext: CoroutineContext = EmptyCoroutineContext,
+): Triple<T1, T2, T3> {
+    val results = methods.map { method ->
+        CoroutineScope(coroutineContext).async {
+            method()
+        }
+    }.awaitAll()
+    return Triple(
+        results[0] as T1,
+        results[1] as T2,
+        results[2] as T3,
+    )
+}
+

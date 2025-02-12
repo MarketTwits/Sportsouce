@@ -21,13 +21,13 @@ import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 fun OnBackgroundCard(
     modifier: Modifier = Modifier,
     shape: Shape = Shapes.medium,
-    colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+    colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.(Modifier) -> Unit,
 ) {
     Card(
         modifier = modifier
-            .shadow(2.dp, shape = shape)
+            .shadow(3.dp, shape = shape)
             .noRippleClickable { }
             .clickable(
                 indication = if (onClick == null) null else LocalIndication.current,

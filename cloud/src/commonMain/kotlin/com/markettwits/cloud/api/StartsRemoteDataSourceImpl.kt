@@ -280,7 +280,7 @@ internal class StartsRemoteDataSourceImpl(
     }
 
     override suspend fun userRegistriesNew2(userId: Int, token: String): List<UserRegistration> {
-        val response = client.get("user/startsByUserId/$userId") {
+        val response = client.get("user/startsByUserId/$userId?maxResultCount=1000") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")

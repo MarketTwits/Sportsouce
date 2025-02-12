@@ -58,15 +58,6 @@ fun RegistrationsStart(
                 }
             }
             item {
-                starts.firstUnpaidItem()?.let { startOrderInfo ->
-                    RegistrationsShouldBePay(
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        onClick(startOrderInfo)
-                    }
-                }
-            }
-            item {
                 if (starts.isEmpty()) {
                     RegistrationsAbsolutelyEmpty(modifier = Modifier.padding(10.dp))
                 }

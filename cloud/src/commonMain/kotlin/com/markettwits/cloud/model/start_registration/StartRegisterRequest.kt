@@ -1,7 +1,7 @@
 package com.markettwits.cloud.model.start_registration
 
 
-import com.markettwits.cloud.ext_model.DistanceItem
+//import com.markettwits.cloud.ext_model.DistanceItem
 import kotlinx.serialization.Serializable
 
 
@@ -58,7 +58,7 @@ data class StartRegisterRequest(
         val phone: String,
         val price: Int,
         val promo: String?,
-        val stage: DistanceItem.Stage,
+        //val stage: DistanceItem.Stage,
         val surname: String,
         val team: String,
         val teamNumber: Int,
@@ -75,7 +75,7 @@ data class StartRegisterRequest(
         val ageTo: String,
         val name: String,
         val sex: String? = null,
-        val stages: List<DistanceItem.Stage>? = null
+        //val stages: List<DistanceItem.Stage>? = null
     )
 }
 

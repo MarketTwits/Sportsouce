@@ -28,9 +28,7 @@ class UserRegistrationsMapperBase(
             dateStartCloud = start.start.start_date,
             members = start.members.map { member ->
                 val ageGroup = member.age_group?.name ?: mapStartGroup(member.group)
-
                 val distance = member.distance_relation?.name ?: member.distance ?: ""
-
                 val format = member.distance_relation?.format ?: member.format ?: ""
                 StartOrderInfo.Member(
                     name = member.name,

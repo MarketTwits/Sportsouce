@@ -105,33 +105,29 @@ private fun BarChartItem(
 
 @Composable
 private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistrationDistanceStatistics> {
-    val b = this.groupBy { it.distance }.toList().mapIndexed { index, pair ->
-        StartRegistrationDistanceStatistics(
-            count = pair.second.size,
-            distance = pair.first,
-            color = mapColor(index)
-        )
-    }
-    return b
-}
+    val availableColors = mutableListOf(
+        SportSouceColor.SportSouceLighBlue,
+        SportSouceColor.SportSouceBlue,
+        SportSouceColor.OnSecondaryContainer,
+        SportSouceColor.VkIcon,
+        SportSouceColor.SportSouceRegistryCommingSoonYellow,
+        SportSouceColor.VeryLighBlue,
+        SportSouceColor.TelegramIcon.copy(0.3f),
+        Color.Gray,
+        SportSouceColor.SportSouceStartEndedPink.copy(0.3f)
+    ).shuffled()
 
-@Composable
-private fun mapColor(index: Int): Color =
-    when (index) {
-        0 -> SportSouceColor.SportSouceLighBlue
-        1 -> SportSouceColor.SportSouceBlue
-        2 -> SportSouceColor.SportSouceStartEndedPink
-        3 -> SportSouceColor.OnSecondaryContainer
-        4 -> SportSouceColor.VkIcon
-        5 -> SportSouceColor.WhatsappIcon
-        6 -> SportSouceColor.SportSouceRegistryCommingSoonYellow
-        7 -> SportSouceColor.SportSouceLightRed
-        8 -> SportSouceColor.VeryLighBlue
-        9 -> SportSouceColor.TelegramIcon.copy(0.3f)
-        10 -> Color.Gray
-        11 -> SportSouceColor.SportSouceStartEndedPink.copy(0.3f)
-        else -> Color.random()
-    }
+    return this
+        .groupBy { it.distance }
+        .toList()
+        .mapIndexed { index, pair ->
+            StartRegistrationDistanceStatistics(
+                count = pair.second.size,
+                distance = pair.first,
+                color = availableColors.getOrElse(index) { Color.random() }
+            )
+        }
+}
 
 private fun Color.Companion.random(): Color {
     val red = Random.nextInt(256)

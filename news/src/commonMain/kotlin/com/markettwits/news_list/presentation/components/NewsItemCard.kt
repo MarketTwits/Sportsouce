@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,71 +30,59 @@ import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.news_list.domain.NewsInfo
 
 @Composable
-fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (NewsInfo) -> Unit) {
-    val imageModifier = Modifier.background(
-        brush = Brush.verticalGradient(
-            colors = listOf(
-                Color.Transparent,
-                Color.Black.copy(alpha = .55f),
-            ),
-        )
-    )
-    val imageModifierError = Modifier.background(
-        brush = Brush.verticalGradient(
-            colors = listOf(
-                SportSouceColor.VeryLighBlue.copy(alpha = .35f),
-                SportSouceColor.SportSouceLighBlue.copy(alpha = .65f),
-            ),
-        )
-    )
-    Box(
+fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onClick: (NewsInfo) -> Unit) {
+    Column(
         modifier = modifier
             .padding(10.dp)
+            .size(width = 240.dp, height = 210.dp)
             .clip(Shapes.medium)
-            .size(width = 270.dp, height = 160.dp)
-            .clickable {
-                onCLick(newsInfo)
-            }
+            .clickable { onClick(newsInfo) }
     ) {
-        SubcomposeAsyncImage(
-            model = newsInfo.imageUrl,
-            contentDescription = newsInfo.title,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxSize(),
-            error = {
-                SubcomposeAsyncImageContent(
-                    painter = DefaultImages.EmptyImageStart(),
-                    contentScale = ContentScale.Crop
-                )
-            },
-            success = {
-                SubcomposeAsyncImageContent()
-            }
-        )
-        Box(modifier = imageModifier.fillMaxSize())
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2.5f)
+        ) {
+            SubcomposeAsyncImage(
+                model = newsInfo.imageUrl,
+                contentDescription = newsInfo.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(Shapes.medium),
+                error = {
+                    SubcomposeAsyncImageContent(
+                        painter = DefaultImages.EmptyImageStart(),
+                        contentScale = ContentScale.Crop
+                    )
+                },
+                success = {
+                    SubcomposeAsyncImageContent()
+                }
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .padding(start = 15.dp, end = 15.dp, bottom = 5.dp)
+                .weight(1f)
+                .padding(top = 8.dp)
         ) {
             Text(
                 overflow = TextOverflow.Ellipsis,
                 text = newsInfo.title,
-                lineHeight = 10.sp,
                 maxLines = 1,
-                fontSize = 12.sp,
+                fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.tertiary,
             )
             HtmlText(
                 overflow = TextOverflow.Ellipsis,
                 text = newsInfo.fullDescription,
                 maxLines = 2,
                 lineHeight = 10.sp,
-                fontSize = 10.sp,
+                fontSize = 12.sp,
                 fontFamily = FontNunito.regular(),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.outline,
             )
         }
     }

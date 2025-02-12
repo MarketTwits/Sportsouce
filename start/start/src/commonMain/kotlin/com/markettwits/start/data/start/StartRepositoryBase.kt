@@ -6,6 +6,8 @@ import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.base.fetchFifth
+import com.markettwits.core_ui.items.base.fetchFourth
+import com.markettwits.core_ui.items.base.fetchTriple
 import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
@@ -21,7 +23,7 @@ import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 
 internal class StartRepositoryBase(
-    private val startService : SportSauceStartApi,
+    private val startService: SportSauceStartApi,
     private val timeService: TimeApi,
     private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper,
@@ -50,15 +52,14 @@ internal class StartRepositoryBase(
     private suspend fun launches(startId: Int): Result<StartItem> {
         val result = runCatching {
             val cloud =
-                fetchFifth<StartRemote, List<StartMember>, List<StartAlbum>, List<Comment>, TimeRemote>(
+                fetchFourth<StartRemote, List<StartMember>, List<StartAlbum>, List<Comment>>(
                     { startService.start(startId) },
                     { safeCallStartMembers(startId) },
                     { startService.albums(startId) },
                     { startService.comments(startId) },
-                    { timeService.currentTime() },
                 )
             val result =
-                mapper.map(cloud.first, cloud.second, cloud.third, cloud.fourth, cloud.fifth)
+                mapper.map(cloud.first, cloud.second, cloud.third, cloud.fourth)
             cache.set(value = Result.success(result), key = startId)
             result
         }
@@ -66,7 +67,7 @@ internal class StartRepositoryBase(
     }
 
     override suspend fun writeComment(
-        startId : Int,
+        startId: Int,
         comment: String,
         id: Int,
         subComment: Boolean
@@ -99,10 +100,10 @@ internal class StartRepositoryBase(
         }
     }
 
-    private suspend fun safeCallStartMembers(startId: Int) : List<StartMember> {
+    private suspend fun safeCallStartMembers(startId: Int): List<StartMember> {
         return kotlin.runCatching {
             startService.membersNew(startId)
-        }.fold(onSuccess = {it}
+        }.fold(onSuccess = { it }
         ) {
             errorLog(it) { "Fail to launch startMembers start id $startId" }
             emptyList()

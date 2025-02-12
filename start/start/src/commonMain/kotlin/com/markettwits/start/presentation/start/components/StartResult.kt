@@ -1,23 +1,10 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.Shapes
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.start.domain.StartItem
 
 @Composable
@@ -42,24 +29,12 @@ fun StartResultContent(
 ) {
     Column(modifier = Modifier.wrapContentSize()) {
         results.forEach {
-            Box(
-                modifier = modifier
-                    .clip(Shapes.medium)
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .clickable { onClickResult(it.url) }
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.Center),
-                    textAlign = TextAlign.Center,
-                    text = it.name,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 14.sp
-                )
-            }
+            StartFileContent(
+                modifier = modifier.noRippleClickable {
+                    onClickResult(it.url)
+                },
+                fileName = it.name
+            )
         }
     }
 }

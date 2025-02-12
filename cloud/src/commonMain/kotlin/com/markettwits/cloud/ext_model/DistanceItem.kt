@@ -58,16 +58,6 @@ sealed interface DistanceItem {
     @Serializable
     data class Stage(val value: String, val sex: List<String>)
 
-    @Serializable
-    data class Discount(
-        val id: Int,
-        val start_id: Int,
-        val c_from: Int,
-        val c_to: Int,
-        val value: Int,
-        val percent: Boolean
-    )
-
     object DistanceItemSerializer :
         JsonContentPolymorphicSerializer<DistanceItem>(DistanceItem::class) {
         override fun selectDeserializer(element: JsonElement) = when {

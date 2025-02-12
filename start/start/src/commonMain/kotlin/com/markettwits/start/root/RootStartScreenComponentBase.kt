@@ -60,19 +60,6 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
                     back = pop::invoke,
-                    register = { distanceInfo, paymentDisabled, paymentType, startTitle, discounts ->
-//                        navigation.push(
-//                            RootStartScreenComponent.Config.StartRegistration(
-//                                input = StartRegistrationInput(
-//                                    startId,
-//                                    startTitle,
-//                                    paymentType,
-//                                    emptyList(),
-//                                    paymentDisabled,
-//                                )
-//                            )
-//                        )
-                    },
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, emptyList())

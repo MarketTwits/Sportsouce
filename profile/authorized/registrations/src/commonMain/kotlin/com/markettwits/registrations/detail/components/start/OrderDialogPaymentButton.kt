@@ -1,54 +1,81 @@
 package com.markettwits.registrations.detail.components.start
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.registrations.detail.store.store.StartOrderStore
 
 @Composable
-internal fun RegistrationButton(
+internal fun OrderDialogPaymentButton(
     modifier: Modifier = Modifier,
-    title: String,
-    isLoading: Boolean,
-    isError : Boolean,
+    priceState: StartOrderStore.StartPriceResult,
     onClick: () -> Unit
 ) {
-    Button(
-        enabled = !isLoading && !isError,
-        modifier = modifier.fillMaxWidth(),
-        colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-        ),
-        onClick = { onClick() }
-    ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(24.dp),
-                color = MaterialTheme.colorScheme.onSecondary,
-                strokeCap = StrokeCap.Round
-            )
-        } else {
+    AnimatedVisibility(priceState is StartOrderStore.StartPriceResult.Failed) {
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .clip(Shapes.medium)
+                .background(SportSouceColor.SportSouceLightRed.copy(alpha = 0.1f))
+        ) {
             Text(
-                modifier = Modifier.padding(2.dp),
-                text = title,
-                fontSize = 16.sp,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(10.dp),
+                text = "Не удалось обновить стоимость заказа",
+                fontSize = 14.sp,
                 fontFamily = FontNunito.bold(),
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = SportSouceColor.SportSouceLightRed
             )
+        }
+    }
+    if (
+        priceState !is StartOrderStore.StartPriceResult.Free
+        &&
+        priceState !is StartOrderStore.StartPriceResult.Failed
+    ) {
+        Button(
+            modifier = modifier.fillMaxWidth(),
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
+            ),
+            onClick = { onClick() }
+        ) {
+            if (priceState is StartOrderStore.StartPriceResult.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    strokeCap = StrokeCap.Round
+                )
+            }
+            if (priceState is StartOrderStore.StartPriceResult.Success) {
+                Text(
+                    modifier = Modifier.padding(2.dp),
+                    text = "Оплатить ${priceState.price} ₽",
+                    fontSize = 16.sp,
+                    fontFamily = FontNunito.bold(),
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
+            }
         }
     }
 }

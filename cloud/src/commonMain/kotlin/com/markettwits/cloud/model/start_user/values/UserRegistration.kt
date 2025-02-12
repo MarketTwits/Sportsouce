@@ -10,7 +10,7 @@ data class UserRegistration(
     val is_refunded: Boolean,
     val members: List<Member>,
     val order_number: String?,
-    val payment: Int,
+    val payment: Int?,
     val price: Int?,
     val price_of_additional_fields: Int,
     val price_without_discount: Int,

@@ -15,13 +15,31 @@ android {
         }
     }
     buildTypes {
-
         defaultConfig {
             resourceConfigurations.addAll(setOf("en", "ru"))
         }
 
         kotlinOptions {
             jvmTarget = "11"
+        }
+
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            isDebuggable = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

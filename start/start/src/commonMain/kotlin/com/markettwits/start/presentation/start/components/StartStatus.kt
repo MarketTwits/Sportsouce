@@ -51,7 +51,7 @@ internal fun StartStatus(modifier: Modifier = Modifier, status: StartItem.StartS
                 .padding(4.dp)
                 .fillMaxWidth()
                 .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.tertiary)
         ) {
             Text(
                 modifier = Modifier
@@ -62,7 +62,7 @@ internal fun StartStatus(modifier: Modifier = Modifier, status: StartItem.StartS
                 fontFamily = FontNunito.bold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.onTertiary
             )
         }
     }

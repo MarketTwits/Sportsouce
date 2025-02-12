@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 object SportSouceColor {
     val SportSouceBlue = Color(46, 63, 110)
     val SportSouceLighBlue = Color(77, 183, 254)
+    val SportSouceLightBlueForDarkTheme =  Color(81, 165,222)
     val SportSouceStartEndedPink = Color(247, 92, 150)
     val SportSouceRegistryOpenGreen = Color(94, 207, 177)
     val SportSouceRegistryCommingSoonYellow = Color(248, 189, 56)
@@ -15,6 +16,8 @@ object SportSouceColor {
     val SecondaryWhite = Color(247, 247, 247)
     val DarkSecondaryNew = Color(18, 18, 18)
     val DarkSecondaryContainerNew = Color(26, 26, 26)
+    val Gray = Color(100,100,100)
+    val GrayForDarkTheme = Color(145,145,145)
     val OnSecondaryContainer = Color(61, 61, 61)
     val TelegramIcon = Color(3, 155, 229)
     val VkIcon = Color(0, 120, 255)

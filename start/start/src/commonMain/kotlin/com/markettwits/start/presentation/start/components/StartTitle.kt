@@ -1,6 +1,7 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,6 +23,7 @@ internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: Str
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.tertiary
         )
+        Spacer(modifier = Modifier.padding(4.dp))
         Text(
             text = place,
             fontSize = 14.sp,

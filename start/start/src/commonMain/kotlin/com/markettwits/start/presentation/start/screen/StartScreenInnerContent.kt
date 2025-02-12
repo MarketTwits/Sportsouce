@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.components.StartAlbums
 import com.markettwits.start.presentation.start.components.StartConditionPanel
 import com.markettwits.start.presentation.start.components.StartDescription
 import com.markettwits.start.presentation.start.components.StartDistances
-import com.markettwits.start.presentation.start.components.StartDistancesNew
 import com.markettwits.start.presentation.start.components.StartMembersPanel
 import com.markettwits.start.presentation.start.components.StartMembersStatistics
 import com.markettwits.start.presentation.start.components.StartOrganizers
@@ -26,7 +24,6 @@ import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
-    onClickDistance: (DistanceItem, Boolean, String) -> Unit,
     onClickDistanceNew: (DistinctDistance) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickFullAlbum: () -> Unit,
@@ -55,8 +52,7 @@ internal fun StartScreenInnerContent(
         StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
             onClickFullAlbum()
         })
-        //New distance
-        StartDistancesNew(
+        StartDistances(
             modifier = innerModifier,
             distance = data.distanceInfoNew,
             mapDistance = data.distanceMapNew,
@@ -69,28 +65,9 @@ internal fun StartScreenInnerContent(
             },
             onClickUrl = onClickUrl
         )
-        //Old distances
-        StartDistances(
-            modifier = innerModifier,
-            distance = data.distanceInfo,
-            startStatus = data.startStatus,
-            paymentDisabled = data.paymentDisabled,
-            paymentType = data.paymentType,
-            regLink = data.regLink,
-            onClick = { distance, paymentDisabled, paymentType ->
-                onClickDistance(distance, paymentDisabled, paymentType)
-            },
-            onClickUrl = onClickUrl
-        )
         StartMembersStatistics(
             modifier = innerModifier,
             membersUi = data.membersUi
-        )
-        StartOrganizers(
-            modifier = innerModifier,
-            organizer = data.organizers,
-            onClickUrl = onClickUrl,
-            onClickPhone = onClickPhone
         )
         StartResult(
             modifier = innerModifier,
@@ -119,6 +96,12 @@ internal fun StartScreenInnerContent(
         ) {
             onClickMembers(data.membersUi)
         }
+        StartOrganizers(
+            modifier = innerModifier,
+            organizer = data.organizers,
+            onClickUrl = onClickUrl,
+            onClickPhone = onClickPhone
+        )
         donations(innerModifier)
     }
     comments(modifier)

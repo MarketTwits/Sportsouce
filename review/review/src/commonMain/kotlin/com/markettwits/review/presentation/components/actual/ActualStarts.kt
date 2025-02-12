@@ -31,7 +31,7 @@ fun ActualStarts(
     )
     val oneColumns = rememberScreenSizeInfo().isPortrait()
     LazyVerticalGrid(
-        modifier = modifier.height(900.dp),
+        modifier = modifier.height(950.dp),
         userScrollEnabled = false,
         columns = GridCells.Fixed(if (oneColumns) 1 else 2)
     ) {

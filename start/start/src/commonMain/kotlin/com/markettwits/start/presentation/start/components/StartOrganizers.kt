@@ -48,13 +48,16 @@ private fun StartOrganizersContent(
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit
 ) {
-    organizer.forEach {
-        Column(modifier = modifier) {
-            Row(modifier = modifier) {
+    Column(modifier = modifier) {
+        organizer.forEach {
+            Row(
+                modifier = modifier,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     imageVector = Icons.Default.HomeRepairService,
                     contentDescription = "icon",
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
                 Spacer(Modifier.padding(horizontal = 2.dp))
                 Text(
@@ -66,11 +69,14 @@ private fun StartOrganizersContent(
             }
             it.phone?.let {
                 if (it.isNotEmpty())
-                    Row(modifier = modifier) {
+                    Row(
+                        modifier = modifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Phone,
                             contentDescription = "icon",
-                            tint = MaterialTheme.colorScheme.secondary
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
                             modifier = modifier.clickable {
@@ -85,12 +91,12 @@ private fun StartOrganizersContent(
             }
 
             Row(modifier = modifier) {
-                it.social_networks?.forEach {
+                it.social_networks.forEach {
                     if (it.url != null) {
                         Box(
                             modifier = modifier
                                 .clip(Shapes.medium)
-                                .background(MaterialTheme.colorScheme.secondary)
+                                .background(MaterialTheme.colorScheme.tertiary)
                                 .size(30.dp)
                                 .clickable {
                                     it.url?.let { url ->

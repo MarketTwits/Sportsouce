@@ -1,6 +1,5 @@
 package com.markettwits.start.domain
 
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
@@ -17,7 +16,6 @@ data class StartItem(
     val description: String,
     val paymentDisabled: Boolean,
     val regLink: String,
-    val distanceInfo: List<DistanceItem>,
     val distanceInfoNew : List<DistinctDistance>,
     val distanceMapNew : List<Distance>,
     val paymentType: String,
@@ -28,7 +26,6 @@ data class StartItem(
     val result: List<Result>,
     val usefulLinks: List<Result>,
     val startTimes: StartTimes,
-    val discounts: List<DistanceItem.Discount>
 ) {
     sealed class ConditionFile {
         data class Base(val url: String) : ConditionFile()

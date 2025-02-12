@@ -4,7 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.store.StartScreenStore
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
@@ -19,7 +18,6 @@ class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
     private val back: () -> Unit,
-    private val register: (DistanceItem, Boolean, String, String, List<DistanceItem.Discount>) -> Unit,
     private val registerNew : (StartRegistrationInput) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
@@ -43,14 +41,6 @@ class StartScreenComponentComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartScreenStore.Label.OnClickBack -> back()
-                    is StartScreenStore.Label.OnClickDistance -> register(
-                        it.distanceInfo,
-                        it.paymentDisabled,
-                        it.paymentType,
-                        it.startTitle,
-                        it.discount
-                    )
-
                     is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
                     is StartScreenStore.Label.OnClickDistanceNew -> registerNew(

@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStore
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStoreFactory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class AuthorizedProfileComponentBase(
     componentContext: ComponentContext,
@@ -17,6 +18,8 @@ class AuthorizedProfileComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state = store.stateFlow
 
     override fun obtainEvent(intent: AuthorizedProfileStore.Intent) {

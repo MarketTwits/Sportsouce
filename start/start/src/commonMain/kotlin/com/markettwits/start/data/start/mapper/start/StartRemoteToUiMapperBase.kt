@@ -1,10 +1,8 @@
 package com.markettwits.start.data.start.mapper.start
 
 import com.markettwits.cloud.model.start_member.StartMemberItem
-import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
-import com.markettwits.start.data.start.mapper.distance.StartDistancesToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.start.data.start.mapper.time.StartTimesMapper
@@ -24,7 +22,6 @@ internal class StartRemoteToUiMapperBase(
     private val membersMapper: StartMembersToUiMapper,
     private val commentsMapper: StartCommentsToUiMapper,
     private val albumsMapper: StartAlbumsToUiMapper,
-    private val distancesMapper: StartDistancesToUiMapper,
     private val startTimesMapper: StartTimesMapper
 ) : StartRemoteToUiMapper {
     override fun map(
@@ -32,7 +29,6 @@ internal class StartRemoteToUiMapperBase(
         startMember: List<StartMember>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,
-        timeRemote: TimeRemote
     ): StartItem {
         return when (startRemote) {
             is StartRemoteNew -> {
@@ -52,14 +48,6 @@ internal class StartRemoteToUiMapperBase(
                     startData = startRemote.start_date,
                     description = startRemote.description ?: "",
                     paymentDisabled = startRemote.payment_disabled ?: false,
-                    distanceInfo = distancesMapper.mapDistanceInfoList(
-                        startMember = startMember,
-                        distances = distancesMapper.mapKindOfSportsToDistanceItemList(
-                            startId = startRemote.id,
-                            kindOfSport = ""
-                        ),
-                        date = timeRemote.date
-                    ),
                     organizers = startRemote.organizers,
                     membersUi = StartMembersNewToUiMapper().map(startMember),
                     commentsRemote = commentsMapper.map(commentsRemote),
@@ -85,7 +73,6 @@ internal class StartRemoteToUiMapperBase(
                         beginningStart = startRemote.start_date,
                         endStart = ""
                     ),
-                    discounts = emptyList(),
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
                     distanceMapNew = startRemote.distances
                 )
@@ -108,14 +95,6 @@ internal class StartRemoteToUiMapperBase(
                     startData = startRemote.start_data.start_date,
                     description = startRemote.start_data.description ?: "",
                     paymentDisabled = startRemote.start_data.payment_disabled ?: false,
-                    distanceInfo = distancesMapper.mapDistanceInfoList(
-                        startMember = startMember,
-                        distances = distancesMapper.mapKindOfSportsToDistanceItemList(
-                            startId = startRemote.start_data.id,
-                            kindOfSport = startRemote.start_data.select_kinds_sport
-                        ),
-                        date = timeRemote.date
-                    ),
                     organizers = startRemote.start_data.organizers,
                     membersUi = emptyList(),
                     commentsRemote = commentsMapper.map(commentsRemote),
@@ -151,7 +130,6 @@ internal class StartRemoteToUiMapperBase(
                         beginningStart = startRemote.start_data.start_date,
                         endStart = startRemote.start_data.end_date
                     ),
-                    discounts = distancesMapper.mapDiscountCloud(startRemote.start_data.discount),
                     distanceInfoNew = emptyList(),
                     distanceMapNew = emptyList()
                 )

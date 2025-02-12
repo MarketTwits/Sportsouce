@@ -22,7 +22,7 @@ class StartOrderStoreExecutor(
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnClickPay -> repay(intent.orderId)
+            is Intent.OnClickPay -> getPaymentUrl(intent.orderId)
             is Intent.OnClickStart -> publish(Label.OnClickStart(intent.startId))
         }
     }
@@ -31,32 +31,36 @@ class StartOrderStoreExecutor(
         getActualPrice(state().startOrderInfo)
     }
 
-    private fun getActualPrice(orderInfo: StartOrderInfo){
+    private fun getActualPrice(orderInfo: StartOrderInfo) {
         scope.launch {
-            dispatch(Message.Loading)
-            repository.getPrice(
-                orderId = orderInfo.id,
-                orderDistancesId = orderInfo.members.map { it.distanceName },
-                startId = orderInfo.startId
-            ).fold(onSuccess = {
-                dispatch(Message.UpdatePrice(it.totalPrice))
-            }, onFailure = {
-                dispatch(Message.Failed(it.message.toString()))
-                errorLog(it) { "Failed when try get price for order ${orderInfo.id}"}
-            })
+            if (orderInfo.payment.payment) {
+                dispatch(Message.GetPriceDontRequired)
+            } else {
+                dispatch(Message.GetPriceLoading)
+                repository.getPrice(
+                    orderInfo.id,
+                    orderInfo.members.map { it.distanceName },
+                    orderInfo.startId
+                ).fold(onSuccess = {
+                    dispatch(Message.GetPriceSuccess(it.totalPrice))
+                }, onFailure = {
+                    dispatch(Message.GetPriceFailed(it.message.toString()))
+                    errorLog(it) { "Failed when try get price for order ${orderInfo.id}" }
+                })
+            }
         }
     }
 
-    private fun repay(id: Int) {
+    private fun getPaymentUrl(id: Int) {
         scope.launch {
-            dispatch(Message.Loading)
+            dispatch(Message.GetPriceLoading)
             repository.pay(id).fold(
                 onSuccess = {
-                    dispatch(Message.Success(it))
+                    dispatch(Message.GetPriceSuccess(state().startOrderInfo.cost))
                     intentAction.openWebPage(it)
                 },
                 onFailure = {
-                    dispatch(Message.Failed(it.message.toString()))
+                    dispatch(Message.GetPriceFailed(it.message.toString()))
                 }
             )
         }

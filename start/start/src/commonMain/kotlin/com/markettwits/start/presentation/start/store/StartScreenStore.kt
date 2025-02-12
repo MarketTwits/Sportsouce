@@ -8,7 +8,6 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.cloud.exception.isNetworkConnectionError
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -17,9 +16,7 @@ import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
-import com.markettwits.start.presentation.start.store.StartScreenStore.Intent
-import com.markettwits.start.presentation.start.store.StartScreenStore.Label
-import com.markettwits.start.presentation.start.store.StartScreenStore.State
+import com.markettwits.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import kotlinx.coroutines.launch
 
@@ -27,15 +24,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
-
-        data class OnClickDistance(
-            val distanceInfo: DistanceItem,
-            val paymentDisabled: Boolean,
-            val paymentType: String
-        ) : Intent
-        data class OnClickDistanceNew(
-            val distance: DistinctDistance
-        ) : Intent
+        data class OnClickDistanceNew(val distance: DistinctDistance) : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
@@ -55,14 +44,6 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OnClickMembers(val members: List<StartMembersUi>) : Label
-        data class OnClickDistance(
-            val distanceInfo: DistanceItem,
-            val paymentDisabled: Boolean,
-            val paymentType: String,
-            val startTitle: String,
-            val discount: List<DistanceItem.Discount>
-        ) : Label
-
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
@@ -109,10 +90,6 @@ class StartScreenStoreFactory(
         override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
-
-                is Intent.OnClickDistance -> {}
-
-
                 is Intent.OnClickMembers -> publish(Label.OnClickMembers(intent.members))
                 is Intent.OnClickRetry -> launch(startId, true)
                 is Intent.OnClickFullAlbum -> {

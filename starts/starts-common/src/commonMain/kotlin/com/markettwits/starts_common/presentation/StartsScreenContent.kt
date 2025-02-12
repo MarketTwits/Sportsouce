@@ -38,7 +38,7 @@ fun StartsScreenContent(
         }
     } else {
         LazyColumn(modifier) {
-            items(items, key = { it -> it.id }) {
+            items(items, key = { it.id }) {
                 StartCard(
                     modifier = Modifier.animateItemPlacement(animationSpec = tween(600)),
                     start = it,

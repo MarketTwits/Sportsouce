@@ -13,12 +13,13 @@ interface NewsRemoteToDomainMapper {
     ) : NewsRemoteToDomainMapper {
         override fun map(news: NewsRemote): List<NewsInfo> {
             return news.rows.map {
+                val imageUrl = it.main_image?.fullPath ?: it.images.firstOrNull()?.fullPath ?: ""
                 NewsInfo(
                     id = it.id,
                     title = it.title,
                     shortDescription = it.short_description,
                     fullDescription = it.full_description,
-                    imageUrl = if (it.images.isNotEmpty()) it.images[0].fullPath else "",
+                    imageUrl = imageUrl,
                     createData = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.createdAt),
                     hashtags = it.hashtags.map {
                         Hashtag(

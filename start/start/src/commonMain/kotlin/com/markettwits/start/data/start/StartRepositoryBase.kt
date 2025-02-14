@@ -1,13 +1,9 @@
 package com.markettwits.start.data.start
 
-import com.markettwits.cloud.api.TimeApi
 import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.cloud.model.time.TimeRemote
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
-import com.markettwits.core_ui.items.base.fetchFifth
 import com.markettwits.core_ui.items.base.fetchFourth
-import com.markettwits.core_ui.items.base.fetchTriple
 import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
@@ -24,7 +20,6 @@ import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 
 internal class StartRepositoryBase(
     private val startService: SportSauceStartApi,
-    private val timeService: TimeApi,
     private val authService: AuthDataSource,
     private val mapper: StartRemoteToUiMapper,
     private val cache: StartMemoryCache

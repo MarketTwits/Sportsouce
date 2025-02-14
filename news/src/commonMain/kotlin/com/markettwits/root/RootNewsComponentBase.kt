@@ -26,6 +26,7 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
         handleBackButton = true,
         childFactory = ::child,
     )
+
     private fun child(
         config: RootNewsComponent.Config,
         componentContext: ComponentContext,
@@ -40,12 +41,13 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
                     }
                 )
             )
+
             is RootNewsComponent.Config.NewsEvent -> RootNewsComponent.Child.NewsEvent(
                 NewsEventComponentBase(
                     context = componentContext,
                     item = config.news,
                     storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
-                    pop = navigation::pop
+                    onBack = navigation::pop
                 )
             )
         }

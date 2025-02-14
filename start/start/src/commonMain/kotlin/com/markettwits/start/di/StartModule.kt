@@ -3,7 +3,6 @@ package com.markettwits.start.di
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cloud.di.sportSouceNetworkModule
-import com.markettwits.cloud.di.timeApiNetworkModule
 import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
@@ -30,7 +29,6 @@ val startModule = module {
     includes(
         sportSouceNetworkModule,
         sportSauceStartNetworkModule,
-        timeApiNetworkModule,
         authDataSourceModule,
         crashlyticsModule,
         intentActionModule

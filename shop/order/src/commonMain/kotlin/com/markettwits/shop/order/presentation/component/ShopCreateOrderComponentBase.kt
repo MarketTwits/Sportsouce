@@ -5,6 +5,7 @@ import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.core.decompose.componentScope
 import com.markettwits.shop.cart.domain.ShopItemCart
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore
 import com.markettwits.shop.order.presentation.store.ShopCreateOrderStoreFactory
@@ -22,8 +23,8 @@ class ShopCreateOrderComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: ShopCreateOrderStoreFactory,
     private val outputs: ShopCreateOrderComponent.Outputs,
-    private val option : Option
-) : ShopCreateOrderComponent, ComponentContext by componentContext{
+    private val option: Option
+) : ShopCreateOrderComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore {
         storeFactory.create(option.shopOrderItems)
@@ -38,12 +39,12 @@ class ShopCreateOrderComponentBase(
 
     init {
         store.labels.onEach {
-            when(it){
+            when (it) {
                 ShopCreateOrderStore.Label.GoBack -> outputs.goBack()
             }
         }.launchIn(componentScope)
     }
 
     @Serializable
-    data class Option(val shopOrderItems : List<ShopItemCart>)
+    data class Option(val shopOrderItems: List<ShopItemCart>)
 }

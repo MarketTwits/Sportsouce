@@ -10,6 +10,7 @@ import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.member_common.domain.emptyProfileMember
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -30,7 +31,9 @@ class MemberEditComponentBase(
             storeFactory.create(emptyProfileMember, MemberEditComponent.Mode.Add)
         }
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<MemberEditStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: MemberEditStore.Intent) {
         store.accept(intent)
     }

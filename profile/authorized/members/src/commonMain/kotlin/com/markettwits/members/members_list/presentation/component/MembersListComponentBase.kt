@@ -9,6 +9,7 @@ import com.markettwits.members.members_list.presentation.store.store.MembersList
 import com.markettwits.members.members_list.presentation.store.store.MembersListStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,9 @@ class MembersListComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<MembersListStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: MembersListStore.Intent) {
         store.accept(intent)
     }

@@ -9,10 +9,10 @@ android.namespace = "com.markettwits.shop.order"
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
             implementation(projects.core.errors)
+            implementation(projects.core.decompose)
             implementation(projects.shop.cloud)
             implementation(projects.shop.cart)
             implementation(projects.core.ui)

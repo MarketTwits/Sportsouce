@@ -137,7 +137,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                     context = componentContext,
                     item = config.news,
                     storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
-                    pop = navigation::pop
+                    onBack = navigation::pop
                 )
             )
 

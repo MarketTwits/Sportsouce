@@ -9,6 +9,7 @@ import com.markettwits.review.presentation.store.ReviewStore
 import com.markettwits.review.presentation.store.ReviewStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,6 +29,7 @@ class ReviewComponentBase(
     }
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<ReviewStore.State> = store.stateFlow
 
     override fun obtainEvent(event: ReviewStore.Intent) {

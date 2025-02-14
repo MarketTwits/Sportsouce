@@ -1,4 +1,4 @@
-package com.markettwits.shop.order.presentation.component
+package com.markettwits.core.decompose
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper

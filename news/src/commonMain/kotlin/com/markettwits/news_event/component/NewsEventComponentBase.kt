@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.core.decompose.componentScope
 import com.markettwits.news_event.store.NewsEventStore
 import com.markettwits.news_event.store.NewsEventStoreFactory
 import com.markettwits.news_list.domain.NewsInfo
@@ -17,9 +18,8 @@ class NewsEventComponentBase(
     context: ComponentContext,
     private val item: NewsInfo,
     private val storeFactory: NewsEventStoreFactory,
-    private val pop: () -> Unit,
-) : NewsEventComponent,
-    ComponentContext by context {
+    private val onBack: () -> Unit,
+) : NewsEventComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
         storeFactory.create(item)
@@ -28,17 +28,15 @@ class NewsEventComponentBase(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<NewsEventStore.State> = store.stateFlow
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-
     override fun obtainEvent(event: NewsEventStore.Intent) {
         store.accept(event)
     }
 
     init {
-        scope.launch {
+        componentScope.launch {
             store.labels.collect {
                 when (it) {
-                    is NewsEventStore.Label.Pop -> pop()
+                    is NewsEventStore.Label.Pop -> onBack()
                 }
             }
         }

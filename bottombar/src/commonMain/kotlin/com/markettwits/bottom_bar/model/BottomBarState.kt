@@ -5,7 +5,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class BottomBarState(
     val showTopBar: Boolean,
-    val selectedTab: Configuration,
+    val selectedTab: BottomBarConfiguration,
     val showLabel: Boolean,
     val items: List<BottomNavigationItem>
 )

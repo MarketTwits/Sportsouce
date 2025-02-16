@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.start.presentation.album.presentation.screen.StartAlbumScreen
-import com.markettwits.start.presentation.membres.filter_screen.screen.StartMembersFilterScreen
+import com.markettwits.start.presentation.membres.filter.screen.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.screen.StartMembersScreen
 import com.markettwits.start.presentation.start.screen.StartScreen
 

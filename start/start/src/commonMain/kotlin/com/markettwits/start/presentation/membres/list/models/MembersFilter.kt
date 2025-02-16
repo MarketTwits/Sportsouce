@@ -1,7 +1,6 @@
-package com.markettwits.start.presentation.membres.list.filter
+package com.markettwits.start.presentation.membres.list.models
 
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
 
 interface MembersFilter {
     fun filterByKeyWordTeam(

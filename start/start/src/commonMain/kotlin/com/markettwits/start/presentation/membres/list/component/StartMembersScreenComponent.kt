@@ -3,8 +3,8 @@ package com.markettwits.start.presentation.membres.list.component
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.start.presentation.common.OnClick
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.list.filter.MembersFilter
+import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
+import com.markettwits.start.presentation.membres.list.models.MembersFilter
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer

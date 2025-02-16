@@ -14,7 +14,7 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.bottom_bar.component.component.BottomBarComponentBase
 import com.markettwits.bottom_bar.component.component.BottomBarComponentHandle
 import com.markettwits.bottom_bar.di.bottomBarModule
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.root_profile.RootProfileComponentBase
 import com.markettwits.starts.root.RootStartsComponentBase
 
@@ -77,12 +77,12 @@ class RootComponentBase(
                 BottomBarComponentBase(
                     componentContext = componentContext,
                     navigationComponentHandle = object : BottomBarComponentHandle {
-                        override fun navigateTo(configuration: Configuration) {
+                        override fun navigateTo(bottomBarConfiguration: BottomBarConfiguration) {
                             stackNavigation.bringToFront(
-                                BottomBarConfigurationMapper.map(configuration)
+                                BottomBarConfigurationMapper.map(bottomBarConfiguration)
                             )
                         }
-                        override fun getActiveConfiguration(observer: (Configuration) -> Unit) {
+                        override fun getActiveConfiguration(observer: (BottomBarConfiguration) -> Unit) {
                             childStack.subscribe {
                                 observer(
                                     BottomBarConfigurationMapper.map(it.active.configuration as RootComponent.Configuration)

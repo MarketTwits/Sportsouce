@@ -4,8 +4,8 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponent
 import com.markettwits.start.presentation.comments.component.StartCommentsComponent
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
+import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
+import com.markettwits.start.presentation.membres.filter.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.component.StartScreenComponent

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.filter_screen
+package com.markettwits.start.presentation.membres.filter
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue

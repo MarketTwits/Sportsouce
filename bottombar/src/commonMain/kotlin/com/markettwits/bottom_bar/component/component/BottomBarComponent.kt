@@ -2,7 +2,7 @@ package com.markettwits.bottom_bar.component.component
 
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 import com.markettwits.bottom_bar.model.BottomBarState
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 import kotlinx.coroutines.flow.StateFlow
 
 interface BottomBarComponent {
@@ -11,5 +11,5 @@ interface BottomBarComponent {
 
     val listener: BottomBarVisibilityListener
 
-    fun onClickTabBar(configuration: Configuration)
+    fun onClickTabBar(bottomBarConfiguration: BottomBarConfiguration)
 }

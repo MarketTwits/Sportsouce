@@ -10,6 +10,7 @@ import com.markettwits.club.registration.presentation.store.store.WorkoutRegistr
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,6 +28,8 @@ class WorkoutRegistrationComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(type)
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<WorkoutRegistrationStore.State> = store.stateFlow
 
     override fun onFormChanged(registrationForm: WorkoutRegistrationForm) {

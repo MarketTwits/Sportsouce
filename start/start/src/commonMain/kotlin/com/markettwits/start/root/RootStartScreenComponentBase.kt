@@ -1,11 +1,7 @@
 package com.markettwits.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -15,11 +11,11 @@ import com.markettwits.start.presentation.album.di.startAlbumModule
 import com.markettwits.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.start.presentation.comments.component.StartCommentsComponentBase
 import com.markettwits.start.presentation.comments.store.StartCommentsStoreFactory
-import com.markettwits.start.presentation.membres.filter_screen.HandleMembersFilterBase
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreenComponent
+import com.markettwits.start.presentation.membres.filter.HandleMembersFilterBase
+import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
+import com.markettwits.start.presentation.membres.filter.StartMembersFilterScreenComponent
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
-import com.markettwits.start.presentation.membres.list.filter.MembersFilterBase
+import com.markettwits.start.presentation.membres.list.models.MembersFilterBase
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
@@ -65,10 +61,10 @@ class RootStartScreenComponentBase(
                         openMembersScreen(startId = id, items = list, emptyList())
                     },
                     album = {
-                        navigation.push(RootStartScreenComponent.Config.StartAlbum(it))
+                        navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
                     },
                     registerNew = {
-                        navigation.push(
+                        navigation.pushNew(
                             RootStartScreenComponent.Config.StartRegistration(it)
                         )
                     }
@@ -137,10 +133,10 @@ class RootStartScreenComponentBase(
         items: List<StartMembersUi>,
         filter: List<MembersFilterGroup>
     ) {
-        navigation.push(RootStartScreenComponent.Config.StartMembers(startId, items, filter))
+        navigation.pushNew(RootStartScreenComponent.Config.StartMembers(startId, items, filter))
     }
 
     private fun openMembersFilter(items: List<MembersFilterGroup>) {
-        navigation.push(RootStartScreenComponent.Config.StartMembersFilter(items))
+        navigation.pushNew(RootStartScreenComponent.Config.StartMembersFilter(items))
     }
 }

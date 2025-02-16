@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.filter_screen.component
+package com.markettwits.start.presentation.membres.filter.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row

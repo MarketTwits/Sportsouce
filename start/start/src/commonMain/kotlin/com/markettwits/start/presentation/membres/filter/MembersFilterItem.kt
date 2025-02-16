@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.filter_screen
+package com.markettwits.start.presentation.membres.filter
 
 import kotlinx.serialization.Serializable
 

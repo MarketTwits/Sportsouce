@@ -22,8 +22,7 @@ pullrefresh = "1.4.0-beta02" # https://github.com/MateriiApps/pullrefresh
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 buildConfigPlugin = "5.5.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
 compose-activity = "1.10.0"
-compose-preview = "1.7.7"
-lazytable = "1.6.0" # https://github.com/oleksandrbalan/lazytable
+compose-preview = "1.7.8"
 appcompat = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.2.2" # https://github.com/arkivanov/Decompose
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
@@ -39,7 +38,6 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 htmlconverter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", version.ref = "htmlconverter" }
-lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRendererM3" }
 mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
 mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }

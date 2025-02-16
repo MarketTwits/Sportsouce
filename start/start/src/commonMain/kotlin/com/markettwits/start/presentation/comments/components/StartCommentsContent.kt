@@ -13,8 +13,6 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.start.presentation.comments.component.StartCommentsComponent
 import com.markettwits.start.presentation.comments.store.StartCommentsStore
-import com.markettwits.start.presentation.start.components.CommentTextField
-import com.markettwits.start.presentation.start.components.StartCommentsPanel
 
 @Composable
 fun StartCommentsContent(
@@ -36,7 +34,7 @@ fun StartCommentsContent(
                         )
                     )
                 })
-            CommentTextField(
+            StartCommentTextField(
                 modifier = Modifier,
                 mode = state.mode,
                 onClickCloseReply = {

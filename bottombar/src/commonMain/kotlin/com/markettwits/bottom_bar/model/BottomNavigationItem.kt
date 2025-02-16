@@ -10,5 +10,5 @@ data class BottomNavigationItem(
     val unselectedIcon: ImageVector,
     val hasNews: Boolean,
     val badgeCount: Int? = null,
-    val configuration: Configuration
+    val bottomBarConfiguration: BottomBarConfiguration
 )

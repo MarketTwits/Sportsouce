@@ -9,7 +9,7 @@ import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.start.presentation.membres.list.compoents.StartMembers
+import com.markettwits.start.presentation.membres.list.compoents.StartMembersTable
 import com.markettwits.start.presentation.membres.list.compoents.StartSearchMember
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreen
 
@@ -19,7 +19,7 @@ fun StartMembersScreen(component: StartMembersScreen) {
 
     CollapsingToolbarScaffold(
         modifier = Modifier,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
+        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             Column {
@@ -30,6 +30,6 @@ fun StartMembersScreen(component: StartMembersScreen) {
             }
         }
     ) {
-        StartMembers(members = members)
+        StartMembersTable(items = members)
     }
 }

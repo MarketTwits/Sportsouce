@@ -2,7 +2,7 @@ package com.markettwits.bottom_bar.component.storage
 
 import com.markettwits.bottom_bar.components.defaultMenuItems
 import com.markettwits.bottom_bar.model.BottomBarState
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.settings.api.api.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,14 +27,14 @@ data class BottomBarStorageImpl(private val repository: SettingsRepository) : Bo
         BottomBarState(
             showTopBar = true,
             showLabel = true,
-            selectedTab = Configuration.Home,
+            selectedTab = BottomBarConfiguration.Home,
             items = defaultMenuItems()
         )
     )
 
-    override fun onSelectTab(configuration: Configuration) {
+    override fun onSelectTab(bottomBarConfiguration: BottomBarConfiguration) {
         state.update {
-            it.copy(selectedTab = configuration)
+            it.copy(selectedTab = bottomBarConfiguration)
         }
     }
 

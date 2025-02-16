@@ -8,7 +8,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
 import com.markettwits.bottom_bar.model.BottomNavigationItem
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 
 internal fun defaultMenuItems(): List<BottomNavigationItem> {
     return listOf(
@@ -16,7 +16,7 @@ internal fun defaultMenuItems(): List<BottomNavigationItem> {
             title = "Старты",
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
-            configuration = Configuration.Home,
+            bottomBarConfiguration = BottomBarConfiguration.Home,
             hasNews = false,
         ),
         BottomNavigationItem(
@@ -24,14 +24,14 @@ internal fun defaultMenuItems(): List<BottomNavigationItem> {
             selectedIcon = Icons.Filled.Newspaper,
             unselectedIcon = Icons.Outlined.Newspaper,
             hasNews = false,
-            configuration = Configuration.Review,
+            bottomBarConfiguration = BottomBarConfiguration.Review,
         ),
         BottomNavigationItem(
             title = "Профиль",
             selectedIcon = Icons.Filled.AccountCircle,
             unselectedIcon = Icons.Outlined.AccountCircle,
             hasNews = false,
-            configuration = Configuration.Profile,
+            bottomBarConfiguration = BottomBarConfiguration.Profile,
         ),
     )
 }

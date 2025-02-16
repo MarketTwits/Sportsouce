@@ -1,11 +1,11 @@
 package com.markettwits.bottom_bar.component.component
 
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 
 interface BottomBarComponentHandle {
 
-    fun navigateTo(configuration: Configuration)
+    fun navigateTo(bottomBarConfiguration: BottomBarConfiguration)
 
-    fun getActiveConfiguration(observer: (Configuration) -> Unit)
+    fun getActiveConfiguration(observer: (BottomBarConfiguration) -> Unit)
 
 }

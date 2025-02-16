@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.filter_screen.component
+package com.markettwits.start.presentation.membres.filter.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.common.OnClick
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterGroup
-import com.markettwits.start.presentation.membres.filter_screen.MembersFilterItem
-import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
+import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
+import com.markettwits.start.presentation.membres.filter.MembersFilterItem
+import com.markettwits.start.presentation.membres.filter.StartMembersFilterScreen
 
 @Composable
 fun StartMemberFilterItemBase(modifier: Modifier = Modifier, item: String, onClick: OnClick) {

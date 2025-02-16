@@ -1,20 +1,20 @@
 package com.markettwits.root
 
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 
-internal object BottomBarConfigurationMapper : Configuration.Mapper<RootComponent.Configuration> {
+internal object BottomBarConfigurationMapper : BottomBarConfiguration.Mapper<RootComponent.Configuration> {
 
-    override fun map(configuration: Configuration): RootComponent.Configuration =
-        when (configuration) {
-            is Configuration.Home -> RootComponent.Configuration.Starts
-            is Configuration.Profile -> RootComponent.Configuration.Profile
-            is Configuration.Review -> RootComponent.Configuration.Review
+    override fun map(bottomBarConfiguration: BottomBarConfiguration): RootComponent.Configuration =
+        when (bottomBarConfiguration) {
+            is BottomBarConfiguration.Home -> RootComponent.Configuration.Starts
+            is BottomBarConfiguration.Profile -> RootComponent.Configuration.Profile
+            is BottomBarConfiguration.Review -> RootComponent.Configuration.Review
         }
 
-    override fun map(configuration: RootComponent.Configuration): Configuration =
+    override fun map(configuration: RootComponent.Configuration): BottomBarConfiguration =
         when (configuration) {
-            is RootComponent.Configuration.Profile -> Configuration.Profile
-            is RootComponent.Configuration.Review -> Configuration.Review
-            is RootComponent.Configuration.Starts -> Configuration.Home
+            is RootComponent.Configuration.Profile -> BottomBarConfiguration.Profile
+            is RootComponent.Configuration.Review -> BottomBarConfiguration.Review
+            is RootComponent.Configuration.Starts -> BottomBarConfiguration.Home
         }
 }

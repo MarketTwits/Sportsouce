@@ -9,6 +9,7 @@ import com.markettwits.club.info.presentation.store.ClubInfoStore
 import com.markettwits.club.info.presentation.store.ClubInfoStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,6 +28,7 @@ internal class ClubInfoComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(index, items)
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ClubInfoStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: ClubInfoStore.Intent) {

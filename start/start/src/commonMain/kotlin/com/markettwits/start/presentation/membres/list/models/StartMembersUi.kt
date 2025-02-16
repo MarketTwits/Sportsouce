@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface StartMembersUi {
+
     val distance: String
     val team: String
     val group: String

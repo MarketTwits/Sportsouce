@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 import com.markettwits.bottom_bar.component.storage.BottomBarStorage
 import com.markettwits.bottom_bar.model.BottomBarState
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 import kotlinx.coroutines.flow.StateFlow
 
 class BottomBarComponentBase(
@@ -15,8 +15,8 @@ class BottomBarComponentBase(
 
     override val state: StateFlow<BottomBarState> = bottomBarStorage.state
 
-    override fun onClickTabBar(configuration: Configuration) {
-        navigationComponentHandle.navigateTo(configuration)
+    override fun onClickTabBar(bottomBarConfiguration: BottomBarConfiguration) {
+        navigationComponentHandle.navigateTo(bottomBarConfiguration)
     }
 
     override val listener: BottomBarVisibilityListener = bottomBarStorage

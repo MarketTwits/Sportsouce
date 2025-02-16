@@ -86,7 +86,6 @@ internal fun ClubInfoPager(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ClubInfoPageIndicator(
     modifier: Modifier = Modifier,

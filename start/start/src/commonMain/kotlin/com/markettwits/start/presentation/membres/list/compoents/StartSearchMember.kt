@@ -22,7 +22,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreen
 
 @Composable
-fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScreen) {
+internal fun StartSearchMember(modifier: Modifier = Modifier, component: StartMembersScreen) {
     val comment by component.filterValue.subscribeAsState()
     Row(
         modifier = modifier.fillMaxWidth(),

@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.filter_screen.screen
+package com.markettwits.start.presentation.membres.filter.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
-import com.markettwits.start.presentation.membres.filter_screen.StartMembersFilterScreen
-import com.markettwits.start.presentation.membres.filter_screen.component.StartMembersFilterButtonSelectionPanel
-import com.markettwits.start.presentation.membres.filter_screen.component.StartMembersSortWrapper2
+import com.markettwits.start.presentation.membres.filter.StartMembersFilterScreen
+import com.markettwits.start.presentation.membres.filter.component.StartMembersFilterButtonSelectionPanel
+import com.markettwits.start.presentation.membres.filter.component.StartMembersSortWrapper2
 
 @Composable
 fun StartMembersFilterScreen(component: StartMembersFilterScreen) {

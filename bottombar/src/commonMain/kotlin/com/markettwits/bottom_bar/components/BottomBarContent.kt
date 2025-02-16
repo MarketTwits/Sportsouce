@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.markettwits.bottom_bar.model.BottomNavigationItem
-import com.markettwits.bottom_bar.model.Configuration
+import com.markettwits.bottom_bar.model.BottomBarConfiguration
 
 @Composable
 internal fun BottomBarContent(
@@ -23,8 +23,8 @@ internal fun BottomBarContent(
     isShowTopBar: Boolean,
     isShowLabel: Boolean,
     items: List<BottomNavigationItem>,
-    selectedTab: Configuration,
-    onClickTab: (Configuration) -> Unit,
+    selectedTab: BottomBarConfiguration,
+    onClickTab: (BottomBarConfiguration) -> Unit,
 ) {
     AnimatedVisibility(
         visible = isShowTopBar,
@@ -40,9 +40,9 @@ internal fun BottomBarContent(
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.tertiaryContainer
                     ),
-                    selected = selectedTab == item.configuration,
+                    selected = selectedTab == item.bottomBarConfiguration,
                     onClick = {
-                        onClickTab(item.configuration)
+                        onClickTab(item.bottomBarConfiguration)
                     },
                     label = {
                         if (isShowLabel)
@@ -51,7 +51,7 @@ internal fun BottomBarContent(
                     alwaysShowLabel = isShowLabel,
                     icon = {
                         Icon(
-                            imageVector = if (selectedTab == item.configuration) {
+                            imageVector = if (selectedTab == item.bottomBarConfiguration) {
                                 item.selectedIcon
                             } else
                                 item.unselectedIcon,

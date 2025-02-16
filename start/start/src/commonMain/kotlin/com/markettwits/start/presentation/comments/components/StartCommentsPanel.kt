@@ -1,31 +1,12 @@
-package com.markettwits.start.presentation.start.components
+package com.markettwits.start.presentation.comments.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -45,7 +24,7 @@ import com.markettwits.core_ui.items.base_screen.FullImageScreen
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
-import com.markettwits.start.presentation.start.component.CommentMode
+import com.markettwits.start.presentation.start.components.StartContentBasePanel
 
 
 @Composable
@@ -90,7 +69,7 @@ internal fun StartCommentsPanel(
 @Composable
 private fun StartCommentCard(
     modifier: Modifier = Modifier,
-    userImageUrl : String,
+    userImageUrl: String,
     userName: String,
     commentCreateDate: String,
     message: String,
@@ -102,12 +81,12 @@ private fun StartCommentCard(
         mutableStateOf(false)
     }
 
-    var isShowAvatarDialog by rememberSaveable{
+    var isShowAvatarDialog by rememberSaveable {
         mutableStateOf(false)
     }
 
-    if (isShowAvatarDialog){
-        FullImageScreen(image = userImageUrl){
+    if (isShowAvatarDialog) {
+        FullImageScreen(image = userImageUrl) {
             isShowAvatarDialog = false
         }
     }
@@ -124,11 +103,22 @@ private fun StartCommentCard(
                 contentScale = ContentScale.Crop
             )
         else
-            Box(modifier = Modifier
-                .clip(Shapes.large)
-                .size(40.dp)
-                .background(Color.Gray)
-            )
+            Box(
+                modifier = Modifier
+                    .clip(Shapes.large)
+                    .size(40.dp)
+                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "",
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
+            }
         Spacer(modifier = Modifier.padding(horizontal = 5.dp))
         Column(modifier = modifier) {
             Row {
@@ -188,8 +178,16 @@ private fun StartCommentCard(
                 }
                 AnimatedVisibility(
                     visible = showReply,
-                    enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 300)),
-                    exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 300))
+                    enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 300
+                        )
+                    ),
+                    exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 300
+                        )
+                    )
                 ) {
                     Column {
                         replies.forEach {
@@ -221,121 +219,3 @@ private fun StartCommentCard(
     }
 }
 
-@Composable
-fun CommentTextField(
-    modifier: Modifier = Modifier,
-    isLoading: Boolean,
-    mode: CommentMode,
-    onClickCloseReply: () -> Unit,
-    sendComment: (String) -> Unit
-) {
-    var comment by rememberSaveable {
-        mutableStateOf("")
-    }
-
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
-            .padding(3.dp),
-    ) {
-        if (mode is CommentMode.Reply) {
-            Row(
-                modifier = modifier
-                    .align(Alignment.CenterStart),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Ответ для ${mode.replier}",
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .size(15.dp)
-                            .clickable {
-                                onClickCloseReply()
-                            },
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "rule",
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-
-
-            }
-
-        }
-        Row(
-            modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier.size(12.dp),
-                imageVector = Icons.Default.Book,
-                contentDescription = "rule",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = "Правила",
-                fontSize = 12.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-
-    }
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = comment,
-        maxLines = 3,
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.tertiary,
-            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-            unfocusedTextColor = MaterialTheme.colorScheme.outline
-        ),
-        placeholder = {
-            Text(
-                text = "Ваш комментарий",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.regular(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = Color.Gray
-            )
-        },
-        trailingIcon = {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(30.dp),
-                    color = MaterialTheme.colorScheme.tertiary,
-                )
-            } else {
-                IconButton(
-                    enabled = !isLoading,
-                    onClick = {
-                        sendComment(comment)
-                    }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "send comment",
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-            }
-        },
-        onValueChange = {
-            comment = it
-        })
-}

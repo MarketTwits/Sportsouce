@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.markettwits.bottom_bar.model.BottomNavigationItem
 import com.markettwits.bottom_bar.model.BottomBarConfiguration
+import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun BottomBarContent(
@@ -46,7 +47,11 @@ internal fun BottomBarContent(
                     },
                     label = {
                         if (isShowLabel)
-                            Text(text = item.title, color = MaterialTheme.colorScheme.tertiary)
+                            Text(
+                                text = item.title,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                fontFamily = FontNunito.medium()
+                            )
                     },
                     alwaysShowLabel = isShowLabel,
                     icon = {

@@ -10,5 +10,6 @@ import org.koin.dsl.module
 
 val bottomBarModule = module {
     includes(settingsModule)
-    singleOf(::BottomBarStorageImpl) binds arrayOf(BottomBarStorage::class, BottomBarVisibilityListener::class)
+    single<BottomBarStorage> { BottomBarStorageImpl }
+    single<BottomBarVisibilityListener> { get<BottomBarStorage>() }
 }

@@ -4,9 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.bottom_bar.component.component.BottomBarSideEffectHandlerAbstract
+import com.markettwits.bottom_bar.component.component.BottomBarHandler
+import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
-import com.markettwits.bottom_bar.component.storage.BottomBarStorage
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -19,18 +19,16 @@ import kotlinx.coroutines.flow.onEach
 internal class ClubDashboardComponentBase(
     private val componentContext: ComponentContext,
     private val storeFactory: ClubDashboardStoreFactory,
-    private val listener: BottomBarVisibilityListener,
     private val output: (ClubDashboardComponent.Output) -> Unit,
-) : ClubDashboardComponent, BottomBarSideEffectHandlerAbstract(listener),
-    ComponentContext by componentContext {
+) : ClubDashboardComponent, BottomBarHandler(
+    bottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysInvisible
+), ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(listener)
+        storeFactory.create()
     }
-
-    override val popInner = { output(ClubDashboardComponent.Output.Dismiss) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ClubDashboardStore.State> = store.stateFlow
@@ -42,10 +40,11 @@ internal class ClubDashboardComponentBase(
     init {
         store.labels.onEach {
             when (it) {
-                is ClubDashboardStore.Label.GoBack -> goBackInner()
+                is ClubDashboardStore.Label.GoBack -> popInner()
                 is ClubDashboardStore.Label.OnClickInfo -> output(
                     ClubDashboardComponent.Output.GoInfo(it.index, it.items)
                 )
+
                 is ClubDashboardStore.Label.OnClickRegistration -> output(
                     ClubDashboardComponent.Output.Subscription(
                         it.type
@@ -53,7 +52,10 @@ internal class ClubDashboardComponentBase(
                 )
             }
         }.launchIn(scope)
+        subscribeOnBottomBar()
+    }
 
-        backHandler.register(bottomBarBackHandler)
+    override fun popInner() {
+        output(ClubDashboardComponent.Output.Dismiss)
     }
 }

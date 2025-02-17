@@ -99,7 +99,8 @@ fun UserInfoCard(
             text = user.userInfo.status.ifEmpty { "Статус не установлен" },
             fontFamily = FontNunito.regular(),
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.outline,
+            textAlign = TextAlign.Center
         )
 
         Button(

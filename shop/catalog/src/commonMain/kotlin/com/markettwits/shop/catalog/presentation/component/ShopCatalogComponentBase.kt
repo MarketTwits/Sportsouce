@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStore
 import com.markettwits.shop.catalog.presentation.store.ShopCatalogStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -15,18 +16,17 @@ import kotlinx.coroutines.flow.onEach
 
 class ShopCatalogComponentBase(
     componentContext: ComponentContext,
+    override val listener: BottomBarVisibilityListener,
     private val storeFactory: ShopCatalogStoreFactory,
     private val outputs: ShopCatalogComponent.Outputs,
 ) : ShopCatalogComponent, ComponentContext by componentContext {
-
 
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val state: StateFlow<ShopCatalogStore.State>
-        get() = store.stateFlow
+    override val state: StateFlow<ShopCatalogStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: ShopCatalogStore.Intent) {
         store.accept(intent)
@@ -41,5 +41,6 @@ class ShopCatalogComponentBase(
                 is ShopCatalogStore.Label.GoSearch -> outputs.goSearch(it.query)
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
+
     }
 }

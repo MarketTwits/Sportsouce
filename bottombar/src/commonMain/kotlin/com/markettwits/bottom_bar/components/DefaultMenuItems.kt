@@ -7,8 +7,8 @@ import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
-import com.markettwits.bottom_bar.model.BottomNavigationItem
 import com.markettwits.bottom_bar.model.BottomBarConfiguration
+import com.markettwits.bottom_bar.model.BottomNavigationItem
 
 internal fun defaultMenuItems(): List<BottomNavigationItem> {
     return listOf(

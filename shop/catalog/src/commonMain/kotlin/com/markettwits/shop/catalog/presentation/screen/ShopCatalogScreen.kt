@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
@@ -64,9 +66,11 @@ fun ShopCatalogScreen(
         ) {
             Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
                 SelectedFilterParams(component = filterComponent)
-                ShopItemsContent(items = shopItems, onClickItem = {
-                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
-                })
+                ShopItemsContent(
+                  //  modifier = modifier.nestedScroll(rememberBottomBarNestedScroll(catalogComponent.listener)),
+                    items = shopItems, onClickItem = {
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
+                    })
             }
         }
     }

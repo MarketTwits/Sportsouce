@@ -16,18 +16,17 @@ internal class ClubDashboardStoreFactory(
     private val exceptionTracker: ExceptionTracker
 ) {
 
-    fun create(bottomBarVisibilityListener: BottomBarVisibilityListener): ClubDashboardStore =
-        ClubDashboardStoreImpl(repository, bottomBarVisibilityListener, exceptionTracker)
+    fun create(): ClubDashboardStore =
+        ClubDashboardStoreImpl(repository, exceptionTracker)
 
     private inner class ClubDashboardStoreImpl(
         private val repository: ClubRepository,
-        private val bottomBarVisibilityListener: BottomBarVisibilityListener,
         private val exceptionTracker: ExceptionTracker
     ) :
         ClubDashboardStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ClubDashboardStore",
-            initialState = State(bottomBarVisibilityListener = bottomBarVisibilityListener),
+            initialState = State(),
             executorFactory = { ClubDashboardExecutor(repository, exceptionTracker) },
             reducer = ClubDashboardReducer,
             bootstrapper = SimpleBootstrapper(Unit)

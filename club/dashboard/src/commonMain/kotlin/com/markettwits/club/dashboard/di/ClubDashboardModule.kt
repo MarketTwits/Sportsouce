@@ -30,7 +30,6 @@ internal fun Scope.createDashboardComponent(
     ClubDashboardComponentBase(
         componentContext = componentContext,
         storeFactory = get(),
-        listener = get<BottomBarVisibilityListener>(),
         output = output
     )
 

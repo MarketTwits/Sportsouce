@@ -12,6 +12,7 @@ kotlin {
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
+            implementation(projects.bottombar)
             implementation(projects.auth.authFlow)
             implementation(projects.core.errors)
             implementation(projects.shop.filter)

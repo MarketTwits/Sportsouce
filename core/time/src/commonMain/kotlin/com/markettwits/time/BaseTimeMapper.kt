@@ -22,7 +22,7 @@ class BaseTimeMapper : TimeMapper {
     }
 
     override fun mapTimeToCloud(timePattern: TimePattern, time: String): String {
-        val inputFormat = SimpleDateFormat(timePattern.map(), Locale.getDefault())
+        val inputFormat = SimpleDateFormat(timePattern.map(), Locale.forLanguageTag("ru"))
         val pareseDate = inputFormat.parse(time)
         val zoneId = ZoneId.of("Z")
         val zonedDateTime = ZonedDateTime.ofInstant(pareseDate.toInstant(), zoneId)

@@ -1,18 +1,13 @@
 package com.markettwits.settings.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
+import com.arkivanov.decompose.router.slot.*
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.selfupdater.components.selft_update.di.selfUpdateComponentModule
-import com.markettwits.settings.internal.appearance.component.AppearanceComponentBase
 import com.markettwits.settings.internal.change_theme.component.ChangeThemeComponentBase
 import com.markettwits.settings.internal.change_theme.di.changeThemeModule
 import com.markettwits.settings.internal.settings_menu.component.HandleSettingsMenu
@@ -22,8 +17,7 @@ import com.markettwits.settings.internal.settings_menu.di.settingsMenuModule
 class RootSettingsComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit
-) : RootSettingsComponent,
-    HandleSettingsMenu,
+) : RootSettingsComponent, HandleSettingsMenu,
     ComponentContext by componentContext {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -92,14 +86,6 @@ class RootSettingsComponentBase(
                     pop = slotNavigation::dismiss
                 )
             )
-
-            is RootSettingsComponent.SlotConfig.Appearance -> RootSettingsComponent.SlotChild.Appearance(
-                AppearanceComponentBase(
-                    componentContext = componentContext,
-                    pop = slotNavigation::dismiss,
-                    storeFactory = scope.get()
-                )
-            )
         }
 
     override fun openChangeThemeScreen() {
@@ -108,9 +94,5 @@ class RootSettingsComponentBase(
 
     override fun openCheckUpdatesScreen() {
         stackNavigation.pushNew(RootSettingsComponent.StackConfig.SelfUpdate)
-    }
-
-    override fun openAppearanceContent() {
-        slotNavigation.activate(RootSettingsComponent.SlotConfig.Appearance)
     }
 }

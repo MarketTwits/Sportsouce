@@ -8,6 +8,7 @@ import com.markettwits.settings.internal.change_theme.store.ChangeThemeStore
 import com.markettwits.settings.internal.change_theme.store.ChangeThemeStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,7 +25,9 @@ class ChangeThemeComponentBase(
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ChangeThemeStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: ChangeThemeStore.Intent) {
         store.accept(intent)
     }

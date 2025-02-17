@@ -40,11 +40,6 @@ internal fun defaultApplicationElements(
         title = "Темная тема",
         icon = Icons.Outlined.NightsStay
     ),
-    SettingsMenuElement.Base(
-        id = 1,
-        title = "Внешний вид",
-        icon = Icons.Default.Palette
-    ),
 )
 
 internal fun defaultSocialElements(): List<SettingsMenuElement> = listOf(

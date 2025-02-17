@@ -10,9 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.start_cloud.model.start.fields.Option
 
 @Composable
 internal fun AdditionalFieldSingleSelect(
@@ -32,15 +34,21 @@ internal fun AdditionalFieldSingleSelect(
 
         StartRegistrationAdditionalFiledTitle(field = field.field)
 
+        val visibleList = options.map {
+            if (it.price != null)
+                "${it.title} Цена: (${it.price.formatPrice()} ₽)"
+            else it.title
+        }
+
         DropDownSpinner(
-            itemList = options
-                .map { it.title },
+            itemList = visibleList,
+            defaultText = "",
             selectedItem = field.answer.singleSelect,
             onItemSelected = { id, item ->
                 onFieldChanged(
                     field.copy(
                         answer = field.answer.copy(
-                            singleSelect = options.find { it.title == item }?.id,
+                            singleSelect = options.getOrNull(id)?.id,
                         )
                     )
                 )

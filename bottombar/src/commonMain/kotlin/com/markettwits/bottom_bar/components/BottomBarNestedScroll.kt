@@ -10,8 +10,9 @@ import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 
 @Composable
 fun rememberBottomBarNestedScroll(
-    bottomBarStorage: BottomBarVisibilityListener,
+    bottomBarStorage: BottomBarVisibilityListener
 ): NestedScrollConnection = remember {
+
     object : NestedScrollConnection {
         private var accumulatedScroll = 0f
         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -28,6 +29,3 @@ fun rememberBottomBarNestedScroll(
     }
 }
 
-val LocalBottomBarVisibilityListener = compositionLocalOf<BottomBarVisibilityListener> {
-    error("No BottomBarVisibilityListener provided")
-}

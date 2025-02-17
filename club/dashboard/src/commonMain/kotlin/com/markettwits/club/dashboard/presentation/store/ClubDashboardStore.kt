@@ -24,7 +24,6 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
             isIncreaseEnable = true,
             isDecreaseEnable = true
         ),
-        val bottomBarVisibilityListener: BottomBarVisibilityListener
     )
 
     sealed interface Intent {

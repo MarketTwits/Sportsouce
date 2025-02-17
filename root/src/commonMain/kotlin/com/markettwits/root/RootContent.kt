@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
@@ -14,8 +13,6 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
 import com.markettwits.bottom_bar.components.BottomBar
-import com.markettwits.bottom_bar.components.LocalBottomBarVisibilityListener
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.root_profile.RootProfileScreen
 import com.markettwits.starts.root.RootStartsScreen
 
@@ -30,11 +27,8 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
             component.slotChild.child?.instance?.also {
                 when (it) {
                     is RootComponent.Navigation.BottomBar -> {
-                        CompositionLocalProvider(LocalBottomBarVisibilityListener provides it.component.listener){
                             Children(component = component, modifier = Modifier.weight(1F))
                             BottomBar(it.component, modifier)
-                        }
-
                     }
                 }
             }

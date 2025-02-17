@@ -1,11 +1,7 @@
 package com.markettwits.club.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
+import com.arkivanov.decompose.router.slot.*
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -21,7 +17,6 @@ import com.markettwits.club.info.di.createClubInfoComponent
 import com.markettwits.club.registration.di.createClubRegistrationComponent
 import com.markettwits.club.registration.di.workoutRegistrationModule
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent
-import com.markettwits.getOrCreateKoinScope
 
 class RootClubComponentBase(
     componentContext: ComponentContext,

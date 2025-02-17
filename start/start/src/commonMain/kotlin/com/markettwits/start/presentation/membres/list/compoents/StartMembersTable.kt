@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,93 +26,96 @@ internal fun StartMembersTable(items: List<StartMembersUi>) {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         val columnWidth = remember {
             maxOf(maxWidth / 6, 100.dp)
         }
-            Column(
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(bottom = 8.dp)
+                .verticalScroll(verticalScrollState)
+                .horizontalScroll(horizontalScrollState)
+        ) {
+            Row(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(bottom = 8.dp)
-                    .verticalScroll(verticalScrollState)
-                    .horizontalScroll(horizontalScrollState)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.background)
-                ) {
-                    TableHeader("Участник(и)", columnWidth)
-                    TableHeader("Дистанция", columnWidth)
-                    TableHeader("Команда", columnWidth)
-                    TableHeader("Группа", columnWidth)
-                    TableHeader("Город", columnWidth)
-                }
+                TableHeader("Участник(и)", columnWidth)
+                TableHeader("Дистанция", columnWidth)
+                TableHeader("Команда", columnWidth)
+                TableHeader("Группа", columnWidth)
+                TableHeader("Город", columnWidth)
+            }
 
-                items.forEachIndexed { index, member ->
+            items.forEachIndexed { index, member ->
 
-                    val backGroundColor =
-                        if (index % 2 == 0)
-                            MaterialTheme.colorScheme.tertiaryContainer
-                        else
-                            MaterialTheme.colorScheme.background
+                val backGroundColor =
+                    if (index % 2 == 0)
+                        MaterialTheme.colorScheme.tertiaryContainer
+                    else
+                        MaterialTheme.colorScheme.background
 
-                    when (member) {
-                        is StartMembersUi.Single -> {
-                            TableRowSingle(
-                                modifier = Modifier.background(backGroundColor),
-                                data = listOf(
-                                    "${member.name} ${member.surname}",
-                                    member.distance,
-                                    member.team,
-                                    member.group,
-                                    member.city
-                                ),
-                                columnWidth = columnWidth
+                when (member) {
+                    is StartMembersUi.Single -> {
+                        TableRowSingle(
+                            modifier = Modifier
+                                .background(backGroundColor),
+                            data = listOf(
+                                "${member.name} ${member.surname}",
+                                member.distance,
+                                member.team,
+                                member.group,
+                                member.city
+                            ),
+                            columnWidth = columnWidth
+                        )
+                    }
+
+                    is StartMembersUi.Team -> {
+
+                        val data = member.members.map {
+                            listOf(
+                                "${it.name} ${it.surname}",
+                                member.distance,
+                                member.team,
+                                member.group,
+                                member.city
                             )
                         }
 
-                        is StartMembersUi.Team -> {
+                        TableRowTeam(
+                            modifier = Modifier.background(backGroundColor),
+                            data = data,
+                            columnWidth = columnWidth
+                        )
 
-                            val data = member.members.map {
-                                listOf(
-                                    "${it.name} ${it.surname}",
-                                    member.distance,
-                                    member.team,
-                                    member.group,
-                                    member.city
-                                )
-                            }
-
-                            TableRowTeam(
-                                modifier = Modifier.background(backGroundColor),
-                                data = data,
-                                columnWidth = columnWidth
-                            )
-
-                        }
                     }
                 }
             }
-            VerticalScrollbarCustom(verticalScrollState, Modifier.align(Alignment.CenterEnd))
-            HorizontalScrollbarCustom(horizontalScrollState, Modifier.align(Alignment.BottomCenter))
+        }
+        VerticalScrollbarCustom(verticalScrollState, Modifier.align(Alignment.CenterEnd))
+        HorizontalScrollbarCustom(horizontalScrollState, Modifier.align(Alignment.BottomCenter))
     }
 }
 
 @Composable
 private fun TableHeader(text: String, columnWidth: Dp) {
     Text(
-        text = text,
-        fontSize = 14.sp,
-        fontFamily = FontNunito.bold(),
         modifier = Modifier
             .padding(vertical = 4.dp)
             .padding(4.dp)
-            .width(columnWidth)
+            .width(columnWidth),
+        text = text,
+        fontSize = 14.sp,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        fontFamily = FontNunito.bold(),
     )
 }
 
-// Одна строка таблицы
 @Composable
 private fun TableRowSingle(
     modifier: Modifier = Modifier,
@@ -126,13 +129,16 @@ private fun TableRowSingle(
     ) {
         data.forEach { text ->
             Text(
-                text = text,
-                fontFamily = FontNunito.regular(),
-                fontSize = 14.sp,
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .padding(4.dp)
-                    .width(columnWidth)
+                    .padding(horizontal = 4.dp)
+                    .width(columnWidth),
+                text = text,
+                fontFamily = FontNunito.regular(),
+                fontSize = 14.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -154,13 +160,16 @@ private fun TableRowTeam(
                 Row {
                     text.forEach { value ->
                         Text(
-                            text = value,
-                            fontFamily = FontNunito.regular(),
-                            fontSize = 14.sp,
                             modifier = Modifier
                                 .padding(vertical = 4.dp)
                                 .padding(4.dp)
-                                .width(columnWidth)
+                                .padding(horizontal = 4.dp)
+                                .width(columnWidth),
+                            text = value,
+                            fontFamily = FontNunito.regular(),
+                            fontSize = 14.sp,
+                            overflow = TextOverflow.Ellipsis
+
                         )
                     }
                 }

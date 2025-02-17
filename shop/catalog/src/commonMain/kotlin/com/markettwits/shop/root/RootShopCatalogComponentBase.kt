@@ -4,6 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.bottom_bar.component.component.BottomBarHandler
+import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
+import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.shop.cart.di.shopCartModule
@@ -39,9 +42,9 @@ import com.markettwits.shop.search.presentation.store.ShopSearchStoreFactory
 class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-) : RootShopCatalogComponent,
-    ComponentContext by componentContext {
-
+) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarHandler(
+    bottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysInvisible,
+) {
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
 
     private val scope = componentContext.getOrCreateKoinScope(
@@ -71,6 +74,7 @@ class RootShopCatalogComponentBase(
             is RootShopCatalogComponent.Config.ShopCatalog -> RootShopCatalogComponent.Child.ShopCatalog(
                 componentPage = ShopCatalogComponentBase(
                     componentContext = componentContext,
+                    listener = BottomBarStorageImpl,
                     storeFactory = scope.get(),
                     outputs = CardsComponentOutputsImpl()
                 ),
@@ -154,7 +158,7 @@ class RootShopCatalogComponentBase(
             )
         }
 
-    private fun createShopFilterComponent(componentContext: ComponentContext) : ShopFilterComponent =
+    private fun createShopFilterComponent(componentContext: ComponentContext): ShopFilterComponent =
         ShopFilterComponentBase(
             componentContext = componentContext,
             store = scope.get(),
@@ -164,9 +168,16 @@ class RootShopCatalogComponentBase(
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
         override fun onClickShopItem(item: ShopItem) =
-            stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopItem(ShopItemPageComponentBase.Options(item.id,item)))
+            stackNavigation.pushNew(
+                RootShopCatalogComponent.Config.ShopItem(
+                    ShopItemPageComponentBase.Options(
+                        item.id,
+                        item
+                    )
+                )
+            )
 
-        override fun goBack() = pop.invoke()
+        override fun goBack() = popInner()
 
         override fun goFilter() =
             stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopFilter)
@@ -181,7 +192,9 @@ class RootShopCatalogComponentBase(
         override fun goBack() = stackNavigation.pop()
 
         override fun updateItem(item: ShopItem) {
-            (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopItem)?.componentCart?.updateItem(ShopItemCart(item))
+            (childStack.value.active.instance as? RootShopCatalogComponent.Child.ShopItem)?.componentCart?.updateItem(
+                ShopItemCart(item)
+            )
         }
     }
 
@@ -237,19 +250,29 @@ class RootShopCatalogComponentBase(
             )
         }
 
-        override fun goOrder(items : List<ShopItemCart>) {
+        override fun goOrder(items: List<ShopItemCart>) {
             val option = ShopCreateOrderComponentBase.Option(items)
             stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopOrder(option))
         }
     }
-    private inner class ShopOrderComponentOutputsImpl : ShopCreateOrderComponent.Outputs{
+
+    private inner class ShopOrderComponentOutputsImpl : ShopCreateOrderComponent.Outputs {
         override fun goBack() {
             stackNavigation.pop()
         }
     }
-    private inner class ShopUserOrdersComponentOutputsImpl : ShopUserOrdersComponent.Outputs{
+
+    private inner class ShopUserOrdersComponentOutputsImpl : ShopUserOrdersComponent.Outputs {
         override fun goBack() = stackNavigation.pop()
 
+    }
+
+    init {
+        subscribeOnBottomBar()
+    }
+
+    override fun popInner() {
+        pop()
     }
 }
 

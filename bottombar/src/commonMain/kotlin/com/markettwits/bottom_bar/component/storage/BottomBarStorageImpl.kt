@@ -11,17 +11,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
-data class BottomBarStorageImpl(private val repository: SettingsRepository) : BottomBarStorage {
 
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
-
-    init {
-        repository.observeSettings().onEach { settings ->
-            state.update {
-                it.copy(showLabel = !settings.bottomPanel.isCompact)
-            }
-        }.launchIn(scope)
-    }
+data object BottomBarStorageImpl : BottomBarStorage {
 
     override val state: MutableStateFlow<BottomBarState> = MutableStateFlow(
         BottomBarState(

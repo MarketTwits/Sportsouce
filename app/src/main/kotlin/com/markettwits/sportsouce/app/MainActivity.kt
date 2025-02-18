@@ -18,7 +18,6 @@ import org.koin.core.context.stopKoin
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
         initKoin {
             androidContext(applicationContext)
@@ -34,7 +33,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
     }
 
     override fun onDestroy() {

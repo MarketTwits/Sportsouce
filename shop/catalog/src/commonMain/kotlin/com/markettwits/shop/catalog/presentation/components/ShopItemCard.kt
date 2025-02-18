@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -41,10 +42,10 @@ fun ShopItemCard(
 ) {
     Box(
         modifier = modifier
+            .padding(4.dp)
             .clip(Shapes.large)
             .width(130.dp)
             .height(260.dp)
-            .padding(4.dp)
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
                 onItemClick(shopItem)
@@ -54,11 +55,9 @@ fun ShopItemCard(
             ImageCard(
                 modifier = Modifier
                     .clip(Shapes.large)
-                    .padding(2.dp)
                     .align(Alignment.CenterHorizontally)
-                    .weight(0.7f)
-                    .background(Color.White)
-                ,
+                    .weight(0.7f),
+                //.background(Color.White)
                 image = shopItem.visual.imageUrl,
             )
             ShowCardPrice(
@@ -87,7 +86,6 @@ private fun ImageCard(
             modifier = Modifier
                 .clip(Shapes.large)
                 .weight(0.9f)
-                .padding(2.dp)
                 .fillMaxSize(),
             state = pagerState
         ) { index ->
@@ -100,22 +98,30 @@ private fun ImageCard(
                 contentScale = ContentScale.Fit,
                 clipToBounds = true,
                 loading = {
-                    Box(modifier = modifier.background(MaterialTheme.colorScheme.primaryContainer))
+                    Box(
+                        modifier = modifier
+                            .shimmer(tiltAngle = 30)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                    )
                 },
                 success = {
-                    SubcomposeAsyncImageContent(modifier = Modifier)
+                    SubcomposeAsyncImageContent(
+                        modifier = Modifier.background(Color.White)
+                    )
                 }
             )
         }
-        if (image.size > 1){
+        if (image.size > 1) {
             ShopImagePageIndicator(
                 Modifier.weight(0.1f),
                 pagerState = pagerState
             )
         }
-        if (image.isEmpty()){
-            Box(modifier = Modifier
-                .fillMaxSize()){
+        if (image.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 Icon(
                     modifier = Modifier
                         .size(40.dp)

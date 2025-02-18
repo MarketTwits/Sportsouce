@@ -36,7 +36,7 @@ class HttpClientProviderBase(
             }
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 100000
+            requestTimeoutMillis = 150000
         }
         defaultRequest {
             header(HttpHeaders.ContentType, ContentType.Application.Json)

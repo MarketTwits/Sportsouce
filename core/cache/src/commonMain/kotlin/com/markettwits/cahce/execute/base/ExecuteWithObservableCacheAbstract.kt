@@ -4,6 +4,7 @@ import com.markettwits.cahce.Cache
 import com.markettwits.cahce.ObservableCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.SerializationException
 
 abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
     protected suspend fun <T> executeObservableCacheWithoutForced(
@@ -29,6 +30,12 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
                     emit(it)
                 }
             }
+            latestData.onFailure {
+                if (it is SerializationException) {
+                    cache.clear()
+                }
+            }
+
         }
     }
 
@@ -44,6 +51,9 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
                 }
                 emit(it)
             }, onFailure = {
+                if (it is SerializationException) {
+                    cache.clear()
+                }
                 val local = cache.get()
                 if (local == null) {
                     throw it

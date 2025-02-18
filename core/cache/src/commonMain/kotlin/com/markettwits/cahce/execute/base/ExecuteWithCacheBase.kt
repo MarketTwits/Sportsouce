@@ -5,6 +5,7 @@ import com.markettwits.cahce.ObservableCache
 import kotlinx.coroutines.flow.Flow
 
 class ExecuteWithCacheBase : ExecuteWithObservableCacheAbstract() {
+
     override suspend fun <T> executeWithCache(
         forced: Boolean,
         cache: Cache<T>,

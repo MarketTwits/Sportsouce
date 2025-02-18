@@ -54,13 +54,12 @@ fun StartCard(
         Row {
             ImageCard(
                 image = start.image,
-                date = start.date,
                 status = start.statusCode
             )
             ImageCardInfo(
                 modifier = Modifier.fillMaxWidth(),
                 title = start.name,
-                place = start.place,
+                date = start.date,
                 distance = start.distance
             )
         }
@@ -71,7 +70,6 @@ fun StartCard(
 private fun ImageCard(
     modifier: Modifier = Modifier,
     image: String,
-    date: String,
     status: StartsListItem.StatusCode
 ) {
     Box(
@@ -104,7 +102,6 @@ private fun ImageCard(
                 }
             )
             Column(modifier = Modifier.align(Alignment.BottomCenter)) {
-                // ImageCardInfoStroke(date)
                 ImageCardInfoStatus(status)
             }
         }
@@ -157,7 +154,7 @@ private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
 private fun ImageCardInfo(
     modifier: Modifier = Modifier,
     title: String,
-    place: String,
+    date: String,
     distance: String
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
@@ -172,7 +169,7 @@ private fun ImageCardInfo(
         Spacer(modifier = Modifier.padding(2.dp))
         Text(
             color = MaterialTheme.colorScheme.outline,
-            text = place,
+            text = date,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
             lineHeight = 14.sp,

@@ -1,6 +1,7 @@
 package com.markettwits.cahce.execute.list
 
 import com.markettwits.cahce.Cache
+import kotlinx.serialization.SerializationException
 
 abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
     protected suspend fun <T> executeListWithCacheWithForced(
@@ -17,6 +18,9 @@ abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
                 callback(it)
             }, onFailure = {
                 val local = cache.get()
+                if (it is SerializationException) {
+                    cache.clear()
+                }
                 if (local.isNullOrEmpty()) {
                     throw it
                 } else {
@@ -48,5 +52,11 @@ abstract class ExecuteListWithCacheAbstract : ExecuteListWithCache {
                 callback(it)
             }
         }
+        latestData.onFailure {
+            if (it is SerializationException) {
+                cache.clear()
+            }
+        }
+
     }
 }

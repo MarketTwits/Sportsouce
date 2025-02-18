@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
-import com.markettwits.core_ui.items.image.icons.OutlineHeartIcon
 
 @Composable
 internal fun ShopItemActionRow(
@@ -30,26 +29,8 @@ internal fun ShopItemActionRow(
     ) {
         BackFloatingActionButton(back = onClickGoBack)
         Row {
-            //AddToFavoriteActionButton(onClick = onClickAddToFavorite)
             ShareActionButton(onClick = onClickShare)
         }
-    }
-
-}
-
-@Composable
-private fun AddToFavoriteActionButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    SmallFloatingActionButton(
-        modifier = modifier.padding(10.dp),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.tertiary,
-        onClick = onClick,
-    ) {
-        Icon(
-            modifier = Modifier.size(20.dp),
-            imageVector = OutlineHeartIcon,
-            contentDescription = "Add to favorite"
-        )
     }
 }
 

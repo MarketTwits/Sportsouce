@@ -36,14 +36,14 @@ internal fun ShopItemExtraOptions(
                 text = options.title,
                 color = MaterialTheme.colorScheme.outline,
                 textAlign = TextAlign.Center,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.medium(),
             )
             FlowRow(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Center,
                 maxItemsInEachRow = 3,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 options.items.forEach { (id, value, isSelected) ->
                     ShopItemExtraOptionButton(
@@ -66,7 +66,8 @@ private fun ShopItemExtraOptionButton(
     val borderColors =
         if (isSelected) SportSouceColor.SportSouceLighBlue else MaterialTheme.colorScheme.outline
     Button(
-        modifier = modifier.defaultMinSize(minHeight = 40.dp)
+        modifier = modifier
+            .defaultMinSize(minHeight = 40.dp)
             .wrapContentHeight(Alignment.CenterVertically),
         onClick = onClick,
         border = BorderStroke(if (isSelected) 3.dp else 1.dp, borderColors),
@@ -81,7 +82,7 @@ private fun ShopItemExtraOptionButton(
             text = value,
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             fontFamily = if (isSelected) FontNunito.bold() else FontNunito.semiBoldBold(),
         )
     }

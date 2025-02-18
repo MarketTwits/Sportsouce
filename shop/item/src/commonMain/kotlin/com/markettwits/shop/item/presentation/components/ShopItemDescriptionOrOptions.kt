@@ -80,7 +80,7 @@ private fun DescriptionOrItemOptionsButton(
 private fun ShopItemDescription(description: String) {
     HtmlText(
         text = description,
-        fontSize = 12.sp,
+        fontSize = 14.sp,
         color = MaterialTheme.colorScheme.tertiary,
         fontFamily = FontNunito.medium(),
     )
@@ -97,7 +97,7 @@ private fun ShopItemOptions(options: List<ShopItem.Option>) {
                     text = option.optionTitle,
                     color = MaterialTheme.colorScheme.outline,
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontNunito.medium(),
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 5.dp))
@@ -105,7 +105,7 @@ private fun ShopItemOptions(options: List<ShopItem.Option>) {
                     text = option.optionValue,
                     color = MaterialTheme.colorScheme.tertiary,
                     textAlign = TextAlign.Center,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     fontFamily = FontNunito.medium(),
                 )
             }

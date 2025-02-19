@@ -7,10 +7,10 @@ Welcome to the **Sportsauce App** – an application designed for working with t
 Below are some screenshots of the app:
 
 <p align="center">
-    <img src=".github/images/screenshot_1.jpg" width="300" height="600">
-    <img src=".github/images/screenshot_2.jpg" width="300" height="600">
-    <img src=".github/images/screenshot_3.jpg" width="300" height="600">
-    <img src=".github/images/screenshot_4.jpg" width="300" height="600">
+    <img src=".github/images/screenshot_1.jpg" width="150" height="300">
+    <img src=".github/images/screenshot_2.jpg" width="150" height="300">
+    <img src=".github/images/screenshot_3.jpg" width="150" height="300">
+    <img src=".github/images/screenshot_4.jpg" width="150" height="300">
 </p>
 
 ## Description

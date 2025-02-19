@@ -4,9 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.bottom_bar.component.component.BottomBarHandler
+import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
 import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
-import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -20,9 +19,7 @@ internal class ClubDashboardComponentBase(
     private val componentContext: ComponentContext,
     private val storeFactory: ClubDashboardStoreFactory,
     private val output: (ClubDashboardComponent.Output) -> Unit,
-) : ClubDashboardComponent, BottomBarHandler(
-    bottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysInvisible
-), ComponentContext by componentContext {
+) : ClubDashboardComponent, BottomBarComponentHandler(), ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
@@ -40,7 +37,7 @@ internal class ClubDashboardComponentBase(
     init {
         store.labels.onEach {
             when (it) {
-                is ClubDashboardStore.Label.GoBack -> popInner()
+                is ClubDashboardStore.Label.GoBack -> output(ClubDashboardComponent.Output.Dismiss)
                 is ClubDashboardStore.Label.OnClickInfo -> output(
                     ClubDashboardComponent.Output.GoInfo(it.index, it.items)
                 )
@@ -52,10 +49,6 @@ internal class ClubDashboardComponentBase(
                 )
             }
         }.launchIn(scope)
-        subscribeOnBottomBar()
-    }
-
-    override fun popInner() {
-        output(ClubDashboardComponent.Output.Dismiss)
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 }

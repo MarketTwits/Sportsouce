@@ -38,7 +38,6 @@ data class User(
         data class WithPhoto(val id: Int, val name: String, val path: String) : Photo() {
             fun imageUrl() = "$path/$name"
         }
-
     }
     object PhotoSerializer : JsonContentPolymorphicSerializer<Photo>(Photo::class) {
         override fun selectDeserializer(element: JsonElement) = when {

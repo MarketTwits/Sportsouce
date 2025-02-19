@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.bottom_bar.component.component.BottomBarHandler
+import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
 import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
 import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 import com.markettwits.getOrCreateKoinScope
@@ -42,9 +42,7 @@ import com.markettwits.shop.search.presentation.store.ShopSearchStoreFactory
 class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarHandler(
-    bottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysInvisible,
-) {
+) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarComponentHandler() {
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
 
     private val scope = componentContext.getOrCreateKoinScope(
@@ -177,7 +175,7 @@ class RootShopCatalogComponentBase(
                 )
             )
 
-        override fun goBack() = popInner()
+        override fun goBack() = pop()
 
         override fun goFilter() =
             stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopFilter)
@@ -268,11 +266,7 @@ class RootShopCatalogComponentBase(
     }
 
     init {
-        subscribeOnBottomBar()
-    }
-
-    override fun popInner() {
-        pop()
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 }
 

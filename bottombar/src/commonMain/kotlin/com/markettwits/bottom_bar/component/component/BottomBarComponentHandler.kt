@@ -2,7 +2,6 @@ package com.markettwits.bottom_bar.component.component
 
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.lifecycle.doOnStart
 import com.arkivanov.essenty.lifecycle.doOnStop
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityListener
@@ -17,33 +16,17 @@ import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
  *
  * @property bottomBarVisibilityListener A listener responsible for managing BottomBar visibility.
  */
-abstract class BottomBarHandler(
+abstract class BottomBarComponentHandler(
     private val bottomBarVisibilityListener: BottomBarVisibilityListener = BottomBarStorageImpl,
-    private val bottomBarVisibilityStrategy: BottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysVisible,
 ) {
-    /**
-     * Back press handler that:
-     * - Shows the BottomBar before navigating back.
-     * - Calls `goBackInner()`, which must be implemented by subclasses.
-     *
-     * The priority is set to `Int.MAX_VALUE` to ensure that this handler
-     * has the highest precedence in the back press handling system.
-     */
-    private val bottomBarBackHandler: BackCallback = BackCallback(
-        onBack = {
-            bottomBarVisibilityStrategy.onStop(bottomBarVisibilityListener)
-            popInner()
-        }, priority = Int.MAX_VALUE
-    )
-
     /**
      * Abstract method that subclasses must implement to define
      * the specific back navigation behavior.
      */
 
-    abstract fun popInner()
-
-    fun ComponentContext.subscribeOnBottomBar() {
+    fun ComponentContext.subscribeOnBottomBar(
+        bottomBarVisibilityStrategy: BottomBarVisibilityStrategy = BottomBarVisibilityStrategy.AlwaysVisible
+    ) {
         lifecycle.doOnStart {
             bottomBarVisibilityStrategy.onStart(bottomBarVisibilityListener)
         }
@@ -51,8 +34,6 @@ abstract class BottomBarHandler(
         lifecycle.doOnStop {
             bottomBarVisibilityStrategy.onStop(bottomBarVisibilityListener)
         }
-
-        backHandler.register(bottomBarBackHandler)
     }
 }
 

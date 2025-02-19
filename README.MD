@@ -26,7 +26,10 @@ This is a Kotlin Multiplatform project that provides functionality for displayin
 
 If you want to install the app on your Android device, click the image below:
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/1280px-Google_Play_Store_badge_EN.svg.png" alt="Download on Google Play" height="80">
+<a href="https://play.google.com/store/apps/details?id=com.markettwits.sportsouce">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/1280px-Google_Play_Store_badge_EN.svg.png" width="240" height="80">
+</a>
+
 ## Installation
 
 1. Download and install the app on your device.
@@ -37,9 +40,4 @@ If you want to install the app on your Android device, click the image below:
 
 - **Kotlin Multiplatform** for building cross-platform apps.
 - **Jetpack Compose** for building the UI.
-- **Decompose** for navigation.
-
-## Contributing
-
-If you'd like to contribute to the project, please create a Pull Request with your suggestion or fix.
-is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+- **Decompose**.

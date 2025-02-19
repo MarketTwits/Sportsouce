@@ -2,12 +2,7 @@ package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -47,6 +42,7 @@ internal fun ShopItemExtraOptions(
             ) {
                 options.items.forEach { (id, value, isSelected) ->
                     ShopItemExtraOptionButton(
+                        modifier = Modifier.padding(2.dp),
                         isSelected = isSelected,
                         value = value,
                         onClick = { onClickOption(id) })

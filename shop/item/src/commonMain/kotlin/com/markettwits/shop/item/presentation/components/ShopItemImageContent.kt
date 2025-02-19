@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,12 +50,13 @@ internal fun ShopItemImageContent(
     modifier: Modifier = Modifier,
     imageUrl: List<String>,
 ) {
-    var isFullScreen: Boolean by remember {
+    var isFullScreen: Boolean by rememberSaveable {
         mutableStateOf(false)
     }
-    var selectedImageUrl : String by remember {
+    var selectedImageUrl: String by remember {
         mutableStateOf("")
     }
+
     FullImageContent(
         modifier = modifier,
         imageUrl = imageUrl,
@@ -68,11 +70,14 @@ internal fun ShopItemImageContent(
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
-        FullImageScreen(image = selectedImageUrl, onDismiss = { isFullScreen = !isFullScreen })
+        FullImageScreen(
+            image = imageUrl,
+            selectedImageUrl = selectedImageUrl,
+            onDismiss = { isFullScreen = !isFullScreen }
+        )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FullImageContent(
     modifier: Modifier = Modifier,
@@ -84,12 +89,16 @@ private fun FullImageContent(
 
     val boxModifier = if (isPortrait) modifier
         .noRippleClickable {
-            onClickImage(imageUrl[pagerState.currentPage])
+            if (imageUrl.isNotEmpty()) {
+                onClickImage(imageUrl[pagerState.currentPage])
+            }
         }
         .fillMaxWidth()
         .height(300.dp) else {
         modifier.noRippleClickable {
-            onClickImage(imageUrl[pagerState.currentPage])
+            if (imageUrl.isNotEmpty()) {
+                onClickImage(imageUrl[pagerState.currentPage])
+            }
         }
     }
     val imageModifier =

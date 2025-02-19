@@ -13,7 +13,6 @@ import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
 import com.markettwits.cloud.model.profile.members.ProfileMembers
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
-import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
@@ -24,27 +23,16 @@ import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_price.StartPriceResponse
-import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
-import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.cloud.model.start_user.values.UserRegistrationsRemote
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_cloud.provider.HttpClientProvider
-import io.ktor.client.call.body
-import io.ktor.client.request.delete
-import io.ktor.client.request.forms.formData
-import io.ktor.client.request.forms.submitFormWithBinaryData
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.Headers
-import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
 import java.io.File
 
 internal class StartsRemoteDataSourceImpl(
@@ -140,60 +128,6 @@ internal class StartsRemoteDataSourceImpl(
             setBody(startPriceRequest)
         }
         return json.decodeFromString(StartPriceResponse.serializer(), response.body())
-    }
-
-    override suspend fun registerOnStartBase(
-        request: StartRegisterRequest,
-        token: String
-    ): StartRegistrationResponse {
-        val response = client.post("member-start") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
-            setBody(request)
-        }
-        return json.decodeFromString(StartRegistrationResponse.serializer(), response.body())
-    }
-
-    override suspend fun registerOnStartCombo(
-        request: StartRegisterRequest.Combo,
-        token: String
-    ): StartRegistrationResponse {
-        val response = client.post("member-start/combo") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
-            setBody(request)
-        }
-        return json.decodeFromString(response.body())
-    }
-
-    @Deprecated("dont use")
-    override suspend fun registerOnStartWithoutPayment(
-        request: StartRegisterRequest,
-        token: String
-    ): StartRegistrationResponseWithoutPayment {
-        val response = client.post("member-start") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
-            setBody(request)
-        }
-        return json.decodeFromString(response.body<String>())
-    }
-
-    override suspend fun promo(value: String, startId: Int,distancesId : List<Int>): PromocodeRemote {
-
-        val response = client.get("start/$startId/promocode"){
-            url {
-                parameters.append("code", value)
-                parameters.append("distances", distancesId.joinToString(","))
-            }
-        }
-        return json.decodeFromString(response.body<String>())
     }
 
     override suspend fun fetchStart(startId: Int): StartData {

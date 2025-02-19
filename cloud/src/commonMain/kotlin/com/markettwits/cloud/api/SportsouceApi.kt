@@ -13,7 +13,6 @@ import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
 import com.markettwits.cloud.model.profile.members.ProfileMembers
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
 import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
-import com.markettwits.cloud.model.promocode.PromocodeRemote
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
@@ -24,9 +23,7 @@ import com.markettwits.cloud.model.start_donation.StartDonationResponse
 import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_price.StartPriceResponse
-import com.markettwits.cloud.model.start_registration.StartRegisterRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
-import com.markettwits.cloud.model.start_registration.StartRegistrationResponseWithoutPayment
 import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.cloud.model.starts.StartsRemote
 import com.markettwits.cloud.model.team.TeamsRemote
@@ -62,18 +59,6 @@ interface SportsouceApi {
         token: String
     ) : StartPriceResponse
 
-    suspend fun registerOnStartBase(
-        request: StartRegisterRequest,
-        token: String
-    ): StartRegistrationResponse
-
-    suspend fun registerOnStartCombo(
-        request: StartRegisterRequest.Combo,
-        token: String
-    ): StartRegistrationResponse
-    suspend fun registerOnStartWithoutPayment(request: StartRegisterRequest,token : String) : StartRegistrationResponseWithoutPayment
-
-    suspend fun promo(value : String,startId: Int,distancesId : List<Int>) : PromocodeRemote
     //Start
     suspend fun fetchStart(startId: Int): StartData
 

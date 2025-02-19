@@ -13,7 +13,6 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.RenderAdditionalFields
 import com.markettwits.start.register.presentation.registration.distance.components.member.StartRegistrationMemberCard
 
 

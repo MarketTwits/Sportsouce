@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +14,6 @@ import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.start_cloud.model.start.fields.Option
 
 @Composable
 internal fun AdditionalFieldSingleSelect(
@@ -32,7 +31,7 @@ internal fun AdditionalFieldSingleSelect(
 
     Column(modifier = modifier.fillMaxWidth()) {
 
-        StartRegistrationAdditionalFiledTitle(field = field.field)
+        AdditionalFiledTitle(field = field.field)
 
         val visibleList = options.map {
             if (it.price != null)

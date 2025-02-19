@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +23,7 @@ internal fun AdditionalFieldNumber(
         else field.answer.number.toString()
 
     Column(modifier = modifier) {
-        StartRegistrationAdditionalFiledTitle(field = field.field)
+        AdditionalFiledTitle(field = field.field)
         OutlinedTextFieldBase(
             value = text,
             onValueChange = {

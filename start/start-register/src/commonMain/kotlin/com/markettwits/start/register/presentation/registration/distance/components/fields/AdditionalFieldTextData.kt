@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -12,7 +12,7 @@ import com.markettwits.time.BaseTimeMapper
 import com.markettwits.time.TimePattern
 
 @Composable
-internal fun StartRegistrationAdditionalFieldTextData(
+internal fun AdditionalFieldTextData(
     modifier: Modifier = Modifier,
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit

@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields
+package com.markettwits.start.register.presentation.registration.distance.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,13 +14,13 @@ import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.AdditionalFiledCheckBox
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.AdditionalFieldMultiselect
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.AdditionalFieldNumber
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.AdditionalFieldSingleSelect
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.StartRegistrationAdditionalFieldText
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.StartRegistrationAdditionalFieldTextData
-import com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields.StartRegistrationAdditionalFieldTextTime
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFiledCheckBox
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldMultiselect
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldNumber
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldSingleSelect
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldText
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldTextData
+import com.markettwits.start.register.presentation.registration.distance.components.fields.AdditionalFieldTextTime
 
 @Composable
 internal fun RenderAdditionalFields(
@@ -61,7 +61,7 @@ internal fun RenderAdditionalField(
 ) {
 
     when (field.field.type) {
-        StartRegistrationAdditionalField.Type.TEXT -> StartRegistrationAdditionalFieldText(
+        StartRegistrationAdditionalField.Type.TEXT -> AdditionalFieldText(
             field = field,
             onFieldChanged = onFieldChanged
         )
@@ -76,12 +76,12 @@ internal fun RenderAdditionalField(
             onFieldChanged = onFieldChanged
         )
 
-        StartRegistrationAdditionalField.Type.DATA -> StartRegistrationAdditionalFieldTextData(
+        StartRegistrationAdditionalField.Type.DATA -> AdditionalFieldTextData(
             field = field,
             onFieldChanged = onFieldChanged
         )
 
-        StartRegistrationAdditionalField.Type.TIME -> StartRegistrationAdditionalFieldTextTime(
+        StartRegistrationAdditionalField.Type.TIME -> AdditionalFieldTextTime(
             field = field,
             onFieldChanged = onFieldChanged
         )

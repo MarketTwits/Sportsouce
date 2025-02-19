@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ internal fun AdditionalFieldMultiselect(
     val selectedOptions =  field.answer.multiSelect?.toMutableList() ?: emptyList<Int>().toMutableList()
 
     Column(modifier = modifier.fillMaxWidth()) {
-        StartRegistrationAdditionalFiledTitle(field = field.field)
+        AdditionalFiledTitle(field = field.field)
         options.forEach { option ->
             val isSelected = selectedOptions.contains(option.id)
             Row(

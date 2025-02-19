@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +16,7 @@ import com.markettwits.start.register.presentation.registration.common.domain.mo
 
 
 @Composable
-internal fun StartRegistrationAdditionalFiledTitle(
+internal fun AdditionalFiledTitle(
     modifier: Modifier = Modifier,
     field: StartRegistrationAdditionalField
 ) {

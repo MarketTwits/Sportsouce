@@ -1,4 +1,4 @@
-package com.markettwits.start.register.presentation.registration.distance.components.additional_fields.fields
+package com.markettwits.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,12 +13,12 @@ import com.markettwits.start.register.presentation.registration.common.domain.mo
 import com.markettwits.core_ui.items.components.textField.TimeTextField
 
 @Composable
-internal fun StartRegistrationAdditionalFieldTextTime(
+internal fun AdditionalFieldTextTime(
     modifier: Modifier = Modifier,
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
-    StartRegistrationAdditionalFiledTitle(field = field.field)
+    AdditionalFiledTitle(field = field.field)
 
     val time = field.answer.string ?: ""
 

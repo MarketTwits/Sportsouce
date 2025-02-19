@@ -33,7 +33,9 @@ internal fun ShopItemDescriptionOrOptions(
         mutableStateOf(true)
     }
 
-    Row(modifier = modifier.padding(vertical = 5.dp)) {
+    Row(modifier = modifier
+        .padding(4.dp)
+        .padding(vertical = 5.dp)) {
         DescriptionOrItemOptionsButton(isSelected = isDescription, title = "Описание", onClick = {
             isDescription = true
         })

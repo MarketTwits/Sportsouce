@@ -35,9 +35,9 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Pri
                 fontSize = 18.sp,
                 fontFamily = FontNunito.bold(),
             )
-            Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
             if (!price.previousPrice.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
                 Text(
                     text = "${price.previousPrice} ₽",
                     color = MaterialTheme.colorScheme.outline,
@@ -46,7 +46,7 @@ internal fun ShopItemPriceRow(modifier: Modifier = Modifier, price: ShopItem.Pri
                     fontSize = 14.sp,
                     fontFamily = FontNunito.light(),
                 )
-                Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                Spacer(modifier = Modifier.padding(horizontal = 4.dp))
                 Text(
                     text = "- ${price.discount}%",
                     color = SportSouceColor.SportSouceLighBlue,

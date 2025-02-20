@@ -1,6 +1,6 @@
 package com.markettwits.start_cloud.api.start
 
-import com.markettwits.cloud.model.start_comments.response.Reply
+import com.markettwits.start_cloud.model.comments.response.Reply
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.start_cloud.model.comments.request.StartCommentRequest
 import com.markettwits.start_cloud.model.comments.request.StartSubCommentRequest

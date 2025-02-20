@@ -8,6 +8,7 @@ import com.markettwits.start.presentation.album.presentation.store.StartAlbumSto
 import com.markettwits.start.presentation.album.presentation.store.StartAlbumStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -17,10 +18,13 @@ class StartAlbumComponentBase(
     private val images: List<String>,
     private val pop: () -> Unit
 ) : StartAlbumComponent, ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore { storeFactory.create(images) }
-    override val state: StateFlow<StartAlbumStore.State>
-        get() = store.stateFlow
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val state: StateFlow<StartAlbumStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: StartAlbumStore.Intent) {
         store.accept(intent)

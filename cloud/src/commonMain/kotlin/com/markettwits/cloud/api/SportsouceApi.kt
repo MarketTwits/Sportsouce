@@ -16,11 +16,8 @@ import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
-import com.markettwits.cloud.model.start.StartData
-import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
-import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
@@ -58,13 +55,6 @@ interface SportsouceApi {
         id : Int,
         token: String
     ) : StartPriceResponse
-
-    //Start
-    suspend fun fetchStart(startId: Int): StartData
-
-    suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote
-
-    suspend fun fetchStartMember(startId: Int): List<StartMemberItem>
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
     //Auth

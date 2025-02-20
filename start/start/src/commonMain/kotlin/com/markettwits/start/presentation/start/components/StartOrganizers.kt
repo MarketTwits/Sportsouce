@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.cloud.model.start.Organizer
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.image.social_networks.IconTelegram
 import com.markettwits.core_ui.items.image.social_networks.IconVk

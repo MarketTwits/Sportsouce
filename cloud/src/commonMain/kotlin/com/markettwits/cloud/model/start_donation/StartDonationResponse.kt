@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartDonationResponse(
-    // val donation: Donation,
     val url: String
 ) {
     @Serializable

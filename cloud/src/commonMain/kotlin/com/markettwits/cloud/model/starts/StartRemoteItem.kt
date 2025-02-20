@@ -4,13 +4,12 @@ package com.markettwits.cloud.model.starts
 import com.markettwits.cloud.model.common.KindOfSport
 import com.markettwits.cloud.model.common.Season
 import com.markettwits.cloud.model.common.StartStatus
-import com.markettwits.sportsourcedemo.all.City
 import com.markettwits.sportsourcedemo.all.ConditionFile
 import com.markettwits.sportsourcedemo.all.PosterLinkFile
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Row(
+data class StartRemoteItem(
     val afishaLinkFile: String?,
     val afisha_link: String?,
     val archive_start_code: Int?,

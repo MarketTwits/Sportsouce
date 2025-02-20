@@ -1,6 +1,5 @@
 package com.markettwits.start_cloud.model.comments.response
 
-import com.markettwits.cloud.model.start_comments.response.Reply
 import kotlinx.serialization.Serializable
 
 @Serializable

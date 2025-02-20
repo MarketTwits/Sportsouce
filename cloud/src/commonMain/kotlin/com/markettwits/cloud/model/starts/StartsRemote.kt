@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StartsRemote(
     val count: Int,
-    val rows: List<Row>
+    val rows: List<StartRemoteItem>
 )

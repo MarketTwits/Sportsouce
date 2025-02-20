@@ -1,13 +1,13 @@
 package com.markettwits.starts_common.data.mapper
 
-import com.markettwits.cloud.model.starts.Row
+import com.markettwits.cloud.model.starts.StartRemoteItem
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 
 abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMapper) :
     StartsCloudToListMapper {
-    override fun mapSingle(items: List<Row>): List<StartsListItem> {
+    override fun mapSingle(items: List<StartRemoteItem>): List<StartsListItem> {
         val resultLists = items.map {
             StartsListItem(
                 id = it.id,

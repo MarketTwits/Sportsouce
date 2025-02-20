@@ -16,11 +16,8 @@ import com.markettwits.cloud.model.profile.update.ChangeProfileInfoResponse
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cloud.model.sign_up.SignUpResponse
-import com.markettwits.cloud.model.start.StartData
-import com.markettwits.cloud.model.start_album.StartAlbumRemote
 import com.markettwits.cloud.model.start_donation.StartDonationRequest
 import com.markettwits.cloud.model.start_donation.StartDonationResponse
-import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
@@ -128,30 +125,6 @@ internal class StartsRemoteDataSourceImpl(
             setBody(startPriceRequest)
         }
         return json.decodeFromString(StartPriceResponse.serializer(), response.body())
-    }
-
-    override suspend fun fetchStart(startId: Int): StartData {
-        val serializer = StartData.serializer()
-        val response = client.get("start/$startId")
-        return json.decodeFromString(serializer, response.body<String>())
-    }
-
-    override suspend fun fetchStartAlbum(startId: Int): StartAlbumRemote {
-        val response = client.get("album") {
-            url {
-                parameters.append("start_id", startId.toString())
-            }
-        }
-        return json.decodeFromString(response.body<String>())
-    }
-
-    override suspend fun fetchStartMember(startId: Int): List<StartMemberItem> {
-        val response = client.get("member-start") {
-            url {
-                parameters.append("start_id", startId.toString())
-            }
-        }
-        return json.decodeFromString<List<StartMemberItem>>(response.body<String>())
     }
 
     override suspend fun signIn(signInRequest: SignInRequest): SignInResponseSuccess {

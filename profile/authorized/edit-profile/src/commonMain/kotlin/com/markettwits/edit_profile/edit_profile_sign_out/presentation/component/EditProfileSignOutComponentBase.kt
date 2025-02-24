@@ -8,6 +8,7 @@ import com.markettwits.edit_profile.edit_profile_sign_out.presentation.store.Edi
 import com.markettwits.edit_profile.edit_profile_sign_out.presentation.store.EditProfileSignOutStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -17,11 +18,16 @@ class EditProfileSignOutComponentBase(
     private val dismiss: () -> Unit,
     private val signOut: () -> Unit
 ) : EditProfileSignOutComponent, ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<EditProfileSignOutStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: EditProfileSignOutStore.Intent) {
         store.accept(intent)
     }

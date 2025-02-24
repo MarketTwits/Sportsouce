@@ -43,6 +43,7 @@ class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
 ) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarComponentHandler() {
+
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
 
     private val scope = componentContext.getOrCreateKoinScope(

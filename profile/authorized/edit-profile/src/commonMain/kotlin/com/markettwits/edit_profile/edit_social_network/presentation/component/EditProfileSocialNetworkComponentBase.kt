@@ -8,6 +8,7 @@ import com.markettwits.edit_profile.edit_social_network.presentation.store.EditP
 import com.markettwits.edit_profile.edit_social_network.presentation.store.EditProfileSocialNetworkStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -16,11 +17,16 @@ class EditProfileSocialNetworkComponentBase(
     private val pop: () -> Unit,
     private val storeFactory: EditProfileSocialNetworkStoreFactory
 ) : EditProfileSocialNetworkComponent, ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<EditProfileSocialNetworkStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: EditProfileSocialNetworkStore.Intent) {
         store.accept(intent)
     }

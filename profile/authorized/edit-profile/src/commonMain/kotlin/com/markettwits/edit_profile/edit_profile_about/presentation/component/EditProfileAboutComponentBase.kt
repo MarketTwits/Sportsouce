@@ -8,6 +8,7 @@ import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditPr
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -21,7 +22,9 @@ class EditProfileAboutComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<EditProfileAboutStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: EditProfileAboutStore.Intent) {
         store.accept(intent)
     }

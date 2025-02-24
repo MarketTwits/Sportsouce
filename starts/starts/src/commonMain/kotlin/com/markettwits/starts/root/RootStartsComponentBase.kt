@@ -1,10 +1,7 @@
 package com.markettwits.starts.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.settings.root.RootSettingsComponentBase
@@ -54,13 +51,13 @@ class RootStartsComponentBase(
                         componentContext = componentContext,
                         dataSource = scope.get(),
                         toDetail = {
-                            navigation.push(RootStartsComponent.Config.Start(it))
+                            navigation.pushNew(RootStartsComponent.Config.Start(it))
                         },
                         toSearch = {
-                            navigation.push(RootStartsComponent.Config.Search)
+                            navigation.pushNew(RootStartsComponent.Config.Search)
                         },
                         toSettings = {
-                            navigation.push(RootStartsComponent.Config.Settings)
+                            navigation.pushNew(RootStartsComponent.Config.Settings)
                         }
                     ),
                 )

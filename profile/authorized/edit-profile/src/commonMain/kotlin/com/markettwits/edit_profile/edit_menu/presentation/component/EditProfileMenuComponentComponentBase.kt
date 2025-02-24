@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.edit_profile.edit_menu.presentation.store.EditProfileMenuStore
 import com.markettwits.edit_profile.edit_menu.presentation.store.EditProfileMenuStoreFactory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 
 class EditProfileMenuComponentComponentBase(
@@ -12,9 +13,12 @@ class EditProfileMenuComponentComponentBase(
     private val output: (EditProfileMenuComponentComponent.OutPut) -> Unit,
     private val storeFactory: EditProfileMenuStoreFactory,
 ) : EditProfileMenuComponentComponent, ComponentContext by componentContext {
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<EditProfileMenuStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: EditProfileMenuStore.Intent) {

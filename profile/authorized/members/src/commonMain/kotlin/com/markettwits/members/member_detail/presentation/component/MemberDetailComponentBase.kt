@@ -9,6 +9,7 @@ import com.markettwits.members.member_detail.presentation.store.MemberDetailStor
 import com.markettwits.members.member_detail.presentation.store.MemberDetailStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -21,11 +22,16 @@ class MemberDetailComponentBase(
     private val onClickEdit: (ProfileMember) -> Unit
 ) : MemberDetailComponent,
     ComponentContext by componentContext {
+
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create(member)
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<MemberDetailStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: MemberDetailStore.Intent) {
         store.accept(intent)
     }

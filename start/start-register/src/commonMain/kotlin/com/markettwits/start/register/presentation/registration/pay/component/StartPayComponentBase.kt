@@ -20,6 +20,7 @@ import com.markettwits.start.register.presentation.registration.registration.com
 import com.markettwits.start.register.presentation.registration.registration.components.getDistancesId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -43,6 +44,7 @@ class StartPayComponentBase(
 
     private val slotNavigation = SlotNavigation<StartPayComponent.Config>()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val newState: StateFlow<StartPayStore.State>  = store.stateFlow
 
     override val childSlot: Value<ChildSlot<*, StartPayComponent.Child>> = childSlot(

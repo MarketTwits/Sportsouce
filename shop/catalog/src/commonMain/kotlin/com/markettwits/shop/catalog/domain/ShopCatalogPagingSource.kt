@@ -4,7 +4,7 @@ import com.markettwits.cloud_shop.api.SportSauceShopApi
 import com.markettwits.cloud_shop.model.product.Product
 import com.markettwits.core.paging.OffsetAndLimitPagingSource
 
-internal const val SHOP_ITEMS_PAGE_SIZE = 30
+internal const val SHOP_ITEMS_PAGE_SIZE = 20
 
 
 class ShopCatalogPagingSource(

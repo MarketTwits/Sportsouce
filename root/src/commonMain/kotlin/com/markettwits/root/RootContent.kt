@@ -27,14 +27,15 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
             component.slotChild.child?.instance?.also {
                 when (it) {
                     is RootComponent.Navigation.BottomBar -> {
-                            Children(component = component, modifier = Modifier.weight(1F))
-                            BottomBar(it.component, modifier)
+                        Children(component = component, modifier = Modifier.weight(1F))
+                        BottomBar(it.component, modifier)
                     }
                 }
             }
         }
     }
 }
+
 @Composable
 private fun Children(component: RootComponent, modifier: Modifier = Modifier) {
     com.arkivanov.decompose.extensions.compose.stack.Children(

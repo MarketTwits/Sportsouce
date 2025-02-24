@@ -9,6 +9,7 @@ import com.markettwits.news_list.presentation.store.NewsStore
 import com.markettwits.news_list.presentation.store.NewsStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -17,11 +18,16 @@ class NewsComponentBase(
     private val storeFactory: NewsStoreFactory,
     private val onItemClick: (NewsInfo) -> Unit
 ) : NewsComponent, ComponentContext by context {
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<NewsStore.State> = store.stateFlow
+
     override fun obtainEvent(event: NewsStore.Intent) {
         store.accept(event)
     }

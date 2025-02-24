@@ -4,7 +4,7 @@
 versionName = "1.2.10"
 jvm = "11"
 kotlin = "2.0.21"
-gradle = "8.5.2"
+gradle = "8.6.0-alpha07" #https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 kotlin-kmp-compose = "1.7.1" # https://github.com/JetBrains/compose-multiplatform
 kotlinx-serialization = "1.7.3" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.9.0" # https://github.com/Kotlin/kotlinx.coroutines

@@ -2,6 +2,8 @@ package com.markettwits.start.presentation.membres.filter
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
+import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
 import kotlinx.serialization.builtins.ListSerializer
 
 class StartMembersFilterScreenComponent(
@@ -10,7 +12,7 @@ class StartMembersFilterScreenComponent(
     private val items: List<MembersFilterGroup>,
     private val apply: (List<MembersFilterGroup>) -> Unit,
     private val handleMembersFilter: HandleMembersFilter
-) : StartMembersFilterScreen, ComponentContext by context {
+) : StartMembersFilterScreen, ComponentContext by context, BottomBarComponentHandler() {
 
     override val filter: MutableValue<List<MembersFilterGroup>> = MutableValue(
         stateKeeper.consume(
@@ -24,6 +26,8 @@ class StartMembersFilterScreenComponent(
             key = FILTER_STATE_KEY,
             ListSerializer(MembersFilterGroup.serializer())
         ) { filter.value }
+
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 
     override fun goBack() {

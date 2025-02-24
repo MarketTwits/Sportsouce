@@ -26,11 +26,12 @@ class RootStartScreenComponentBase(
     context: ComponentContext,
     private val startId: Int,
     private val pop: () -> Unit
-) : RootStartScreenComponent,
-    ComponentContext by context {
+) : RootStartScreenComponent, ComponentContext by context {
+
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext(false)
     }
+
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(startModule, startRegistrationModule, startAlbumModule, startSupportModule)
     )
@@ -58,7 +59,7 @@ class RootStartScreenComponentBase(
                     back = pop::invoke,
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
-                        openMembersScreen(startId = id, items = list, emptyList())
+                        openMembersScreen(startId = id, items = list, filter = emptyList())
                     },
                     album = {
                         navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))

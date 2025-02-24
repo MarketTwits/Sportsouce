@@ -119,7 +119,7 @@ private fun StartCommentCard(
                     color = MaterialTheme.colorScheme.onTertiary
                 )
             }
-        Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
         Column(modifier = modifier) {
             Row {
                 Text(
@@ -137,7 +137,7 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.medium(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
             Text(
@@ -158,7 +158,7 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
 

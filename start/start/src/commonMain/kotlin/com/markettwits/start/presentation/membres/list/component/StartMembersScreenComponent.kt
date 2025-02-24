@@ -2,6 +2,8 @@ package com.markettwits.start.presentation.membres.list.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
+import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
 import com.markettwits.start.presentation.membres.list.models.MembersFilter
@@ -15,7 +17,11 @@ class StartMembersScreenComponent(
     private val openFilterScreen: (List<MembersFilterGroup>) -> Unit,
     private val onBack: OnClick,
     private val membersFilter: MembersFilter,
-) : ComponentContext by componentContext, StartMembersScreen {
+) : ComponentContext by componentContext, StartMembersScreen, BottomBarComponentHandler() {
+
+    init {
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
+    }
 
     override val members: MutableValue<List<StartMembersUi>> = MutableValue(
         stateKeeper.consume(

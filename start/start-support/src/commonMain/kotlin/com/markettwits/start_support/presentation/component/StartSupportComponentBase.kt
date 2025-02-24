@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.start_support.presentation.store.StartSupportStore
 import com.markettwits.start_support.presentation.store.StartSupportStoreFactory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 
 class StartSupportComponentBase(
@@ -16,8 +17,8 @@ class StartSupportComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(startId)
     }
-    override val state: StateFlow<StartSupportStore.State>
-        get() = store.stateFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val state: StateFlow<StartSupportStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: StartSupportStore.Intent) {
         store.accept(intent)

@@ -76,7 +76,7 @@ private fun StartAlbumsContent(
     ) {
         items(album.photos.take(6), key = { it.id }) {
             StartAlbumItemContent(
-                modifier = modifier.animateItemPlacement(animationSpec = tween(600)),
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null, placementSpec = tween(600)),
                 image = it.imageUrl,
                 hashtag = it.tags.values.firstOrNull() ?: "",
                 onClickImage = {

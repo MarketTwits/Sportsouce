@@ -110,6 +110,9 @@ fun StartScreen(
                             )
                         }
                     },
+                    onClickMembersResults = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembersResult)
+                    }
                 )
                 if (fullImage) {
                     FullImageScreen(image = data.image) { fullImage = !fullImage }

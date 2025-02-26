@@ -17,6 +17,7 @@ import com.markettwits.start.presentation.membres.filter.StartMembersFilterScree
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.models.MembersFilterBase
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.result.component.StartMemberResultsComponentBase
 import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
 import com.markettwits.start_support.di.startSupportModule
@@ -67,6 +68,11 @@ class RootStartScreenComponentBase(
                     registerNew = {
                         navigation.pushNew(
                             RootStartScreenComponent.Config.StartRegistration(it)
+                        )
+                    },
+                    membersResult = {
+                        navigation.pushNew(
+                            RootStartScreenComponent.Config.StartMembersResult(it)
                         )
                     }
                 ),
@@ -125,6 +131,15 @@ class RootStartScreenComponentBase(
                     storeFactory = scope.get(),
                     pop = navigation::pop,
                     images = config.images
+                )
+            )
+
+            is RootStartScreenComponent.Config.StartMembersResult -> RootStartScreenComponent.Child.StartMembersResults(
+                StartMemberResultsComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    memberResult = config.items,
+                    goBack = navigation::pop,
                 )
             )
         }

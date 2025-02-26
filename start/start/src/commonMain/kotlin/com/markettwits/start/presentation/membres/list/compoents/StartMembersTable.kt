@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -112,6 +113,7 @@ private fun TableHeader(text: String, columnWidth: Dp) {
         fontSize = 14.sp,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Center,
         fontFamily = FontNunito.bold(),
     )
 }
@@ -132,12 +134,12 @@ private fun TableRowSingle(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .padding(4.dp)
-                    .padding(horizontal = 4.dp)
                     .width(columnWidth),
                 text = text,
                 fontFamily = FontNunito.regular(),
                 fontSize = 14.sp,
                 maxLines = 2,
+                textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis
             )
         }
@@ -163,10 +165,10 @@ private fun TableRowTeam(
                             modifier = Modifier
                                 .padding(vertical = 4.dp)
                                 .padding(4.dp)
-                                .padding(horizontal = 4.dp)
                                 .width(columnWidth),
                             text = value,
                             fontFamily = FontNunito.regular(),
+                            textAlign = TextAlign.Center,
                             fontSize = 14.sp,
                             overflow = TextOverflow.Ellipsis
 

@@ -22,12 +22,9 @@ fun StartMembersScreen(component: StartMembersScreen) {
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
-            Column {
-                TopBarBase(title = "Список участников") {
-                    component.back()
-                }
-                StartSearchMember(component = component)
-            }
+            StartSearchMember(
+                component = component
+            )
         }
     ) {
         StartMembersTable(items = members)

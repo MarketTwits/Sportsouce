@@ -1,16 +1,19 @@
 package com.markettwits.core.paging
 
+import app.cash.paging.*
+
 private const val INITIAL_LOAD_SIZE = 0
 
-abstract class OffsetAndLimitPagingSource<Value : Any>(
+@Suppress("CAST_NEVER_SUCCEEDS")
+abstract class OffsetAndLimitPagingSourceNew<Value : Any>(
     private val pageSize: Int,
-) : androidx.paging.PagingSource<Int, Value>() {
+) : PagingSource<Int, Value>() {
 
-    override fun getRefreshKey(state: androidx.paging.PagingState<Int, Value>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Value>): Int? {
         return null
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Value> {
+    override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Value> {
         return try {
             val position = params.key ?: INITIAL_LOAD_SIZE
             val offset = if (params.key != null) {
@@ -20,22 +23,24 @@ abstract class OffsetAndLimitPagingSource<Value : Any>(
             }
             val data = load(offset, params.loadSize)
             if (data.isEmpty()) {
-                LoadResult.Page(
+                PagingSourceLoadResultPage(
                     data = data,
                     prevKey = null,
                     nextKey = null
-                )
+                ) as PagingSourceLoadResult<Int, Value>
             } else {
                 val nextKey = position + (params.loadSize / pageSize)
-                LoadResult.Page(
+                PagingSourceLoadResultPage(
                     data = data,
                     prevKey = null,
                     nextKey = nextKey
-                )
+                ) as PagingSourceLoadResult<Int, Value>
             }
 
         } catch (exception: Throwable) {
-            LoadResult.Error(exception)
+            PagingSourceLoadResultError<Int, Value>(
+                exception
+            ) as PagingSourceLoadResult<Int, Value>
         }
     }
 

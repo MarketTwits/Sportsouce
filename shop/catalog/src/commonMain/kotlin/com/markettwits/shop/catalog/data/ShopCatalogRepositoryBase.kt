@@ -1,10 +1,10 @@
 package com.markettwits.shop.catalog.data
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+
 import androidx.paging.map
-import app.cash.paging.PagingData
+import app.cash.paging.*
 import com.markettwits.cloud_shop.api.SportSauceShopApi
+import com.markettwits.cloud_shop.model.product.Product
 import com.markettwits.shop.catalog.domain.ShopCatalogRepository
 import com.markettwits.shop.domain.mapper.ShopProductsMapper
 import com.markettwits.shop.domain.model.ShopItem
@@ -23,25 +23,30 @@ class ShopCatalogRepositoryBase(
         categoryId: Int?,
         options: List<String>?,
         maxPrice: Int?,
-        minPrice : Int?
+        minPrice: Int?
     ): Flow<PagingData<ShopItem>> {
-        return Pager(
-            PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
-        ) {
-            ShopCatalogPagingSource(
-                cloudService,
-                ShopCatalogParams.WithFilter(categoryId, options, maxPrice, minPrice)
-            )
-        }.flow.map {  it.map { data -> productMapper.map(data) } }
+        val pager: Pager<Int, Product> = run {
+            val pagingConfig = PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE, initialLoadSize = SHOP_ITEMS_PAGE_SIZE)
+            Pager(pagingConfig) {
+                ShopCatalogPagingSource(
+                    shopApi = cloudService,
+                    params = ShopCatalogParams.WithFilter(categoryId, options, maxPrice, minPrice)
+                ) as PagingSource<Int, Product>
+            }
+        }
+        return pager.flow.map { it.map { value -> productMapper.map(value) } }
     }
 
     override fun paddingProducts(query: String): Flow<PagingData<ShopItem>> {
-        return Pager(
-            PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE)
-        ) {
-            ShopCatalogPagingSource(cloudService, ShopCatalogParams.WithQuery(query))
-        }.flow.map {
-            it.map { data -> productMapper.map(data) }
+        val pager: Pager<Int, Product> = run {
+            val pagingConfig = PagingConfig(pageSize = SHOP_ITEMS_PAGE_SIZE,initialLoadSize = SHOP_ITEMS_PAGE_SIZE)
+            Pager(pagingConfig) {
+                ShopCatalogPagingSource(
+                    shopApi = cloudService,
+                    params = ShopCatalogParams.WithQuery(query)
+                ) as PagingSource<Int, Product>
+            }
         }
+        return pager.flow.map { it.map { value -> productMapper.map(value) } }
     }
 }

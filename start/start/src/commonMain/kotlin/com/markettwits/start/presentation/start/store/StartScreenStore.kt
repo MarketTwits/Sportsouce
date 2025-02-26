@@ -16,6 +16,7 @@ import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
         data class OnClickDistanceNew(val distance: DistinctDistance) : Intent
+        data object OnClickMembersResult : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
@@ -44,10 +46,11 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class OnClickMembers(val members: List<StartMembersUi>) : Label
+        data class OnClickMembersResult(val membersResult: List<MemberResult>) : Label
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
-            val comboId : Int?,
+            val comboId: Int?,
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
@@ -111,22 +114,27 @@ class StartScreenStoreFactory(
 
                         val b = if (matchingDistance?.combo != null) {
                             // Если combo не null, ищем DistinctDistance по id в combo
-                           it. distanceInfoNew.filter { it.id in matchingDistance.combo!! }
+                            it.distanceInfoNew.filter { it.id in matchingDistance.combo!! }
                         } else {
                             // Если combo null, возвращаем выбранный DistinctDistance в виде списка
                             listOf(intent.distance)
                         }
 
-                        publish(Label.OnClickDistanceNew(
-                            startId = it.id,
-                            distanceInfo = b,
-                            paymentDisabled = it.paymentDisabled,
-                            paymentType = it.paymentType,
-                            comboId = comboId,
-                            startTitle = it.title
-                        ))
+                        publish(
+                            Label.OnClickDistanceNew(
+                                startId = it.id,
+                                distanceInfo = b,
+                                paymentDisabled = it.paymentDisabled,
+                                paymentType = it.paymentType,
+                                comboId = comboId,
+                                startTitle = it.title
+                            )
+                        )
                     }
                 }
+
+                is Intent.OnClickMembersResult -> state().data?.let { Label.OnClickMembersResult(it.membersResults) }
+                    ?.let { publish(it) }
             }
         }
 
@@ -143,10 +151,6 @@ class StartScreenStoreFactory(
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
                             exceptionTracker.reportException(it, "StartScreenStore#launch")
                         }
-                        println(""""""""")
-                        println("#StartScreenStore")
-                        println(it.localizedMessage)
-                        println(""""""""")
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },
                     onSuccess = {
@@ -158,17 +162,17 @@ class StartScreenStoreFactory(
     }
 
     private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(message: Msg): State =
-            when (message) {
-                is Msg.InfoFailed -> State(message = message.message, isError = true)
-                is Msg.InfoLoaded -> State(data = message.data)
+        override fun State.reduce(msg: Msg): State =
+            when (msg) {
+                is Msg.InfoFailed -> State(message = msg.message, isError = true)
+                is Msg.InfoLoaded -> State(data = msg.data)
                 is Msg.Loading -> copy(isLoading = true, isError = false)
                 is Msg.OnConsumedEvent -> copy(event = consumed())
                 is Msg.TriggerEvent -> copy(
                     event = triggered(
                         EventContent(
-                            message.status,
-                            message.message
+                            msg.status,
+                            msg.message
                         )
                     )
                 )

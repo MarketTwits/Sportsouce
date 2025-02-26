@@ -19,6 +19,7 @@ kotlin {
         implementation(projects.start.startRegister)
         implementation(projects.start.startSupport)
         implementation(projects.core.cache)
+        implementation(projects.core.decompose)
         implementation(projects.bottombar)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)

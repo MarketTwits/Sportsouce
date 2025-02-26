@@ -3,6 +3,7 @@ package com.markettwits.core_cloud.provider
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
@@ -36,7 +37,9 @@ class HttpClientProviderBase(
             }
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 150000
+            requestTimeoutMillis = 30000
+            connectTimeoutMillis = 30000
+            socketTimeoutMillis = 30000
         }
         defaultRequest {
             header(HttpHeaders.ContentType, ContentType.Application.Json)

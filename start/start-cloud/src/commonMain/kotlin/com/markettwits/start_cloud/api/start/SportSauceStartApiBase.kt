@@ -9,6 +9,8 @@ import com.markettwits.start_cloud.model.comments.response.StartCommentsRemote
 import com.markettwits.start_cloud.model.filters.FiltersRemote
 import com.markettwits.start_cloud.model.members.StartMember
 import com.markettwits.start_cloud.model.members.StartMembersRemote
+import com.markettwits.start_cloud.model.result.StartMemberResult
+import com.markettwits.start_cloud.model.result.StartMemberResultRows
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbumRemote
@@ -21,6 +23,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import kotlinx.serialization.decodeFromString
 
 internal class SportSauceStartApiBase(
     private val httpClient: HttpClientProvider
@@ -30,7 +33,7 @@ internal class SportSauceStartApiBase(
 
     private val client = httpClient.provide(true)
 
-    override suspend fun start(startId : Int) : StartRemote {
+    override suspend fun start(startId: Int): StartRemote {
         val response = client.get("start/$startId")
         return json.decodeFromString(response.body<String>())
     }
@@ -40,12 +43,29 @@ internal class SportSauceStartApiBase(
         return json.decodeFromString(response.body<String>())
     }
 
-    override suspend fun membersNew(startId: Int): List<StartMember> {
-        val response = client.get("member-start/paid"){
+    override suspend fun members(startId: Int): List<StartMember> {
+        val response = client.get("member-start/paid") {
             parameter("start_id", startId)
             parameter("maxResultCount", 1000)
         }
         return json.decodeFromString<StartMembersRemote>(response.body<String>()).rows
+    }
+
+    override suspend fun membersResults(
+        maxResultCount: Int,
+        startId: Int,
+        filterText: String,
+        sorting: String
+    ): List<StartMemberResult> {
+        val response = client.get("member-result") {
+            parameter("maxResultCount", maxResultCount.toString())
+            parameter("start_id", startId.toString())
+            parameter("sorting", sorting)
+            if (filterText.isNotBlank()) {
+                parameter("filterText", filterText)
+            }
+        }
+        return json.decodeFromString<StartMemberResultRows>(response.body()).rows
     }
 
     override suspend fun comments(startId: Int): List<Comment> {

@@ -5,11 +5,14 @@ import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
+import com.markettwits.start.data.start.mapper.result.StartMembersResultsToUiMapper
 import com.markettwits.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start_cloud.model.comments.response.Comment
 import com.markettwits.start_cloud.model.members.StartMember
+import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.StartRemoteNew
 import com.markettwits.start_cloud.model.start.StartRemoteOld
@@ -20,6 +23,7 @@ import com.markettwits.time.TimePattern
 internal class StartRemoteToUiMapperBase(
     private val timeMapper: TimeMapper,
     private val membersMapper: StartMembersToUiMapper,
+    private val membersResultsMapper: StartMembersResultsToUiMapper,
     private val commentsMapper: StartCommentsToUiMapper,
     private val albumsMapper: StartAlbumsToUiMapper,
     private val startTimesMapper: StartTimesMapper
@@ -27,6 +31,7 @@ internal class StartRemoteToUiMapperBase(
     override fun map(
         startRemote: StartRemote,
         startMember: List<StartMember>,
+        startMemberResults: List<StartMemberResult>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,
     ): StartItem {
@@ -74,7 +79,8 @@ internal class StartRemoteToUiMapperBase(
                         endStart = ""
                     ),
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
-                    distanceMapNew = startRemote.distances
+                    distanceMapNew = startRemote.distances,
+                    membersResults = membersResultsMapper.map(startMemberResults)
                 )
             }
 
@@ -131,10 +137,15 @@ internal class StartRemoteToUiMapperBase(
                         endStart = startRemote.start_data.end_date
                     ),
                     distanceInfoNew = emptyList(),
-                    distanceMapNew = emptyList()
+                    distanceMapNew = emptyList(),
+                    membersResults = membersResultsMapper.map(startMemberResults)
                 )
             }
         }
+    }
+
+    override fun map(startMemberResults: List<StartMemberResult>): List<MemberResult> {
+        return membersResultsMapper.map(startMemberResults)
     }
 
 

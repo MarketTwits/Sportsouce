@@ -2,10 +2,7 @@ package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +20,11 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.common.startStatusBackground
 
 @Composable
-internal fun StartStatus(modifier: Modifier = Modifier, status: StartItem.StartStatus, date: String) {
+internal fun StartStatus(
+    modifier: Modifier = Modifier,
+    status: StartItem.StartStatus,
+    date: String
+) {
     Column(modifier = modifier) {
         val color = startStatusBackground(status.code)
         Box(
@@ -46,6 +47,7 @@ internal fun StartStatus(modifier: Modifier = Modifier, status: StartItem.StartS
                 textAlign = TextAlign.Center
             )
         }
+        Spacer(modifier = Modifier.size(8.dp))
         Box(
             modifier = Modifier
                 .padding(4.dp)

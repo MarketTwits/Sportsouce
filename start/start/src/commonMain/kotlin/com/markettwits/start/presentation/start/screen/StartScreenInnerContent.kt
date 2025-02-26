@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.start.components.*
 import com.markettwits.start.presentation.start.components.StartAlbums
 import com.markettwits.start.presentation.start.components.StartConditionPanel
 import com.markettwits.start.presentation.start.components.StartDescription
@@ -26,6 +27,7 @@ internal fun StartScreenInnerContent(
     data: StartItem,
     onClickDistanceNew: (DistinctDistance) -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
+    onClickMembersResults : () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
@@ -96,6 +98,11 @@ internal fun StartScreenInnerContent(
         ) {
             onClickMembers(data.membersUi)
         }
+        StartMembersResultPanel(
+            modifier = innerModifier,
+            membersResultCount = data.membersResults.size,
+            onClick = onClickMembersResults
+        )
         StartOrganizers(
             modifier = innerModifier,
             organizer = data.organizers,

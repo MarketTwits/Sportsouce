@@ -1,4 +1,4 @@
-package com.markettwits.start.presentation.membres.list.compoents
+package com.markettwits.start.presentation.result.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,13 +29,13 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreen
 
 @Composable
-internal fun StartSearchMember(
+internal fun StartSearchMemberResults(
     modifier: Modifier = Modifier,
-    component: StartMembersScreen,
+    query: String,
+    onValueChange: (String) -> Unit,
+    onClickGoBack: () -> Unit,
+    onClickBrush: () -> Unit,
 ) {
-    val query by component.filterValue.subscribeAsState()
-
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -44,9 +45,7 @@ internal fun StartSearchMember(
         IconButton(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            onClick = {
-                component.back()
-            }
+            onClick = onClickGoBack
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -60,9 +59,7 @@ internal fun StartSearchMember(
                 .weight(1f)
                 .padding(top = 5.dp),
             value = query,
-            onValueChange = {
-                component.handleTextFiled(it)
-            },
+            onValueChange = onValueChange,
             placeholder = {
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
@@ -75,16 +72,17 @@ internal fun StartSearchMember(
                 )
             },
         )
-        IconButton(
-            onClick = {
-                component.openFilter()
+        if (query.isNotEmpty()) {
+            IconButton(
+                onClick = onClickBrush
+            ) {
+                Icon(
+
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close",
+                    tint = Color.Gray
+                )
             }
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Notes,
-                contentDescription = "Notes",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
         }
     }
 }

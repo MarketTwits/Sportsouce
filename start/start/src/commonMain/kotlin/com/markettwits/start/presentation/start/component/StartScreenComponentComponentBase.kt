@@ -8,6 +8,7 @@ import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start.presentation.start.store.StartScreenStore
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
+import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
     private val startId: Int,
     private val back: () -> Unit,
-    private val registerNew: (StartRegistrationInput) -> Unit,
+    private val registerNew: (StartDistancesInput) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
     private val membersResult: (List<MemberResult>) -> Unit,
@@ -47,13 +48,13 @@ class StartScreenComponentComponentBase(
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
                     is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.membersResult)
                     is StartScreenStore.Label.OnClickDistanceNew -> registerNew(
-                        StartRegistrationInput(
+                        StartDistancesInput(
                             startId = it.startId,
                             startTitle = it.startTitle,
                             paymentType = it.paymentType,
-                            comboId = it.comboId,
-                            distances = it.distanceInfo,
-                            isPaymentDisabled = it.paymentDisabled
+                            distance = it.distanceInfo,
+                            paymentDisabled = it.paymentDisabled,
+                            mapDistance = it.mapDistance,
                         )
                     )
                 }

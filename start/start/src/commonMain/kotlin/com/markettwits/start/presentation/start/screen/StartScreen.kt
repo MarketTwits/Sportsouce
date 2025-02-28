@@ -67,9 +67,9 @@ fun StartScreen(
                     onClickBack = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
                     },
-                    onClickDistanceNew = {
+                    onClickRegistration = {
                         startComponent.obtainEvent(
-                            StartScreenStore.Intent.OnClickDistanceNew(it)
+                            StartScreenStore.Intent.OnClickRegistration
                         )
                     },
                     onClickMembers = {

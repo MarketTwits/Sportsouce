@@ -34,7 +34,7 @@ internal fun StartOrganizers(
     onClickPhone: (String) -> Unit
 ) {
     if (organizer.isNotEmpty()) {
-        StartContentBasePanel(modifier = modifier, label = "Организаторы", openByDefault = false) {
+        StartContentBasePanel(modifier = modifier, label = "Организаторы") {
             StartOrganizersContent(Modifier.padding(4.dp), organizer, onClickUrl, onClickPhone)
         }
     }

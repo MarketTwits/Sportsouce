@@ -121,7 +121,7 @@ class RootStartScreenComponentBase(
                 RootStartRegisterBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    content = config.input
+                    input = config.input,
                 )
             )
 

@@ -2,8 +2,10 @@ package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,8 +37,8 @@ internal fun StartMembersResultPanel(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Результаты старта",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.bold(),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = FontNunito.semiBoldBold(),
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.padding(start = 5.dp))
@@ -55,10 +57,10 @@ internal fun StartMembersResultPanel(
                 }
             }
 
-            _root_ide_package_.androidx.compose.material3.Icon(
-                imageVector = _root_ide_package_.androidx.compose.material.icons.Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.tertiary
+                tint = MaterialTheme.colorScheme.outline
             )
         }
     }

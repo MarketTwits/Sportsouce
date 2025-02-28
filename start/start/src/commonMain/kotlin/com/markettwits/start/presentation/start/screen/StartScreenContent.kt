@@ -2,14 +2,7 @@ package com.markettwits.start.presentation.start.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +25,7 @@ internal fun StartScreenContent(
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
-    onClickDistanceNew: (DistinctDistance) -> Unit,
+    onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
     onClickImage: () -> Unit,
@@ -79,7 +72,7 @@ internal fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
-                            onClickDistanceNew = onClickDistanceNew,
+                            onClickRegistration = onClickRegistration,
                             onClickMembers = onClickMembers,
                             onClickMembersResults = onClickMembersResults,
                             onClickUrl = onClickUrl,
@@ -99,7 +92,7 @@ internal fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = it,
                         data = data,
-                        onClickDistanceNew = onClickDistanceNew,
+                        onClickRegistration = onClickRegistration,
                         onClickMembers = onClickMembers,
                         onClickMembersResults = onClickMembersResults,
                         onClickUrl = onClickUrl,

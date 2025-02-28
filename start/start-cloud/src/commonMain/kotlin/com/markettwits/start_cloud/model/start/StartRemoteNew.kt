@@ -30,7 +30,7 @@ data class StartRemoteNew(
     val payment_disabled: Boolean?,
     val payment_type: String?,
     val posterLinkFile: PosterLinkFile?,
-    val reg_on_site: Boolean,
+    val reg_on_site: Boolean? = null,
     val short_name: String?,
     val slug: String?,
     val start_date: String,

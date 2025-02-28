@@ -18,6 +18,7 @@ import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start.presentation.start.store.StartScreenStore.*
+import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
-        data class OnClickDistanceNew(val distance: DistinctDistance) : Intent
+        data object OnClickRegistration : Intent
         data object OnClickMembersResult : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data object OnClickBack : Intent
@@ -50,7 +51,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
-            val comboId: Int?,
+            val mapDistance: List<Distance>,
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
@@ -106,30 +107,22 @@ class StartScreenStoreFactory(
                 is Intent.TriggerEvent -> dispatch(Msg.TriggerEvent(intent.message, intent.status))
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
-                is Intent.OnClickDistanceNew -> {
-                    state().data?.let {
-                        val matchingDistance = it.distanceMapNew.find { it.id == intent.distance.id }
-
-                        val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
-
-                        val b = if (matchingDistance?.combo != null) {
-                            // Если combo не null, ищем DistinctDistance по id в combo
-                            it.distanceInfoNew.filter { it.id in matchingDistance.combo!! }
-                        } else {
-                            // Если combo null, возвращаем выбранный DistinctDistance в виде списка
-                            listOf(intent.distance)
+                is Intent.OnClickRegistration -> {
+                    state().data?.let { value ->
+                        if (value.regLink.isNotEmpty()) {
+                            intentAction.openWebPage(value.regLink)
                         }
-
-                        publish(
-                            Label.OnClickDistanceNew(
-                                startId = it.id,
-                                distanceInfo = b,
-                                paymentDisabled = it.paymentDisabled,
-                                paymentType = it.paymentType,
-                                comboId = comboId,
-                                startTitle = it.title
+                        if (value.distanceInfoNew.isNotEmpty() && value.startStatus.code == 3)
+                            publish(
+                                Label.OnClickDistanceNew(
+                                    startId = startId,
+                                    startTitle = value.title,
+                                    distanceInfo = value.distanceInfoNew,
+                                    paymentDisabled = value.paymentDisabled,
+                                    paymentType = value.paymentType,
+                                    mapDistance = value.distanceMapNew
+                                )
                             )
-                        )
                     }
                 }
 

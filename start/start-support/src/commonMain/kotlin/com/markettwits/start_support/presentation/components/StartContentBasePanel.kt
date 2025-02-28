@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 
@@ -35,8 +36,9 @@ internal fun StartSupportPanel(
         }
         Spacer(modifier = Modifier.padding(5.dp))
         ButtonContentBase(
-            containerColor = MaterialTheme.colorScheme.tertiary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
+            containerColor = MaterialTheme.colorScheme.secondary,
+            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+            shape = Shapes.medium,
             textColor = titleColor,
             isEnabled = isEnabled,
             title = "Поддержать",

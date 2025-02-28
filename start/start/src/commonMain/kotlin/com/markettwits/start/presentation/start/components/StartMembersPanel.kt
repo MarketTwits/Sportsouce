@@ -41,8 +41,8 @@ internal fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int,
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Список участников",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.bold(),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = FontNunito.semiBoldBold(),
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.padding(start = 5.dp))
@@ -64,7 +64,7 @@ internal fun StartMembersPanel(modifier: Modifier = Modifier, membersCount: Int,
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.tertiary
+                tint = MaterialTheme.colorScheme.outline
             )
         }
     }

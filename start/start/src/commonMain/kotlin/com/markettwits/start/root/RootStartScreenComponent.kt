@@ -11,6 +11,7 @@ import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start.presentation.start.component.StartScreenComponent
+import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.start_support.presentation.component.StartSupportComponent
 import kotlinx.serialization.Serializable
@@ -38,7 +39,7 @@ interface RootStartScreenComponent {
         data class StartMembersResult(val items: List<MemberResult>) : Config()
 
         @Serializable
-        data class StartRegistration(val input: StartRegistrationInput) : Config()
+        data class StartRegistration(val input: StartDistancesInput) : Config()
 
         @Serializable
         data class StartAlbum(val images: List<String>) : Config()

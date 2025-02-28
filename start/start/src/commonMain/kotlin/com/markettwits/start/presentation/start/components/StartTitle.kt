@@ -21,16 +21,7 @@ internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: Str
             fontFamily = FontNunito.extraBold(),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.padding(4.dp))
-        Text(
-            text = place,
-            fontSize = 14.sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

@@ -2,6 +2,9 @@ package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,6 +25,7 @@ import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import kotlin.random.Random
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StartMembersStatistics(
     modifier: Modifier = Modifier,
@@ -29,15 +35,28 @@ internal fun StartMembersStatistics(
         StartContentBasePanel(
             modifier = modifier,
             label = "Регистрации по дистанциям",
-            openByDefault = true
         ) {
             val distances = membersUi.mapToRegistrationDistance()
             Column(modifier = modifier) {
                 ColorPalette(members = distances)
                 Spacer(Modifier.padding(4.dp))
-                distances.forEach { members ->
-                    BarChartItem(member = members)
+                FlowRow(
+                    maxItemsInEachRow = 2,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    distances.forEach { member ->
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            BarChartItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                member = member
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
@@ -73,9 +92,7 @@ private fun BarChartItem(
     member: StartRegistrationDistanceStatistics,
 ) {
     Row(
-        modifier = modifier
-            .padding(vertical = 4.dp)
-            .fillMaxWidth(),
+        modifier = modifier.padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -105,17 +122,11 @@ private fun BarChartItem(
 
 @Composable
 private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistrationDistanceStatistics> {
-    val availableColors = mutableListOf(
-        SportSouceColor.SportSouceLighBlue,
-        SportSouceColor.SportSouceBlue,
-        SportSouceColor.OnSecondaryContainer,
-        SportSouceColor.VkIcon,
-        SportSouceColor.SportSouceRegistryCommingSoonYellow,
-        SportSouceColor.VeryLighBlue,
-        SportSouceColor.TelegramIcon.copy(0.3f),
-        Color.Gray,
-        SportSouceColor.SportSouceStartEndedPink.copy(0.3f)
-    ).shuffled()
+    val baseColor = MaterialTheme.colorScheme.secondary
+    val availableColors = List(10) { index ->
+        val factor = index / 9f
+        lerp(Color.White, baseColor, factor)
+    }.shuffled()
 
     return this
         .groupBy { it.distance }
@@ -124,7 +135,7 @@ private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistra
             StartRegistrationDistanceStatistics(
                 count = pair.second.size,
                 distance = pair.first,
-                color = availableColors.getOrElse(index) { Color.random() }
+                color = availableColors.getOrNull(index) ?: baseColor
             )
         }
 }

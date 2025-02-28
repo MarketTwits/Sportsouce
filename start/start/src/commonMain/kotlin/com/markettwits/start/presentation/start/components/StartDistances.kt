@@ -25,12 +25,13 @@ import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
+@Suppress("deprecated")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StartDistances(
     modifier: Modifier = Modifier,
     distance: List<DistinctDistance>,
-    mapDistance : List<Distance>,
+    mapDistance: List<Distance>,
     startStatus: StartItem.StartStatus,
     paymentDisabled: Boolean,
     paymentType: String,
@@ -65,8 +66,9 @@ internal fun StartDistances(
         StartContentBasePanel(modifier = modifier, label = "Дистанции") {
             ButtonContentBase(
                 modifier = modifier.fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.secondary,
-                textColor = MaterialTheme.colorScheme.onSecondary,
+                shape = Shapes.medium,
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                textColor = MaterialTheme.colorScheme.onTertiary,
                 title = "Перейти на сайт регистрации",
                 onClick = {
                     onClickUrl(regLink)
@@ -116,7 +118,7 @@ private fun DistanceItem(
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.tertiary
             )
-            if (item.description != null){
+            if (item.description != null) {
                 Text(
                     text = item.description ?: "",
                     fontSize = 14.sp,
@@ -139,7 +141,7 @@ private fun DistanceItem(
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.tertiary
                 )
-            }else{
+            } else {
                 Spacer(modifier = Modifier.height(14.dp))
             }
             if (paymentDisabled && paymentType.isNotEmpty()) {
@@ -189,7 +191,7 @@ private fun DistanceItem(
 private fun getDistanceTitle(
     distances: List<Distance>,
     distinctDistances: List<DistinctDistance>,
-    selectedDistance : DistinctDistance,
+    selectedDistance: DistinctDistance,
 ): String {
     val matchingDistance = distances.find { it.id == selectedDistance.id }
 

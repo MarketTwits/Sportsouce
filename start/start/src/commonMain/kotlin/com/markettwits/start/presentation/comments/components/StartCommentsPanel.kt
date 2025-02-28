@@ -59,7 +59,7 @@ internal fun StartCommentsPanel(
                     fontSize = 15.sp,
                     fontFamily = FontNunito.medium(),
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -91,7 +91,10 @@ private fun StartCommentCard(
         }
     }
 
-    Row(modifier = modifier.padding(vertical = 10.dp)) {
+    Row(modifier = modifier.padding(
+        vertical = 10.dp,
+        horizontal = 5.dp,
+    )) {
         if (userImageUrl.isNotEmpty())
             AsyncImage(
                 modifier = Modifier
@@ -128,13 +131,13 @@ private fun StartCommentCard(
                     fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 5.dp))
                 Text(
                     text = commentCreateDate,
                     fontSize = 10.sp,
-                    fontFamily = FontNunito.medium(),
+                    fontFamily = FontNunito.regular(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.outline
@@ -142,11 +145,12 @@ private fun StartCommentCard(
             }
             Text(
                 text = message,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.medium(),
                 maxLines = 5,
+                lineHeight = 16.sp,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.onPrimary
             )
             if (!isReply) {
                 Text(
@@ -173,7 +177,7 @@ private fun StartCommentCard(
                         fontFamily = FontNunito.bold(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
                 AnimatedVisibility(
@@ -210,7 +214,7 @@ private fun StartCommentCard(
                             fontFamily = FontNunito.bold(),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.tertiary
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 }

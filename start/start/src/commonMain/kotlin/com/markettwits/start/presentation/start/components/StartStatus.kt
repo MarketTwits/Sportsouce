@@ -1,8 +1,11 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddComment
+import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
@@ -23,49 +25,79 @@ import com.markettwits.start.presentation.common.startStatusBackground
 internal fun StartStatus(
     modifier: Modifier = Modifier,
     status: StartItem.StartStatus,
-    date: String
+    membersCount: Int,
 ) {
-    Column(modifier = modifier) {
+    Row(modifier = modifier) {
         val color = startStatusBackground(status.code)
-        Box(
+        Row(
             modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth()
-                .border(width = 4.dp, color = color, shape = Shapes.medium)
-                .clip(Shapes.medium)
+                .weight(3f)
+                .border(2.dp, color.copy(0.8f), Shapes.large)
+                .clip(Shapes.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
             Text(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(10.dp),
+                    .padding(8.dp),
                 text = status.name,
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
                 color = color,
+                fontFamily = FontNunito.bold(),
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center
             )
         }
-        Spacer(modifier = Modifier.size(8.dp))
-        Box(
+        Spacer(modifier = Modifier.size(12.dp))
+        Row(
             modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth()
-                .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.tertiary)
+                .weight(1f)
+                .border(0.5.dp, MaterialTheme.colorScheme.outline.copy(0.8f), Shapes.large)
+                .clip(Shapes.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
+            Spacer(modifier = Modifier.size(4.dp))
+            Icon(
+                modifier = Modifier
+                    .padding(8.dp),
+                imageVector = Icons.Outlined.Group,
+                tint = MaterialTheme.colorScheme.outline,
+                contentDescription = null,
+            )
             Text(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(10.dp),
-                text = date,
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 3,
+                    .padding(8.dp),
+                text = membersCount.toString(),
+                color = MaterialTheme.colorScheme.outline,
+                fontFamily = FontNunito.medium(),
+                fontSize = 14.sp,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onTertiary
+                textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.size(4.dp))
+        }
+        Spacer(modifier = Modifier.size(12.dp))
+        Row(
+            modifier = Modifier
+                .weight(0.7f)
+                .border(0.5.dp, MaterialTheme.colorScheme.outline.copy(0.8f), Shapes.large)
+                .clip(Shapes.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Spacer(modifier = Modifier.size(4.dp))
+            Icon(
+                modifier = Modifier
+                    .padding(8.dp),
+                imageVector = Icons.Outlined.AddComment,
+                tint = MaterialTheme.colorScheme.outline,
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.size(4.dp))
         }
     }
+    Spacer(modifier = Modifier.size(4.dp))
 }

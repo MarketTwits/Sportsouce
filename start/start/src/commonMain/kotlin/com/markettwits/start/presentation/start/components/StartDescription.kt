@@ -36,7 +36,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun StartDescription(modifier: Modifier, description: String) {
     var expanded by remember { mutableStateOf(false) }
-    val displayText = if (expanded) description else description.take(150)
+    val displayText = if (expanded) description else description.take(200)
 
     Column(modifier) {
         val textColor = MaterialTheme.colorScheme.onPrimary
@@ -77,7 +77,7 @@ internal fun StartDescription(modifier: Modifier, description: String) {
                         text = if (expanded) "Скрыть" else "Подробнее",
                         fontFamily = FontNunito.bold(),
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                 }
             }

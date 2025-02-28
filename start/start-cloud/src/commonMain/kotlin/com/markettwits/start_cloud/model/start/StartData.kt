@@ -15,7 +15,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartData(
-    val afishaLinkFile: Int?,
     val afisha_link: Int?,
     val age_counting: String,
     val age_groups: List<String>?,

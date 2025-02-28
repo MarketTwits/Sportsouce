@@ -11,23 +11,19 @@ import com.markettwits.start.presentation.start.components.*
 import com.markettwits.start.presentation.start.components.StartAlbums
 import com.markettwits.start.presentation.start.components.StartConditionPanel
 import com.markettwits.start.presentation.start.components.StartDescription
-import com.markettwits.start.presentation.start.components.StartDistances
 import com.markettwits.start.presentation.start.components.StartMembersPanel
 import com.markettwits.start.presentation.start.components.StartMembersStatistics
-import com.markettwits.start.presentation.start.components.StartOrganizers
 import com.markettwits.start.presentation.start.components.StartResult
 import com.markettwits.start.presentation.start.components.StartStatus
-import com.markettwits.start.presentation.start.components.StartTimeProgram
 import com.markettwits.start.presentation.start.components.StartTitle
-import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
 @Composable
 internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
-    onClickDistanceNew: (DistinctDistance) -> Unit,
+    onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
-    onClickMembersResults : () -> Unit,
+    onClickMembersResults: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
@@ -44,29 +40,46 @@ internal fun StartScreenInnerContent(
         )
         StartStatus(
             modifier = innerModifier,
-            status = data.startStatus, date = data.startTime
+            status = data.startStatus,
+            membersCount = data.membersUi.count(),
         )
-        StartDescription(modifier = innerModifier, description = data.description)
-        StartTimeProgram(
-            modifier = innerModifier,
-            startTimes = data.startTimes
-        )
-        StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
-            onClickFullAlbum()
-        })
-        StartDistances(
+        StartRegistrationPanel(
             modifier = innerModifier,
             distance = data.distanceInfoNew,
-            mapDistance = data.distanceMapNew,
             startStatus = data.startStatus,
-            paymentDisabled = data.paymentDisabled,
-            paymentType = data.paymentType,
             regLink = data.regLink,
-            onClick = {
-                onClickDistanceNew(it)
+            onClickRegistration = {
+                onClickRegistration()
             },
             onClickUrl = onClickUrl
         )
+        StartDescription(modifier = innerModifier, description = data.description)
+        StartExtraFieldsPanel(
+            modifier = innerModifier,
+            place = data.startPlace,
+            organizers = data.organizers,
+            startDate = data.startTime
+        )
+//        StartTimeProgram(
+//            modifier = innerModifier,
+//            startTimes = data.startTimes
+//        )
+        StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
+            onClickFullAlbum()
+        })
+//        StartDistances(
+//            modifier = innerModifier,
+//            distance = data.distanceInfoNew,
+//            mapDistance = data.distanceMapNew,
+//            startStatus = data.startStatus,
+//            paymentDisabled = data.paymentDisabled,
+//            paymentType = data.paymentType,
+//            regLink = data.regLink,
+//            onClick = {
+//                onClickDistanceNew(it)
+//            },
+//            onClickUrl = onClickUrl
+//        )
         StartMembersStatistics(
             modifier = innerModifier,
             membersUi = data.membersUi
@@ -103,12 +116,12 @@ internal fun StartScreenInnerContent(
             membersResultCount = data.membersResults.size,
             onClick = onClickMembersResults
         )
-        StartOrganizers(
-            modifier = innerModifier,
-            organizer = data.organizers,
-            onClickUrl = onClickUrl,
-            onClickPhone = onClickPhone
-        )
+//        StartOrganizers(
+//            modifier = innerModifier,
+//            organizer = data.organizers,
+//            onClickUrl = onClickUrl,
+//            onClickPhone = onClickPhone
+//        )
         donations(innerModifier)
     }
     comments(modifier)

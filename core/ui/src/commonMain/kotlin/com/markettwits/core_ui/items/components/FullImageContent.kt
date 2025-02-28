@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -29,21 +30,21 @@ fun FullImageContent(
 ) {
     val boxModifier = if (isPortrait) modifier
         .fillMaxWidth()
-        .height(300.dp) else {
+        .height(350.dp) else {
         modifier
     }
     val imageModifier =
         if (isPortrait) Modifier
             .wrapContentSize()
-            .width(200.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .width(250.dp)
+            .clip(Shapes.large)
         else Modifier.fillMaxSize()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(Shapes.large)
 
     Box(
         modifier = boxModifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(330.dp)
     ) {
         if (isPortrait) {
             SubcomposeAsyncImage(
@@ -51,8 +52,9 @@ fun FullImageContent(
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .blur(radius = 4.dp)
                     .fillMaxSize()
-                    .alpha(0.2f),
+                    .alpha(0.15f),
                 error = {
                     SubcomposeAsyncImageContent(
                         modifier = modifier,
@@ -68,7 +70,7 @@ fun FullImageContent(
             modifier = Modifier
                 .padding(18.dp)
                 .align(Alignment.Center),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             SubcomposeAsyncImage(
                 model = imageUrl,

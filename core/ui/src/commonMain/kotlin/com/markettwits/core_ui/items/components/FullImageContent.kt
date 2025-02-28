@@ -36,7 +36,7 @@ fun FullImageContent(
     val imageModifier =
         if (isPortrait) Modifier
             .wrapContentSize()
-            .width(250.dp)
+            .width(230.dp)
             .clip(Shapes.large)
         else Modifier.fillMaxSize()
             .clip(Shapes.large)
@@ -70,7 +70,8 @@ fun FullImageContent(
             modifier = Modifier
                 .padding(18.dp)
                 .align(Alignment.Center),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            shape = Shapes.large,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             SubcomposeAsyncImage(
                 model = imageUrl,

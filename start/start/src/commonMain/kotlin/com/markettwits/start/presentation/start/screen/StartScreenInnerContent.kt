@@ -30,7 +30,7 @@ internal fun StartScreenInnerContent(
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
-    val innerModifier = Modifier.padding(8.dp)
+    val innerModifier = Modifier.padding(10.dp)
 
     Column(modifier = modifier) {
         StartTitle(
@@ -43,6 +43,12 @@ internal fun StartScreenInnerContent(
             status = data.startStatus,
             membersCount = data.membersUi.count(),
         )
+        StartExtraFieldsPanel(
+            modifier = innerModifier,
+            place = data.startPlace,
+            organizers = data.organizers,
+            startDate = data.startTime
+        )
         StartRegistrationPanel(
             modifier = innerModifier,
             distance = data.distanceInfoNew,
@@ -54,32 +60,9 @@ internal fun StartScreenInnerContent(
             onClickUrl = onClickUrl
         )
         StartDescription(modifier = innerModifier, description = data.description)
-        StartExtraFieldsPanel(
-            modifier = innerModifier,
-            place = data.startPlace,
-            organizers = data.organizers,
-            startDate = data.startTime
-        )
-//        StartTimeProgram(
-//            modifier = innerModifier,
-//            startTimes = data.startTimes
-//        )
         StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
             onClickFullAlbum()
         })
-//        StartDistances(
-//            modifier = innerModifier,
-//            distance = data.distanceInfoNew,
-//            mapDistance = data.distanceMapNew,
-//            startStatus = data.startStatus,
-//            paymentDisabled = data.paymentDisabled,
-//            paymentType = data.paymentType,
-//            regLink = data.regLink,
-//            onClick = {
-//                onClickDistanceNew(it)
-//            },
-//            onClickUrl = onClickUrl
-//        )
         StartMembersStatistics(
             modifier = innerModifier,
             membersUi = data.membersUi
@@ -116,12 +99,6 @@ internal fun StartScreenInnerContent(
             membersResultCount = data.membersResults.size,
             onClick = onClickMembersResults
         )
-//        StartOrganizers(
-//            modifier = innerModifier,
-//            organizer = data.organizers,
-//            onClickUrl = onClickUrl,
-//            onClickPhone = onClickPhone
-//        )
         donations(innerModifier)
     }
     comments(modifier)

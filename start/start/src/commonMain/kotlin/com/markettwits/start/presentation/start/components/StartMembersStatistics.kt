@@ -1,10 +1,12 @@
 package com.markettwits.start.presentation.start.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,19 +43,16 @@ internal fun StartMembersStatistics(
                 ColorPalette(members = distances)
                 Spacer(Modifier.padding(4.dp))
                 FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     maxItemsInEachRow = 2,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     distances.forEach { member ->
-                        Box(
-                            modifier = Modifier.weight(1f),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            BarChartItem(
-                                modifier = Modifier.fillMaxWidth(),
-                                member = member
-                            )
-                        }
+                        BarChartItem(
+                            modifier = Modifier.padding(4.dp),
+                            member = member
+                        )
                     }
                 }
 
@@ -70,6 +69,7 @@ private fun ColorPalette(
 ) {
     Row(
         modifier = modifier
+            .border(0.3.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), shape = Shapes.small)
             .fillMaxWidth()
             .clip(Shapes.small),
         horizontalArrangement = Arrangement.End
@@ -81,7 +81,7 @@ private fun ColorPalette(
                     .height(30.dp)
                     .background(it.color)
                     .weight(it.count.toFloat())
-            ) {}
+            )
         }
     }
 }
@@ -97,6 +97,7 @@ private fun BarChartItem(
     ) {
         Box(
             modifier = Modifier
+                .border(0.2.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), shape = Shapes.small)
                 .clip(Shapes.small)
                 .size(20.dp)
                 .background(member.color)
@@ -106,7 +107,6 @@ private fun BarChartItem(
             color = MaterialTheme.colorScheme.outline,
             fontFamily = FontNunito.semiBoldBold(),
             fontSize = 14.sp,
-            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 6.dp)
         )
         Text(
@@ -114,7 +114,6 @@ private fun BarChartItem(
             color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.bold(),
             fontSize = 14.sp,
-            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 6.dp)
         )
     }

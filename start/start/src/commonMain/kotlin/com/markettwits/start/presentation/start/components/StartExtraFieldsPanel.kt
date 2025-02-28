@@ -1,12 +1,9 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.outlined.Album
-import androidx.compose.material.icons.outlined.CalendarToday
-import androidx.compose.material.icons.outlined.Groups
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +25,12 @@ internal fun StartExtraFieldsPanel(
     startDate: String
 ) {
     Column(modifier = modifier) {
+        if (startDate.isNotEmpty()) {
+            StartExtraFiledRow(
+                icon = Icons.Outlined.DateRange,
+                value = startDate,
+            )
+        }
         if (place.isNotEmpty()) {
             StartExtraFiledRow(
                 icon = Icons.Outlined.Place,
@@ -36,15 +39,9 @@ internal fun StartExtraFieldsPanel(
         }
         if (organizers.isNotEmpty()) {
             StartExtraFiledRow(
-                icon = Icons.Outlined.Groups,
+                icon = Icons.Outlined.PersonOutline,
                 value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
 
-            )
-        }
-        if (startDate.isNotEmpty()) {
-            StartExtraFiledRow(
-                icon = Icons.Outlined.CalendarToday,
-                value = startDate,
             )
         }
     }

@@ -47,7 +47,7 @@ internal fun StartRegistrationPanel(
                         text = "Дистанции: ${distance.joinToString(", ") { it.name } ?: ""}",
                         color = MaterialTheme.colorScheme.secondary,
                         fontSize = 12.sp,
-                        fontFamily = FontNunito.light(),
+                        fontFamily = FontNunito.regular(),
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center,
                     )
@@ -66,6 +66,7 @@ internal fun StartRegistrationPanel(
                         onClickUrl(regLink)
                     }
                 },
+                elevation = ButtonDefaults.buttonElevation(2.dp, 4.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 shape = Shapes.medium,
             ) {

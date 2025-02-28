@@ -48,6 +48,7 @@ class RootStartScreenComponentBase(
             childFactory = ::child,
         )
 
+
     private fun child(
         config: RootStartScreenComponent.Config,
         componentContext: ComponentContext,

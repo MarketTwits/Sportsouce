@@ -7,14 +7,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.base_extensions.formatPrice
@@ -23,7 +24,6 @@ import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.start.register.presentation.registration.registration.components.StartRegistrationTopBar
-import com.markettwits.start.register.presentation.registration.registration.store.StartRegistrationPageStore
 import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
@@ -106,8 +106,6 @@ private fun InfoCard() {
             }
         }
     }
-
-
 }
 
 @Composable

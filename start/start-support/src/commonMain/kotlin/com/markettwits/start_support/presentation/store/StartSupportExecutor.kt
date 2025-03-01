@@ -27,6 +27,7 @@ internal class StartSupportExecutor(
             dispatch(Message.Loading)
             useCase.donation(startId, cost).fold(
                 onSuccess = {
+                    dispatch(Message.Success(it))
                     intentAction.openWebPage(it)
                 },
                 onFailure = { dispatch(Message.Failure(it.message.toString())) }

@@ -8,14 +8,6 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.components.*
-import com.markettwits.start.presentation.start.components.StartAlbums
-import com.markettwits.start.presentation.start.components.StartConditionPanel
-import com.markettwits.start.presentation.start.components.StartDescription
-import com.markettwits.start.presentation.start.components.StartMembersPanel
-import com.markettwits.start.presentation.start.components.StartMembersStatistics
-import com.markettwits.start.presentation.start.components.StartResult
-import com.markettwits.start.presentation.start.components.StartStatus
-import com.markettwits.start.presentation.start.components.StartTitle
 
 @Composable
 internal fun StartScreenInnerContent(
@@ -37,11 +29,6 @@ internal fun StartScreenInnerContent(
             modifier = innerModifier,
             title = data.title,
             place = data.startPlace
-        )
-        StartStatus(
-            modifier = innerModifier,
-            status = data.startStatus,
-            membersCount = data.membersUi.count(),
         )
         StartExtraFieldsPanel(
             modifier = innerModifier,

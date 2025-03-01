@@ -29,7 +29,6 @@ internal object StartSupportReducer : Reducer<State, Message> {
                     EventContent(true, msg.url)
                 )
             )
-
             is Message.OnConsumedEvent -> copy(eventWithContent = consumed())
         }
     }

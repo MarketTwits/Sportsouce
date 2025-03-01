@@ -18,10 +18,12 @@ import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
+    starts : List<StartsListItem>,
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
@@ -32,6 +34,7 @@ internal fun StartScreenContent(
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
+    onClickRecommendedStart : (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
@@ -72,8 +75,10 @@ internal fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
+                            starts = starts,
                             onClickRegistration = onClickRegistration,
                             onClickMembers = onClickMembers,
+                            onClickRecommendedStart = onClickRecommendedStart,
                             onClickMembersResults = onClickMembersResults,
                             onClickUrl = onClickUrl,
                             onClickPhone = onClickPhone,
@@ -92,9 +97,11 @@ internal fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = it,
                         data = data,
+                        starts = starts,
                         onClickRegistration = onClickRegistration,
                         onClickMembers = onClickMembers,
                         onClickMembersResults = onClickMembersResults,
+                        onClickRecommendedStart = onClickRecommendedStart,
                         onClickUrl = onClickUrl,
                         onClickPhone = onClickPhone,
                         onClickFullAlbum = onClickFullAlbum,

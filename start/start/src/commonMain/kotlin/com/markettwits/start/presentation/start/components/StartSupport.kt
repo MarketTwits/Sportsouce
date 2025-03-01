@@ -1,5 +1,6 @@
 package com.markettwits.start.presentation.start.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -32,8 +33,6 @@ internal fun StartSupport(
     var isShowSupportDialog by rememberSaveable {
         mutableStateOf(false)
     }
-
-    HorizontalDivider()
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,7 +49,6 @@ internal fun StartSupport(
                 fontFamily = FontNunito.semiBoldBold(),
                 fontSize = 18.sp
             )
-            Spacer(modifier = Modifier.padding(start = 5.dp))
         }
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -58,6 +56,7 @@ internal fun StartSupport(
             tint = MaterialTheme.colorScheme.outline
         )
     }
+    Spacer(modifier = Modifier.padding(5.dp))
 
     if (isShowSupportDialog) {
         DefaultModalBottomSheet(

@@ -23,7 +23,7 @@ interface RootStartScreenComponent {
     sealed class Config {
 
         @Serializable
-        data class Start(val startId: Int, val isBackEnabled: Boolean) : Config()
+        data class Start(val startId: Int, val index : Int = 0) : Config()
 
         @Serializable
         data class StartMembers(

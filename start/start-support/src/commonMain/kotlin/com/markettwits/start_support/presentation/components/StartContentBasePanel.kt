@@ -25,9 +25,8 @@ internal fun StartSupportPanel(
 ) {
     val focus = LocalFocusManager.current
     Column(modifier = modifier) {
-        Spacer(modifier = Modifier.padding(5.dp))
         StartSupportInfoCard()
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         OutlinedTextFieldBase(
             label = "Сумма",
             value = value,

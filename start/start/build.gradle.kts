@@ -13,6 +13,7 @@ kotlin {
         implementation(projects.analytics.crashlytics)
         implementation(projects.cloud)
         implementation(projects.start.startCloud)
+        implementation(projects.starts.startsCommon)
         implementation(projects.core.ui)
         implementation(projects.core.koin)
         implementation(projects.auth.authService)

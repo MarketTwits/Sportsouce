@@ -1,4 +1,4 @@
-package com.markettwits.review.presentation.components.actual
+package com.markettwits.review.presentation.components.archive
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -89,7 +89,6 @@ private fun ImageCard(
                     )
                 }
             }
-
         }
         Text(
             text = name,

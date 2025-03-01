@@ -43,11 +43,11 @@ class RootStartScreenComponentBase(
         childStack(
             source = navigation,
             serializer = RootStartScreenComponent.Config.serializer(),
-            initialConfiguration = RootStartScreenComponent.Config.Start(startId, true),
+            initialConfiguration = RootStartScreenComponent.Config.Start(startId),
             handleBackButton = true,
+            key = startId.toString(),
             childFactory = ::child,
         )
-
 
     private fun child(
         config: RootStartScreenComponent.Config,
@@ -58,7 +58,13 @@ class RootStartScreenComponentBase(
                 component = StartScreenComponentComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
-                    back = pop::invoke,
+                    back = {
+                        if (config.index == 0) {
+                            pop()
+                        } else {
+                            navigation.popTo(config.index - 1)
+                        }
+                    },
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, filter = emptyList())
@@ -75,6 +81,9 @@ class RootStartScreenComponentBase(
                         navigation.pushNew(
                             RootStartScreenComponent.Config.StartMembersResult(it)
                         )
+                    },
+                    pushStart = {
+                        navigation.pushNew(RootStartScreenComponent.Config.Start(it, config.index + 1))
                     }
                 ),
                 commentsComponent = StartCommentsComponentBase(

@@ -8,17 +8,20 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.components.*
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
+    starts: List<StartsListItem>,
     onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
+    onClickRecommendedStart: (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
@@ -85,6 +88,11 @@ internal fun StartScreenInnerContent(
             modifier = innerModifier,
             membersResultCount = data.membersResults.size,
             onClick = onClickMembersResults
+        )
+        StartsRecommendationPanel(
+            modifier = innerModifier,
+            items = starts,
+            onItemClick = onClickRecommendedStart
         )
         donations(innerModifier)
     }

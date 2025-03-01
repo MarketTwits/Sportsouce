@@ -1,10 +1,10 @@
 package com.markettwits.start.data.start
 
+import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.base.fetchFifth
-import com.markettwits.core_ui.items.base.fetchFourth
 import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
@@ -20,11 +20,15 @@ import com.markettwits.start_cloud.model.members.StartMember
 import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.domain.StartsListItem
 
 internal class StartRepositoryBase(
+    private val starsService: SportsouceApi,
     private val startService: SportSauceStartApi,
     private val authService: AuthDataSource,
-    private val mapper: StartRemoteToUiMapper,
+    private val startMapper: StartRemoteToUiMapper,
+    private val startsMapper: StartsCloudToListMapper,
     private val cache: StartMemoryCache
 ) : StartRepository, LogTagProvider {
 
@@ -48,16 +52,22 @@ internal class StartRepositoryBase(
         offset: Int
     ): Result<List<MemberResult>> =
         kotlin.runCatching {
-            startService.membersResults(1000, startId,query)
+            startService.membersResults(1000, startId, query)
         }.map {
-            mapper.map(it)
+            startMapper.map(it)
         }
 
     override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
         retryRunCatchingAsync {
             val value = startService.comments(startId)
-            mapper.map(value)
+            startMapper.map(value)
         }
+
+    override suspend fun startsRecommended(startId: Int): Result<List<StartsListItem>> = runCatching {
+        startsMapper.mapSingle(starsService.fetchActualStarts().rows)
+            .filter { it.id != startId }
+            .shuffled()
+    }
 
     private suspend fun launches(startId: Int): Result<StartItem> {
         val result = runCatching {
@@ -70,7 +80,7 @@ internal class StartRepositoryBase(
                     { safeCallStartMembersResults(startId) }
                 )
             val result =
-                mapper.map(cloud.first, cloud.second, cloud.fifth, cloud.third, cloud.fourth)
+                startMapper.map(cloud.first, cloud.second, cloud.fifth, cloud.third, cloud.fourth)
             cache.set(value = Result.success(result), key = startId)
             result
         }

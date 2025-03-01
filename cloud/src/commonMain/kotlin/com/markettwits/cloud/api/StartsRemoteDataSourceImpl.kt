@@ -114,7 +114,7 @@ internal class StartsRemoteDataSourceImpl(
 
     override suspend fun checkStartPrice(
         startPriceRequest: StartPriceRequest,
-        id : Int,
+        id: Int,
         token: String
     ): StartPriceResponse {
         val response = client.post("member-start/$id/price") {

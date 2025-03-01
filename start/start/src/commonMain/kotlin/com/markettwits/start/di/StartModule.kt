@@ -24,6 +24,8 @@ import com.markettwits.start.domain.StartRepository
 import com.markettwits.start.presentation.result.store.StartMemberResultsStoreFactory
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -45,6 +47,7 @@ val startModule = module {
     singleOf(::StartRemoteToUiMapperBase) bind StartRemoteToUiMapper::class
     singleOf(::StartTimesMapperBase) bind StartTimesMapper::class
     singleOf(::StartMembersResultsToUiMapperBase) bind StartMembersResultsToUiMapper::class
+    singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
     singleOf(::StartMemberResultsStoreFactory)
     singleOf(::StartMemoryCache)
 }

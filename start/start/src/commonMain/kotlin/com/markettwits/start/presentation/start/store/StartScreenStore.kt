@@ -20,6 +20,7 @@ import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
+import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.launch
 
 interface StartScreenStore : Store<Intent, State, Label> {
@@ -35,13 +36,15 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data object OnConsumedEvent : Intent
         data class OnClickUrl(val url: String) : Intent
         data class OnClickPhone(val url: String) : Intent
+        data class OnClickStartRecommended(val startId: Int) : Intent
     }
 
     data class State(
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
-        val data: StartItem? = null,
+        val startItem: StartItem? = null,
+        val startsRecommended: List<StartsListItem> = emptyList(),
         val event: StateEventWithContent<EventContent> = consumed()
     )
 
@@ -57,6 +60,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val startTitle: String,
         ) : Label
 
+        data class OnClickStartRecommended(val startId: Int) : Label
         data object OnClickBack : Label
         data class OnClickFullAlbum(val images: List<String>) : Label
     }
@@ -81,16 +85,16 @@ class StartScreenStoreFactory(
         data object Loading : Msg
         data object OnConsumedEvent : Msg
         data class TriggerEvent(val message: String, val status: Boolean) : Msg
-        data class InfoLoaded(val data: StartItem) : Msg
-        data class InfoFailed(val message: String) : Msg
+        data class StartInfoSuccess(val data: StartItem) : Msg
+        data class StartInfoFailed(val message: String) : Msg
+        data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
     }
 
     private inner class ExecutorImpl(
         private val startId: Int,
         private val exceptionTracker: ExceptionTracker,
         private val intentAction: IntentAction
-    ) :
-        CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
+    ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
@@ -98,7 +102,7 @@ class StartScreenStoreFactory(
                 is Intent.OnClickRetry -> launch(startId, true)
                 is Intent.OnClickFullAlbum -> {
                     val images =
-                        state().data?.startAlbum?.flatMap { it.photos.map { it.imageUrl } }
+                        state().startItem?.startAlbum?.flatMap { it.photos.map { it.imageUrl } }
                     if (!images.isNullOrEmpty())
                         publish(Label.OnClickFullAlbum(images))
                 }
@@ -108,7 +112,7 @@ class StartScreenStoreFactory(
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickRegistration -> {
-                    state().data?.let { value ->
+                    state().startItem?.let { value ->
                         if (value.regLink.isNotEmpty()) {
                             intentAction.openWebPage(value.regLink)
                         }
@@ -126,8 +130,10 @@ class StartScreenStoreFactory(
                     }
                 }
 
-                is Intent.OnClickMembersResult -> state().data?.let { Label.OnClickMembersResult(it.membersResults) }
+                is Intent.OnClickMembersResult -> state().startItem?.let { Label.OnClickMembersResult(it.membersResults) }
                     ?.let { publish(it) }
+
+                is Intent.OnClickStartRecommended -> publish(Label.OnClickStartRecommended(intent.startId))
             }
         }
 
@@ -144,12 +150,17 @@ class StartScreenStoreFactory(
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
                             exceptionTracker.reportException(it, "StartScreenStore#launch")
                         }
-                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                        dispatch(Msg.StartInfoFailed(networkExceptionHandler(it).message.toString()))
                     },
                     onSuccess = {
-                        dispatch(Msg.InfoLoaded(it))
+                        dispatch(Msg.StartInfoSuccess(it))
                     }
                 )
+            }
+            scope.launch {
+                service.startsRecommended(startId).onSuccess {
+                    dispatch(Msg.StartsRecommendedSuccess(it))
+                }
             }
         }
     }
@@ -157,8 +168,8 @@ class StartScreenStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State =
             when (msg) {
-                is Msg.InfoFailed -> State(message = msg.message, isError = true)
-                is Msg.InfoLoaded -> State(data = msg.data)
+                is Msg.StartInfoFailed -> copy(message = msg.message, isLoading = false, isError = true)
+                is Msg.StartInfoSuccess -> copy(startItem = msg.data, isLoading = false, isError = false)
                 is Msg.Loading -> copy(isLoading = true, isError = false)
                 is Msg.OnConsumedEvent -> copy(event = consumed())
                 is Msg.TriggerEvent -> copy(
@@ -169,6 +180,7 @@ class StartScreenStoreFactory(
                         )
                     )
                 )
+                is Msg.StartsRecommendedSuccess -> copy(startsRecommended = msg.data)
             }
     }
 }

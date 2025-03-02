@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -21,9 +22,12 @@ import com.markettwits.core_ui.items.theme.FontNunito
 internal fun StartFileContent(
     modifier: Modifier,
     fileName: String,
+    onClick: () -> Unit,
 ) {
     OnBackgroundCard(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(8.dp),

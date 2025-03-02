@@ -1,6 +1,8 @@
 package com.markettwits.root
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
@@ -24,20 +26,22 @@ fun RootReviewScreen(component: RootReviewComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootReviewComponent.Child.Review -> ReviewScreen(
-                component = child.component,
-                notification = {
-                    component.childSlot.child?.instance?.also { child ->
-                        when (child) {
-                            is RootReviewComponent.ChildSlot.Notification -> NotificationScreen(
-                                modifier = it,
-                                notificationComponent = child.component,
-                                renderer = child.render
-                            )
+            is RootReviewComponent.Child.Review -> {
+                ReviewScreen(
+                    component = child.component,
+                    notification = {
+                        component.childSlot.child?.instance?.also { child ->
+                            when (child) {
+                                is RootReviewComponent.ChildSlot.Notification -> NotificationScreen(
+                                    modifier = it,
+                                    notificationComponent = child.component,
+                                    renderer = child.render
+                                )
+                            }
                         }
-                    }
-                }
-            )
+                    })
+            }
+
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
             is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)

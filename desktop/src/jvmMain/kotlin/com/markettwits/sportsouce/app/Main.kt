@@ -33,19 +33,19 @@ fun main() {
     InStorageCacheDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
     InStorageFileDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
 
-    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-        java.awt.Dialog(Frame(), e.message ?: "Error").apply {
-            layout = FlowLayout()
-            val label = Label(e.message)
-            add(label)
-            val button = java.awt.Button("OK").apply {
-                addActionListener { dispose() }
-            }
-            add(button)
-            setSize(300, 300)
-            isVisible = true
-        }
-    }
+//    Thread.setDefaultUncaughtExceptionHandler { _, e ->
+//        java.awt.Dialog(Frame(), e.stackTraceToString() ?: "Error").apply {
+//            layout = FlowLayout()
+//            val label = Label(e.message)
+//            add(label)
+//            val button = java.awt.Button("OK").apply {
+//                addActionListener { dispose() }
+//            }
+//            add(button)
+//            setSize(300, 300)
+//            isVisible = true
+//        }
+//    }
 
     val lifecycle = LifecycleRegistry()
     val context = DefaultComponentContext(lifecycle)

@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.markettwits.bottom_bar.model.BottomNavigationItem
 import com.markettwits.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -37,11 +38,19 @@ internal fun BottomBarContent(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             items.forEach { item ->
+
+                val isSelected = selectedTab == item.bottomBarConfiguration
+
+                val color = if (isSelected)
+                    MaterialTheme.colorScheme.tertiary
+                else
+                    Color.Gray
+
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = MaterialTheme.colorScheme.tertiaryContainer
                     ),
-                    selected = selectedTab == item.bottomBarConfiguration,
+                    selected = isSelected,
                     onClick = {
                         onClickTab(item.bottomBarConfiguration)
                     },
@@ -49,19 +58,19 @@ internal fun BottomBarContent(
                         if (isShowLabel)
                             Text(
                                 text = item.title,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                fontFamily = FontNunito.medium()
+                                color = color,
+                                fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
                             )
                     },
                     alwaysShowLabel = isShowLabel,
                     icon = {
                         Icon(
-                            imageVector = if (selectedTab == item.bottomBarConfiguration) {
+                            imageVector = if (isSelected) {
                                 item.selectedIcon
                             } else
                                 item.unselectedIcon,
                             contentDescription = item.title,
-                            tint = MaterialTheme.colorScheme.tertiary
+                            tint = color
                         )
                     }
                 )

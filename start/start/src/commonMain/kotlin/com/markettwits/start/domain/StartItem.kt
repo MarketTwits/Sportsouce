@@ -1,6 +1,7 @@
 package com.markettwits.start.domain
 
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start_cloud.model.start.fields.Distance
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 
@@ -21,6 +22,7 @@ data class StartItem(
     val paymentType: String,
     val organizers: List<com.markettwits.start_cloud.model.start.fields.Organizer>,
     val membersUi: List<StartMembersUi>,
+    val membersResults : List<MemberResult>,
     val conditionFile: ConditionFile,
     val commentsRemote: Comments,
     val result: List<Result>,

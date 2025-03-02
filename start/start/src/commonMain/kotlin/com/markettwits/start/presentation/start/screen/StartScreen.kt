@@ -57,9 +57,10 @@ fun StartScreen(
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(it)
         ) {
-            state.data?.let { data ->
+            state.startItem?.let { data ->
                 StartScreenContent(
                     data = data,
+                    starts = state.startsRecommended,
                     isLoading = state.isLoading,
                     onClickRetry = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
@@ -67,9 +68,9 @@ fun StartScreen(
                     onClickBack = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
                     },
-                    onClickDistanceNew = {
+                    onClickRegistration = {
                         startComponent.obtainEvent(
-                            StartScreenStore.Intent.OnClickDistanceNew(it)
+                            StartScreenStore.Intent.OnClickRegistration
                         )
                     },
                     onClickMembers = {
@@ -110,12 +111,18 @@ fun StartScreen(
                             )
                         }
                     },
+                    onClickMembersResults = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembersResult)
+                    },
+                    onClickRecommendedStart = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickStartRecommended(it))
+                    }
                 )
                 if (fullImage) {
                     FullImageScreen(image = data.image) { fullImage = !fullImage }
                 }
             }
-            if (state.isLoading && state.data == null) {
+            if (state.isLoading && state.startItem == null) {
                 LoadingFullScreen(
                     onClickBack = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)

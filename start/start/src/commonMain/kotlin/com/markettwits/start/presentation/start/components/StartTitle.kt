@@ -14,23 +14,14 @@ import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
-    Column(modifier = modifier.padding(vertical = 4.dp)) {
+    Column(modifier = modifier) {
         Text(
             text = title,
             fontSize = 20.sp,
             fontFamily = FontNunito.extraBold(),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.padding(4.dp))
-        Text(
-            text = place,
-            fontSize = 14.sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.tertiary
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

@@ -34,7 +34,7 @@ internal fun StartOrganizers(
     onClickPhone: (String) -> Unit
 ) {
     if (organizer.isNotEmpty()) {
-        StartContentBasePanel(modifier = modifier, label = "Организаторы", openByDefault = false) {
+        StartContentBasePanel(modifier = modifier, label = "Организаторы") {
             StartOrganizersContent(Modifier.padding(4.dp), organizer, onClickUrl, onClickPhone)
         }
     }
@@ -61,8 +61,8 @@ private fun StartOrganizersContent(
                 Spacer(Modifier.padding(horizontal = 2.dp))
                 Text(
                     text = it.name,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.regular(),
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.medium(),
                     fontSize = 14.sp
                 )
             }
@@ -82,8 +82,8 @@ private fun StartOrganizersContent(
                                 onClickPhone(it)
                             },
                             text = it,
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontFamily = FontNunito.regular(),
+                            color = MaterialTheme.colorScheme.outline,
+                            fontFamily = FontNunito.medium(),
                             fontSize = 14.sp
                         )
                     }
@@ -114,7 +114,7 @@ private fun StartOrganizersContent(
                                     .align(Alignment.Center),
                                 imageVector = icon,
                                 contentDescription = "icon",
-                                tint = Color.White
+                                tint = MaterialTheme.colorScheme.onTertiary
                             )
                         }
                     }

@@ -1,6 +1,7 @@
 package com.markettwits.start_support.presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 
@@ -22,22 +24,25 @@ internal fun StartSupportPanel(
     onClickSupport: () -> Unit
 ) {
     val focus = LocalFocusManager.current
-    val titleColor =
-        if (isEnabled) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.outline
     Column(modifier = modifier) {
+        StartSupportInfoCard()
+        Spacer(modifier = Modifier.padding(10.dp))
         OutlinedTextFieldBase(
             label = "Сумма",
             value = value,
             visualTransformation = RubleSymbolVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         ) {
-            onValueChanged(it)
+            if (it.length < 7) {
+                onValueChanged(it)
+            }
         }
         Spacer(modifier = Modifier.padding(5.dp))
         ButtonContentBase(
-            containerColor = MaterialTheme.colorScheme.tertiary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
-            textColor = titleColor,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            shape = Shapes.medium,
+            textColor = MaterialTheme.colorScheme.onSecondary,
             isEnabled = isEnabled,
             title = "Поддержать",
             onClick = {

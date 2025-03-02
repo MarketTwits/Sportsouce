@@ -22,7 +22,6 @@ internal fun StartConditionPanel(
                 )
             }
         }
-
         is StartItem.ConditionFile.Empty -> {}
     }
 }

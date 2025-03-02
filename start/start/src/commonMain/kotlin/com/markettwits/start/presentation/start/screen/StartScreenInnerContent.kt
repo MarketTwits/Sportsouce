@@ -7,32 +7,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
-import com.markettwits.start.presentation.start.components.StartAlbums
-import com.markettwits.start.presentation.start.components.StartConditionPanel
-import com.markettwits.start.presentation.start.components.StartDescription
-import com.markettwits.start.presentation.start.components.StartDistances
-import com.markettwits.start.presentation.start.components.StartMembersPanel
-import com.markettwits.start.presentation.start.components.StartMembersStatistics
-import com.markettwits.start.presentation.start.components.StartOrganizers
-import com.markettwits.start.presentation.start.components.StartResult
-import com.markettwits.start.presentation.start.components.StartStatus
-import com.markettwits.start.presentation.start.components.StartTimeProgram
-import com.markettwits.start.presentation.start.components.StartTitle
-import com.markettwits.start_cloud.model.start.fields.DistinctDistance
+import com.markettwits.start.presentation.start.components.*
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
-    onClickDistanceNew: (DistinctDistance) -> Unit,
+    starts: List<StartsListItem>,
+    onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
+    onClickMembersResults: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
+    onClickRecommendedStart: (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
-    val innerModifier = Modifier.padding(8.dp)
+    val innerModifier = Modifier.padding(10.dp)
 
     Column(modifier = modifier) {
         StartTitle(
@@ -40,31 +33,26 @@ internal fun StartScreenInnerContent(
             title = data.title,
             place = data.startPlace
         )
-        StartStatus(
+        StartExtraFieldsPanel(
             modifier = innerModifier,
-            status = data.startStatus, date = data.startTime
+            place = data.startPlace,
+            organizers = data.organizers,
+            startDate = data.startTime
         )
-        StartDescription(modifier = innerModifier, description = data.description)
-        StartTimeProgram(
-            modifier = innerModifier,
-            startTimes = data.startTimes
-        )
-        StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
-            onClickFullAlbum()
-        })
-        StartDistances(
+        StartRegistrationPanel(
             modifier = innerModifier,
             distance = data.distanceInfoNew,
-            mapDistance = data.distanceMapNew,
             startStatus = data.startStatus,
-            paymentDisabled = data.paymentDisabled,
-            paymentType = data.paymentType,
             regLink = data.regLink,
-            onClick = {
-                onClickDistanceNew(it)
+            onClickRegistration = {
+                onClickRegistration()
             },
             onClickUrl = onClickUrl
         )
+        StartDescription(modifier = innerModifier, description = data.description)
+        StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
+            onClickFullAlbum()
+        })
         StartMembersStatistics(
             modifier = innerModifier,
             membersUi = data.membersUi
@@ -96,11 +84,15 @@ internal fun StartScreenInnerContent(
         ) {
             onClickMembers(data.membersUi)
         }
-        StartOrganizers(
+        StartMembersResultPanel(
             modifier = innerModifier,
-            organizer = data.organizers,
-            onClickUrl = onClickUrl,
-            onClickPhone = onClickPhone
+            membersResultCount = data.membersResults.size,
+            onClick = onClickMembersResults
+        )
+        StartsRecommendationPanel(
+            modifier = innerModifier,
+            items = starts,
+            onItemClick = onClickRecommendedStart
         )
         donations(innerModifier)
     }

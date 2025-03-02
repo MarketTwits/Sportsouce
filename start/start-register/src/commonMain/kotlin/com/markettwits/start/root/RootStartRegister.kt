@@ -2,6 +2,8 @@ package com.markettwits.start.root
 
 import com.arkivanov.decompose.value.Value
 import com.markettwits.profile.api.root.RootAuthFlowComponent
+import com.markettwits.start.register.presentation.distances.component.StartDistancesComponent
+import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationPageComponent
 import com.markettwits.start.register.presentation.success.RegisterSuccessComponent
@@ -21,6 +23,9 @@ interface RootStartRegister {
         data class StartRegistrationPage(val input: StartRegistrationInput) : Config()
 
         @Serializable
+        data class StartRegistrationDistancesPage(val input: StartDistancesInput) : Config()
+
+        @Serializable
         data object AuthFlow : Config()
     }
 
@@ -30,7 +35,9 @@ interface RootStartRegister {
 
         data class StartRegistrationPage(val component: StartRegistrationPageComponent) : Child
 
-        data class AuthFlow(val component : RootAuthFlowComponent) : Child
+        data class StartRegistrationDistances(val component: StartDistancesComponent) : Child
+
+        data class AuthFlow(val component: RootAuthFlowComponent) : Child
     }
 
 }

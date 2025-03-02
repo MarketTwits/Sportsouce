@@ -12,4 +12,6 @@ kotlin {
             api(libs.paging.compose.common)
         }
     }
+
+    js()
 }

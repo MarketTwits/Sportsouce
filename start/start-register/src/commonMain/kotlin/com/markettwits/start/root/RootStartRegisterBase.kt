@@ -1,15 +1,15 @@
 package com.markettwits.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.profile.api.root.RootAuthFlowComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
+import com.markettwits.start.register.presentation.distances.component.StartDistancesComponentBase
+import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
+import com.markettwits.start.register.presentation.distances.component.StartDistancesOutput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationOutput
 import com.markettwits.start.register.presentation.registration.registration.component.StartRegistrationPageComponentBase
@@ -24,7 +24,7 @@ import com.markettwits.start.register.presentation.success.RegisterSuccessCompon
 class RootStartRegisterBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-    private val content: StartRegistrationInput
+    private val input: StartDistancesInput,
 ) : ComponentContext by componentContext, RootStartRegister {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -39,9 +39,7 @@ class RootStartRegisterBase(
     override val childStack: Value<ChildStack<*, RootStartRegister.Child>> = childStack(
         source = stackNavigation,
         serializer = RootStartRegister.Config.serializer(),
-        initialConfiguration = RootStartRegister.Config.StartRegistrationPage(
-            content
-        ),
+        initialConfiguration = getInitialConfig(input),
         handleBackButton = true,
         childFactory = ::childStack,
     )
@@ -73,19 +71,23 @@ class RootStartRegisterBase(
                     context = componentContext,
                     goBack = pop::invoke,
                     goProfile = {
-                        stackNavigation.replaceAll(
-                            RootStartRegister.Config.StartRegistrationPage(
-                                content
-                            )
-                        )
+                        stackNavigation.replaceAll(RootStartRegister.Config.StartRegistrationDistancesPage(input))
                     }
+                )
+            )
+
+            is RootStartRegister.Config.StartRegistrationDistancesPage -> RootStartRegister.Child.StartRegistrationDistances(
+                StartDistancesComponentBase(
+                    componentContext = componentContext,
+                    input = config.input,
+                    output = StartDistancesOutputImpl()
                 )
             )
         }
 
     private inner class StartRegistrationPageComponentOutputsImpl : StartRegistrationOutput {
         override fun goBack() {
-            pop()
+            stackNavigation.pop()
         }
 
         override fun goSuccess() {
@@ -95,5 +97,24 @@ class RootStartRegisterBase(
         override fun goAuth() {
             stackNavigation.replaceAll(RootStartRegister.Config.AuthFlow)
         }
+    }
+
+    private inner class StartDistancesOutputImpl : StartDistancesOutput {
+        override fun onClickGoBack() {
+            pop()
+        }
+
+        override fun onClickDistance(distinctDistance: StartRegistrationInput) {
+            stackNavigation.pushNew(
+                RootStartRegister.Config.StartRegistrationPage(
+                    distinctDistance
+                )
+            )
+        }
+
+    }
+
+    private fun getInitialConfig(input: StartDistancesInput): RootStartRegister.Config {
+        return RootStartRegister.Config.StartRegistrationDistancesPage(input)
     }
 }

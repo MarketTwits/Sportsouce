@@ -57,7 +57,6 @@ fun ShopItemCard(
                     .clip(Shapes.large)
                     .align(Alignment.CenterHorizontally)
                     .weight(0.7f),
-                //.background(Color.White)
                 image = shopItem.visual.imageUrl,
             )
             ShowCardPrice(
@@ -96,7 +95,7 @@ private fun ImageCard(
                 contentDescription = "",
                 alignment = Alignment.Center,
                 contentScale = ContentScale.Fit,
-                clipToBounds = true,
+                clipToBounds = false,
                 loading = {
                     Box(
                         modifier = modifier
@@ -113,9 +112,11 @@ private fun ImageCard(
         }
         if (image.size > 1) {
             ShopImagePageIndicator(
-                Modifier.weight(0.1f),
+                modifier = Modifier.weight(0.05f),
                 pagerState = pagerState
             )
+        }else{
+            Spacer(modifier = Modifier.weight(0.05f))
         }
         if (image.isEmpty()) {
             Box(

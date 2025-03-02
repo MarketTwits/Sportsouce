@@ -58,7 +58,6 @@ internal fun StartAlbums(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun StartAlbumsContent(
     modifier: Modifier = Modifier,

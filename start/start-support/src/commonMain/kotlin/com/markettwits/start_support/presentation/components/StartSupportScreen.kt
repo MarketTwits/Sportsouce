@@ -13,6 +13,7 @@ import com.markettwits.start_support.presentation.store.StartSupportStore
 fun StartSupportScreen(
     modifier: Modifier = Modifier,
     component: StartSupportComponent,
+    onClickDismiss: () -> Unit,
     event: (EventContent) -> Unit
 ) {
     val state by component.state.collectAsState()
@@ -24,6 +25,7 @@ fun StartSupportScreen(
             component.obtainEvent(StartSupportStore.Intent.OnChangeValue(it))
         }, onClickSupport = {
             component.obtainEvent(StartSupportStore.Intent.OnClickSupport)
+            onClickDismiss()
         }
     )
     EventEffect(event = state.eventWithContent, onConsumed = {

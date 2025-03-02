@@ -30,9 +30,12 @@ fun ShopItemsContent(
         )
     }, onException = {
         it.mapToSauceError().SauceErrorScreen(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             onClickRetry = items::refresh
         )
+        println(it)
     }, onSuccess = { isRefreshing ->
         ShopItemsBase(
             modifier = modifier,

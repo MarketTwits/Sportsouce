@@ -14,13 +14,18 @@ import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapperBase
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersToUiMapperBase
+import com.markettwits.start.data.start.mapper.result.StartMembersResultsToUiMapper
+import com.markettwits.start.data.start.mapper.result.StartMembersResultsToUiMapperBase
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.start.data.start.mapper.start.StartRemoteToUiMapperBase
 import com.markettwits.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.start.data.start.mapper.time.StartTimesMapperBase
 import com.markettwits.start.domain.StartRepository
+import com.markettwits.start.presentation.result.store.StartMemberResultsStoreFactory
 import com.markettwits.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -41,5 +46,8 @@ val startModule = module {
     singleOf(::StartCommentsToUiMapperBase) bind StartCommentsToUiMapper::class
     singleOf(::StartRemoteToUiMapperBase) bind StartRemoteToUiMapper::class
     singleOf(::StartTimesMapperBase) bind StartTimesMapper::class
+    singleOf(::StartMembersResultsToUiMapperBase) bind StartMembersResultsToUiMapper::class
+    singleOf(::StartsCloudToListMapperBase) bind StartsCloudToListMapper::class
+    singleOf(::StartMemberResultsStoreFactory)
     singleOf(::StartMemoryCache)
 }

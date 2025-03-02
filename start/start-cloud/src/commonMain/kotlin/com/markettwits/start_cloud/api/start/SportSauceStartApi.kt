@@ -6,21 +6,29 @@ import com.markettwits.start_cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.start_cloud.model.comments.response.Comment
 import com.markettwits.start_cloud.model.filters.FiltersRemote
 import com.markettwits.start_cloud.model.members.StartMember
+import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 
 
 interface SportSauceStartApi {
 
-    suspend fun start(startId : Int) : StartRemote
+    suspend fun start(startId: Int): StartRemote
 
-    suspend fun filters(startId: Int) : FiltersRemote
+    suspend fun filters(startId: Int): FiltersRemote
 
-    suspend fun membersNew(startId: Int) : List<StartMember>
+    suspend fun members(startId: Int): List<StartMember>
 
-    suspend fun albums(startId: Int) : List<StartAlbum>
+    suspend fun membersResults(
+        maxResultCount: Int,
+        startId: Int,
+        filterText: String = "",
+        sorting: String = "result asc"
+    ): List<StartMemberResult>
 
-    suspend fun comments(startId : Int) : List<Comment>
+    suspend fun albums(startId: Int): List<StartAlbum>
+
+    suspend fun comments(startId: Int): List<Comment>
 
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): Comment
 

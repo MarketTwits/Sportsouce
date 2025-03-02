@@ -17,6 +17,7 @@ import com.markettwits.start.presentation.membres.filter.StartMembersFilterScree
 import com.markettwits.start.presentation.membres.list.component.StartMembersScreenComponent
 import com.markettwits.start.presentation.membres.list.models.MembersFilterBase
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.start.presentation.result.component.StartMemberResultsComponentBase
 import com.markettwits.start.presentation.start.component.StartScreenComponentComponentBase
 import com.markettwits.start.register.di.startRegistrationModule
 import com.markettwits.start_support.di.startSupportModule
@@ -42,8 +43,9 @@ class RootStartScreenComponentBase(
         childStack(
             source = navigation,
             serializer = RootStartScreenComponent.Config.serializer(),
-            initialConfiguration = RootStartScreenComponent.Config.Start(startId, true),
+            initialConfiguration = RootStartScreenComponent.Config.Start(startId),
             handleBackButton = true,
+            key = startId.toString(),
             childFactory = ::child,
         )
 
@@ -56,7 +58,13 @@ class RootStartScreenComponentBase(
                 component = StartScreenComponentComponentBase(
                     componentContext = componentContext,
                     startId = config.startId,
-                    back = pop::invoke,
+                    back = {
+                        if (config.index == 0) {
+                            pop()
+                        } else {
+                            navigation.popTo(config.index - 1)
+                        }
+                    },
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
                         openMembersScreen(startId = id, items = list, filter = emptyList())
@@ -68,6 +76,14 @@ class RootStartScreenComponentBase(
                         navigation.pushNew(
                             RootStartScreenComponent.Config.StartRegistration(it)
                         )
+                    },
+                    membersResult = {
+                        navigation.pushNew(
+                            RootStartScreenComponent.Config.StartMembersResult(it)
+                        )
+                    },
+                    pushStart = {
+                        navigation.pushNew(RootStartScreenComponent.Config.Start(it, config.index + 1))
                     }
                 ),
                 commentsComponent = StartCommentsComponentBase(
@@ -115,7 +131,7 @@ class RootStartScreenComponentBase(
                 RootStartRegisterBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    content = config.input
+                    input = config.input,
                 )
             )
 
@@ -125,6 +141,15 @@ class RootStartScreenComponentBase(
                     storeFactory = scope.get(),
                     pop = navigation::pop,
                     images = config.images
+                )
+            )
+
+            is RootStartScreenComponent.Config.StartMembersResult -> RootStartScreenComponent.Child.StartMembersResults(
+                StartMemberResultsComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    memberResult = config.items,
+                    goBack = navigation::pop,
                 )
             )
         }

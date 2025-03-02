@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartRemoteItem(
-    val afishaLinkFile: String?,
+    val afishaLinkFile: PosterLinkFile?,
     val afisha_link: String?,
     val archive_start_code: Int?,
     val city: City?,

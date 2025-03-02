@@ -2,6 +2,8 @@ package com.markettwits.start.presentation.start.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -34,13 +36,16 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun StartDescription(modifier: Modifier, description: String) {
     var expanded by remember { mutableStateOf(false) }
-    val displayText = if (expanded) description else description.take(150)
+    val displayText = if (expanded) description else description.take(200)
 
     Column(modifier) {
         val textColor = MaterialTheme.colorScheme.onPrimary
         HtmlText(
             modifier = Modifier.animateContentSize(
-                animationSpec = tween(700)
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessLow
+                ),
             ),
             text = displayText,
             fontSize = 14.sp,
@@ -72,7 +77,7 @@ internal fun StartDescription(modifier: Modifier, description: String) {
                         text = if (expanded) "Скрыть" else "Подробнее",
                         fontFamily = FontNunito.bold(),
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                 }
             }

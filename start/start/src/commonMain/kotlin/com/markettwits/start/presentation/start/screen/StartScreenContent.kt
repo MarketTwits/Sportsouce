@@ -2,14 +2,7 @@ package com.markettwits.start.presentation.start.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -25,19 +18,23 @@ import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
+import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
+    starts : List<StartsListItem>,
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
-    onClickDistanceNew : (DistinctDistance) -> Unit,
+    onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
+    onClickMembersResults: () -> Unit,
     onClickImage: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
+    onClickRecommendedStart : (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
@@ -78,8 +75,11 @@ internal fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
-                            onClickDistanceNew = onClickDistanceNew,
+                            starts = starts,
+                            onClickRegistration = onClickRegistration,
                             onClickMembers = onClickMembers,
+                            onClickRecommendedStart = onClickRecommendedStart,
+                            onClickMembersResults = onClickMembersResults,
                             onClickUrl = onClickUrl,
                             onClickPhone = onClickPhone,
                             onClickFullAlbum = onClickFullAlbum,
@@ -97,8 +97,11 @@ internal fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = it,
                         data = data,
-                        onClickDistanceNew = onClickDistanceNew,
+                        starts = starts,
+                        onClickRegistration = onClickRegistration,
                         onClickMembers = onClickMembers,
+                        onClickMembersResults = onClickMembersResults,
+                        onClickRecommendedStart = onClickRecommendedStart,
                         onClickUrl = onClickUrl,
                         onClickPhone = onClickPhone,
                         onClickFullAlbum = onClickFullAlbum,

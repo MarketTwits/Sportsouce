@@ -6,6 +6,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.profile.api.root.RootAuthFlowScreen
+import com.markettwits.start.register.presentation.distances.screen.StartDistancesScreen
 import com.markettwits.start.register.presentation.registration.registration.components.StartRegistrationPage
 import com.markettwits.start.register.presentation.success.RegisterSuccessScreen
 
@@ -22,6 +23,7 @@ fun RootStartRegisterScreen(component: RootStartRegister) {
             is RootStartRegister.Child.StartRegistrationSuccess -> RegisterSuccessScreen(component = child.component)
             is RootStartRegister.Child.StartRegistrationPage -> StartRegistrationPage(component = child.component)
             is RootStartRegister.Child.AuthFlow -> RootAuthFlowScreen(component = child.component)
+            is RootStartRegister.Child.StartRegistrationDistances -> StartDistancesScreen(component = child.component)
         }
     }
 }

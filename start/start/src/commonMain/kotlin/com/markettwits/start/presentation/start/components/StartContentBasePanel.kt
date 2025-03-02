@@ -1,12 +1,10 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,47 +25,29 @@ import com.markettwits.start.presentation.common.Animation
 
 
 @Composable
-fun StartContentBasePanel(
+internal fun StartContentBasePanel(
     modifier: Modifier = Modifier,
     label: String,
-    openByDefault: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    var panelState by rememberSaveable {
-        mutableStateOf(openByDefault)
-    }
-    // HorizontalDivider()
-    OnBackgroundCard(modifier = Modifier.padding(vertical = 14.dp)) {
+    HorizontalDivider()
+    Column(modifier = Modifier.padding(vertical = 14.dp)) {
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .noRippleClickable {
-                    panelState = !panelState
-                },
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = label,
                 fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
+                fontFamily = FontNunito.semiBoldBold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-            Icon(
-                imageVector = if (!panelState) Icons.AutoMirrored.Filled.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
-        androidx.compose.animation.AnimatedVisibility(
-            visible = panelState,
-            enter = Animation.enterAnimation,
-            exit = Animation.exitAnimation
-        ) {
-            content()
-        }
+        content()
     }
 }

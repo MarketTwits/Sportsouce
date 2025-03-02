@@ -116,6 +116,7 @@ fun HtmlText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     selectable: Boolean,
+    @Suppress("warning can be crash, see documentation")
     maxLines: Int = Int.MAX_VALUE,
 ) {
     val handler = LocalUriHandler.current

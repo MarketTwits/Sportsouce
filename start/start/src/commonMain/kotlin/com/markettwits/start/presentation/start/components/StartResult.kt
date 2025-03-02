@@ -22,7 +22,7 @@ internal fun StartResult(
 }
 
 @Composable
-fun StartResultContent(
+internal fun StartResultContent(
     modifier: Modifier = Modifier,
     results: List<StartItem.Result>,
     onClickResult: (String) -> Unit
@@ -30,7 +30,8 @@ fun StartResultContent(
     Column(modifier = Modifier.wrapContentSize()) {
         results.forEach {
             StartFileContent(
-                modifier = modifier.noRippleClickable {
+                modifier = modifier,
+                onClick = {
                     onClickResult(it.url)
                 },
                 fileName = it.name

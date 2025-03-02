@@ -15,13 +15,10 @@ tasks.withType<Jar> {
 kotlin {
 
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "20"
-        }
         withJava()
     }
 
-    jvmToolchain(20)
+   // jvmToolchain(20)
 
     sourceSets.jvmMain.dependencies {
         implementation(compose.desktop.currentOs)

@@ -1,4 +1,8 @@
-# Sportsauce App
+![kotlin-version](https://img.shields.io/badge/kotlin-2.1.0-blue?logo=kotlin)
+
+![badge-android](http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat)
+![badge-desktop](http://img.shields.io/badge/platform-desktop-DB413D.svg?style=flat)
+# Sportsauce
 
 Welcome to the **Sportsauce App** – an application designed for working with the website **sportsauce.ru**. This app helps users easily interact with various sports data and events provided on the platform.
 
@@ -17,27 +21,23 @@ Below are some screenshots of the app:
 
 This is a Kotlin Multiplatform project that provides functionality for displaying and interacting with data from **sportsauce.ru**.
 
-### Main Features:
+## Main Features:
 - Integration with **sportsauce.ru**.
 - Viewing schedules and results.
 - A convenient user interface for mobile devices.
 
-## Google Play Link
+## Download
+<table style="width:100%">
+  <tr>
+    <td><a href='https://play.google.com/store/apps/details?id=com.markettwits.sportsouce'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=240/></a>
+  </tr>
+</table>
 
-If you want to install the app on your Android device, click the image below:
-
-<a href="https://play.google.com/store/apps/details?id=com.markettwits.sportsouce">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/1280px-Google_Play_Store_badge_EN.svg.png" width="240" height="80">
-</a>
-
-## Installation
-
-1. Download and install the app on your device.
-2. Open the app and start enjoying the sports data.
-3. For more information, visit the website [sportsauce.ru](https://sportsauce.ru).
-
-## Tech Stack
-
-- **Kotlin Multiplatform** for building cross-platform apps.
-- **Jetpack Compose** for building the UI.
-- **Decompose**.
+## Tech Stack 📚
+- [Kotlin Multiplatform](https://kotlinlang.org/lp/multiplatform/)
+- [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/)
+- [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+- [Koin](https://insert-koin.io/)
+- [Coil](https://coil-kt.github.io/coil/)
+- [Ktor](https://ktor.io/)
+- [Decompose](https://github.com/arkivanov/Decompose)

@@ -21,14 +21,13 @@ pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-
 pullrefresh = "1.4.0-beta02" # https://github.com/MateriiApps/pullrefresh
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 buildConfigPlugin = "5.5.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
-compose-activity = "1.10.0"
+compose-activity = "1.10.1"
 compose-preview = "1.7.8"
 appcompat = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.2.2" # https://github.com/arkivanov/Decompose
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
 tracer = "0.2.15" # https://apptracer.ru/
 coreKtx = "1.15.0" # https://developer.android.com/kotlin/ktx
-material = "1.12.0"
 
 [libraries]
 

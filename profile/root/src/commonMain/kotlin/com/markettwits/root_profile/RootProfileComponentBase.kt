@@ -17,8 +17,7 @@ import com.markettwits.unauthorized.presentation.component.UnAuthorizedProfileCo
 
 class RootProfileComponentBase(
     componentContext: ComponentContext,
-) :
-    ComponentContext by componentContext, RootProfileComponent {
+) : ComponentContext by componentContext, RootProfileComponent {
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()

@@ -40,7 +40,7 @@ fun StartsScreenContent(
         LazyColumn(modifier) {
             items(items, key = { it.id }) {
                 StartCard(
-                    modifier = Modifier.animateItemPlacement(animationSpec = tween(600)),
+                    modifier = Modifier.animateItem(fadeInSpec = tween(600)),
                     start = it,
                     onItemClick = { startId ->
                         onClick(startId)

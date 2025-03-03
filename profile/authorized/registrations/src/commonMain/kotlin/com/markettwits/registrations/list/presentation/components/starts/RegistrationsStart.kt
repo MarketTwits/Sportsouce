@@ -78,7 +78,7 @@ fun RegistrationsStart(
                     OrderStartCard(
                         modifier = Modifier
                             .padding(10.dp)
-                            .animateItemPlacement(animationSpec = tween(600)),
+                            .animateItem(fadeInSpec = tween(600)),
                         item = it,
                         onClickStart = { start ->
                             onClick(it)

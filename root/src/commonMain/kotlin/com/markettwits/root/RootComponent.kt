@@ -9,7 +9,9 @@ import com.markettwits.starts.root.RootStartsComponentBase
 import kotlinx.serialization.Serializable
 
 interface RootComponent {
+
     val childStack: Value<ChildStack<*, Child>>
+
     val slotChild: Value<ChildSlot<*, Navigation>>
 
     @Serializable

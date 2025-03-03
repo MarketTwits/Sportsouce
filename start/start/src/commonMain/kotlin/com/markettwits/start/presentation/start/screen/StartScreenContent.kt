@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,16 +17,18 @@ import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.FullImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
+import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
-import com.markettwits.start_cloud.model.start.fields.DistinctDistance
 import com.markettwits.starts_common.domain.StartsListItem
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
-    starts : List<StartsListItem>,
+    starts: List<StartsListItem>,
     isLoading: Boolean,
     onClickRetry: () -> Unit,
     onClickBack: () -> Unit,
@@ -34,7 +39,7 @@ internal fun StartScreenContent(
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
-    onClickRecommendedStart : (Int) -> Unit,
+    onClickRecommendedStart: (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit
 ) {
@@ -46,13 +51,13 @@ internal fun StartScreenContent(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
         ) {
-            val window = rememberScreenSizeInfo()
-            if (!window.isPortrait()) {
+            val windowSize = calculateWindowSizeClass()
+            if (windowSize.isLarge) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    val imageWith = window.wDP.value / 2.5f
+                    val imageWith = windowSize.screenWidthDp.value / 2.5f
                     Box(
                         modifier = Modifier
                             .width(imageWith.dp)

@@ -14,7 +14,7 @@ kotlin {
             implementation(projects.bottombar)
             implementation(projects.starts.starts)
             implementation(projects.profile.root)
-            implementation(projects.review.review)
+            implementation(projects.review)
             implementation(projects.core.ui)
             implementation(projects.core.koin)
             implementation(libs.bundles.decompose.compose)

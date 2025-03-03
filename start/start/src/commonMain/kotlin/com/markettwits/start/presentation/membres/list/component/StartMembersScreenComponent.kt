@@ -2,8 +2,8 @@ package com.markettwits.start.presentation.membres.list.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
-import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
-import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
+import com.markettwits.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.start.presentation.common.OnClick
 import com.markettwits.start.presentation.membres.filter.MembersFilterGroup
 import com.markettwits.start.presentation.membres.list.models.MembersFilter

@@ -2,7 +2,9 @@ package com.markettwits.sportsouce.app
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
@@ -33,26 +35,16 @@ fun main() {
     InStorageCacheDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
     InStorageFileDirectory.path = File(System.getProperty("java.io.tmpdir")).absolutePath
 
-//    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-//        java.awt.Dialog(Frame(), e.stackTraceToString() ?: "Error").apply {
-//            layout = FlowLayout()
-//            val label = Label(e.message)
-//            add(label)
-//            val button = java.awt.Button("OK").apply {
-//                addActionListener { dispose() }
-//            }
-//            add(button)
-//            setSize(300, 300)
-//            isVisible = true
-//        }
-//    }
-
     val lifecycle = LifecycleRegistry()
     val context = DefaultComponentContext(lifecycle)
     initKoin {
         val root = runOnUiThread { RootComponentBase(context) }
         val theme = runOnUiThread { ThemeComponentBase(context) }
         application {
+            val windowState = rememberWindowState()
+
+            LifecycleController(lifecycle, windowState)
+
             Window(
                 title = "Спорт Союз",
                 icon = DefaultImages.SportSauceLightLogo(),

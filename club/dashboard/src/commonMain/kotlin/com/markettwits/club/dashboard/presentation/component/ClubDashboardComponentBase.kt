@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
-import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
+import com.markettwits.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStore
 import com.markettwits.club.dashboard.presentation.store.ClubDashboardStoreFactory
 import kotlinx.coroutines.CoroutineScope

@@ -32,7 +32,7 @@ fun MembersList(
             MemberItemCard(
                 modifier = Modifier
                     .padding(vertical = 10.dp)
-                    .animateItemPlacement(animationSpec = tween(600)),
+                    .animateItem(fadeInSpec = tween(600)),
                 item = it,
                 onClick = { member ->
                     onClick(member)

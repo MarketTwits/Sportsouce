@@ -32,6 +32,8 @@ kotlin {
             api(libs.coil.compose)
             api(libs.coil.network)
             api(libs.htmlconverter)
+            api(libs.composeMaterial3WindowSize)
+            api(libs.composeMaterial3Adaptive)
             implementation(compose.components.resources)
         }
         

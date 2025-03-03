@@ -2,8 +2,8 @@ package com.markettwits.start.presentation.membres.filter
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
-import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
-import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
+import com.markettwits.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import kotlinx.serialization.builtins.ListSerializer
 
 class StartMembersFilterScreenComponent(

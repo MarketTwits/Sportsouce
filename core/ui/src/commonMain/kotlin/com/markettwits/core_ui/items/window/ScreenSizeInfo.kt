@@ -13,6 +13,5 @@ data class ScreenSizeInfo(val hPX: Int, val wPX: Int, val hDP: Dp, val wDP: Dp) 
     }
 }
 
-
 @Composable
 expect fun rememberScreenSizeInfo(): ScreenSizeInfo

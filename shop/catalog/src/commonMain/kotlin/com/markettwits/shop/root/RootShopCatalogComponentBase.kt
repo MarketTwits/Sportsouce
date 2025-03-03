@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.bottom_bar.component.component.BottomBarComponentHandler
-import com.markettwits.bottom_bar.component.component.BottomBarVisibilityStrategy
+import com.markettwits.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.bottom_bar.component.storage.BottomBarStorageImpl
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.profile.api.root.RootAuthFlowComponentBase

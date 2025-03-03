@@ -16,8 +16,10 @@ import com.markettwits.bottom_bar.components.BottomBar
 import com.markettwits.root_profile.RootProfileScreen
 import com.markettwits.starts.root.RootStartsScreen
 
+
 @Composable
 fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
+
     Surface(modifier = modifier, color = MaterialTheme.colorScheme.primary) {
         Column(
             modifier = Modifier
@@ -28,7 +30,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 when (it) {
                     is RootComponent.Navigation.BottomBar -> {
                         Children(component = component, modifier = Modifier.weight(1F))
-                        BottomBar(it.component, modifier)
+                        BottomBar(component = it.component, modifier)
                     }
                 }
             }
@@ -49,5 +51,4 @@ private fun Children(component: RootComponent, modifier: Modifier = Modifier) {
             is RootComponent.Child.Review -> RootReviewScreen(child.component)
         }
     }
-
 }

@@ -7,8 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +15,7 @@ import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.FullImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.core_ui.items.window.screenWidthDp

@@ -18,6 +18,7 @@ kotlin {
         androidMain.dependencies {
             api(libs.compose.ui.tooling.preview)
             api(libs.ktor.client.okhttp)
+            implementation(libs.compose.activity)
         }
 
         commonMain.dependencies {

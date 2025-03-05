@@ -1,17 +1,12 @@
 package com.markettwits.shop.item.presentation.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -36,19 +31,18 @@ internal fun ShopItemProductScreen(
         onRefresh = onRefresh,
     ) {
         Scaffold(
-            modifier = Modifier.padding(horizontal = 16.dp),
             bottomBar = {
                 content(Modifier.fillMaxWidth())
             },
             containerColor = Color.Transparent
         ) { paddingValues ->
-            Box {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(bottom = paddingValues.calculateBottomPadding())
-                ) {
-                    ShopItemImageContent(imageUrl = item.visual.imageUrl)
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+            ) {
+                ShopItemImageContent(imageUrl = item.visual.imageUrl)
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                     ShopItemTitle(title = item.visual.displayName)
                     ShopItemPriceRow(price = item.price)
                     ShopItemExtraOptions(extraOption = options, onClickOption = onClickOption)
@@ -57,13 +51,14 @@ internal fun ShopItemProductScreen(
                         options = item.options
                     )
                 }
-                ShopItemActionRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClickGoBack = onClickGoBack,
-                    onClickAddToFavorite = onClickAddToFavorite,
-                    onClickShare = onClickShare
-                )
+
             }
+            ShopItemActionRow(
+                modifier = Modifier.fillMaxWidth(),
+                onClickGoBack = onClickGoBack,
+                onClickAddToFavorite = onClickAddToFavorite,
+                onClickShare = onClickShare
+            )
         }
     }
 }

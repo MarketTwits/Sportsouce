@@ -1,6 +1,8 @@
 package com.markettwits.shop.catalog.presentation.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,7 +21,7 @@ import com.markettwits.shop.domain.model.ShopItem
 
 
 @Composable
-fun ShopItemsContent(
+fun ColumnScope.ShopItemsContent(
     modifier: Modifier = Modifier,
     items: LazyPagingItems<ShopItem>,
     onClickItem: (ShopItem) -> Unit
@@ -35,7 +37,6 @@ fun ShopItemsContent(
                 .verticalScroll(rememberScrollState()),
             onClickRetry = items::refresh
         )
-        println(it)
     }, onSuccess = { isRefreshing ->
         ShopItemsBase(
             modifier = modifier,

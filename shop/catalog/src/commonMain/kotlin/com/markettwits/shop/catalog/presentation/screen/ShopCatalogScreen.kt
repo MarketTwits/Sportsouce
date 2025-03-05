@@ -67,7 +67,6 @@ fun ShopCatalogScreen(
             Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
                 SelectedFilterParams(component = filterComponent)
                 ShopItemsContent(
-                  //  modifier = modifier.nestedScroll(rememberBottomBarNestedScroll(catalogComponent.listener)),
                     items = shopItems, onClickItem = {
                         catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
                     })

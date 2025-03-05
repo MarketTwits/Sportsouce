@@ -13,28 +13,25 @@ import com.markettwits.shop.item.presentation.store.ShopItemPageStore
 @Composable
 fun ShopItemPageScreen(
     component: ShopItemPageComponent,
-    cartComponent : ShopCartPageComponent
+    cartComponent: ShopCartPageComponent
 ) {
-
     val state by component.state.collectAsState()
-
-    ShopItemPageContent(
-        state = state, onClickOption = {
-            component.obtainEvent(ShopItemPageStore.Intent.OnClickOption(it))
-        }, onClickRetry = {
-            component.obtainEvent(ShopItemPageStore.Intent.OnClickRetry)
-        }, onClickGoBack = {
-            component.obtainEvent(ShopItemPageStore.Intent.OnClickGoBack)
-        },
-        onClickShare = {
-            component.obtainEvent(ShopItemPageStore.Intent.OnClickShare)
-        },
-        onClickAddToFavorite = {
-            component.obtainEvent(ShopItemPageStore.Intent.OnClickAddToFavorite)
-        },
-        cartContent = {
-            ShopCartItemWidget(component = cartComponent)
-        }
-    )
-
+        ShopItemPageContent(
+            state = state, onClickOption = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickOption(it))
+            }, onClickRetry = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickRetry)
+            }, onClickGoBack = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickGoBack)
+            },
+            onClickShare = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickShare)
+            },
+            onClickAddToFavorite = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickAddToFavorite)
+            },
+            cartContent = {
+                ShopCartItemWidget(component = cartComponent)
+            }
+        )
 }

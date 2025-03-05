@@ -26,7 +26,7 @@ import com.markettwits.start_support.presentation.component.StartSupportComponen
 class RootStartScreenComponentBase(
     context: ComponentContext,
     private val startId: Int,
-    private val pop: () -> Unit
+    private val pop: () -> Unit,
 ) : RootStartScreenComponent, ComponentContext by context {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -37,7 +37,6 @@ class RootStartScreenComponentBase(
         listOf(startModule, startRegistrationModule, startAlbumModule, startSupportModule)
     )
     private val navigation = StackNavigation<RootStartScreenComponent.Config>()
-
 
     override val childStack: Value<ChildStack<*, RootStartScreenComponent.Child>> =
         childStack(

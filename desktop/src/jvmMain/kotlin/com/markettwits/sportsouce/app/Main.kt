@@ -17,15 +17,10 @@ import com.markettwits.root.RootContent
 import com.markettwits.theme.theme.SportSauceTheme
 import com.markettwits.theme.theme.component.ThemeComponentBase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.awt.FlowLayout
-import java.awt.Frame
-import java.awt.Label
 import java.io.File
 import java.util.Locale
 
 
-@OptIn(ExperimentalCoroutinesApi::class)
 fun main() {
 
     Locale.setDefault(Locale("ru", "RUS"))
@@ -42,9 +37,7 @@ fun main() {
         val theme = runOnUiThread { ThemeComponentBase(context) }
         application {
             val windowState = rememberWindowState()
-
             LifecycleController(lifecycle, windowState)
-
             Window(
                 title = "Спорт Союз",
                 icon = DefaultImages.SportSauceLightLogo(),

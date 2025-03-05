@@ -50,6 +50,7 @@ internal class StartRemoteToUiMapperBase(
                         TimePattern.FullWithEmptySpace,
                         startRemote.start_date
                     ),
+                    slug = startRemote.slug ?: "",
                     startData = startRemote.start_date,
                     description = startRemote.description ?: "",
                     paymentDisabled = startRemote.payment_disabled ?: false,
@@ -138,7 +139,8 @@ internal class StartRemoteToUiMapperBase(
                     ),
                     distanceInfoNew = emptyList(),
                     distanceMapNew = emptyList(),
-                    membersResults = membersResultsMapper.map(startMemberResults)
+                    membersResults = membersResultsMapper.map(startMemberResults),
+                    slug = ""
                 )
             }
         }

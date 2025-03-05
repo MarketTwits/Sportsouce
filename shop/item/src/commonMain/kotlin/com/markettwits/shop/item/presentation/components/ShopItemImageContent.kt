@@ -6,14 +6,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
@@ -82,95 +78,70 @@ internal fun ShopItemImageContent(
 private fun FullImageContent(
     modifier: Modifier = Modifier,
     imageUrl: List<String>,
-    isPortrait: Boolean = true,
     onClickImage: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { imageUrl.size })
 
-    val boxModifier = if (isPortrait) modifier
-        .noRippleClickable {
-            if (imageUrl.isNotEmpty()) {
-                onClickImage(imageUrl[pagerState.currentPage])
-            }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .heightIn(max = 400.dp)
+    ) {
+        HorizontalPager(
+            modifier = Modifier.align(Alignment.Center),
+            state = pagerState,
+            verticalAlignment = Alignment.CenterVertically,
+        ) { index ->
+            SubcomposeAsyncImage(
+                modifier = Modifier
+                    .background(Color.White)
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .clip(Shapes.large)
+                    .noRippleClickable {
+                        onClickImage(imageUrl[index])
+                    },
+                model = imageUrl[index],
+                contentDescription = "",
+                contentScale = ContentScale.Fit,
+                error = {
+                    SubcomposeAsyncImageContent(
+//                     painter = DefaultImages.EmptyImageStart()
+                    )
+                },
+                success = {
+                    SubcomposeAsyncImageContent(modifier = modifier)
+                }
+            )
         }
-        .fillMaxWidth()
-        .height(300.dp) else {
-        modifier.noRippleClickable {
-            if (imageUrl.isNotEmpty()) {
-                onClickImage(imageUrl[pagerState.currentPage])
-            }
+        if (imageUrl.isNotEmpty()) {
+            ShopItemImagePageIndicator(
+                currentPageIndex = pagerState.targetPage,
+                pageCount = pagerState.pageCount,
+            )
         }
     }
-    val imageModifier =
-        if (isPortrait) Modifier
-            .wrapContentSize()
-            .width(200.dp)
-            .clip(RoundedCornerShape(10.dp))
-        else Modifier.fillMaxSize()
-            .clip(RoundedCornerShape(10.dp))
-    Box(
-        modifier = boxModifier
-            .fillMaxWidth()
-            .height(300.dp)
-    ) {
-        if (imageUrl.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .clip(Shapes.medium)
-                    .padding(10.dp)
-                    .align(Alignment.BottomStart)
-            ) {
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = "${pagerState.targetPage + 1} / ${pagerState.pageCount}",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.medium(),
-                )
-            }
-        }
-        HorizontalPager(
-            state = pagerState
-        ) { index ->
-            Box {
-                if (isPortrait) {
-                    SubcomposeAsyncImage(
-                        model = imageUrl[index],
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(0.2f),
-                        error = {
-                            //
-                        },
-                        success = {
-                            SubcomposeAsyncImageContent(modifier = modifier)
-                        }
-                    )
-                }
-                Card(
-                    modifier = Modifier
-                        .padding(18.dp)
-                        .align(Alignment.Center),
-                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+}
 
-                ) {
-                    SubcomposeAsyncImage(
-                        model = imageUrl[index],
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop,
-                        modifier = imageModifier,
-                        error = {
-                            //
-                        },
-                        success = {
-                            SubcomposeAsyncImageContent(modifier = modifier)
-                        }
-                    )
-                }
-            }
-        }
+@Composable
+private fun BoxScope.ShopItemImagePageIndicator(
+    modifier: Modifier = Modifier,
+    currentPageIndex: Int,
+    pageCount: Int,
+) {
+    Box(
+        modifier = modifier
+            .clip(Shapes.medium)
+            .padding(10.dp)
+            .align(Alignment.BottomStart)
+    ) {
+        Text(
+            modifier = Modifier.padding(4.dp),
+            text = "${currentPageIndex + 1} / ${pageCount}",
+            color = MaterialTheme.colorScheme.onTertiary,
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp,
+            fontFamily = FontNunito.medium(),
+        )
     }
 }

@@ -9,6 +9,7 @@ data class StartItem(
     val id: Int,
     val title: String,
     val startPlace: String,
+    val slug : String,
     val image: String,
     val startStatus: StartStatus,
     val startData: String,

@@ -39,8 +39,7 @@ internal fun MyOrdersCard(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 fontSize = 18.sp
             )
             Box(
-                modifier = Modifier
-                    .clip(Shapes.medium)
+                modifier = Modifier.clip(Shapes.medium)
             ) {
                 Icon(
                     imageVector = Icons.Default.ChevronRight,

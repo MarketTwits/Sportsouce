@@ -1,7 +1,12 @@
 package com.markettwits.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -82,7 +87,12 @@ class RootStartScreenComponentBase(
                         )
                     },
                     pushStart = {
-                        navigation.pushNew(RootStartScreenComponent.Config.Start(it, config.index + 1))
+                        navigation.pushNew(
+                            RootStartScreenComponent.Config.Start(
+                                it,
+                                config.index + 1
+                            )
+                        )
                     }
                 ),
                 commentsComponent = StartCommentsComponentBase(

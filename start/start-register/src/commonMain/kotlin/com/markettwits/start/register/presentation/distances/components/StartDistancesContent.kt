@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.base_extensions.formatPrice
+import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.components.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -44,26 +45,28 @@ internal fun StartDistancesContent(
             )
         },
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Spacer(modifier = Modifier.height(14.dp))
-            InfoCard()
-            Spacer(modifier = Modifier.height(14.dp))
-            state.distance.forEach {
-                Column(modifier.clip(Shapes.medium)) {
-                    DistanceItem(
-                        item = it,
-                        distinctDistances = state.distance,
-                        distances = state.mapDistance,
-                        paymentType = state.paymentType,
-                        paymentDisabled = state.paymentDisabled,
-                        onClick = { onClickSelectedDistance(it) }
-                    )
+        AdaptivePane {
+            Column(
+                modifier = Modifier
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Spacer(modifier = Modifier.height(14.dp))
+                InfoCard()
+                Spacer(modifier = Modifier.height(14.dp))
+                state.distance.forEach {
+                    Column(modifier.clip(Shapes.medium)) {
+                        DistanceItem(
+                            item = it,
+                            distinctDistances = state.distance,
+                            distances = state.mapDistance,
+                            paymentType = state.paymentType,
+                            paymentDisabled = state.paymentDisabled,
+                            onClick = { onClickSelectedDistance(it) }
+                        )
+                    }
                 }
             }
         }

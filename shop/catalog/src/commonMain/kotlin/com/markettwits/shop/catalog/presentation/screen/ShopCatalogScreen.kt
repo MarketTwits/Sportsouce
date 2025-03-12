@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import app.cash.paging.compose.collectAsLazyPagingItems
-import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
+import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.presentation.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.presentation.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.presentation.toolbar.rememberCollapsingToolbarScaffoldState
@@ -35,7 +35,6 @@ fun ShopCatalogScreen(
     val state by catalogComponent.state.collectAsState()
 
     val shopItems = state.shopItems.collectAsLazyPagingItems()
-
     Scaffold(
         modifier = modifier,
         floatingActionButtonPosition = FabPosition.End,
@@ -64,12 +63,14 @@ fun ShopCatalogScreen(
                 )
             }
         ) {
-            Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
-                SelectedFilterParams(component = filterComponent)
-                ShopItemsContent(
-                    items = shopItems, onClickItem = {
-                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
-                    })
+            AdaptivePane {
+                Column(modifier = Modifier.padding(top = paddingValues.calculateTopPadding())) {
+                    SelectedFilterParams(component = filterComponent)
+                    ShopItemsContent(
+                        items = shopItems, onClickItem = {
+                            catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
+                        })
+                }
             }
         }
     }

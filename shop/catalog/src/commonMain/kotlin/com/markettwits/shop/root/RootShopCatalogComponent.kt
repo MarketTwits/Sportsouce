@@ -1,6 +1,7 @@
 package com.markettwits.shop.root
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.profile.api.root.RootAuthFlowComponent
@@ -9,7 +10,6 @@ import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogC
 import com.markettwits.shop.cart.presentation.page.component.ShopCartPageComponent
 import com.markettwits.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.shop.filter.presentation.component.ShopFilterComponent
-import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.shop.item.presentation.component.ShopItemPageComponentBase
 import com.markettwits.shop.order.presentation.component.ShopCreateOrderComponent
@@ -32,7 +32,7 @@ interface RootShopCatalogComponent : ComponentContext {
         data object ShopCatalog : Config
 
         @Serializable
-        data class ShopItem(val option : ShopItemPageComponentBase.Options) : Config
+        data class ShopItem(val option: ShopItemPageComponentBase.Options) : Config
 
         @Serializable
         data object ShopFilter : Config
@@ -44,7 +44,7 @@ interface RootShopCatalogComponent : ComponentContext {
         data object ShopCart : Config
 
         @Serializable
-        data class ShopOrder(val option : ShopCreateOrderComponentBase.Option) : Config
+        data class ShopOrder(val option: ShopCreateOrderComponentBase.Option) : Config
 
         @Serializable
         data object ShopUserOrders : Config
@@ -56,7 +56,7 @@ interface RootShopCatalogComponent : ComponentContext {
         data class ShopCatalog(
             val componentPage: ShopCatalogComponent,
             val componentCart: ShopCartCatalogComponent,
-            val componentFilter : ShopFilterComponent
+            val componentFilter: ShopFilterComponent
         ) : Child
 
         data class ShopItem(
@@ -68,12 +68,12 @@ interface RootShopCatalogComponent : ComponentContext {
 
         data class ShopSearch(val component: ShopSearchComponent) : Child
 
-        data class ShopCart(val component : ShopCartComponent) : Child
+        data class ShopCart(val component: ShopCartComponent) : Child
 
-        data class ShopOrder(val component : ShopCreateOrderComponent) : Child
+        data class ShopOrder(val component: ShopCreateOrderComponent) : Child
 
-        data class ShopUserOrders(val component : ShopUserOrdersComponent) : Child
+        data class ShopUserOrders(val component: ShopUserOrdersComponent) : Child
 
-        data class AuthFlow(val component : RootAuthFlowComponent) : Child
+        data class AuthFlow(val component: RootAuthFlowComponent) : Child
     }
 }

@@ -1,6 +1,8 @@
 package com.markettwits.start.presentation.start.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,6 +11,7 @@ import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.start.components.*
 import com.markettwits.starts_common.domain.StartsListItem
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun StartScreenInnerContent(
@@ -47,7 +50,6 @@ internal fun StartScreenInnerContent(
             onClickRegistration = {
                 onClickRegistration()
             },
-            onClickUrl = onClickUrl
         )
         StartDescription(modifier = innerModifier, description = data.description)
         StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
@@ -97,4 +99,10 @@ internal fun StartScreenInnerContent(
         donations(innerModifier)
     }
     comments(modifier)
+}
+
+@Composable
+@Preview
+private fun prev(){
+    Box(Modifier.fillMaxSize()) {}
 }

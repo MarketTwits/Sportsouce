@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.base_extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.domain.RegistrationMemberValidatorBase
@@ -33,7 +34,7 @@ internal fun StartRegistrationMemberCard(
     RegistrationMemberValidatorBase()
         .validateFields(startStatement).fold(onSuccess = {
             UserCardAvailable(
-                modifier = modifier.clickable {
+                modifier = modifier.noRippleClickable {
                     onClickStartStatement(startStatement)
                 },
                 name = startStatement.name,
@@ -47,7 +48,7 @@ internal fun StartRegistrationMemberCard(
             )
         }, onFailure = {
             UserCardUnAvailable(
-                modifier = modifier.clickable {
+                modifier = modifier.noRippleClickable {
                     onClickStartStatement(startStatement)
                 }
             )

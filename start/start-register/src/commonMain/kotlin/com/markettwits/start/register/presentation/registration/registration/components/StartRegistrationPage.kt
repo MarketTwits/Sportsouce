@@ -20,6 +20,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -66,46 +67,47 @@ fun StartRegistrationPage(
             }
         }
     ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .verticalScroll(rememberScrollState())
-        ) {
-            if (state.pagesState.isLoading) {
-                LoadingFullScreen(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxSize()
-                )
-            }
 
-            state.pagesState.error?.SauceErrorScreen()
+        AdaptivePane {
+            Column(
+                modifier = modifier
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (state.pagesState.isLoading) {
+                    LoadingFullScreen(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .fillMaxSize()
+                    )
+                }
+                state.pagesState.error?.SauceErrorScreen()
+                Children(
+                    stack = pages,
+                    animation = stackAnimation(animator = slide())
+                ) { child ->
+                    when (val page = child.instance) {
+                        is StartPayComponent -> {
+                            StartPay(
+                                modifier = Modifier,
+                                component = page
+                            )
+                        }
 
-            Children(
-                stack = pages,
-                animation = stackAnimation(animator = slide())
-            ) { child ->
-                when (val page = child.instance) {
-                    is StartPayComponent -> {
-                        StartPay(
-                            modifier = Modifier,
-                            component = page
-                        )
-                    }
-
-                    is StartDistanceComponent -> {
-                        StartStage(
-                            modifier = Modifier,
-                            component = page
-                        )
+                        is StartDistanceComponent -> {
+                            StartStage(
+                                modifier = Modifier,
+                                component = page
+                            )
+                        }
                     }
                 }
+                StartStagesIndicatorContent(
+                    modifier = Modifier.padding(10.dp),
+                    currentIndex = pages.active.instance.value.id,
+                    startRegistrationStage = state.stages
+                )
             }
-            StartStagesIndicatorContent(
-                modifier = Modifier.padding(10.dp),
-                currentIndex = pages.active.instance.value.id,
-                startRegistrationStage = state.stages
-            )
         }
     }
     EventEffect(

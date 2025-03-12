@@ -1,11 +1,7 @@
 package com.markettwits.shop.root
 
 import androidx.compose.runtime.Composable
-import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.markettwits.profile.api.root.RootAuthFlowScreen
 import com.markettwits.shop.cart.presentation.cart.screen.ShopCartScreen

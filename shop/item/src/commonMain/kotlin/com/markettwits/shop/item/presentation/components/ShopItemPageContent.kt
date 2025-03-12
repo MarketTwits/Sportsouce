@@ -36,7 +36,7 @@ internal fun ShopItemPageContent(
             onRefresh = onClickRetry,
             onClickAddToFavorite = onClickAddToFavorite,
             onClickShare = onClickShare,
-            content = cartContent
+            cartContent = cartContent
         )
     }
 }

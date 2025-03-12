@@ -1,37 +1,31 @@
 package com.markettwits.root
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
-import com.markettwits.bottom_bar.components.BottomBar
+import com.markettwits.bottom_bar.components.BottomBarScaffold
 import com.markettwits.root_profile.RootProfileScreen
 import com.markettwits.starts.root.RootStartsScreen
-
 
 @Composable
 fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
 
-    Surface(modifier = modifier, color = MaterialTheme.colorScheme.primary) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-        ) {
-            component.slotChild.child?.instance?.also {
-                when (it) {
-                    is RootComponent.Navigation.BottomBar -> {
-                        Children(component = component, modifier = Modifier.weight(1F))
-                        BottomBar(component = it.component, modifier)
-                    }
+    component.slotChild.child?.instance?.also {
+        when (it) {
+            is RootComponent.Navigation.BottomBar -> {
+                BottomBarScaffold(component = it.component, modifier = modifier) {
+                    NestedContent(
+                        component = component, modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding()
+                    )
                 }
             }
         }
@@ -39,8 +33,8 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Children(component: RootComponent, modifier: Modifier = Modifier) {
-    com.arkivanov.decompose.extensions.compose.stack.Children(
+private fun NestedContent(component: RootComponent, modifier: Modifier = Modifier) {
+    Children(
         stack = component.childStack,
         modifier = modifier,
         animation = stackAnimation(fade() + scale()),

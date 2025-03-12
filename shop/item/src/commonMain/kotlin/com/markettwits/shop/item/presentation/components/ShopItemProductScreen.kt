@@ -1,19 +1,27 @@
 package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.window.calculateWindowSizeClass
+import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.domain.models.ShopExtraOptions
+import com.markettwits.shop.item.presentation.components.panes.ShopItemCompactPane
+import com.markettwits.shop.item.presentation.components.panes.ShopItemLargePane
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun ShopItemProductScreen(
     item: ShopItem,
@@ -24,41 +32,50 @@ internal fun ShopItemProductScreen(
     onRefresh: () -> Unit,
     onClickAddToFavorite: () -> Unit,
     onClickShare: () -> Unit,
-    content: @Composable (Modifier) -> Unit
+    cartContent: @Composable (Modifier) -> Unit
 ) {
-    PullToRefreshScreen(
-        isRefreshing = isLoading,
-        onRefresh = onRefresh,
-    ) {
-        Scaffold(
-            bottomBar = {
-                content(Modifier.fillMaxWidth())
-            },
-            containerColor = Color.Transparent
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = paddingValues.calculateBottomPadding())
-            ) {
-                ShopItemImageContent(imageUrl = item.visual.imageUrl)
-                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    ShopItemTitle(title = item.visual.displayName)
-                    ShopItemPriceRow(price = item.price)
-                    ShopItemExtraOptions(extraOption = options, onClickOption = onClickOption)
-                    ShopItemDescriptionOrOptions(
-                        description = item.visual.description,
-                        options = item.options
-                    )
-                }
 
+    val windowSize = calculateWindowSizeClass()
+
+    AdaptivePane {
+        PullToRefreshScreen(
+            isRefreshing = isLoading,
+            onRefresh = onRefresh,
+        ) {
+            Scaffold(
+                bottomBar = {
+                    if (!windowSize.isLarge)
+                        cartContent(Modifier.fillMaxWidth())
+                },
+                containerColor = Color.Transparent
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                ) {
+                    if (windowSize.isLarge) {
+                        ShopItemLargePane(
+                            item = item,
+                            options = options,
+                            cartContent = cartContent,
+                            onClickOption = onClickOption
+                        )
+                    } else {
+                        ShopItemCompactPane(
+                            item = item,
+                            options = options,
+                            onClickOption = onClickOption
+                        )
+                    }
+                }
+                ShopItemActionRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClickGoBack = onClickGoBack,
+                    onClickAddToFavorite = onClickAddToFavorite,
+                    onClickShare = onClickShare
+                )
             }
-            ShopItemActionRow(
-                modifier = Modifier.fillMaxWidth(),
-                onClickGoBack = onClickGoBack,
-                onClickAddToFavorite = onClickAddToFavorite,
-                onClickShare = onClickShare
-            )
         }
     }
 }

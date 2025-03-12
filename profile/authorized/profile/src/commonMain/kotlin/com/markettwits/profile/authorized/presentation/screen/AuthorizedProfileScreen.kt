@@ -13,10 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.CollapsingToolbarRefreshScaffold
-import com.markettwits.core_ui.items.base_screen.FailedScreen
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.base_screen.*
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.authorized.presentation.components.members.MyMembersCard
 import com.markettwits.profile.authorized.presentation.components.orders.MyOrdersCard
@@ -49,54 +46,56 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                     goSettings = {
                         component.obtainOutput(AuthorizedProfileComponent.Output.Settings)
                     })
-            }, body = {
-                LazyColumn(modifier = it.padding(14.dp)) {
-                    item {
-                        UserInfoCard(
-                            user = user,
-                            onClickAddSocialNetwork = {
-                                component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
-                            },
-                            onClickEdit = {
-                                component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
-                            },
-                            onClickImage = {
-                                fullImageState = true
-                            },
-                            onClickSocialNetwork = {
-                                component.obtainEvent(
-                                    AuthorizedProfileStore.Intent.OnClickUserSocialNetwork(it)
-                                )
-                            }
-                        )
-                    }
-                    item{
-                        MyOrdersCard(
-                            onClick = {
-                                component.obtainOutput(AuthorizedProfileComponent.Output.UserOrders)
-                            }
-                        )
-                    }
-                    item {
-                        UserStarts(
-                            starts = user.activity.userRegistry,
-                            onClickAll = {
-                                component.obtainOutput(AuthorizedProfileComponent.Output.AllRegistries)
-                            },
-                            onClickStart = { start ->
-                                component.obtainOutput(
-                                    AuthorizedProfileComponent.Output.StartOrder(start)
-                                )
-                            }
-                        )
-                    }
-                    item {
-                        UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
-                    }
-                    item {
-                        MyMembersCard(onClick = {
-                            component.obtainOutput(AuthorizedProfileComponent.Output.Members)
-                        })
+            }, body = { modifier ->
+                AdaptivePane {
+                    LazyColumn(modifier = modifier.padding(14.dp)) {
+                        item {
+                            UserInfoCard(
+                                user = user,
+                                onClickAddSocialNetwork = {
+                                    component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
+                                },
+                                onClickEdit = {
+                                    component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
+                                },
+                                onClickImage = {
+                                    fullImageState = true
+                                },
+                                onClickSocialNetwork = {
+                                    component.obtainEvent(
+                                        AuthorizedProfileStore.Intent.OnClickUserSocialNetwork(it)
+                                    )
+                                }
+                            )
+                        }
+                        item {
+                            MyOrdersCard(
+                                onClick = {
+                                    component.obtainOutput(AuthorizedProfileComponent.Output.UserOrders)
+                                }
+                            )
+                        }
+                        item {
+                            UserStarts(
+                                starts = user.activity.userRegistry,
+                                onClickAll = {
+                                    component.obtainOutput(AuthorizedProfileComponent.Output.AllRegistries)
+                                },
+                                onClickStart = { start ->
+                                    component.obtainOutput(
+                                        AuthorizedProfileComponent.Output.StartOrder(start)
+                                    )
+                                }
+                            )
+                        }
+                        item {
+                            UserStartStatistic(items = userStatisticMapper(user.activity.userRegistry))
+                        }
+                        item {
+                            MyMembersCard(onClick = {
+                                component.obtainOutput(AuthorizedProfileComponent.Output.Members)
+                            })
+                        }
                     }
                 }
             }

@@ -137,11 +137,12 @@ private fun BoxScope.ShopItemImagePageIndicator(
     ) {
         Text(
             modifier = Modifier.padding(4.dp),
-            text = "${currentPageIndex + 1} / ${pageCount}",
-            color = MaterialTheme.colorScheme.onTertiary,
+            text = "${currentPageIndex + 1} / $pageCount",
+            color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             fontFamily = FontNunito.medium(),
         )
     }
 }
+

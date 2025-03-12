@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -74,44 +75,46 @@ internal fun ShopCreateOrderContent(
             }
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(10.dp)
-        ) {
-            ShopOrderDeliveryType(
-                shopDeliveryType = state.deliveryType.options,
-                selectedOption = state.deliveryType.selectedOption,
-                onClickOption = onClickDeliveryType
-            )
-            ShopDeliveryTypeDescriptionContent(
-                deliveryTitle = state.deliveryType.selectedOption.mapTitleToString(),
-                deliveryPlace = state.deliveryType.selectedOption.mapPlaceToString()
-            )
-            ShopOrderPaymentType(
-                shopFilterPaymentTypes = state.paymentType.options,
-                selectedPaymentType = state.paymentType.selectedOption,
-                selectedShopDeliveryType = state.deliveryType.selectedOption,
-                onClickChangePaymentType = onClickPaymentType
-            )
-            ShopOrderRecipient(
-                shopRecipient = state.shopRecipientState.currentShopRecipient,
-                onClick = onClickShopRecipientSheet
-            )
-            ShopOrderComposition(shopItems = state.shopOrderResultItems)
-            ShopOrderPriceContent(
-                totalCost = state.shopOrderPrice.totalPrice.formatPrice(),
-                discount = state.shopOrderPrice.totalDiscount.formatPrice(),
-                itemsCount = state.shopOrderPrice.productCount.toString()
-            )
-            ShopCreateOrderButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                isLoading = state.shopCreateOrderState.isLoading,
-                isAvailable = state.shopCreateOrderState.isAvailable,
-                message = state.shopCreateOrderState.message,
-                onClick = onClickCreateOrder
-            )
+        AdaptivePane {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(10.dp)
+            ) {
+                ShopOrderDeliveryType(
+                    shopDeliveryType = state.deliveryType.options,
+                    selectedOption = state.deliveryType.selectedOption,
+                    onClickOption = onClickDeliveryType
+                )
+                ShopDeliveryTypeDescriptionContent(
+                    deliveryTitle = state.deliveryType.selectedOption.mapTitleToString(),
+                    deliveryPlace = state.deliveryType.selectedOption.mapPlaceToString()
+                )
+                ShopOrderPaymentType(
+                    shopFilterPaymentTypes = state.paymentType.options,
+                    selectedPaymentType = state.paymentType.selectedOption,
+                    selectedShopDeliveryType = state.deliveryType.selectedOption,
+                    onClickChangePaymentType = onClickPaymentType
+                )
+                ShopOrderRecipient(
+                    shopRecipient = state.shopRecipientState.currentShopRecipient,
+                    onClick = onClickShopRecipientSheet
+                )
+                ShopOrderComposition(shopItems = state.shopOrderResultItems)
+                ShopOrderPriceContent(
+                    totalCost = state.shopOrderPrice.totalPrice.formatPrice(),
+                    discount = state.shopOrderPrice.totalDiscount.formatPrice(),
+                    itemsCount = state.shopOrderPrice.productCount.toString()
+                )
+                ShopCreateOrderButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    isLoading = state.shopCreateOrderState.isLoading,
+                    isAvailable = state.shopCreateOrderState.isAvailable,
+                    message = state.shopCreateOrderState.message,
+                    onClick = onClickCreateOrder
+                )
+            }
         }
     }
     EventEffect(

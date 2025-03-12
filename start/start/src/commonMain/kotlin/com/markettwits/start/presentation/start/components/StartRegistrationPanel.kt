@@ -22,7 +22,6 @@ internal fun StartRegistrationPanel(
     startStatus: StartItem.StartStatus,
     regLink: String,
     onClickRegistration: () -> Unit,
-    onClickUrl: (String) -> Unit
 ) {
     if (distance.isNotEmpty() && startStatus.code == 3 || regLink.isNotEmpty()) {
         Box(
@@ -62,9 +61,6 @@ internal fun StartRegistrationPanel(
                     .height(48.dp),
                 onClick = {
                     onClickRegistration()
-                    if (regLink.isNotEmpty()) {
-                        onClickUrl(regLink)
-                    }
                 },
                 elevation = ButtonDefaults.buttonElevation(2.dp, 4.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),

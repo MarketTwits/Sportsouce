@@ -1,5 +1,7 @@
 package com.markettwits.start.presentation.start.store
 
+import com.arkivanov.mvikotlin.core.store.Bootstrapper
+import com.arkivanov.mvikotlin.core.store.Executor
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
@@ -9,10 +11,13 @@ import com.markettwits.IntentAction
 import com.markettwits.cloud.exception.isNetworkConnectionError
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.ext_model.DistanceItem
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
+import com.markettwits.crashlitics.api.logging.ExceptionLoggingTracker
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.domain.StartRepository
@@ -33,9 +38,11 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentDisabled: Boolean,
             val paymentType: String
         ) : Intent
+
         data class OnClickDistanceNew(
             val distance: DistinctDistance
         ) : Intent
+
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
@@ -66,7 +73,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
-            val comboId : Int?,
+            val comboId: Int?,
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
@@ -81,7 +88,7 @@ class StartScreenStoreFactory(
     private val storeFactory: StoreFactory,
     private val service: StartRepository,
     private val exceptionTracker: ExceptionTracker,
-    private val intentAction: IntentAction
+    private val intentAction: IntentAction,
 ) {
     fun create(startID: Int): StartScreenStore =
         object : StartScreenStore, Store<Intent, State, Label> by storeFactory.create(
@@ -102,10 +109,10 @@ class StartScreenStoreFactory(
 
     private inner class ExecutorImpl(
         private val startId: Int,
-        private val exceptionTracker: ExceptionTracker,
+        val tracker: ExceptionTracker,
         private val intentAction: IntentAction
-    ) :
-        CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
+    ) : LogTagProvider, CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
+
         override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
@@ -135,26 +142,30 @@ class StartScreenStoreFactory(
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickDistanceNew -> {
                     state().data?.let {
-                        val matchingDistance = it.distanceMapNew.find { it.id == intent.distance.id }
+                        val matchingDistance =
+                            it.distanceMapNew.find { it.id == intent.distance.id }
 
-                        val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
+                        val comboId =
+                            if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
 
                         val b = if (matchingDistance?.combo != null) {
                             // Если combo не null, ищем DistinctDistance по id в combo
-                           it. distanceInfoNew.filter { it.id in matchingDistance.combo!! }
+                            it.distanceInfoNew.filter { it.id in matchingDistance.combo!! }
                         } else {
                             // Если combo null, возвращаем выбранный DistinctDistance в виде списка
                             listOf(intent.distance)
                         }
 
-                        publish(StartScreenStore.Label.OnClickDistanceNew(
-                            startId = it.id,
-                            distanceInfo = b,
-                            paymentDisabled = it.paymentDisabled,
-                            paymentType = it.paymentType,
-                            comboId = comboId,
-                            startTitle = it.title
-                        ))
+                        publish(
+                            StartScreenStore.Label.OnClickDistanceNew(
+                                startId = it.id,
+                                distanceInfo = b,
+                                paymentDisabled = it.paymentDisabled,
+                                paymentType = it.paymentType,
+                                comboId = comboId,
+                                startTitle = it.title
+                            )
+                        )
                     }
                 }
             }
@@ -170,8 +181,11 @@ class StartScreenStoreFactory(
                 service.start(startId, relaunch).fold(
                     onFailure = {
                         if (!it.isNetworkConnectionError()) {
-                            exceptionTracker.setKey(Pair("startId", startId.toString()))
-                            exceptionTracker.reportException(it, "StartScreenStore#launch")
+                            tracker.setKey(Pair("startId", startId.toString()))
+                            tracker.reportException(it, "StartScreenStore#launch")
+                        }
+                        errorLog(it) {
+                            "fail launch with startID :$startId"
                         }
                         dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
                     },
@@ -181,6 +195,8 @@ class StartScreenStoreFactory(
                 )
             }
         }
+
+        override val tag: String = "StartScreenStore"
     }
 
     private object ReducerImpl : Reducer<State, Msg> {

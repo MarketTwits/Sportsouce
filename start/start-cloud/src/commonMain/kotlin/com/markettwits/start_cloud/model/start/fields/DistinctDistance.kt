@@ -17,7 +17,6 @@ data class DistinctDistance(
     val slots: Int?,
     val stages: List<Stage>,
     val static_price: Int?,
-    val taken_slots: Int,
     val track_code: String?,
     val track_link : String?
 )

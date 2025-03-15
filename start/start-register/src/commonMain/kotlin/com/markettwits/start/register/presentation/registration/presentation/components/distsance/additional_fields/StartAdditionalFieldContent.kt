@@ -12,15 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationAdditionalField
 import com.markettwits.start.register.presentation.registration.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldCheckBox
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldMultiselect
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldNumber
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldSingleSelect
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldText
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldTextData
-import com.markettwits.start.register.presentation.registration.presentation.components.distsance.additional_fields.fields.StartRegistrationAdditionalFieldTextTime
 
 @Composable
 internal fun RenderAdditionalFields(
@@ -63,33 +55,34 @@ internal fun RenderAdditionalField(
 ) {
 
     when (field.field.type) {
-        StartRegistrationAdditionalField.Type.TEXT -> StartRegistrationAdditionalFieldText(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.NUMBER -> StartRegistrationAdditionalFieldNumber(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.CHECKBOX -> StartRegistrationAdditionalFieldCheckBox(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.DATA -> StartRegistrationAdditionalFieldTextData(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.TIME -> StartRegistrationAdditionalFieldTextTime(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.MULTISELECT -> StartRegistrationAdditionalFieldMultiselect(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
-        StartRegistrationAdditionalField.Type.SINGLE_SELECT -> StartRegistrationAdditionalFieldSingleSelect(
-            field = field,
-            onFieldChanged = onFieldChanged
-        )
+//        StartRegistrationAdditionalField.Type.TEXT -> StartRegistrationAdditionalFieldText(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.NUMBER -> StartRegistrationAdditionalFieldNumber(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.CHECKBOX -> StartRegistrationAdditionalFieldCheckBox(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.DATA -> StartRegistrationAdditionalFieldTextData(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.TIME -> StartRegistrationAdditionalFieldTextTime(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.MULTISELECT -> StartRegistrationAdditionalFieldMultiselect(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+//        StartRegistrationAdditionalField.Type.SINGLE_SELECT -> StartRegistrationAdditionalFieldSingleSelect(
+//            field = field,
+//            onFieldChanged = onFieldChanged
+//        )
+        else -> {}
     }
 }

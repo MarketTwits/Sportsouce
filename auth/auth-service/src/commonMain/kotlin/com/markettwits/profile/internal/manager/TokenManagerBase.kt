@@ -20,7 +20,15 @@ internal class TokenManagerBase : TokenManager {
     @OptIn(ExperimentalEncodingApi::class)
     override fun decode(token: String): Payload {
         val parts = token.split('.')
-        val payloadJson = Base64.decode(parts[1].toByteArray()).decodeToString()
+        val payloadBase64 = parts[1].let {
+            val rem = it.length % 4
+            if (rem > 0) {
+                it + "=".repeat(4 - rem)
+            } else {
+                it
+            }
+        }
+        val payloadJson = Base64.decode(payloadBase64.toByteArray()).decodeToString()
         return Json.decodeFromString<Payload>(payloadJson)
     }
 

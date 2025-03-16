@@ -9,7 +9,8 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * Implementation of TimeMapper using kotlinx.datetime and kotlinx_datetime_ext.Locale
+ * Implementation of TimeMapper using kotlinx.datetime and
+ * kotlinx_datetime_ext.Locale
  */
 class ExtendedTimeMapper : TimeMapper {
 
@@ -17,7 +18,7 @@ class ExtendedTimeMapper : TimeMapper {
 
         val formatter = LocalDateTimeFormatter.ofPattern(
             pattern = timePattern.map(),
-            locale = Locale.default()
+            locale = Locale.forLanguageTag(LANGUAGE_RU_TAG)
         )
 
         val localDateTime = Instant.parse(time).toLocalDateTime(TimeZone.UTC)
@@ -25,12 +26,38 @@ class ExtendedTimeMapper : TimeMapper {
         return formatter.format(localDateTime)
     }
 
+    override fun mapTime(timePattern: TimePattern, time: Long?): String {
+        if (time == null) return ""
+
+        val instant = Instant.fromEpochMilliseconds(time)
+        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+
+        val formatter = LocalDateTimeFormatter.ofPattern(
+            pattern = timePattern.map(),
+            locale = Locale.forLanguageTag(LANGUAGE_RU_TAG)
+        )
+
+        return formatter.format(localDateTime)
+    }
+
     override fun mapTimeToCloud(timePattern: TimePattern, time: String): String {
 
         val formatter = when (timePattern) {
-            is TimePattern.Full -> LocalDateTimeFormatter.ofPattern(timePattern.map(), Locale.default())
-            is TimePattern.FullWithEmptySpace -> LocalDateTimeFormatter.ofPattern(timePattern.map(), Locale.default())
-            is TimePattern.FullWithDots -> LocalDateTimeFormatter.ofPattern(timePattern.map(), Locale.default())
+            is TimePattern.Full -> LocalDateTimeFormatter.ofPattern(
+                timePattern.map(),
+                Locale.forLanguageTag(LANGUAGE_RU_TAG)
+            )
+
+            is TimePattern.FullWithEmptySpace -> LocalDateTimeFormatter.ofPattern(
+                timePattern.map(),
+                Locale.forLanguageTag(LANGUAGE_RU_TAG)
+            )
+
+            is TimePattern.FullWithDots -> LocalDateTimeFormatter.ofPattern(
+                timePattern.map(),
+                Locale.forLanguageTag(LANGUAGE_RU_TAG)
+            )
+
             else -> throw IllegalArgumentException("Unsupported pattern for input")
         }
 
@@ -41,11 +68,16 @@ class ExtendedTimeMapper : TimeMapper {
                 val localDate = formatter.parseToLocalDate(time)
                 localDate.atTime(0, 0)
             }
+
             else -> throw IllegalArgumentException("Unsupported pattern for input")
         }
 
         val instant = localDateTime.toInstant(TimeZone.UTC)
 
         return instant.toString()
+    }
+
+    companion object {
+        private const val LANGUAGE_RU_TAG = "ru-RU"
     }
 }

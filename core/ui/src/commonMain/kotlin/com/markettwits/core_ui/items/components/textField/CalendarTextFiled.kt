@@ -19,7 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.markettwits.core_ui.items.base_extensions.mapDateToString
+import com.markettwits.time.ExtendedTimeMapper
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,9 +35,15 @@ fun CalendarTextFiled(
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
+    val timeMapper: TimeMapper = ExtendedTimeMapper()
+
     if (openDialog) {
         val datePickerState = rememberDatePickerState(
-           // yearRange = IntRange(1900, LocalDate.now().year)
+            yearRange = IntRange(
+                start = 1925,
+                endInclusive = Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).year
+            )
         )
         val confirmEnabled by remember {
             derivedStateOf { datePickerState.selectedDateMillis != null }
@@ -53,7 +64,11 @@ fun CalendarTextFiled(
                     enabled = confirmEnabled
                 ) {
                     Text("ОК")
-                    datePickerState.selectedDateMillis?.let { onValueChanged(it.mapDateToString()) }
+                    datePickerState.selectedDateMillis?.let {
+                        onValueChanged(
+                            timeMapper.mapTime(TimePattern.FullWithDots, it)
+                        )
+                    }
                 }
             },
             dismissButton = {

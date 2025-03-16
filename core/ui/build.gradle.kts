@@ -30,10 +30,11 @@ kotlin {
             api(compose.material3AdaptiveNavigationSuite)
             api(compose.components.uiToolingPreview)
             api(compose.ui)
-           // api(libs.pullrefresh)
             api(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.datetime)
+            implementation(projects.core.time)
             implementation(compose.components.resources)
-
+            implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc11")
             api(libs.ktor.core)
             api(libs.coil.compose)
             api(libs.coil.compose.core)

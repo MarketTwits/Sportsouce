@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
@@ -87,10 +89,10 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onCLick: (Ne
                 color = Color.White,
             )
             HtmlText(
+                modifier = Modifier.heightIn(max = 60.dp),
                 overflow = TextOverflow.Ellipsis,
                 text = newsInfo.fullDescription,
-                maxLines = 2,
-                lineHeight = 10.sp,
+                lineHeight = 12.sp,
                 fontSize = 10.sp,
                 fontFamily = FontNunito.regular(),
                 color = Color.White,

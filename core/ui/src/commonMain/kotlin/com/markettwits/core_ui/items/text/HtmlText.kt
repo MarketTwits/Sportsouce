@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+
 /**
  * Simple Text composable to show the text with html styling from string
  * resources. Supported are:
@@ -57,15 +58,10 @@ fun HtmlText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     selectable: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE,
 ) {
-    val annotatedString = htmlToAnnotatedStringInner(
-        html = text,
-    )
-
-    HtmlText(
+    CommonHtmlText(
         modifier = modifier,
-        annotatedString = annotatedString,
+        text = text,
         color = color,
         fontSize = fontSize,
         fontStyle = fontStyle,
@@ -78,29 +74,30 @@ fun HtmlText(
         overflow = overflow,
         selectable = selectable,
         softWrap = softWrap,
-        maxLines = maxLines,
     )
 }
 
-/**
- * Simple Text composable to show the text with html styling from a String.
- * Supported are:
- *
- * **Bold**
- *
- * *Italic*
- *
- * <u>Underlined</u>
- *
- * <strike>Strikethrough</strike>
- *
- * <a href="https://google.de">Link</a>
- *
- * @see androidx.compose.material.Text
- */
+@Composable
+internal expect fun CommonHtmlText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    selectable: Boolean,
+)
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun HtmlText(
+internal fun DefaultHtmlText(
     modifier: Modifier = Modifier,
     annotatedString: AnnotatedString,
     color: Color = Color.Unspecified,

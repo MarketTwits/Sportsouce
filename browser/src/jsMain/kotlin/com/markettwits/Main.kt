@@ -1,5 +1,6 @@
 package com.markettwits
 
+import InitPlatformLocaleForWeb
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import com.arkivanov.decompose.DefaultComponentContext
@@ -21,10 +22,12 @@ import web.events.EventType
 fun main() {
     val lifecycle = LifecycleRegistry()
     val context = DefaultComponentContext(lifecycle = lifecycle)
+    InitPlatformLocaleForWeb()
     initKoin {
         val root = RootComponentBase(context)
         val theme = ThemeComponentBase(context)
         lifecycle.attachToDocument()
+
         onWasmReady {
             InStorageCacheDirectory.path = "data/com.markettwits.sportsauce"
             InStorageFileDirectory.path = "cache/com.markettwits.sportsauce"

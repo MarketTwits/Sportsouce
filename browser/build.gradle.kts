@@ -1,4 +1,3 @@
-
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
@@ -9,7 +8,7 @@ kotlin {
     js(IR) {
         useEsModules()
         nodejs()
-        browser{
+        browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
             }
@@ -19,6 +18,7 @@ kotlin {
 
     sourceSets.jsMain.dependencies {
         implementation(projects.core.theme)
+        implementation(projects.core.time)
         implementation(projects.core.ui)
         implementation(projects.root)
         implementation(projects.core.cache)

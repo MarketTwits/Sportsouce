@@ -24,7 +24,8 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
         for (item in startMember) {
             val safeRegCode = item.reg_code ?: ""
             if (item.payment != null && safeRegCode.isNotEmpty()) {
-                teamMap.computeIfAbsent(safeRegCode) { mutableListOf() }.add(item)
+                val list = teamMap.getOrPut(safeRegCode) { mutableListOf() }
+                list.add(item)
             }
         }
         return if (teamMap.isEmpty()) {

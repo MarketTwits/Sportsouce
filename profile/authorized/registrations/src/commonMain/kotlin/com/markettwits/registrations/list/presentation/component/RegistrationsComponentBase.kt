@@ -9,6 +9,7 @@ import com.markettwits.registrations.list.presentation.store.RegistrationsDataSt
 import com.markettwits.registrations.list.presentation.store.RegistrationsStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,7 @@ class RegistrationsComponentBase(
         storeFactory.create()
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<RegistrationsStore.State> = store.stateFlow
     override fun obtainEvent(event: RegistrationsStore.Intent) {
         store.accept(event)

@@ -1,8 +1,8 @@
 package com.markettwits.shop.cart.presentation.catalog.store
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.shop.cart.domain.ShopCartRepository
-import com.markettwits.shop.cart.domain.formatPrice
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

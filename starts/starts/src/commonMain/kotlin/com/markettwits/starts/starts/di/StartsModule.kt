@@ -9,7 +9,6 @@ import com.markettwits.starts.starts.data.StartsRepositoryBase
 import com.markettwits.starts.starts.domain.StartsRepository
 import com.markettwits.starts_common.data.mapper.StartsCloudToListMapperBase
 import com.markettwits.time.BaseTimeMapper
-import com.markettwits.time.ExtendedTimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -22,7 +21,7 @@ internal val startsModule = module {
     singleOf(::StartsMainCache)
     single<StartsCloudToUiMapper> {
         StartsCloudToUiMapper.Base(
-            StartsCloudToListMapperBase(ExtendedTimeMapper())
+            StartsCloudToListMapperBase(BaseTimeMapper())
         )
     }
 }

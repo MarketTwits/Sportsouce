@@ -10,6 +10,7 @@ kotlin{
         commonMain.dependencies {
             implementation(projects.cloud)
             implementation(projects.core.cache)
+            implementation(projects.core.time)
             implementation(libs.koin.core)
         }
     }

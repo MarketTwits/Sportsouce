@@ -9,6 +9,7 @@ import com.markettwits.start_search.filter.presentation.store.StartFilerStoreFac
 import com.markettwits.start_search.filter.presentation.store.StartFilterStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,10 @@ internal class StartFilterComponentBase(
         storeFactory.create(filterUi, startFilter)
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<StartFilterStore.State> = store.stateFlow
+
     override fun obtainEvent(event: StartFilterStore.Intent) {
         store.accept(event)
     }

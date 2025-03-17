@@ -60,13 +60,13 @@ private fun menu() = listOf<ReviewMenuItem>(
         SportSouceColor.SportSouceStartEndedPink.copy(alpha = 0.1f),
         SportSouceColor.SportSouceStartEndedPink
     ),
-    ReviewMenuItem(
-        1,
-        "Расписание",
-        Icons.Filled.TableChart,
-        SportSouceColor.SportSouceLighBlue.copy(alpha = 0.1f),
-        SportSouceColor.SportSouceLighBlue
-    ),
+//    ReviewMenuItem(
+//        1,
+//        "Расписание",
+//        Icons.Filled.TableChart,
+//        SportSouceColor.SportSouceLighBlue.copy(alpha = 0.1f),
+//        SportSouceColor.SportSouceLighBlue
+//    ),
     ReviewMenuItem(
         2,
         "Клуб",

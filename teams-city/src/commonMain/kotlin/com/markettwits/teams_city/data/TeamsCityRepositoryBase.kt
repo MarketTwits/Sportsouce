@@ -45,7 +45,7 @@ internal class TeamsCityRepositoryBase(
     }
 
     override suspend fun city(): Result<List<City>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Main.immediate) {
             suspendCoroutine { continuation ->
                 var resumed = false
                 scope.launch {
@@ -67,7 +67,7 @@ internal class TeamsCityRepositoryBase(
     }
 
     override suspend fun teams(): Result<List<Team>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Main.immediate.immediate) {
             suspendCoroutine { continuation ->
                 var resumed = false
                 scope.launch {

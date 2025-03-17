@@ -14,4 +14,9 @@ kotlin {
     jvm()
     jvmToolchain(project.PROJECT_JAVA_VERSION.getMajorVersion().toInt())
     androidTarget()
+    js{
+        browser()
+        nodejs()
+        binaries.executable()
+    }
 }

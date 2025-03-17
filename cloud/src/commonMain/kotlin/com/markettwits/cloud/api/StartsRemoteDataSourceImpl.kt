@@ -6,7 +6,6 @@ import com.markettwits.cloud.model.auth.sign_in.response.SignInResponseSuccess
 import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.cloud.model.change_password.ChangePasswordRequest
 import com.markettwits.cloud.model.city.CityRemote
-import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
 import com.markettwits.cloud.model.news.NewsRemote
 import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
@@ -28,9 +27,7 @@ import com.markettwits.cloud.model.team.TeamsRemote
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import java.io.File
 
 internal class StartsRemoteDataSourceImpl(
     private val httpClient: HttpClientProvider
@@ -145,18 +142,18 @@ internal class StartsRemoteDataSourceImpl(
         return json.decodeFromString(response.body())
     }
 
-    override suspend fun uploadFile(file: File): UploadFileResponse {
-        val response = client.submitFormWithBinaryData(
-            url = "file/upload",
-            formData = formData {
-                append("file", file.readBytes(), Headers.build {
-                    append(HttpHeaders.ContentDisposition, "filename=${file.name}")
-                })
-                append("lastModified", file.lastModified())
-            }
-        )
-        return json.decodeFromString(response.body())
-    }
+//    override suspend fun uploadFile(file: File): UploadFileResponse {
+//        val response = client.submitFormWithBinaryData(
+//            url = "file/upload",
+//            formData = formData {
+//                append("file", file.readBytes(), Headers.build {
+//                    append(HttpHeaders.ContentDisposition, "filename=${file.name}")
+//                })
+//                append("lastModified", file.lastModified())
+//            }
+//        )
+//        return json.decodeFromString(response.body())
+//    }
 
     override suspend fun changeProfileInfo(
         profile: ChangeProfileInfoRequest,

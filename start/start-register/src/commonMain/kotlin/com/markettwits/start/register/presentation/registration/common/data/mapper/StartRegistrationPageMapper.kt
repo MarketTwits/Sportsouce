@@ -4,12 +4,7 @@ import com.markettwits.cloud.model.auth.sign_in.response.User
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.member_common.domain.emptyProfileMember
 import com.markettwits.start.register.domain.StartStatement
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationFieldPrice
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStage
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStageWithStatement
-import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.start.register.presentation.registration.common.domain.models.*
 import com.markettwits.start_cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.start_cloud.model.start.fields.AdditionalField
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance
@@ -18,9 +13,10 @@ import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
 class StartRegistrationPageMapper(
     private val timeMapper: TimeMapper
@@ -140,10 +136,17 @@ class StartRegistrationPageMapper(
 
     private fun calculateAge(birthdaySimple: String): Int {
         return try {
-            val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-            val birthLocalDate = LocalDate.parse(birthdaySimple, dateFormatter)
-            val currentDate = LocalDate.now()
-            ChronoUnit.YEARS.between(birthLocalDate, currentDate).toInt()
+            val parts = birthdaySimple.split(".") // Разбиваем строку "dd.MM.yyyy"
+            val birthLocalDate = LocalDate(parts[2].toInt(), parts[1].toInt(), parts[0].toInt()) // LocalDate(year, month, day)
+
+            val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+            val years = currentDate.year - birthLocalDate.year - if (
+                currentDate.monthNumber < birthLocalDate.monthNumber ||
+                (currentDate.monthNumber == birthLocalDate.monthNumber && currentDate.dayOfMonth < birthLocalDate.dayOfMonth)
+            ) 1 else 0
+
+            years
         } catch (e: Exception) {
             0
         }

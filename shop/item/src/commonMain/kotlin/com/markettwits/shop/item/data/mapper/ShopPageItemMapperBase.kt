@@ -4,8 +4,6 @@ import com.markettwits.cloud_shop.model.product.ProductRemote
 import com.markettwits.shop.domain.mapper.ShopProductsMapper
 import com.markettwits.shop.domain.model.ShopItem
 import com.markettwits.shop.item.domain.models.ShopExtraOptions
-import java.text.NumberFormat
-import java.util.Locale
 
 class ShopPageItemMapperBase(
     private val shopProductsMapper: ShopProductsMapper

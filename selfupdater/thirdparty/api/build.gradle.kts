@@ -16,9 +16,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.koin.core)
-
         }
         jvmMain.dependencies {
+            implementation(projects.selfupdater.unknown)
+        }
+        jsMain.dependencies {
             implementation(projects.selfupdater.unknown)
         }
     }

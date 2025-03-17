@@ -11,6 +11,7 @@ import com.markettwits.start.register.presentation.member.store.RegistrationMemb
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -30,6 +31,7 @@ class RegistrationMemberComponentBase(
         storeFactory.create(memberId, startStatement, membersProfile)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<RegistrationMemberStore.State> = store.stateFlow
 
     override fun obtainEvent(event: RegistrationMemberStore.Intent) {

@@ -4,9 +4,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-class ExtendedTimeMapperTest {
+class BaseTimeMapperTest {
 
-    private val mapper : TimeMapper = ExtendedTimeMapper()
+    private val mapper : TimeMapper = BaseTimeMapper()
 
     @Test
     fun map_cloud_to_full() {

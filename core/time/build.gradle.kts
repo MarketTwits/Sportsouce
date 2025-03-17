@@ -7,8 +7,8 @@ android{
 kotlin {
     sourceSets {
         commonMain.dependencies{
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.datetime.ext)
+            api(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime.ext)
         }
         commonTest.dependencies {
             implementation(libs.kotlinx.coroutines.test)

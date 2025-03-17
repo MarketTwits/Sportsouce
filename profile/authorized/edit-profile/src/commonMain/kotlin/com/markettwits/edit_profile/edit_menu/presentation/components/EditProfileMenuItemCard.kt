@@ -1,4 +1,3 @@
-@file:JvmName("ProfileMenuKt")
 
 package com.markettwits.edit_profile.edit_menu.presentation.components
 

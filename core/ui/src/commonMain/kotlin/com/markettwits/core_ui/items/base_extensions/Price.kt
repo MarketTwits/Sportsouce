@@ -2,8 +2,20 @@ package com.markettwits.core_ui.items.base_extensions
 
 
 fun Int?.formatPrice(): String {
+    if (this == null) return "0"
     return runCatching {
-        if (this == null) "0"
-        else String.format("%,d", this / 100).replace(',', ' ')
+        val integerPart = (this / 100).toString()
+        val formatted = buildString {
+            var count = 0
+            for (i in integerPart.indices.reversed()) {
+                if (count == 3) {
+                    append(' ')
+                    count = 0
+                }
+                append(integerPart[i])
+                count++
+            }
+        }.reversed()
+        formatted
     }.getOrDefault("0")
 }

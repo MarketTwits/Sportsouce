@@ -9,12 +9,20 @@ kotlin{
     sourceSets{
         commonMain.dependencies {
             api(libs.kstore)
-            api(libs.kstore.file)
             implementation(projects.core.koin)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.koin.core)
+        }
+        jvmMain.dependencies {
+            api(libs.kstore.file)
+        }
+        androidMain.dependencies {
+            api(libs.kstore.file)
+        }
+        jsMain.dependencies {
+            api(libs.kstore.storage)
         }
     }
 }

@@ -18,6 +18,17 @@ interface TimeMapper {
     fun mapTime(timePattern: TimePattern, time: String): String
 
     /**
+     * Maps and formats a given ISO 8601 time string into a specific time pattern.
+     *
+     * @param timePattern The desired {@link TimePattern} to format the time string into.
+     * @param time A timestamp that represents the selected date start of the day in UTC milliseconds from the epoch..
+     * @return A formatted string representing the date and time in the specified pattern.
+     *
+     * @throws IllegalArgumentException If the time string cannot be parsed or the pattern is invalid.
+     */
+    fun mapTime(timePattern: TimePattern, time : Long?) : String
+
+    /**
      * Converts a given time string from a specific pattern into a UTC-compatible ISO 8601 format.
      *
      * This method supports patterns defined in {@link TimePattern}, such as `Full`, `FullWithEmptySpace`,

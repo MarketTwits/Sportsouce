@@ -1,4 +1,3 @@
-@file:JvmName("StartScreenKt")
 
 package com.markettwits.start.presentation.start.screen
 

@@ -4,7 +4,6 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.Intent
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.Label
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.State
-import java.io.File
 
 interface EditProfileImageStore : Store<Intent, State, Label> {
     data class State(
@@ -16,7 +15,7 @@ interface EditProfileImageStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Dismiss : Intent
-        data class UpdateImage(val file: File) : Intent
+        //data class UpdateImage(val file: File) : Intent
     }
 
     sealed interface Message {

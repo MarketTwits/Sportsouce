@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
+import coil3.compose.setSingletonImageLoaderFactory
+import com.markettwits.theme.theme.components.asyncImageLoader
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.core_ui.items.theme.Typography
 import com.markettwits.theme.theme.component.ThemeComponent
@@ -31,13 +33,16 @@ fun SportSauceTheme(
     )
 }
 
-
 @Composable
 private fun SportSauceTheme(
     isDark: Boolean = isSystemInDarkTheme(),
     colorScheme: ColorScheme,
     content: @Composable () -> Unit
 ) {
+    setSingletonImageLoaderFactory { context ->
+        context.asyncImageLoader()
+    }
+
     MaterialTheme(
         shapes = Shapes(medium = RoundedCornerShape(size = 10.dp)),
         colorScheme = colorScheme,

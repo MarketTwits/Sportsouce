@@ -1,4 +1,3 @@
-@file:JvmName("StartScreenKt")
 
 package com.markettwits.edit_profile.edit_profile_change_password.presentation.screen
 

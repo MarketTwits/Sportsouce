@@ -17,12 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.core_ui.items.components.top_bar.TopBarBase
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.shop.cart.domain.formatPrice
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
 import com.markettwits.shop.order.domain.model.ShopPaymentType
 import com.markettwits.shop.order.domain.model.ShopRecipient

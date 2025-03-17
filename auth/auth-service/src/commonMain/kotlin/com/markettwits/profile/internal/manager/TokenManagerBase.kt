@@ -1,22 +1,31 @@
 package com.markettwits.profile.internal.manager
 
+import io.ktor.utils.io.core.*
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
-import java.util.Base64
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 internal class TokenManagerBase : TokenManager {
 
+    @OptIn(ExperimentalEncodingApi::class)
     override fun decode(token: String): Payload {
         val parts = token.split('.')
-        val payloadJson = String(Base64.getDecoder().decode(parts[1]))
+        val payloadBase64 = parts[1].let {
+            val rem = it.length % 4
+            if (rem > 0) {
+                it + "=".repeat(4 - rem)
+            } else {
+                it
+            }
+        }
+        val payloadJson = Base64.decode(payloadBase64.toByteArray()).decodeToString()
         return Json.decodeFromString<Payload>(payloadJson)
     }
 
     override fun isExpired(expired: Long): Boolean {
-        val time = System.currentTimeMillis() / MILLS_IN_SECOND
+        val time = Clock.System.now().epochSeconds
         return expired > time
     }
 
-    private companion object {
-        private const val MILLS_IN_SECOND = 1000
-    }
 }

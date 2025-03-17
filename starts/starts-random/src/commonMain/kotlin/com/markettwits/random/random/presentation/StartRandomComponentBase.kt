@@ -8,6 +8,7 @@ import com.markettwits.random.random.presentation.store.StartRandomStore
 import com.markettwits.random.random.presentation.store.StartRandomStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -21,6 +22,7 @@ internal class StartRandomComponentBase(
         storeFactory.create()
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<StartRandomStore.State> = store.stateFlow
     override fun obtainEvent(event: StartRandomStore.Intent) {
         store.accept(event)

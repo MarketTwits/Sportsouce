@@ -26,7 +26,7 @@ class ReviewRepositoryBase(
 
     private suspend fun launch(): Review {
         val (actual, archive, news) = coroutineScope {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { service.fetchStartMain() }
                 val deferredPaste = async { service.fetchPasteStarts() }
                 val deferredNews = async { service.news() }

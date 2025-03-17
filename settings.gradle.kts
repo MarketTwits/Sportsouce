@@ -4,17 +4,16 @@ pluginManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-       // maven("https://jitpack.io")
+        maven("https://jitpack.io")
         maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
         gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-       // maven("https://jitpack.io")
+        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://artifactory-external.vkpartner.ru/artifactory/maven/")
     }
@@ -23,6 +22,7 @@ dependencyResolutionManagement {
 rootProject.name = "Sportsouce"
 includeBuild("build-logic")
 include(":app")
+include("browser")
 include(":desktop")
 include(":starts:starts")
 include(":start:start")
@@ -52,7 +52,7 @@ include(":profile:authorized:edit-profile")
 include(":profile:authorized:change-password")
 include(":profile:authorized:registrations")
 include(":review")
-include(":starts:starts-schedule")
+//include(":starts:starts-schedule")
 include(":starts:starts-random")
 include(":starts:starts-popular")
 include(":starts:starts-common")

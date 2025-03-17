@@ -11,7 +11,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.ktor.client.json)
-            api(libs.ktor.client.okhttp)
             implementation(projects.core.koin)
             implementation(projects.core.cloud)
             implementation(libs.ktor.core)

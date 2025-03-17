@@ -43,7 +43,6 @@ val startRegistrationModule = module {
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::RegistrationMemberValidatorBase) bind RegistrationMemberValidator::class
     singleOf(::BaseTimeMapper) bind TimeMapper::class
-
     //New Register
     singleOf(::StartRegistrationPageStoreFactory)
     singleOf(::StartRegistrationRepositoryBase) bind StartRegistrationRepository::class

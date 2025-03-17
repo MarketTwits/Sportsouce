@@ -9,6 +9,7 @@ import com.markettwits.registrations.detail.store.store.StartOrderStoreFactory
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,9 @@ class StartOrderComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create(start)
     }
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<StartOrderStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: StartOrderStore.Intent) {
         store.accept(intent)
     }

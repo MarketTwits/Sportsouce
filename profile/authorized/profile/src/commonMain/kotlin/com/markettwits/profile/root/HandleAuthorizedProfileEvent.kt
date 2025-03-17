@@ -44,11 +44,11 @@ internal fun handleAuthorizedProfileEvent(
             RootAuthorizedProfileComponent.Config.Members
         )
 
-        is AuthorizedProfileComponent.Output.Settings -> navigation.push(
+        is AuthorizedProfileComponent.Output.Settings -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.Settings
         )
 
-        is AuthorizedProfileComponent.Output.UserOrders -> navigation.push(
+        is AuthorizedProfileComponent.Output.UserOrders -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.ShopUserOrders
         )
     }

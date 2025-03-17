@@ -8,6 +8,7 @@ import com.markettwits.settings.internal.settings_menu.store.SettingsStore
 import com.markettwits.settings.internal.settings_menu.store.SettingsStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,6 +25,8 @@ class SettingsComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<SettingsStore.State> = store.stateFlow
     override fun obtainEvent(intent: SettingsStore.Intent) {
         store.accept(intent)

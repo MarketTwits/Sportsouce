@@ -9,7 +9,7 @@ import com.markettwits.shop.orders.data.ShopUserOrdersRepositoryBase
 import com.markettwits.shop.orders.data.mapper.ShopUserOrdersMapper
 import com.markettwits.shop.orders.domain.ShopUserOrdersRepository
 import com.markettwits.shop.orders.presentation.store.ShopUserOrdersStoreFactory
-import com.markettwits.time.ExtendedTimeMapper
+import com.markettwits.time.BaseTimeMapper
 import com.markettwits.time.TimeMapper
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -21,7 +21,7 @@ val shopUserOrdersModule = module {
     singleOf(::ShopUserOrdersRepositoryBase) bind ShopUserOrdersRepository::class
     singleOf(::ShopUserOrdersStoreFactory)
     singleOf(::ShopUserOrdersMapper)
-    singleOf(::ExtendedTimeMapper) bind TimeMapper::class
+    singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
 
 }

@@ -8,6 +8,7 @@ import com.markettwits.profile.internal.forgot_password.presentation.store.Forgo
 import com.markettwits.profile.internal.forgot_password.presentation.store.ForgotPasswordStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,6 +26,7 @@ internal class ForgotPasswordComponentBase(
         storeFactory.create()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<ForgotPasswordStore.State> = store.stateFlow
 
     override fun obtainEvent(intent: ForgotPasswordStore.Intent) {

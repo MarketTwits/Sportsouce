@@ -114,9 +114,9 @@ internal fun StartScreenContent(
                     )
                 }
             }
-        }
-        BackFloatingActionButton {
-            onClickBack()
+            BackFloatingActionButton {
+                onClickBack()
+            }
         }
     }
 }

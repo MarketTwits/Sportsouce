@@ -7,9 +7,11 @@ import com.markettwits.start.register.presentation.member.store.RegistrationMemb
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Label
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.Message
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore.State
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
+
 
 class RegistrationMemberExecutor(private val validation: RegistrationMemberValidator) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
@@ -46,12 +48,23 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
 
     private fun StartStatement.updateAge(): StartStatement {
         return if (birthday.isNotEmpty()) {
-            val birthLocalDate =
-                LocalDate.parse(birthday, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-            val year = ChronoUnit.YEARS.between(birthLocalDate, LocalDate.now()).toInt()
-            copy(age = year.toString())
-        } else
-            copy()
+            val birthLocalDate = try {
+                val parts = birthday.split(".") // Разбиваем строку "dd.MM.yyyy"
+                LocalDate(parts[2].toInt(), parts[1].toInt(), parts[0].toInt()) // LocalDate(year, month, day)
+            } catch (e: Exception) {
+                return copy() // Если дата не парсится, возвращаем копию без изменений
+            }
 
+            val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+            val years = currentDate.year - birthLocalDate.year - if (
+                currentDate.monthNumber < birthLocalDate.monthNumber ||
+                (currentDate.monthNumber == birthLocalDate.monthNumber && currentDate.dayOfMonth < birthLocalDate.dayOfMonth)
+            ) 1 else 0
+
+            copy(age = years.toString())
+        } else {
+            copy()
+        }
     }
 }

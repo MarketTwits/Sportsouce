@@ -8,24 +8,24 @@ import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditPr
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.Message
 import com.markettwits.edit_profile.edit_profile_Image.presentation.store.EditProfileImageStore.State
 import kotlinx.coroutines.launch
-import java.io.File
+//import java.io.File
 
 class EditProfileImageExecutor(private val repository: EditProfileImageRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.UpdateImage -> uploadImage(intent.file)
+           // is Intent.UpdateImage -> uploadImage(intent.file)
         }
     }
 
-    private fun uploadImage(file: File) {
-        scope.launch {
-            dispatch(Message.ShowLoading)
-            repository.send(file).fold(
-                onSuccess = { dispatch(Message.ShowSuccess) },
-                onFailure = { dispatch(Message.ShowError(networkExceptionHandler(it).message.toString())) }
-            )
-        }
-    }
+//    private fun uploadImage(file: File) {
+//        scope.launch {
+//            dispatch(Message.ShowLoading)
+//            repository.send(file).fold(
+//                onSuccess = { dispatch(Message.ShowSuccess) },
+//                onFailure = { dispatch(Message.ShowError(networkExceptionHandler(it).message.toString())) }
+//            )
+//        }
+//    }
 }

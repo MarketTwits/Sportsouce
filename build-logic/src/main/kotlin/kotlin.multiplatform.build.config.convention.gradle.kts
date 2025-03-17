@@ -31,7 +31,6 @@ buildConfig {
     buildConfigField("APP_VERSION_NUMBER", versionCode)
     buildConfigField("BUILD_TIME", System.currentTimeMillis())
     buildConfigField("SPORTSAUCE_API_PATH", apiProdPath)
-
 }
 
 fun exceptionMessage(propertyName: String) =

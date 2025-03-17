@@ -7,6 +7,7 @@ android {
 }
 
 kotlin {
+
     sourceSets {
 
         all {
@@ -29,18 +30,22 @@ kotlin {
             api(compose.material3AdaptiveNavigationSuite)
             api(compose.components.uiToolingPreview)
             api(compose.ui)
-            api(libs.pullrefresh)
             api(libs.coil.compose)
             api(libs.coil.network)
-            api(libs.htmlconverter)
+            api(libs.coil.mp)
+            api(libs.richeditor)
             api(libs.composeMaterial3WindowSize)
             api(libs.composeMaterial3Adaptive)
             implementation(compose.components.resources)
+            implementation(projects.core.time)
         }
         
         jvmMain.dependencies {
             api(compose.animation)
             api(libs.compose.ui.tooling.preview)
+        }
+        jsMain.dependencies {
+            api(libs.ktor.client.js)
         }
     }
 }

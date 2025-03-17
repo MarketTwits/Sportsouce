@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
 
 /**
  * Simple Text composable to show the text with html styling from string
@@ -61,12 +60,16 @@ fun HtmlText(
     selectable: Boolean = false,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    val annotatedString = htmlToAnnotatedString(
-        html = text,
-    )
-    HtmlText(
+
+//    val state = rememberRichTextState()
+//
+//    LaunchedEffect(text) {
+//        state.setHtml(text)
+//        state.config.linkColor = color
+//    }
+
+    Text(
         modifier = modifier,
-        annotatedString = annotatedString,
         color = color,
         fontSize = fontSize,
         fontStyle = fontStyle,
@@ -74,13 +77,28 @@ fun HtmlText(
         fontFamily = fontFamily,
         letterSpacing = letterSpacing,
         textDecoration = textDecoration,
-        textAlign = textAlign,
+        textAlign = textAlign ?: TextAlign.Unspecified,
         lineHeight = lineHeight,
         overflow = overflow,
-        selectable = selectable,
         softWrap = softWrap,
-        maxLines = maxLines,
+        text = text,
     )
+
+//    RichText(
+//        state = state,
+//        modifier = modifier,
+//        color = color,
+//        fontSize = fontSize,
+//        fontStyle = fontStyle,
+//        fontWeight = fontWeight,
+//        fontFamily = fontFamily,
+//        letterSpacing = letterSpacing,
+//        textDecoration = textDecoration,
+//        textAlign = textAlign ?: TextAlign.Unspecified,
+//        lineHeight = lineHeight,
+//        overflow = overflow,
+//        softWrap = softWrap,
+//    )
 }
 
 /**

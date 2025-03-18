@@ -22,8 +22,8 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.OnBackgroundCard
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.items.theme.FontNunito

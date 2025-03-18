@@ -35,8 +35,15 @@ actual fun NewEditProfileImageScreen(component: EditProfileImageComponent) {
             scope.launch {
                 val result = uri?.let { imageCropper.crop(it, context) }
                 if (result is CropResult.Success) {
-                    val cropFile = convertBitmapToFile(context, result.bitmap.asAndroidBitmap())
-                    component.obtainEvent(EditProfileImageStore.Intent.UpdateImage(cropFile))
+                    val file = convertBitmapToFile(context, result.bitmap.asAndroidBitmap())
+                    val byteArray = file.readBytes()
+                    val lastModified = file.lastModified()
+                    component.obtainEvent(
+                        EditProfileImageStore.Intent.UpdateImage(
+                            byteArray,
+                            lastModified
+                        )
+                    )
                 }
             }
         }

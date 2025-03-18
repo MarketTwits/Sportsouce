@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.edit_profile_info.data
 
 
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserDataContent

@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.profile.internal.forgot_password.presentation.component.ForgotPasswordComponent

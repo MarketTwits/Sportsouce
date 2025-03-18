@@ -11,11 +11,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.markettwits.bottom_bar.components.rememberBottomBarNestedScroll
 import com.markettwits.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.club.dashboard.presentation.components.menu.ClubMenuContent
 import com.markettwits.club.dashboard.presentation.components.schedule.ScheduleContent
@@ -28,7 +25,7 @@ import com.markettwits.club.dashboard.presentation.store.getSelectedSubscription
 import com.markettwits.club.info.domain.models.findFirstSchedule
 import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 
 @Composable

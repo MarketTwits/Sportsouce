@@ -46,8 +46,8 @@ class ShopProductsMapperBase : ShopProductsMapper {
         val previousPrice: String?
         val discount: Int?
         return if (discountPrice != null && discountPrice > 0 && discountPrice < price) {
-            currentPrice = formatPrice(discountPrice / 100)
-            previousPrice = formatPrice(price / 100)
+            currentPrice = formatPriceWithSpaces(discountPrice / 100)
+            previousPrice = formatPriceWithSpaces(price / 100)
             discount =
                 ((price - discountPrice) * 100 / price)
             ShopItem.Price(
@@ -56,7 +56,7 @@ class ShopProductsMapperBase : ShopProductsMapper {
                 discount = discount
             )
         } else {
-            currentPrice = formatPrice(price / 100)
+            currentPrice = formatPriceWithSpaces(price / 100)
             ShopItem.Price(
                 currentPrice = currentPrice,
                 previousPrice = null,

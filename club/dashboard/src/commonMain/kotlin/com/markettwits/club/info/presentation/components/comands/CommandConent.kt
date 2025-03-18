@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.markettwits.club.info.domain.models.Trainer
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.components.OnBackgroundCard
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito

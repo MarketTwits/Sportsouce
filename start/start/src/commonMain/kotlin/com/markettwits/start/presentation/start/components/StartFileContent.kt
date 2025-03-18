@@ -9,13 +9,10 @@ import androidx.compose.material.icons.filled.FilePresent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
-import com.markettwits.core_ui.items.components.OnBackgroundCard
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable

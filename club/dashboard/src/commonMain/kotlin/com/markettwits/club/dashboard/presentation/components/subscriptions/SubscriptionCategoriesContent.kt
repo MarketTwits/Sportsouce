@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.club.dashboard.presentation.store.SubscriptionsUi
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 
 @OptIn(ExperimentalLayoutApi::class)

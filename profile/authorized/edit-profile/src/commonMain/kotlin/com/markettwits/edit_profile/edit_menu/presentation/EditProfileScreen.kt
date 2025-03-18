@@ -8,7 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
 import com.markettwits.edit_profile.edit_menu.presentation.components.EditProfileMenu
 import com.markettwits.edit_profile.edit_menu.presentation.components.profileMenu

@@ -26,6 +26,6 @@ kotlin {
         implementation(libs.koin.core)
         implementation(projects.core.koin)
         implementation(project.dependencies.enforcedPlatform(libs.jetbrains.kotlinWrappers.kotlinWrappersBom))
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-browser")
+        implementation(libs.kotlin.browser)
     }
 }

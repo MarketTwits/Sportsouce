@@ -23,7 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
 import com.markettwits.shop.order.presentation.components.common.ShopBasicSectorContent

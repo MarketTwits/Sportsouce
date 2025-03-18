@@ -5,7 +5,7 @@ import com.markettwits.cahce.execute.list.ExecuteListWithCache
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.exception.networkExceptionHandler
 import com.markettwits.cloud.model.seasons.StartSeasonsRemote
-import com.markettwits.core_ui.items.base.Fourth
+import com.markettwits.core_ui.items.extensions.Fourth
 import com.markettwits.starts.starts.domain.StartsRepository
 import com.markettwits.starts.starts.presentation.component.StartsUiState
 import com.markettwits.starts_common.domain.StartsListItem

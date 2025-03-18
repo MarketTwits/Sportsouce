@@ -5,7 +5,7 @@ import com.markettwits.inappnotification.api.InAppNotificationListener
 import com.markettwits.inappnotification.api.InAppNotificationStorage
 import com.markettwits.inappnotification.api.model.InAppNotification
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration
 

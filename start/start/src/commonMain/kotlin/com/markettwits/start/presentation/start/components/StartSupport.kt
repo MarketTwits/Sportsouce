@@ -1,10 +1,8 @@
 package com.markettwits.start.presentation.start.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.bottom_sheet.DefaultModalBottomSheet
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.theme.FontNunito

@@ -11,8 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.cloud_shop.model.common.OptionInfo
-import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 import com.markettwits.shop.filter.presentation.store.ShopFilterStore

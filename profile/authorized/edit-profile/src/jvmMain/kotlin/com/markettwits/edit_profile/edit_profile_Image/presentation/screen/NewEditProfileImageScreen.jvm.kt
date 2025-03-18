@@ -20,7 +20,14 @@ actual fun NewEditProfileImageScreen(component: EditProfileImageComponent) {
             dismiss = { component.obtainEvent(EditProfileImageStore.Intent.Dismiss) },
             onClickImageBox = {
                 openImageFileDialog()?.let { file ->
-                  //  component.obtainEvent(EditProfileImageStore.Intent.UpdateImage(file))
+                    val byteArray = file.readBytes()
+                    val lastModified = file.lastModified()
+                    component.obtainEvent(
+                        EditProfileImageStore.Intent.UpdateImage(
+                            byteArray,
+                            lastModified
+                        )
+                    )
                 }
             })
     }

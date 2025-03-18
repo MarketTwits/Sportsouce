@@ -17,12 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_extensions.formatPrice
-import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
-import com.markettwits.core_ui.items.components.top_bar.TopBarBase
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.components.topbar.TopBarBase
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.shop.domain.mapper.formatPriceWithSpaces
 import com.markettwits.shop.order.domain.model.ShopDeliveryType
 import com.markettwits.shop.order.domain.model.ShopPaymentType
 import com.markettwits.shop.order.domain.model.ShopRecipient
@@ -40,16 +40,16 @@ import com.markettwits.shop.order.presentation.store.ShopCreateOrderStore
 
 @Composable
 internal fun ShopCreateOrderContent(
-    state : ShopCreateOrderStore.State,
+    state: ShopCreateOrderStore.State,
     modifier: Modifier = Modifier,
-    onClickPaymentType : (ShopPaymentType) -> Unit,
+    onClickPaymentType: (ShopPaymentType) -> Unit,
     onClickDeliveryType: (ShopDeliveryType) -> Unit,
-    onClickCreateOrder : () -> Unit,
-    onClickChangeRecipient : () -> Unit,
-    onChangeRecipient : (ShopRecipient) -> Unit,
-    onClickGoBack : () -> Unit,
-    onClickShopRecipientSheet : () -> Unit,
-    onConsumedMessage : () -> Unit,
+    onClickCreateOrder: () -> Unit,
+    onClickChangeRecipient: () -> Unit,
+    onChangeRecipient: (ShopRecipient) -> Unit,
+    onClickGoBack: () -> Unit,
+    onClickShopRecipientSheet: () -> Unit,
+    onConsumedMessage: () -> Unit,
 ) {
 
     var snackBarColor by remember {
@@ -103,9 +103,9 @@ internal fun ShopCreateOrderContent(
                 )
                 ShopOrderComposition(shopItems = state.shopOrderResultItems)
                 ShopOrderPriceContent(
-                    totalCost = state.shopOrderPrice.totalPrice.formatPrice(),
-                    discount = state.shopOrderPrice.totalDiscount.formatPrice(),
-                    itemsCount = state.shopOrderPrice.productCount.toString()
+                    totalCost = formatPriceWithSpaces(state.shopOrderPrice.totalPrice),
+                    discount = formatPriceWithSpaces(state.shopOrderPrice.totalDiscount),
+                    itemsCount = formatPriceWithSpaces(state.shopOrderPrice.productCount)
                 )
                 ShopCreateOrderButton(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -125,7 +125,7 @@ internal fun ShopCreateOrderContent(
             SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
         snackBarHostState.showLongMessageWithDismiss(message = it.message)
     }
-    if (state.shopRecipientState.isExpanded){
+    if (state.shopRecipientState.isExpanded) {
         ShopOrderRecipientBottomSheet(
             state = state.shopRecipientState,
             onClickChangeRecipient = onClickChangeRecipient,

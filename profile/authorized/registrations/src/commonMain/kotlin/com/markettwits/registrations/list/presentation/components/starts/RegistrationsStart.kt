@@ -16,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.registrations.detail.components.start.OrderStartCard
 import com.markettwits.registrations.list.domain.StartOrderInfo
-import com.markettwits.registrations.list.domain.firstUnpaidItem
 import com.markettwits.registrations.list.presentation.components.filter.FilterItem
 import com.markettwits.registrations.list.presentation.components.filter.RegistrationsFilterItem
 

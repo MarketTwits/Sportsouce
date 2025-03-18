@@ -3,7 +3,6 @@ package com.markettwits.start.register.presentation.registration.distance.compon
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.domain.StartStatement
 import com.markettwits.start.register.presentation.member.domain.RegistrationMemberValidatorBase

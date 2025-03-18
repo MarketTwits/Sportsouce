@@ -17,7 +17,7 @@ import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.errors.impl.supcomponents.SauceThrowableRetryButtonLarge
 import com.markettwits.core.errors.impl.supcomponents.mapSauceErrorImage
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable

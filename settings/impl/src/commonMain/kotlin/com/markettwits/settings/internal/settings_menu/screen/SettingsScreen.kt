@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.settings.internal.settings_menu.component.SettingsComponent
 import com.markettwits.settings.internal.settings_menu.components.SettingsContent

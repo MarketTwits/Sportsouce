@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
-import com.markettwits.core_ui.items.components.top_bar.TopBarBase
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.components.topbar.TopBarBase
 import com.markettwits.shop.cart.presentation.cart.component.ShopCartComponent
 import com.markettwits.shop.cart.presentation.cart.components.CreateOrderButton
 import com.markettwits.shop.cart.presentation.cart.components.ShopCartItems

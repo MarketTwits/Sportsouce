@@ -1,7 +1,6 @@
 package com.markettwits.shop.catalog.presentation.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -15,7 +14,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.paging.fold
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.domain.model.ShopItem
 

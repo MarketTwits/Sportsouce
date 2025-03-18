@@ -13,10 +13,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.markettwits.core_ui.items.base_extensions.formatPrice
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.cart.domain.calculateTotalCost
+import com.markettwits.shop.domain.mapper.formatPriceWithSpaces
 import com.markettwits.shop.order.domain.model.ShopItemOrderResult
 import com.markettwits.shop.order.presentation.components.common.ShopBasicSectorContent
 
@@ -35,7 +35,7 @@ internal fun ShopOrderComposition(
                     modifier = Modifier.padding(4.dp),
                     itemCount = it.item.count,
                     imageUrl = it.item.item.visual.imageUrl.firstOrNull() ?: "",
-                    totalPrice = it.item.calculateTotalCost().formatPrice(),
+                    totalPrice = formatPriceWithSpaces(it.item.calculateTotalCost()),
                     isSuccess = it.isAvailable,
                     message = it.message
                 )

@@ -19,9 +19,9 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
-import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.register.presentation.registration.distance.component.StartDistanceComponent

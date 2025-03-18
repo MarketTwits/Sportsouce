@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.edit_social_network.domain.interactor
 
 
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.edit_profile.edit_social_network.data.ProfileSocialNetworkRepository
 import com.markettwits.edit_profile.edit_social_network.domain.UserSocialNetwork
 import com.markettwits.edit_profile.edit_social_network.domain.handle.ProfileSocialNetworkHandler

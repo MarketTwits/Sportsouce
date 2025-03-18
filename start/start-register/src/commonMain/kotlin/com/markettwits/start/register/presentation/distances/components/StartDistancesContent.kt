@@ -18,10 +18,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.formatPrice
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
-import com.markettwits.core_ui.items.components.OnBackgroundCard
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.extensions.formatPrice
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.start.register.presentation.registration.registration.components.StartRegistrationTopBar

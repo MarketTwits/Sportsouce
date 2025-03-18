@@ -14,8 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
+import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.start.presentation.common.OnClick
 
 @Composable
@@ -44,7 +45,7 @@ internal fun StartMembersResultPanel(
                 Spacer(modifier = Modifier.padding(start = 5.dp))
                 Box(
                     modifier = Modifier
-                        .clip(_root_ide_package_.com.markettwits.core_ui.items.components.Shapes.small)
+                        .clip(Shapes.small)
                         .background(MaterialTheme.colorScheme.tertiaryContainer)
                         .padding(5.dp)
                 ) {

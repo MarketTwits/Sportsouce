@@ -26,8 +26,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.theme.Shapes
 
 @Composable
 

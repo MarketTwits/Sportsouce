@@ -20,7 +20,7 @@ coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/andr
 htmlconverter = "1.0.3" # https://github.com/cbeyls/HtmlConverterCompose
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 pullrefresh = "1.4.0-beta02" # https://github.com/MateriiApps/pullrefresh
-richeditor = "1.0.0-rc11" # https://github.com/MohamedRejeb/compose-rich-editor
+richeditor = "1.0.0-rc12" # https://github.com/MohamedRejeb/compose-rich-editor
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 buildConfigPlugin = "5.5.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
 compose-activity = "1.10.1"
@@ -43,6 +43,7 @@ composeMaterial3Adaptive = { group = "org.jetbrains.compose.material3.adaptive",
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 coroutines-interop = { module = "com.badoo.reaktive:coroutines-interop", version.ref = "reaktive" }
 htmlconverter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", version.ref = "htmlconverter" }
+kotlin-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser" }
 richeditor = {group = "com.mohamedrejeb.richeditor", name = "richeditor-compose", version.ref = "richeditor"}
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "multiplatformMarkdownRendererM3" }

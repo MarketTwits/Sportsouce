@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
 import com.markettwits.profile.api.root.RootAuthFlowScreen
 import com.markettwits.profile.root.RootAuthorizedProfileScreen
 import com.markettwits.unauthorized.presentation.screen.UnAuthorizedProfileScreen

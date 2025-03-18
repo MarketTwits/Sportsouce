@@ -14,7 +14,7 @@ import com.markettwits.club.info.domain.models.Training
 import com.markettwits.club.registration.domain.WorkoutPrice
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
-import com.markettwits.core_ui.items.base.fetchFifth
+import com.markettwits.core_ui.items.extensions.fetchFifth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

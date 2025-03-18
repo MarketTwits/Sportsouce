@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.start.presentation.membres.filter.StartMembersFilterScreen
 import com.markettwits.start.presentation.membres.filter.component.StartMembersFilterButtonSelectionPanel
 import com.markettwits.start.presentation.membres.filter.component.StartMembersSortWrapper2

@@ -11,13 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
-import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
-import com.markettwits.core_ui.items.components.FullImageContent
+import com.markettwits.core_ui.items.extensions.noRippleClickable
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
+import com.markettwits.core_ui.items.screens.FullImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
-import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi

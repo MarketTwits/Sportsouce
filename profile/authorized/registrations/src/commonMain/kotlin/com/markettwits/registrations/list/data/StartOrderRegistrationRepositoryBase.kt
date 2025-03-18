@@ -3,7 +3,7 @@ package com.markettwits.registrations.list.data
 import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.cloud.model.start_price.StartPriceRequest
 import com.markettwits.cloud.model.start_registration.StartRegistrationResponse
-import com.markettwits.core_ui.items.base_extensions.retryRunCatchingAsync
+import com.markettwits.core_ui.items.extensions.retryRunCatchingAsync
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.registrations.list.domain.StartOrderInfo

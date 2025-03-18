@@ -16,5 +16,6 @@ data class ShopItemCart(
 
     fun isDecreaseAvailable() : Boolean = item.quantity < count
 }
+
 fun ShopItemCart.calculateTotalCost() = numberPrice * count
 

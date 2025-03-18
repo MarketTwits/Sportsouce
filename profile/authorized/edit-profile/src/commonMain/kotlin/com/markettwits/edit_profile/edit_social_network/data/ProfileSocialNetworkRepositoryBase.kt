@@ -1,6 +1,6 @@
 package com.markettwits.edit_profile.edit_social_network.data
 
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.edit_profile.edit_social_network.data.mapper.ProfileSocialNetworkCloudMapper
 import com.markettwits.edit_profile.edit_social_network.domain.UserSocialNetwork
 import com.markettwits.profile.api.AuthDataSource

@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.domain.StartItem
 import com.markettwits.start.presentation.start.components.StartContentBasePanel

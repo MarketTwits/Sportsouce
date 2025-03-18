@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_filter.start_filter.presentation.component.StartFilterUi
 

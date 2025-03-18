@@ -32,7 +32,6 @@ object FontNunito {
     @Composable
     fun semiBoldBold() = FontFamily(Font(Res.font.nunito_semi_bold))
 
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun extraBold() = FontFamily(Font(Res.font.nunito_extra_bold))
 }

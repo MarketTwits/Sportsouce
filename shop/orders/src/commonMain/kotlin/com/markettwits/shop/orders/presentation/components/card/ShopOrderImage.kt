@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 
 @Composable
 internal fun ShopOrderImage(

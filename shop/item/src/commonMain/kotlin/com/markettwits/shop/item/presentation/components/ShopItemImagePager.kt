@@ -2,10 +2,6 @@ package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.extensions.noRippleClickable
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.theme.Shapes
 
 
 @Composable

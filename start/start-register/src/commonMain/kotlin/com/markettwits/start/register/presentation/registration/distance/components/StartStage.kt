@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.window.Dialog
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.start.register.presentation.member.screen.MemberScreen
 import com.markettwits.start.register.presentation.member.store.RegistrationMemberStore
 import com.markettwits.start.register.presentation.registration.distance.component.StartDistanceComponent

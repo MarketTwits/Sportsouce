@@ -9,10 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.base_screen.FailedScreen
-import com.markettwits.core_ui.items.base_screen.FullImageScreen
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.start.presentation.comments.component.StartCommentsComponent

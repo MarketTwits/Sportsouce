@@ -9,7 +9,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_extensions.formatPrice
+import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationFieldPrice

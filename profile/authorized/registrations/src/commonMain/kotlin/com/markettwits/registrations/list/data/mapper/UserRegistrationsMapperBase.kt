@@ -3,7 +3,7 @@ package com.markettwits.registrations.list.data.mapper
 import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start_price.StartPriceResponse
 import com.markettwits.cloud.model.start_user.values.UserRegistration
-import com.markettwits.core_ui.items.base_extensions.formatPrice
+import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import com.markettwits.registrations.list.domain.StartOrderPrice
 import com.markettwits.time.TimeMapper

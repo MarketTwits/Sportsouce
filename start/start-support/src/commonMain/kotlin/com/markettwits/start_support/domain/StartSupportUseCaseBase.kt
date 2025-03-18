@@ -1,6 +1,6 @@
 package com.markettwits.start_support.domain
 
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.start_support.data.StartSupportRepository
 
 internal class StartSupportUseCaseBase(private val repository: StartSupportRepository) :

@@ -3,7 +3,7 @@ package com.markettwits.club.registration.data
 import com.markettwits.club.common.domain.ClubRepository
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationUseCase
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 
 class WorkoutRegistrationUseCaseBase(
     private val repository: ClubRepository

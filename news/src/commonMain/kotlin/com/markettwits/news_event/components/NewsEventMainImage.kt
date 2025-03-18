@@ -10,8 +10,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.base_extensions.noRippleClickable
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.extensions.noRippleClickable
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.image.DefaultImages
 
 @Composable

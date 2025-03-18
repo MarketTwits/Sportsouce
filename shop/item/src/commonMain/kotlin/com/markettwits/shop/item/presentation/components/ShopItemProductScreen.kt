@@ -1,7 +1,6 @@
 package com.markettwits.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -11,9 +10,8 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.AdaptivePane
-import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.shop.domain.model.ShopItem

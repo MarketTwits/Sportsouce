@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.base_screen.FailedScreen
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_filter.starts.store.StartsFilteredStore
 import com.markettwits.starts_common.presentation.StartCard

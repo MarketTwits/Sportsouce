@@ -1,9 +1,9 @@
 package com.markettwits.shop.cart.presentation.catalog.store
 
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.core_ui.items.base_extensions.formatPrice
 import com.markettwits.shop.cart.domain.ShopCartRepository
 import com.markettwits.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
+import com.markettwits.shop.domain.mapper.formatPriceWithSpaces
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +45,7 @@ private class ShopCartCatalogStoreBase(private val repository: ShopCartRepositor
                         item.numberPrice * item.count
                     }
                     ShopCartCatalogComponent.State.Expanded(
-                        cartCost = totalCost.formatPrice()
+                        cartCost = formatPriceWithSpaces(totalCost)
                     )
                 }
             }.onEach { state ->

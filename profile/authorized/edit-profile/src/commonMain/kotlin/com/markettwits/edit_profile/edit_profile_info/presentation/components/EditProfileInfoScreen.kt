@@ -14,10 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.base_screen.FailedScreen
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
-import com.markettwits.core_ui.items.components.top_bar.TopBarClipWithLabel
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
+import com.markettwits.core_ui.items.components.topbar.TopBarClipWithLabel
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponent

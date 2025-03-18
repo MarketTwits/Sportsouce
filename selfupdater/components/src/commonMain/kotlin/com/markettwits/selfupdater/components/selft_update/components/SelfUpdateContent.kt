@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.selfupdater.components.selft_update.components.update_available.SelfUpdateAvailable
 import com.markettwits.selfupdater.components.selft_update.components.update_available.SelfUpdateButton

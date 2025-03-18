@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.news_list.presentation.components.NewsItemCard
 import com.markettwits.news_list.presentation.store.NewsStore

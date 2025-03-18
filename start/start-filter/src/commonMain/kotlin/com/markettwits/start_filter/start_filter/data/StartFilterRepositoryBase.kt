@@ -42,7 +42,7 @@ internal class StartFilterRepositoryBase(
 
     private suspend fun fetchFilter(): StartFilter {
         val (kindOfSport, seasons, cities) = coroutineScope {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main.immediate) {
                 val deferredKindOfSports = async { service.kindOfSports() }
                 val deferredSeasons = async { service.seasons() }
                 val deferredCities = async { service.cities(true) }

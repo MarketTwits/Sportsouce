@@ -3,7 +3,7 @@ package com.markettwits.edit_profile.edit_menu.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.components.OnBackgroundCard
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 
 @Composable
 fun EditProfileMenu(

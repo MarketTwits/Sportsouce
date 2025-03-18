@@ -13,7 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.*
+import com.markettwits.core_ui.items.screens.*
 import com.markettwits.profile.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.profile.authorized.presentation.components.members.MyMembersCard
 import com.markettwits.profile.authorized.presentation.components.orders.MyOrdersCard

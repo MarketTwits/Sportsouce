@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.Shapes
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -59,7 +60,7 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onClick: (Ne
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1.25f)
                 .padding(top = 8.dp)
         ) {
             Text(
@@ -70,17 +71,10 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsInfo, onClick: (Ne
                 fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.tertiary,
             )
-//            val convertedText = remember(newsInfo.fullDescription) {
-//                htmlToAnnotatedString(
-//                    newsInfo.fullDescription,
-//                    style = HtmlStyle(indentUnit = TextUnit.Unspecified)
-//                )
-//            }
             HtmlText(
-                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.heightIn(max = 30.dp),
                 text = newsInfo.fullDescription,
-                maxLines = 2,
-                lineHeight = 10.sp,
+                lineHeight = 14.sp,
                 fontSize = 12.sp,
                 fontFamily = FontNunito.regular(),
                 color = MaterialTheme.colorScheme.outline,

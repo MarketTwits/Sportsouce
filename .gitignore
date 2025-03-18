@@ -5,6 +5,7 @@
 /captures
 .externalNativeBuild
 .cxx
+/kotlin-js-store
 local.properties
 
 # Project exclude paths

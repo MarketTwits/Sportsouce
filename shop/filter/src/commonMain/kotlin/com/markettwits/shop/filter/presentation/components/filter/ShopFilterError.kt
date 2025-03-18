@@ -2,7 +2,7 @@ package com.markettwits.shop.filter.presentation.components.filter
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.base_screen.FailedScreen
+import com.markettwits.core_ui.items.screens.FailedScreen
 
 @Composable
 internal fun ShopFilterError(

@@ -67,6 +67,8 @@ interface SportsouceApi {
     //Profile
     //suspend fun uploadFile(file: File): UploadFileResponse
 
+    suspend fun uploadFile(data: ByteArray, lastModified: Long) : UploadFileResponse
+
     suspend fun changeProfileInfo(profile: ChangeProfileInfoRequest, token: String) : ChangeProfileInfoResponse
 
     suspend fun changePassword(password : ChangePasswordRequest, token: String) : ChangeProfileInfoResponse

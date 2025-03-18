@@ -1,7 +1,7 @@
 package com.markettwits.members.member_add_edit.domain.edit
 
 
-import com.markettwits.core_ui.items.result.flatMapCallback
+import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.members.member_add_edit.domain.validate.AddOrEditMemberValidator
 import com.markettwits.members.member_common.data.ProfileMembersRepository
 import com.markettwits.members.member_common.domain.ProfileMember

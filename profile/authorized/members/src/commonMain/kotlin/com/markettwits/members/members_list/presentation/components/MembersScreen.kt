@@ -8,9 +8,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.base_screen.FailedScreen
-import com.markettwits.core_ui.items.base_screen.PullToRefreshScreen
-import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
+import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.members.members_list.presentation.component.MembersListComponent
 import com.markettwits.members.members_list.presentation.components.components.MembersList
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore

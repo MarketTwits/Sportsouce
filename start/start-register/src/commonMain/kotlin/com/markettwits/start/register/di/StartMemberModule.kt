@@ -2,7 +2,6 @@ package com.markettwits.start.register.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.members.member_root.di.rootMembersModule
@@ -29,7 +28,6 @@ import org.koin.dsl.module
 
 val startRegistrationModule = module {
     includes(
-        sportSouceNetworkModule,
         sportSauceStartNetworkModule,
         teamsCityModule,
         rootMembersModule,

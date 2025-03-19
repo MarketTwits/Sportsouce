@@ -2,15 +2,15 @@ package com.markettwits.members.member_common.data
 
 import com.markettwits.cahce.Cache
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
-import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.members.member_common.data.mapper.MembersMapper
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.profile.api.AuthDataSource
+import com.markettwits.profile.cloud.SportSauceNetworkProfileApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class ProfileMembersRepositoryBase(
-    private val service: SportsouceApi,
+    private val service: SportSauceNetworkProfileApi,
     private val auth: AuthDataSource,
     private val mapper: MembersMapper,
     private val cache: Cache<List<ProfileMember>>,

@@ -10,9 +10,11 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.core.time)
         implementation(projects.core.cache)
-        implementation(projects.cloud)
+        implementation(projects.core.errors)
         implementation(projects.core.ui)
         implementation(projects.core.koin)
+        implementation(projects.start.startCloud)
+        implementation(projects.teamsCity)
         implementation(projects.start.start)
         implementation(projects.starts.startsCommon)
         implementation(libs.bundles.mviKotlin)

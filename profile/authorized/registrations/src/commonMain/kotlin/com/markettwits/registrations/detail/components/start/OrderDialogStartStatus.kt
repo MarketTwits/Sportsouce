@@ -16,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.cloud.model.common.StartStatus
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.start.domain.StartItem
 
 @Composable
-fun OrderDialogStartStatus(modifier: Modifier = Modifier, startStatus: StartStatus) {
+fun OrderDialogStartStatus(modifier: Modifier = Modifier, startStatus: StartItem.StartStatus) {
     OnBackgroundCard(modifier = modifier) {
         Row(
             modifier = Modifier.padding(10.dp),

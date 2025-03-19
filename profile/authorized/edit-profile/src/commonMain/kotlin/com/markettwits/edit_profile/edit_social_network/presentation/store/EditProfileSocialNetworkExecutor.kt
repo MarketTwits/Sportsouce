@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.edit_social_network.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.edit_profile.edit_social_network.domain.UserSocialNetwork
 import com.markettwits.edit_profile.edit_social_network.domain.interactor.ProfileSocialNetworkInteractor
 import com.markettwits.edit_profile.edit_social_network.presentation.store.EditProfileSocialNetworkStore.Intent
@@ -33,7 +33,7 @@ class EditProfileSocialNetworkExecutor(private val interactor: ProfileSocialNetw
                     dispatch(Message.UpdateSuccess("Данные успешно обновлены"))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
                 }
             )
         }
@@ -44,7 +44,7 @@ class EditProfileSocialNetworkExecutor(private val interactor: ProfileSocialNetw
             dispatch(Message.IsLoading)
             interactor.fetch().fold(
                 onFailure = {
-                    dispatch(Message.IsFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.IsFailed(it.networkExceptionHandler().message.toString()))
                 },
                 onSuccess = {
                     dispatch(Message.IsLoaded(it))

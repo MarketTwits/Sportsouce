@@ -30,7 +30,11 @@ decompose = "3.2.2" # https://github.com/arkivanov/Decompose
 reaktive = "2.2.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
 tracer = "0.2.15" # https://apptracer.ru/
-coreKtx = "1.15.0" # https://developer.android.com/kotlin/ktx
+coreKtx = "1.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+material = "1.12.0" # https://developer.android.com/kotlin/ktx
 
 [libraries]
 
@@ -111,6 +115,10 @@ org-jetbrains-compose-gradle-plugin = { module = "org.jetbrains.compose:org.jetb
 buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.ref = "buildConfigPlugin" }
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 

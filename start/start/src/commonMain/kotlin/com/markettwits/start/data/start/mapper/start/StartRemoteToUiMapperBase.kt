@@ -1,6 +1,5 @@
 package com.markettwits.start.data.start.mapper.start
 
-import com.markettwits.cloud.model.start_member.StartMemberItem
 import com.markettwits.start.data.start.mapper.albums.StartAlbumsToUiMapper
 import com.markettwits.start.data.start.mapper.comments.StartCommentsToUiMapper
 import com.markettwits.start.data.start.mapper.members.StartMembersNewToUiMapper
@@ -12,6 +11,7 @@ import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import com.markettwits.start.presentation.result.model.MemberResult
 import com.markettwits.start_cloud.model.comments.response.Comment
 import com.markettwits.start_cloud.model.members.StartMember
+import com.markettwits.start_cloud.model.members.StartMemberItem
 import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.StartRemoteNew

@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.cache)
-            implementation(projects.cloud)
+            
             implementation(projects.core.ui)
             implementation(projects.core.koin)
             implementation(projects.start.start)

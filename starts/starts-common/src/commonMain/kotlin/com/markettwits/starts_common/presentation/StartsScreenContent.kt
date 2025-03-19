@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.starts_common.domain.StartsListItem
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StartsScreenContent(
     modifier: Modifier = Modifier,

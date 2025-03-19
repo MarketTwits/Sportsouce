@@ -1,13 +1,14 @@
 package com.markettwits.starts_common.data.mapper
 
-import com.markettwits.cloud.model.starts.StartRemoteItem
+import com.markettwits.cloud.model.NetworkKindOfSport
+import com.markettwits.cloud.model.NetworkStartRemoteItem
 import com.markettwits.starts_common.domain.StartsListItem
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
 
-abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMapper) :
+internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMapper) :
     StartsCloudToListMapper {
-    override fun mapSingle(items: List<StartRemoteItem>): List<StartsListItem> {
+    override fun mapSingle(items: List<NetworkStartRemoteItem>): List<StartsListItem> {
         val resultLists = items.map {
             StartsListItem(
                 id = it.id,
@@ -28,7 +29,7 @@ abstract class StartsCloudToListMapperAbstract(private val timeMapper: TimeMappe
         return resultLists
     }
 
-    private fun mapKindOfSports(kindOfSports: List<com.markettwits.cloud.model.common.KindOfSport>): List<StartsListItem.KindOfSport> =
+    private fun mapKindOfSports(kindOfSports: List<NetworkKindOfSport>): List<StartsListItem.KindOfSport> =
         kindOfSports.map {
             StartsListItem.KindOfSport(
                 id = it.id,

@@ -1,32 +1,28 @@
 package com.markettwits.popular.popular.domain
 
 import com.markettwits.starts_common.domain.StartsListItem
+import com.markettwits.time.TimeMapper
+import com.markettwits.time.TimePattern
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
-internal class RecentStartsFilterBase : RecentStartsFilter {
+internal class RecentStartsFilterBase(
+    private val timeMapper: TimeMapper
+) : RecentStartsFilter {
     override fun lastThreeMonth(): Map<String, String> {
-        // Получаем текущую дату с использованием kotlinx.datetime
-        val currentDate = Clock.System.now().toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
+        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
-//        // Создаем форматтер для LocalDate с использованием kotlinx.datetime
-//        val formatter: DateTimeFormatter<LocalDate> = DateTimeFormat {
-//            year()
-//            monthNumber()
-//            dayOfMonth()
-//            separator("-")
-//        }
-//
-//        // Вычисляем даты (минус 2 и 1 месяц)
-//        val twoMonthsAgo = currentDate.minus(2, DateTimeUnit.MONTH)
-//        val oneMonthAgo = currentDate.minus(1, DateTimeUnit.MONTH)
-//
-//        // Форматируем даты в строки
-//        val fromDate = twoMonthsAgo.format(formatter)
-//        val toDate = oneMonthAgo.format(formatter)
-//
-//        return mapOf("fromDate" to fromDate, "toDate" to toDate)
-        return mapOf()
+        val twoMonthsAgo = currentDate.minus(DatePeriod(months = 2))
+        val oneMonthAgo = currentDate.minus(DatePeriod(months = 1))
+
+        val fromDate = timeMapper.mapTime(TimePattern.FullWithDots, twoMonthsAgo.toString())
+        val toDate = timeMapper.mapTime(TimePattern.FullWithDots, oneMonthAgo.toString())
+
+        return mapOf("fromDate" to fromDate, "toDate" to toDate)
     }
 
     override suspend fun sortPopularStarts(starts: List<StartsListItem>): List<StartsListItem> =

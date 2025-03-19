@@ -14,13 +14,11 @@ object WorkoutRegistrationReducer : Reducer<State, Message> {
                 isLoading = false,
                 message = msg.message
             )
-
             is Message.RegistrationSuccess -> copy(
                 isError = false,
                 isLoading = false,
                 isSuccess = true
             )
-
             is Message.RegistrationReset -> copy(isSuccess = false)
         }
     }

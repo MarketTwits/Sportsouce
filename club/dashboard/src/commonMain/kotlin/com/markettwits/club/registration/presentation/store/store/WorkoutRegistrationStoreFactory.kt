@@ -1,5 +1,6 @@
 package com.markettwits.club.registration.presentation.store.store
 
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
@@ -22,14 +23,12 @@ class WorkoutRegistrationStoreFactory(
         private val useCase: WorkoutRegistrationUseCase,
         private val intentAction: IntentAction,
         private val registrationType: RegistrationType
-    ) :
-        WorkoutRegistrationStore,
+    ) : WorkoutRegistrationStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "WorkoutRegistrationStore",
-            initialState = State(
-                form = WorkoutRegistrationForm(registrationType, "", "", "")
-            ),
-            executorFactory = { WorkoutRegistrationExecutor(useCase, intentAction) },
-            reducer = WorkoutRegistrationReducer
+            initialState = State(form = WorkoutRegistrationForm.EMPTY),
+            executorFactory = { WorkoutRegistrationExecutor(useCase, intentAction,registrationType) },
+            reducer = WorkoutRegistrationReducer,
+            bootstrapper = SimpleBootstrapper(Unit)
         )
 }

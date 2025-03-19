@@ -29,9 +29,7 @@ fun WorkoutRegistrationScreen(component: WorkoutRegistrationComponent) {
             },
             label = "Content Animation"
         ) {
-            if (state.isSuccess) {
-                WorkoutRegistrationSuccessContent(onClickNext = component::onClickFinish)
-            } else {
+            if (!state.isSuccess) {
                 WorkoutRegistrationContent(
                     form = state.form,
                     isLoading = state.isLoading,
@@ -41,6 +39,8 @@ fun WorkoutRegistrationScreen(component: WorkoutRegistrationComponent) {
                     onPhoneClick = component::onClickPhone,
                     onLinkClick = component::onClickLink
                 )
+            } else {
+                WorkoutRegistrationSuccessContent(onClickNext = component::onClickFinish)
             }
         }
     }

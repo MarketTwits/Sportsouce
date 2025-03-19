@@ -14,6 +14,8 @@ class WorkoutRegistrationUseCaseBase(
             repository.workoutRegistration(workoutRegistrationForm)
         }
 
+    override suspend fun init(): WorkoutRegistrationForm = repository.workoutRegistrationUserData()
+
     private fun validate(request: WorkoutRegistrationForm): Result<Unit> {
         if (request.name.isBlank() || request.surname.isBlank()) {
             return Result.failure(Exception("Имя/Фамилия не должны быть пустыми"))

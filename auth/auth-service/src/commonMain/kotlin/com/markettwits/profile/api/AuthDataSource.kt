@@ -1,8 +1,8 @@
 package com.markettwits.profile.api
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.sign_up.SignUpRequest
+import com.markettwits.auth.cloud.model.change.ChangeProfileInfoRequest
+import com.markettwits.auth.cloud.model.sign_in.response.User
+import com.markettwits.auth.cloud.model.sign_up.SignUpRequest
 import kotlinx.coroutines.flow.Flow
 
 interface AuthDataSource {

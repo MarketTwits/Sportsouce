@@ -1,13 +1,20 @@
 package com.markettwits.edit_profile.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.*
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.slot.ChildSlot
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.childSlot
+import com.arkivanov.decompose.router.slot.dismiss
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponentBase
 import com.markettwits.edit_profile.edit_menu.presentation.component.EditProfileMenuOutputProvide
@@ -24,6 +31,7 @@ import com.markettwits.edit_profile.edit_profile_sign_out.di.editProfileSignOutM
 import com.markettwits.edit_profile.edit_profile_sign_out.presentation.component.EditProfileSignOutComponentBase
 import com.markettwits.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
 import com.markettwits.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
+import com.markettwits.profile.cloud.di.sportSauceNetworkProfileModule
 
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,
@@ -37,7 +45,7 @@ class RootEditProfileComponentBase(
 
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(
-            sportSouceNetworkModule,
+            sportSauceNetworkProfileModule,
             changePasswordModule,
             editProfileSocialNetworkModule,
             editProfileInfoModule,

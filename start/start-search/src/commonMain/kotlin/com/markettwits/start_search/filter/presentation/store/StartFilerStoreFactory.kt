@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.start_search.filter.domain.StartFilter
 import com.markettwits.start_search.filter.domain.StartFilterRepository
 import com.markettwits.start_search.filter.presentation.component.StartFilterUi
@@ -48,7 +48,7 @@ internal class StartFilerStoreFactory(
                 is StartFilterStore.Intent.GoBack -> publish(StartFilterStore.Label.GoBack)
                 is StartFilterStore.Intent.OnItemSelected -> dispatch(
                     Msg.ChangeFilter(
-                        updateState3(
+                        updateState(
                             item = intent.startFilter,
                             index = intent.index,
                             currentState = state().filter,
@@ -78,7 +78,7 @@ internal class StartFilerStoreFactory(
         }
 
 
-        private fun updateState3(
+        private fun updateState(
             item: String,
             index: Int,
             currentState: StartFilterUi,
@@ -115,7 +115,7 @@ internal class StartFilerStoreFactory(
                         dispatch(Msg.Loading)
                     }
                     .catch {
-                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                        dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
                     }
                     .collect {
                         dispatch(Msg.InfoLoaded(it))

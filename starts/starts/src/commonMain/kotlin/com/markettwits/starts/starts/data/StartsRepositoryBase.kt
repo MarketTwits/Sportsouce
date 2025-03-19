@@ -2,12 +2,11 @@ package com.markettwits.starts.starts.data
 
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.cloud.exception.networkExceptionHandler
-import com.markettwits.cloud.model.seasons.StartSeasonsRemote
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core_ui.items.extensions.Fourth
 import com.markettwits.starts.starts.domain.StartsRepository
 import com.markettwits.starts.starts.presentation.component.StartsUiState
+import com.markettwits.starts_common.domain.SportSauceStartsApi
 import com.markettwits.starts_common.domain.StartsListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -15,7 +14,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
 internal class StartsRepositoryBase(
-    private val service: SportsouceApi,
+    private val service: SportSauceStartsApi,
     private val cache: StartsMainCache,
     private val execute: ExecuteListWithCache,
     private val mapper: StartsCloudToUiMapper,
@@ -34,16 +33,15 @@ internal class StartsRepositoryBase(
                 },
             )
         }.onFailure {
-            starts.value = mapper.map(networkExceptionHandler(it))
+            starts.value = mapper.map(it.networkExceptionHandler())
         }
     }
 
     private suspend fun launch(): List<List<StartsListItem>> {
-        StartSeasonsRemote
         val (actual, paste, preview, main) = coroutineScope {
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { service.fetchActualStarts() }
-                val deferredPaste = async { service.fetchPasteStarts().rows.reversed() }
+                val deferredPaste = async { service.fetchPasteStarts().reversed() }
                 val deferredPreview = async { service.fetchPreview() }
                 val deferredMain = async { service.fetchStartMain() }
                 Fourth(
@@ -54,8 +52,7 @@ internal class StartsRepositoryBase(
                 )
             }
         }
-        val data =
-            mapper.mapAll(actual.rows, paste.rows, preview, main.rows) as StartsUiState.Success
+        val data = mapper.mapAll(actual, paste, preview, main) as StartsUiState.Success
         return data.items
     }
 }

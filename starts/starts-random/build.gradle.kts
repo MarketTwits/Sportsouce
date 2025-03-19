@@ -8,8 +8,9 @@ android {
 }
 kotlin {
     sourceSets.commonMain.dependencies {
-        implementation(projects.cloud)
+        
         implementation(projects.core.ui)
+        implementation(projects.core.errors)
         implementation(projects.core.koin)
         implementation(projects.start.start)
         implementation(projects.starts.startsCommon)

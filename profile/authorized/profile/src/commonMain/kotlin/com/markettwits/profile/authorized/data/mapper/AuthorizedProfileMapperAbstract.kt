@@ -1,9 +1,9 @@
 package com.markettwits.profile.authorized.data.mapper
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.members.ProfileMembers
-import com.markettwits.cloud.model.start_user.values.UserRegistration
+import com.markettwits.auth.cloud.model.sign_in.response.User
 import com.markettwits.profile.authorized.domain.UserProfile
+import com.markettwits.profile.cloud.model.members.ProfileMembers
+import com.markettwits.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapper
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern

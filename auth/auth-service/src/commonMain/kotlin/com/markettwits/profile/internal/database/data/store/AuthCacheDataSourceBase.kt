@@ -1,7 +1,7 @@
 package com.markettwits.profile.internal.database.data.store
 
 
-import com.markettwits.cloud.model.auth.common.AuthException
+import com.markettwits.auth.cloud.model.common.AuthException
 import com.markettwits.profile.internal.database.data.entities.CredentialRealmCache
 
 internal class AuthCacheDataSourceBase(

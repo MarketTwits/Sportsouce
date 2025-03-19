@@ -2,8 +2,8 @@ package com.markettwits.start_support.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.intentActionModule
+import com.markettwits.start_cloud.di.sportSauceStartNetworkModule
 import com.markettwits.start_support.data.StartSupportRepository
 import com.markettwits.start_support.data.StartSupportRepositoryBase
 import com.markettwits.start_support.data.mapper.StartSupportMapper
@@ -16,7 +16,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val startSupportModule = module {
-    includes(sportSouceNetworkModule, intentActionModule)
+    includes(sportSauceStartNetworkModule, intentActionModule)
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::StartSupportStoreFactory)
     singleOf(::StartSupportUseCaseBase) bind StartSupportUseCase::class

@@ -11,7 +11,7 @@ kotlin {
         implementation(projects.settings.impl)
         implementation(projects.core.time)
         implementation(projects.core.cache)
-        implementation(projects.cloud)
+        implementation(projects.core.errors)
         implementation(projects.core.koin)
         implementation(projects.start.start)
         implementation(projects.start.startSearch)
@@ -19,5 +19,6 @@ kotlin {
         implementation(projects.starts.startsCommon)
         implementation(libs.koin.core)
         implementation(libs.bundles.decompose.compose)
+        implementation(libs.kotlinx.serialization.json)
     }
 }

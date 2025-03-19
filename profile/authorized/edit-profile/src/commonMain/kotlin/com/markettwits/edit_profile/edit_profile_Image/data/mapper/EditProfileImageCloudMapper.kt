@@ -1,8 +1,8 @@
 package com.markettwits.edit_profile.edit_profile_Image.data.mapper
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.image.UploadFileResponse
-import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
+import com.markettwits.auth.cloud.model.change.ChangeProfileInfoRequest
+import com.markettwits.auth.cloud.model.sign_in.response.User
+import com.markettwits.profile.cloud.model.update.UploadFileResponse
 
 interface EditProfileImageCloudMapper {
     fun map(user: User, fileResponse: UploadFileResponse): ChangeProfileInfoRequest

@@ -1,7 +1,6 @@
 package com.markettwits.start.data.start
 
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.extensions.fetchFifth
@@ -20,15 +19,14 @@ import com.markettwits.start_cloud.model.members.StartMember
 import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
-import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.domain.SportSauceStartsApi
 import com.markettwits.starts_common.domain.StartsListItem
 
 internal class StartRepositoryBase(
-    private val starsService: SportsouceApi,
     private val startService: SportSauceStartApi,
     private val authService: AuthDataSource,
     private val startMapper: StartRemoteToUiMapper,
-    private val startsMapper: StartsCloudToListMapper,
+    private val startsService: SportSauceStartsApi,
     private val cache: StartMemoryCache
 ) : StartRepository, LogTagProvider {
 
@@ -63,11 +61,12 @@ internal class StartRepositoryBase(
             startMapper.map(value)
         }
 
-    override suspend fun startsRecommended(startId: Int): Result<List<StartsListItem>> = runCatching {
-        startsMapper.mapSingle(starsService.fetchActualStarts().rows)
-            .filter { it.id != startId }
-            .shuffled()
-    }
+    override suspend fun startsRecommended(startId: Int): Result<List<StartsListItem>> =
+        runCatching {
+            startsService.fetchActualStarts()
+                .filter { it.id != startId }
+                .shuffled()
+        }
 
     private suspend fun launches(startId: Int): Result<StartItem> {
         val result = runCatching {
@@ -117,7 +116,7 @@ internal class StartRepositoryBase(
                 )
             CommentUiState.Success
         } catch (e: Exception) {
-            CommentUiState.Error(networkExceptionHandler(e).message.toString())
+            CommentUiState.Error(e.networkExceptionHandler().message.toString())
         }
     }
 

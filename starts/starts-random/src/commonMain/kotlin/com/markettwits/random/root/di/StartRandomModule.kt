@@ -14,7 +14,6 @@ internal fun createStartRandomModule(dependencies : StartRandomComponentDependen
     return listOf(
         startRandomModule,
         module {
-            factory { dependencies.startsCloudToUiMapper }
             factory { dependencies.sportsouceApi }
         }
     )

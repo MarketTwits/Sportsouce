@@ -1,9 +1,7 @@
 package com.markettwits.random.root.di
 
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.domain.SportSauceStartsApi
 
 interface StartRandomComponentDependencies {
-    val sportsouceApi : SportsouceApi
-    val startsCloudToUiMapper: StartsCloudToListMapper
+    val sportsouceApi : SportSauceStartsApi
 }

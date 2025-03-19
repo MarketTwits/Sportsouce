@@ -11,7 +11,6 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.core.time)
         implementation(projects.analytics.crashlytics)
-        implementation(projects.cloud)
         implementation(projects.start.startCloud)
         implementation(projects.starts.startsCommon)
         implementation(projects.core.ui)
@@ -21,6 +20,7 @@ kotlin {
         implementation(projects.start.startSupport)
         implementation(projects.core.cache)
         implementation(projects.core.decompose)
+        implementation(projects.core.errors)
         implementation(projects.bottombar)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)

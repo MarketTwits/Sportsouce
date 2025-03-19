@@ -1,7 +1,7 @@
 package com.markettwits.popular.popular.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.popular.popular.domain.StartsPopularRepository
 import com.markettwits.popular.popular.presentation.store.StartsPopularStore.Intent
 import com.markettwits.popular.popular.presentation.store.StartsPopularStore.Label
@@ -30,7 +30,7 @@ internal class StartsPopularExecutor(
             dispatch(Message.Loading)
             repository.popularStarts()
                 .catch {
-                    dispatch(Message.Failed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.Failed(it.networkExceptionHandler().message.toString()))
                 }
                 .collect {
                     dispatch(Message.Loaded(it))

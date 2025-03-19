@@ -1,11 +1,11 @@
 package com.markettwits.review.data.mapper
 
-import com.markettwits.cloud.model.news.NewsRemote
-import com.markettwits.cloud.model.starts.StartsRemote
+import com.markettwits.news.cloud.model.NetworkNews
 import com.markettwits.review.domain.Review
+import com.markettwits.starts_common.domain.StartsListItem
 
 interface ReviewMapper {
 
-    fun map(actual: StartsRemote, archive: StartsRemote, news: NewsRemote): Review
+    fun map(actual: List<StartsListItem>, archive: List<StartsListItem>, news: NetworkNews): Review
 
 }

@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
@@ -55,7 +55,7 @@ internal class SignUpStoreFactory(
                         publish(SignUpStore.Label.OpenProfile)
                     }, onFailure = {
                         exceptionTracker.reportException(it, key = "sign_up")
-                        dispatch(Msg.LoadFailed(networkExceptionHandler(it).message.toString()))
+                        dispatch(Msg.LoadFailed(it.networkExceptionHandler().message.toString()))
                     })
 
             }

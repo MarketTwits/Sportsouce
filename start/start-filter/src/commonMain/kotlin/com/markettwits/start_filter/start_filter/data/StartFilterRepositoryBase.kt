@@ -26,6 +26,10 @@ internal class StartFilterRepositoryBase(
     private val startsCloudToUiMapper: StartsCloudToListMapper
 ) : StartFilterRepository {
 
+    init {
+        throw RuntimeException()
+    }
+
     override suspend fun filter(): Flow<StartFilter> =
         flow {
             emit(fetchFilter())

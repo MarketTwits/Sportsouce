@@ -10,7 +10,6 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.cloud)
             implementation(projects.auth.authService)
             implementation(projects.core.ui)
             implementation(compose.components.resources)

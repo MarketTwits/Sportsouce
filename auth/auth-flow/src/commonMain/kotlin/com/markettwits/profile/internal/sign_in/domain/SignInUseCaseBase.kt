@@ -1,6 +1,6 @@
 package com.markettwits.profile.internal.sign_in.domain
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.auth.cloud.model.sign_in.response.User
 import com.markettwits.profile.api.AuthDataSource
 
 internal class SignInUseCaseBase(

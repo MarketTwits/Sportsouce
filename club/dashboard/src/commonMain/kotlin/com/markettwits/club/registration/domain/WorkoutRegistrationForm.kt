@@ -8,5 +8,9 @@ data class WorkoutRegistrationForm(
     val name: String,
     val surname: String,
     val phone: String
-)
+) {
+    companion object {
+        val EMPTY = WorkoutRegistrationForm(RegistrationType.Empty, "", "", "")
+    }
+}
 

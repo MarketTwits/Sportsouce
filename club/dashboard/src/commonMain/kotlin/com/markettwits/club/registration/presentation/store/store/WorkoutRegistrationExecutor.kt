@@ -2,6 +2,7 @@ package com.markettwits.club.registration.presentation.store.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
+import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationUseCase
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStore.Intent
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class WorkoutRegistrationExecutor(
     private val workoutRegistrationUseCase: WorkoutRegistrationUseCase,
-    private val intentAction: IntentAction
+    private val intentAction: IntentAction,
+    private val registrationType: RegistrationType
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
@@ -22,12 +24,20 @@ class WorkoutRegistrationExecutor(
             is Intent.OnClickRegistration -> {
                 onClickRegistration(state().form)
             }
+
             is Intent.OnClickPhone -> intentAction.openPhone(intent.phone)
             is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
             is Intent.OnClickContinueAfterSuccess -> {
                 dispatch(Message.RegistrationReset)
                 publish(Label.Dismiss)
             }
+        }
+    }
+
+    override fun executeAction(action: Unit) {
+        scope.launch {
+            val value = workoutRegistrationUseCase.init()
+            dispatch(Message.OnValueChanged(value.copy(type = registrationType)))
         }
     }
 

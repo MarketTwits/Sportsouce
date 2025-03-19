@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.withSaveLayer
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -55,20 +56,19 @@ fun Modifier.shimmer(
         ),
         label = "shimmer translate animation"
     )
-   // val radians = Math.toRadians(tiltAngle.toDouble()).toFloat()
-
+    val radians = (tiltAngle * PI / 180).toFloat()
     return this then drawWithContent {
         with(drawContext.canvas) {
             val brush = Brush.linearGradient(
                 colors = gradientColors,
-//                start = Offset(
-//                    size.width * translateAnimation * cos(radians),
-//                    size.height * translateAnimation * sin(radians)
-//                ),
-//                end = Offset(
-//                    2 * size.width * translateAnimation * cos(radians),
-//                    2 * size.height * translateAnimation * sin(radians)
-//                )
+                start = Offset(
+                    size.width * translateAnimation * cos(radians),
+                    size.height * translateAnimation * sin(radians)
+                ),
+                end = Offset(
+                    2 * size.width * translateAnimation * cos(radians),
+                    2 * size.height * translateAnimation * sin(radians)
+                )
             )
             withSaveLayer(
                 bounds = size.toRect(),

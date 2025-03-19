@@ -9,13 +9,11 @@ import kotlinx.serialization.SerializationException
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun Throwable.mapToSauceError(): SauceError = when (this) {
-   // is UnknownHostException -> SauceError.Connection(this)
-    is HttpRequestTimeoutException -> SauceError.Connection(this)
-   // is SocketTimeoutException -> SauceError.Connection(this)
-    is ResponseException -> {
+fun Throwable.mapToSauceError(): SauceError = when {
+    this.isNetworkConnectionError() -> SauceError.Connection(this)
+    this is HttpRequestTimeoutException -> SauceError.Connection(this)
+    this is ResponseException -> {
         val deferred = CompletableDeferred<String>()
-
         CoroutineScope(Dispatchers.Main.immediate).launch {
             try {
                 val message = this@mapToSauceError.response.body<ResponseError>().message
@@ -24,15 +22,14 @@ fun Throwable.mapToSauceError(): SauceError = when (this) {
                 deferred.completeExceptionally(e)
             }
         }
-
         SauceError.WrongRequest(Exception(deferred.getCompleted()))
     }
-    is SerializationException -> SauceError.JsonConverter(this)
+    this is SerializationException -> SauceError.JsonConverter(this)
     else -> SauceError.General(this)
 }
 
 
-fun SauceError.mapToString() : String = when(this){
+fun SauceError.mapToString(): String = when (this) {
     is SauceError.Connection -> NETWORK_EXCEPTION_MESSAGE
     is SauceError.Empty -> EMPTY_EXCEPTION_MESSAGE
     is SauceError.General -> GENERAL_EXCEPTION_MESSAGE
@@ -42,7 +39,6 @@ fun SauceError.mapToString() : String = when(this){
 }
 
 suspend fun Throwable.networkExceptionHandler(): Exception = when (this) {
-    //is UnknownHostException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is HttpRequestTimeoutException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is SocketTimeoutException -> Exception(TIMEOUT_EXCEPTION_MESSAGE)
     is ResponseException -> Exception(response.body<ResponseError>().message)

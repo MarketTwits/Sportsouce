@@ -11,6 +11,7 @@ import com.markettwits.club.registration.domain.RegistrationType
 import com.markettwits.club.registration.domain.WorkoutPrice
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
+import com.markettwits.profile.api.SharedUser
 
 class SubscriptionMapperBase : SubscriptionMapper {
     override fun map(subscriptionsRemote: List<SubscriptionItemsRemote>): List<SubscriptionItems> =
@@ -41,6 +42,21 @@ class SubscriptionMapperBase : SubscriptionMapper {
         priceWithoutDiscounts = workoutPriceResponse.priceWithoutDiscounts,
         totalPrice = workoutPriceResponse.totalPrice
     )
+
+    override fun map(sharedUser: Result<SharedUser>): WorkoutRegistrationForm =
+        sharedUser.fold(
+            onSuccess = {
+                WorkoutRegistrationForm(
+                    type = RegistrationType.Empty,
+                    name = it.name,
+                    surname = it.surname,
+                    phone = it.phone
+                )
+            },
+            onFailure = {
+                WorkoutRegistrationForm.EMPTY
+            }
+        )
 
     private fun mapSubscriptions(
         subscriptionsRemote: List<SubscriptionRemote>

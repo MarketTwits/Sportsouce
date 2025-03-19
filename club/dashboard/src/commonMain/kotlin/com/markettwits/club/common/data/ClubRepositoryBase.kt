@@ -15,40 +15,47 @@ import com.markettwits.club.registration.domain.WorkoutPrice
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.core_ui.items.extensions.fetchFifth
+import com.markettwits.core_ui.items.extensions.flatMap
+import com.markettwits.core_ui.items.extensions.flatMapCallback
+import com.markettwits.profile.api.AuthDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class ClubRepositoryBase(
-    private val service: SportSauceClubsApi,
+    private val clubservice: SportSauceClubsApi,
     private val subscriptionMapper: SubscriptionMapper,
-    private val clubInfoMapper: ClubInfoMapper
+    private val clubInfoMapper: ClubInfoMapper,
+    private val authDataSource: AuthDataSource
 ) : ClubRepository {
 
     override suspend fun subscriptions(): Flow<List<SubscriptionItems>> = flow {
-        val subscriptions = subscriptionMapper.map(service.subscription())
+        val subscriptions = subscriptionMapper.map(clubservice.subscription())
         emit(subscriptions)
     }
 
+    override suspend fun workoutRegistrationUserData(): WorkoutRegistrationForm =
+        subscriptionMapper.map(authDataSource.sharedUser())
+
     override suspend fun workoutRegistration(workoutRegistrationForm: WorkoutRegistrationForm): Result<Unit> =
         runCatching {
-            service.workoutRequest(subscriptionMapper.map(workoutRegistrationForm))
+            clubservice.workoutRequest(subscriptionMapper.map(workoutRegistrationForm))
         }
 
     override suspend fun workoutRegistrationPrice(
         workoutPriceForm: WorkoutPriceForm
     ): Result<WorkoutPrice> = runCatching {
-        val result = service.workoutRequestPrice(subscriptionMapper.map(workoutPriceForm))
+        val result = clubservice.workoutRequestPrice(subscriptionMapper.map(workoutPriceForm))
         subscriptionMapper.map(result)
     }
 
     override suspend fun clubInfo(): Result<List<ClubInfo>> = runCatching {
         val cloud =
             fetchFifth<List<Trainer>, List<Question>, List<Statistic>, List<Training>, List<Schedule>>(
-                { clubInfoMapper.mapTrainers(service.trainers()) },
-                { clubInfoMapper.mapQuestions(service.questions()) },
-                { clubInfoMapper.mapStatistics(service.clubSettings()) },
-                { clubInfoMapper.mapTraining(service.workout()) },
-                { clubInfoMapper.mapSchedule(service.schedule()) }
+                { clubInfoMapper.mapTrainers(clubservice.trainers()) },
+                { clubInfoMapper.mapQuestions(clubservice.questions()) },
+                { clubInfoMapper.mapStatistics(clubservice.clubSettings()) },
+                { clubInfoMapper.mapTraining(clubservice.workout()) },
+                { clubInfoMapper.mapSchedule(clubservice.schedule()) }
             )
         listOf(
             ClubInfo.Commands(cloud.first),

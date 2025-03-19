@@ -8,6 +8,7 @@ import com.markettwits.club.dashboard.domain.SubscriptionItems
 import com.markettwits.club.registration.domain.WorkoutPrice
 import com.markettwits.club.registration.domain.WorkoutPriceForm
 import com.markettwits.club.registration.domain.WorkoutRegistrationForm
+import com.markettwits.profile.api.SharedUser
 
 interface SubscriptionMapper {
 
@@ -18,4 +19,6 @@ interface SubscriptionMapper {
     fun map(workoutPriceForm: WorkoutPriceForm) : WorkoutPriceRequest
 
     fun map(workoutPriceResponse: WorkoutPriceResponse) : WorkoutPrice
+
+    fun map(sharedUser: Result<SharedUser>) : WorkoutRegistrationForm
 }

@@ -11,6 +11,8 @@ interface ClubRepository {
 
     suspend fun subscriptions(): Flow<List<SubscriptionItems>>
 
+    suspend fun workoutRegistrationUserData() : WorkoutRegistrationForm
+
     suspend fun workoutRegistration(workoutRegistrationForm: WorkoutRegistrationForm): Result<Unit>
 
     suspend fun workoutRegistrationPrice(workoutPriceForm: WorkoutPriceForm) : Result<WorkoutPrice>

@@ -11,6 +11,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.analytics.crashlytics)
+            implementation(projects.auth.authService)
             implementation(projects.club.cloud)
             implementation(projects.core.cache)
             implementation(projects.bottombar)

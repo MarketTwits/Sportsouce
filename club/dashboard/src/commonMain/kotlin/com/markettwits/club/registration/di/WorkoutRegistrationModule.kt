@@ -11,12 +11,13 @@ import com.markettwits.club.registration.presentation.component.WorkoutRegistrat
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponentBase
 import com.markettwits.club.registration.presentation.store.store.WorkoutRegistrationStoreFactory
 import com.markettwits.intentActionModule
+import com.markettwits.profile.api.authDataSourceModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val workoutRegistrationModule = module {
-    includes(clubCloudModule, intentActionModule)
+    includes(clubCloudModule, intentActionModule, authDataSourceModule)
     singleOf(::ClubRepositoryBase) bind ClubRepository::class
     singleOf(::WorkoutRegistrationStoreFactory)
     singleOf(::WorkoutRegistrationUseCaseBase) bind WorkoutRegistrationUseCase::class

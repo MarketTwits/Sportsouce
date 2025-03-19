@@ -10,12 +10,7 @@ import com.markettwits.club.registration.presentation.store.store.WorkoutRegistr
 interface WorkoutRegistrationStore : Store<Intent, State, Label> {
 
     data class State(
-        val form: WorkoutRegistrationForm = WorkoutRegistrationForm(
-            RegistrationType.Empty,
-            ",",
-            "",
-            ""
-        ),
+        val form: WorkoutRegistrationForm = WorkoutRegistrationForm.EMPTY,
         val isLoading: Boolean = false,
         val isError: Boolean = false,
         val isSuccess: Boolean = false,

@@ -11,7 +11,7 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.intent.api)
         implementation(projects.intent.impl)
-        implementation(projects.cloud)
+        implementation(projects.start.startCloud)
         implementation(projects.core.ui)
         implementation(projects.core.koin)
         implementation(compose.components.resources)

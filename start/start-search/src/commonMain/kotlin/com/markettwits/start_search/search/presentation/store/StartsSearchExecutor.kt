@@ -1,11 +1,10 @@
 package com.markettwits.start_search.search.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.start_search.filter.domain.StartFilter
 import com.markettwits.start_search.filter.presentation.component.StartFilterUi
 import com.markettwits.start_search.search.data.repository.StartsSearchRepository
-import com.markettwits.start_search.search.domain.CoroutineDebounceBase
 import com.markettwits.start_search.search.domain.StartsSearch
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Intent
 import com.markettwits.start_search.search.presentation.store.StartsSearchStore.Label
@@ -117,7 +116,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
                     dispatch(Message.Loading)
                 }
                 .catch {
-                    dispatch(Message.InfoFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.InfoFailed(it.networkExceptionHandler().message.toString()))
                 }.collect {
                     dispatch(Message.InfoLoaded(it))
                 }

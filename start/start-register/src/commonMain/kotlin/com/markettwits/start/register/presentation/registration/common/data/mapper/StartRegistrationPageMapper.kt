@@ -1,10 +1,15 @@
 package com.markettwits.start.register.presentation.registration.common.data.mapper
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.auth.cloud.model.sign_in.response.User
 import com.markettwits.members.member_common.domain.ProfileMember
 import com.markettwits.members.member_common.domain.emptyProfileMember
 import com.markettwits.start.register.domain.StartStatement
-import com.markettwits.start.register.presentation.registration.common.domain.models.*
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationFieldPrice
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStage
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStageWithStatement
+import com.markettwits.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 import com.markettwits.start_cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.start_cloud.model.start.fields.AdditionalField
 import com.markettwits.start_cloud.model.start.fields.DistinctDistance

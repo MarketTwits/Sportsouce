@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
@@ -112,7 +112,7 @@ class ChangePasswordStoreFactory(
                                     dispatch(Msg.UpdateSuccess("Данные успешно обновлены"))
                                 }
                                     .onFailure {
-                                        dispatch(Msg.UpdateFailed(networkExceptionHandler(it).message.toString()))
+                                        dispatch(Msg.UpdateFailed(it.networkExceptionHandler().message.toString()))
                                     }
                             }
                     }

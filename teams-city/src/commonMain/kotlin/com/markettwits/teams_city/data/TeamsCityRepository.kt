@@ -10,7 +10,7 @@ interface TeamsCityRepository {
 
     suspend fun teamsFlow(): Flow<List<Team>>
 
-    suspend fun city(): Result<List<City>>
+    suspend fun city(withStarts : Boolean = false): Result<List<City>>
 
     suspend fun teams(): Result<List<Team>>
 

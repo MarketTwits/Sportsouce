@@ -1,20 +1,17 @@
 package com.markettwits.random.random.data
 
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.domain.SportSauceStartsApi
 import kotlin.random.Random
 
 class RandomRepositoryBase(
-    private val service: SportsouceApi,
-    private val startsRemoteToUiMapper: StartsCloudToListMapper
+    private val service: SportSauceStartsApi,
 ) : RandomRepository {
     override suspend fun randomStart(): Result<Int> {
-        val b = runCatching {
+        val value = runCatching {
             val result = service.startWithFilter(randomRequest())
-            startsRemoteToUiMapper.mapSingle(result.rows).map { it.id }.first()
+            result.map { it.id }.first()
         }
-        return b
-
+        return value
     }
 
     private fun randomRequest(): Map<String, String> =

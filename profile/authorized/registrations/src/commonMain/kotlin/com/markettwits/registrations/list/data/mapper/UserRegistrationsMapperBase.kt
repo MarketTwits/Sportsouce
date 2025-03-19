@@ -1,13 +1,14 @@
 package com.markettwits.registrations.list.data.mapper
 
-import com.markettwits.cloud.ext_model.DistanceItem
 import com.markettwits.cloud.model.start_price.StartPriceResponse
-import com.markettwits.cloud.model.start_user.values.UserRegistration
 import com.markettwits.core_ui.items.extensions.formatPrice
+import com.markettwits.profile.cloud.model.registrations.Group
+import com.markettwits.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.registrations.list.domain.StartOrderInfo
 import com.markettwits.registrations.list.domain.StartOrderPrice
 import com.markettwits.time.TimeMapper
 import com.markettwits.time.TimePattern
+import io.ktor.http.ContentType.Application.Json
 import kotlinx.serialization.json.Json
 
 class UserRegistrationsMapperBase(
@@ -76,7 +77,7 @@ class UserRegistrationsMapperBase(
             ignoreUnknownKeys = true
         }
         return try {
-            json.decodeFromString<DistanceItem.Group>(group ?: "").name
+            json.decodeFromString<Group>(group ?: "").name
         } catch (e: Exception) {
             ""
         }

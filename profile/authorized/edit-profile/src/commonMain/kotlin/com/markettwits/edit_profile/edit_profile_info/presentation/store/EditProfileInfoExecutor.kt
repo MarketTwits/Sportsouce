@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.edit_profile_info.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.edit_profile.edit_profile_info.presentation.store.EditProfileInfoStore.Intent
@@ -35,7 +35,7 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
                     dispatch(Message.UpdateSuccess("Данные профиля успешно обновлены"))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
                 }
             )
         }
@@ -46,7 +46,7 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
             dispatch(Message.IsLoading)
             repository.fetch()
                 .catch {
-                    dispatch(Message.IsFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.IsFailed(it.networkExceptionHandler().message.toString()))
                 }
                 .collect {
                     dispatch(Message.IsLoaded(it))

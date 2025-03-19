@@ -1,7 +1,7 @@
 package com.markettwits.members.member_add_edit.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.members.member_add_edit.domain.add.MemberAddUseCase
 import com.markettwits.members.member_add_edit.domain.edit.MemberEditUseCase
 import com.markettwits.members.member_add_edit.presentation.component.MemberEditComponent
@@ -39,7 +39,7 @@ class MemberEditExecutor(
                     dispatch(Message.Loaded(it))
                 },
                 onFailure = {
-                    dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
                 }
             )
         }
@@ -62,7 +62,7 @@ class MemberEditExecutor(
                     dispatch(Message.UpdateSuccess("Участник успешно обновлен"))
                 },
                 onFailure = {
-                    dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
                 }
             )
         }
@@ -75,10 +75,9 @@ class MemberEditExecutor(
                 publish(Label.UpdateSuccess(profileMember))
                 dispatch(Message.UpdateSuccess("Участник добавлен"))
             }, onFailure = {
-                dispatch(Message.Error(networkExceptionHandler(it).message.toString()))
+                dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
             })
         }
-
     }
 
 }

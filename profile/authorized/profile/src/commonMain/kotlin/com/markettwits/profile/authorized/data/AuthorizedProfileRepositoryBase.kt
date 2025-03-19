@@ -1,12 +1,12 @@
 package com.markettwits.profile.authorized.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
-import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.profile.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.authorized.data.mapper.AuthorizedProfileMapper
 import com.markettwits.profile.authorized.domain.AuthorizedProfileRepository
 import com.markettwits.profile.authorized.domain.UserProfile
+import com.markettwits.profile.cloud.SportSauceNetworkProfileApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.flow
 
 class AuthorizedProfileRepositoryBase(
     private val auth: AuthDataSource,
-    private val remote: SportsouceApi,
+    private val remote: SportSauceNetworkProfileApi,
     private val cache: UserProfileCache,
     private val executeWithCache: ExecuteWithCache,
     private val mapper: AuthorizedProfileMapper

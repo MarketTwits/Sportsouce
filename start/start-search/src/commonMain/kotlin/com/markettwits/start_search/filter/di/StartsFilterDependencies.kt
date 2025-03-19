@@ -1,9 +1,7 @@
 package com.markettwits.start_search.filter.di
 
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.starts_common.data.mapper.StartsCloudToListMapper
+import com.markettwits.starts_common.domain.SportSauceStartsApi
 
 interface StartsFilterDependencies {
-    val sportsouceApi: SportsouceApi
-    val startsCloudToListMapper: StartsCloudToListMapper
+    val sportsouceApi : SportSauceStartsApi
 }

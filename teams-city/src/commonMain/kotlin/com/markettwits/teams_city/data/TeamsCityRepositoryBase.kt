@@ -1,9 +1,9 @@
 package com.markettwits.teams_city.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
-import com.markettwits.cloud.api.SportsouceApi
 import com.markettwits.teams_city.data.cache.TeamsAndCities
 import com.markettwits.teams_city.data.cache.TeamsAndCitiesCache
+import com.markettwits.teams_city.data.network.SportSauceNetworkTeamsCityApi
 import com.markettwits.teams_city.domain.City
 import com.markettwits.teams_city.domain.Team
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 
 
 internal class TeamsCityRepositoryBase(
-    private val cloud: SportsouceApi,
+    private val cloud: SportSauceNetworkTeamsCityApi,
     private val cache: TeamsAndCitiesCache,
     private val executeWithCache: ExecuteWithCache
 ) : TeamsCityRepository {
@@ -27,7 +27,7 @@ internal class TeamsCityRepositoryBase(
     override suspend fun cityFlow(): Flow<List<City>> = flow {
         executeWithCache.executeWithCache(
             cache = cache,
-            launch = { combine().getOrThrow() },
+            launch = { combine(false).getOrThrow() },
             callback = { result ->
                 emit(result.cities)
             }
@@ -37,14 +37,14 @@ internal class TeamsCityRepositoryBase(
     override suspend fun teamsFlow(): Flow<List<Team>> = flow {
         executeWithCache.executeWithCache(
             cache = cache,
-            launch = { combine().getOrThrow() },
+            launch = { combine(false).getOrThrow() },
             callback = { result ->
                 emit(result.teams)
             }
         )
     }
 
-    override suspend fun city(): Result<List<City>> {
+    override suspend fun city(withStarts: Boolean): Result<List<City>> {
         return withContext(Dispatchers.Main.immediate) {
             suspendCoroutine { continuation ->
                 var resumed = false
@@ -52,7 +52,7 @@ internal class TeamsCityRepositoryBase(
                     runCatching {
                         executeWithCache.executeWithCache(
                             cache = cache,
-                            launch = { combine().getOrThrow() },
+                            launch = { combine(withStarts).getOrThrow() },
                             callback = { result ->
                                 if (!resumed) {
                                     continuation.resume(Result.success(result.cities))
@@ -73,7 +73,7 @@ internal class TeamsCityRepositoryBase(
                 scope.launch {
                     executeWithCache.executeWithCache(
                         cache = cache,
-                        launch = { combine().getOrThrow() },
+                        launch = { combine(false).getOrThrow() },
                         callback = { result ->
                             if (!resumed) {
                                 continuation.resume(Result.success(result.teams))
@@ -86,15 +86,15 @@ internal class TeamsCityRepositoryBase(
         }
     }
 
-    private suspend fun combine(): Result<TeamsAndCities> =
+    private suspend fun combine(withStarts: Boolean): Result<TeamsAndCities> =
         runCatching {
-            val city = cityCloud().getOrThrow()
+            val city = cityCloud(withStarts).getOrThrow()
             val teams = teamsCloud().getOrThrow()
             TeamsAndCities(teams, city)
         }
 
-    private suspend fun cityCloud(): Result<List<City>> = runCatching {
-        cloud.cities(false).rows.map {
+    private suspend fun cityCloud(withStarts : Boolean): Result<List<City>> = runCatching {
+        cloud.cities(withStarts).rows.map {
             City(id = it.id, name = it.name)
         }
     }

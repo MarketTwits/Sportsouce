@@ -11,9 +11,9 @@ kotlin {
     sourceSets.commonMain.dependencies {
         implementation(projects.analytics.crashlytics)
         implementation(projects.auth.authService)
-        implementation(projects.cloud)
         implementation(projects.core.ui)
         implementation(projects.core.koin)
+        implementation(projects.core.errors)
         implementation(libs.koin.core)
         implementation(compose.components.resources)
         implementation(libs.bundles.decompose.compose)

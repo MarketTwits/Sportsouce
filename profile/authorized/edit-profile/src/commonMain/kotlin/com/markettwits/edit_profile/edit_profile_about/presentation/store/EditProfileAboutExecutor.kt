@@ -1,7 +1,7 @@
 package com.markettwits.edit_profile.edit_profile_about.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.edit_profile.edit_profile_about.data.EditProfileAboutRepository
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStore.Intent
 import com.markettwits.edit_profile.edit_profile_about.presentation.store.EditProfileAboutStore.Label
@@ -33,7 +33,7 @@ class EditProfileAboutExecutor(
                     dispatch(Message.LoadedAbout(State.FiledState(it)))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
                 }
             )
         }
@@ -48,7 +48,7 @@ class EditProfileAboutExecutor(
                     dispatch(Message.UpdateSuccess)
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
                 }
             )
         }

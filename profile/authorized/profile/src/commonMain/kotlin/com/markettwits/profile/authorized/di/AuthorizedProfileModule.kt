@@ -3,7 +3,6 @@ package com.markettwits.profile.authorized.di
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
@@ -12,6 +11,7 @@ import com.markettwits.profile.authorized.data.cache.UserProfileCache
 import com.markettwits.profile.authorized.data.mapper.AuthorizedProfileMapperBase
 import com.markettwits.profile.authorized.domain.UserProfileInteractorBase
 import com.markettwits.profile.authorized.presentation.store.AuthorizedProfileStoreFactory
+import com.markettwits.profile.cloud.di.sportSauceNetworkProfileModule
 import com.markettwits.registrations.list.data.mapper.UserRegistrationsMapperBase
 import com.markettwits.time.BaseTimeMapper
 import org.koin.core.module.dsl.singleOf
@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val authorizedProfileModule = module {
     includes(
         authDataSourceModule,
-        sportSouceNetworkModule,
+        sportSauceNetworkProfileModule,
         crashlyticsModule,
         intentActionModule
     )

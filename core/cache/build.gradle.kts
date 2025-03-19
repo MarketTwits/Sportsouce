@@ -9,10 +9,10 @@ kotlin{
     sourceSets{
         commonMain.dependencies {
             api(libs.kstore)
-            implementation(projects.core.koin)
+            api(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.serialization.core)
+            implementation(projects.core.koin)
             implementation(libs.koin.core)
         }
         jvmMain.dependencies {

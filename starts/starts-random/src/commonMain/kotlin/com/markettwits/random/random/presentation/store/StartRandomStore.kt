@@ -5,7 +5,7 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.random.random.data.RandomRepository
 import com.markettwits.random.random.presentation.store.StartRandomStore.Intent
 import com.markettwits.random.random.presentation.store.StartRandomStore.Label
@@ -18,7 +18,6 @@ interface StartRandomStore : Store<Intent, State, Label> {
         data object Retry : Intent
         data object GoBack : Intent
     }
-
 
     data class State(
         val isLoading : Boolean = false,
@@ -64,7 +63,7 @@ internal class StartRandomStoreFactory(
             scope.launch {
                 dispatch(Msg.Loading)
                 repository.randomStart().onFailure {
-                    dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                    dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
                 }.onSuccess {
                     publish(Label.OpenStart(it))
                     dispatch(Msg.InfoLoaded(it))

@@ -9,8 +9,9 @@ android {
 }
 kotlin {
     sourceSets.commonMain.dependencies {
-        implementation(projects.cloud)
+        
         implementation(projects.auth.authService)
+        implementation(projects.profile.cloud)
         implementation(projects.core.ui)
         implementation(projects.start.start)
         implementation(projects.core.koin)
@@ -19,6 +20,7 @@ kotlin {
         implementation(projects.intent.api)
         implementation(projects.intent.impl)
         implementation(libs.koin.core)
+        implementation(libs.kotlinx.serialization.json)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.bundles.mviKotlin)
     }

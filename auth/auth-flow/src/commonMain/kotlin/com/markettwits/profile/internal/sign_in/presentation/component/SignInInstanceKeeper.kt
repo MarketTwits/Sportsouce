@@ -2,7 +2,7 @@ package com.markettwits.profile.internal.sign_in.presentation.component
 
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.internal.sign_in.domain.SignInUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +31,7 @@ class SignInInstanceKeeper(
                         labels.value = SignInOutPuts.GoProfile
                     }
                 }, onFailure = {
-                    val message = networkExceptionHandler(it).message.toString()
+                    val message = it.networkExceptionHandler().message.toString()
                     exceptionTracker.setLog("email : ${fieldState.value.email}\npassword: ${fieldState.value.password}")
                     exceptionTracker.reportException(it, key = "#SignInInstanceKeeper#login")
                     authUiState.value = SignInUiState.Error(message = message, messageShow = false)

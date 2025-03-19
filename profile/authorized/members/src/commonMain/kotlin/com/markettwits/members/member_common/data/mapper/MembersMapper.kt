@@ -1,9 +1,9 @@
 package com.markettwits.members.member_common.data.mapper
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.members.ProfileMemberRequest
-import com.markettwits.cloud.model.profile.members.ProfileMembers
+import com.markettwits.auth.cloud.model.sign_in.response.User
 import com.markettwits.members.member_common.domain.ProfileMember
+import com.markettwits.profile.cloud.model.members.ProfileMemberRequest
+import com.markettwits.profile.cloud.model.members.ProfileMembers
 
 interface MembersMapper {
     fun mapAll(members: ProfileMembers): List<ProfileMember>

@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.review.domain.Review
@@ -68,7 +68,7 @@ class ReviewStoreFactory(
                     }
                     .catch {
                         errorLog(it) { "Failed when launch review content" }
-                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                        dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
                     }
                     .collect { result ->
                         dispatch(Msg.InfoLoaded(result))

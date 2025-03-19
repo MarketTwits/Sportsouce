@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.build.konfig.convension)
 }
-android{
+android {
     namespace = "com.markettwits.core.cloud"
 }
 
@@ -16,10 +16,10 @@ kotlin {
             api(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
-            implementation(libs.ktor.client.json)
-            implementation(libs.ktor.core)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.client.content.negotiation)
+            api(libs.ktor.client.json)
+            api(libs.ktor.core)
+            api(libs.ktor.client.logging)
+            api(libs.ktor.client.content.negotiation)
         }
     }
 }

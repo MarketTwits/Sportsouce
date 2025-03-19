@@ -2,7 +2,7 @@ package com.markettwits.edit_profile.edit_profile_change_password.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.di.sportSouceNetworkModule
+import com.markettwits.profile.cloud.di.sportSauceNetworkProfileModule
 import com.markettwits.edit_profile.edit_profile_change_password.data.ChangePasswordDataSource
 import com.markettwits.edit_profile.edit_profile_change_password.data.ChangePasswordDataSourceBase
 import com.markettwits.edit_profile.edit_profile_change_password.domain.ChangePasswordValidation
@@ -13,7 +13,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val changePasswordModule = module {
-    includes(sportSouceNetworkModule, authDataSourceModule)
+    includes(sportSauceNetworkProfileModule, authDataSourceModule)
 
     singleOf(::ChangePasswordDataSourceBase) bind ChangePasswordDataSource::class
     singleOf(::ChangePasswordStoreFactory) bind ChangePasswordStoreFactory::class

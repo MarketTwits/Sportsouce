@@ -1,11 +1,14 @@
 package com.markettwits.popular.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.popular.popular.di.popularStartsModule
 import com.markettwits.popular.popular.presentation.component.StartsPopularComponentBase
 import com.markettwits.start.root.RootStartScreenComponentBase
@@ -21,7 +24,7 @@ class RootStartsPopularComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(sportSouceNetworkModule, popularStartsModule)
+        listOf(popularStartsModule)
     )
 
     override val childStack: Value<ChildStack<*, RootStartsPopularComponent.Child>> = childStack(

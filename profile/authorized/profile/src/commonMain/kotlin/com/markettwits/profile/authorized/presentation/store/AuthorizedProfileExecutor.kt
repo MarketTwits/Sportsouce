@@ -2,8 +2,8 @@ package com.markettwits.profile.authorized.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.cloud.exception.isNetworkConnectionError
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
+import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.profile.authorized.domain.UserProfileInteractor
 import com.markettwits.profile.authorized.domain.UserSocialNetworkIntent
@@ -47,7 +47,7 @@ class AuthorizedProfileExecutor(
                 .catch { throwable ->
                     if (!throwable.isNetworkConnectionError())
                         exceptionTracker.reportException(throwable, "#UserProfile#launch")
-                    dispatch(Message.LoadingFailed(networkExceptionHandler(throwable).message.toString()))
+                    dispatch(Message.LoadingFailed(throwable.networkExceptionHandler().message.toString()))
                 }
                 .collect { dispatch(Message.LoadingSuccess(it)) }
         }

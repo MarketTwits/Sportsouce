@@ -1,15 +1,15 @@
 package com.markettwits.start_search.filter.data.mapper
 
-import com.markettwits.cloud.model.city.CityRemote
-import com.markettwits.cloud.model.kind_of_sport.KindOfSportRemote
-import com.markettwits.cloud.model.seasons.StartSeasonsRemote
+import com.markettwits.start_cloud.model.kindofsport.KindOfSportRemote
+import com.markettwits.start_cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.start_search.filter.domain.StartFilter
+import com.markettwits.teams_city.domain.City
 
 internal interface StartFilterRemoteToDomainMapper {
     fun map(
         kindOfSportRemote: KindOfSportRemote,
         seasonsRemote: StartSeasonsRemote,
-        cities: CityRemote,
+        cities: List<City>,
     ): StartFilter
 
 
@@ -17,12 +17,12 @@ internal interface StartFilterRemoteToDomainMapper {
         override fun map(
             kindOfSportRemote: KindOfSportRemote,
             seasonsRemote: StartSeasonsRemote,
-            cities: CityRemote,
+            cities: List<City>,
         ): StartFilter = StartFilter(
             kindOfSport = kindOfSportRemote.rows.map { it.name },
             startSeason = seasonsRemote.rows.map { it.name },
             startStatus = mapStartStatus(),
-            city = cities.rows.map { it.name },
+            city = cities.map { it.name },
             sorted = StartFilter.Sorted.FirstBefore
         )
 

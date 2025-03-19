@@ -1,11 +1,11 @@
 package com.markettwits.profile.internal
 
+import com.markettwits.auth.cloud.SportSauceNetworkAuthApi
+import com.markettwits.auth.cloud.model.change.ChangeProfileInfoRequest
+import com.markettwits.auth.cloud.model.sign_in.request.SignInRequest
+import com.markettwits.auth.cloud.model.sign_in.response.User
+import com.markettwits.auth.cloud.model.sign_up.SignUpRequest
 import com.markettwits.cahce.ObservableCache
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.cloud.model.auth.sign_in.request.SignInRequest
-import com.markettwits.cloud.model.auth.sign_in.response.User
-import com.markettwits.cloud.model.profile.update.ChangeProfileInfoRequest
-import com.markettwits.cloud.model.sign_up.SignUpRequest
 import com.markettwits.profile.api.AuthDataSource
 import com.markettwits.profile.api.SharedUser
 import com.markettwits.profile.api.mapToShared
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 
 internal class BaseAuthDataSource(
-    private val remoteService: SportsouceApi,
+    private val remoteService: SportSauceNetworkAuthApi,
     private val signInCacheMapper: SignInRemoteToCacheMapper,
     private val userInfoCache: ObservableCache<User>,
     private val tokenManager: TokenManager,

@@ -1,6 +1,5 @@
 package com.markettwits.registrations.list.domain
 
-import com.markettwits.cloud.model.common.StartStatus
 import kotlinx.serialization.Serializable
 
 @Serializable

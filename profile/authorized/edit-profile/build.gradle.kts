@@ -11,9 +11,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.time)
-            implementation(projects.cloud)
+            implementation(projects.profile.cloud)
             implementation(projects.auth.authService)
             implementation(projects.core.ui)
+            implementation(projects.core.errors)
             implementation(projects.core.koin)
             implementation(projects.teamsCity)
             implementation(libs.koin.core)

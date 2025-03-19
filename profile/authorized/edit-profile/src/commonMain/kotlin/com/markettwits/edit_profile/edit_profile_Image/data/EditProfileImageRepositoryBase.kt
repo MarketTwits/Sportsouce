@@ -1,13 +1,13 @@
 package com.markettwits.edit_profile.edit_profile_Image.data
 
-import com.markettwits.cloud.api.SportsouceApi
-import com.markettwits.cloud.model.image.UploadFileResponse
 import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.edit_profile.edit_profile_Image.data.mapper.EditProfileImageCloudMapper
 import com.markettwits.profile.api.AuthDataSource
+import com.markettwits.profile.cloud.SportSauceNetworkProfileApi
+import com.markettwits.profile.cloud.model.update.UploadFileResponse
 
 internal class EditProfileImageRepositoryBase(
-    private val cloud: SportsouceApi,
+    private val cloud: SportSauceNetworkProfileApi,
     private val authDataSource: AuthDataSource,
     private val mapper: EditProfileImageCloudMapper
 ) : EditProfileImageRepository {

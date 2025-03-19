@@ -1,7 +1,6 @@
 package com.markettwits.registrations.root.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cloud.di.sportSouceNetworkModule
 import com.markettwits.intentActionModule
 import com.markettwits.profile.api.authDataSourceModule
 import com.markettwits.registrations.detail.store.store.StartOrderStoreFactory
@@ -13,8 +12,8 @@ import com.markettwits.time.BaseTimeMapper
 import org.koin.dsl.module
 
 val userStartRegistrationModule = module {
+
     includes(
-        sportSouceNetworkModule,
         authDataSourceModule,
         intentActionModule
     )

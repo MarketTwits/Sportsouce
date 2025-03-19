@@ -8,9 +8,12 @@ android{
 kotlin{
     sourceSets{
         commonMain.dependencies {
-            implementation(projects.cloud)
+            api(projects.auth.authCloud)
             implementation(projects.core.cache)
             implementation(projects.core.time)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.core)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
         }
     }

@@ -1,6 +1,6 @@
 package com.markettwits.unauthorized.presentation.components
 
-import com.markettwits.cloud.model.auth.sign_in.response.User
+import com.markettwits.auth.cloud.model.sign_in.response.User
 import kotlinx.serialization.Serializable
 
 @Serializable

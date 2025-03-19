@@ -6,11 +6,15 @@ import com.markettwits.start_cloud.model.comments.request.StartCommentRequest
 import com.markettwits.start_cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.start_cloud.model.comments.response.Comment
 import com.markettwits.start_cloud.model.comments.response.StartCommentsRemote
+import com.markettwits.start_cloud.model.donation.StartDonationRequest
+import com.markettwits.start_cloud.model.donation.StartDonationResponse
 import com.markettwits.start_cloud.model.filters.FiltersRemote
+import com.markettwits.start_cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.start_cloud.model.members.StartMember
 import com.markettwits.start_cloud.model.members.StartMembersRemote
 import com.markettwits.start_cloud.model.result.StartMemberResult
 import com.markettwits.start_cloud.model.result.StartMemberResultRows
+import com.markettwits.start_cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.start_cloud.model.start.StartRemote
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbum
 import com.markettwits.start_cloud.model.start.fields.album.StartAlbumRemote
@@ -35,6 +39,16 @@ internal class SportSauceStartApiBase(
 
     override suspend fun start(startId: Int): StartRemote {
         val response = client.get("start/$startId")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun kindOfSports(): KindOfSportRemote {
+        val response = client.get("kind-of-sport")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun seasons(): StartSeasonsRemote {
+        val response = client.get("season")
         return json.decodeFromString(response.body<String>())
     }
 
@@ -66,6 +80,14 @@ internal class SportSauceStartApiBase(
             }
         }
         return json.decodeFromString<StartMemberResultRows>(response.body()).rows
+    }
+
+    override suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse {
+        val response = client.post("donations") {
+            contentType(ContentType.Application.Json)
+            setBody(startDonationRequest)
+        }
+        return json.decodeFromString(response.body())
     }
 
     override suspend fun comments(startId: Int): List<Comment> {

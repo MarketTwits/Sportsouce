@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo
@@ -18,9 +20,10 @@ import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 @Composable
 internal fun ShopFilterContent(
     modifier: Modifier = Modifier,
+    isCompactMode: Boolean,
     state: ShopFilterStore.State,
     onClickGoBack: () -> Unit,
-    onClickRetry : () -> Unit,
+    onClickRetry: () -> Unit,
     onClickReset: () -> Unit,
     onMaxPriceChange: (String) -> Unit,
     onMinPriceChange: (String) -> Unit,
@@ -31,12 +34,17 @@ internal fun ShopFilterContent(
     Scaffold(
         modifier = modifier,
         floatingActionButtonPosition = FabPosition.Center,
+        containerColor = MaterialTheme.colorScheme.primary,
         floatingActionButton = {
             if (!state.isError)
-                ShopFilterApplyButton(onClickApply = onClickApplyFilter, onClickReset = onClickReset)
+                ShopFilterApplyButton(
+                    onClickApply = onClickApplyFilter,
+                    onClickReset = onClickReset
+                )
         },
         topBar = {
-            ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)
+            if (isCompactMode)
+                ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)
         },
     ) { paddingValues ->
         Column(

@@ -59,6 +59,7 @@ fun ShopItemCard(
                     .weight(0.7f),
                 image = shopItem.visual.imageUrl,
             )
+            Spacer(modifier = Modifier.padding(4.dp))
             ShowCardPrice(
                 modifier = Modifier
                     .padding(4.dp)
@@ -201,18 +202,19 @@ private fun ShowCardPrice(
                     fontFamily = FontNunito.medium(),
                 )
             }
-        }
-        if (!previousPrice.isNullOrEmpty()) {
-            Text(
-                text = "-$discount%",
-                color = SportSouceColor.SportSouceLighBlue,
-                textAlign = TextAlign.Start,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 14.sp,
-                lineHeight = 12.sp,
-                fontFamily = FontNunito.medium(),
-            )
+            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+            if (!previousPrice.isNullOrEmpty()) {
+                Text(
+                    text = "-$discount%",
+                    color = SportSouceColor.SportSouceLighBlue,
+                    textAlign = TextAlign.Start,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 14.sp,
+                    lineHeight = 12.sp,
+                    fontFamily = FontNunito.medium(),
+                )
+            }
         }
         Text(
             text = title,

@@ -10,10 +10,10 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.club.root.RootClubComponentBase
-import com.markettwits.di.newsModule
-import com.markettwits.news_event.component.NewsEventComponentBase
-import com.markettwits.news_event.store.NewsEventStoreFactory
-import com.markettwits.news_list.presentation.NewsComponentBase
+import com.markettwits.news.di.newsModule
+import com.markettwits.news.news_event.component.NewsEventComponentBase
+import com.markettwits.news.news_event.store.NewsEventStoreFactory
+import com.markettwits.news.news_list.component.NewsComponentBase
 import com.markettwits.popular.root.RootStartsPopularComponentBase
 import com.markettwits.random.root.presentation.RootStartRandomComponentBase
 import com.markettwits.review.di.reviewModule
@@ -199,7 +199,7 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
-           // 1 -> RootReviewComponent.Config.Schedule
+            // 1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Shop

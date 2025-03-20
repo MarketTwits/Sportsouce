@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.news_list.domain.NewsInfo
+import com.markettwits.news.common.model.NewsItem
 import com.markettwits.review.presentation.store.ReviewStore
 import com.markettwits.review.presentation.store.ReviewStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +19,7 @@ class ReviewComponentBase(
     private val storeFactory: ReviewStoreFactory,
     private val onClickMenu: (Int) -> Unit,
     private val onStartClick: (Int) -> Unit,
-    private val onClickNews: (NewsInfo) -> Unit,
+    private val onClickNews: (NewsItem) -> Unit,
     private val onClickSearch: () -> Unit,
     private val onClickSettings: () -> Unit,
 ) : ReviewComponent, ComponentContext by context {

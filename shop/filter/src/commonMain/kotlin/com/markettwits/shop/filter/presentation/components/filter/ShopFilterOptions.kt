@@ -18,8 +18,6 @@ import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.shop.filter.domain.models.ShopOptionInfo
 
-
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ShopFilterOptions(
     options: List<ShopOptionInfo>,
@@ -41,7 +39,7 @@ internal fun ShopFilterOptions(
         }
         options.forEach { optionInfo ->
             Text(
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(6.dp),
                 text = optionInfo.name,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -60,7 +58,7 @@ internal fun ShopFilterOptions(
                         val isSelected = selectedOptions.any { option -> option.uuid == value.uuid }
 
                         Button(
-                            modifier = Modifier.padding(4.dp),
+                            modifier = Modifier.padding(6.dp),
                             elevation = ButtonDefaults.buttonElevation(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor =

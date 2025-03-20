@@ -5,7 +5,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
 import com.markettwits.club.root.RootClubScreen
-import com.markettwits.news_event.screen.NewsEventScreen
+import com.markettwits.news.news_event.screen.NewsEventScreen
 import com.markettwits.popular.root.RootStartsPopularScreen
 import com.markettwits.random.root.presentation.RootRandomStartScreen
 import com.markettwits.review.presentation.screen.ReviewScreen

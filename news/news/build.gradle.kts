@@ -9,11 +9,11 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            api(projects.news.newsCommon)
             implementation(projects.core.ui)
             implementation(projects.core.time)
             implementation(projects.core.koin)
             implementation(projects.core.decompose)
-            implementation(projects.news.newsCloud)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
         }

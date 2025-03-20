@@ -13,7 +13,6 @@ kotlin {
         implementation(projects.core.cache)
         implementation(projects.core.errors)
         implementation(projects.news.news)
-        implementation(projects.news.newsCloud)
         implementation(projects.start.startSearch)
         implementation(projects.start.start)
         implementation(projects.starts.startsRandom)

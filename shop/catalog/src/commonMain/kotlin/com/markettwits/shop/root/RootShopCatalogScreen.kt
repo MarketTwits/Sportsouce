@@ -28,7 +28,10 @@ fun RootShopCatalogScreen(component: RootShopCatalogComponent) {
                 component = child.componentPage,
                 cartComponent = child.componentCart
             )
-            is RootShopCatalogComponent.Child.ShopFilter -> ShopFilterScreen(component = child.component)
+            is RootShopCatalogComponent.Child.ShopFilter -> ShopFilterScreen(
+                component = child.component,
+                isCompactMode = true
+            )
             is RootShopCatalogComponent.Child.ShopSearch -> ShopSearchScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopCart -> ShopCartScreen(component = child.component)
             is RootShopCatalogComponent.Child.ShopOrder -> ShopCreateOrderScreen(component = child.component)

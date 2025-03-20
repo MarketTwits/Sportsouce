@@ -10,6 +10,7 @@ import com.markettwits.start_search.search.presentation.store.StartsSearchStore
 import com.markettwits.start_search.search.presentation.store.StartsSearchStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -22,10 +23,14 @@ class StartsSearchComponentBase(
 ) : StartsSearchComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<StartsSearchStore.State> = store.stateFlow
+
     override fun obtainEvent(intent: StartsSearchStore.Intent) {
         store.accept(intent)
     }

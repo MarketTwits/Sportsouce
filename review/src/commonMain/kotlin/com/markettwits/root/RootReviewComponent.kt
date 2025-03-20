@@ -4,9 +4,9 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.club.root.RootClubComponent
 import com.markettwits.inappnotification.api.InAppNotificationRenderer
-import com.markettwits.news_event.component.NewsEventComponent
-import com.markettwits.news_list.domain.NewsInfo
-import com.markettwits.news_list.presentation.NewsComponent
+import com.markettwits.news.common.model.NewsItem
+import com.markettwits.news.news_event.component.NewsEventComponent
+import com.markettwits.news.news_list.component.NewsComponent
 import com.markettwits.popular.root.RootStartsPopularComponent
 import com.markettwits.random.root.presentation.RootStartRandomComponent
 import com.markettwits.review.presentation.component.ReviewComponent
@@ -35,9 +35,6 @@ interface RootReviewComponent {
         @Serializable
         data object Random : Config
 
-//        @Serializable
-//        data object Schedule : Config
-
         @Serializable
         data object Popular : Config
 
@@ -45,7 +42,7 @@ interface RootReviewComponent {
         data object Search : Config
 
         @Serializable
-        data class NewsEvent(val news: NewsInfo) : Config
+        data class NewsEvent(val news: NewsItem) : Config
 
         @Serializable
         data class Notification(val newAppVersion: NewAppVersion) : Config
@@ -64,7 +61,6 @@ interface RootReviewComponent {
         data class Review(val component: ReviewComponent, val newsComponent: NewsComponent) : Child
         data class Start(val component: RootStartScreenComponent) : Child
         data class Random(val component: RootStartRandomComponent) : Child
-        //data class Schedule(val component: RootStartsScheduleComponent) : Child
         data class Popular(val component: RootStartsPopularComponent) : Child
         data class NewsEvent(val component: NewsEventComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child

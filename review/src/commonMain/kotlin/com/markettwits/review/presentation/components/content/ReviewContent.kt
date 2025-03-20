@@ -5,8 +5,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.news_list.domain.NewsInfo
-import com.markettwits.news_list.presentation.components.NewsContent
+import com.markettwits.news.common.model.NewsItem
+import com.markettwits.news.news_list.components.NewsContent
 import com.markettwits.review.presentation.components.actual.ActualStarts
 import com.markettwits.review.presentation.components.archive.ArchiveStarts
 import com.markettwits.review.presentation.components.review_menu.ReviewMenu
@@ -15,11 +15,11 @@ import com.markettwits.starts_common.domain.StartsListItem
 
 @Composable
 fun ReviewContent(
-    news: List<NewsInfo>,
+    news: List<NewsItem>,
     actual: List<StartsListItem>,
     archive: List<StartsListItem>,
     onClickStart: (Int) -> Unit,
-    onClickNewsInfo: (NewsInfo) -> Unit,
+    onClickNewsInfo: (NewsItem) -> Unit,
     onClickMenu: (Int) -> Unit,
     onClickTelegram: () -> Unit,
     onClickVk: () -> Unit,

@@ -1,6 +1,7 @@
 package com.markettwits.start_search.search.domain
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
@@ -8,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+@OptIn(FlowPreview::class)
 class CoroutineDebounceBase(private val scope: CoroutineScope) : Debouncing,
     ReadOnlyProperty<Any?, Debouncing> {
 

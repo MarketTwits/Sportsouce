@@ -11,6 +11,7 @@ import com.markettwits.shop.filter.presentation.store.ShopFilterStore
 @Composable
 fun ShopFilterScreen(
     modifier: Modifier = Modifier,
+    isCompactMode : Boolean,
     component: ShopFilterComponent,
 ) {
     val state by component.state.collectAsState()
@@ -18,6 +19,7 @@ fun ShopFilterScreen(
     ShopFilterContent(
         modifier = modifier,
         state = state,
+        isCompactMode = isCompactMode,
         onClickGoBack = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickGoBack)
         },

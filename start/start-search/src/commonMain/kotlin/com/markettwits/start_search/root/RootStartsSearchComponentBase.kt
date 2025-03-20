@@ -11,6 +11,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -56,7 +57,6 @@ class RootStartsSearchComponentBase(
         componentContext: ComponentContext,
     ): RootStartsSearchComponent.ChildStack =
         when (config) {
-
             is RootStartsSearchComponent.ConfigStack.Start -> RootStartsSearchComponent.ChildStack.Start(
                 RootStartScreenComponentBase(
                     componentContext,
@@ -65,14 +65,6 @@ class RootStartsSearchComponentBase(
                 )
             )
 
-//            is RootStartsSearchComponent.ConfigStack.Filter -> RootStartsSearchComponent.ChildStack.Filter(
-//                RootStartFilterComponentBase(
-//                    context = componentContext,
-//                    dependencies = scope.get(),
-//                    pop = stackNavigation::pop
-//                )
-//            )
-
             is RootStartsSearchComponent.ConfigStack.Search -> RootStartsSearchComponent.ChildStack.Search(
                 StartsSearchComponentBase(
                     componentContext = componentContext,
@@ -80,10 +72,9 @@ class RootStartsSearchComponentBase(
                     back = pop::invoke,
                     filter = {
                         slotNavigation.activate(RootStartsSearchComponent.ConfigSlot.Filter(it))
-                        // stackNavigation.push(RootStartsSearchComponent.ConfigStack.Filter)
                     },
                     start = {
-                        stackNavigation.push(RootStartsSearchComponent.ConfigStack.Start(it))
+                        stackNavigation.pushNew(RootStartsSearchComponent.ConfigStack.Start(it))
                     }
                 )
             )

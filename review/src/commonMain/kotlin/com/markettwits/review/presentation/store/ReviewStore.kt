@@ -2,7 +2,7 @@ package com.markettwits.review.presentation.store
 
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.news_list.domain.NewsInfo
+import com.markettwits.news.common.model.NewsItem
 import com.markettwits.review.domain.Review
 import com.markettwits.review.presentation.store.ReviewStore.Intent
 import com.markettwits.review.presentation.store.ReviewStore.Label
@@ -13,7 +13,7 @@ interface ReviewStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object OnClickSearch : Intent
         data object OnClickSettings : Intent
-        data class OnClickNews(val news: NewsInfo) : Intent
+        data class OnClickNews(val news: NewsItem) : Intent
         data class OnClickItem(val item : Int) : Intent
         data class OnClickMenu(val item : Int) : Intent
         data object OnClickTelegram : Intent
@@ -31,7 +31,7 @@ interface ReviewStore : Store<Intent, State, Label> {
     sealed interface Label {
         data object OnClickSearch : Label
         data object OnClickSettings : Label
-        data class OnClickNews(val news: NewsInfo) : Label
+        data class OnClickNews(val news: NewsItem) : Label
         data class OnClickItem(val item : Int) : Label
         data class OnClickMenu(val item : Int) : Label
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,7 +34,8 @@ import com.markettwits.core_ui.items.theme.FontNunito
 fun ShopSearchBar(
     modifier: Modifier = Modifier,
     query: String,
-    onClickBack : () -> Unit,
+    isShowFilter: Boolean,
+    onClickBack: () -> Unit,
     onClickSearchPanel: () -> Unit,
     onClickFilter: () -> Unit,
     onBrushClicked: () -> Unit
@@ -102,7 +104,10 @@ fun ShopSearchBar(
                 }
                 Row {
                     IconButton(
-                        onClick = onClickFilter
+                        onClick = {
+                            if (isShowFilter)
+                                onClickFilter()
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Notes,
@@ -110,7 +115,7 @@ fun ShopSearchBar(
                             contentDescription = "Filter"
                         )
                     }
-                    if (query.isNotEmpty()){
+                    if (query.isNotEmpty()) {
                         IconButton(
                             onClick = { onBrushClicked() }
                         ) {

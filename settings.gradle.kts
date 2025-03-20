@@ -42,6 +42,7 @@ include(":profile:authorized:registrations")
 // News
 include(":news:news")
 include(":news:news-cloud")
+include(":news:news-common")
 // Shop
 include(":shop:catalog")
 include(":shop:cloud")

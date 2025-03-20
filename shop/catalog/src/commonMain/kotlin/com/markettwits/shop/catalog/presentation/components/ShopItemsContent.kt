@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.LazyPagingItems
+import app.cash.paging.compose.LazyPagingItems
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.paging.fold
@@ -20,15 +20,14 @@ import com.markettwits.shop.domain.model.ShopItem
 
 
 @Composable
-fun ColumnScope.ShopItemsContent(
+fun ShopItemsContent(
     modifier: Modifier = Modifier,
     items: LazyPagingItems<ShopItem>,
     onClickItem: (ShopItem) -> Unit
 ) {
     items.fold(onLoading = {
-        LoadingFullScreen(
-            modifier = modifier,
-        )
+        ShopItemsShimmer(modifier = modifier)
+
     }, onException = {
         it.mapToSauceError().SauceErrorScreen(
             modifier = Modifier

@@ -18,9 +18,9 @@ expect fun calculateWindowSizeClass(): WindowSizeClass
 val WindowSizeClass.isLarge: Boolean
     @Composable get() = when (widthSizeClass) {
         WindowWidthSizeClass.Compact -> false
+        WindowWidthSizeClass.Medium -> false
         WindowWidthSizeClass.Expanded -> true
-        WindowWidthSizeClass.Medium -> true
-        else -> true
+        else -> false
     }
 
 val WindowSizeClass.screenWidthPx: Int

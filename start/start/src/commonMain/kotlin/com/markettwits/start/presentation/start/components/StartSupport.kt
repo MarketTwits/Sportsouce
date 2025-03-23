@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.bottom_sheet.DefaultModalBottomSheet
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start_support.presentation.component.StartSupportComponent

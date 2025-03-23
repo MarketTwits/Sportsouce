@@ -1,0 +1,48 @@
+name: Deploy Compose Web App (JS)
+
+on:
+  push:
+    branches:
+      - SP-01-js-merge
+  workflow_dispatch:
+
+jobs:
+  test-and-build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create secrets file
+        run: |
+          cat <<EOF > secrets.properties
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          sportsauce.api.prod.path=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          sportsauce.api.dev.path=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          EOF
+
+      - name: Move secrets file
+        run: mv secrets.properties src/main/resources/secrets.properties
+
+      - name: Build
+        run: |
+          ./gradlew jsBrowserDistribution --no-configuration-cache
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.6.8
+        with:
+          branch: gh-pages
+          folder: browser/build/dist/js/productionExecutable

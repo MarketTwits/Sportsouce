@@ -11,6 +11,7 @@ internal object ShopCatalogReducer : Reducer<State, Message> {
             is Message.Loaded -> copy(shopItems = msg.items)
             is Message.UpdateCategories -> copy()
             is Message.QueryApplied -> copy(queryState = msg.query)
+            is Message.ChangeFilterVisibility -> copy(isShowFilter = msg.isShowFilter)
         }
     }
 }

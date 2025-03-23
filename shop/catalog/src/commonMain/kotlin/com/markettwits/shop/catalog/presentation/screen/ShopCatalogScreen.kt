@@ -41,8 +41,6 @@ import com.markettwits.shop.filter.presentation.components.api.SelectedFilterPar
 import com.markettwits.shop.filter.presentation.screen.ShopFilterScreen
 import com.markettwits.shop.search.presentation.components.publish.ShopSearchBar
 
-
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun ShopCatalogScreen(
     modifier: Modifier = Modifier,
@@ -57,10 +55,6 @@ fun ShopCatalogScreen(
 
     val backgroundColor =
         if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
-
-    var isShowFilter by remember {
-        mutableStateOf(false)
-    }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
@@ -79,8 +73,7 @@ fun ShopCatalogScreen(
                 onClickSearchPanel = {
                     catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickSearch)
                 }, onClickFilter = {
-                    isShowFilter = !isShowFilter
-                    // catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
+                    catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
                 },
                 onBrushClicked = {
                     catalogComponent.obtainEvent(ShopCatalogStore.Intent.ApplyQuery(""))
@@ -91,8 +84,8 @@ fun ShopCatalogScreen(
             )
         }
     ) { paddingValues ->
-        LaunchedEffect(isShowFilter) {
-            if (isShowFilter) {
+        LaunchedEffect(state.isShowFilter) {
+            if (state.isShowFilter) {
                 drawerState.open()
             } else {
                 drawerState.close()

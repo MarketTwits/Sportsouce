@@ -34,9 +34,6 @@ jobs:
           sportsauce.api.dev.path=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
           EOF
 
-      - name: Move secrets file
-        run: mv secrets.properties src/main/resources/secrets.properties
-
       - name: Build
         run: |
           ./gradlew jsBrowserDistribution --no-configuration-cache
@@ -45,4 +42,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.6.8
         with:
           branch: gh-pages
-          folder: browser/build/dist/js/productionExecutable
+          folder: modules/instances/web/build/dist/js/productionExecutable

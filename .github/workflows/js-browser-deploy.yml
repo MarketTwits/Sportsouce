@@ -36,7 +36,7 @@ jobs:
 
       - name: Build
         run: |
-          ./gradlew jsBrowserDistribution --no-configuration-cache
+          ./gradlew browser:jsBrowserDistribution --no-configuration-cache
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.6.8

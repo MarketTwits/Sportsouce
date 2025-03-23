@@ -20,7 +20,6 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.start.presentation.membres.list.models.StartMembersUi
 import kotlin.random.Random
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StartMembersStatistics(
     modifier: Modifier = Modifier,

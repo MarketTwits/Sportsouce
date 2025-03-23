@@ -37,6 +37,7 @@ kotlin {
             api(libs.composeMaterial3WindowSize)
             api(libs.composeMaterial3Adaptive)
             implementation(compose.components.resources)
+            implementation(libs.kotlinx.serialization.json)
             implementation(projects.core.time)
         }
         

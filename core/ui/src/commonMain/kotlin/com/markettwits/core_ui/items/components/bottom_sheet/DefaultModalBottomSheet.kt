@@ -1,8 +1,5 @@
-package com.markettwits.core_ui.items.bottom_sheet
+package com.markettwits.core_ui.items.components.bottom_sheet
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues

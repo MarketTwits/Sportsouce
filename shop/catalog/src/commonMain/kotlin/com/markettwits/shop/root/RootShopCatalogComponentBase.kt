@@ -1,18 +1,13 @@
 package com.markettwits.shop.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.router.panels.ChildPanels
-import com.arkivanov.decompose.router.panels.ChildPanelsMode
-import com.arkivanov.decompose.router.panels.ChildPanelsMode.TRIPLE
-import com.arkivanov.decompose.router.panels.Panels
-import com.arkivanov.decompose.router.panels.PanelsNavigation
-import com.arkivanov.decompose.router.panels.childPanels
-import com.arkivanov.decompose.router.panels.navigate
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.mvikotlin.core.rx.internal.BehaviorSubject
-import com.arkivanov.mvikotlin.core.utils.internal.InternalMviKotlinApi
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.bottom_bar.component.listener.BottomBarComponentHandler
 import com.markettwits.bottom_bar.component.listener.BottomBarVisibilityStrategy

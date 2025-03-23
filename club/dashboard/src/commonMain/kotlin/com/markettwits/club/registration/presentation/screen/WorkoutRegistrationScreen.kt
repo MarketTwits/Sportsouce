@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import com.markettwits.club.registration.presentation.component.WorkoutRegistrationComponent
 import com.markettwits.club.registration.presentation.components.WorkoutRegistrationContent
 import com.markettwits.club.registration.presentation.components.WorkoutRegistrationSuccessContent
-import com.markettwits.core_ui.items.bottom_sheet.DefaultModalBottomSheet
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
 
 @Composable
 fun WorkoutRegistrationScreen(component: WorkoutRegistrationComponent) {

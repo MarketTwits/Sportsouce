@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.club.info.presentation.component.ClubInfoComponent
 import com.markettwits.club.info.presentation.components.pager.ClubInfoPager
 import com.markettwits.club.info.presentation.store.ClubInfoStore
-import com.markettwits.core_ui.items.bottom_sheet.DefaultModalBottomSheet
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 
 @Composable

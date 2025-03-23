@@ -1,4 +1,4 @@
-package com.markettwits.core_ui.items.bottom_sheet
+package com.markettwits.core_ui.items.components.bottom_sheet
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

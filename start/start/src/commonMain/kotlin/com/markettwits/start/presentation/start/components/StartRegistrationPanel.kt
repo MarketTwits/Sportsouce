@@ -22,7 +22,7 @@ internal fun StartRegistrationPanel(
     regLink: String,
     onClickRegistration: () -> Unit,
 ) {
-    if (distance.isNotEmpty() && startStatus.code == 3 || regLink.isNotEmpty()) {
+    if (distance.isNotEmpty() && startStatus.code == 3 || regLink.isNotEmpty() && startStatus.code == 3) {
         Box(
             modifier = modifier
                 .noRippleClickable {

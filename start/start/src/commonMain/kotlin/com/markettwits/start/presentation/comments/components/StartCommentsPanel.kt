@@ -91,10 +91,12 @@ private fun StartCommentCard(
         }
     }
 
-    Row(modifier = modifier.padding(
-        vertical = 10.dp,
-        horizontal = 5.dp,
-    )) {
+    Row(
+        modifier = modifier.padding(
+            vertical = 10.dp,
+            horizontal = 5.dp,
+        )
+    ) {
         if (userImageUrl.isNotEmpty())
             AsyncImage(
                 modifier = Modifier
@@ -154,9 +156,12 @@ private fun StartCommentCard(
             )
             if (!isReply) {
                 Text(
-                    modifier = Modifier.clickable {
-                        onClickReply()
-                    },
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clip(Shapes.small)
+                        .clickable {
+                            onClickReply()
+                        },
                     text = "Ответить",
                     fontSize = 12.sp,
                     fontFamily = FontNunito.bold(),

@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
+import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.members.members_list.presentation.component.MembersListComponent
 import com.markettwits.members.members_list.presentation.components.components.MembersList
 import com.markettwits.members.members_list.presentation.store.store.MembersListStore
@@ -30,33 +31,36 @@ fun MembersScreen(component: MembersListComponent) {
                 .padding(top = paddingValues.calculateTopPadding()),
             isRefreshing = state.isLoading, onRefresh = {
                 component.obtainEvent(MembersListStore.Intent.Retry)
-            }) {
-            if (state.isSuccess) {
-                Column(
-                    modifier = it
-                        .padding(10.dp)
-                ) {
-                    MembersList(items = state.members,
-                        onClick = {
-                            component.obtainEvent(MembersListStore.Intent.OnClickMember(it))
+            }) { modifier ->
+            AdaptivePane {
+                if (state.isSuccess) {
+                    Column(
+                        modifier = modifier
+                            .padding(10.dp)
+                    ) {
+                        MembersList(items = state.members,
+                            onClick = {
+                                component.obtainEvent(MembersListStore.Intent.OnClickMember(it))
+                            },
+                            onClickAddMember = {
+                                component.obtainEvent(MembersListStore.Intent.OnClickAddMember)
+                            }
+                        )
+                    }
+                }
+                if (state.isError) {
+                    FailedScreen(
+                        message = state.message,
+                        onClickRetry = {
+                            component.obtainEvent(MembersListStore.Intent.Retry)
                         },
-                        onClickAddMember = {
-                            component.obtainEvent(MembersListStore.Intent.OnClickAddMember)
+                        onClickBack = {
+                            component.obtainEvent(MembersListStore.Intent.GoBack)
                         }
                     )
                 }
             }
-            if (state.isError) {
-                FailedScreen(
-                    message = state.message,
-                    onClickRetry = {
-                        component.obtainEvent(MembersListStore.Intent.Retry)
-                    },
-                    onClickBack = {
-                        component.obtainEvent(MembersListStore.Intent.GoBack)
-                    }
-                )
-            }
+
         }
     }
 }

@@ -12,7 +12,7 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
         when (intent) {
             is Intent.OnClickGoBack -> publish(Label.GoBack)
             is Intent.OnClickItem -> publish(Label.OnClickItem(intent.item))
-            is Intent.OnClickFilter -> publish(Label.GoFilter)
+            is Intent.OnClickFilter -> onClickFilter()
             is Intent.OnClickSearch -> publish(Label.GoSearch(state().queryState))
             is Intent.ApplyQuery -> launchWithQuery(intent.query)
             is Intent.ApplyFilter -> {
@@ -34,7 +34,7 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
         categoryId: Int?,
         options: List<String>,
         maxPrice: Int?,
-        minPrice : Int?
+        minPrice: Int?
     ) {
         dispatch(
             Message.Loaded(
@@ -54,6 +54,10 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
     ) {
         dispatch(Message.QueryApplied(query))
         dispatch(Message.Loaded(repository.paddingProducts(query).cachedIn(scope)))
+    }
+
+    private fun onClickFilter() {
+        dispatch(Message.ChangeFilterVisibility(!state().isShowFilter))
     }
 
 }

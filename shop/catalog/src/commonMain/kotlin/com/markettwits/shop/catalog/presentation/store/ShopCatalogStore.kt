@@ -15,6 +15,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
 
     data class State(
         val shopItems: Flow<PagingData<ShopItem>>,
+        val isShowFilter : Boolean = false,
         val queryState : String = "",
     )
 
@@ -30,6 +31,7 @@ interface ShopCatalogStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data class Loaded(val items: Flow<PagingData<ShopItem>>) : Message
+        data class ChangeFilterVisibility(val isShowFilter: Boolean) : Message
         data class UpdateCategories(val id: Int) : Message
         data class QueryApplied(val query: String) : Message
     }

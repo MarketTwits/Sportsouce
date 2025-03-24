@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="teams-city-jvm">
-    <output-path>$PROJECT_DIR$/components/teams-city/build/libs</output-path>
-    <root id="archive" name="teams-city-jvm.jar">
-      <element id="module-output" name="Sportsouce.components.teams-city.jvmMain" />
-    </root>
-  </artifact>
-</component>

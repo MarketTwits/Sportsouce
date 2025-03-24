@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="unauthorized-js">
-    <output-path>$PROJECT_DIR$/components/profile/unauthorized/build/libs</output-path>
-    <root id="archive" name="unauthorized-js.jar">
-      <element id="module-output" name="Sportsouce.components.profile.unauthorized.jsMain" />
-    </root>
-  </artifact>
-</component>

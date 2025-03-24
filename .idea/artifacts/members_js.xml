@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="members-js">
-    <output-path>$PROJECT_DIR$/components/profile/authorized/members/build/libs</output-path>
-    <root id="archive" name="members-js.jar">
-      <element id="module-output" name="Sportsouce.components.profile.authorized.members.jsMain" />
-    </root>
-  </artifact>
-</component>

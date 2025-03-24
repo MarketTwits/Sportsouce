@@ -1,17 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidLayouts">
-    <shared>
-      <config />
-    </shared>
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a38cf6ab-ac06-4ff8-a116-c5adcef442ae" name="Changes" comment="add components folder">
+    <list default="true" id="a38cf6ab-ac06-4ff8-a116-c5adcef442ae" name="Changes" comment="change workflow_dispatch to manual run">
       <change afterPath="$PROJECT_DIR$/secrets.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/js-browser-deploy.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/js-browser-deploy.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AndroidProjectSystem.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/api_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/api_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/app_browser_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/app_desktop_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_cloud_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_cloud_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_flow_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_flow_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_service_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auth_service_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/bottombar_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/bottombar_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/browser_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cache_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cache_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cart_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cart_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/catalog_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/catalog_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cloud_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/cloud_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/components_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/components_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/composable_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/composable_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/crashlytics_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/crashlytics_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/dashboard_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/dashboard_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/decompose_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/decompose_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/desktop_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/domain_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/domain_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/edit_profile_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/edit_profile_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/errors_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/errors_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/filter_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/filter_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/github_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/github_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/googleplay_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/googleplay_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/impl_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/impl_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/item_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/item_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/koin_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/koin_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/log_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/log_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/members_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/members_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_cloud_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_cloud_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_common_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_common_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/news_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/order_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/order_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/orders_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/orders_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/paging_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/paging_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/profile_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/profile_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/registrations_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/registrations_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/review_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/review_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/root_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/root_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/search_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/search_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_cloud_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_cloud_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_filter_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_filter_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_register_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_register_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_search_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_search_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_support_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/start_support_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_cloud_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_cloud_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_common_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_common_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_popular_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_popular_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_random_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_random_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_schedule_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/starts_schedule_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/teams_city_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/teams_city_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/theme_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/theme_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/time_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/time_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ui_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ui_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/unauthorized_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/unauthorized_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/unknown_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/unknown_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ver_js.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ver_jvm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/migrations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,45 +150,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <task path="$PROJECT_DIR$/browser">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/analytics">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/analytics/crashlytics">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/app">
-          <activation />
-        </task>
         <projects_view>
           <tree_state>
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Sportsouce" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Sportsouce" type="f1a62948:ProjectNode" />
-                <item name="Sportsouce" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Sportsouce" type="f1a62948:ProjectNode" />
-                <item name="Sportsouce" type="2d1252cf:ModuleNode" />
-                <item name="app" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Sportsouce" type="f1a62948:ProjectNode" />
-                <item name="Sportsouce" type="2d1252cf:ModuleNode" />
-                <item name="app" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
               </path>
             </expand>
             <select />
@@ -77,339 +164,42 @@
       </state>
     </system>
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Kotlin Interface" />
-        <option value="Kotlin Class" />
-        <option value="Kotlin File" />
-      </list>
-    </option>
-  </component>
-  <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="C:\Users\danii\OneDrive\Рабочий стол\key-store.jks" />
-    <option name="KEY_ALIAS" value="key0" />
-    <option name="REMEMBER_PASSWORDS" value="true" />
-    <option name="BUILD_TARGET_KEY" value="apk" />
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;MarketTwits&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "MarketTwits"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/MarketTwits/Sportsouce.git&quot;,
-    &quot;accountId&quot;: &quot;86d886ba-d8ba-4f10-b650-e81ce728728c&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MarketTwits/Sportsouce.git",
+    "accountId": "86d886ba-d8ba-4f10-b650-e81ce728728c"
   }
-}</component>
-  <component name="KotlinMultiplatform" KONAN_HOME="C:\Users\danii\.konan\kotlin-native-prebuilt-windows-x86_64-2.1.0" />
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;d2d6defc&quot;
-}</component>
-  <component name="ProjectId" id="2uQYEk0I9S2LO1nEhihrwZkR7eu" />
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "d2d6defc"
+}]]></component>
+  <component name="ProjectId" id="2ukvMXADMJztslDIwOubb1uoLsh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Android App.MainActivity (1).executor&quot;: &quot;Run&quot;,
-    &quot;Android App.MainActivity.executor&quot;: &quot;Run&quot;,
-    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
-    &quot;ApkExportedModule&quot;: &quot;Sportsouce.app&quot;,
-    &quot;ExportApk.ApkPathForSportsouce.app&quot;: &quot;C:\\Users\\danii\\AndroidStudioProject\\MyProjects\\Sportsouce\\app&quot;,
-    &quot;Gradle.Build Sportsouce.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Building Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Load Gradle Dependencies.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Main [jvm].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Sportsouce:app [installDebug].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Sportsouce:browser [jsBrowserProductionRun].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Sportsouce:browser [jsBrowserRun].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;SP-01-js-merge&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/danii/AndroidStudioProject/MyProjects/Sportsouce/components/core/koin&quot;,
-    &quot;memory.settings.postsync.last.time.stamp&quot;: &quot;1742797632875&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.28553298&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;memory.settings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;ExportApk.BuildVariants&quot;: [
-      &quot;release&quot;
-    ]
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "SP-01-js-merge",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
-  <component name="PsdUISettings">
-    <option name="MODULE_TAB" value="Properties" />
-    <option name="LAST_EDITED_SIGNING_CONFIG" value="debug" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news-common\src\commonMain\kotlin\com\markettwits\news\common\model" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\browser\src\jsMain\resources" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\profile\cloud\src\commonMain\kotlin\com\markettwits\profile\cloud\model\registrations" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news-cloud\src\commonMain\kotlin\com\markettwits\news\cloud\model" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news-cloud" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news\src\commonMain\kotlin\com\markettwits\news" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news\src\commonMain\kotlin\com\markettwits\news_list\screen" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news\src\commonMain\kotlin\com\markettwits\news_list" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\news\news-cloud\src\commonMain\kotlin\com\markettwits\news\cloud" />
-      <recent name="C:\Users\danii\AndroidStudioProject\MyProjects\Sportsouce\auth\auth-service\src\commonMain\kotlin\com\markettwits\profile\internal\database" />
-    </key>
-    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
-      <recent name="com.markettwits.news_list.component" />
-      <recent name="com.markettwits.news.cloud.model.news" />
-      <recent name="com.markettwits.news.cloud.model.hashtags" />
-      <recent name="com.markettwits.news.cloud.model.categories" />
-      <recent name="com.markettwits.profile.cloud.model.update" />
-    </key>
-    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
-      <recent name="com.markettwits.auth.cloud.model.change" />
-      <recent name="com.markettwits.profile.cloud.model.profile.start_user.values" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Android App.MainActivity (1)">
-    <configuration name="MainActivity (1)" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false" temporary="true">
-      <module name="Sportsouce.instances.app-android" />
-      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
-      <option name="DEPLOY" value="true" />
-      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
-      <option name="DEPLOY_AS_INSTANT" value="false" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ALL_USERS" value="false" />
-      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
-      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
-      <option name="CLEAR_APP_STORAGE" value="false" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="specific_activity" />
-      <option name="RESTORE_ENABLED" value="false" />
-      <option name="RESTORE_FILE" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Auto" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Hybrid>
-      <Java>
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Java>
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Native>
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
-        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
-        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY" value="" />
-      <option name="ACTIVITY_CLASS" value="com.markettwits.sportsouce.app.MainActivity" />
-      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
-      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MainActivity" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false" temporary="true">
-      <module name="Sportsouce.app" />
-      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
-      <option name="DEPLOY" value="true" />
-      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
-      <option name="DEPLOY_AS_INSTANT" value="false" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ALL_USERS" value="false" />
-      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
-      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
-      <option name="CLEAR_APP_STORAGE" value="false" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="specific_activity" />
-      <option name="RESTORE_ENABLED" value="false" />
-      <option name="RESTORE_FILE" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Hybrid>
-      <Java>
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Java>
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Native>
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
-        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
-        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY" value="" />
-      <option name="ACTIVITY_CLASS" value="com.markettwits.sportsouce.app.MainActivity" />
-      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
-      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
-      <method v="2">
-        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="Sportsouce.app" />
-      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
-      <option name="DEPLOY" value="true" />
-      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
-      <option name="DEPLOY_AS_INSTANT" value="false" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ALL_USERS" value="false" />
-      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
-      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
-      <option name="CLEAR_APP_STORAGE" value="false" />
-      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="RESTORE_ENABLED" value="false" />
-      <option name="RESTORE_FILE" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <Auto>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Auto>
-      <Hybrid>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Hybrid>
-      <Java>
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Java>
-      <Native>
-        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
-        <option name="SHOW_STATIC_VARS" value="true" />
-        <option name="WORKING_DIR" value="" />
-        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
-        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
-        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
-        <option name="DEBUG_SANDBOX_SDK" value="false" />
-      </Native>
-      <Profilers>
-        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
-        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
-        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
-      </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
-      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration name="instances.app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+}]]></component>
+  <component name="RunManager">
+    <configuration name="instances.app-android" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="Sportsouce.instances.app-android" />
       <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
       <option name="DEPLOY" value="true" />
@@ -480,296 +270,16 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main [jvm]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/desktop" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="-DmainClass=com.markettwits.sportsouce.app.MainKt --quiet" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="jvmRun" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="Sportsouce:browser [jsBrowserProductionRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/browser" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="jsBrowserProductionRun" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="Sportsouce:browser [jsBrowserRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/browser" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="jsBrowserRun" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Android App.instances.app" />
-      <item itemvalue="Android App.app" />
-      <item itemvalue="Android App.MainActivity (1)" />
-      <item itemvalue="Android App.MainActivity" />
-      <item itemvalue="Gradle.Main [jvm]" />
-      <item itemvalue="Gradle.Sportsouce:browser [jsBrowserProductionRun]" />
-      <item itemvalue="Gradle.Sportsouce:browser [jsBrowserRun]" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Android App.MainActivity (1)" />
-        <item itemvalue="Android App.MainActivity" />
-        <item itemvalue="Gradle.Main [jvm]" />
-        <item itemvalue="Gradle.Sportsouce:browser [jsBrowserRun]" />
-        <item itemvalue="Gradle.Sportsouce:browser [jsBrowserProductionRun]" />
-      </list>
-    </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a38cf6ab-ac06-4ff8-a116-c5adcef442ae" name="Changes" comment="" />
-      <created>1742182158017</created>
+      <changelist id="a38cf6ab-ac06-4ff8-a116-c5adcef442ae" name="Changes" comment="change workflow_dispatch to manual run" />
+      <created>1742805340391</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742182158017</updated>
-      <workItem from="1742190091754" duration="382000" />
-      <workItem from="1742190486022" duration="2402000" />
-      <workItem from="1742193799865" duration="1620000" />
-      <workItem from="1742196760437" duration="1310000" />
-      <workItem from="1742198388952" duration="4374000" />
-      <workItem from="1742204708336" duration="1477000" />
-      <workItem from="1742268735620" duration="36000" />
-      <workItem from="1742274245749" duration="622000" />
-      <workItem from="1742274883721" duration="1482000" />
-      <workItem from="1742299315618" duration="13000" />
-      <workItem from="1742390786496" duration="2000" />
+      <updated>1742805340391</updated>
     </task>
-    <task id="LOCAL-00001" summary="support js target from current dev version">
-      <option name="closed" value="true" />
-      <created>1742206323811</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1742206323811</updated>
-    </task>
-    <task id="LOCAL-00002" summary="fix html in all target">
-      <option name="closed" value="true" />
-      <created>1742303459394</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1742303459394</updated>
-    </task>
-    <task id="LOCAL-00003" summary="fix dismissing when move to jsTarget">
-      <option name="closed" value="true" />
-      <created>1742352411049</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1742352411049</updated>
-    </task>
-    <task id="LOCAL-00004" summary="add auto input in WorkoutRegistration">
-      <option name="closed" value="true" />
-      <created>1742359335290</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1742359335290</updated>
-    </task>
-    <task id="LOCAL-00005" summary="remove cloud module">
-      <option name="closed" value="true" />
-      <created>1742410318678</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1742410318678</updated>
-    </task>
-    <task id="LOCAL-00006" summary="remove uncheck from cloud module">
-      <option name="closed" value="true" />
-      <created>1742442102760</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1742442102760</updated>
-    </task>
-    <task id="LOCAL-00007" summary="adaptive shop catalog for large screen #1">
-      <option name="closed" value="true" />
-      <created>1742491575265</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1742491575265</updated>
-    </task>
-    <task id="LOCAL-00008" summary="support image in html text">
-      <option name="closed" value="true" />
-      <created>1742749891909</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1742749891909</updated>
-    </task>
-    <task id="LOCAL-00009" summary="try deploy">
-      <option name="closed" value="true" />
-      <created>1742750532868</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1742750532868</updated>
-    </task>
-    <task id="LOCAL-00010" summary="try deploy #2">
-      <option name="closed" value="true" />
-      <created>1742750588249</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1742750588249</updated>
-    </task>
-    <task id="LOCAL-00011" summary="try deploy #3">
-      <option name="closed" value="true" />
-      <created>1742750756060</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1742750756060</updated>
-    </task>
-    <task id="LOCAL-00012" summary="try deploy #4">
-      <option name="closed" value="true" />
-      <created>1742752421882</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1742752421882</updated>
-    </task>
-    <task id="LOCAL-00013" summary="try deploy #5">
-      <option name="closed" value="true" />
-      <created>1742754333301</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1742754333301</updated>
-    </task>
-    <task id="LOCAL-00014" summary="add components folder">
-      <option name="closed" value="true" />
-      <created>1742804968567</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1742804968567</updated>
-    </task>
-    <option name="localTasksCounter" value="15" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="support js target from current dev version" />
-    <MESSAGE value="fix html in all target" />
-    <MESSAGE value="fix dismissing when move to jsTarget" />
-    <MESSAGE value="add auto input in WorkoutRegistration" />
-    <MESSAGE value="remove cloud module" />
-    <MESSAGE value="remove uncheck from cloud module" />
-    <MESSAGE value="adaptive shop catalog for large screen #1" />
-    <MESSAGE value="support image in html text" />
-    <MESSAGE value="try deploy" />
-    <MESSAGE value="try deploy #2" />
-    <MESSAGE value="try deploy #3" />
-    <MESSAGE value="try deploy #4" />
-    <MESSAGE value="try deploy #5" />
-    <MESSAGE value="add components folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="add components folder" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/club/dashboard/src/commonMain/kotlin/com/markettwits/club/registration/presentation/components/WorkoutRegistrationFileldsContent.kt</url>
-          <line>25</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
-  </component>
-  <component name="play_dynamic_filters_status">
-    <option name="appIdToCheckInfo">
-      <map>
-        <entry key="com.markettwits.sportsouce">
-          <value>
-            <CheckInfo lastCheckTimestamp="1742352592076" />
-          </value>
-        </entry>
-        <entry key="com.markettwits.sportsouce.test">
-          <value>
-            <CheckInfo lastCheckTimestamp="1742352592080" />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>

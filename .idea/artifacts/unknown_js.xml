@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="unknown-js">
-    <output-path>$PROJECT_DIR$/components/selfupdater/unknown/build/libs</output-path>
-    <root id="archive" name="unknown-js.jar">
-      <element id="module-output" name="Sportsouce.components.selfupdater.unknown.jsMain" />
-    </root>
-  </artifact>
-</component>

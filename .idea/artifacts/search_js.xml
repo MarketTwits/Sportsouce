@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="search-js">
-    <output-path>$PROJECT_DIR$/components/shop/search/build/libs</output-path>
-    <root id="archive" name="search-js.jar">
-      <element id="module-output" name="Sportsouce.components.shop.search.jsMain" />
-    </root>
-  </artifact>
-</component>

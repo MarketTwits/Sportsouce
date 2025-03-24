@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="koin-jvm">
-    <output-path>$PROJECT_DIR$/components/core/koin/build/libs</output-path>
-    <root id="archive" name="koin-jvm.jar">
-      <element id="module-output" name="Sportsouce.components.core.koin.jvmMain" />
-    </root>
-  </artifact>
-</component>

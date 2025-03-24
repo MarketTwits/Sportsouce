@@ -22,4 +22,3 @@ local.properties
 # Project secrets config
 /store
 .secrets.properties
-

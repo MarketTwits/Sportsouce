@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="starts-popular-js">
+    <output-path>$PROJECT_DIR$/components/starts/starts-popular/build/libs</output-path>
+    <root id="archive" name="starts-popular-js.jar">
+      <element id="module-output" name="Sportsouce.components.starts.starts-popular.jsMain" />
+    </root>
+  </artifact>
+</component>

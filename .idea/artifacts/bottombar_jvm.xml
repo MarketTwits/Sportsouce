@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="bottombar-jvm">
+    <output-path>$PROJECT_DIR$/components/bottombar/build/libs</output-path>
+    <root id="archive" name="bottombar-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.bottombar.jvmMain" />
+    </root>
+  </artifact>
+</component>

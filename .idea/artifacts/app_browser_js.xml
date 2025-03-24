@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="app-browser-js">
+    <output-path>$PROJECT_DIR$/instances/app-browser/build/libs</output-path>
+    <root id="archive" name="app-browser-js.jar" />
+  </artifact>
+</component>

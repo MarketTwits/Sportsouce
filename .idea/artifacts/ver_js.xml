@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ver-js">
+    <output-path>$PROJECT_DIR$/components/selfupdater/ver/build/libs</output-path>
+    <root id="archive" name="ver-js.jar">
+      <element id="module-output" name="Sportsouce.components.selfupdater.ver.jsMain" />
+    </root>
+  </artifact>
+</component>

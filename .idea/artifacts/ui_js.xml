@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ui-js">
+    <output-path>$PROJECT_DIR$/components/core/ui/build/libs</output-path>
+    <root id="archive" name="ui-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.ui.jsMain" />
+    </root>
+  </artifact>
+</component>

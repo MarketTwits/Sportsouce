@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="auth-cloud-jvm">
+    <output-path>$PROJECT_DIR$/components/auth/auth-cloud/build/libs</output-path>
+    <root id="archive" name="auth-cloud-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.auth.auth-cloud.jvmMain" />
+    </root>
+  </artifact>
+</component>

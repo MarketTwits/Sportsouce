@@ -12,9 +12,7 @@ local.properties
 /build-logic/build/
 /build-logic/build/classes/kotlin/main/
 
-/app/release
-/app/debug
-
+**/build/
 # IDEA/Android Studio Ignore exceptions
 # Project icon
 !/.idea/icon.png

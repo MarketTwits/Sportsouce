@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="crashlytics-js">
+    <output-path>$PROJECT_DIR$/components/analytics/crashlytics/build/libs</output-path>
+    <root id="archive" name="crashlytics-js.jar">
+      <element id="module-output" name="Sportsouce.components.analytics.crashlytics.jsMain" />
+    </root>
+  </artifact>
+</component>

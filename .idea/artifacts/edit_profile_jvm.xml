@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="edit-profile-jvm">
+    <output-path>$PROJECT_DIR$/components/profile/authorized/edit-profile/build/libs</output-path>
+    <root id="archive" name="edit-profile-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.profile.authorized.edit-profile.jvmMain" />
+    </root>
+  </artifact>
+</component>

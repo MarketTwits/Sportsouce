@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="paging-js">
+    <output-path>$PROJECT_DIR$/components/core/paging/build/libs</output-path>
+    <root id="archive" name="paging-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.paging.jsMain" />
+    </root>
+  </artifact>
+</component>

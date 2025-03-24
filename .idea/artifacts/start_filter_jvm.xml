@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="start-filter-jvm">
+    <output-path>$PROJECT_DIR$/components/start/start-filter/build/libs</output-path>
+    <root id="archive" name="start-filter-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.start.start-filter.jvmMain" />
+    </root>
+  </artifact>
+</component>

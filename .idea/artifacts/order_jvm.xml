@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="order-jvm">
+    <output-path>$PROJECT_DIR$/components/shop/order/build/libs</output-path>
+    <root id="archive" name="order-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.shop.order.jvmMain" />
+    </root>
+  </artifact>
+</component>

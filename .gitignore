@@ -5,6 +5,7 @@
 /captures
 .externalNativeBuild
 .cxx
+.kotlin
 /kotlin-js-store
 local.properties
 
@@ -15,9 +16,10 @@ local.properties
 **/build/
 # IDEA/Android Studio Ignore exceptions
 # Project icon
-!/.idea/icon.png
 .DS_Store
-
+/.idea/
+!/.idea/icon.png
 # Project secrets config
 /store
 .secrets.properties
+

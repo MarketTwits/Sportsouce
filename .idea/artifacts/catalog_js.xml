@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="catalog-js">
-    <output-path>$PROJECT_DIR$/components/shop/catalog/build/libs</output-path>
-    <root id="archive" name="catalog-js.jar">
-      <element id="module-output" name="Sportsouce.components.shop.catalog.jsMain" />
-    </root>
-  </artifact>
-</component>

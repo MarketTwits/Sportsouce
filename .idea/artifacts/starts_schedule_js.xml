@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="starts-schedule-js">
-    <output-path>$PROJECT_DIR$/starts/starts-schedule/build/libs</output-path>
-    <root id="archive" name="starts-schedule-js.jar">
-      <element id="module-output" name="Sportsouce.starts.starts-schedule.jsMain" />
-    </root>
-  </artifact>
-</component>

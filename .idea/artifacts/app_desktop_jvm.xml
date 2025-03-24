@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="app-desktop-jvm">
-    <output-path>$PROJECT_DIR$/instances/app-desktop/build/libs</output-path>
-    <root id="archive" name="app-desktop-jvm.jar" />
-  </artifact>
-</component>

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="github-js">
-    <output-path>$PROJECT_DIR$/components/selfupdater/thirdparty/github/build/libs</output-path>
-    <root id="archive" name="github-js.jar">
-      <element id="module-output" name="Sportsouce.components.selfupdater.thirdparty.github.jsMain" />
-    </root>
-  </artifact>
-</component>

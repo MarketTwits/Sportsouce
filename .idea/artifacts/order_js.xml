@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="order-js">
-    <output-path>$PROJECT_DIR$/components/shop/order/build/libs</output-path>
-    <root id="archive" name="order-js.jar">
-      <element id="module-output" name="Sportsouce.components.shop.order.jsMain" />
-    </root>
-  </artifact>
-</component>

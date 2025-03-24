@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="root-js">
-    <output-path>$PROJECT_DIR$/components/profile/root/build/libs</output-path>
-    <root id="archive" name="root-js.jar">
-      <element id="module-output" name="Sportsouce.components.profile.root.jsMain" />
-    </root>
-  </artifact>
-</component>

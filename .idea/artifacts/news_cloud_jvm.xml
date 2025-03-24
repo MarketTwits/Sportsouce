@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="news-cloud-jvm">
-    <output-path>$PROJECT_DIR$/components/news/news-cloud/build/libs</output-path>
-    <root id="archive" name="news-cloud-jvm.jar">
-      <element id="module-output" name="Sportsouce.components.news.news-cloud.jvmMain" />
-    </root>
-  </artifact>
-</component>

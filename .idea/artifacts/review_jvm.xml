@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="review-jvm">
+    <output-path>$PROJECT_DIR$/components/review/build/libs</output-path>
+    <root id="archive" name="review-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.review.jvmMain" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="errors-js">
+    <output-path>$PROJECT_DIR$/components/core/errors/build/libs</output-path>
+    <root id="archive" name="errors-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.errors.jsMain" />
+    </root>
+  </artifact>
+</component>

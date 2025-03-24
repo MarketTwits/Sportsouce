@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="domain-jvm">
+    <output-path>$PROJECT_DIR$/components/shop/domain/build/libs</output-path>
+    <root id="archive" name="domain-jvm.jar">
+      <element id="module-output" name="Sportsouce.components.shop.domain.jvmMain" />
+    </root>
+  </artifact>
+</component>

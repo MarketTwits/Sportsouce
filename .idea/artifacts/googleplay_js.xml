@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="googleplay-js">
-    <output-path>$PROJECT_DIR$/components/selfupdater/googleplay/build/libs</output-path>
-    <root id="archive" name="googleplay-js.jar">
-      <element id="module-output" name="Sportsouce.components.selfupdater.googleplay.jsMain" />
-    </root>
-  </artifact>
-</component>

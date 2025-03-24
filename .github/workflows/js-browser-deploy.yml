@@ -1,9 +1,6 @@
 name: Deploy Compose Web App (JS)
 
 on:
-  push:
-    branches:
-      - SP-01-js-merge
   workflow_dispatch:
 
 jobs:

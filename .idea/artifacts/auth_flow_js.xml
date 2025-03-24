@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="auth-flow-js">
-    <output-path>$PROJECT_DIR$/components/auth/auth-flow/build/libs</output-path>
-    <root id="archive" name="auth-flow-js.jar">
-      <element id="module-output" name="Sportsouce.components.auth.auth-flow.jsMain" />
-    </root>
-  </artifact>
-</component>

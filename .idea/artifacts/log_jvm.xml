@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="log-jvm">
-    <output-path>$PROJECT_DIR$/components/core/log/build/libs</output-path>
-    <root id="archive" name="log-jvm.jar">
-      <element id="module-output" name="Sportsouce.components.core.log.jvmMain" />
-    </root>
-  </artifact>
-</component>

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="impl-js">
-    <output-path>$PROJECT_DIR$/components/settings/impl/build/libs</output-path>
-    <root id="archive" name="impl-js.jar">
-      <element id="module-output" name="Sportsouce.components.settings.impl.jsMain" />
-    </root>
-  </artifact>
-</component>

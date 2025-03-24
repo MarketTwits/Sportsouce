@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="starts-cloud-jvm">
-    <output-path>$PROJECT_DIR$/components/starts/starts-cloud/build/libs</output-path>
-    <root id="archive" name="starts-cloud-jvm.jar">
-      <element id="module-output" name="Sportsouce.components.starts.starts-cloud.jvmMain" />
-    </root>
-  </artifact>
-</component>

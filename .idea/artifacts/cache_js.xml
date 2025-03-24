@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="cache-js">
+    <output-path>$PROJECT_DIR$/components/core/cache/build/libs</output-path>
+    <root id="archive" name="cache-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.cache.jsMain" />
+    </root>
+  </artifact>
+</component>

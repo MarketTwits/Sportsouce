@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="dashboard-js">
+    <output-path>$PROJECT_DIR$/components/club/dashboard/build/libs</output-path>
+    <root id="archive" name="dashboard-js.jar">
+      <element id="module-output" name="Sportsouce.components.club.dashboard.jsMain" />
+    </root>
+  </artifact>
+</component>

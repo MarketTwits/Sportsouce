@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="auth-service-js">
+    <output-path>$PROJECT_DIR$/components/auth/auth-service/build/libs</output-path>
+    <root id="archive" name="auth-service-js.jar">
+      <element id="module-output" name="Sportsouce.components.auth.auth-service.jsMain" />
+    </root>
+  </artifact>
+</component>

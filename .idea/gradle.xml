@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/build-logic" name="build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/build-logic" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="testRunner" value="CHOOSE_PER_TEST" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/components" />
+            <option value="$PROJECT_DIR$/components/analytics" />
+            <option value="$PROJECT_DIR$/components/analytics/crashlytics" />
+            <option value="$PROJECT_DIR$/components/auth" />
+            <option value="$PROJECT_DIR$/components/auth/auth-cloud" />
+            <option value="$PROJECT_DIR$/components/auth/auth-flow" />
+            <option value="$PROJECT_DIR$/components/auth/auth-service" />
+            <option value="$PROJECT_DIR$/components/bottombar" />
+            <option value="$PROJECT_DIR$/components/club" />
+            <option value="$PROJECT_DIR$/components/club/cloud" />
+            <option value="$PROJECT_DIR$/components/club/dashboard" />
+            <option value="$PROJECT_DIR$/components/core" />
+            <option value="$PROJECT_DIR$/components/core/activityholder" />
+            <option value="$PROJECT_DIR$/components/core/cache" />
+            <option value="$PROJECT_DIR$/components/core/cloud" />
+            <option value="$PROJECT_DIR$/components/core/decompose" />
+            <option value="$PROJECT_DIR$/components/core/errors" />
+            <option value="$PROJECT_DIR$/components/core/koin" />
+            <option value="$PROJECT_DIR$/components/core/log" />
+            <option value="$PROJECT_DIR$/components/core/paging" />
+            <option value="$PROJECT_DIR$/components/core/theme" />
+            <option value="$PROJECT_DIR$/components/core/time" />
+            <option value="$PROJECT_DIR$/components/core/ui" />
+            <option value="$PROJECT_DIR$/components/inappnotification" />
+            <option value="$PROJECT_DIR$/components/inappnotification/api" />
+            <option value="$PROJECT_DIR$/components/inappnotification/impl" />
+            <option value="$PROJECT_DIR$/components/intent" />
+            <option value="$PROJECT_DIR$/components/intent/api" />
+            <option value="$PROJECT_DIR$/components/intent/composable" />
+            <option value="$PROJECT_DIR$/components/intent/impl" />
+            <option value="$PROJECT_DIR$/components/news" />
+            <option value="$PROJECT_DIR$/components/news/news" />
+            <option value="$PROJECT_DIR$/components/news/news-cloud" />
+            <option value="$PROJECT_DIR$/components/news/news-common" />
+            <option value="$PROJECT_DIR$/components/profile" />
+            <option value="$PROJECT_DIR$/components/profile/authorized" />
+            <option value="$PROJECT_DIR$/components/profile/authorized/change-password" />
+            <option value="$PROJECT_DIR$/components/profile/authorized/edit-profile" />
+            <option value="$PROJECT_DIR$/components/profile/authorized/members" />
+            <option value="$PROJECT_DIR$/components/profile/authorized/profile" />
+            <option value="$PROJECT_DIR$/components/profile/authorized/registrations" />
+            <option value="$PROJECT_DIR$/components/profile/cloud" />
+            <option value="$PROJECT_DIR$/components/profile/root" />
+            <option value="$PROJECT_DIR$/components/profile/unauthorized" />
+            <option value="$PROJECT_DIR$/components/review" />
+            <option value="$PROJECT_DIR$/components/root" />
+            <option value="$PROJECT_DIR$/components/selfupdater" />
+            <option value="$PROJECT_DIR$/components/selfupdater/api" />
+            <option value="$PROJECT_DIR$/components/selfupdater/components" />
+            <option value="$PROJECT_DIR$/components/selfupdater/googleplay" />
+            <option value="$PROJECT_DIR$/components/selfupdater/impl" />
+            <option value="$PROJECT_DIR$/components/selfupdater/thirdparty" />
+            <option value="$PROJECT_DIR$/components/selfupdater/thirdparty/api" />
+            <option value="$PROJECT_DIR$/components/selfupdater/thirdparty/github" />
+            <option value="$PROJECT_DIR$/components/selfupdater/unknown" />
+            <option value="$PROJECT_DIR$/components/selfupdater/ver" />
+            <option value="$PROJECT_DIR$/components/settings" />
+            <option value="$PROJECT_DIR$/components/settings/api" />
+            <option value="$PROJECT_DIR$/components/settings/impl" />
+            <option value="$PROJECT_DIR$/components/shop" />
+            <option value="$PROJECT_DIR$/components/shop/cart" />
+            <option value="$PROJECT_DIR$/components/shop/catalog" />
+            <option value="$PROJECT_DIR$/components/shop/cloud" />
+            <option value="$PROJECT_DIR$/components/shop/domain" />
+            <option value="$PROJECT_DIR$/components/shop/filter" />
+            <option value="$PROJECT_DIR$/components/shop/item" />
+            <option value="$PROJECT_DIR$/components/shop/order" />
+            <option value="$PROJECT_DIR$/components/shop/orders" />
+            <option value="$PROJECT_DIR$/components/shop/search" />
+            <option value="$PROJECT_DIR$/components/start" />
+            <option value="$PROJECT_DIR$/components/start/start" />
+            <option value="$PROJECT_DIR$/components/start/start-cloud" />
+            <option value="$PROJECT_DIR$/components/start/start-filter" />
+            <option value="$PROJECT_DIR$/components/start/start-register" />
+            <option value="$PROJECT_DIR$/components/start/start-search" />
+            <option value="$PROJECT_DIR$/components/start/start-support" />
+            <option value="$PROJECT_DIR$/components/starts" />
+            <option value="$PROJECT_DIR$/components/starts/starts" />
+            <option value="$PROJECT_DIR$/components/starts/starts-cloud" />
+            <option value="$PROJECT_DIR$/components/starts/starts-common" />
+            <option value="$PROJECT_DIR$/components/starts/starts-popular" />
+            <option value="$PROJECT_DIR$/components/starts/starts-random" />
+            <option value="$PROJECT_DIR$/components/teams-city" />
+            <option value="$PROJECT_DIR$/instances" />
+            <option value="$PROJECT_DIR$/instances/app-android" />
+            <option value="$PROJECT_DIR$/instances/app-browser" />
+            <option value="$PROJECT_DIR$/instances/app-desktop" />
+          </set>
+        </option>
+        <option name="resolveExternalAnnotations" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

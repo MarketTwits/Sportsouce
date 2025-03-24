@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="decompose-js">
+    <output-path>$PROJECT_DIR$/components/core/decompose/build/libs</output-path>
+    <root id="archive" name="decompose-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.decompose.jsMain" />
+    </root>
+  </artifact>
+</component>

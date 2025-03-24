@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="start-support-js">
+    <output-path>$PROJECT_DIR$/components/start/start-support/build/libs</output-path>
+    <root id="archive" name="start-support-js.jar">
+      <element id="module-output" name="Sportsouce.components.start.start-support.jsMain" />
+    </root>
+  </artifact>
+</component>

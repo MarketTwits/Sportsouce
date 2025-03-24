@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="profile-js">
+    <output-path>$PROJECT_DIR$/components/profile/authorized/profile/build/libs</output-path>
+    <root id="archive" name="profile-js.jar">
+      <element id="module-output" name="Sportsouce.components.profile.authorized.profile.jsMain" />
+    </root>
+  </artifact>
+</component>

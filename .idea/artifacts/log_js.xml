@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="log-js">
+    <output-path>$PROJECT_DIR$/components/core/log/build/libs</output-path>
+    <root id="archive" name="log-js.jar">
+      <element id="module-output" name="Sportsouce.components.core.log.jsMain" />
+    </root>
+  </artifact>
+</component>

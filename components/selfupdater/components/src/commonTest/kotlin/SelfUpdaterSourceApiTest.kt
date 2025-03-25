@@ -1,9 +1,9 @@
-import com.flipperdevices.inappnotification.impl.storage.InAppNotificationStorageImpl
 import com.flipperdevices.selfupdater.impl.api.SelfUpdaterApiImpl
 import com.flipperdevices.selfupdater.models.SelfUpdateResult
-import com.markettwits.inappnotification.api.InAppNotificationListener
-import com.markettwits.inappnotification.api.InAppNotificationStorage
-import com.markettwits.inappnotification.api.model.InAppNotification
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationListener
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
+import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
+import com.markettwits.sportsouce.inappnotification.impl.storage.InAppNotificationStorageImpl
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

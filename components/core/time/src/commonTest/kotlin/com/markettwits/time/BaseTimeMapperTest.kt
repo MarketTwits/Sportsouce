@@ -1,5 +1,8 @@
 package com.markettwits.time
 
+import com.markettwits.core.time.BaseTimeMapper
+import com.markettwits.core.time.TimeMapper
+import com.markettwits.core.time.TimePattern
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

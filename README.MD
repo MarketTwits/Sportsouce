@@ -2,6 +2,7 @@
 
 ![badge-android](http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat)
 ![badge-desktop](http://img.shields.io/badge/platform-desktop-DB413D.svg?style=flat)
+![badge-js](http://img.shields.io/badge/platform-web-FDD835.svg?style=flat)
 # Sportsauce
 
 Welcome to the **Sportsauce App** – an application designed for working with the website **sportsauce.ru**. This app helps users easily interact with various sports data and events provided on the platform.

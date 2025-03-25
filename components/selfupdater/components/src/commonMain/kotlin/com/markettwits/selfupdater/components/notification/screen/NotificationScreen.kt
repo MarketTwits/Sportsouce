@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.inappnotification.api.InAppNotificationRenderer
-import com.markettwits.inappnotification.api.model.InAppNotification
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
+import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 
 @Composable
 fun NotificationScreen(

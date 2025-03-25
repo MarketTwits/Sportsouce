@@ -3,15 +3,13 @@ package com.markettwits.sportsouce.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.defaultComponentContext
+import com.markettwits.core.theme.SportSauceTheme
+import com.markettwits.core.theme.component.ThemeComponentBase
 import com.markettwits.initKoin
-import com.markettwits.root.RootComponentBase
-import com.markettwits.root.RootContent
-import com.markettwits.theme.theme.SportSauceTheme
-import com.markettwits.theme.theme.component.ThemeComponentBase
+import com.markettwits.sportsouce.root.RootComponentBase
+import com.markettwits.sportsouce.root.RootContent
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.stopKoin
 

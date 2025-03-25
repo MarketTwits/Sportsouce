@@ -19,9 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.markettwits.time.BaseTimeMapper
-import com.markettwits.time.TimeMapper
-import com.markettwits.time.TimePattern
+import com.markettwits.core.time.BaseTimeMapper
+import com.markettwits.core.time.TimeMapper
+import com.markettwits.core.time.TimePattern
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

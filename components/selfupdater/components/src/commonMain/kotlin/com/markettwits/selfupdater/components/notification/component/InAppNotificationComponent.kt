@@ -1,7 +1,7 @@
 package com.markettwits.selfupdater.components.notification.component
 
-import com.markettwits.inappnotification.api.InAppNotificationListener
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationListener
 import kotlinx.coroutines.flow.StateFlow
 
 interface InAppNotificationComponent : InAppNotificationListener {

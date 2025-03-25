@@ -12,8 +12,8 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.markettwits.activityholder.CurrentActivityHolder
 import com.markettwits.inappnotification.api.BuildConfig
-import com.markettwits.inappnotification.api.InAppNotificationStorage
-import com.markettwits.inappnotification.api.model.InAppNotification
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
+import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 import kotlinx.coroutines.tasks.await
 
 private const val UPDATE_CODE = 228

@@ -1,9 +1,8 @@
 package com.markettwits.core_cloud.provider
 
+import Sportsouce.components.core.cloud.BuildConfig
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.DEFAULT
@@ -52,3 +51,17 @@ class HttpClientProviderBase(
 
     override fun json(): Json = json
 }
+
+
+
+fun SportSauceHttpClientProvider(
+    baseUrl: String = SportSauceBaseUrl,
+    json: Json = JsonProviderBase().provide(),
+) : HttpClientProvider {
+    return HttpClientProviderBase(
+        json = json,
+        baseUrl = baseUrl,
+    )
+}
+
+val SportSauceBaseUrl = BuildConfig.SPORTSAUCE_API_PATH

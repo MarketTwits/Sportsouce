@@ -20,5 +20,4 @@ local.properties
 /.idea/
 !/.idea/icon.png
 # Project secrets config
-/store
-.secrets.properties
+/secrets.properties

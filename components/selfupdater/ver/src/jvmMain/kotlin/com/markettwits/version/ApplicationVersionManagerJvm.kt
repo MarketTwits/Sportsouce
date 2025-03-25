@@ -1,6 +1,6 @@
 package com.markettwits.version
 
-import Sportsouce.selfupdater.ver.BuildConfig
+import Sportsouce.components.selfupdater.ver.BuildConfig
 
 class ApplicationVersionManagerJvm : ApplicationVersionManager {
 

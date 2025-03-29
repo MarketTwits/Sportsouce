@@ -37,7 +37,7 @@ fun WorkoutRegistrationContent(
     ) {
         Text(
             modifier = Modifier.padding(4.dp),
-            text = "Заполните форму и мы вам перезвоним ♥",
+            text = "Заполните форму и мы вам перезвоним",
             color = MaterialTheme.colorScheme.tertiary,
             textAlign = TextAlign.Start,
             fontFamily = FontNunito.bold(),

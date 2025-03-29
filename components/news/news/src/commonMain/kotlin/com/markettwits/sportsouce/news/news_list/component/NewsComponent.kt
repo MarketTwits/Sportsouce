@@ -1,6 +1,6 @@
-package com.markettwits.news.news_list.component
+package com.markettwits.sportsouce.news.news_list.component
 
-import com.markettwits.news.news_list.store.NewsStore
+import com.markettwits.sportsouce.news.news_list.store.NewsStore
 import kotlinx.coroutines.flow.StateFlow
 
 interface NewsComponent {

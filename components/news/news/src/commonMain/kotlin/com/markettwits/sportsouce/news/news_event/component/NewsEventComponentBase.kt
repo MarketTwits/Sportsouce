@@ -1,13 +1,13 @@
-package com.markettwits.news.news_event.component
+package com.markettwits.sportsouce.news.news_event.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.core.decompose.componentScope
-import com.markettwits.news.common.model.NewsItem
-import com.markettwits.news.news_event.store.NewsEventStore
-import com.markettwits.news.news_event.store.NewsEventStoreFactory
+import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_event.store.NewsEventStore
+import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,8 +26,8 @@ class NewsEventComponentBase(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<NewsEventStore.State> = store.stateFlow
 
-    override fun obtainEvent(event: NewsEventStore.Intent) {
-        store.accept(event)
+    override fun obtainEvent(intent: NewsEventStore.Intent) {
+        store.accept(intent)
     }
 
     init {

@@ -18,8 +18,8 @@ kotlin {
             implementation(projects.components.core.ui)
             implementation(projects.components.shop.domain)
             implementation(projects.components.core.koin)
-            implementation(projects.components.intent.api)
-            implementation(projects.components.intent.impl)
+            implementation(projects.components.core.intent.api)
+            implementation(projects.components.core.intent.impl)
             implementation(projects.components.auth.authService)
         }
     }

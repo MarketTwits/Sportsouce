@@ -2,7 +2,7 @@ package com.markettwits.sportsouce.review.review.presentation.store
 
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.Intent
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.Label

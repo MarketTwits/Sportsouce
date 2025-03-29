@@ -1,4 +1,4 @@
-package com.markettwits.news.news_event.components
+package com.markettwits.sportsouce.news.news_event.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

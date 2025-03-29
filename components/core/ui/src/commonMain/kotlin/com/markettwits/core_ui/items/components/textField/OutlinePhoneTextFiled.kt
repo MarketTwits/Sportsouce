@@ -2,10 +2,6 @@ package com.markettwits.core_ui.items.components.textField
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -35,7 +31,8 @@ fun OutlinePhoneTextFiled(
     ),
     onValueChange: (String) -> Unit
 ) {
-    var texts by remember { mutableStateOf(mapFullRuPhoneNumberToSimple(value)) }
+    var texts = mapFullRuPhoneNumberToSimple(value)
+
     OutlinedTextFieldBase(
         modifier = modifier,
         label = label,
@@ -50,9 +47,12 @@ fun OutlinePhoneTextFiled(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         onValueChange = {
-            if (it.length <= NumberDefaults.INPUT_LENGTH) {
-                texts = it
-                onValueChange(visualTransformation.filter(AnnotatedString(it)).text.text)
+            val filteredValue = it.filterIndexed { index, char ->
+                char.isDigit() || (index == 0 && char == '+')
+            }
+            if (filteredValue.length <= NumberDefaults.INPUT_LENGTH) {
+                texts = filteredValue
+                onValueChange(visualTransformation.filter(AnnotatedString(filteredValue)).text.text)
             }
         }
     )

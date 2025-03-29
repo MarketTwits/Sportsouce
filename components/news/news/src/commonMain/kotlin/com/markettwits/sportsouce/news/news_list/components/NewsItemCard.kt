@@ -1,4 +1,4 @@
-package com.markettwits.news.news_list.components
+package com.markettwits.sportsouce.news.news_list.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,7 @@ import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
 fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (NewsItem) -> Unit) {

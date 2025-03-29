@@ -2,14 +2,14 @@ package com.markettwits.sportsouce.review.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.news.common.model.NewsItem
-import com.markettwits.news.news_event.component.NewsEventComponent
-import com.markettwits.news.news_list.component.NewsComponent
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
 import com.markettwits.sportsouce.club.root.RootClubComponent
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
+import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
+import com.markettwits.sportsouce.news.news_list.component.NewsComponent
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponent
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponent

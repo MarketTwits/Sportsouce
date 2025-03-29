@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -38,15 +39,13 @@ fun <E> DropDownSpinner(
     var isOpen by remember { mutableStateOf(false) }
 
     Box(
-        modifier
-            .fillMaxWidth(),
+        modifier,
         contentAlignment = Alignment.CenterStart
     ) {
         if (selectedItem == null || selectedItem.toString().isEmpty()) {
             Text(
                 text = defaultText,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 3.dp),
                 color = MaterialTheme.colorScheme.primary
             )
@@ -54,7 +53,6 @@ fun <E> DropDownSpinner(
         textFiled()
         DropdownMenu(
             modifier = Modifier
-                .fillMaxWidth(.85f)
                 .background(MaterialTheme.colorScheme.onPrimaryContainer),
             expanded = isOpen,
             onDismissRequest = {
@@ -88,6 +86,7 @@ fun <E> DropDownSpinner(
         Spacer(
             modifier = Modifier
                 .matchParentSize()
+                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
                 .background(Color.Transparent)
                 .clickable(
                     onClick = { isOpen = true }

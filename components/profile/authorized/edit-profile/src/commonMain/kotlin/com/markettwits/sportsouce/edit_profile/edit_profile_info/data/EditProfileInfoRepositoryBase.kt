@@ -6,7 +6,7 @@ import com.markettwits.sportsouce.auth.service.api.AuthDataSource
 import com.markettwits.sportsouce.edit_profile.edit_profile_info.domain.EditProfileInfoRepository
 import com.markettwits.sportsouce.edit_profile.edit_profile_info.domain.models.UserData
 import com.markettwits.sportsouce.edit_profile.edit_profile_info.domain.models.UserDataContent
-import com.markettwits.sportsouce.teams_city.data.TeamsCityRepository
+import com.markettwits.sportsouce.teams_city.domain.TeamsCityRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

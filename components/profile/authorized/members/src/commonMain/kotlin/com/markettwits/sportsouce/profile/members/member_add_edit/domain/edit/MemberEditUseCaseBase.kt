@@ -5,8 +5,8 @@ import com.markettwits.core_ui.items.extensions.flatMapCallback
 import com.markettwits.sportsouce.profile.members.member_add_edit.domain.validate.AddOrEditMemberValidator
 import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMembersRepository
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
-import com.markettwits.sportsouce.teams_city.data.TeamsCityRepository
 import com.markettwits.sportsouce.teams_city.domain.Team
+import com.markettwits.sportsouce.teams_city.domain.TeamsCityRepository
 
 class MemberEditUseCaseBase(
     private val profileRepository: ProfileMembersRepository,

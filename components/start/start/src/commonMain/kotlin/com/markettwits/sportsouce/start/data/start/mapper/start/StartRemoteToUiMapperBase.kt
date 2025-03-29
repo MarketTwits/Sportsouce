@@ -43,17 +43,17 @@ internal class StartRemoteToUiMapperBase(
                     startPlace = startRemote.coordinates ?: "",
                     image = startRemote.posterLinkFile?.fullPath ?: "",
                     startStatus = StartItem.StartStatus(
-                        code = startRemote.start_status.code,
-                        name = startRemote.start_status.name
+                        code = startRemote.startStatus.code,
+                        name = startRemote.startStatus.name
                     ),
                     startTime = timeMapper.mapTime(
                         TimePattern.FullWithEmptySpace,
-                        startRemote.start_date
+                        startRemote.startDate
                     ),
                     slug = startRemote.slug ?: "",
-                    startData = startRemote.start_date,
+                    startData = startRemote.startDate,
                     description = startRemote.description ?: "",
-                    paymentDisabled = startRemote.payment_disabled ?: false,
+                    paymentDisabled = startRemote.paymentDisabled ?: false,
                     organizers = startRemote.organizers,
                     membersUi = StartMembersNewToUiMapper().map(startMember),
                     commentsRemote = commentsMapper.map(commentsRemote),
@@ -62,9 +62,17 @@ internal class StartRemoteToUiMapperBase(
                     } else {
                         StartItem.ConditionFile.Empty
                     },
-                    paymentType = startRemote.payment_type ?: "",
-                    result = emptyList(),
-                    usefulLinks = startRemote.useful_links?.map {
+                    paymentType = startRemote.paymentType ?: "",
+                    result = startRemote.results?.filter {
+                        it.file != null
+                    }?.map {
+                        StartItem.Result(
+                            id = it.id,
+                            name = it.name,
+                            url = it.file?.fullPath ?: ""
+                        )
+                    } ?: emptyList(),
+                    usefulLinks = startRemote.usefulLinks?.map {
                         StartItem.Result(
                             id = it.id,
                             name = it.text,
@@ -72,11 +80,11 @@ internal class StartRemoteToUiMapperBase(
                         )
                     } ?: emptyList(),
                     startAlbum = albumsMapper.map(startAlbum),
-                    regLink = startRemote.reg_link ?: "",
+                    regLink = startRemote.regLink ?: "",
                     startTimes = startTimesMapper.map(
                         beginningRegistry = "",
                         endRegistry = "",
-                        beginningStart = startRemote.start_date,
+                        beginningStart = startRemote.startDate,
                         endStart = ""
                     ),
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),

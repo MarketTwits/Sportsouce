@@ -35,7 +35,7 @@ import com.markettwits.core_ui.items.theme.Shapes
 @Composable
 internal fun StartDescription(modifier: Modifier, description: String) {
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val displayText = if (expanded) description else description.take(200)
+    val displayText = if (expanded) description else description.take(250)
 
     Column(modifier) {
         val textColor = MaterialTheme.colorScheme.onPrimary
@@ -49,13 +49,13 @@ internal fun StartDescription(modifier: Modifier, description: String) {
             text = displayText,
             fontSize = 14.sp,
             fontFamily = FontNunito.medium(),
-            lineHeight = 15.sp,
+            lineHeight = 16.sp,
             selectable = true,
             color = textColor,
         )
 
         AnimatedVisibility(
-            visible = description.length > 200,
+            visible = description.length > 250,
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically()
         ) {

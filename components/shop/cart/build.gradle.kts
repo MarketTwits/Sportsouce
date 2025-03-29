@@ -13,7 +13,7 @@ kotlin {
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)
             implementation(libs.koin.core)
-            implementation(projects.components.intent.composable)
+            implementation(projects.components.core.intent.composable)
             implementation(projects.components.shop.domain)
             implementation(projects.components.core.cache)
             implementation(projects.components.core.ui)

@@ -25,5 +25,4 @@ data class ShopFilterPrice(
             override fun apply(): Int? = null
         }
     }
-
 }

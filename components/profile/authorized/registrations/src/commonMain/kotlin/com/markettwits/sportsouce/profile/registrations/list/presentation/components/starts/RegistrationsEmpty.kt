@@ -1,9 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.list.presentation.components.starts
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -16,21 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
-
-@Composable
-fun RegistrationsEmpty(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        Text(
-            modifier = modifier
-                .align(Alignment.Center),
-            text = "Вы пока не принимали участие в стартах",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 16.sp
-        )
-    }
-}
 
 @Composable
 fun RegistrationsAbsolutelyEmpty(modifier: Modifier = Modifier) {

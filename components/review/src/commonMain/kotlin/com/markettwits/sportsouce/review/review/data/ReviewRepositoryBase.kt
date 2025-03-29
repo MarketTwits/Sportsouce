@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.review.review.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
-import com.markettwits.news.common.NewsRepository
+import com.markettwits.sportsouce.news.common.NewsRepository
 import com.markettwits.sportsouce.review.review.data.cache.ReviewCache
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository

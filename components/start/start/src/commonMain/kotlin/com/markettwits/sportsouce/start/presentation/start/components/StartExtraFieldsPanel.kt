@@ -58,7 +58,7 @@ private fun StartExtraFiledRow(
     value: String,
 ) {
     Row(
-        modifier = modifier.padding(vertical = 4.dp),
+        modifier = modifier.padding(vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(

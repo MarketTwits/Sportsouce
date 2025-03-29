@@ -1,10 +1,10 @@
-package com.markettwits.news.common.internal
+package com.markettwits.sportsouce.news.common.internal
 
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.core.time.TimePattern
-import com.markettwits.news.cloud.model.news.NetworkNews
-import com.markettwits.news.common.model.NewsHashtag
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.cloud.model.news.NetworkNews
+import com.markettwits.sportsouce.news.common.model.NewsHashtag
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 class NetworkNewsMapper(
     private val timeMapper: TimeMapper

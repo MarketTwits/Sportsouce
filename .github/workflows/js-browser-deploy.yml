@@ -33,10 +33,10 @@ jobs:
 
       - name: Build
         run: |
-          ./gradlew browser:jsBrowserDistribution --no-configuration-cache
+          ./gradlew instances:app-browser:jsBrowserDistribution --no-configuration-cache
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.6.8
         with:
           branch: gh-pages
-          folder: browser/build/dist/js/productionExecutable
+          folder: instances:app-browser/build/dist/js/productionExecutable

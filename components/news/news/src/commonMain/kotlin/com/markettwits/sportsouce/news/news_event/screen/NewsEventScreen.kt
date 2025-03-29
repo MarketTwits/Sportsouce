@@ -1,11 +1,11 @@
-package com.markettwits.news.news_event.screen
+package com.markettwits.sportsouce.news.news_event.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.markettwits.news.news_event.component.NewsEventComponent
-import com.markettwits.news.news_event.components.NewsEventContent
-import com.markettwits.news.news_event.store.NewsEventStore
+import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
+import com.markettwits.sportsouce.news.news_event.components.NewsEventContent
+import com.markettwits.sportsouce.news.news_event.store.NewsEventStore
 
 @Composable
 fun NewsEventScreen(component: NewsEventComponent) {

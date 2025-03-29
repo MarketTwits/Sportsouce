@@ -24,7 +24,6 @@ class WorkoutRegistrationExecutor(
             is Intent.OnClickRegistration -> {
                 onClickRegistration(state().form)
             }
-
             is Intent.OnClickPhone -> intentAction.openPhone(intent.phone)
             is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
             is Intent.OnClickContinueAfterSuccess -> {
@@ -37,6 +36,7 @@ class WorkoutRegistrationExecutor(
     override fun executeAction(action: Unit) {
         scope.launch {
             val value = workoutRegistrationUseCase.init()
+            println("WorkoutRegistrationExecutor $value")
             dispatch(Message.OnValueChanged(value.copy(type = registrationType)))
         }
     }

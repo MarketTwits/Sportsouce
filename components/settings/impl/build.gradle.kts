@@ -9,8 +9,8 @@ android.namespace = "com.markettwits.settings.impl"
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.components.intent.api)
-            implementation(projects.components.intent.impl)
+            implementation(projects.components.core.intent.api)
+            implementation(projects.components.core.intent.impl)
             implementation(projects.components.selfupdater.components)
             implementation(projects.components.selfupdater.api)
             implementation(projects.components.selfupdater.ver)

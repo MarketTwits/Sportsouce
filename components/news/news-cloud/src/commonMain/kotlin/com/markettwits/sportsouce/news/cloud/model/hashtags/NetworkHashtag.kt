@@ -1,4 +1,4 @@
-package com.markettwits.news.cloud.model.hashtags
+package com.markettwits.sportsouce.news.cloud.model.hashtags
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

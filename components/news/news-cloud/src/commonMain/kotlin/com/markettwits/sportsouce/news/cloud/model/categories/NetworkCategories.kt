@@ -1,4 +1,4 @@
-package com.markettwits.news.cloud.model.categories
+package com.markettwits.sportsouce.news.cloud.model.categories
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

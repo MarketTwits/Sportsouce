@@ -5,8 +5,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markettwits.news.common.model.NewsItem
-import com.markettwits.news.news_list.components.NewsContent
+import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_list.components.NewsContent
 import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStarts
 import com.markettwits.sportsouce.review.review.presentation.components.archive.ArchiveStarts
 import com.markettwits.sportsouce.review.review.presentation.components.review_menu.ReviewMenu

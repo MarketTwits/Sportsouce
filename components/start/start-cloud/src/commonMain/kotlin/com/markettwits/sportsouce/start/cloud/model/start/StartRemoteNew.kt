@@ -5,9 +5,11 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
 import com.markettwits.sportsouce.start.cloud.model.start.fields.PosterLinkFile
+import com.markettwits.sportsouce.start.cloud.model.start.fields.Result
 import com.markettwits.sportsouce.start.cloud.model.start.fields.StartStatus
 import com.markettwits.sportsouce.start.cloud.model.start.fields.UsefulLinks
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -17,26 +19,48 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class StartRemoteNew(
+    @SerialName("conditionFile")
     val conditionFile: ConditionFile?,
-    val condition_short: String?,
+    @SerialName("condition_short")
+    val conditionShort: String?,
+    @SerialName("coordinates")
     val coordinates: String?,
+    @SerialName("description")
     val description: String?,
+    @SerialName("distances")
     val distances: List<Distance>,
+    @SerialName("distinctDistances")
     val distinctDistances: Map<Int, DistinctDistance>,
+    @SerialName("id")
     val id: Int,
+    @SerialName("name")
     val name: String,
+    @SerialName("organizers")
     val organizers: List<Organizer>,
-    val payment_disabled: Boolean?,
-    val payment_type: String?,
+    @SerialName("payment_disabled")
+    val paymentDisabled: Boolean?,
+    @SerialName("payment_type")
+    val paymentType: String?,
+    @SerialName("posterLinkFile")
     val posterLinkFile: PosterLinkFile?,
-    val reg_on_site: Boolean? = null,
-    val short_name: String?,
+    @SerialName("reg_on_site")
+    val regOnSite: Boolean? = null,
+    @SerialName("short_name")
+    val shortName: String?,
+    @SerialName("slug")
     val slug: String?,
-    val start_date: String,
-    val start_status: StartStatus,
-    val start_time: String?,
-    val reg_link : String?,
-    val useful_links: List<UsefulLinks>?
+    @SerialName("start_date")
+    val startDate: String,
+    @SerialName("start_status")
+    val startStatus: StartStatus,
+    @SerialName("start_time")
+    val startTime: String?,
+    @SerialName("reg_link")
+    val regLink : String?,
+    @SerialName("useful_links")
+    val usefulLinks: List<UsefulLinks>?,
+    @SerialName("results")
+    val results : List<Result>?
 ) : StartRemote {
 
     @Deprecated("Use for isOpen field, don't use now")

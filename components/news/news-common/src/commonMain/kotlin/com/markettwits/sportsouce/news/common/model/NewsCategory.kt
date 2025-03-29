@@ -1,4 +1,4 @@
-package com.markettwits.news.common.model
+package com.markettwits.sportsouce.news.common.model
 
 import kotlinx.serialization.Serializable
 

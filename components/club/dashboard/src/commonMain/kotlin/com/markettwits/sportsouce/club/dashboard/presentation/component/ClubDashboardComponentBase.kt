@@ -41,7 +41,6 @@ internal class ClubDashboardComponentBase(
                 is ClubDashboardStore.Label.OnClickInfo -> output(
                     ClubDashboardComponent.Output.GoInfo(it.index, it.items)
                 )
-
                 is ClubDashboardStore.Label.OnClickRegistration -> output(
                     ClubDashboardComponent.Output.Subscription(
                         it.type

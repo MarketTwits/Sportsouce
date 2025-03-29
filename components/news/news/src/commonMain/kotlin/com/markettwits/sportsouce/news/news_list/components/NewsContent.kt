@@ -1,4 +1,4 @@
-package com.markettwits.news.news_list.components
+package com.markettwits.sportsouce.news.news_list.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
 fun NewsContent(

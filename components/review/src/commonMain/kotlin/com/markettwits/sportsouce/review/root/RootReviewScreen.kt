@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
-import com.markettwits.news.news_event.screen.NewsEventScreen
 import com.markettwits.selfupdater.components.notification.screen.NotificationScreen
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
 import com.markettwits.sportsouce.club.root.RootClubScreen
+import com.markettwits.sportsouce.news.news_event.screen.NewsEventScreen
 import com.markettwits.sportsouce.review.review.presentation.screen.ReviewScreen
 import com.markettwits.sportsouce.settings.root.RootSettingsScreen
 import com.markettwits.sportsouce.shop.root.RootShopCatalogScreen

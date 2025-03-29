@@ -1,14 +1,18 @@
-package com.markettwits.news.root
+package com.markettwits.sportsouce.news.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.news.di.newsModule
-import com.markettwits.news.news_event.component.NewsEventComponentBase
-import com.markettwits.news.news_event.store.NewsEventStoreFactory
-import com.markettwits.news.news_list.component.NewsComponentBase
+import com.markettwits.sportsouce.news.di.newsModule
+import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBase
+import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
+import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
 
 class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
     ComponentContext by context {

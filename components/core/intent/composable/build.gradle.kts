@@ -9,9 +9,9 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.components.intent.api)
+            api(projects.components.core.intent.api)
             implementation(projects.components.core.ui)
-            implementation(projects.components.intent.impl)
+            implementation(projects.components.core.intent.impl)
         }
     }
 }

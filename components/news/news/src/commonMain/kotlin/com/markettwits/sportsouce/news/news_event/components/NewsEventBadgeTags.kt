@@ -1,4 +1,4 @@
-package com.markettwits.news.news_event.components
+package com.markettwits.sportsouce.news.news_event.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.news.common.model.NewsHashtag
+import com.markettwits.sportsouce.news.common.model.NewsHashtag
 
 
 @Composable

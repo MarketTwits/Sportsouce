@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.club.dashboard.di
 
 import com.arkivanov.decompose.ComponentContext
 import com.markettwits.crashlitics.api.di.crashlyticsModule
+import com.markettwits.sportsouce.club.cloud.di.clubCloudModule
 import com.markettwits.sportsouce.club.common.data.ClubRepositoryBase
 import com.markettwits.sportsouce.club.common.data.mapper.subscription.SubscriptionMapper
 import com.markettwits.sportsouce.club.common.data.mapper.subscription.SubscriptionMapperBase
@@ -15,7 +16,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val clubDashboardModule = module {
-    includes(com.markettwits.sportsouce.club.cloud.di.clubCloudModule, crashlyticsModule)
+    includes(clubCloudModule, crashlyticsModule)
     singleOf(::ClubRepositoryBase) bind ClubRepository::class
     singleOf(::ClubDashboardStoreFactory)
     singleOf(::SubscriptionMapperBase) bind SubscriptionMapper::class

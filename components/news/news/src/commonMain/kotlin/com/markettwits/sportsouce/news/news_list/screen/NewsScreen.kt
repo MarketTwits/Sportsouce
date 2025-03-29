@@ -1,4 +1,4 @@
-package com.markettwits.news.news_list.screen
+package com.markettwits.sportsouce.news.news_list.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.news.news_list.component.NewsComponent
-import com.markettwits.news.news_list.components.NewsItemCard
-import com.markettwits.news.news_list.store.NewsStore
+import com.markettwits.sportsouce.news.news_list.component.NewsComponent
+import com.markettwits.sportsouce.news.news_list.components.NewsItemCard
+import com.markettwits.sportsouce.news.news_list.store.NewsStore
 
 
 @Composable

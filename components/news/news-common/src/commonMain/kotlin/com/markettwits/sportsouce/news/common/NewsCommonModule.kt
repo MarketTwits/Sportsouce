@@ -1,10 +1,10 @@
-package com.markettwits.news.common
+package com.markettwits.sportsouce.news.common
 
 import com.markettwits.core.time.BaseTimeMapper
 import com.markettwits.core.time.TimeMapper
-import com.markettwits.news.cloud.sportSauceNewsNetworkModule
-import com.markettwits.news.common.internal.NetworkNewsMapper
-import com.markettwits.news.common.internal.NewsRepositoryBase
+import com.markettwits.sportsouce.news.cloud.sportSauceNewsNetworkModule
+import com.markettwits.sportsouce.news.common.internal.NetworkNewsMapper
+import com.markettwits.sportsouce.news.common.internal.NewsRepositoryBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

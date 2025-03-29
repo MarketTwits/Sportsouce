@@ -11,15 +11,14 @@ import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
 @Composable
 fun ShopFilterScreen(
     modifier: Modifier = Modifier,
-    isCompactMode : Boolean,
     component: ShopFilterComponent,
+    onClickApplyFilter : () -> Unit
 ) {
     val state by component.state.collectAsState()
 
     ShopFilterContent(
         modifier = modifier,
         state = state,
-        isCompactMode = isCompactMode,
         onClickGoBack = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickGoBack)
         },
@@ -40,6 +39,7 @@ fun ShopFilterScreen(
         },
         onClickApplyFilter = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickApplyFilter)
+            onClickApplyFilter()
         },
         onClickRetry = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickRetry)

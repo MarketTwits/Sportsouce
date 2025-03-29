@@ -1,7 +1,5 @@
-package com.markettwits.sportsouce.teams_city.data
+package com.markettwits.sportsouce.teams_city.domain
 
-import com.markettwits.sportsouce.teams_city.domain.City
-import com.markettwits.sportsouce.teams_city.domain.Team
 import kotlinx.coroutines.flow.Flow
 
 interface TeamsCityRepository {

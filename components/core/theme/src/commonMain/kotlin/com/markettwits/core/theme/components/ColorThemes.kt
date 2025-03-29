@@ -8,6 +8,7 @@ import com.markettwits.core_ui.items.theme.SportSouceColor
 internal val LightColorScheme = lightColorScheme(
     primary = Color.White,
     onPrimary = SportSouceColor.DarkSecondaryNew,
+    primaryContainer = Color.White,
     onPrimaryContainer = Color.White,
     secondary = SportSouceColor.SportSouceLighBlue,
     onSecondary = Color.White,
@@ -17,7 +18,6 @@ internal val LightColorScheme = lightColorScheme(
     onTertiaryContainer = SportSouceColor.SportSouceBlue,
     background = Color.White,
     onBackground = Color.Black,
-    primaryContainer = Color.White,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
     outline = SportSouceColor.Gray,
     outlineVariant = SportSouceColor.SecondaryWhite,

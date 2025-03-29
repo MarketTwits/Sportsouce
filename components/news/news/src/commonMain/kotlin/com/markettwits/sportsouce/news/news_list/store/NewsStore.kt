@@ -1,7 +1,7 @@
-package com.markettwits.news.news_list.store
+package com.markettwits.sportsouce.news.news_list.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 
 interface NewsStore : Store<NewsStore.Intent, NewsStore.State, NewsStore.Label> {

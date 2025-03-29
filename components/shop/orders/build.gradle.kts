@@ -21,7 +21,7 @@ kotlin {
             implementation(projects.components.shop.order)
             implementation(projects.components.analytics.crashlytics)
             implementation(projects.components.auth.authService)
-            implementation(projects.components.intent.composable)
+            implementation(projects.components.core.intent.composable)
         }
     }
 }

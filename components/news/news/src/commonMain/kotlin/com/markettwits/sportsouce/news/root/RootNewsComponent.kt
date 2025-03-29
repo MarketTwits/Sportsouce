@@ -1,10 +1,10 @@
-package com.markettwits.news.root
+package com.markettwits.sportsouce.news.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.news.common.model.NewsItem
-import com.markettwits.news.news_event.component.NewsEventComponent
-import com.markettwits.news.news_list.component.NewsComponent
+import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
+import com.markettwits.sportsouce.news.news_list.component.NewsComponent
 import kotlinx.serialization.Serializable
 
 interface RootNewsComponent {

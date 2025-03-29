@@ -1,8 +1,8 @@
-package com.markettwits.news.common
+package com.markettwits.sportsouce.news.common
 
-import com.markettwits.news.common.model.NewsCategory
-import com.markettwits.news.common.model.NewsHashtag
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsCategory
+import com.markettwits.sportsouce.news.common.model.NewsHashtag
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 interface NewsRepository {
 

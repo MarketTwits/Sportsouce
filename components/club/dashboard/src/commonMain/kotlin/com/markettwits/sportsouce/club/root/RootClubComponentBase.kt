@@ -112,7 +112,6 @@ class RootClubComponentBase(
                         output.clubInfo
                     )
                 )
-
             is ClubDashboardComponent.Output.Subscription -> slotNavigation.activate(
                 RootClubComponent.SlotConfig.WorkoutRegistration(output.type)
             )

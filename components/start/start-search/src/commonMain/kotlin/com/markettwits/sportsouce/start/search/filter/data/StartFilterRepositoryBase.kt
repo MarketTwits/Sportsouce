@@ -5,7 +5,7 @@ import com.markettwits.sportsouce.start.cloud.api.start.SportSauceStartApi
 import com.markettwits.sportsouce.start.search.filter.data.mapper.StartFilterRemoteToDomainMapper
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilterRepository
-import com.markettwits.sportsouce.teams_city.data.TeamsCityRepository
+import com.markettwits.sportsouce.teams_city.domain.TeamsCityRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

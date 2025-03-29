@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.review.review.domain
 
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.serialization.Serializable
 

@@ -1,11 +1,11 @@
-package com.markettwits.news.cloud
+package com.markettwits.sportsouce.news.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
-import com.markettwits.news.cloud.model.categories.NetworkCategories
-import com.markettwits.news.cloud.model.categories.NetworkCategory
-import com.markettwits.news.cloud.model.hashtags.NetworkHashtag
-import com.markettwits.news.cloud.model.hashtags.NetworkHashtags
-import com.markettwits.news.cloud.model.news.NetworkNews
+import com.markettwits.sportsouce.news.cloud.model.categories.NetworkCategories
+import com.markettwits.sportsouce.news.cloud.model.categories.NetworkCategory
+import com.markettwits.sportsouce.news.cloud.model.hashtags.NetworkHashtag
+import com.markettwits.sportsouce.news.cloud.model.hashtags.NetworkHashtags
+import com.markettwits.sportsouce.news.cloud.model.news.NetworkNews
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter

@@ -9,8 +9,8 @@ android {
 }
 kotlin {
     sourceSets.commonMain.dependencies {
-        implementation(projects.components.intent.api)
-        implementation(projects.components.intent.impl)
+        implementation(projects.components.core.intent.api)
+        implementation(projects.components.core.intent.impl)
         implementation(projects.components.start.startCloud)
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)

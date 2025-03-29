@@ -19,7 +19,6 @@ import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
 @Composable
 internal fun ShopFilterContent(
     modifier: Modifier = Modifier,
-    isCompactMode: Boolean,
     state: ShopFilterStore.State,
     onClickGoBack: () -> Unit,
     onClickRetry: () -> Unit,
@@ -40,10 +39,6 @@ internal fun ShopFilterContent(
                     onClickApply = onClickApplyFilter,
                     onClickReset = onClickReset
                 )
-        },
-        topBar = {
-            if (isCompactMode)
-                ShopFilterTopBar(onClickBack = onClickGoBack, onClickReset = onClickReset)
         },
     ) { paddingValues ->
         Column(

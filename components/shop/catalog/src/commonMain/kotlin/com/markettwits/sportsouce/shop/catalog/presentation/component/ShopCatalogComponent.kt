@@ -23,4 +23,5 @@ interface ShopCatalogComponent {
 
         fun goSearch(query : String)
     }
+
 }

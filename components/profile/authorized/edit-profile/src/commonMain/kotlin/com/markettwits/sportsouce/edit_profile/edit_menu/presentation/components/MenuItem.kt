@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.edit_profile.edit_menu.presentation.components
 
-sealed class MenuItem(val title: String) {
+sealed class MenuItem(
+    val title: String
+) {
     class Base(title: String) : MenuItem(title)
     class Header(title: String) : MenuItem(title)
 }

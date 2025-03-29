@@ -1,6 +1,6 @@
-package com.markettwits.news.cloud.model.news
+package com.markettwits.sportsouce.news.cloud.model.news
 
-import com.markettwits.news.cloud.model.hashtags.NetworkHashtag
+import com.markettwits.sportsouce.news.cloud.model.hashtags.NetworkHashtag
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

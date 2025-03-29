@@ -1,10 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,9 +36,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
 
     state.user?.let { user ->
         CollapsingToolbarRefreshScaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+            modifier = Modifier.fillMaxSize(),
             isRefreshing = false, onRefresh = {
                 component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
             },

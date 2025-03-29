@@ -1,8 +1,11 @@
 package com.markettwits.core_ui.items.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -19,7 +22,7 @@ import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 fun AdaptivePane(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass = calculateWindowSizeClass(),
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = Color.Transparent,
     content: @Composable (BoxScope) -> Unit
 ) {
     val maxWidth = when (windowSizeClass.widthSizeClass) {

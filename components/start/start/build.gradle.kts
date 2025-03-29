@@ -25,7 +25,7 @@ kotlin {
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)
-        implementation(projects.components.intent.api)
-        implementation(projects.components.intent.impl)
+        implementation(projects.components.core.intent.api)
+        implementation(projects.components.core.intent.impl)
     }
 }

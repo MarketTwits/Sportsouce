@@ -1,10 +1,10 @@
-package com.markettwits.news.root
+package com.markettwits.sportsouce.news.root
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.markettwits.news.news_event.screen.NewsEventScreen
-import com.markettwits.news.news_list.screen.NewsScreen
+import com.markettwits.sportsouce.news.news_event.screen.NewsEventScreen
+import com.markettwits.sportsouce.news.news_list.screen.NewsScreen
 
 @Composable
 fun RootNewsScreen(component: RootNewsComponent) {

@@ -1,12 +1,12 @@
-package com.markettwits.news.news_list.component
+package com.markettwits.sportsouce.news.news_list.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.news.common.model.NewsItem
-import com.markettwits.news.news_list.store.NewsStore
-import com.markettwits.news.news_list.store.NewsStoreFactory
+import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_list.store.NewsStore
+import com.markettwits.sportsouce.news.news_list.store.NewsStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

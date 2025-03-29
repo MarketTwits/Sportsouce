@@ -3,7 +3,10 @@ package com.markettwits.sportsouce.shop.catalog.presentation.store
 import app.cash.paging.cachedIn
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.*
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Intent
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Label
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Message
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.State
 
 internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
@@ -22,6 +25,8 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
                     maxPrice = intent.state.maxPrice,
                     minPrice = intent.state.minPrice
                 )
+                if (state().isShowFilter)
+                    onClickFilter()
             }
         }
     }

@@ -16,5 +16,4 @@ object ShopDeliveryTypeFactory : ShopDeliveryType.Factory {
             is ShopDeliveryType.Delivery -> shopDeliveryType.toString()
             is ShopDeliveryType.Pickup -> shopDeliveryType.toString()
         }
-
 }

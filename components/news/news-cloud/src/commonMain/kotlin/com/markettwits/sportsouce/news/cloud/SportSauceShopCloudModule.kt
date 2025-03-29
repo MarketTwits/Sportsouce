@@ -1,4 +1,4 @@
-package com.markettwits.news.cloud
+package com.markettwits.sportsouce.news.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase

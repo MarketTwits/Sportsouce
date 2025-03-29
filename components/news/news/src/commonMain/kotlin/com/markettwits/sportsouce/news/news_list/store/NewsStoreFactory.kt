@@ -1,12 +1,12 @@
-package com.markettwits.news.news_list.store
+package com.markettwits.sportsouce.news.news_list.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.news.common.NewsRepository
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.NewsRepository
+import com.markettwits.sportsouce.news.common.model.NewsItem
 import kotlinx.coroutines.launch
 
 class NewsStoreFactory(

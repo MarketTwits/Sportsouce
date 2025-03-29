@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterC
 import com.markettwits.sportsouce.shop.filter.presentation.components.api.SelectedFilterParams
 import com.markettwits.sportsouce.shop.filter.presentation.screen.ShopFilterScreen
 import com.markettwits.sportsouce.shop.search.presentation.components.publish.ShopSearchBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun ShopCatalogScreen(
@@ -48,6 +50,8 @@ fun ShopCatalogScreen(
         if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -75,7 +79,7 @@ fun ShopCatalogScreen(
             )
         }
     ) { paddingValues ->
-        LaunchedEffect(state.isShowFilter) {
+        LaunchedEffect(state) {
             if (state.isShowFilter) {
                 drawerState.open()
             } else {
@@ -83,10 +87,8 @@ fun ShopCatalogScreen(
             }
         }
         ModalNavigationDrawer(
-            modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding()),
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
             drawerState = drawerState,
-            gesturesEnabled = true,
             drawerContent = {
                 ShopFilterScreen(
                     modifier = Modifier
@@ -94,7 +96,11 @@ fun ShopCatalogScreen(
                         .width(400.dp)
                         .fillMaxHeight(),
                     component = filterComponent,
-                    isCompactMode = false
+                    onClickApplyFilter = {
+                        coroutineScope.launch {
+                            drawerState.close()
+                        }
+                    }
                 )
             },
             content = {

@@ -1,7 +1,9 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.common.data
 
-import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMembersRepository
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
+import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMembersRepository
+import com.markettwits.sportsouce.start.cloud.api.register.SportSauceStartRegisterApi
+import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.register.domain.StartPromo
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegisterPriceMapper
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegisterResultMapper
@@ -11,9 +13,7 @@ import com.markettwits.sportsouce.start.register.presentation.registration.commo
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationPriceResult
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationResult
-import com.markettwits.sportsouce.start.cloud.api.register.SportSauceStartRegisterApi
-import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
-import com.markettwits.sportsouce.teams_city.data.TeamsCityRepository
+import com.markettwits.sportsouce.teams_city.domain.TeamsCityRepository
 import kotlinx.coroutines.flow.first
 
 class StartRegistrationRepositoryBase(

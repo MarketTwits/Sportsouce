@@ -45,7 +45,7 @@ internal class ShopUserOrdersRepositoryBase(
         return result
     }
 
-    suspend fun refreshUserOrders(): Flow<List<ShopUserOrder>> = flow {
+    private fun refreshUserOrders(): Flow<List<ShopUserOrder>> = flow {
         val result = fetchAndCacheOrders()
         emit(result.getOrElse { emptyList() })
     }

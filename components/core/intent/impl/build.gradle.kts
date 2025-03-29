@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.koin.core)
-            implementation(projects.components.intent.api)
+            implementation(projects.components.core.intent.api)
         }
     }
 }

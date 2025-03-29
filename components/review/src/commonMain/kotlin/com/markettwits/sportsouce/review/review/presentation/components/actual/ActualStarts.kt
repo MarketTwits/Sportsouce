@@ -1,10 +1,7 @@
 package com.markettwits.sportsouce.review.review.presentation.components.actual
 
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,16 +26,18 @@ fun ActualStarts(
         fontFamily = FontNunito.bold(),
         fontSize = 18.sp
     )
-    val oneColumns = rememberScreenSizeInfo().isPortrait()
-    LazyVerticalGrid(
-        modifier = modifier.height(950.dp),
-        userScrollEnabled = false,
-        columns = GridCells.Fixed(if (oneColumns) 1 else 2)
+    val isPortrait = rememberScreenSizeInfo().isPortrait()
+    val items = starts.take(if (isPortrait) 5 else 10)
+    FlowRow(
+        modifier = modifier,
+        maxItemsInEachRow = if (isPortrait) 1 else 2
     ) {
-        items(starts.take(if (oneColumns) 5 else 10)) {
-            StartCard(start = it, onItemClick = {
-                onClick(it)
-            })
+        items.forEach { item ->
+            StartCard(
+                modifier = Modifier.weight(1f),
+                start = item, onItemClick = {
+                    onClick(it)
+                })
         }
     }
 }

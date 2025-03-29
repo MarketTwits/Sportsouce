@@ -1,4 +1,4 @@
-package com.markettwits.news.news_event.components
+package com.markettwits.sportsouce.news.news_event.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,7 @@ import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
 internal fun NewsEventContent(modifier: Modifier = Modifier, news: NewsItem, goBack: () -> Unit) {

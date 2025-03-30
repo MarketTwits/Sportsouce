@@ -1,5 +1,4 @@
-package sources
-
+package com.markettwits.sportsouce.sources
 
 object ApkConfig {
 

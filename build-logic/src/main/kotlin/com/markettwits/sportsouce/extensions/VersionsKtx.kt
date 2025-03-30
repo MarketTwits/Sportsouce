@@ -1,4 +1,4 @@
-package extensions
+package com.markettwits.sportsouce.extensions
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project

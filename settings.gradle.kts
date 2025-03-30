@@ -84,6 +84,7 @@ include(
     ":components:core:time",
     ":components:core:theme",
     ":components:core:activityholder",
+    ":components:core:build-config",
     ":components:core:errors",
     ":components:core:log",
     ":components:core:cloud",

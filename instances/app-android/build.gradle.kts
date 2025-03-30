@@ -1,4 +1,4 @@
-import sources.ApkConfig
+import com.markettwits.sportsouce.sources.ApkConfig
 
 plugins {
     id("android.application.convention")
@@ -16,13 +16,10 @@ android {
     }
     buildTypes {
         defaultConfig {
-            resourceConfigurations.addAll(setOf("en", "ru"))
+            androidResources {
+                localeFilters += listOf("en", "ru")
+            }
         }
-
-        kotlinOptions {
-            jvmTarget = "11"
-        }
-
         debug {
             isMinifyEnabled = false
             isShrinkResources = false

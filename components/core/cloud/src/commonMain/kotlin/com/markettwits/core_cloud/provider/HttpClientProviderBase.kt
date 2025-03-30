@@ -1,6 +1,6 @@
 package com.markettwits.core_cloud.provider
 
-import Sportsouce.components.core.cloud.BuildConfig
+import com.markettwits.buildkonfig.BuildKonfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -64,4 +64,4 @@ fun SportSauceHttpClientProvider(
     )
 }
 
-val SportSauceBaseUrl = BuildConfig.SPORTSAUCE_API_PATH
+val SportSauceBaseUrl = BuildKonfig.SPORTSAUCE_API_PATH

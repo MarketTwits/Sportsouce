@@ -1,12 +1,12 @@
 plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.kmp.convention)
-    alias(libs.plugins.build.konfig.convension)
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.components.core.buildConfig)
             implementation(projects.components.core.cache)
             implementation(projects.components.core.ui)
             implementation(projects.components.core.time)

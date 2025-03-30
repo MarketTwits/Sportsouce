@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.starts.cloud.di
 
-import Sportsouce.components.starts.starts_cloud.BuildConfig
+import com.markettwits.buildkonfig.BuildKonfig
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase
 import com.markettwits.sportsouce.starts.cloud.SportSauceNetworkStartsApi
@@ -11,7 +11,7 @@ val sportSauceStartsCloudModule = module {
         SportSauceNetworkStartsApi(
             HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                baseUrl = BuildConfig.SPORTSAUCE_API_PATH
+                baseUrl = BuildKonfig.SPORTSAUCE_API_PATH
             )
         )
     }

@@ -16,7 +16,7 @@ kotlin {
         implementation(projects.components.teamsCity)
         implementation(projects.components.start.startCloud)
         implementation(projects.components.core.time)
-        implementation(projects.components.profile.authorized.members)
+        implementation(projects.components.profile.members)
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.impl)
         implementation(libs.bundles.mviKotlin)

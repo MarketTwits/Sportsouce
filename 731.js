@@ -1,2 +1,2 @@
-"use strict";(globalThis.webpackChunkbrowser=globalThis.webpackChunkbrowser||[]).push([[731],{731:e=>{e.exports=function(){throw new Error("ws does not work in the browser. Browser clients must use the native WebSocket object")}}}]);
+"use strict";(globalThis.webpackChunkapp_browser=globalThis.webpackChunkapp_browser||[]).push([[731],{731:e=>{e.exports=function(){throw new Error("ws does not work in the browser. Browser clients must use the native WebSocket object")}}}]);
 //# sourceMappingURL=731.js.map

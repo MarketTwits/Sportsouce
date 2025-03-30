@@ -3,6 +3,7 @@ package com.markettwits.core.errors.impl.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,6 +62,7 @@ internal fun SauceThrowableContent(
         if(onClickRetry != null){
             SauceThrowableRetryButtonLarge(
                 modifier = Modifier
+                    .widthIn(max = 280.dp)
                     .padding(8.dp)
                     .padding(horizontal = 16.dp)
                     .align(Alignment.CenterHorizontally),

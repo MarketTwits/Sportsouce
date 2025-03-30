@@ -1,6 +1,5 @@
 import extensions.libs
 import extensions.stabilityConfiguration
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     id("org.jetbrains.kotlin.plugin.compose")
@@ -25,7 +24,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(stabilityConfiguration())
     }

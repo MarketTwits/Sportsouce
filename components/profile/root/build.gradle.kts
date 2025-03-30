@@ -7,7 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.profile.unauthorized)
-            implementation(projects.components.profile.authorized.profile)
+            implementation(projects.components.profile.authorized)
             implementation(projects.components.auth.authFlow)
             implementation(projects.components.core.koin)
             implementation(libs.koin.core)

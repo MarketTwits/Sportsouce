@@ -1,5 +1,5 @@
-import extensions.libs
-import extensions.stabilityConfiguration
+import com.markettwits.sportsouce.extensions.libs
+import com.markettwits.sportsouce.extensions.stabilityConfiguration
 
 plugins {
     id("org.jetbrains.kotlin.plugin.compose")

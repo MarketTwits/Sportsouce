@@ -1,14 +1,13 @@
 import com.android.build.gradle.BaseExtension
-import extensions.PROJECT_JAVA_VERSION
-import extensions.PROJECT_VERSION_CODE
-import extensions.PROJECT_VERSION_NAME
+import com.markettwits.sportsouce.extensions.PROJECT_VERSION_CODE
+import com.markettwits.sportsouce.extensions.PROJECT_VERSION_NAME
+import com.markettwits.sportsouce.sources.ApkConfig
 import org.gradle.api.Project
-import sources.ApkConfig
 
 
 fun BaseExtension.commonAndroid(project: Project) {
     configureBuildConfig()
-    configureCompileOptions(project)
+    commonJava(project)
     configureDefaultConfig(project)
 }
 
@@ -16,10 +15,6 @@ private fun BaseExtension.configureBuildConfig() {
     buildFeatures.buildConfig = true
 }
 
-private fun BaseExtension.configureCompileOptions(project: Project) {
-    compileOptions.sourceCompatibility = project.PROJECT_JAVA_VERSION
-    compileOptions.targetCompatibility = project.PROJECT_JAVA_VERSION
-}
 
 private fun BaseExtension.configureDefaultConfig(project: Project) {
     compileSdkVersion(ApkConfig.COMPILE_SDK_VERSION)
@@ -40,7 +35,6 @@ private fun BaseExtension.configureDefaultConfig(project: Project) {
             resources.excludes += "META-INF/DEPENDENCIES"
             resources.excludes += "*.proto"
         }
-
     }
 }
 

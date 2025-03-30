@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.profile.cloud.di
 
-import Sportsouce.components.profile.cloud.BuildConfig
+import com.markettwits.buildkonfig.BuildKonfig
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
@@ -11,7 +11,7 @@ val sportSauceNetworkProfileModule = module {
         SportSauceNetworkProfileApi(
             HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                baseUrl = BuildConfig.SPORTSAUCE_API_PATH
+                baseUrl = BuildKonfig.SPORTSAUCE_API_PATH
             )
         )
     }

@@ -13,11 +13,8 @@ tasks.withType<Jar> {
 }
 
 kotlin {
-
-    jvm {
-        withJava()
-    }
-
+    jvm()
+    jvmToolchain(21)
     sourceSets.jvmMain.dependencies {
         implementation(compose.desktop.currentOs)
         implementation(projects.components.core.ui)

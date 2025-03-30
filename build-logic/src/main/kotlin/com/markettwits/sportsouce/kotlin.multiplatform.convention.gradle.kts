@@ -1,6 +1,5 @@
 import com.android.build.gradle.BaseExtension
-import extensions.PROJECT_JAVA_VERSION
-import extensions.suppressExperimentalCoroutinesApi
+import com.markettwits.sportsouce.extensions.suppressExperimentalCoroutinesApi
 
 plugins {
     id("com.android.library")
@@ -9,11 +8,11 @@ plugins {
 
 configure<BaseExtension> {
     commonAndroid(project)
+    commonJava(project)
 }
 
 kotlin {
     jvm()
-    jvmToolchain(project.PROJECT_JAVA_VERSION.getMajorVersion().toInt())
     androidTarget()
     js {
         browser()

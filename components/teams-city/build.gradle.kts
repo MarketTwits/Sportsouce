@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.build.konfig.convension)
 }
 
 android {
@@ -12,6 +11,7 @@ kotlin{
         implementation(projects.components.core.koin)
         implementation(projects.components.core.cloud)
         implementation(projects.components.core.cache)
+        implementation(projects.components.core.buildConfig)
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.kotlinx.serialization.core)

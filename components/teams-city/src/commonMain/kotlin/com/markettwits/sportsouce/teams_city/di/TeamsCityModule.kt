@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.teams_city.di
 
-import Sportsouce.components.teams_city.BuildConfig
+import com.markettwits.buildkonfig.BuildKonfig
 import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
@@ -21,7 +21,7 @@ val teamsCityModule = module {
         SportSauceNetworkTeamsCityApi(
             HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                baseUrl = BuildConfig.SPORTSAUCE_API_PATH
+                baseUrl = BuildKonfig.SPORTSAUCE_API_PATH
             )
         )
     }

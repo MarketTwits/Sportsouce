@@ -41,7 +41,7 @@ class IntentActionBase(
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(context, "Скопировано в буфер обмена",Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Скопировано в буфер обмена", Toast.LENGTH_SHORT).show()
     }
 
     override fun sharePlainText(text: String) {

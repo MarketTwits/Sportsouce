@@ -2,7 +2,7 @@ package com.markettwits.sportsouce.club.common.data
 
 import com.markettwits.core_ui.items.extensions.fetchFifth
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
-import com.markettwits.sportsouce.club.cloud.api.SportSauceClubsApi
+import com.markettwits.sportsouce.club.cloud.api.SportSauceClubsNetworkApi
 import com.markettwits.sportsouce.club.common.data.mapper.club_info.ClubInfoMapper
 import com.markettwits.sportsouce.club.common.data.mapper.subscription.SubscriptionMapper
 import com.markettwits.sportsouce.club.common.domain.ClubRepository
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class ClubRepositoryBase(
-    private val clubservice: SportSauceClubsApi,
+    private val clubservice: SportSauceClubsNetworkApi,
     private val subscriptionMapper: SubscriptionMapper,
     private val clubInfoMapper: ClubInfoMapper,
     private val authDataSource: AuthDataSource

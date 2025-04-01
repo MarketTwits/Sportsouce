@@ -147,7 +147,7 @@ private fun DistanceItem(
         selectedDistance = item
     )
 
-    val enabled = if (item.infinite_slots) true else if (item.open_slots!! > 0) true else false
+    val enabled = if (item.infiniteSlots) true else if (item.openSlots!! > 0) true else false
 
     OnBackgroundCard(
         modifier = Modifier
@@ -172,8 +172,8 @@ private fun DistanceItem(
                     fontFamily = FontNunito.semiBoldBold(),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
-                if (!item.infinite_slots && (item.open_slots ?: 0) > 0) {
-                    Text(text = "${item.open_slots} слота", fontSize = 14.sp, color = MaterialTheme.colorScheme.outline)
+                if (!item.infiniteSlots && (item.openSlots ?: 0) > 0) {
+                    Text(text = "${item.openSlots} слота", fontSize = 14.sp, color = MaterialTheme.colorScheme.outline)
                 } else {
                     Spacer(modifier = Modifier.height(14.dp))
                 }
@@ -210,7 +210,7 @@ private fun DistanceItem(
                     val price =
                         if (paymentDisabled && paymentType.isNotEmpty()) paymentType
                         else
-                            "Цена : " + item.static_price.formatPrice() + " ₽"
+                            "Цена : " + item.staticPrice.formatPrice() + " ₽"
                     Text(
                         text = price,
                         color = MaterialTheme.colorScheme.onSecondary

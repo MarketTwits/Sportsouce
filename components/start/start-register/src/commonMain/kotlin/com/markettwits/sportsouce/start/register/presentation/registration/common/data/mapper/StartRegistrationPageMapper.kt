@@ -47,9 +47,9 @@ class StartRegistrationPageMapper(
                     cities = cities,
                     teams = teams
                 ),
-                price = mapStartRegistrationPrice(it.static_price),
+                price = mapStartRegistrationPrice(it.staticPrice),
                 format = it.format ?: "",
-                answers = mapStartAdditionalFields(it.additional_fields ?: emptyList()).map {
+                answers = mapStartAdditionalFields(it.additionalFields ?: emptyList()).map {
                     StartRegistrationStatementAnswer(
                         field = it,
                         answer = StartRegisterAnswer(
@@ -201,12 +201,12 @@ class StartRegistrationPageMapper(
                     ),
                 stage = StartRegistrationStage(
                     id = stage.id,
-                    distanceId = stage.distance_id,
+                    distanceId = stage.distanceId,
                     name = stage.name,
-                    length = stage.stage_length ?: "",
+                    length = stage.stageLength ?: "",
                     sex = stage.sex ?: "",
                     additionalFields = mapStartAdditionalFields(
-                        stage.additional_fields ?: emptyList()
+                        stage.additionalFields ?: emptyList()
                     ).map {
                         StartRegistrationStatementAnswer(
                             field = it,

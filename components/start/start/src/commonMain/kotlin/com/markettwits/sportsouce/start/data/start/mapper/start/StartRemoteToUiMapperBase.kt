@@ -95,33 +95,33 @@ internal class StartRemoteToUiMapperBase(
 
             is StartRemoteOld -> {
                 StartItem(
-                    id = startRemote.start_data.id,
-                    title = startRemote.start_data.name,
-                    startPlace = startRemote.start_data.coordinates ?: "",
-                    image = startRemote.start_data.posterLinkFile?.fullPath ?: "",
+                    id = startRemote.startData.id,
+                    title = startRemote.startData.name,
+                    startPlace = startRemote.startData.coordinates ?: "",
+                    image = startRemote.startData.posterLinkFile?.fullPath ?: "",
                     startStatus = StartItem.StartStatus(
-                        code = startRemote.start_data.start_status.code,
-                        name = startRemote.start_data.start_status.name
+                        code = startRemote.startData.startStatus.code,
+                        name = startRemote.startData.startStatus.name
                     ),
                     startTime = timeMapper.mapTime(
                         TimePattern.FullWithEmptySpace,
-                        startRemote.start_data.start_date
+                        startRemote.startData.startDate
                     ),
-                    startData = startRemote.start_data.start_date,
-                    description = startRemote.start_data.description ?: "",
-                    paymentDisabled = startRemote.start_data.payment_disabled ?: false,
-                    organizers = startRemote.start_data.organizers,
+                    startData = startRemote.startData.startDate,
+                    description = startRemote.startData.description ?: "",
+                    paymentDisabled = startRemote.startData.paymentDisabled ?: false,
+                    organizers = startRemote.startData.organizers,
                     membersUi = emptyList(),
                     commentsRemote = commentsMapper.map(commentsRemote),
-                    conditionFile = if (startRemote.start_data.conditionFile != null) {
+                    conditionFile = if (startRemote.startData.conditionFile != null) {
                         StartItem.ConditionFile.Base(
-                            startRemote.start_data.conditionFile?.fullPath ?: ""
+                            startRemote.startData.conditionFile?.fullPath ?: ""
                         )
                     } else {
                         StartItem.ConditionFile.Empty
                     },
-                    paymentType = startRemote.start_data.payment_type ?: "",
-                    result = startRemote.start_data.results.filter {
+                    paymentType = startRemote.startData.paymentType ?: "",
+                    result = startRemote.startData.results.filter {
                         it.file != null
                     }.map {
                         StartItem.Result(
@@ -130,7 +130,7 @@ internal class StartRemoteToUiMapperBase(
                             url = it.file?.fullPath ?: ""
                         )
                     },
-                    usefulLinks = startRemote.start_data.useful_links?.map {
+                    usefulLinks = startRemote.startData.usefulLinks?.map {
                         StartItem.Result(
                             id = it.id,
                             name = it.text,
@@ -138,12 +138,12 @@ internal class StartRemoteToUiMapperBase(
                         )
                     } ?: emptyList(),
                     startAlbum = albumsMapper.map(startAlbum),
-                    regLink = startRemote.start_data.reg_link ?: "",
+                    regLink = startRemote.startData.regLink ?: "",
                     startTimes = startTimesMapper.map(
-                        beginningRegistry = startRemote.start_data.registration_start_date,
-                        endRegistry = startRemote.start_data.registration_end_date,
-                        beginningStart = startRemote.start_data.start_date,
-                        endStart = startRemote.start_data.end_date
+                        beginningRegistry = startRemote.startData.registrationStartDate,
+                        endRegistry = startRemote.startData.registrationEndDate,
+                        beginningStart = startRemote.startData.startDate,
+                        endStart = startRemote.startData.endDate
                     ),
                     distanceInfoNew = emptyList(),
                     distanceMapNew = emptyList(),

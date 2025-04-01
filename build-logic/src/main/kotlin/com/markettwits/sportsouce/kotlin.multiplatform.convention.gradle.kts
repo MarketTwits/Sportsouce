@@ -23,5 +23,4 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(suppressExperimentalCoroutinesApi())
     }
-
 }

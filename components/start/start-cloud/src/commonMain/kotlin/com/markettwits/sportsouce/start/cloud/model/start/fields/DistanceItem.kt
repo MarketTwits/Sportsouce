@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.cloud.model.start.fields
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
@@ -58,16 +57,6 @@ sealed interface DistanceItem {
     @Serializable
     data class Stage(val value: String, val sex: List<String>)
 
-    @Serializable
-    data class Discount(
-        val id: Int,
-        val start_id: Int,
-        val c_from: Int,
-        val c_to: Int,
-        val value: Int,
-        val percent: Boolean
-    )
-
     object DistanceItemSerializer :
         JsonContentPolymorphicSerializer<DistanceItem>(DistanceItem::class) {
         override fun selectDeserializer(element: JsonElement) = when {
@@ -75,12 +64,4 @@ sealed interface DistanceItem {
             else -> DistanceInfo.serializer()
         }
     }
-}
-
-fun Json.mapKindOfSportsToDistanceItemListBase(
-    kindOfSport: String
-): List<DistanceItem> = try {
-    this.decodeFromString<List<DistanceItem>>(kindOfSport)
-} catch (e: Exception) {
-    emptyList()
 }

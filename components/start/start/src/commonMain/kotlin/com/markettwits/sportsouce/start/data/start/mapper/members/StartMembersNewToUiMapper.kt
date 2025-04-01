@@ -12,9 +12,9 @@ class StartMembersNewToUiMapper {
                     id = member.id,
                     name = member.name,
                     surname = member.surname,
-                    distance = member.distance_relation.name,
+                    distance = member.distanceRelation.name,
                     team = member.team,
-                    group = member.age_group?.name ?: "",
+                    group = member.ageGroup?.name ?: "",
                     city = member.city
                 )
             }else{
@@ -26,9 +26,9 @@ class StartMembersNewToUiMapper {
                             surname = member.surname
                         )
                     },
-                    distance = it.members.firstOrNull()?.distance_relation?.name ?: "",
+                    distance = it.members.firstOrNull()?.distanceRelation?.name ?: "",
                     team = it.members.firstOrNull()?.team ?: "",
-                    group = it.members.firstOrNull()?.age_group?.name ?: "",
+                    group = it.members.firstOrNull()?.ageGroup?.name ?: "",
                     city = it.members.firstOrNull()?.city ?: ""
                 )
             }

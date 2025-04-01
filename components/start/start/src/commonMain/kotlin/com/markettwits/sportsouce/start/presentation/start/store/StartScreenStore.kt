@@ -8,6 +8,8 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -96,7 +98,10 @@ class StartScreenStoreFactory(
         private val startId: Int,
         private val exceptionTracker: ExceptionTracker,
         private val intentAction: IntentAction
-    ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
+    ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>(), LogTagProvider {
+
+        override val tag: String =  "StartScreenExecutorImpl"
+
         override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(Label.OnClickBack)
@@ -151,6 +156,7 @@ class StartScreenStoreFactory(
                         if (!it.isNetworkConnectionError()) {
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
                             exceptionTracker.reportException(it, "StartScreenStore#launch")
+                            errorLog { "Fail to fetch start ${it.message}" }
                         }
                         dispatch(Msg.StartInfoFailed(it.networkExceptionHandler().message.toString()))
                     },

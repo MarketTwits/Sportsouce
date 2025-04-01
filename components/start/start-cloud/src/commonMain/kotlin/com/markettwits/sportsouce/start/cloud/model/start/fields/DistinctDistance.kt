@@ -1,21 +1,36 @@
 package com.markettwits.sportsouce.start.cloud.model.start.fields
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DistinctDistance(
-    val additional_fields: List<AdditionalField>?,
-    val combo_discount_is_percent: Boolean?,
-    val combo_discount_value: Int?,
+    @SerialName("additional_fields")
+    val additionalFields: List<AdditionalField>?,
+    @SerialName("combo_discount_is_percent")
+    val comboDiscountIsPercent: Boolean?,
+    @SerialName("combo_discount_value")
+    val comboDiscountValue: Int?,
+    @SerialName("description")
     val description: String?,
+    @SerialName("format")
     val format: String?,
+    @SerialName("id")
     val id: Int,
-    val infinite_slots: Boolean,
+    @SerialName("infinite_slots")
+    val infiniteSlots: Boolean,
+    @SerialName("name")
     val name: String,
-    val open_slots: Int?,
-    val order_number: Int,
+    @SerialName("open_slots")
+    val openSlots: Int?,
+    @SerialName("order_number")
+    val orderNumber: Int,
+    @SerialName("slots")
     val slots: Int?,
+    @SerialName("stages")
     val stages: List<Stage>,
-    val static_price: Int?,
-    val taken_slots: Int? = null,
+    @SerialName("static_price")
+    val staticPrice: Int?,
+    @SerialName("taken_slots")
+    val takenSlots: Int? = null,
 )

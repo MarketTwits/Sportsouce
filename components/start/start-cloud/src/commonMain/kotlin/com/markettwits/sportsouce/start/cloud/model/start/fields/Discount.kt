@@ -1,14 +1,22 @@
 package com.markettwits.sportsouce.start.cloud.model.start.fields
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Discount(
-    val c_from: Int,
-    val c_to: Int,
+    @SerialName("c_from")
+    val cFrom: Int,
+    @SerialName("c_to")
+    val cTo: Int,
+    @SerialName("id")
     val id: Int,
-    val start_id: Int,
+    @SerialName("start_id")
+    val startId: Int,
+    @SerialName("percent")
     val percent: Boolean?,
+    @SerialName("type")
     val type: String?,
+    @SerialName("value")
     val value: Int
 )

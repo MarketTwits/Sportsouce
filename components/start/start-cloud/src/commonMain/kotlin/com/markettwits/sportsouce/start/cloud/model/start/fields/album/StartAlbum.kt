@@ -6,47 +6,54 @@ import kotlinx.serialization.Serializable
 
 @Serializable
     data class StartAlbum(
+    @SerialName("createdAt")
     val createdAt: String,
+    @SerialName("id")
     val id: Int,
+    @SerialName("isBeforeStart")
     val isBeforeStart: Boolean? = null,
+    @SerialName("name")
     val name: String,
+    @SerialName("photos")
     val photos: List<Photo>,
+    @SerialName("start")
     val start: Start,
-    val start_id: Int,
+    @SerialName("start_id")
+    val startId: Int,
+    @SerialName("updatedAt")
     val updatedAt: String
     ) {
         @Serializable
         data class Photo(
-            val album_id: Int,
-            val createdAt: String,
-            val file: File,
-            val file_id: Int,
-            val id: Int,
-            val tags: List<Tag>,
-            val updatedAt: String
+            @SerialName("album_id") val albumId: Int,
+            @SerialName("createdAt") val createdAt: String,
+            @SerialName("file") val file: File,
+            @SerialName("file_id") val fileId: Int,
+            @SerialName("id") val id: Int,
+            @SerialName("tags") val tags: List<Tag>,
+            @SerialName("updatedAt") val updatedAt: String
         ) {
             @Serializable
             data class Tag(
-                @SerialName("PhotosToTag")
-                val photosToTag: PhotosToTag,
-                val createdAt: String,
-                val id: Int,
-                val name: String,
-                val updatedAt: String
+                @SerialName("PhotosToTag") val photosToTag: PhotosToTag,
+                @SerialName("createdAt") val createdAt: String,
+                @SerialName("id") val id: Int,
+                @SerialName("name") val name: String,
+                @SerialName("updatedAt") val updatedAt: String
             ) {
                 @Serializable
                 data class PhotosToTag(
-                    val id: Int,
-                    val photoTag_id: Int,
-                    val photo_id: Int
+                    @SerialName("id") val id: Int,
+                    @SerialName("photoTag_id") val phototagId: Int,
+                    @SerialName("photo_id") val photoId: Int
                 )
             }
         }
 
         @Serializable
         data class Start(
-            val id: Int,
-            val short_name: String,
-            val start_date: String
+            @SerialName("id") val id: Int,
+            @SerialName("short_name") val shortName: String,
+            @SerialName("start_date") val startDate: String
         )
     }

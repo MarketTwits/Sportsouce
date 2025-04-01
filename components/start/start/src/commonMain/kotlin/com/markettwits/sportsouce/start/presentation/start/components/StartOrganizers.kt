@@ -90,7 +90,7 @@ private fun StartOrganizersContent(
             }
 
             Row(modifier = modifier) {
-                it.social_networks.forEach {
+                it.socialNetworks.forEach {
                     if (it.url != null) {
                         Box(
                             modifier = modifier

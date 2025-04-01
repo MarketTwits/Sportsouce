@@ -36,10 +36,10 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
     ) : StartRegisterPriceRequest =
 
         StartRegisterPriceRequest(
-            combo_id = comboId,
+            comboId = comboId,
             promocode = promo,
-            start_id = startId,
-            registration_without_payment = registrationWithoutPayment,
+            startId = startId,
+            registrationWithoutPayment = registrationWithoutPayment,
             distances = mapDistances(distances)
         )
 
@@ -48,7 +48,7 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
     ) : List<StartRegisterDistance>{
         return distances.map { distance ->
             StartRegisterDistance(
-                distance_id = distance.id,
+                distanceId = distance.id,
                 member = distance.stages.map { stage ->
                     stage.statement.mapToStartRegisterMember(
                         stageId = stage.stage.id,
@@ -83,10 +83,10 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
             gender = sex,
             name = name,
             phone = phone,
-            stage_id = stageId,
+            stageId = stageId,
             surname = surname,
             team = team,
-            user_id = userId.userId
+            userId = userId.userId
         )
 
         return member

@@ -11,7 +11,7 @@ import com.markettwits.sportsouce.club.cloud.models.workout.price.WorkoutPriceRe
 import com.markettwits.sportsouce.club.cloud.models.workout.registration.WorkoutRegistrationRequestRemote
 
 
-interface SportSauceClubsApi {
+interface SportSauceClubsNetworkApi {
 
     suspend fun trainers(): List<TrainersRemoteRow>
 

@@ -10,7 +10,7 @@ internal class StartAlbumsToUiMapperBase : StartAlbumsToUiMapper {
             row.photos.map { photoRemote ->
                 StartItem.Album.Photo(
                     id = photoRemote.id,
-                    photoId = photoRemote.file_id,
+                    photoId = photoRemote.fileId,
                     imageUrl = photoRemote.file.fullPath,
                     tags = photoRemote.tags.associate { it.id to it.name }
                 )
@@ -19,7 +19,7 @@ internal class StartAlbumsToUiMapperBase : StartAlbumsToUiMapper {
         val albums = startAlbum.map {
             StartItem.Album(
                 id = it.id,
-                startId = it.start_id,
+                startId = it.startId,
                 photos = photos,
                 name = it.name,
             )

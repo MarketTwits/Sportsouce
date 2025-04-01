@@ -21,7 +21,7 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
 
 
         for (item in startMember) {
-            val safeRegCode = item.reg_code ?: ""
+            val safeRegCode = item.regCode ?: ""
             if (item.payment != null && safeRegCode.isNotEmpty()) {
                 val list = teamMap.getOrPut(safeRegCode) { mutableListOf() }
                 list.add(item)
@@ -43,7 +43,7 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
                 .map { createTeam(it) }
 
             val singles = startMember
-                .filter { it.payment != null && (it.reg_code.isNullOrEmpty()) }
+                .filter { it.payment != null && (it.regCode.isNullOrEmpty()) }
                 .map { convertToSingle(it) }
 
             singles + teams

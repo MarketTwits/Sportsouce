@@ -8,10 +8,8 @@ import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -32,8 +30,7 @@ internal fun BottomBarContent(
     onClickTab: (BottomBarConfiguration) -> Unit,
     content: @Composable () -> Unit
 ) {
-
-    val state = rememberNavigationSuiteScaffoldState()
+    //val state = rememberNavigationSuiteScaffoldState()
 
     val isLarge = calculateWindowSizeClass().isLarge
 
@@ -49,17 +46,16 @@ internal fun BottomBarContent(
 
     val itemModifier = if (isLarge) Modifier.padding(6.dp) else Modifier.padding(2.dp)
 
-    LaunchedEffect(isShowTopBar) {
-        if (isShowTopBar) {
-            state.show()
-        } else {
-            if (!isLarge)
-                state.hide()
-        }
-    }
+//    LaunchedEffect(isShowTopBar) {
+//        if (isShowTopBar) {
+//            state.show()
+//        } else {
+//            if (!isLarge)
+//                state.hide()
+//        }
+//    }
 
     NavigationSuiteScaffold(
-        state = state,
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primary,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
@@ -67,41 +63,39 @@ internal fun BottomBarContent(
             navigationRailContainerColor = MaterialTheme.colorScheme.primary,
         ),
         navigationSuiteItems = {
-            items.forEach { item ->
-                val isSelected = selectedTab == item.bottomBarConfiguration
-                val color = if (isSelected) textColor else Color.Gray
-                item(
-                    modifier = itemModifier,
-                    colors = itemColors,
-                    selected = isSelected,
-                    onClick = {
-                        onClickTab(item.bottomBarConfiguration)
-                    },
-                    label = {
-                        if (isShowLabel)
-                            Text(
-                                text = item.title,
-                                color = color,
-                                fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
+                items.forEach { item ->
+                    val isSelected = selectedTab == item.bottomBarConfiguration
+                    val color = if (isSelected) textColor else Color.Gray
+                    item(
+                        modifier = itemModifier,
+                        colors = itemColors,
+                        selected = isSelected,
+                        onClick = {
+                            onClickTab(item.bottomBarConfiguration)
+                        },
+                        label = {
+                            if (isShowLabel)
+                                Text(
+                                    text = item.title,
+                                    color = color,
+                                    fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
+                                )
+                        },
+                        alwaysShowLabel = isShowLabel,
+                        icon = {
+                            Icon(
+                                imageVector = if (isSelected) {
+                                    item.selectedIcon
+                                } else
+                                    item.unselectedIcon,
+                                contentDescription = item.title,
+                                tint = color
                             )
-                    },
-                    alwaysShowLabel = isShowLabel,
-                    icon = {
-                        Icon(
-                            imageVector = if (isSelected) {
-                                item.selectedIcon
-                            } else
-                                item.unselectedIcon,
-                            contentDescription = item.title,
-                            tint = color
-                        )
-                    }
-                )
-            }
+                        }
+                    )
+                }
         }
     ) {
         content()
     }
-
-
 }

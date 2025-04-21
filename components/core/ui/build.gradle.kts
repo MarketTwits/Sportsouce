@@ -19,6 +19,7 @@ kotlin {
         androidMain.dependencies {
             api(libs.compose.ui.tooling.preview)
             api(libs.ktor.client.okhttp)
+            api("androidx.compose.material3:material3-adaptive-navigation-suite:1.3.2")
             implementation(libs.compose.activity)
         }
 

@@ -21,6 +21,7 @@ kotlin {
         implementation(projects.components.core.ui)
         implementation(projects.components.root)
         implementation(projects.components.core.cache)
+        implementation(compose.components.resources)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.kotlinx.datetime.ext)
         implementation(libs.koin.core)

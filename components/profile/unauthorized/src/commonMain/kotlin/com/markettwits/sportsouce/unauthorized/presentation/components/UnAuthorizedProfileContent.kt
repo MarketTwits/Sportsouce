@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
@@ -33,7 +36,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import sportsouce.components.profile.unauthorized.generated.resources.Res
 
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
     var file by remember {
@@ -49,7 +52,8 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .align(Alignment.Center)
-            .padding(40.dp)
+            .padding(40.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LottieAnimation(
             iterations = LottieConstants.IterateForever,
@@ -70,16 +74,15 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
         )
         Button(
             modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
+                .width(250.dp)
+                .padding(10.dp),
             shape = Shapes.large,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
             onClick = {
                 onClickAuth()
             }) {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier,
                 textAlign = TextAlign.Center,
                 text = "Авторизация",
                 fontSize = 16.sp,
@@ -88,8 +91,7 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
             )
         }
         Text(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier,
             textAlign = TextAlign.Center,
             text = "Войдите или создайте профиль, чтобы открыть\n" +
                     "для себя весь функционал приложения ! ",

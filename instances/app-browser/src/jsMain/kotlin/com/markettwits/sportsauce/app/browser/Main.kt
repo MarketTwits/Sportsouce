@@ -6,13 +6,14 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.markettwits.core.theme.SportSauceTheme
 import com.markettwits.core.theme.component.ThemeComponentBase
+import com.markettwits.core_ui.items.font.preloadFontResources
 import com.markettwits.initKoin
 import com.markettwits.sportsouce.root.RootComponentBase
 import com.markettwits.sportsouce.root.RootContent
 import kotlinx.browser.document
 import org.jetbrains.skiko.wasm.onWasmReady
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class,)
 fun main() {
     val lifecycle = LifecycleRegistry()
     val componentContext = DefaultComponentContext(lifecycle = lifecycle)
@@ -24,6 +25,7 @@ fun main() {
         lifecycle.attachToDocument()
         onWasmReady {
             ComposeViewport(document.body ?: return@onWasmReady) {
+                preloadFontResources()
                 SportSauceTheme(theme) {
                     RootContent(root)
                 }

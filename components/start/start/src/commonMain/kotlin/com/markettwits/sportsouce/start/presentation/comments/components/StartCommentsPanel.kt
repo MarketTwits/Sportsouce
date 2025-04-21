@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.text.ClickableText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.domain.StartItem
@@ -154,7 +155,7 @@ private fun StartCommentCard(
                     color = MaterialTheme.colorScheme.outline
                 )
             }
-            Text(
+            ClickableText(
                 text = message,
                 fontSize = 14.sp,
                 fontFamily = FontNunito.medium(),
@@ -211,11 +212,11 @@ private fun StartCommentCard(
                         replies.forEach {
                             StartCommentCard(
                                 modifier = modifier,
+                                isReply = true,
                                 userName = "${it.user.surname} ${it.user.name}",
                                 commentCreateDate = it.createdAt,
                                 message = it.comment,
                                 userImageUrl = it.user.photo ?: "",
-                                isReply = true,
                                 onClickReply = {}
                             )
                         }

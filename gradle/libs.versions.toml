@@ -5,7 +5,7 @@ versionName = "1.4.0"
 jvm = "11"
 kotlin = "2.1.20"
 gradle = "8.9.1" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
-kotlin-kmp-compose = "1.8.0-alpha03" # https://github.com/JetBrains/compose-multiplatform
+kotlin-kmp-compose = "1.8.0-beta02" # https://github.com/JetBrains/compose-multiplatform
 kotlinx-serialization = "1.8.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.1" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.6.2" # https://github.com/Kotlin/kotlinx-datetime
@@ -14,7 +14,7 @@ kstore = "0.9.1" # https://github.com/xxfast/KStore
 kermit = "2.0.4" # https://kermit.touchlab.co/docs/
 koin = "3.5.3" # https://github.com/InsertKoinIO/koin
 ktor = "3.0.1" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "1.0.0-pre.608"
+jetbrainsKotlinWrappers = "2025.4.11" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
@@ -37,7 +37,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
 composeMaterial3WindowSize = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "kotlin-kmp-compose" }
-composeMaterial3Adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version = "1.1.0-alpha03" }
+composeMaterial3Adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version = "1.1.0-alpha02" }
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 coroutines-interop = { module = "com.badoo.reaktive:coroutines-interop", version.ref = "reaktive" }
 kotlin-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser" }

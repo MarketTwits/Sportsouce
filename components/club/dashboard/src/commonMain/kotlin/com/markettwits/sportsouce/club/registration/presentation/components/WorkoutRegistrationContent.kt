@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.text.ClickableText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
 
@@ -43,10 +45,17 @@ fun WorkoutRegistrationContent(
             fontFamily = FontNunito.bold(),
             fontSize = 20.sp
         )
-        ClickableTextWrapper(
+        ClickableText(
             modifier = Modifier.padding(4.dp),
+            text = defaultText,
             onPhoneClick = onPhoneClick,
-            onLinkClick = onLinkClick
+            onLinkClick = onLinkClick,
+            overflow = TextOverflow.Ellipsis,
+            style = androidx.compose.ui.text.TextStyle(
+                fontSize = 12.sp,
+                fontFamily = FontNunito.semiBoldBold(),
+                color = MaterialTheme.colorScheme.outline,
+            )
         )
         WorkoutRegistrationFieldsContent(
             modifier = Modifier.padding(4.dp),
@@ -84,3 +93,7 @@ fun WorkoutRegistrationContent(
         )
     }
 }
+
+
+private val defaultText =
+    "Вы можете позвонить +7 968 22 111 22 или написать нам https://t.me/sportsoyuznsk"

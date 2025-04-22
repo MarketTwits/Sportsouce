@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core_ui.items.components.topbar.TopBarBase
+import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.shop.orders.domain.models.ShopUserOrder
 import com.markettwits.sportsouce.shop.orders.presentation.components.states.ShopUserOrdersErrorContent
@@ -32,22 +33,24 @@ fun ShopUserOrdersContent(
             isRefreshing = isLoading && items.isNotEmpty(),
             onRefresh = onClickRetry
         ) { innerModifier ->
-            ShopUserOrdersItemsContent(
-                modifier = innerModifier,
-                paddingValues = paddingValues,
-                isSuccess = isSuccess,
-                items = items
-            )
-            ShopUserOrdersErrorContent(
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-                error = error,
-                onClickRetry = onClickRetry
-            )
-            ShopUserOrdersLoadingContent(
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-                isLoading = isLoading,
-                isListEmpty = items.isEmpty()
-            )
+            AdaptivePane {
+                ShopUserOrdersItemsContent(
+                    modifier = innerModifier,
+                    paddingValues = paddingValues,
+                    isSuccess = isSuccess,
+                    items = items
+                )
+                ShopUserOrdersErrorContent(
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
+                    error = error,
+                    onClickRetry = onClickRetry
+                )
+                ShopUserOrdersLoadingContent(
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
+                    isLoading = isLoading,
+                    isListEmpty = items.isEmpty()
+                )
+            }
         }
     }
 }

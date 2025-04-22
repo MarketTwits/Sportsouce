@@ -8,10 +8,10 @@ import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileComponent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersComponentBase
-import com.markettwits.sportsouce.profile.registrations.detail.component.StartOrderComponent
-import com.markettwits.sportsouce.profile.registrations.list.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.list.presentation.component.RegistrationsComponent
-import com.markettwits.sportsouce.profile.registrations.root.RootRegistrationsComponent
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponent
+import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component.RegistrationsComponent
+import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrdersComponent
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase

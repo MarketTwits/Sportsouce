@@ -10,9 +10,9 @@ import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileScreen
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.screen.AuthorizedProfileScreen
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersScreen
-import com.markettwits.sportsouce.profile.registrations.detail.components.StartOrderProfileDialogScreen
-import com.markettwits.sportsouce.profile.registrations.list.presentation.screen.MyRegistrationsScreen
-import com.markettwits.sportsouce.profile.registrations.root.RootRegistrationsScreen
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.StartOrderProfileDialogScreen
+import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.screen.MyRegistrationsScreen
+import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsScreen
 import com.markettwits.sportsouce.settings.root.RootSettingsScreen
 import com.markettwits.sportsouce.shop.orders.presentation.screen.ShopUserOrdersScreen
 import com.markettwits.sportsouce.start.root.RootStartScreen

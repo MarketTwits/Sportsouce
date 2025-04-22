@@ -73,7 +73,7 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
         return json.decodeFromString(response.body())
     }
 
-    suspend fun userRegistriesNew2(userId: Int, token: String): List<UserRegistration> {
+    suspend fun userRegistries(userId: Int, token: String): List<UserRegistration> {
         val response = client.get("user/startsByUserId/$userId?maxResultCount=1000") {
             contentType(ContentType.Application.Json)
             headers {

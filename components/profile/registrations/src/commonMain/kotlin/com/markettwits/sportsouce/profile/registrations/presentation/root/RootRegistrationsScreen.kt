@@ -11,7 +11,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.screen.MyRegistrationsScreen
+import com.markettwits.sportsouce.profile.registrations.presentation.list.screen.MyRegistrationsScreen
 import com.markettwits.sportsouce.start.root.RootStartScreen
 
 @OptIn(FaultyDecomposeApi::class)

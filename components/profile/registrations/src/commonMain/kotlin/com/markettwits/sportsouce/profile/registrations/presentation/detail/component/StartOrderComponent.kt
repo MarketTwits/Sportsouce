@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.component
 
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import kotlinx.coroutines.flow.StateFlow
 
 interface StartOrderComponent {

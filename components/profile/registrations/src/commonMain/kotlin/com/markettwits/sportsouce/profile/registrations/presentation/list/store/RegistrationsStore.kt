@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store
+package com.markettwits.sportsouce.profile.registrations.presentation.list.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
@@ -9,10 +9,10 @@ import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPaymentStatus
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.filter.FilterItem
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsStore.Intent
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsStore.Label
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsStore.State
+import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore.Intent
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore.Label
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore.State
 import kotlinx.coroutines.launch
 
 interface RegistrationsStore : Store<Intent, State, Label> {
@@ -47,9 +47,9 @@ class RegistrationsDataStoreFactory(
 ) {
 
     fun create(): RegistrationsStore =
-        object : RegistrationsStore, Store<Intent, State, Label> by storeFactory.create(
+        object : RegistrationsStore, Store<RegistrationsStore.Intent, RegistrationsStore.State, RegistrationsStore.Label> by storeFactory.create(
             name = "RegistrationsDataStore",
-            initialState = State(emptyList()),
+            initialState = RegistrationsStore.State(emptyList()),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
@@ -63,16 +63,16 @@ class RegistrationsDataStoreFactory(
         data class UpdateUserInfo(val sharedUser: SharedUser) : Msg
     }
 
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent) {
+    private inner class ExecutorImpl : CoroutineExecutor<RegistrationsStore.Intent, Unit, RegistrationsStore.State, Msg, RegistrationsStore.Label>() {
+        override fun executeIntent(intent: RegistrationsStore.Intent) {
             when (intent) {
-                is Intent.LoadData -> {
+                is RegistrationsStore.Intent.LoadData -> {
                     launch()
                 }
 
-                is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
-                is Intent.Pop -> publish(Label.GoBack)
-                is Intent.OnClickFilter -> updateFilter(intent.item, state())
+                is RegistrationsStore.Intent.OnClickItem -> publish(RegistrationsStore.Label.OnItemClick(intent.orderInfo))
+                is RegistrationsStore.Intent.Pop -> publish(RegistrationsStore.Label.GoBack)
+                is RegistrationsStore.Intent.OnClickFilter -> updateFilter(intent.item, state())
             }
         }
 
@@ -104,7 +104,7 @@ class RegistrationsDataStoreFactory(
             }.distinctBy { it.value }
         }
 
-        private fun updateFilter(item: FilterItem, state: State) {
+        private fun updateFilter(item: FilterItem, state: RegistrationsStore.State) {
             val index = state.filter.indexOf(item)
             val filter = state.filter.toMutableList()
             filter[index] = item.copy(checked = !item.checked)
@@ -131,10 +131,10 @@ class RegistrationsDataStoreFactory(
         }
     }
 
-    private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(msg: Msg): State {
+    private object ReducerImpl : Reducer<RegistrationsStore.State, Msg> {
+        override fun RegistrationsStore.State.reduce(msg: Msg): RegistrationsStore.State {
             return when (msg) {
-                is Msg.InfoFailed -> State(
+                is Msg.InfoFailed -> RegistrationsStore.State(
                     base = emptyList(),
                     isError = true,
                     isLoading = false,

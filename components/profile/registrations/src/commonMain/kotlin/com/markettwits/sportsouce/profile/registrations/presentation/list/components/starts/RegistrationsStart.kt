@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.starts
+package com.markettwits.sportsouce.profile.registrations.presentation.list.components.starts
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.horizontalScroll
@@ -21,8 +21,8 @@ import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderStartCard
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.filter.FilterItem
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.filter.RegistrationsFilterItem
+import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
+import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.RegistrationsFilterItem
 
 @Composable
 fun RegistrationsStart(

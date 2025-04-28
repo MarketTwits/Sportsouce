@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.root
 
 import com.arkivanov.decompose.value.Value
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component.RegistrationsComponent
+import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponent
 import com.markettwits.sportsouce.start.root.RootStartScreenComponent
 import kotlinx.serialization.Serializable
 

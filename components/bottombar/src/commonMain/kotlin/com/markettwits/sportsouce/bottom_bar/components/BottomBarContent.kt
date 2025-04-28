@@ -8,8 +8,10 @@ import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -30,7 +32,7 @@ internal fun BottomBarContent(
     onClickTab: (BottomBarConfiguration) -> Unit,
     content: @Composable () -> Unit
 ) {
-    //val state = rememberNavigationSuiteScaffoldState()
+    val state = rememberNavigationSuiteScaffoldState()
 
     val isLarge = calculateWindowSizeClass().isLarge
 
@@ -46,17 +48,18 @@ internal fun BottomBarContent(
 
     val itemModifier = if (isLarge) Modifier.padding(6.dp) else Modifier.padding(2.dp)
 
-//    LaunchedEffect(isShowTopBar) {
-//        if (isShowTopBar) {
-//            state.show()
-//        } else {
-//            if (!isLarge)
-//                state.hide()
-//        }
-//    }
+    LaunchedEffect(isShowTopBar) {
+        if (isShowTopBar) {
+            state.show()
+        } else {
+            if (!isLarge)
+                state.hide()
+        }
+    }
 
     NavigationSuiteScaffold(
         modifier = modifier,
+        state = state,
         containerColor = MaterialTheme.colorScheme.primary,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = MaterialTheme.colorScheme.primary,

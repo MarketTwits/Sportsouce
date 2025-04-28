@@ -1,9 +1,9 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store
+package com.markettwits.sportsouce.profile.registrations.presentation.detail.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore.Intent
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore.Label
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore.State
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Intent
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Label
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.State
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 
 interface StartOrderStore : Store<Intent, State, Label> {

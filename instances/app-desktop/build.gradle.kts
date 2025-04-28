@@ -8,7 +8,7 @@ plugins {
 }
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "com.markettwits.sportsouce.app.MainKt"
+        attributes["Main-Class"] = "com.markettwits.sportsouce.app.desktop.MainKt"
     }
 }
 
@@ -35,7 +35,7 @@ kotlin {
 compose.desktop {
     application {
 
-        mainClass = "com.markettwits.sportsouce.app.MainKt"
+        mainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
 
         nativeDistributions {
             packageName = "Спорт Союз"

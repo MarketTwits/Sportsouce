@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.screen
+package com.markettwits.sportsouce.profile.registrations.presentation.list.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component.RegistrationsComponent
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.starts.RegistrationsStart
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsStore
+import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponent
+import com.markettwits.sportsouce.profile.registrations.presentation.list.components.starts.RegistrationsStart
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore
 
 @Composable
 fun MyRegistrationsScreen(component: RegistrationsComponent) {

@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.starts
+package com.markettwits.sportsouce.profile.registrations.presentation.list.components.starts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

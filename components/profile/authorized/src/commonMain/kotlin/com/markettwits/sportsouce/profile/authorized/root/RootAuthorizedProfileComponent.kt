@@ -10,7 +10,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.presentation.com
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponent
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component.RegistrationsComponent
+import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponent
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrdersComponent

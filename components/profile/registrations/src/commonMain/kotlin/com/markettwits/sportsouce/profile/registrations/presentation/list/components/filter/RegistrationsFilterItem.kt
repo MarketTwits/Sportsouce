@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.components.filter
+package com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

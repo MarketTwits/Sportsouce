@@ -9,8 +9,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component.RegistrationsComponentBase
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsDataStoreFactory
+import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponentBase
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
 import com.markettwits.sportsouce.profile.registrations.presentation.root.di.userStartRegistrationModule
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 

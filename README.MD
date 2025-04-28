@@ -22,10 +22,16 @@ Below are some screenshots of the app:
 
 This is a Kotlin Multiplatform project that provides functionality for displaying and interacting with data from **sportsauce.ru**.
 
-## Main Features:
-- Integration with **sportsauce.ru**.
-- Viewing schedules and results.
-- A convenient user interface for mobile devices.
+
+### JS
+<p style="text-align: center;">
+  <img src=".github/images/screenshot_5.jpg" width="613"/>
+</p>
+
+### Desktop
+<p style="text-align: center;">
+  <img src=".github/images/screenshot_6.jpg" width="613"/>
+</p>
 
 ## Download
 <table style="width:100%">

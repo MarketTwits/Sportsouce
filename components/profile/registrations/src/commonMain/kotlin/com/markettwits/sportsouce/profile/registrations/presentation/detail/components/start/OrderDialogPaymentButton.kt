@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 
 @Composable
 internal fun OrderDialogPaymentButton(

@@ -1,8 +1,8 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store
+package com.markettwits.sportsouce.profile.registrations.presentation.detail.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore.Message
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore.State
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Message
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.State
 
 object StartOrderStoreReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {

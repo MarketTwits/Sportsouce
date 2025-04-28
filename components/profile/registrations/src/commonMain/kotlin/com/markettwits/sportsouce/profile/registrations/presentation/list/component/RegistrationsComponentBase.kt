@@ -1,12 +1,12 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.component
+package com.markettwits.sportsouce.profile.registrations.presentation.list.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsDataStoreFactory
-import com.markettwits.sportsouce.profile.registrations.presentation.list.presentation.store.RegistrationsStore
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
+import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

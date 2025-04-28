@@ -37,7 +37,7 @@ fun MemberResultsCard(
         ResultInfoRow("Стартовый номер:", result.bodyNumber)
         ResultInfoRow("Место:", result.place.toString())
         ResultInfoRow("Результат:", result.result)
-        ResultInfoRow("Сдвиг старта:", result.shift)
+        ResultInfoRow("Отставание от лидера:", result.shift)
 
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalDivider()

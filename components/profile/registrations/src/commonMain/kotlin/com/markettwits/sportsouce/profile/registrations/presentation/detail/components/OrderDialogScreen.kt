@@ -21,7 +21,7 @@ import com.markettwits.sportsouce.profile.registrations.presentation.detail.comp
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderMembersCard
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderPromocodeCard
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderStartCard
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.store.StartOrderStore
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

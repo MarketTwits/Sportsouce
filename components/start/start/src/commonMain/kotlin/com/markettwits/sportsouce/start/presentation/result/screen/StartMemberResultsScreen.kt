@@ -8,8 +8,8 @@ import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffol
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
-import com.markettwits.sportsouce.start.presentation.result.components.StartMembersResultTable
 import com.markettwits.sportsouce.start.presentation.result.components.StartSearchMemberResults
+import com.markettwits.sportsouce.start.presentation.result.newcomponents.ResultsScreen
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore
 
 @Composable
@@ -36,6 +36,9 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
             )
         }
     ) {
-        StartMembersResultTable(items = state.visibleMembersResult)
+        ResultsScreen(
+            results = state.visibleMembersResult,
+        )
+        //StartMembersResultTable(items = state.visibleMembersResult)
     }
 }

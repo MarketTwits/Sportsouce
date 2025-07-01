@@ -22,6 +22,7 @@ pullrefresh = "1.4.0-beta02" # https://github.com/MateriiApps/pullrefresh
 richeditor = "1.0.0-rc12" # https://github.com/MohamedRejeb/compose-rich-editor
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.1.0-beta01"
+composeHotReload = "1.0.0-alpha09" # https://github.com/JetBrains/compose-hot-reload
 composeMaterial3AdaptiveNavigationSuite = "1.8.0-alpha03"
 buildConfigPlugin = "5.5.4" # https://github.com/gmazzo/gradle-buildconfig-plugin
 compose-activity = "1.10.1"
@@ -121,6 +122,7 @@ kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin"
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 build-konfig = {id = "com.github.gmazzo.buildconfig", version.ref = "buildConfigPlugin"}
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
 
 #Convention Plugins
 kotlin-kmp-convention = { id = "kotlin.multiplatform.convention", version = "unspecified" }

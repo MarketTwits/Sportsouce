@@ -14,7 +14,7 @@ import kotlinx.serialization.json.encodeToJsonElement
 @Serializable
 data class StartMemberResult(
     @SerialName("birthday")
-    val birthday: String = "",
+    val birthday: String? = null,
     @SerialName("body_number")
     val bodyNumber: String = "",
     @SerialName("circles")
@@ -39,7 +39,7 @@ data class StartMemberResult(
     @SerialName("sex")
     val sex: String = "",
     @SerialName("shift")
-    val shift: String = "",
+    val shift: String? = null,
     @SerialName("start_id")
     val startId: Int = 0,
     @SerialName("team")

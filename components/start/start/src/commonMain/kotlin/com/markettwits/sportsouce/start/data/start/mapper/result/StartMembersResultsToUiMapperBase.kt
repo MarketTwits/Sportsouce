@@ -11,7 +11,7 @@ internal class StartMembersResultsToUiMapperBase : StartMembersResultsToUiMapper
             distance = it.distance,
             circles = it.circles,
             sex = it.sex,
-            shift = it.shift,
+            shift = it.shift ?: "",
             result = it.result,
             startId = it.startId,
             team = it.team,

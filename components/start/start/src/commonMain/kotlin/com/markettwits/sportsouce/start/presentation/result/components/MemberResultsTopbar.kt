@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.presentation.result.newcomponents
+package com.markettwits.sportsouce.start.presentation.result.components
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
@@ -17,13 +17,12 @@ import com.markettwits.core_ui.items.components.textField.DropDownSpinnerStage
 import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.sportsouce.start.presentation.result.components.StartSearchMemberResults
 import com.markettwits.sportsouce.start.presentation.result.model.*
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MemberResultsTopbar(
+fun StartMemberMemberResultsTopbar(
     state: StartMemberResultsStore.State,
     windowSizeClass: WindowSizeClass,
     onIntent: (StartMemberResultsStore.Intent) -> Unit,
@@ -68,7 +67,7 @@ private fun MemberResultsTopBar(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                StartSearchMemberResults(
+                StartMemberResultsSearchBar(
                     modifier = Modifier.weight(1f),
                     query = state.filterState.searchQuery,
                     onValueChange = { onIntent(StartMemberResultsStore.Intent.OnChangeQuery(it)) },

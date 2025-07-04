@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.presentation.result.newcomponents
+package com.markettwits.sportsouce.start.presentation.result.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseOutCubic
@@ -36,7 +36,7 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import kotlin.math.roundToInt
 
 @Composable
-fun DetailedResultScreen(
+fun MemberResultDetailedDialog(
     memberResult: MemberResult,
     onBackClick: () -> Unit = {},
     modifier: Modifier = Modifier

@@ -22,7 +22,7 @@ import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-internal fun StartSearchMemberResults(
+internal fun StartMemberResultsSearchBar(
     modifier: Modifier = Modifier,
     query: String,
     onValueChange: (String) -> Unit,

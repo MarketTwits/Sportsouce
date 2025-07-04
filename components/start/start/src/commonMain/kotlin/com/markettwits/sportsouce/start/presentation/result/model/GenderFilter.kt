@@ -31,7 +31,7 @@ data class FilterState(
     val distanceFilters: List<DistanceFilter> = emptyList(),
     val groupFilters: List<GroupFilter> = emptyList(),
     val teamFilters: List<TeamFilter> = emptyList(),
-    val sortBy: SortBy = SortBy.NAME,
+    val sortBy: SortBy = SortBy.RESULT,
     val sortOrder: SortOrder = SortOrder.ASC,
     val searchQuery: String = ""
 )

@@ -3,22 +3,34 @@ package com.markettwits.sportsouce.start.presentation.result.model
 class MemberResultsFilterApi {
 
     fun createInitialFilterState(members: List<MemberResult>): FilterState {
-        return FilterState(
-            distanceFilters = extractDistancesFromMembers(members).map {
-                DistanceFilter(name = it, isSelected = false)
-            },
-            groupFilters = extractGroupsFromMembers(members).map {
+        val distanceFilters = extractDistancesFromMembers(members).mapIndexed { index, filter ->
+            DistanceFilter(name = filter, isSelected = index == 0)
+        }
+
+        val selectedDistance = distanceFilters.firstOrNull { it.isSelected }?.name
+
+        val groupFilters = members
+            .filter { it.distance == selectedDistance }
+            .map { it.group }
+            .distinct()
+            .map {
                 GroupFilter(name = it, isSelected = false)
-            },
-            teamFilters = extractTeamsFromMembers(members).map {
-                TeamFilter(name = it, isSelected = false)
             }
+
+        val teamFilters = extractTeamsFromMembers(members).map {
+            TeamFilter(name = it, isSelected = false)
+        }
+
+        return FilterState(
+            distanceFilters = distanceFilters,
+            groupFilters = groupFilters,
+            teamFilters = teamFilters
         )
     }
 
     fun filterAndSort(
         members: List<MemberResult>,
-        filterState: FilterState
+        filterState: FilterState,
     ): List<MemberResult> {
         return members
             .filter { member -> applyFilters(member, filterState) }
@@ -26,32 +38,29 @@ class MemberResultsFilterApi {
     }
 
     private fun applyFilters(member: MemberResult, filterState: FilterState): Boolean {
-        // Search filter
+        // Поиск
         if (filterState.searchQuery.isNotBlank()) {
             val query = filterState.searchQuery.lowercase()
             val name = member.name.lowercase()
             if (!name.contains(query)) return false
         }
 
-        // Gender filter
-        if (filterState.genderFilter.value != null &&
-            member.sex != filterState.genderFilter.value) {
-            return false
-        }
-
-        // Distance filter
+        // Дистанция
         val selectedDistances = filterState.distanceFilters.filter { it.isSelected }.map { it.name }
         if (selectedDistances.isNotEmpty() && member.distance !in selectedDistances) {
             return false
         }
 
-        // Group filter
-        val selectedGroups = filterState.groupFilters.filter { it.isSelected }.map { it.name }
-        if (selectedGroups.isNotEmpty() && member.group !in selectedGroups) {
-            return false
+        // Группа (только если дистанция совпадает)
+        val selectedDistance = selectedDistances.firstOrNull()
+        if (selectedDistance != null && member.distance == selectedDistance) {
+            val selectedGroups = filterState.groupFilters.filter { it.isSelected }.map { it.name }
+            if (selectedGroups.isNotEmpty() && member.group !in selectedGroups) {
+                return false
+            }
         }
 
-        // Team filter
+        // Команда
         val selectedTeams = filterState.teamFilters.filter { it.isSelected }.map { it.name }
         if (selectedTeams.isNotEmpty() && member.team !in selectedTeams) {
             return false

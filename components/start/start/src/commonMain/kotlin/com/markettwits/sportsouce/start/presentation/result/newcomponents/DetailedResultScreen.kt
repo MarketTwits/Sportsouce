@@ -14,12 +14,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,8 +29,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.screenWidthDp
+import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import kotlin.math.roundToInt
 
@@ -53,8 +56,6 @@ private fun DetailedResultContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val configuration = calculateWindowSizeClass()
-    val isTablet = configuration.screenWidthDp >= 600.dp
     
     var isVisible by remember { mutableStateOf(false) }
     
@@ -69,6 +70,7 @@ private fun DetailedResultContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .clip(Shapes.large)
             .background(MaterialTheme.colorScheme.background)
     ) {
         // Top App Bar
@@ -86,7 +88,7 @@ private fun DetailedResultContent(
             ) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onTertiary
                     )
@@ -94,7 +96,8 @@ private fun DetailedResultContent(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Результаты",
-                    style = MaterialTheme.typography.headlineSmall,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
                     color = MaterialTheme.colorScheme.onTertiary,
                     fontWeight = FontWeight.Bold
                 )
@@ -114,7 +117,7 @@ private fun DetailedResultContent(
                         initialOffsetY = { -slideDistance.toInt() }
                     ) + fadeIn(animationSpec)
                 ) {
-                    HeaderResultCard(memberResult = memberResult, isTablet = isTablet)
+                    HeaderResultCard(memberResult = memberResult)
                 }
             }
             
@@ -127,7 +130,7 @@ private fun DetailedResultContent(
                         initialOffsetY = { slideDistance.toInt() }
                     ) + fadeIn(tween(800, delayMillis = 200))
                 ) {
-                    PerformanceMetricsCard(memberResult = memberResult, isTablet = isTablet)
+                    PerformanceMetricsCard(memberResult = memberResult)
                 }
             }
             
@@ -141,7 +144,7 @@ private fun DetailedResultContent(
                             initialOffsetY = { slideDistance.toInt() }
                         ) + fadeIn(tween(800, delayMillis = 400))
                     ) {
-                        CheckpointDetailsCard(memberResult = memberResult, isTablet = isTablet)
+                        CheckpointDetailsCard(memberResult = memberResult)
                     }
                 }
             }
@@ -155,7 +158,7 @@ private fun DetailedResultContent(
                         initialOffsetY = { slideDistance.toInt() }
                     ) + fadeIn(tween(800, delayMillis = 600))
                 ) {
-                    AdditionalInfoCard(memberResult = memberResult, isTablet = isTablet)
+                    AdditionalInfoCard(memberResult = memberResult)
                 }
             }
         }
@@ -165,7 +168,6 @@ private fun DetailedResultContent(
 @Composable
 private fun HeaderResultCard(
     memberResult: MemberResult,
-    isTablet: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -181,7 +183,7 @@ private fun HeaderResultCard(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(if (isTablet) 200.dp else 160.dp)
+                    .height(160.dp)
                     .background(
                         Brush.radialGradient(
                             colors = listOf(
@@ -207,8 +209,8 @@ private fun HeaderResultCard(
                 // Athlete name
                 Text(
                     text = memberResult.name,
-                    style = if (isTablet) MaterialTheme.typography.headlineMedium 
-                           else MaterialTheme.typography.headlineSmall,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
                     color = MaterialTheme.colorScheme.onTertiary,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -219,8 +221,8 @@ private fun HeaderResultCard(
                 // Result time
                 Text(
                     text = memberResult.result,
-                    style = if (isTablet) MaterialTheme.typography.headlineLarge 
-                           else MaterialTheme.typography.headlineMedium,
+                    fontSize = 18.sp,
+                    fontFamily = FontNunito.bold(),
                     color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -284,7 +286,6 @@ private fun PlaceBadge(place: Int) {
 @Composable
 private fun PerformanceMetricsCard(
     memberResult: MemberResult,
-    isTablet: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -302,38 +303,14 @@ private fun PerformanceMetricsCard(
         ) {
             Text(
                 text = "Показатели",
-                style = MaterialTheme.typography.titleLarge,
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 fontWeight = FontWeight.Bold
             )
             
             Spacer(modifier = Modifier.height(16.dp))
-            
-            if (isTablet) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    MetricItem(
-                        icon = Icons.Default.Speed,
-                        label = "Темп",
-                        value = calculatePace(memberResult.result, memberResult.distance),
-                        modifier = Modifier.weight(1f)
-                    )
-                    MetricItem(
-                        icon = Icons.Default.DirectionsRun,
-                        label = "Дистанция", 
-                        value = memberResult.distance,
-                        modifier = Modifier.weight(1f)
-                    )
-                    MetricItem(
-                        icon = Icons.Default.Group,
-                        label = "Категория",
-                        value = memberResult.group,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            } else {
+
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -355,7 +332,6 @@ private fun PerformanceMetricsCard(
                 }
             }
         }
-    }
 }
 
 @Composable
@@ -389,14 +365,15 @@ private fun MetricItem(
         Column {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f)
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.titleMedium,
+                fontSize = 14.sp,
+                fontFamily = FontNunito.medium(),
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                fontWeight = FontWeight.SemiBold
             )
         }
     }
@@ -405,7 +382,6 @@ private fun MetricItem(
 @Composable
 private fun CheckpointDetailsCard(
     memberResult: MemberResult,
-    isTablet: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -423,9 +399,9 @@ private fun CheckpointDetailsCard(
         ) {
             Text(
                 text = "Контрольные точки",
-                style = MaterialTheme.typography.titleLarge,
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -463,13 +439,14 @@ private fun CheckpointChip(
         ) {
             Text(
                 text = "КП $checkpoint",
-                style = MaterialTheme.typography.labelMedium,
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.secondary,
-                fontWeight = FontWeight.SemiBold
             )
             Text(
                 text = time,
-                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 14.sp,
+                fontFamily = FontNunito.medium(),
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
@@ -479,7 +456,6 @@ private fun CheckpointChip(
 @Composable
 private fun AdditionalInfoCard(
     memberResult: MemberResult,
-    isTablet: Boolean,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -497,40 +473,22 @@ private fun AdditionalInfoCard(
         ) {
             Text(
                 text = "Дополнительная информация",
-                style = MaterialTheme.typography.titleLarge,
+                fontSize = 16.sp,
+                fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold
             )
             
             Spacer(modifier = Modifier.height(16.dp))
-            
-            if (isTablet) {
-                Row {
-                    Column(modifier = Modifier.weight(1f)) {
-                        InfoRow("Команда", memberResult.team)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        InfoRow("Пол", if (memberResult.sex == "M") "Мужской" else "Женский")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        InfoRow("Смена", memberResult.shift)
-                    }
-                    Spacer(modifier = Modifier.width(24.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        InfoRow("Стартовый №", memberResult.startId.toString())
-                        Spacer(modifier = Modifier.height(8.dp))
-                        InfoRow("ID участника", memberResult.id.toString())
-                    }
-                }
-            } else {
+
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     InfoRow("Команда", memberResult.team)
-                    InfoRow("Пол", if (memberResult.sex == "M") "Мужской" else "Женский")
+                    InfoRow("Пол", memberResult.sex)
                     InfoRow("Смена", memberResult.shift)
                     InfoRow("Стартовый №", memberResult.startId.toString())
                     InfoRow("ID участника", memberResult.id.toString())
                 }
-            }
         }
     }
 }
@@ -548,12 +506,14 @@ private fun InfoRow(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
+            fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimary,
+            fontFamily = FontNunito.medium(),
             fontWeight = FontWeight.Medium
         )
     }

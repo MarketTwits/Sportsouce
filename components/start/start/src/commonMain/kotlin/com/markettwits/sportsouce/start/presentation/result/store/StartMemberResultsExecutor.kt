@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.start.presentation.result.store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.start.presentation.result.model.*
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.*
+import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.Message.*
 
 class StartMemberResultsExecutor(
     private val filterApi: MemberResultsFilterApi = MemberResultsFilterApi(),
@@ -10,61 +11,68 @@ class StartMemberResultsExecutor(
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            is StartMemberResultsStore.Intent.OnClickGoBack -> {
-                publish(StartMemberResultsStore.Label.GoBack)
+            is Intent.OnClickGoBack -> {
+                publish(Label.GoBack)
             }
 
-            is StartMemberResultsStore.Intent.OnMembersLoaded -> {
-                // Инициализируем фильтры на основе загруженных данных
+            is Intent.OnMembersLoaded -> {
                 val initialFilterState = filterApi.createInitialFilterState(intent.members)
-                dispatch(Message.UpdateMembersResult(intent.members))
-                dispatch(Message.UpdateFilterState(initialFilterState))
+                dispatch(UpdateMembersResult(intent.members))
+                dispatch(UpdateFilterState(initialFilterState))
                 applyFilters(intent.members, initialFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnChangeQuery -> {
+            is Intent.OnChangeQuery -> {
                 val newFilterState = state().filterState.copy(searchQuery = intent.query)
-                dispatch(Message.UpdateFilterState(newFilterState))
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(state().membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnClickBrush -> {
-                // Сброс всех фильтров, но сохраняем доступные опции
+            is Intent.OnClickBrush -> {
                 val currentState = state()
                 val clearedFilterState = FilterState(
                     distanceFilters = currentState.filterState.distanceFilters.map { it.copy(isSelected = false) },
                     groupFilters = currentState.filterState.groupFilters.map { it.copy(isSelected = false) },
                     teamFilters = currentState.filterState.teamFilters.map { it.copy(isSelected = false) }
                 )
-                dispatch(Message.UpdateFilterState(clearedFilterState))
+                dispatch(UpdateFilterState(clearedFilterState))
                 applyFilters(currentState.membersResult, clearedFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnToggleFilterDialog -> {
-                dispatch(Message.ToggleFilterDialog(!state().isFilterDialogOpen))
+            is Intent.OnToggleFilterDialog -> {
+                dispatch(ToggleFilterDialog(!state().isFilterDialogOpen))
             }
 
-            is StartMemberResultsStore.Intent.OnGenderFilterChange -> {
-                val newFilterState = state().filterState.copy(genderFilter = intent.gender)
-                dispatch(Message.UpdateFilterState(newFilterState))
-                applyFilters(state().membersResult, newFilterState)
-            }
-
-            is StartMemberResultsStore.Intent.OnDistanceFilterToggle -> {
+            is Intent.OnDistanceFilterToggle -> {
                 val currentState = state()
+
+                // Обновляем выбор дистанции
                 val updatedDistanceFilters = currentState.filterState.distanceFilters.map { distance ->
-                    if (distance.name == intent.distanceName) {
+                    if (distance == intent.distanceFilter) {
                         distance.copy(isSelected = !distance.isSelected)
                     } else {
-                        distance
+                        distance.copy(isSelected = false)
                     }
                 }
-                val newFilterState = currentState.filterState.copy(distanceFilters = updatedDistanceFilters)
-                dispatch(Message.UpdateFilterState(newFilterState))
+
+                val selectedDistance = updatedDistanceFilters.firstOrNull { it.isSelected }?.name
+
+                val updatedGroupFilters = currentState.membersResult
+                    .filter { it.distance == selectedDistance }
+                    .map { it.group }
+                    .distinct()
+                    .map { groupName -> GroupFilter(name = groupName, isSelected = false) }
+
+                val newFilterState = currentState.filterState.copy(
+                    distanceFilters = updatedDistanceFilters,
+                    groupFilters = updatedGroupFilters
+                )
+
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(currentState.membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnGroupFilterToggle -> {
+            is Intent.OnGroupFilterToggle -> {
                 val currentState = state()
                 val updatedGroupFilters = currentState.filterState.groupFilters.map { group ->
                     if (group.name == intent.groupName) {
@@ -74,11 +82,11 @@ class StartMemberResultsExecutor(
                     }
                 }
                 val newFilterState = currentState.filterState.copy(groupFilters = updatedGroupFilters)
-                dispatch(Message.UpdateFilterState(newFilterState))
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(currentState.membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnTeamFilterToggle -> {
+            is Intent.OnTeamFilterToggle -> {
                 val currentState = state()
                 val updatedTeamFilters = currentState.filterState.teamFilters.map { team ->
                     if (team.name == intent.teamName) {
@@ -88,32 +96,37 @@ class StartMemberResultsExecutor(
                     }
                 }
                 val newFilterState = currentState.filterState.copy(teamFilters = updatedTeamFilters)
-                dispatch(Message.UpdateFilterState(newFilterState))
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(currentState.membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnSortByChange -> {
+            is Intent.OnSortByChange -> {
                 val newFilterState = state().filterState.copy(sortBy = intent.sortBy)
-                dispatch(Message.UpdateFilterState(newFilterState))
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(state().membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnSortOrderChange -> {
+            is Intent.OnSortOrderChange -> {
                 val newFilterState = state().filterState.copy(sortOrder = intent.sortOrder)
-                dispatch(Message.UpdateFilterState(newFilterState))
+                dispatch(UpdateFilterState(newFilterState))
                 applyFilters(state().membersResult, newFilterState)
             }
 
-            is StartMemberResultsStore.Intent.OnClearFilters -> {
+            is Intent.OnClearFilters -> {
                 val currentState = state()
                 val clearedFilterState = FilterState(
                     distanceFilters = currentState.filterState.distanceFilters.map { it.copy(isSelected = false) },
                     groupFilters = currentState.filterState.groupFilters.map { it.copy(isSelected = false) },
                     teamFilters = currentState.filterState.teamFilters.map { it.copy(isSelected = false) }
                 )
-                dispatch(Message.UpdateFilterState(clearedFilterState))
+                dispatch(UpdateFilterState(clearedFilterState))
                 applyFilters(currentState.membersResult, clearedFilterState)
             }
+
+            is Intent.OnClickBrushQuery -> {val currentState = state()
+                val clearedFilterState = state().filterState.copy(searchQuery = "")
+                dispatch(UpdateFilterState(clearedFilterState))
+                applyFilters(currentState.membersResult, clearedFilterState)}
         }
     }
 

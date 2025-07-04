@@ -1,15 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.result.model
 
-enum class GenderFilter(val displayName: String, val value: String?) {
-    ALL("All", null),
-    MALE("Male", "M"),
-    FEMALE("Female", "F")
-}
 
 enum class SortBy(val displayName: String) {
-    NAME("Name"),
-    RESULT("Result"),
-    START_NUMBER("Start Number")
+    RESULT("Результату"),
+    NAME("Имени"),
+    START_NUMBER("Стартовому номеру")
 }
 
 enum class SortOrder {
@@ -33,7 +28,6 @@ data class DistanceFilter(
 )
 
 data class FilterState(
-    val genderFilter: GenderFilter = GenderFilter.ALL,
     val distanceFilters: List<DistanceFilter> = emptyList(),
     val groupFilters: List<GroupFilter> = emptyList(),
     val teamFilters: List<TeamFilter> = emptyList(),
@@ -41,3 +35,14 @@ data class FilterState(
     val sortOrder: SortOrder = SortOrder.ASC,
     val searchQuery: String = ""
 )
+
+internal fun List<DistanceFilter>.getSelectDistance() : DistanceFilter?
+    = this.firstOrNull { it.isSelected }
+
+internal fun List<TeamFilter>.getSelectTeams() : List<TeamFilter>
+        = this.filter { it.isSelected }
+
+internal fun List<GroupFilter>.getSelectedGroups() : List<GroupFilter>
+        = this.filter { it.isSelected }
+
+

@@ -1,12 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.result.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.sportsouce.start.presentation.result.model.DistanceFilter
-import com.markettwits.sportsouce.start.presentation.result.model.FilterState
-import com.markettwits.sportsouce.start.presentation.result.model.GenderFilter
-import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
-import com.markettwits.sportsouce.start.presentation.result.model.SortBy
-import com.markettwits.sportsouce.start.presentation.result.model.SortOrder
+import com.markettwits.sportsouce.start.presentation.result.model.*
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.*
 
 interface StartMemberResultsStore : Store<Intent, State, Label> {
@@ -22,11 +17,11 @@ interface StartMemberResultsStore : Store<Intent, State, Label> {
         data object OnClickGoBack : Intent
         data class OnChangeQuery(val query: String) : Intent
         data object OnClickBrush : Intent
+        data object OnClickBrushQuery : Intent
         data object OnToggleFilterDialog : Intent
 
         // Filter intents
-        data class OnGenderFilterChange(val gender: GenderFilter) : Intent
-        data class OnDistanceFilterToggle(val distanceName: String) : Intent
+        data class OnDistanceFilterToggle(val distanceFilter: DistanceFilter) : Intent
         data class OnGroupFilterToggle(val groupName: String) : Intent
         data class OnTeamFilterToggle(val teamName: String) : Intent
         data class OnSortByChange(val sortBy: SortBy) : Intent

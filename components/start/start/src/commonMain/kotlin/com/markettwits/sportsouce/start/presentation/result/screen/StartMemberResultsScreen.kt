@@ -3,15 +3,14 @@ package com.markettwits.sportsouce.start.presentation.result.screen
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
-import com.markettwits.sportsouce.start.presentation.result.components.MemberResultDetailedDialog
+import com.markettwits.sportsouce.start.presentation.result.components.MemberResultDetailed
 import com.markettwits.sportsouce.start.presentation.result.components.StartMemberMemberResultsTopbar
 import com.markettwits.sportsouce.start.presentation.result.components.StartMemberResultsItemsContent
 
@@ -42,13 +41,13 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
             }
         )
         if (currentMemberResult != null) {
-            Dialog(
-                properties = DialogProperties(usePlatformDefaultWidth = true),
+            DefaultModalBottomSheet(
                 onDismissRequest = {
                     currentMemberResult = null
-                }
+                },
+                dragHandle = {}
             ) {
-                MemberResultDetailedDialog(
+                MemberResultDetailed(
                     memberResult = currentMemberResult!!,
                     onBackClick = {
                         currentMemberResult = null

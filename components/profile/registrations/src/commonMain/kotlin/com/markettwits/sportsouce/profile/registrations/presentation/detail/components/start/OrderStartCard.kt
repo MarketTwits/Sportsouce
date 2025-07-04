@@ -244,8 +244,8 @@ private fun ResultsIndicator(
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
 
     val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.2f,
+        initialValue = 0.8f,
+        targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(1000, easing = EaseInOut),
             repeatMode = RepeatMode.Reverse

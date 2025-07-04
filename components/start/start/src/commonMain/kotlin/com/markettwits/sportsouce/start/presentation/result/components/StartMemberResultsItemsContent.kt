@@ -120,13 +120,14 @@ private fun CompactResultCard(
                     Text(
                         text = result.name,
                         style = MaterialTheme.typography.titleSmall.copy(
-                            fontFamily = FontNunito.semiBoldBold(),
+                            fontFamily = FontNunito.bold(),
                             color = MaterialTheme.colorScheme.onBackground
                         ),
                         fontSize = 14.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
+                    Spacer(Modifier.width(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -144,7 +145,7 @@ private fun CompactResultCard(
                             color = MaterialTheme.colorScheme.outline,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
-                            fontFamily = FontNunito.regular(),
+                            fontFamily = FontNunito.medium(),
                             fontSize = 12.sp,
                         )
                         Spacer(Modifier.width(12.dp))
@@ -161,14 +162,14 @@ private fun CompactResultCard(
                             color = MaterialTheme.colorScheme.outline,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
-                            fontFamily = FontNunito.regular(),
+                            fontFamily = FontNunito.medium(),
                             fontSize = 12.sp,
                         )
                         Spacer(Modifier.width(12.dp))
                         Icon(
                             modifier = Modifier
                                 .padding(4.dp)
-                                .size(16.dp),
+                                .size(14.dp),
                             tint = MaterialTheme.colorScheme.tertiary,
                             imageVector = Icons.Default.Groups,
                             contentDescription = result.bodyNumber,
@@ -178,7 +179,7 @@ private fun CompactResultCard(
                             color = MaterialTheme.colorScheme.outline,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
-                            fontFamily = FontNunito.regular(),
+                            fontFamily = FontNunito.medium(),
                             fontSize = 12.sp,
                         )
                     }
@@ -254,8 +255,8 @@ private fun ExpandedResultCard(
             ) {
                 Text(
                     text = result.name.formatNames(),
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.bold(),
                     color = MaterialTheme.colorScheme.onBackground,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -369,19 +370,19 @@ private fun CompactResultItem(
                 fontFamily = if (isHighlighted)
                     FontNunito.semiBoldBold()
                 else
-                    FontNunito.regular(),
+                    FontNunito.medium(),
                 color = if (isHighlighted) MaterialTheme.colorScheme.secondary
                 else
                     MaterialTheme.colorScheme.onBackground,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = label,
-                fontFamily = FontNunito.regular(),
+                fontFamily = FontNunito.medium(),
                 color = MaterialTheme.colorScheme.outline,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
         }

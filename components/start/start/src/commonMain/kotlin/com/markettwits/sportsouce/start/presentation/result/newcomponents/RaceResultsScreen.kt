@@ -9,10 +9,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AirplaneTicket
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
@@ -31,7 +29,7 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun RaceResultsScreen2(
+fun RaceResultsScreen(
     results: List<MemberResult>,
     onClickMemberResult: (MemberResult) -> Unit,
     modifier: Modifier = Modifier,
@@ -40,21 +38,10 @@ fun RaceResultsScreen2(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        topBar = {
-
-//            MemberResultFilterBar(
-//                filterManager = manager,
-//                availableDistances = results.map { it.distance }.toSet().toList(),
-//                availableClubs = results.map { it.team }.toSet().toList(),
-//                onFiltersChanged = {
-//                    //manager.
-//                }
-//            )
-        }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
@@ -62,7 +49,7 @@ fun RaceResultsScreen2(
                     text = "Всего ${results.size} результатов",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
@@ -78,106 +65,6 @@ fun RaceResultsScreen2(
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SearchBar(
-    query: String,
-    onQueryChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedTextField(
-        value = query,
-        onValueChange = onQueryChanged,
-        placeholder = {
-            Text(
-                text = "Search by name or bib number...",
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-            )
-        },
-        trailingIcon = {
-            if (query.isNotBlank()) {
-                IconButton(onClick = { onQueryChanged("") }) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Clear",
-                        tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                    )
-                }
-            }
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-            focusedTextColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedTextColor = MaterialTheme.colorScheme.onBackground
-        ),
-        modifier = modifier
-    )
-}
-
-//@Composable
-//private fun RaceResultsHeader(
-//    totalResults: Int,
-//    windowSizeClass: WindowSizeClass,
-//    modifier: Modifier = Modifier
-//) {
-//    val isCompact = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-//
-//    Card(
-//        modifier = modifier.fillMaxWidth(),
-//        colors = CardDefaults.cardColors(
-//            containerColor = MaterialTheme.colorScheme.tertiaryContainer
-//        ),
-//        shape = RoundedCornerShape(if (isCompact) 12.dp else 16.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(if (isCompact) 12.dp else 16.dp)
-//        ) {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.Start
-//            ) {
-//                Icon(
-//                    imageVector = androidx.compose.material.icons.Icons.Default.Timer,
-//                    contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
-//                    modifier = Modifier.size(if (isCompact) 20.dp else 24.dp)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text(
-//                    text = "Показаны 1-25 из $totalResults записей",
-//                    style = (if (isCompact) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium).copy(
-//                        fontFamily = FontNunito.medium(),
-//                        color = MaterialTheme.colorScheme.onTertiaryContainer
-//                    )
-//                )
-//            }
-//
-//            Spacer(modifier = Modifier.height(if (isCompact) 6.dp else 8.dp))
-//
-//            Text(
-//                text = "Результаты участников выстроены по чистому (chip) времени",
-//                style = (if (isCompact) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium).copy(
-//                    fontFamily = FontNunito.regular(),
-//                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
-//                )
-//            )
-//        }
-//    }
-//}
-
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable

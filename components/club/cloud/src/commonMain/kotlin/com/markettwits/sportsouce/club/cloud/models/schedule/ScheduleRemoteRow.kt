@@ -26,7 +26,7 @@ data class ScheduleRemoteRow(
     @SerialName("updatedAt")
     val updatedAt: String,
     @SerialName("weekday")
-    val weekday: String,
+    val weekday: String? = null,
     @SerialName("workout")
     val workout: Workout? = null,
     @SerialName("workout_id")

@@ -3,6 +3,8 @@ package com.markettwits.sportsouce.club.dashboard.presentation.store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.club.common.domain.ClubRepository
 import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Intent
@@ -18,7 +20,10 @@ import kotlinx.coroutines.launch
 internal class ClubDashboardExecutor(
     private val clubRepository: ClubRepository,
     private val exceptionTracker: ExceptionTracker
-) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+) : CoroutineExecutor<Intent, Unit, State, Message, Label>(), LogTagProvider {
+
+    override val tag: String = "ClubDashboardExecutor"
+
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnClickBack -> publish(Label.GoBack)
@@ -108,6 +113,7 @@ internal class ClubDashboardExecutor(
         clubRepository.clubInfo().onSuccess {
             dispatch(Message.Loaded(state.copy(clubInfo = it)))
         }.onFailure {
+            errorLog { "can't load List<ClubInfo : ${it.message}" }
             if (!it.isNetworkConnectionError())
                 exceptionTracker.reportException(
                     exception = it,

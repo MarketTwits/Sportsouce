@@ -354,7 +354,7 @@ private fun MobileTeamsSearchFilter(
 
     Column(
         modifier = modifier
-            .padding(8.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
     ) {
         LazyRow(
@@ -390,12 +390,9 @@ private fun MobileTeamsSearchFilter(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 
-    Column(
-        modifier = Modifier.padding(top = 12.dp)
-    ) {
+    Column {
         // Поле поиска
         OutlinedTextField(
             value = searchQuery,
@@ -436,11 +433,10 @@ private fun MobileTeamsSearchFilter(
         Spacer(modifier = Modifier.height(12.dp))
 
         // Список команд
-        LazyColumn(
-            modifier = Modifier.heightIn(max = 200.dp),
+        Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(filteredTeams) { team ->
+            filteredTeams.forEach { team ->
                 TeamSelectionItem(
                     team = team,
                     isSelected = team.isSelected,
@@ -449,20 +445,18 @@ private fun MobileTeamsSearchFilter(
             }
 
             if (filteredTeams.isEmpty() && searchQuery.isNotEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Команды не найдены",
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Команды не найдены",
+                        fontFamily = FontNunito.medium(),
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
         }
@@ -490,7 +484,7 @@ private fun TeamSelectionItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 6.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
@@ -503,7 +497,7 @@ private fun TeamSelectionItem(
                 )
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 text = team.name,

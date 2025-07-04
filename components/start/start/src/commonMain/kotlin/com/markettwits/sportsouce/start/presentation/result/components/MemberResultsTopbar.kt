@@ -104,7 +104,7 @@ private fun MemberResultsTopBar(
 
                 if (!isWideScreen) {
                     BadgedBox(badge = {
-                        Badge() {
+                        Badge {
                             if (getActiveFiltersCount(state.filterState) > 0) {
                                 Text(
                                     text = getActiveFiltersCount(state.filterState).toString(),
@@ -177,6 +177,12 @@ private fun SortButton(
             containerColor = MaterialTheme.colorScheme.primary,
         ) {
             SortBy.entries.forEach { sort ->
+                Text(
+                    text = "Сортировать по :",
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
                 DropdownMenuItem(
                     text = {
                         Row(

@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -36,12 +37,11 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import kotlin.math.roundToInt
 
 @Composable
-fun MemberResultDetailedDialog(
+fun MemberResultDetailed(
     memberResult: MemberResult,
     onBackClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-
     DetailedResultContent(
         memberResult = memberResult,
         onBackClick = onBackClick,
@@ -82,7 +82,7 @@ private fun DetailedResultContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(8.dp)
                     .statusBarsPadding(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -317,10 +317,10 @@ private fun PerformanceMetricsCard(
                     MetricItem(
                         icon = Icons.Default.Speed,
                         label = "Темп",
-                        value = calculatePace(memberResult.result, memberResult.distance)
+                        value = calculatePace()
                     )
                     MetricItem(
-                        icon = Icons.Default.DirectionsRun,
+                        icon = Icons.AutoMirrored.Filled.DirectionsRun,
                         label = "Дистанция",
                         value = memberResult.distance
                     )
@@ -520,22 +520,4 @@ private fun InfoRow(
 }
 
 // Helper function to calculate pace
-private fun calculatePace(result: String, distance: String): String {
-    try {
-        val timeParts = result.split(":")
-        val totalSeconds = when (timeParts.size) {
-            2 -> timeParts[0].toInt() * 60 + timeParts[1].toInt()
-            3 -> timeParts[0].toInt() * 3600 + timeParts[1].toInt() * 60 + timeParts[2].toInt()
-            else -> return "Н/Д"
-        }
-        
-        val distanceKm = distance.replace("км", "").replace(",", ".").toFloatOrNull() ?: return "Н/Д"
-        val paceSeconds = (totalSeconds / distanceKm).roundToInt()
-        val paceMinutes = paceSeconds / 60
-        val paceSecondsRemainder = paceSeconds % 60
-        return ""
-       // return String.format("%d:%02d /км", paceMinutes, paceSecondsRemainder)
-    } catch (e: Exception) {
-        return "Н/Д"
-    }
-}
+private fun calculatePace(): String = "Н/Д"

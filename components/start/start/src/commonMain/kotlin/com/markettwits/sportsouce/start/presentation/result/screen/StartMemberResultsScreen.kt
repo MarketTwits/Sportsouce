@@ -11,9 +11,9 @@ import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolba
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
-import com.markettwits.sportsouce.start.presentation.result.newcomponents.DetailedResultScreen
-import com.markettwits.sportsouce.start.presentation.result.newcomponents.MemberResultsTopbar
-import com.markettwits.sportsouce.start.presentation.result.newcomponents.RaceResultsScreen
+import com.markettwits.sportsouce.start.presentation.result.components.MemberResultDetailedDialog
+import com.markettwits.sportsouce.start.presentation.result.components.StartMemberMemberResultsTopbar
+import com.markettwits.sportsouce.start.presentation.result.components.StartMemberResultsItemsContent
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -28,14 +28,14 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
-            MemberResultsTopbar(
+            StartMemberMemberResultsTopbar(
                 state = state,
                 windowSizeClass = calculateWindowSizeClass(),
                 onIntent = component::obtainEvent
             )
         }
     ) {
-        RaceResultsScreen(
+        StartMemberResultsItemsContent(
             results = state.filteredMembers,
             onClickMemberResult = {
                 currentMemberResult = it
@@ -48,7 +48,7 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
                     currentMemberResult = null
                 }
             ) {
-                DetailedResultScreen(
+                MemberResultDetailedDialog(
                     memberResult = currentMemberResult!!,
                     onBackClick = {
                         currentMemberResult = null

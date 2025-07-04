@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.presentation.result.newcomponents
+package com.markettwits.sportsouce.start.presentation.result.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

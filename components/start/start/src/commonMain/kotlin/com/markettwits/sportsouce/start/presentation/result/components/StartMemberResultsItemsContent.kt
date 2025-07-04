@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.presentation.result.newcomponents
+package com.markettwits.sportsouce.start.presentation.result.components
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -29,7 +29,7 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun RaceResultsScreen(
+fun StartMemberResultsItemsContent(
     results: List<MemberResult>,
     onClickMemberResult: (MemberResult) -> Unit,
     modifier: Modifier = Modifier,

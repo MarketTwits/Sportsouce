@@ -38,9 +38,7 @@ fun FilterBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val bottomSheetState = rememberModalBottomSheetState()
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -359,13 +357,13 @@ private fun MobileTeamsSearchFilter(
             .padding(8.dp)
             .fillMaxWidth()
     ) {
-        // Показать выбранные команды
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(selectedTeams) { team ->
                 FilterChip(
+                    modifier = Modifier.animateItem(),
                     selected = true,
                     onClick = { onTeamToggle(team) },
                     label = {

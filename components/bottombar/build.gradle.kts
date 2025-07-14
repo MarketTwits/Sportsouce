@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.components.core.koin)
             implementation(projects.components.settings.api)
             implementation(libs.bundles.decompose.compose)
+            implementation(libs.composeMaterial3AdaptiveNavigationSuite)
         }
     }
 }

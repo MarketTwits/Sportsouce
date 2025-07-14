@@ -21,6 +21,7 @@ kotlin {
             implementation(projects.components.core.intent.api)
             implementation(projects.components.core.intent.impl)
             implementation(projects.components.core.errors)
+            implementation(projects.components.core.log)
             implementation(libs.compottie)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)

@@ -4,9 +4,12 @@ import com.markettwits.cahce.Cache
 import com.markettwits.cahce.ObservableCache
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.MissingFieldException
 import kotlinx.serialization.SerializationException
 
 abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
+    @OptIn(ExperimentalSerializationApi::class)
     protected suspend fun <T> executeObservableCacheWithoutForced(
         cache: ObservableCache<T>,
         launch: suspend () -> T,
@@ -31,7 +34,7 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
                 }
             }
             latestData.onFailure {
-                if (it is SerializationException) {
+                if (it is SerializationException || it is MissingFieldException) {
                     cache.clear()
                 }
             }
@@ -39,6 +42,7 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
         }
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     protected suspend fun <T> executeObservableCacheWithForced(
         cache: Cache<T>,
         launch: suspend () -> T,
@@ -51,7 +55,7 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
                 }
                 emit(it)
             }, onFailure = {
-                if (it is SerializationException) {
+                if (it is SerializationException || it is MissingFieldException) {
                     cache.clear()
                 }
                 val local = cache.get()

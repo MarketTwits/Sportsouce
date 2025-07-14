@@ -1,16 +1,36 @@
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.reload.ComposeHotRun
 
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-
+    id("org.jetbrains.compose.hot-reload")
 }
-tasks.withType<Jar> {
-    manifest {
-        attributes["Main-Class"] = "com.markettwits.sportsouce.app.MainKt"
+
+val desktopMainPath = "com.markettwits.sportsouce.app.desktop.MainKt"
+
+//tasks.withType<Jar> {
+//    manifest {
+//        attributes["Main-Class"] = desktopMainPath
+//    }
+//}
+//tasks.withType<ComposeHotRun>().configureEach {
+//    mainClass.set(desktopMainPath)
+//}
+
+tasks {
+    withType<Jar> {
+        manifest {
+            attributes["Main-Class"] = desktopMainPath
+        }
+    }
+    withType<ComposeHotRun>().configureEach {
+        mainClass.set(desktopMainPath)
     }
 }
+
 
 kotlin {
     jvm()
@@ -35,7 +55,7 @@ kotlin {
 compose.desktop {
     application {
 
-        mainClass = "com.markettwits.sportsouce.app.MainKt"
+        mainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
 
         nativeDistributions {
             packageName = "Спорт Союз"

@@ -13,7 +13,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.data.mapper.Auth
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfileInteractorBase
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStoreFactory
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
-import com.markettwits.sportsouce.profile.registrations.list.data.mapper.UserRegistrationsMapperBase
+import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapperBase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

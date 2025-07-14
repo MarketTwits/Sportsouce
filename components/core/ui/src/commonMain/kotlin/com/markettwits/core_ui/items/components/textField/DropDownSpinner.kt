@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
+import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
@@ -88,7 +90,82 @@ fun <E> DropDownSpinner(
                 .matchParentSize()
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
                 .background(Color.Transparent)
-                .clickable(
+                .noRippleClickable(
+                    onClick = { isOpen = true }
+                )
+        )
+    }
+}
+
+@Composable
+fun <E> DropDownSpinnerStage(
+    modifier: Modifier = Modifier,
+    defaultText: String = "Select...",
+    selectedItem: List<E>,
+    onItemSelected: (Int, E) -> Unit,
+    itemList: List<E>?,
+    textFiled: @Composable () -> Unit
+) {
+    var isOpen by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.CenterStart
+    ) {
+        if (selectedItem.isNotEmpty() || selectedItem.toString().isEmpty()) {
+            Text(
+                text = defaultText,
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, bottom = 3.dp),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        textFiled()
+        DropdownMenu(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.onPrimaryContainer),
+            expanded = isOpen,
+            onDismissRequest = {
+                isOpen = false
+            }
+        ) {
+            itemList?.forEachIndexed { index, item ->
+                DropdownMenuItem(
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.tertiary,
+                    ),
+                    text = {
+                        Text(item.toString(), fontFamily = FontNunito.medium())
+                    },
+                    onClick = {
+                        onItemSelected(index, item)
+                    },
+                    leadingIcon = {
+                        CheckBoxBase(
+                            checked = selectedItem.contains(item),
+                            onValueChanged = {
+                                onItemSelected(index, item)
+                            }
+                        )
+                    }
+                )
+            }
+        }
+        androidx.compose.material3.Icon(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 10.dp)
+                .size(24.dp),
+            tint = MaterialTheme.colorScheme.tertiary,
+            imageVector = if (!isOpen) Icons.Default.ArrowDropDown else Icons.Default.ArrowDropUp,
+            contentDescription = "Close"
+        )
+        Spacer(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+                .background(Color.Transparent)
+                .noRippleClickable(
                     onClick = { isOpen = true }
                 )
         )

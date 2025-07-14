@@ -27,7 +27,6 @@ kotlin {
             api(compose.foundation)
             api(compose.material3)
             api(compose.materialIconsExtended)
-            api(compose.material3AdaptiveNavigationSuite)
             api(compose.components.uiToolingPreview)
             api(compose.ui)
             api(libs.coil.compose)
@@ -45,6 +44,7 @@ kotlin {
             api(compose.animation)
             api(libs.compose.ui.tooling.preview)
         }
+
         jsMain.dependencies {
             api(libs.ktor.client.js)
         }

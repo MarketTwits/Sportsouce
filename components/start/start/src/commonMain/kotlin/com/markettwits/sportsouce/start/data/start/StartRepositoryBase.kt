@@ -126,6 +126,7 @@ internal class StartRepositoryBase(
         }.fold(onSuccess = { it }
         ) {
             errorLog(it) { "Fail to launch startMembers start id $startId" }
+            errorLog { "Error ${it.message}" }
             emptyList()
         }
     }
@@ -134,7 +135,8 @@ internal class StartRepositoryBase(
         return kotlin.runCatching {
             startService.membersResults(1000, startId)
         }.fold(onSuccess = { it }, onFailure = {
-            println(it)
+            errorLog { "Fail to launch startMembersResults start id $startId" }
+            errorLog { "Error ${it.message}" }
             emptyList()
         })
     }

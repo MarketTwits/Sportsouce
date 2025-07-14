@@ -12,9 +12,8 @@ class StartMemberResultsStoreFactory(
     private val storeFactory: StoreFactory,
 ) {
 
-    fun create(membersResult: List<MemberResult>): StartMemberResultsStore {
-        return StartMemberResultsStoreImpl(membersResult)
-    }
+    fun create(membersResult: List<MemberResult>): StartMemberResultsStore =
+         StartMemberResultsStoreImpl(membersResult)
 
     private inner class StartMemberResultsStoreImpl(
         private val memberResult: List<MemberResult>

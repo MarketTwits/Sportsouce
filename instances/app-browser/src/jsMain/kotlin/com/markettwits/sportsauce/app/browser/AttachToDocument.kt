@@ -3,8 +3,8 @@ package com.markettwits.sportsauce.app.browser
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.stop
+import kotlinx.browser.document
 import web.dom.DocumentVisibilityState
-import web.events.EventType
 
 internal fun LifecycleRegistry.attachToDocument() {
     fun onVisibilityChanged() {
@@ -17,7 +17,10 @@ internal fun LifecycleRegistry.attachToDocument() {
 
     onVisibilityChanged()
 
-    web.dom.document.addEventListener(
-        type = EventType("visibilitychange"),
-        callback = { onVisibilityChanged() })
+    document.addEventListener(
+        type = "visibilitychange",
+        callback = {
+            onVisibilityChanged()
+        }
+    )
 }

@@ -5,7 +5,7 @@ import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.User
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMembers
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
-import com.markettwits.sportsouce.profile.registrations.list.data.mapper.UserRegistrationsMapper
+import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapper
 
 class AuthorizedProfileMapperBase(
     userRegistrationsMapper: UserRegistrationsMapper,

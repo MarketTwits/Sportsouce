@@ -4,6 +4,8 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.errorLog
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfileInteractor
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserSocialNetworkIntent
@@ -18,7 +20,9 @@ class AuthorizedProfileExecutor(
     private val interactor: UserProfileInteractor,
     private val exceptionTracker: ExceptionTracker,
     private val action: IntentAction
-) : CoroutineExecutor<Intent, Unit, State, Message, Unit>() {
+) : CoroutineExecutor<Intent, Unit, State, Message, Unit>(), LogTagProvider {
+
+    override val tag: String = "AuthorizedProfileExecutor"
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
@@ -45,6 +49,7 @@ class AuthorizedProfileExecutor(
                 .catch { throwable ->
                     if (!throwable.isNetworkConnectionError())
                         exceptionTracker.reportException(throwable, "#UserProfile#launch")
+                    errorLog { "Fail to fetch userProfile $throwable" }
                     dispatch(Message.LoadingFailed(throwable.mapToSauceError()))
                 }
                 .collect { dispatch(Message.LoadingSuccess(it)) }

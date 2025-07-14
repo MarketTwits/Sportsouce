@@ -69,7 +69,7 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
                 trainerFullName = if (it.trainers.isNotEmpty()) {
                     it.trainers.joinToString(separator = "\n") { trainer -> "${trainer.name} ${trainer.surname}" }
                 } else "",
-                weekday = it.weekday,
+                weekday = it.weekday ?: "",
                 workoutTitle = it.workout?.type ?: ""
             )
         }

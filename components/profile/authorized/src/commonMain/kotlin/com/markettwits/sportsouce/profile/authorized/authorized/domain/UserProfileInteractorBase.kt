@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.domain
 
-import com.markettwits.sportsouce.profile.registrations.list.domain.StartOrderInfo
+import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

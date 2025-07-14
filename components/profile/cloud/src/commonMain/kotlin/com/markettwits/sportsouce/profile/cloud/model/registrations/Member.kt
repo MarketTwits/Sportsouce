@@ -13,6 +13,8 @@ data class Member(
     val distanceId: Int?,
     @SerialName("distance_relation")
     val distanceRelation: DistanceRelation?,
+    @SerialName("results")
+    val results: List<MemberResult>,
     @SerialName("gender")
     val gender: String,
     @SerialName("id")

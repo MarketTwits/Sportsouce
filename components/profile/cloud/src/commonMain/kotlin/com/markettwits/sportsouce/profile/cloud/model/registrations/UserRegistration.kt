@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserRegistration(
     @SerialName("combo_id")
-    val combo_id: Int?,
+    val comboId: Int?,
     @SerialName("createdAt")
     val createdAt: String,
     @SerialName("id")
     val id: Int,
     @SerialName("is_refunded")
-    val is_refunded: Boolean,
+    val isRefunded: Boolean,
     @SerialName("members")
     val members: List<Member>,
     @SerialName("order_number")

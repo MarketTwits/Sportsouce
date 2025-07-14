@@ -32,7 +32,6 @@ internal fun BottomBarContent(
     onClickTab: (BottomBarConfiguration) -> Unit,
     content: @Composable () -> Unit
 ) {
-
     val state = rememberNavigationSuiteScaffoldState()
 
     val isLarge = calculateWindowSizeClass().isLarge
@@ -59,49 +58,47 @@ internal fun BottomBarContent(
     }
 
     NavigationSuiteScaffold(
-        state = state,
         modifier = modifier,
+        state = state,
         containerColor = MaterialTheme.colorScheme.primary,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = MaterialTheme.colorScheme.primary,
             navigationRailContainerColor = MaterialTheme.colorScheme.primary,
         ),
         navigationSuiteItems = {
-            items.forEach { item ->
-                val isSelected = selectedTab == item.bottomBarConfiguration
-                val color = if (isSelected) textColor else Color.Gray
-                item(
-                    modifier = itemModifier,
-                    colors = itemColors,
-                    selected = isSelected,
-                    onClick = {
-                        onClickTab(item.bottomBarConfiguration)
-                    },
-                    label = {
-                        if (isShowLabel)
-                            Text(
-                                text = item.title,
-                                color = color,
-                                fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
+                items.forEach { item ->
+                    val isSelected = selectedTab == item.bottomBarConfiguration
+                    val color = if (isSelected) textColor else Color.Gray
+                    item(
+                        modifier = itemModifier,
+                        colors = itemColors,
+                        selected = isSelected,
+                        onClick = {
+                            onClickTab(item.bottomBarConfiguration)
+                        },
+                        label = {
+                            if (isShowLabel)
+                                Text(
+                                    text = item.title,
+                                    color = color,
+                                    fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
+                                )
+                        },
+                        alwaysShowLabel = isShowLabel,
+                        icon = {
+                            Icon(
+                                imageVector = if (isSelected) {
+                                    item.selectedIcon
+                                } else
+                                    item.unselectedIcon,
+                                contentDescription = item.title,
+                                tint = color
                             )
-                    },
-                    alwaysShowLabel = isShowLabel,
-                    icon = {
-                        Icon(
-                            imageVector = if (isSelected) {
-                                item.selectedIcon
-                            } else
-                                item.unselectedIcon,
-                            contentDescription = item.title,
-                            tint = color
-                        )
-                    }
-                )
-            }
+                        }
+                    )
+                }
         }
     ) {
         content()
     }
-
-
 }

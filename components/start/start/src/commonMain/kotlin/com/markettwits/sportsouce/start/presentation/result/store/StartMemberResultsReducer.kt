@@ -7,11 +7,10 @@ import com.markettwits.sportsouce.start.presentation.result.store.StartMemberRes
 object StartMemberResultsReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Loaded -> copy(
-                defaultMembersResult = msg.membersResult,
-                visibleMembersResult = msg.membersResult
-            )
-            is Message.OnChangeQuery -> copy(textQuery = msg.query, visibleMembersResult = msg.membersResult)
+            is Message.ToggleFilterDialog -> copy(isFilterDialogOpen = msg.isOpen)
+            is Message.UpdateFilterState -> copy(filterState = msg.filterState)
+            is Message.UpdateFilteredMembers -> copy(filteredMembers = msg.members)
+            is Message.UpdateMembersResult -> copy(membersResult = msg.membersResult)
         }
     }
 }

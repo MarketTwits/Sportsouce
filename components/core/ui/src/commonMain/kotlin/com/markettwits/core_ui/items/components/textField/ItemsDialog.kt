@@ -79,8 +79,56 @@ internal fun ItemsDialog(
     }
 }
 
+@Suppress("NonSkippableComposable")
+@Composable
+internal fun ItemsDialog(
+    modifier: Modifier = Modifier,
+    values: List<String>,
+    label: String,
+    selected: List<String>,
+    onDismissRequest: () -> Unit,
+    onValueChange: (String) -> Unit
+) {
+    var textFiledValue by remember {
+        mutableStateOf("")
+    }
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Column(
+            modifier = modifier
+                .padding(10.dp)
+                .clip(Shapes.medium)
+                .background(MaterialTheme.colorScheme.primary)
+        ) {
+            ItemsDialogHeader(
+                modifier = modifier.padding(horizontal = 10.dp),
+                label = label,
+                onDismissRequest = { onDismissRequest() }
+            )
+            if (values.size > 10) {
+                OutlinedTextFieldBase(
+                    modifier = modifier
+                        .padding(horizontal = 10.dp),
+                    value = textFiledValue,
+                    label = "Поиск",
+                    onValueChange = {
+                        textFiledValue = it
+                    }
+                )
+            }
+            ItemsDialogFilterBody(
+                items = filterAndSortList(values, textFiledValue),
+                selected = selected,
+                selectedItem = {
+                    onValueChange(it)
+                })
+        }
+    }
+}
+
 private fun filterAndSortList(list: List<String>, keyword: String): List<String> {
-    val filteredList = list.filter { it.contains(keyword, ignoreCase = true) }
+    val filteredList = list.filter { it
+        .replace(" ", "")
+        .contains(keyword, ignoreCase = true) }
     return filteredList.sorted()
 }
 
@@ -106,6 +154,44 @@ private fun ItemsDialogHeader(modifier: Modifier, label: String, onDismissReques
                 contentDescription = "",
                 tint = MaterialTheme.colorScheme.tertiary
             )
+        }
+    }
+}
+
+@Suppress("NonSkippableComposable")
+@Composable
+private fun ItemsDialogFilterBody(
+    modifier: Modifier = Modifier,
+    items: List<String>,
+    selected: List<String>,
+    selectedItem: (String) -> Unit,
+) = Column(
+    modifier = modifier
+        .fillMaxWidth()
+) {
+    LazyColumn {
+        itemsIndexed(items) { index, item ->
+            ItemsDialogFilterPosition(
+                item = item,
+                checked = selected.contains(item)
+            ) {
+                selectedItem(item)
+            }
+        }
+        if (items.isEmpty()) {
+            item {
+                Text(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                        .padding(10.dp),
+                    text = "Список пуст",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.medium(),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }

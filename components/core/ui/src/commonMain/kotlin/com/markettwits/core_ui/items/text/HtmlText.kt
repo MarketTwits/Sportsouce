@@ -5,13 +5,7 @@ import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -68,14 +62,25 @@ fun HtmlText(
         mutableStateOf(emptyList<String>())
     }
 
-    LaunchedEffect(text) {
-        state.setHtml(text)
-        state.config.linkColor = color
-        state.config.codeSpanColor = color
-        state.config.codeSpanBackgroundColor = color
-        state.config.codeSpanStrokeColor = color
+    val spaceColor = MaterialTheme.colorScheme.onBackground
+
+    LaunchedEffect(text, color) {
+        val cleanedText = removeColorStylesFromHtml(text)
+        state.setHtml(cleanedText)
+        val actualColor = if (color == Color.Unspecified) {
+            spaceColor
+        } else {
+            color
+        }
+
+        state.config.linkColor = actualColor
+        state.config.codeSpanColor = actualColor
+        state.config.codeSpanBackgroundColor = Color.Transparent
+        state.config.codeSpanStrokeColor = Color.Transparent
+
         images = extractImageUrlsFromHtml(text)
     }
+
 
     val selectionColor = TextSelectionColors(
         handleColor = MaterialTheme.colorScheme.tertiary,
@@ -115,6 +120,31 @@ fun HtmlText(
         richText()
     }
 }
+
+private fun removeColorStylesFromHtml(html: String): String {
+    return html
+        .replace(Regex("""style\s*=\s*["'][^"']*color\s*:\s*[^;"']*[;"']?[^"']*["']""", RegexOption.IGNORE_CASE), "")
+        .replace(Regex("""<font[^>]*color\s*=\s*["'][^"']*["'][^>]*>""", RegexOption.IGNORE_CASE)) { matchResult ->
+            val fontTag = matchResult.value
+            fontTag.replace(Regex("""color\s*=\s*["'][^"']*["']""", RegexOption.IGNORE_CASE), "")
+        }
+        .replace(
+            Regex(
+                """<span[^>]*style\s*=\s*["'][^"']*color\s*:\s*[^;"']*[;"']?[^"']*["'][^>]*>""",
+                RegexOption.IGNORE_CASE
+            )
+        ) { matchResult ->
+            val spanTag = matchResult.value
+            val cleanedStyle = spanTag.replace(Regex("""color\s*:\s*[^;"']*[;"']?""", RegexOption.IGNORE_CASE), "")
+            if (cleanedStyle.contains("""style=""")) {
+                cleanedStyle.replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
+            } else {
+                cleanedStyle
+            }
+        }
+        .replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
+}
+
 
 
 private fun extractImageUrlsFromHtml(html: String): List<String> {

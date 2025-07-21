@@ -85,7 +85,7 @@ private fun StartCommentCard(
     message: String,
     replies: List<StartItem.Comments.Reply> = emptyList(),
     onClickReply: () -> Unit,
-    isReply: Boolean = false
+    isReply: Boolean = false,
 ) {
     var showReply by rememberSaveable {
         mutableStateOf(false)
@@ -167,7 +167,9 @@ private fun StartCommentCard(
             if (!isReply) {
                 Text(
                     modifier = Modifier
-                        .padding(4.dp)
+                        .padding(
+                            horizontal = 6.dp,
+                            vertical = 4.dp)
                         .clip(Shapes.small)
                         .clickable {
                             onClickReply()
@@ -184,9 +186,14 @@ private fun StartCommentCard(
             if (replies.isNotEmpty()) {
                 if (!showReply) {
                     Text(
-                        modifier = Modifier.clickable {
-                            showReply = !showReply
-                        },
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 6.dp,
+                                vertical = 4.dp)
+                            .clip(Shapes.small)
+                            .clickable {
+                                showReply = !showReply
+                            },
                         text = "Показать ${replies.size} ответов",
                         fontSize = 12.sp,
                         fontFamily = FontNunito.bold(),
@@ -221,7 +228,12 @@ private fun StartCommentCard(
                             )
                         }
                         Text(
-                            modifier = Modifier.clickable {
+                            modifier = Modifier
+                                .padding(
+                                    horizontal = 6.dp,
+                                    vertical = 4.dp)
+                                .clip(Shapes.small)
+                                .clickable {
                                 showReply = !showReply
                             },
                             text = "Скрыть",

@@ -3,10 +3,10 @@ package com.markettwits.sportsouce.start.register.presentation.registration.dist
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.domain.RegistrationMemberValidatorBase
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidatorBase
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

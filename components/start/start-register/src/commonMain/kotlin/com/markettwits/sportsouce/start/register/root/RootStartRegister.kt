@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponent
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesComponent
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
+import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberInput
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationPageComponent
 import com.markettwits.sportsouce.start.register.presentation.success.RegisterSuccessComponent

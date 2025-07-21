@@ -1,11 +1,11 @@
-package com.markettwits.sportsouce.start.register.presentation.member.store
+package com.markettwits.sportsouce.start.register.presentation.registration.member.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Message
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.State
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.Message
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.State
 
 object RegistrationMemberReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {

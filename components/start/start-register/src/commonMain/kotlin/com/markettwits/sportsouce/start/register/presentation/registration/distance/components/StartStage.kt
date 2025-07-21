@@ -8,11 +8,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.sportsouce.start.register.presentation.member.screen.MemberScreen
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore
 import com.markettwits.sportsouce.start.register.presentation.registration.distance.component.StartDistanceComponent
+import com.markettwits.sportsouce.start.register.presentation.registration.member.screen.MemberScreen
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore
 import com.markettwits.sportsouce.start.register.presentation.registration.pay.components.price.ButtonContent
 
 
@@ -29,9 +30,12 @@ internal fun StartStage(
     child.child?.instance?.also {
         when (it) {
             is StartDistanceComponent.Child.StartRegistrationMember ->
-                Dialog(onDismissRequest = {
-                    it.component.obtainEvent(RegistrationMemberStore.Intent.Pop)
-                }) {
+                Dialog(
+                    onDismissRequest = {
+                        it.component.obtainEvent(RegistrationMemberStore.Intent.Pop)
+                    },
+                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
                     MemberScreen(
                         modifier = Modifier
                             .clip(Shapes.medium)

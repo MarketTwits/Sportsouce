@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.register.presentation.member.components
+package com.markettwits.sportsouce.start.register.presentation.registration.member.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Checkbox

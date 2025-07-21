@@ -1,12 +1,12 @@
-package com.markettwits.sportsouce.start.register.presentation.member.store
+package com.markettwits.sportsouce.start.register.presentation.registration.member.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.domain.RegistrationMemberValidator
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Intent
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Label
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Message
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.State
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.Intent
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.Label
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.Message
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.State
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone

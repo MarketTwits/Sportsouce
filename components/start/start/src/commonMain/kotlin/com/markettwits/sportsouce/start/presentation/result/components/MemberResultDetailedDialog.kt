@@ -485,7 +485,7 @@ private fun AdditionalInfoCard(
                 ) {
                     InfoRow("Команда", memberResult.team)
                     InfoRow("Пол", memberResult.sex)
-                    InfoRow("Смена", memberResult.shift)
+                    InfoRow("Отставание", memberResult.shift)
                     InfoRow("Стартовый №", memberResult.startId.toString())
                     InfoRow("ID участника", memberResult.id.toString())
                 }

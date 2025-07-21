@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.register.presentation.member.domain
+package com.markettwits.sportsouce.start.register.presentation.registration.member.domain
 
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 

@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.register.presentation.member.store
+package com.markettwits.sportsouce.start.register.presentation.registration.member.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.core_ui.items.event.EventContent
@@ -6,9 +6,7 @@ import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Intent
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Label
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.State
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.*
 
 interface RegistrationMemberStore : Store<Intent, State, Label> {
     data class State(

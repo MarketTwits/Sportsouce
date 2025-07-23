@@ -1,5 +1,4 @@
 import com.markettwits.sportsouce.extensions.libs
-import com.markettwits.sportsouce.extensions.stabilityConfiguration
 
 plugins {
     id("org.jetbrains.kotlin.plugin.compose")
@@ -22,9 +21,5 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
-    }
-
-    compilerOptions {
-        freeCompilerArgs.addAll(stabilityConfiguration())
     }
 }

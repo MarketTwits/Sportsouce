@@ -1,5 +1,4 @@
 import com.android.build.gradle.BaseExtension
-import com.markettwits.sportsouce.extensions.suppressExperimentalCoroutinesApi
 
 plugins {
     id("com.android.library")
@@ -18,9 +17,5 @@ kotlin {
         browser()
         nodejs()
         binaries.executable()
-    }
-
-    compilerOptions {
-        freeCompilerArgs.addAll(suppressExperimentalCoroutinesApi())
     }
 }

@@ -9,6 +9,4 @@ object ApkConfig {
     const val TARGET_SDK_VERSION = 36
 
     const val COMPILE_SDK_VERSION = 36
-
-    private const val DEBUG_VERSION = "DEBUG_VERSION"
 }

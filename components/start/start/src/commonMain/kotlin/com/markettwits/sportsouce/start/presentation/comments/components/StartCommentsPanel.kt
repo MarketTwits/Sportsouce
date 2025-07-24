@@ -1,19 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.comments.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -169,7 +160,8 @@ private fun StartCommentCard(
                     modifier = Modifier
                         .padding(
                             horizontal = 6.dp,
-                            vertical = 4.dp)
+                            vertical = 4.dp
+                        )
                         .clip(Shapes.small)
                         .clickable {
                             onClickReply()
@@ -189,7 +181,8 @@ private fun StartCommentCard(
                         modifier = Modifier
                             .padding(
                                 horizontal = 6.dp,
-                                vertical = 4.dp)
+                                vertical = 4.dp
+                            )
                             .clip(Shapes.small)
                             .clickable {
                                 showReply = !showReply
@@ -231,7 +224,8 @@ private fun StartCommentCard(
                             modifier = Modifier
                                 .padding(
                                     horizontal = 6.dp,
-                                    vertical = 4.dp)
+                                    vertical = 4.dp
+                                )
                                 .clip(Shapes.small)
                                 .clickable {
                                 showReply = !showReply

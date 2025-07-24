@@ -17,7 +17,7 @@ object SportSouceColor {
     val DarkSecondaryNew = Color(29, 32, 36)
     val DarkSecondaryContainerNew = Color(42, 45, 49)
     val Gray = Color(100,100,100)
-    val GrayForDarkTheme = Color(185,185,185)
+    val GrayForDarkTheme = Color(185, 185, 185)
     val TelegramIcon = Color(3, 155, 229)
     val VkIcon = Color(0, 120, 255)
     val InstagramIcon = Color(247, 92, 150)

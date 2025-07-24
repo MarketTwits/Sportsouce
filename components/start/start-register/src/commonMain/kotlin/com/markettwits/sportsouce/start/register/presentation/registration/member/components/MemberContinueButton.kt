@@ -2,7 +2,6 @@ package com.markettwits.sportsouce.start.register.presentation.registration.memb
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,7 +15,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 fun MemberContinueButton(
     modifier: Modifier = Modifier,
-    onClickContinue: () -> Unit
+    onClickContinue: () -> Unit,
 ) {
     Button(
         onClick = onClickContinue,

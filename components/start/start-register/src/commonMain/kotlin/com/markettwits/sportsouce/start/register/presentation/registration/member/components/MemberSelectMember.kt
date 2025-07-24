@@ -2,16 +2,10 @@ package com.markettwits.sportsouce.start.register.presentation.registration.memb
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 
 @Suppress("NonSkippableComposable")
@@ -20,7 +14,7 @@ fun MemberSelectMember(
     modifier: Modifier = Modifier,
     selectedNameSurname: String,
     members: List<ProfileMember>,
-    onMemberSelected: (ProfileMember) -> Unit
+    onMemberSelected: (ProfileMember) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()

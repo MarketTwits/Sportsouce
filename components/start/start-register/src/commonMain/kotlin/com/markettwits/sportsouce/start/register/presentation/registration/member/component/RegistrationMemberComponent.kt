@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.member.component
 
 import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore
-import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartStageComponent
 import kotlinx.coroutines.flow.StateFlow
 
 interface RegistrationMemberComponent {

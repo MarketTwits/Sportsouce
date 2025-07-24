@@ -4,7 +4,6 @@ import app.cash.paging.*
 
 private const val INITIAL_LOAD_SIZE = 0
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 abstract class OffsetAndLimitPagingSourceNew<Value : Any>(
     private val pageSize: Int,
 ) : PagingSource<Int, Value>() {
@@ -13,6 +12,7 @@ abstract class OffsetAndLimitPagingSourceNew<Value : Any>(
         return null
     }
 
+    @Suppress("CAST_NEVER_SUCCEEDS")
     override suspend fun load(params: PagingSourceLoadParams<Int>): PagingSourceLoadResult<Int, Value> {
         return try {
             val position = params.key ?: INITIAL_LOAD_SIZE

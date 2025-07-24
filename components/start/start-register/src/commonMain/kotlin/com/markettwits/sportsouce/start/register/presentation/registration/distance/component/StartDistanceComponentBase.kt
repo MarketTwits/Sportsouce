@@ -1,19 +1,16 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
+import com.arkivanov.decompose.router.slot.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.component.RegistrationMemberComponentBase
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberComponentBase
+import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberInput
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -86,10 +83,12 @@ class StartDistanceComponentBase(
         is StartDistanceComponent.Config.StartRegistrationMember -> StartDistanceComponent.Child.StartRegistrationMember(
             RegistrationMemberComponentBase(
                 componentContext = componentContext,
-                startStatement = config.startStatement,
-                memberId = config.memberId,
                 storeFactory = scope.get(),
-                membersProfile = config.profileMembers,
+                input = RegistrationMemberInput(
+                    startStatement = config.startStatement,
+                    membersProfile = config.profileMembers,
+                    memberId = config.memberId
+                ),
                 apply = { member, id ->
                     feature.onChangeStartStatement(
                         startStatement = member,

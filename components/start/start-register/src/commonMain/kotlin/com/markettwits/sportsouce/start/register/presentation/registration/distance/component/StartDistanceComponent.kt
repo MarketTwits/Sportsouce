@@ -4,8 +4,8 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.component.RegistrationMemberComponent
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberComponent
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartStageComponent
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
 import kotlinx.coroutines.flow.StateFlow

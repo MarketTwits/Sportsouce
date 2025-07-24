@@ -8,9 +8,6 @@ import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.sportsouce.profile.members.member_root.di.rootMembersModule
 import com.markettwits.sportsouce.start.cloud.di.sportSauceStartNetworkModule
-import com.markettwits.sportsouce.start.register.presentation.member.domain.RegistrationMemberValidator
-import com.markettwits.sportsouce.start.register.presentation.member.domain.RegistrationMemberValidatorBase
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.promo.store.RegistrationPromoStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.StartRegistrationRepositoryBase
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegisterPriceMapper
@@ -18,6 +15,9 @@ import com.markettwits.sportsouce.start.register.presentation.registration.commo
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegistrationPageMapper
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegistrationPromoMapper
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.StartRegistrationRepository
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidatorBase
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.store.StartRegistrationPageStoreFactory
 import com.markettwits.sportsouce.teams_city.di.teamsCityModule

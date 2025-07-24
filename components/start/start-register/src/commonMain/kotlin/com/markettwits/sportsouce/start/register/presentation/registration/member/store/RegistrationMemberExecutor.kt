@@ -1,12 +1,9 @@
-package com.markettwits.sportsouce.start.register.presentation.member.store
+package com.markettwits.sportsouce.start.register.presentation.registration.member.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.member.domain.RegistrationMemberValidator
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Intent
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Label
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.Message
-import com.markettwits.sportsouce.start.register.presentation.member.store.RegistrationMemberStore.State
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
+import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -49,10 +46,10 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
     private fun StartStatement.updateAge(): StartStatement {
         return if (birthday.isNotEmpty()) {
             val birthLocalDate = try {
-                val parts = birthday.split(".") // Разбиваем строку "dd.MM.yyyy"
+                val parts = birthday.split(".")
                 LocalDate(parts[2].toInt(), parts[1].toInt(), parts[0].toInt()) // LocalDate(year, month, day)
-            } catch (e: Exception) {
-                return copy() // Если дата не парсится, возвращаем копию без изменений
+            } catch (_: Exception) {
+                return copy()
             }
 
             val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())

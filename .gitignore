@@ -21,3 +21,4 @@ local.properties
 !/.idea/icon.png
 # Project secrets config
 /secrets.properties
+/key-store.jks

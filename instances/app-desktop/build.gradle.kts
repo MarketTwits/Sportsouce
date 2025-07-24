@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.reload.ComposeHotRun
 
@@ -11,15 +10,6 @@ plugins {
 
 val desktopMainPath = "com.markettwits.sportsouce.app.desktop.MainKt"
 
-//tasks.withType<Jar> {
-//    manifest {
-//        attributes["Main-Class"] = desktopMainPath
-//    }
-//}
-//tasks.withType<ComposeHotRun>().configureEach {
-//    mainClass.set(desktopMainPath)
-//}
-
 tasks {
     withType<Jar> {
         manifest {
@@ -30,7 +20,6 @@ tasks {
         mainClass.set(desktopMainPath)
     }
 }
-
 
 kotlin {
     jvm()
@@ -58,11 +47,24 @@ compose.desktop {
         mainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
 
         nativeDistributions {
-            packageName = "Спорт Союз"
-            description = "Sportsauce Desktop Application"
-            copyright = "© 2024 My Name. All rights reserved."
-            vendor = "MarketTwits"
+
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+
+            packageName = "Sportsauce"
+            description = "Sportsauce Desktop Application"
+            copyright = "© 2024 Sportsauce."
+            vendor = "MarketTwits"
+
+            linux {
+                iconFile.set(project.file("desktopAppIcons/LinuxSportSauceIcon.png"))
+            }
+            windows {
+                iconFile.set(project.file("desktopAppIcons/WindowsSportSauceIcon.ico"))
+            }
+            macOS {
+                iconFile.set(project.file("desktopAppIcons/MacSportSauceIcon.icns"))
+                bundleID = "com.markettwits.sibersspace.desktopApp"
+            }
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
         }
 

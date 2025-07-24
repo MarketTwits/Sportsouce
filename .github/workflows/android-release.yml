@@ -1,9 +1,7 @@
 name: Build and Release Android APK/AAB
 
 on:
-  push:
-    branches:
-      - SP-01-git-hub-actions-2
+  workflow_dispatch:
 
 jobs:
   build-and-release:
@@ -64,14 +62,11 @@ jobs:
         run: |
           VERSION_NAME="${{ steps.version.outputs.version_name }}"
           
-          # Читаем файл и заменяем переменные
           RELEASE_NOTES=$(cat .github/whatsnew/whatsnew-en-US)
           RELEASE_NOTES=$(echo "$RELEASE_NOTES" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
           
-          # Сохраняем в файл для корректного форматирования
           echo "$RELEASE_NOTES" > release_notes.md
           
-          # Используем многострочный output для GitHub Actions
           {
             echo 'notes<<EOF'
             cat release_notes.md
@@ -149,15 +144,12 @@ jobs:
         run: |
           VERSION_NAME="${{ needs.build-and-release.outputs.version_name }}"
           
-          # Создаем папку для Google Play whatsnew файлов
           mkdir -p whatsnew
           
-          # Подготавливаем английскую версию из файла
           NOTES_EN=$(cat .github/whatsnew/whatsnew-en-US)
           NOTES_EN=$(echo "$NOTES_EN" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
           echo "$NOTES_EN" > whatsnew/whatsnew-en-US
           
-          # Подготавливаем русскую версию из файла
           NOTES_RU=$(cat .github/whatsnew/whatsnew-ru-RU)
           NOTES_RU=$(echo "$NOTES_RU" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
           echo "$NOTES_RU" > whatsnew/whatsnew-ru-RU
@@ -187,12 +179,14 @@ jobs:
           status: completed
           whatsNewDirectory: whatsnew/
           inAppUpdatePriority: 2
+          releaseName: ${{ needs.build-and-release.outputs.version_name }}.${{ needs.build-and-release.outputs.version_code }}
 
       - name: Notify success
         run: |
           echo "✅ Successfully uploaded to Google Play Internal Testing!"
           echo "Version: ${{ needs.build-and-release.outputs.version_name }}"
           echo "Version Code: ${{ needs.build-and-release.outputs.version_code }}"
+          echo "Release Name: ${{ needs.build-and-release.outputs.version_name }}.${{ needs.build-and-release.outputs.version_code }}"
           echo "🔗 Check your Google Play Console: https://play.google.com/console/"
 
       - name: Clean up

@@ -62,13 +62,11 @@ jobs:
       - name: Prepare release notes
         id: release_notes
         run: |
-          VERSION_NAME=$(grep 'versionName = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
-          BUILD_DATE=$(date '+%Y-%m-%d %H:%M UTC')
+          VERSION_NAME="${{ steps.version.outputs.version_name }}"
           
           # Читаем файл и заменяем переменные
           RELEASE_NOTES=$(cat .github/whatsnew/whatsnew-en-US)
           RELEASE_NOTES=$(echo "$RELEASE_NOTES" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
-          RELEASE_NOTES=$(echo "$RELEASE_NOTES" | sed "s/\$(date '+%Y-%m-%d %H:%M UTC')/$BUILD_DATE/g")
           
           # Сохраняем в файл для корректного форматирования
           echo "$RELEASE_NOTES" > release_notes.md
@@ -150,22 +148,28 @@ jobs:
       - name: Prepare Google Play release notes
         run: |
           VERSION_NAME="${{ needs.build-and-release.outputs.version_name }}"
-          BUILD_DATE=$(date '+%Y-%m-%d %H:%M UTC')
           
           # Создаем папку для Google Play whatsnew файлов
           mkdir -p whatsnew
           
-          # Подготавливаем английскую версию
+          # Подготавливаем английскую версию из файла
           NOTES_EN=$(cat .github/whatsnew/whatsnew-en-US)
           NOTES_EN=$(echo "$NOTES_EN" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
-          NOTES_EN=$(echo "$NOTES_EN" | sed "s/\$(date '+%Y-%m-%d %H:%M UTC')/$BUILD_DATE/g")
           echo "$NOTES_EN" > whatsnew/whatsnew-en-US
           
-          # Подготавливаем русскую версию
+          # Подготавливаем русскую версию из файла
           NOTES_RU=$(cat .github/whatsnew/whatsnew-ru-RU)
           NOTES_RU=$(echo "$NOTES_RU" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
-          NOTES_RU=$(echo "$NOTES_RU" | sed "s/\$(дата '+%Y-%m-%d %H:%M UTC')/$BUILD_DATE/g")
           echo "$NOTES_RU" > whatsnew/whatsnew-ru-RU
+
+      - name: Debug whatsnew files
+        run: |
+          echo "📝 Checking whatsnew files length:"
+          echo "English version ($(wc -c < whatsnew/whatsnew-en-US) chars):"
+          cat whatsnew/whatsnew-en-US
+          echo ""
+          echo "Russian version ($(wc -c < whatsnew/whatsnew-ru-RU) chars):"
+          cat whatsnew/whatsnew-ru-RU
 
       - name: Find AAB file
         id: aab

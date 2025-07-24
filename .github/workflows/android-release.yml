@@ -1,7 +1,9 @@
 name: Build and Release Android APK
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - SP-01-git-hub-actions-2
 
 jobs:
   build-and-release:
@@ -73,14 +75,14 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            An automatically compiled version of the Sportsauce App
+            Автоматически собранная версия приложения Sportsauce App
             
-             **Version:** ${{ steps.version.outputs.version_name }}
-             **Version code:** ${{ steps.version.outputs.version_code }}
+            **Версия:** ${{ steps.version.outputs.version_name }}
+            **Код версии:** ${{ steps.version.outputs.version_code }}
             
-             ### Changes
-             - Automatic APK assembly and signing
-             - Ready to install on Android devices
+            ### Изменения
+            - Автоматическая сборка и подпись APK
+            - Готов к установке на Android устройства
 
       - name: Upload APK to Release
         uses: actions/upload-release-asset@v1

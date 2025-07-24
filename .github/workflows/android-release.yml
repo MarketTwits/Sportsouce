@@ -1,4 +1,4 @@
-name: Build and Release Android APK
+name: Build and Release Android APK/AAB
 
 on:
   push:
@@ -8,6 +8,9 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.version.outputs.version_name }}
+      version_code: ${{ steps.version.outputs.version_code }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.1
@@ -42,9 +45,9 @@ jobs:
         run: |
           echo "${{ secrets.SPORTSAUCE_ANDROID_STORE_FILE }}" | base64 --decode > key-store.jks
 
-      - name: Build Release APK
+      - name: Build Release APK and AAB
         run: |
-          ./gradlew instances:app-android:assembleRelease --no-configuration-cache
+          ./gradlew instances:app-android:assembleRelease instances:app-android:bundleRelease --no-configuration-cache
 
       - name: Extract version info
         id: version
@@ -85,6 +88,12 @@ jobs:
           APK_NAME=$(basename "$APK_PATH")
           echo "apk_name=$APK_NAME" >> $GITHUB_OUTPUT
 
+      - name: Find AAB file
+        id: aab
+        run: |
+          AAB_PATH=$(find instances/app-android/build/outputs/bundle/release -name "*.aab" | head -1)
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -107,8 +116,83 @@ jobs:
           asset_name: ${{ steps.apk.outputs.apk_name }}
           asset_content_type: application/vnd.android.package-archive
 
+      - name: Upload AAB artifact for Google Play
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle
+          path: ${{ steps.aab.outputs.aab_path }}
+          retention-days: 7
+
       - name: Clean up keystore
         if: always()
         run: |
           rm -f key-store.jks
           rm -f release_notes.md
+
+  deploy-to-google-play:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Checkout (for whatsnew files)
+        uses: actions/checkout@v4.2.1
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-bundle
+          path: ./
+
+      - name: Create service account file
+        run: |
+          echo "${{ secrets.SPORTSAUCE_SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+
+      - name: Prepare Google Play release notes
+        run: |
+          VERSION_NAME="${{ needs.build-and-release.outputs.version_name }}"
+          BUILD_DATE=$(date '+%Y-%m-%d %H:%M UTC')
+          
+          # Создаем папку для Google Play whatsnew файлов
+          mkdir -p whatsnew
+          
+          # Подготавливаем английскую версию
+          NOTES_EN=$(cat .github/whatsnew/whatsnew-en-US)
+          NOTES_EN=$(echo "$NOTES_EN" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
+          NOTES_EN=$(echo "$NOTES_EN" | sed "s/\$(date '+%Y-%m-%d %H:%M UTC')/$BUILD_DATE/g")
+          echo "$NOTES_EN" > whatsnew/whatsnew-en-US
+          
+          # Подготавливаем русскую версию
+          NOTES_RU=$(cat .github/whatsnew/whatsnew-ru-RU)
+          NOTES_RU=$(echo "$NOTES_RU" | sed "s/\$APP_VERSION/$VERSION_NAME/g")
+          NOTES_RU=$(echo "$NOTES_RU" | sed "s/\$(дата '+%Y-%m-%d %H:%M UTC')/$BUILD_DATE/g")
+          echo "$NOTES_RU" > whatsnew/whatsnew-ru-RU
+
+      - name: Find AAB file
+        id: aab
+        run: |
+          AAB_PATH=$(find . -name "*.aab" | head -1)
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload to Google Play Internal Testing
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJson: service-account.json
+          packageName: ${{ secrets.SPORTSAUCE_PACKAGE_NAME }}
+          releaseFiles: ${{ steps.aab.outputs.aab_path }}
+          track: internal
+          status: completed
+          whatsNewDirectory: whatsnew/
+          inAppUpdatePriority: 2
+
+      - name: Notify success
+        run: |
+          echo "✅ Successfully uploaded to Google Play Internal Testing!"
+          echo "Version: ${{ needs.build-and-release.outputs.version_name }}"
+          echo "Version Code: ${{ needs.build-and-release.outputs.version_code }}"
+          echo "🔗 Check your Google Play Console: https://play.google.com/console/"
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -f service-account.json
+          rm -rf whatsnew/

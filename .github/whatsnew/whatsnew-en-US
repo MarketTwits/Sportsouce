@@ -1,19 +1,9 @@
-## 🚀 Sportsauce App v$APP_VERSION
+🟠 New Features
+- Updated start results screen with convenient sorting and filtering options right from your phone
+- Start results are now displayed in user profile for easy access and tracking
 
-### ✨ NEW FEATURES:
-- The start results screen has been completely updated with convenient sorting and filtering
-- The results of the starts are now displayed in the user's profile
-
-### 🔧 FIXES:
+🟠 Bug Fixes
 - Fixed the error of incorrect formatting of the start information
+- Resolved display issues in results screen
 
-### 📱 COMPATIBILITY:
-- File size: ~7 MB
-
-### 💬 FEEDBACK:
-Thank you for using our app! Your feedback helps us get better.
-
-**Found a bug or have a suggestion?** Please create an issue in our repository or contact us through the app.
-
----
-*This release was automatically built and signed on $(date '+%Y-%m-%d %H:%M UTC')*
+Thanks for using Sportsauce v$APP_VERSION!

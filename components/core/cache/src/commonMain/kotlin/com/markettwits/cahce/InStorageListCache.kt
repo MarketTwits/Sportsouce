@@ -9,6 +9,8 @@ import kotlinx.serialization.Serializable
 abstract class InStorageListCache<T : @Serializable Any>(
     private val cache: KStore<List<T>>
 ) : ObservableListCache<T> {
+
+    @Suppress("UNCHECKED_CAST")
     override suspend fun get(key: Any): T? =
         (cache.get() ?: emptyList<T>()) as T?
 

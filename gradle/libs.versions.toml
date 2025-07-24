@@ -2,6 +2,7 @@
 #plugins
 
 versionName = "1.4.2"
+versionCode = "10402"
 jvm = "11"
 kotlin = "2.1.20"
 gradle = "8.9.2" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
@@ -18,7 +19,6 @@ jetbrainsKotlinWrappers = "2025.4.11" #https://github.com/JetBrains/kotlin-wrapp
 compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
-pullrefresh = "1.4.0-beta02" # https://github.com/MateriiApps/pullrefresh
 richeditor = "1.0.0-rc12" # https://github.com/MohamedRejeb/compose-rich-editor
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.1.0-beta01"
@@ -93,7 +93,6 @@ koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = 
 #Tracer
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "pagingCommon" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "pagingCommon" }
-pullrefresh = { module = "dev.materii.pullrefresh:pullrefresh", version.ref = "pullrefresh" }
 reaktive = { module = "com.badoo.reaktive:reaktive", version.ref = "reaktive" }
 tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", version.ref = "tracer" }
 tracer-heap-dump = { group = "ru.ok.tracer", name = "tracer-heap-dumps", version.ref = "tracer" }
@@ -116,7 +115,6 @@ tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", ver
 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "gradle" }
-android-application = { id = "com.android.application", version.ref = "gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "compose" }

@@ -1,3 +1,4 @@
+
 name: Build and Release Android APK
 
 on:
@@ -56,6 +57,16 @@ jobs:
           echo "tag_name=$VERSION_NAME.$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "release_name=Sportsauce App \"$VERSION_NAME\"" >> $GITHUB_OUTPUT
 
+      - name: Prepare release notes
+        id: release_notes
+        run: |
+          VERSION_NAME=$(grep 'versionName = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
+          RELEASE_NOTES=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-en-US)
+          RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
+          echo "notes=$RELEASE_NOTES" >> $GITHUB_OUTPUT
+
       - name: Find APK file
         id: apk
         run: |
@@ -74,15 +85,7 @@ jobs:
           release_name: ${{ steps.version.outputs.release_name }}
           draft: false
           prerelease: false
-          body: |
-            Автоматически собранная версия приложения Sportsauce App
-            
-            **Версия:** ${{ steps.version.outputs.version_name }}
-            **Код версии:** ${{ steps.version.outputs.version_code }}
-            
-            ### Изменения
-            - Автоматическая сборка и подпись APK
-            - Готов к установке на Android устройства
+          body: ${{ steps.release_notes.outputs.notes }}
 
       - name: Upload APK to Release
         uses: actions/upload-release-asset@v1

@@ -176,13 +176,13 @@ private fun SortButton(
             onDismissRequest = { showSortMenu = false },
             containerColor = MaterialTheme.colorScheme.primary,
         ) {
+            Text(
+                text = "Сортировать по :",
+                fontFamily = FontNunito.semiBoldBold(),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
             SortBy.entries.forEach { sort ->
-                Text(
-                    text = "Сортировать по :",
-                    fontFamily = FontNunito.semiBoldBold(),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
                 DropdownMenuItem(
                     text = {
                         Row(

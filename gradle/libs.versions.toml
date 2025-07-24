@@ -112,7 +112,6 @@ buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.r
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 
 [plugins]
-
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

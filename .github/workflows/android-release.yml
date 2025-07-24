@@ -1,0 +1,98 @@
+name: Build and Release Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create secrets file
+        run: |
+          cat <<EOF > secrets.properties
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          com.sportsauce.api.path.prod=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          storePassword64=${{ secrets.SPORTSAUCE_ANDROID_STORE_PASSWORD }}
+          keyAlias64=${{ secrets.SPORTSAUCE_ANDROID_KEY_ALIAS }}
+          keyPassword64=${{ secrets.SPORTSAUCE_ANDROID_KEY_PASSWORD }}
+          EOF
+
+      - name: Create keystore file
+        run: |
+          echo "${{ secrets.SPORTSAUCE_ANDROID_STORE_FILE }}" | base64 --decode > key-store.jks
+
+      - name: Build Release APK
+        run: |
+          ./gradlew instances:app-android:assembleRelease --no-configuration-cache
+
+      - name: Extract version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep 'versionCode = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "tag_name=$VERSION_NAME.$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "release_name=Sportsauce App \"$VERSION_NAME\"" >> $GITHUB_OUTPUT
+
+      - name: Find APK file
+        id: apk
+        run: |
+          APK_PATH=$(find instances/app-android/build/outputs/apk/release -name "*.apk" | head -1)
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          APK_NAME=$(basename "$APK_PATH")
+          echo "apk_name=$APK_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.tag_name }}
+          release_name: ${{ steps.version.outputs.release_name }}
+          draft: false
+          prerelease: false
+          body: |
+            An automatically compiled version of the Sportsauce App
+            
+             **Version:** ${{ steps.version.outputs.version_name }}
+             **Version code:** ${{ steps.version.outputs.version_code }}
+            
+             ### Changes
+             - Automatic APK assembly and signing
+             - Ready to install on Android devices
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.apk.outputs.apk_path }}
+          asset_name: ${{ steps.apk.outputs.apk_name }}
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Clean up keystore
+        if: always()
+        run: |
+          rm -f key-store.jks

@@ -82,26 +82,19 @@ class StartDistanceFeature(
         startRegisterAnswer: StartRegistrationStatementAnswer
     ): StartRegistrationStagePage.Registration {
         val registration = state.value
-
-        // Создаем обновленную копию стадий
         val updatedStages = registration.distance.stages.map { stageWithStatement ->
-            // Проверяем, нужно ли обновлять текущую стадию
             val needsUpdate = stageWithStatement.stage.additionalFields.any {
                 it.field.id == startRegisterAnswer.field.id
             }
-
-            // Если нужно обновлять, создаем копию с обновленными additionalFields
             if (needsUpdate) {
                 val updatedStage = stageWithStatement.stage.copy(
                     additionalFields = updateAnswers(stageWithStatement.stage.additionalFields, startRegisterAnswer)
                 )
                 stageWithStatement.copy(stage = updatedStage)
             } else {
-                stageWithStatement // Если не нужно обновлять, оставляем без изменений
+                stageWithStatement
             }
         }
-
-        // Возвращаем новую копию registration с обновленными stages
         return registration.copy(
             distance = registration.distance.copy(
                 stages = updatedStages
@@ -132,21 +125,21 @@ class StartDistanceFeature(
                     answer.date.isNullOrEmpty() &&
                     answer.multiSelect.isNullOrEmpty() &&
                     answer.singleSelect == null
-        } ?: true // Если answer == null, то он считается пустым
+        }
 
         return answers.map { existingAnswer ->
             if (existingAnswer.field.id == startRegisterAnswer.field.id) {
                 if (isAnswerEmpty) {
-                    existingAnswer.copy() // Создаем копию даже для пустых значений
+                    existingAnswer.copy()
                 } else {
-                    startRegisterAnswer.copy() // Создаем новую копию переданного ответа
+                    startRegisterAnswer.copy()
                 }
             } else {
-                existingAnswer.copy() // Убедимся, что возвращаем независимую копию
+                existingAnswer.copy()
             }
         }.let { updatedAnswers ->
             if (!isAnswerEmpty && updatedAnswers.none { it.field.id == startRegisterAnswer.field.id }) {
-                updatedAnswers + startRegisterAnswer.copy() // Добавляем копию ответа
+                updatedAnswers + startRegisterAnswer.copy()
             } else {
                 updatedAnswers
             }
@@ -156,25 +149,21 @@ class StartDistanceFeature(
     private fun validateAnswers(
         page: StartRegistrationStagePage.Registration,
         onSuccess: () -> Unit,
-        onMessage: (EventContent) -> Unit // Для вызова сообщения
+        onMessage: (EventContent) -> Unit,
     ) {
-        // Получаем все обязательные поля из distance.answers
         val requiredFieldIdsFromDistance = page.distance.answers
             .map { it.field }
             .filter { !it.isOptional }
             .map { it.id }
 
-        // Получаем все обязательные поля из stages.stage.additionalFields
         val requiredFieldIdsFromStages = page.distance.stages
             .flatMap { it.stage.additionalFields }
             .map { it.field }
             .filter { !it.isOptional }
             .map { it.id }
 
-        // Объединяем обязательные поля
         val requiredFieldIds = requiredFieldIdsFromDistance + requiredFieldIdsFromStages
 
-        // Получаем ID полей, на которые есть ответы, из distance.answers
         val providedAnswerIdsFromDistance = page.distance.answers
             .filter { answer ->
                 val field = answer.field
@@ -190,7 +179,6 @@ class StartDistanceFeature(
             }
             .map { it.field.id }
 
-        // Получаем ID полей, на которые есть ответы, из stages.stage.additionalFields
         val providedAnswerIdsFromStages = page.distance.stages
             .flatMap { it.stage.additionalFields }
             .filter { answer ->
@@ -207,10 +195,8 @@ class StartDistanceFeature(
             }
             .map { it.field.id }
 
-        // Объединяем заполненные ответы
         val providedAnswerIds = providedAnswerIdsFromDistance + providedAnswerIdsFromStages
 
-        // Проверяем, что все обязательные поля есть в списке заполненных
         if (requiredFieldIds.all { it in providedAnswerIds }) {
             onSuccess()
         } else {

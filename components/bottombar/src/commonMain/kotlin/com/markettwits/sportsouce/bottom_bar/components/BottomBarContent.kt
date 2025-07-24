@@ -2,13 +2,8 @@ package com.markettwits.sportsouce.bottom_bar.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.NavigationRailItemDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
@@ -74,7 +69,7 @@ internal fun BottomBarContent(
             items.forEach { item ->
                 val isSelected = selectedTab == item.bottomBarConfiguration
                 val color = if (isSelected) textColor else Color.Gray
-                
+
                 item(
                     modifier = itemModifier,
                     colors = itemColors,
@@ -112,20 +107,20 @@ internal fun BottomBarContent(
 }
 
 @Composable
-private fun iconScale(isSelected : Boolean) : Float{
-   val value  by animateFloatAsState(
-            targetValue = if (isSelected) 1.05f else 1.0f,
-    animationSpec = spring(
-        dampingRatio = 0.6f,
-        stiffness = 300f
-    ),
-    label = "iconScale"
+private fun iconScale(isSelected: Boolean): Float {
+    val value by animateFloatAsState(
+        targetValue = if (isSelected) 1.05f else 1.0f,
+        animationSpec = spring(
+            dampingRatio = 0.6f,
+            stiffness = 300f
+        ),
+        label = "iconScale"
     )
     return value
 }
 
 @Composable
-private fun textScale(isSelected : Boolean) : Float{
+private fun textScale(isSelected: Boolean): Float {
     val value by animateFloatAsState(
         targetValue = if (isSelected) 1.05f else 1.0f,
         animationSpec = spring(

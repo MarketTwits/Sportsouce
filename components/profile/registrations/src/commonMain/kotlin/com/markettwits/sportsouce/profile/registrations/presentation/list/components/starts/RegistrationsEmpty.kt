@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsRun
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Timer
@@ -177,7 +177,7 @@ private fun AnimatedSportsIcons(
     modifier: Modifier = Modifier,
 ) {
     val sportsIcons = listOf(
-        Icons.Default.DirectionsRun,
+        Icons.AutoMirrored.Filled.DirectionsRun,
         Icons.Default.FitnessCenter,
         Icons.Default.Timer
     )

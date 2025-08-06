@@ -1,6 +1,5 @@
 package com.markettwits.sportsouce.starts.popular.presentation.screen
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -27,23 +26,20 @@ internal fun PopularStartsScreen(component: StartsPopularComponent) {
                 component.obtainEvent(StartsPopularStore.Intent.OnClickBack)
             }
         }
-    ) {
+    ) { paddingValues ->
         PullToRefreshScreen(
-            modifier = Modifier.padding(top = it.calculateTopPadding()),
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
             isRefreshing = state.isLoading && state.starts.isNotEmpty(),
             onRefresh = {
                 component.obtainEvent(StartsPopularStore.Intent.Retry)
             }) {
             if (state.starts.isNotEmpty()) {
-                Column {
                     StartsPopularContent(
-                        modifier = it,
                         items = state.starts
                     ) {
                         component.obtainEvent(StartsPopularStore.Intent.OnClickStart(it))
                     }
                 }
-            }
             if (state.isError) {
                 FailedScreen(
                     message = state.message,

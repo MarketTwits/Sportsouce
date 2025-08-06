@@ -1,19 +1,17 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.list.components.starts
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.screens.AdaptivePane
@@ -22,6 +20,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderStartCard
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
+import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.RegistrationsEmptyFiltered
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.RegistrationsFilterItem
 
 @Composable
@@ -35,6 +34,7 @@ fun RegistrationsStart(
     onRefresh: () -> Unit
 ) {
     val state = rememberLazyListState()
+    val activeFiltersCount = filter.count { it.checked }
 
     PullToRefreshScreen(
         isRefreshing = isRefreshing,
@@ -43,53 +43,120 @@ fun RegistrationsStart(
         AdaptivePane {
             LazyColumn(
                 state = state,
-                modifier = innerModifier
+                modifier = innerModifier,
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item {
-                    Column {
-                        Row(
-                            modifier = Modifier
-                                .horizontalScroll(rememberScrollState())
-                        ) {
-                            filter.forEach { filterItem ->
-                                RegistrationsFilterItem(
-                                    modifier = Modifier.padding(10.dp),
-                                    value = filterItem.value,
-                                    checked = filterItem.checked,
-                                    onClick = {
-                                        onClickFilter(filterItem)
-                                    })
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        if (filter.isNotEmpty()) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.FilterList,
+                                        contentDescription = "Фильтры",
+                                        modifier = Modifier.size(20.dp),
+                                        tint = MaterialTheme.colorScheme.secondary
+                                    )
+                                    Text(
+                                        text = "Фильтры",
+                                        fontSize = 16.sp,
+                                        fontFamily = FontNunito.semiBoldBold(),
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                    if (activeFiltersCount > 0) {
+                                        Badge(
+                                            containerColor = MaterialTheme.colorScheme.secondary,
+                                            contentColor = MaterialTheme.colorScheme.onSecondary
+                                        ) {
+                                            Text(
+                                                text = "$activeFiltersCount",
+                                                fontSize = 12.sp,
+                                                fontFamily = FontNunito.bold()
+                                            )
+                                        }
+                                    }
+                                }
+
+                                LazyRow(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 4.dp)
+                                ) {
+                                    items(filter) { filterItem ->
+                                        RegistrationsFilterItem(
+                                            value = filterItem.value,
+                                            checked = filterItem.checked,
+                                            onClick = {
+                                                onClickFilter(filterItem)
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         }
-                        if (withoutFilterStarts.isEmpty()) {
-                            RegistrationsAbsolutelyEmpty(
-                                modifier = Modifier.padding(10.dp)
-                            )
+
+                        if (withoutFilterStarts.isNotEmpty()) {
+                            Surface(
+                                shape = MaterialTheme.shapes.small,
+                                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f)
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    text = buildString {
+                                        append("Показано ${withFilterStarts.size}")
+                                        if (withFilterStarts.size != withoutFilterStarts.size) {
+                                            append(" из ${withoutFilterStarts.size}")
+                                        }
+                                        append(" регистраций")
+                                    },
+                                    fontSize = 14.sp,
+                                    fontFamily = FontNunito.medium(),
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            }
                         }
                     }
                 }
-                items(items = withFilterStarts, key = { it.id }) {
-                    if (withoutFilterStarts.isNotEmpty()) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                            text = "Всего ${withoutFilterStarts.size}",
-                            fontSize = 14.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.outline
+
+                if (withoutFilterStarts.isEmpty()) {
+                    item {
+                        RegistrationsAbsolutelyEmpty(
+                            modifier = Modifier.padding(16.dp)
                         )
-                        withFilterStarts.forEach {
-                            OrderStartCard(
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .animateItem(fadeInSpec = tween(600)),
-                                item = it,
-                                onClickStart = { startId ->
-                                    onClick(it)
-                                })
-                        }
                     }
+                } else if (withFilterStarts.isEmpty() && activeFiltersCount > 0) {
+                    item {
+                        RegistrationsEmptyFiltered(
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    items(
+                        items = withFilterStarts,
+                        key = { it.id }
+                    ) { orderInfo ->
+                        OrderStartCard(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .animateItem(fadeInSpec = tween(600)),
+                            item = orderInfo,
+                            onClickStart = { startId ->
+                                onClick(orderInfo)
+                            }
+                        )
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

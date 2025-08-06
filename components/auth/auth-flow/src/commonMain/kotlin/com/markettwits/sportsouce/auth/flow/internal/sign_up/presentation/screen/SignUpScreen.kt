@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.store.
 
 @Composable
 internal fun SignUpScreen(component: SignUpComponent) {
+
     val state by component.state.collectAsState()
 
     SignUpScreenContent(
@@ -24,6 +25,12 @@ internal fun SignUpScreen(component: SignUpComponent) {
         },
         onClickBack = {
             component.obtainEvent(SignUpStore.Intent.OnClickBack)
+        },
+        onNextClick = {
+            component.obtainEvent(SignUpStore.Intent.OnClickNext)
+        },
+        onClickSignIn = {
+            component.obtainEvent(SignUpStore.Intent.OnClickSignIn)
         }
     )
 }

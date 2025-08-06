@@ -22,7 +22,7 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
     val state by component.value.collectAsState()
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.outlineVariant,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopBarWithClip(title = "Мои регистрации") {
                 component.obtainEvent(RegistrationsStore.Intent.Pop)

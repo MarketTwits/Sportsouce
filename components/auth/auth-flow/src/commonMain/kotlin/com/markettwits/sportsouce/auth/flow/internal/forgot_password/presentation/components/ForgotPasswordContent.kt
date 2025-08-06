@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthButton
-import com.markettwits.sportsouce.auth.flow.internal.common.ConsumeRowContent
-import com.markettwits.sportsouce.auth.flow.internal.common.WelcomeContent
+import com.markettwits.sportsouce.auth.flow.internal.common.AuthConsumeRowContent
+import com.markettwits.sportsouce.auth.flow.internal.common.AuthWelcomeContent
 
 @Composable
 internal fun ForgotPasswordContent(
@@ -30,7 +30,7 @@ internal fun ForgotPasswordContent(
             .padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        WelcomeContent("Введите вашу почту и мы вышлем вам ссылку для восстановления пароля")
+        AuthWelcomeContent("Введите вашу почту и мы вышлем вам ссылку для восстановления пароля")
         OutlinedTextFieldBase(
             modifier = modifier,
             label = "Почта",
@@ -47,6 +47,6 @@ internal fun ForgotPasswordContent(
             focus.clearFocus()
             onClickRecover()
         }
-        ConsumeRowContent(title = "Назад", onClickConsume = onClickConsume)
+        AuthConsumeRowContent(title = "Назад", onClickConsume = onClickConsume)
     }
 }

@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.root_profile
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -12,7 +13,7 @@ import com.markettwits.sportsouce.unauthorized.presentation.screen.UnAuthorizedP
 @Composable
 fun RootProfileScreen(component: RootProfileComponent) {
     val childStack by component.childStack.subscribeAsState()
-    com.arkivanov.decompose.extensions.compose.stack.Children(
+    Children(
         stack = childStack,
         animation = stackAnimation(fade())
     ) {

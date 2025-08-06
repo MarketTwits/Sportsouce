@@ -1,10 +1,6 @@
 package com.markettwits.sportsouce.settings.internal.settings_menu.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -49,8 +45,8 @@ private fun SettingsMenuElementBase(
         Text(
             text = item.title,
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.semiBoldBold(),
+            color = MaterialTheme.colorScheme.onBackground,
+            fontFamily = FontNunito.medium(),
         )
     }
 }
@@ -76,14 +72,14 @@ private fun SettingsMenuElementWithDescription(
             Text(
                 text = item.title,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.tertiary,
-                fontFamily = FontNunito.semiBoldBold(),
+                color = MaterialTheme.colorScheme.onBackground,
+                fontFamily = FontNunito.regular(),
             )
             Text(
                 text = item.description,
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.semiBoldBold(),
+                fontFamily = FontNunito.regular(),
             )
         }
     }

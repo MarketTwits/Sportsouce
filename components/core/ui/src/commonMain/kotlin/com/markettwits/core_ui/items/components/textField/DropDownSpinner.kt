@@ -1,7 +1,6 @@
 package com.markettwits.core_ui.items.components.textField
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -10,16 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -64,7 +55,7 @@ fun <E> DropDownSpinner(
             itemList?.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.onBackground,
                     ),
                     text = {
                         Text(item.toString(), fontFamily = FontNunito.medium())
@@ -76,7 +67,7 @@ fun <E> DropDownSpinner(
                 )
             }
         }
-        androidx.compose.material3.Icon(
+        Icon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 10.dp)
@@ -132,7 +123,7 @@ fun <E> DropDownSpinnerStage(
             itemList?.forEachIndexed { index, item ->
                 DropdownMenuItem(
                     colors = MenuDefaults.itemColors(
-                        textColor = MaterialTheme.colorScheme.tertiary,
+                        textColor = MaterialTheme.colorScheme.onBackground,
                     ),
                     text = {
                         Text(item.toString(), fontFamily = FontNunito.medium())
@@ -151,7 +142,7 @@ fun <E> DropDownSpinnerStage(
                 )
             }
         }
-        androidx.compose.material3.Icon(
+        Icon(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 10.dp)

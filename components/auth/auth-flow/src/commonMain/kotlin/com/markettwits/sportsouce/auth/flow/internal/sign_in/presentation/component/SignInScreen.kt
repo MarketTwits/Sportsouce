@@ -1,17 +1,11 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.component
 
-import com.arkivanov.decompose.value.Value
-
+import com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.store.SignInStore
+import kotlinx.coroutines.flow.StateFlow
 
 internal interface SignInScreen {
-    val state : Value<SignInUiState>
-    val fieldState : Value<SignInFieldUiState>
+    val state: StateFlow<SignInStore.State>
+    fun obtainEvent(intent: SignInStore.Intent)
     fun back()
-    fun signUp()
     fun forgotPassword()
-    fun logIn()
-    fun messageHasBeenShowed()
-    fun handleEmail(email : String)
-    fun handlePhone(phone: String)
-    fun handlePassword(password: String)
 }

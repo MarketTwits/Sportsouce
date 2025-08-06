@@ -1,63 +1,54 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
-
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
+import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.store.SignInStore
+import com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.store.SignInStoreFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class SignInScreenComponent(
-    private val context: ComponentContext,
-    private val signInInstanceKeeper: SignInInstanceKeeper,
+    context: ComponentContext,
+    private val storeFactory: SignInStoreFactory,
     private val toSignUp: () -> Unit,
     private val toProfile: () -> Unit,
     private val toForgotPassword: () -> Unit,
-    private val toBack: () -> Unit
+    private val toBack: () -> Unit,
 ) : SignInScreen, ComponentContext by context {
-    private val keeper = instanceKeeper.getOrCreateSimple { signInInstanceKeeper }
-    override val state: Value<SignInUiState> = keeper.authUiState
-    override val fieldState: Value<SignInFieldUiState> = keeper.fieldState
+
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+
+    private val store = instanceKeeper.getStore {
+        storeFactory.create()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override val state: StateFlow<SignInStore.State> = store.stateFlow
+
+    override fun obtainEvent(intent: SignInStore.Intent) {
+        store.accept(intent)
+    }
 
     override fun back() {
         toBack()
-    }
-
-    override fun signUp() {
-        keeper.signUp()
     }
 
     override fun forgotPassword() {
         toForgotPassword()
     }
 
-    override fun logIn() {
-        keeper.login()
-    }
-
-    override fun messageHasBeenShowed() {
-        keeper.authUiState.value = SignInUiState.Error("", true)
-    }
-
-    override fun handleEmail(email: String) {
-        keeper.fieldState.value = keeper.fieldState.value.copy(email = email)
-        keeper.validate()
-    }
-
-    override fun handlePhone(phone: String) {
-        keeper.fieldState.value = keeper.fieldState.value.copy(email = phone)
-        keeper.validate()
-    }
-
-    override fun handlePassword(password: String) {
-        keeper.fieldState.value = keeper.fieldState.value.copy(password = password)
-        keeper.validate()
-    }
-
     init {
-        keeper.labels.subscribe {
-            when (it) {
-                SignInOutPuts.Empty -> {}
-                SignInOutPuts.GoProfile -> toProfile()
-                SignInOutPuts.GoSignUp -> toSignUp()
+        scope.launch {
+            store.labels.collect {
+                when (it) {
+                    SignInStore.Label.GoProfile -> toProfile()
+                    SignInStore.Label.GoSignUp -> toSignUp()
+                }
             }
         }
     }

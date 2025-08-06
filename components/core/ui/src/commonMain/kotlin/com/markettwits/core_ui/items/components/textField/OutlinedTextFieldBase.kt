@@ -1,6 +1,7 @@
 package com.markettwits.core_ui.items.components.textField
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +32,8 @@ fun OutlinedTextFieldBase(
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onValueChange: (String) -> Unit
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onValueChange: (String) -> Unit,
 ) {
     OutlinedTextField(
         enabled = isEnabled,
@@ -50,6 +52,7 @@ fun OutlinedTextFieldBase(
         colors = defaultOutlineTextFiledColors(),
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         textStyle = TextStyle(fontFamily = FontNunito.medium()),
         maxLines = maxLines,
         minLines = minLines,
@@ -71,8 +74,8 @@ fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
     ),
     focusedLabelColor = MaterialTheme.colorScheme.tertiary,
     unfocusedLabelColor = Color.Gray,
-    focusedTextColor = MaterialTheme.colorScheme.tertiary,
-    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
     errorTextColor = MaterialTheme.colorScheme.error,
     errorIndicatorColor = SportSouceColor.SportSouceLightRed,
     errorContainerColor = Color.Transparent,
@@ -80,5 +83,5 @@ fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
     disabledContainerColor = Color.Transparent,
     disabledIndicatorColor = Color.Gray,
     disabledLabelColor = Color.Gray,
-    disabledTextColor = MaterialTheme.colorScheme.tertiary
+    disabledTextColor = MaterialTheme.colorScheme.onBackground
 )

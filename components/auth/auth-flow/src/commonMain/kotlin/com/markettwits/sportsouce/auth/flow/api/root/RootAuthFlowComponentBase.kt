@@ -1,11 +1,7 @@
 package com.markettwits.sportsouce.auth.flow.api.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -57,7 +53,7 @@ class RootAuthFlowComponentBase(
             is RootAuthFlowComponent.Config.SignIn -> RootAuthFlowComponent.Child.SignIn(
                 SignInScreenComponent(
                     context = componentContext,
-                    signInInstanceKeeper = scope.get(),
+                    storeFactory = scope.get(),
                     toSignUp = { navigation.pushNew(RootAuthFlowComponent.Config.SignUp) },
                     toProfile = { goProfile() },
                     toBack = { goBack() },
@@ -72,7 +68,8 @@ class RootAuthFlowComponentBase(
                     context = componentContext,
                     storeFactory = scope.get(),
                     pop = navigation::pop,
-                    profile = { goProfile() }
+                    profile = { goProfile() },
+                    signIn = { navigation.replaceAll(RootAuthFlowComponent.Config.SignIn) }
                 )
             )
         }

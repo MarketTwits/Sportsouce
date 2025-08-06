@@ -1,22 +1,8 @@
 package com.markettwits.core_ui.items.components.textField
 
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.markettwits.core.time.BaseTimeMapper
@@ -35,7 +21,7 @@ fun CalendarTextFiled(
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
-    val timeMapper: TimeMapper = BaseTimeMapper()
+    val timeMapper: TimeMapper = remember { BaseTimeMapper() }
 
     if (openDialog) {
         val datePickerState = rememberDatePickerState(

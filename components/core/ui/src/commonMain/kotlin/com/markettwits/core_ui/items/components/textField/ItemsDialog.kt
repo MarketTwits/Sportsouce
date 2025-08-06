@@ -2,26 +2,13 @@ package com.markettwits.core_ui.items.components.textField
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,8 +16,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.Shapes
 
 @Suppress("NonSkippableComposable")
 @Composable
@@ -142,7 +129,7 @@ private fun ItemsDialogHeader(modifier: Modifier, label: String, onDismissReques
     ) {
         Text(
             text = label,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onBackground,
             fontFamily = FontNunito.bold(),
             fontSize = 16.sp,
             overflow = TextOverflow.Ellipsis
@@ -152,7 +139,7 @@ private fun ItemsDialogHeader(modifier: Modifier, label: String, onDismissReques
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.tertiary
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -258,7 +245,7 @@ private fun ItemsDialogFilterPosition(
             onCheckedChange = { onClick(item) })
         Text(
             text = item,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onBackground,
             fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )

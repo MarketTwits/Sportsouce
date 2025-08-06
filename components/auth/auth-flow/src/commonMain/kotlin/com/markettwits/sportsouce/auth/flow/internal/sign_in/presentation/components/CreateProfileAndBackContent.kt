@@ -16,7 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.sportsouce.auth.flow.internal.common.ConsumeRowContent
+import com.markettwits.sportsouce.auth.flow.internal.common.AuthConsumeRowContent
+import com.markettwits.sportsouce.auth.flow.internal.common.TermsAndPrivacyContent
 
 @Composable
 internal fun CreateProfileAndBackContent(
@@ -28,20 +29,31 @@ internal fun CreateProfileAndBackContent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OrRowContent(modifier = Modifier.padding(10.dp))
+        OrRowContent()
+
         ButtonContentBase(
             modifier = Modifier.padding(10.dp),
             title = "Создать профиль",
             onClick = onClickRegistry,
             borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary)
         )
-        ConsumeRowContent(
-            modifier = Modifier.padding(10.dp),
+
+        AuthConsumeRowContent(
+            modifier = Modifier.padding(
+                horizontal = 10.dp,
+                vertical = 4.dp
+            ),
             onClickConsume = onClickConsume,
             title = "Пропустить"
         )
+
+        TermsAndPrivacyContent(
+            modifier = Modifier.padding(10.dp),
+            value = "Зарегистрироваться"
+        )
     }
 }
+
 
 @Composable
 private fun OrRowContent(modifier: Modifier = Modifier) {
@@ -80,4 +92,6 @@ private fun OrRowContent(modifier: Modifier = Modifier) {
         }
     }
 }
+
+
 

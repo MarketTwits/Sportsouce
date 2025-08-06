@@ -27,7 +27,7 @@ import com.markettwits.sportsouce.start.register.presentation.registration.membe
 internal fun StartRegistrationMemberCard(
     modifier: Modifier = Modifier,
     startStatement: StartStatement,
-    onClickStartStatement: (StartStatement) -> Unit
+    onClickStartStatement: (StartStatement) -> Unit,
 ) {
 
     RegistrationMemberValidatorBase()
@@ -43,7 +43,8 @@ internal fun StartRegistrationMemberCard(
                 city = startStatement.city,
                 team = startStatement.team,
                 phone = startStatement.phone,
-                email = startStatement.email
+                email = startStatement.email,
+                onClick = { onClickStartStatement(startStatement) }
             )
         }, onFailure = {
             UserCardUnAvailable(
@@ -196,7 +197,8 @@ internal fun UserCardAvailable(
     city: String,
     team: String,
     phone: String,
-    email: String
+    email: String,
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -264,7 +266,8 @@ internal fun UserCardAvailable(
                         containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
                         contentColor = MaterialTheme.colorScheme.secondary
                     ),
-                    onClick = { /* Handle edit click */ }) {
+                    onClick = onClick
+                ) {
                     Icon(
                         modifier = Modifier.padding(10.dp),
                         imageVector = Icons.Default.Edit,
@@ -343,7 +346,7 @@ private fun DashedLine(
     lineThickness: Float = 1f,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .height(1.dp)
+        .height(1.dp),
 ) {
     Canvas(modifier = modifier) {
         var startX = 0f

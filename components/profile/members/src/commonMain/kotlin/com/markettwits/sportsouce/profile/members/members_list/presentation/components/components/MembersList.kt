@@ -1,15 +1,21 @@
 package com.markettwits.sportsouce.profile.members.members_list.presentation.components.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.profile.members.member_common.presentation.MemberItemCard
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -17,31 +23,74 @@ internal fun MembersList(
     modifier: Modifier = Modifier,
     items: List<ProfileMember>,
     onClick: (ProfileMember) -> Unit,
-    onClickAddMember : () -> Unit,
+    onClickAddMember: () -> Unit,
 ) {
+    var showContent by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        showContent = true
+    }
+
     Scaffold(
-        modifier = modifier.padding(10.dp),
+        modifier = modifier,
         floatingActionButton = {
             AddMemberActionButton(onClick = onClickAddMember)
-        }
-    ) {
-        LazyColumn {
-            items(items = items, key = { it.id }) {
-                MemberItemCard(
+        },
+        containerColor = androidx.compose.ui.graphics.Color.Transparent
+    ) { paddingValues ->
+        AnimatedVisibility(
+            visible = showContent,
+            enter = fadeIn(animationSpec = tween(400))
+        ) {
+            if (items.isEmpty()) {
+                MembersEmptyCard(
                     modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .animateItem(fadeInSpec = tween(600)),
-                    item = it,
-                    onClick = { member ->
-                        onClick(member)
-                    })
-            }
-            item {
-                if (items.isEmpty()) {
-                    MembersEmptyCard()
+                        .padding(paddingValues)
+                        .padding(16.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    itemsIndexed(
+                        items = items,
+                        key = { _, item -> item.id }
+                    ) { index, item ->
+                        var isItemVisible by remember { mutableStateOf(false) }
+
+                        LaunchedEffect(item.id) {
+                            delay(index * 50L) // Staggered animation
+                            isItemVisible = true
+                        }
+
+                        AnimatedVisibility(
+                            visible = isItemVisible,
+                            enter = slideInVertically(
+                                animationSpec = tween(400),
+                                initialOffsetY = { it / 2 }
+                            ) + fadeIn(animationSpec = tween(400))
+                        ) {
+                            MemberItemCard(
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = tween(600),
+                                    fadeOutSpec = tween(400),
+                                    placementSpec = tween(600)
+                                ),
+                                item = item,
+                                onClick = { member ->
+                                    onClick(member)
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
     }
-
 }

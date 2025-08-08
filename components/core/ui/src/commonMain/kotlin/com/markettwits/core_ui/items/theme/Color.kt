@@ -4,7 +4,7 @@ package com.markettwits.core_ui.items.theme
 import androidx.compose.ui.graphics.Color
 
 object SportSouceColor {
-    val SportSouceBlue = Color(46, 63, 110)
+    val SportSouceBlue = Color(8, 32, 75)
     val SportSouceLighBlue = Color(77, 183, 254)
     val SportSouceLightBlueForDarkTheme =  Color(81, 165,222)
     val SportSouceStartEndedPink = Color(247, 92, 150)

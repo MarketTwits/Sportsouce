@@ -29,7 +29,7 @@ fun OnBackgroundCard(
     Card(
         modifier = modifier
             .shadow(3.dp, shape = shape)
-            .noRippleClickable { }
+            .noRippleClickable {}
             .clickable(
                 indication = if (onClick == null) null else LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() }) {

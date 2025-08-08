@@ -1,10 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.PersonOutline
@@ -70,7 +66,7 @@ private fun StartExtraFiledRow(
         Text(
             text = value,
             color = MaterialTheme.colorScheme.onBackground,
-            fontFamily = FontNunito.regular(),
+            fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )
     }

@@ -1,14 +1,11 @@
 package com.markettwits.core_ui.items.components.textField
 
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.*
 import kotlin.math.absoluteValue
 
 
@@ -29,7 +26,8 @@ fun OutlinePhoneTextFiled(
         keyboardType = KeyboardType.Phone,
         imeAction = ImeAction.Done
     ),
-    onValueChange: (String) -> Unit
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onValueChange: (String) -> Unit,
 ) {
     var texts = mapFullRuPhoneNumberToSimple(value)
 
@@ -44,6 +42,7 @@ fun OutlinePhoneTextFiled(
         minLines = minLines,
         supportingText = supportingText,
         trailingIcon = trailingIcon,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         onValueChange = {

@@ -1,6 +1,9 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,10 +12,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
+import com.markettwits.sportsouce.start.domain.StartItem
 
 @Composable
 internal fun StartRegistrationPanel(
@@ -42,8 +45,8 @@ internal fun StartRegistrationPanel(
                 if (distance.isNotEmpty()) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Дистанции: ${distance.joinToString(", ") { it.name } ?: ""}",
-                        color = MaterialTheme.colorScheme.secondary,
+                        text = distance.joinToString(", ") { it.name },
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f),
                         fontSize = 12.sp,
                         fontFamily = FontNunito.regular(),
                         overflow = TextOverflow.Ellipsis,

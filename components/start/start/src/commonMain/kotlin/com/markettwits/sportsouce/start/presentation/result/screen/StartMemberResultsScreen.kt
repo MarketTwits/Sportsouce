@@ -9,10 +9,10 @@ import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
-import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.result.components.MemberResultDetailed
 import com.markettwits.sportsouce.start.presentation.result.components.StartMemberMemberResultsTopbar
 import com.markettwits.sportsouce.start.presentation.result.components.StartMemberResultsItemsContent
+import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -21,11 +21,12 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
     val state by component.state.collectAsState()
 
     var currentMemberResult by remember { mutableStateOf<MemberResult?>(null) }
+    val toolbarState = rememberCollapsingToolbarScaffoldState()
 
     CollapsingToolbarScaffold(
         modifier = Modifier,
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-        state = rememberCollapsingToolbarScaffoldState(),
+        state = toolbarState,
         toolbar = {
             StartMemberMemberResultsTopbar(
                 state = state,
@@ -36,8 +37,8 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
     ) {
         StartMemberResultsItemsContent(
             results = state.filteredMembers,
-            onClickMemberResult = {
-                currentMemberResult = it
+            onClickMemberResult = { member ->
+                currentMemberResult = member
             }
         )
         if (currentMemberResult != null) {

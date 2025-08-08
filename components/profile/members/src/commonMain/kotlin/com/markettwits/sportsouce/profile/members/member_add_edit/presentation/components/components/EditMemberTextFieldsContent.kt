@@ -1,24 +1,29 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
-import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
-import com.markettwits.core_ui.items.components.textField.DropDownSpinner
-import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
-import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.textField.*
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.teams_city.domain.Team
@@ -32,31 +37,61 @@ fun EditMemberTextFieldsContent(
     teams: List<Team>,
 ) {
     OnBackgroundCard(modifier = modifier) {
-        val modifierInner = Modifier.padding(5.dp)
+        val modifierInner = Modifier.padding(8.dp)
+        val focusManager = LocalFocusManager.current
+        
         Column(modifierInner) {
             OutlinedTextFieldBase(
                 modifier = modifierInner,
                 value = member.name,
                 onValueChange = { newValue -> onMemberChange(member.copy(name = newValue)) },
-                label = "Имя"
+                label = "Имя",
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                )
             )
             OutlinedTextFieldBase(
                 modifier = modifierInner,
                 value = member.surname,
                 onValueChange = { newValue -> onMemberChange(member.copy(surname = newValue)) },
-                label = "Фамилия"
+                label = "Фамилия",
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                )
             )
             OutlinePhoneTextFiled(
                 modifier = modifierInner,
                 value = member.phone,
                 onValueChange = { newValue -> onMemberChange(member.copy(phone = newValue)) },
-                label = "Номер телефона"
+                label = "Номер телефона",
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Phone
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                )
             )
             OutlinedTextFieldBase(
                 modifier = modifierInner,
                 value = member.email,
                 onValueChange = { newValue -> onMemberChange(member.copy(email = newValue)) },
-                label = "Почта"
+                label = "Почта",
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                )
             )
 
             CalendarTextFiled(
@@ -66,7 +101,13 @@ fun EditMemberTextFieldsContent(
                         modifier = it,
                         label = "День рождения",
                         value = member.birthday,
-                        isEnabled = false
+                        isEnabled = false,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     ) {}
                 },
                 onValueChanged = {
@@ -118,30 +159,44 @@ fun EditMemberTextFieldsContent(
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(onClick = {
+                        onMemberChange(member.copy(child = false))
+                    })
             ) {
                 CheckBoxBase(checked = !member.child, onValueChanged = {
-                    onMemberChange(member.copy(child = !it))
+                    onMemberChange(member.copy(child = false))
                 })
                 Text(
                     text = "Взрослный",
                     fontFamily = FontNunito.medium(),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(onClick = {
+                        onMemberChange(member.copy(child = true))
+                    })
             ) {
                 CheckBoxBase(checked = member.child, onValueChanged = {
-                    onMemberChange(member.copy(child = it))
+                    onMemberChange(member.copy(child = true))
                 })
                 Text(
                     text = "Ребенок",
                     fontFamily = FontNunito.medium(),
                     fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }

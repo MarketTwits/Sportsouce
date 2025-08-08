@@ -3,24 +3,12 @@ package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import com.markettwits.core_ui.items.components.topbar.TopBarClipWithLabel
+import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FailedScreen
@@ -53,15 +41,10 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
         Scaffold(topBar = {
             val title =
                 if (state.mode is MemberEditComponent.Mode.Edit) "Редактировать участника" else "Добавить участника"
-            TopBarClipWithLabel(title = title,
-                onClickLabel = {
-                    focusManager.clearFocus()
-                    component.obtainEvent(MemberEditStore.Intent.Save)
-
-                }, goBack = {
-                    focusManager.clearFocus()
-                    component.obtainEvent(MemberEditStore.Intent.Dismiss)
-                })
+            TopBarWithClip(title = title) {
+                focusManager.clearFocus()
+                component.obtainEvent(MemberEditStore.Intent.Dismiss)
+            }
         },
             snackbarHost = {
                 SnackbarHost(
@@ -83,7 +66,11 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
                     component.obtainEvent(MemberEditStore.Intent.OnValueChanged(it))
                 },
                 member = state.member,
-                teams = state.teams
+                teams = state.teams,
+                onSave = {
+                    focusManager.clearFocus()
+                    component.obtainEvent(MemberEditStore.Intent.Save)
+                }
             )
             if (state.isLoading) {
                 LoadingFullScreen()

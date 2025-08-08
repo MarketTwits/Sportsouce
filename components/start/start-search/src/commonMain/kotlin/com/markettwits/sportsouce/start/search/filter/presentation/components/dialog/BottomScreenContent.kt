@@ -96,7 +96,7 @@ private fun FilterPosition(
             onCheckedChange = { onClick(item) })
         Text(
             text = item,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = MaterialTheme.colorScheme.onBackground,
             fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )

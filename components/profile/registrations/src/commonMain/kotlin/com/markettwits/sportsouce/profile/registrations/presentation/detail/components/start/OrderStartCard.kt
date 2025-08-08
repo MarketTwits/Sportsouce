@@ -1,37 +1,38 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.*
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPaymentStatus
 
@@ -42,15 +43,28 @@ fun OrderStartCard(
     onClickStart: (Int) -> Unit,
 ) {
     var isPressed by remember { mutableStateOf(false) }
+    var isHovered by remember { mutableStateOf(false) }
 
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) 0.95f else 1f,
-        animationSpec = tween(150),
+        targetValue = when {
+            isPressed -> 0.96f
+            isHovered -> 1.02f
+            else -> 1f
+        },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
         label = "scale"
     )
 
+    val elevation by animateFloatAsState(
+        targetValue = if (isPressed) 2.dp.value else 8.dp.value,
+        animationSpec = tween(200),
+        label = "elevation"
+    )
 
-    OnBackgroundCard(
+    Card(
         modifier = modifier
             .scale(scale)
             .pointerInput(Unit) {
@@ -65,146 +79,238 @@ fun OrderStartCard(
                     }
                 )
             },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = elevation.dp,
+            pressedElevation = 2.dp,
+            hoveredElevation = 12.dp
+        )
     ) {
-        Row(
-            modifier = it
-                .clip(Shapes.medium)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
                 .background(
-                    brush = Brush.horizontalGradient(
+                    brush = Brush.linearGradient(
                         colors = listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+                            MaterialTheme.colorScheme.primaryContainer,
+                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
                         )
                     )
-                ),
-            horizontalArrangement = Arrangement.Center,
+                )
         ) {
-            RegistrationsCardImageCard(
-                image = item.image,
+            Column {
+                Box {
+                    RegistrationsCardImageCard(
+                        image = item.image,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    PaymentStatusBadge(
+                        paymentStatus = item.payment,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(12.dp)
+                    )
+
+                    if (item.members.any { it.results.isNotEmpty() }) {
+                        ResultsBadge(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(12.dp)
+                        )
+                    }
+                }
+
+                RegistrationsCardContentInfo(
+                    title = item.startTitle,
+                    startDate = item.dateStartPreview,
+                    orderId = item.id,
+                    cost = item.cost,
+                    membersCount = item.members.size,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PaymentStatusBadge(
+    paymentStatus: StartOrderPaymentStatus,
+    modifier: Modifier = Modifier,
+) {
+    val statusColor = mapOrderStatusColor(paymentStatus)
+    val statusIcon = mapOrderStatusIcon(paymentStatus)
+
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        color = statusColor.copy(alpha = 0.8f),
+        shadowElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                imageVector = statusIcon,
+                contentDescription = null,
+                modifier = Modifier.size(14.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
             )
-            RegistrationsCardInfoStatusInfo(
-                title = item.startTitle,
-                startDate = item.dateStartPreview,
-                orderId = item.id,
-                paymentStatus = item.payment,
-                isHasResults = item.members.any { it.results.isNotEmpty() }
+            Text(
+                text = paymentStatus.title,
+                fontSize = 12.sp,
+                fontFamily = FontNunito.bold(),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     }
 }
 
 @Composable
-private fun RegistrationsCardInfoStatusInfo(
+private fun ResultsBadge(
     modifier: Modifier = Modifier,
-    paymentStatus: StartOrderPaymentStatus,
-    orderId: Int,
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
+        shadowElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.EmojiEvents,
+                contentDescription = "Есть результаты",
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Text(
+                text = "Есть результаты",
+                fontSize = 12.sp,
+                fontFamily = FontNunito.bold(),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSecondary
+            )
+        }
+    }
+}
+
+@Composable
+private fun RegistrationsCardContentInfo(
+    modifier: Modifier = Modifier,
     title: String,
     startDate: String,
-    isHasResults : Boolean = false,
+    orderId: Int,
+    cost: String,
+    membersCount: Int,
 ) {
-    var isVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        isVisible = true
-    }
-
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn(animationSpec = tween(800)) + slideInVertically(
-            initialOffsetY = { it / 2 },
-            animationSpec = tween(800)
-        )
+    Column(
+        modifier = modifier.animateContentSize(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Column(
-            modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
+        Text(
+            text = title,
+            fontSize = 18.sp,
+            fontFamily = FontNunito.bold(),
+            fontWeight = FontWeight.Bold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onBackground,
+            lineHeight = 22.sp
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Spacer(Modifier.height(6.dp))
-
-            // Заголовок
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimary,
-                lineHeight = 20.sp
+            Icon(
+                imageVector = Icons.Default.Schedule,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.secondary
             )
+            Text(
+                text = startDate,
+                fontSize = 14.sp,
+                fontFamily = FontNunito.medium(),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            )
+        }
 
-            Spacer(Modifier.height(6.dp))
-
-            // Дата с иконкой
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.animateContentSize()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.CalendarMonth,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp),
-                    tint = MaterialTheme.colorScheme.outline
+                InfoChip(
+                    icon = Icons.Default.Receipt,
+                    text = "№ $orderId"
                 )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    text = startDate,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.medium(),
-                    color = MaterialTheme.colorScheme.outline
+                InfoChip(
+                    icon = Icons.Default.Group,
+                    text = "$membersCount участн."
                 )
             }
 
-            Spacer(Modifier.height(6.dp))
-
-            // Номер заказа и статус платежа
-            Row(
-                modifier = Modifier.animateContentSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (cost.isNotEmpty() && cost != "0") {
                 Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
-                    modifier = Modifier.padding(end = 8.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
                 ) {
                     Text(
-                        text = "№ $orderId",
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.medium(),
-                        color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = mapOrderStatus(paymentStatus).copy(alpha = 0.15f)
-                ) {
-                    Text(
-                        text = paymentStatus.title,
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.medium(),
-                        color = mapOrderStatus(paymentStatus),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        text = "$cost ₽",
+                        fontSize = 16.sp,
+                        fontFamily = FontNunito.bold(),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                     )
                 }
             }
-            // Индикатор результатов
-            if (isHasResults) {
-                Spacer(Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier.animateContentSize(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Есть результаты ",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.medium(),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    ResultsIndicator()
-                }
-            }
+        }
+    }
+}
+
+@Composable
+private fun InfoChip(
+    icon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(12.dp),
+                tint = MaterialTheme.colorScheme.outline
+            )
+            Text(
+                text = text,
+                fontSize = 12.sp,
+                fontFamily = FontNunito.medium(),
+                color = MaterialTheme.colorScheme.outline
+            )
         }
     }
 }
@@ -216,8 +322,9 @@ fun RegistrationsCardImageCard(
 ) {
     Box(
         modifier = modifier
-            .size(width = 130.dp, height = 150.dp)
-            .clip(RoundedCornerShape(12.dp))
+            .fillMaxWidth()
+            .height(180.dp)
+            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
     ) {
         SubcomposeAsyncImage(
             model = image,
@@ -226,75 +333,28 @@ fun RegistrationsCardImageCard(
             modifier = Modifier.fillMaxSize(),
             error = {
                 SubcomposeAsyncImageContent(
-                    modifier = modifier,
+                    modifier = Modifier.fillMaxSize(),
                     painter = DefaultImages.EmptyImageStart()
                 )
             },
             success = {
-                SubcomposeAsyncImageContent(modifier = modifier)
+                SubcomposeAsyncImageContent(modifier = Modifier.fillMaxSize())
             }
         )
-    }
-}
 
-@Composable
-private fun ResultsIndicator(
-    modifier: Modifier = Modifier
-) {
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 0.8f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulseScale"
-    )
-
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.7f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulseAlpha"
-    )
-
-    Box(
-        modifier = modifier
-            .scale(pulseScale)
-            .alpha(pulseAlpha)
-    ) {
-        // Внешнее кольцо пульсации
         Box(
             modifier = Modifier
-                .size(24.dp)
+                .fillMaxSize()
                 .background(
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
-                    shape = CircleShape
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.3f),
+                            Color.Transparent,
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.3f)
+                        )
+                    )
                 )
         )
-
-        Box(
-            modifier = Modifier
-                .size(16.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.secondary,
-                    shape = CircleShape
-                )
-                .align(Alignment.Center)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = "Есть результаты",
-                modifier = Modifier
-                    .size(10.dp)
-                    .align(Alignment.Center),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-        }
     }
 }

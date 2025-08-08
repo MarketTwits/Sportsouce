@@ -1,29 +1,27 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,23 +37,79 @@ internal fun OrderMembersCard(
     modifier: Modifier = Modifier,
     startOrderMembers: List<StartOrderMember>
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = "Участники",
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        startOrderMembers.forEach { member ->
-            Spacer(modifier = Modifier.height(8.dp))
-            RegistrationsCardMemberInfo(
-                member = member,
+    Column(
+        modifier = modifier
+            .clip(Shapes.large)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                    )
+                )
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Group,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = "Участники",
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f),
+                        Shapes.small
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = "${startOrderMembers.size}",
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        startOrderMembers.forEachIndexed { index, member ->
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        delayMillis = index * 100
+                    )
+                ) + expandVertically(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                )
+            ) {
+                RegistrationsCardMemberInfo(
+                    member = member,
+                    modifier = Modifier.padding(bottom = if (index < startOrderMembers.lastIndex) 12.dp else 0.dp)
+                )
+            }
         }
     }
-
 }
 
 @Composable
@@ -63,80 +117,126 @@ private fun RegistrationsCardMemberInfo(
     modifier: Modifier = Modifier,
     member: StartOrderMember,
 ) {
-
     val fullName = member.surname + " " + member.name
-
-    var isShowResult by remember {
-        mutableStateOf(false)
-    }
+    var isShowResult by remember { mutableStateOf(false) }
+    val hasResults = member.results.isNotEmpty()
 
     Box(
         modifier = modifier
-            .shadow(3.dp, shape = Shapes.medium)
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .clip(Shapes.medium)
+            .background(MaterialTheme.colorScheme.outlineVariant)
             .fillMaxWidth()
-            .clickable(
-                enabled = member.results.isNotEmpty(),
-                onClick = {
-                    isShowResult = !isShowResult
-                },
+            .then(
+                if (hasResults) {
+                    Modifier.clickable(
+                        onClick = { isShowResult = !isShowResult }
+                    )
+                } else Modifier
             )
     ) {
-        if (member.results.isNotEmpty()) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RegistrationsMemberMiniature(fullName = fullName)
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = fullName,
+                        fontSize = 16.sp,
+                        fontFamily = FontNunito.bold(),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "${member.ageGroupName} • ${member.distanceName}",
+                        fontSize = 14.sp,
+                        fontFamily = FontNunito.medium(),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                if (hasResults) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.EmojiEvents,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Icon(
+                            imageVector = if (isShowResult) Icons.Default.KeyboardArrowUp
+                            else Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                RegistrationsCardInfoStatusInfoText(
+                    label = "Команда: ",
+                    value = member.teamName
+                )
+                RegistrationsCardInfoStatusInfoText(
+                    label = "Формат: ",
+                    value = member.formatName
+                )
+                RegistrationsCardInfoStatusInfoText(
+                    label = "Пол: ",
+                    value = member.genderName
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isShowResult && hasResults,
+                enter = expandVertically(
+                    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+                ) + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    MemberResultsCard(
+                        result = member.results.first()
+                    )
+                }
+            }
+        }
+
+        if (hasResults) {
             Box(
                 modifier = Modifier
+                    .align(Alignment.TopEnd)
                     .background(
                         color = MaterialTheme.colorScheme.tertiary,
-                        shape = RoundedCornerShape(bottomStart = 10.dp, topEnd = 10.dp)
+                        shape = RoundedCornerShape(bottomStart = 8.dp, topEnd = 10.dp)
                     )
-                    .align(Alignment.TopEnd)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
-                    modifier = modifier.padding(6.dp),
-                    text = "Есть результаты",
-                    fontSize = 12.sp,
-                    overflow = TextOverflow.Ellipsis,
+                    text = "Результат",
+                    fontSize = 10.sp,
                     fontFamily = FontNunito.semiBoldBold(),
                     color = MaterialTheme.colorScheme.onTertiary
                 )
             }
         }
-        Row {
-            Spacer(modifier = Modifier.size(4.dp))
-            RegistrationsMemberMiniature(fullName = fullName)
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
-                RegistrationsCardInfoStatusInfoText(
-                    label = "ФИО : ",
-                    value = fullName
-                )
-                RegistrationsCardInfoStatusInfoText(
-                    label = "Группа : ",
-                    value = member.ageGroupName
-                )
-                RegistrationsCardInfoStatusInfoText(
-                    label = "Дистанция : ",
-                    value = member.distanceName
-                )
-                RegistrationsCardInfoStatusInfoText(
-                    label = "Команда : ",
-                    value = member.teamName
-                )
-                RegistrationsCardInfoStatusInfoText(
-                    label = "Формат : ",
-                    value = member.formatName
-                )
-                AnimatedVisibility(isShowResult && member.results.isNotEmpty()) {
-                    MemberResultsCard(
-                        result = member.results.first(),
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.size(4.dp))
-        }
     }
-
 }
 
 @Composable

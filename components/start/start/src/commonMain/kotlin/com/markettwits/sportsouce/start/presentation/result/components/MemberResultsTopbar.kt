@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.DropDownSpinnerStage
 import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
@@ -352,21 +353,21 @@ private fun SelectedFiltersPane(
         maxLines = 3,
     ) {
         selectedDistance?.let { selectedDistance ->
-            DefaultFilterChip(
+            FilterChipBase(
                 selected = true,
                 onClick = { onClickDistance(selectedDistance) },
                 label = selectedDistance.name
             )
         }
         selectedGroups.forEach { group ->
-            DefaultFilterChip(
+            FilterChipBase(
                 selected = true,
                 onClick = { onClickGroup(group) },
                 label = group.name
             )
         }
         selectedTeams.forEach { team ->
-            DefaultFilterChip(
+            FilterChipBase(
                 selected = true,
                 onClick = { onClickTeam(team) },
                 label = team.name
@@ -374,42 +375,6 @@ private fun SelectedFiltersPane(
         }
     }
 }
-
-@Composable
-private fun DefaultFilterChip(
-    modifier: Modifier = Modifier,
-    selected: Boolean,
-    onClick: () -> Unit,
-    label: String,
-) {
-    FilterChip(
-        modifier = modifier,
-        selected = selected,
-        onClick = onClick,
-        label = {
-            Text(
-                text = label,
-                fontFamily = FontNunito.medium(),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        },
-        leadingIcon = {
-            if (selected) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        },
-        colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-        )
-    )
-}
-
 
 // Utility functions
 private fun hasActiveFilters(filterState: FilterState): Boolean {

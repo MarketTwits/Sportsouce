@@ -1,6 +1,6 @@
 [versions]
 #plugins
-versionName = "1.4.2"
+versionName = "1.4.3"
 versionCode = "10403"
 jvm = "11"
 kotlin = "2.1.20"

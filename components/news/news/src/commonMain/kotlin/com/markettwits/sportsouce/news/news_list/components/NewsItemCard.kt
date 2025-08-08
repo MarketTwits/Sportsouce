@@ -1,24 +1,21 @@
 package com.markettwits.sportsouce.news.news_list.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -54,6 +51,18 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (Ne
                 },
                 success = {
                     SubcomposeAsyncImageContent()
+                },
+                loading = {
+                    OnBackgroundCard(
+                        modifier = Modifier.shimmer(
+                            tiltAngle = 30,
+                            gradientColors = listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                                Color.Transparent,
+                            )
+                        )
+                    ) {}
                 }
             )
         }

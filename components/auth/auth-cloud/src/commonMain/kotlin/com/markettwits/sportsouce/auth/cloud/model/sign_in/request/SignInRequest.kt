@@ -11,6 +11,4 @@ data class SignInRequest(
     val password: String,
     @SerialName("kind")
     val kind: String = "login",
-    @SerialName("redirect")
-    val redirect: Redirect = Redirect(true)
 )

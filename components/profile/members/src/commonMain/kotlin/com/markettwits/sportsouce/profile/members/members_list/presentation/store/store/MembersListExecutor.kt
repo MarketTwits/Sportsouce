@@ -4,10 +4,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.profile.members.members_list.domain.MembersListUseCase
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Intent
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Label
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Message
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.State
+import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
@@ -34,8 +31,8 @@ class MembersListExecutor(private val useCase: MembersListUseCase) :
                 .catch {
                     dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
                 }
-                .collect {
-                    dispatch(Message.Loaded(it))
+                .collect { members ->
+                    dispatch(Message.Loaded(members))
                 }
         }
     }

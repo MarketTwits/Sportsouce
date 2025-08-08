@@ -53,7 +53,6 @@ include(
     ":components:start:start",
     ":components:start:start-register",
     ":components:start:start-search",
-    ":components:start:start-filter",
     ":components:start:start-support",
     ":components:start:start-cloud",
     ":components:starts:starts",

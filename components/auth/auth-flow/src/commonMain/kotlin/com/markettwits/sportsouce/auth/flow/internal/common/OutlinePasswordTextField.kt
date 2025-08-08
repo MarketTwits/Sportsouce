@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.auth.flow.internal.common
 
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -25,6 +26,7 @@ fun OutlinePasswordTextField(
     value: String,
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChanged: (String) -> Unit,
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -34,6 +36,7 @@ fun OutlinePasswordTextField(
         value = value,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         trailingIcon = {
             val image = if (passwordVisible)
                 Icons.Filled.Visibility

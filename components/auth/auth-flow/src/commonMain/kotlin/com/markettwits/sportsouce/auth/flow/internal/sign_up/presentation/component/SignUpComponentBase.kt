@@ -16,7 +16,8 @@ internal class SignUpComponentBase(
     context: ComponentContext,
     private val storeFactory: SignUpStoreFactory,
     private val pop: () -> Unit,
-    private val profile: () -> Unit
+    private val profile: () -> Unit,
+    private val signIn: () -> Unit,
 ) : SignUpComponent, ComponentContext by context {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -38,6 +39,7 @@ internal class SignUpComponentBase(
                 when (it) {
                     SignUpStore.Label.OnClickBack -> pop()
                     SignUpStore.Label.OpenProfile -> profile()
+                    SignUpStore.Label.OpenSignIn -> signIn()
                 }
             }
         }

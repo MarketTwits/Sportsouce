@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.profile.members.member_detail.presentation.components.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,6 +23,7 @@ fun MemberDetailContent(
             item = item,
             onClick = {}
         )
+        Spacer(Modifier.height(14.dp))
         MemberDetailButtons(
             modifier = Modifier.padding(vertical = 10.dp),
             deleteLoading = isDeleteLoading,

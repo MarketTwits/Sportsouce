@@ -10,8 +10,10 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Help
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -354,27 +356,5 @@ fun RegistrationsCardImageCard(
                     )
                 )
         )
-    }
-}
-
-private fun mapOrderStatusColor(payment: StartOrderPaymentStatus): Color {
-    return when (payment) {
-        is StartOrderPaymentStatus.Success -> Color(0xFF4CAF50) // Зеленый
-        is StartOrderPaymentStatus.Free -> Color(0xFF2196F3) // Синий
-        is StartOrderPaymentStatus.OnPlace -> Color(0xFFFF9800) // Оранжевый
-        is StartOrderPaymentStatus.NotPaid -> Color(0xFFF44336) // Красный
-        is StartOrderPaymentStatus.PaymentCancelled -> Color(0xFF9E9E9E) // Серый
-        is StartOrderPaymentStatus.WithoutStatus -> Color(0xFF607D8B) // Сине-серый
-    }
-}
-
-private fun mapOrderStatusIcon(payment: StartOrderPaymentStatus): ImageVector {
-    return when (payment) {
-        is StartOrderPaymentStatus.Success -> Icons.Default.CheckCircle
-        is StartOrderPaymentStatus.Free -> Icons.Default.CardGiftcard
-        is StartOrderPaymentStatus.OnPlace -> Icons.Default.LocationOn
-        is StartOrderPaymentStatus.NotPaid -> Icons.Default.Schedule
-        is StartOrderPaymentStatus.PaymentCancelled -> Icons.Default.Cancel
-        is StartOrderPaymentStatus.WithoutStatus -> Icons.AutoMirrored.Filled.Help
     }
 }

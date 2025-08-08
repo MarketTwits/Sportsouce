@@ -1,27 +1,28 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Payment
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 
 @Composable
@@ -30,55 +31,118 @@ internal fun OrderDialogPaymentButton(
     priceState: StartOrderStore.StartPriceResult,
     onClick: () -> Unit
 ) {
-    AnimatedVisibility(priceState is StartOrderStore.StartPriceResult.Failed) {
-        Box(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-                .clip(Shapes.medium)
-                .background(SportSouceColor.SportSouceLightRed.copy(alpha = 0.1f))
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(10.dp),
-                text = "Не удалось обновить стоимость заказа",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                overflow = TextOverflow.Ellipsis,
-                color = SportSouceColor.SportSouceLightRed
-            )
-        }
-    }
-    if (
-        priceState !is StartOrderStore.StartPriceResult.Free
-        &&
-        priceState !is StartOrderStore.StartPriceResult.Failed
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
-            ),
-            onClick = { onClick() }
+        // Error state
+        AnimatedVisibility(
+            visible = priceState is StartOrderStore.StartPriceResult.Failed,
+            enter = expandVertically(
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            ) + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
         ) {
-            if (priceState is StartOrderStore.StartPriceResult.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.onTertiary,
-                    strokeCap = StrokeCap.Round
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(Shapes.medium)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.1f),
+                                MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.05f)
+                            )
+                        )
+                    )
+                    .padding(16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Не удалось обновить стоимость заказа",
+                        fontSize = 14.sp,
+                        fontFamily = FontNunito.semiBoldBold(),
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-            if (priceState is StartOrderStore.StartPriceResult.Success) {
-                Text(
-                    modifier = Modifier.padding(2.dp),
-                    text = "Оплатить ${priceState.price} ₽",
-                    fontSize = 16.sp,
-                    fontFamily = FontNunito.bold(),
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onTertiary
-                )
+        }
+
+        // Payment button
+        AnimatedVisibility(
+            visible = priceState !is StartOrderStore.StartPriceResult.Free &&
+                    priceState !is StartOrderStore.StartPriceResult.Failed,
+            enter = expandVertically(
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            ) + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            val buttonScale by animateFloatAsState(
+                targetValue = if (priceState is StartOrderStore.StartPriceResult.Loading) 0.95f else 1f,
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .scale(buttonScale),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                ),
+                shape = Shapes.large,
+                enabled = priceState is StartOrderStore.StartPriceResult.Success,
+                onClick = onClick
+            ) {
+                Row(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    when (priceState) {
+                        is StartOrderStore.StartPriceResult.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.onTertiary,
+                                strokeCap = StrokeCap.Round,
+                                strokeWidth = 2.dp
+                            )
+                            Text(
+                                text = "Загрузка...",
+                                fontSize = 16.sp,
+                                fontFamily = FontNunito.semiBoldBold(),
+                                color = MaterialTheme.colorScheme.onTertiary
+                            )
+                        }
+
+                        is StartOrderStore.StartPriceResult.Success -> {
+                            Icon(
+                                imageVector = Icons.Default.Payment,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "Оплатить ${priceState.price} ₽",
+                                fontSize = 16.sp,
+                                fontFamily = FontNunito.bold(),
+                                color = MaterialTheme.colorScheme.onTertiary
+                            )
+                        }
+
+                        else -> {}
+                    }
+                }
             }
         }
     }

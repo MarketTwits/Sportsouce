@@ -69,7 +69,6 @@ internal fun BottomBarContent(
             items.forEach { item ->
                 val isSelected = selectedTab == item.bottomBarConfiguration
                 val color = if (isSelected) textColor else Color.Gray
-
                 item(
                     modifier = itemModifier,
                     colors = itemColors,

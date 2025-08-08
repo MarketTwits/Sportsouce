@@ -2,10 +2,9 @@ package com.markettwits.sportsouce.profile.registrations.presentation.list.compo
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
@@ -14,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -21,7 +21,6 @@ import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderStartCard
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.RegistrationsEmptyFiltered
-import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.RegistrationsFilterItem
 
 @Composable
 fun RegistrationsStart(
@@ -33,7 +32,7 @@ fun RegistrationsStart(
     onClickFilter: (FilterItem) -> Unit,
     onRefresh: () -> Unit
 ) {
-    val state = rememberLazyListState()
+    val gridState = rememberLazyGridState()
     val activeFiltersCount = filter.count { it.checked }
 
     PullToRefreshScreen(
@@ -41,15 +40,16 @@ fun RegistrationsStart(
         onRefresh = onRefresh::invoke,
     ) { innerModifier ->
         AdaptivePane {
-            LazyColumn(
-                state = state,
+            LazyVerticalGrid(
+                state = gridState,
                 modifier = innerModifier,
-                contentPadding = PaddingValues(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                columns = GridCells.Adaptive(minSize = 320.dp),
+                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                item {
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     Column(
-                        modifier = Modifier.padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (filter.isNotEmpty()) {
@@ -91,13 +91,20 @@ fun RegistrationsStart(
                                     contentPadding = PaddingValues(horizontal = 4.dp)
                                 ) {
                                     items(filter) { filterItem ->
-                                        RegistrationsFilterItem(
-                                            value = filterItem.value,
-                                            checked = filterItem.checked,
+                                        FilterChipBase(
+                                            label = filterItem.value,
+                                            selected = filterItem.checked,
                                             onClick = {
                                                 onClickFilter(filterItem)
                                             }
                                         )
+//                                        RegistrationsFilterItem(
+//                                            value = filterItem.value,
+//                                            checked = filterItem.checked,
+//                                            onClick = {
+//                                                onClickFilter(filterItem)
+//                                            }
+//                                        )
                                     }
                                 }
                             }
@@ -127,38 +134,40 @@ fun RegistrationsStart(
                 }
 
                 if (withoutFilterStarts.isEmpty()) {
-                    item {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         RegistrationsAbsolutelyEmpty(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier
                         )
                     }
                 } else if (withFilterStarts.isEmpty() && activeFiltersCount > 0) {
-                    item {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         RegistrationsEmptyFiltered(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier
                         )
                     }
                 } else {
                     items(
                         items = withFilterStarts,
-                        key = { it.id }
+                        key = { it.id },
                     ) { orderInfo ->
                         OrderStartCard(
                             modifier = Modifier
-                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
                                 .animateItem(fadeInSpec = tween(600)),
                             item = orderInfo,
-                            onClickStart = { startId ->
+                            onClickStart = { _ ->
                                 onClick(orderInfo)
                             }
                         )
                     }
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
     }
 }
+
+

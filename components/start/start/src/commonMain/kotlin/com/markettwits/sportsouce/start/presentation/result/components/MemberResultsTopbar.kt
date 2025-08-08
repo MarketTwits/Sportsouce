@@ -135,15 +135,20 @@ private fun MemberResultsTopBar(
 
             val teams = state.filterState.teamFilters.getSelectTeams()
             val groups = state.filterState.groupFilters.getSelectedGroups()
+            val distances = state.filterState.distanceFilters.getSelectDistance()
 
             SelectedFiltersPane(
                 selectedTeams = teams,
                 selectedGroups = groups,
+                selectedDistance = distances,
                 onClickTeam = {
                     onIntent(StartMemberResultsStore.Intent.OnTeamFilterToggle(it.name))
                 },
                 onClickGroup = {
                     onIntent(StartMemberResultsStore.Intent.OnGroupFilterToggle(it.name))
+                },
+                onClickDistance = { distance ->
+                    onIntent(StartMemberResultsStore.Intent.OnDistanceFilterToggle(distance))
                 }
             )
         }
@@ -176,44 +181,48 @@ private fun SortButton(
             onDismissRequest = { showSortMenu = false },
             containerColor = MaterialTheme.colorScheme.primary,
         ) {
-            Text(
-                text = "Сортировать по :",
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-            SortBy.entries.forEach { sort ->
-                DropdownMenuItem(
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                sort.displayName,
-                                fontFamily = FontNunito.semiBoldBold(),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                fontSize = 14.sp,
-                            )
-                            if (sortBy == sort) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.tertiary,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        }
-                    },
-                    onClick = {
-                        if (sortBy == sort) {
-                            onSortOrderChange(if (sortOrder == SortOrder.ASC) SortOrder.DESC else SortOrder.ASC)
-                        } else {
-                            onSortByChange(sort)
-                        }
-                        showSortMenu = false
-                    }
+            Column(
+                modifier = Modifier.padding(8.dp),
+            ) {
+                Text(
+                    text = "Сортировать по :",
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
+                SortBy.entries.forEach { sort ->
+                    DropdownMenuItem(
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    sort.displayName,
+                                    fontFamily = FontNunito.semiBoldBold(),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontSize = 14.sp,
+                                )
+                                if (sortBy == sort) {
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.tertiary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+                        },
+                        onClick = {
+                            if (sortBy == sort) {
+                                onSortOrderChange(if (sortOrder == SortOrder.ASC) SortOrder.DESC else SortOrder.ASC)
+                            } else {
+                                onSortByChange(sort)
+                            }
+                            showSortMenu = false
+                        }
+                    )
+                }
             }
         }
     }
@@ -331,15 +340,24 @@ private fun TeamsDropDownFilter(
 private fun SelectedFiltersPane(
     modifier: Modifier = Modifier,
     selectedTeams: List<TeamFilter>,
+    selectedDistance: DistanceFilter?,
     selectedGroups: List<GroupFilter>,
     onClickTeam: (TeamFilter) -> Unit,
     onClickGroup: (GroupFilter) -> Unit,
+    onClickDistance: (DistanceFilter) -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         maxLines = 3,
     ) {
+        selectedDistance?.let { selectedDistance ->
+            DefaultFilterChip(
+                selected = true,
+                onClick = { onClickDistance(selectedDistance) },
+                label = selectedDistance.name
+            )
+        }
         selectedGroups.forEach { group ->
             DefaultFilterChip(
                 selected = true,
@@ -373,7 +391,7 @@ private fun DefaultFilterChip(
                 text = label,
                 fontFamily = FontNunito.medium(),
                 fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onSecondary
             )
         },
         leadingIcon = {
@@ -381,13 +399,13 @@ private fun DefaultFilterChip(
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.tertiary,
+                    tint = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.size(16.dp)
                 )
             }
         },
         colors = FilterChipDefaults.filterChipColors(
-            selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            selectedContainerColor = MaterialTheme.colorScheme.secondary,
         )
     )
 }

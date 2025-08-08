@@ -34,22 +34,26 @@ fun StartMemberResultsItemsContent(
     onClickMemberResult: (MemberResult) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) { paddingValues ->
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         LazyColumn(
-            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-            contentPadding = PaddingValues(horizontal = 16.dp),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
             item {
                 Text(
+                    modifier = Modifier.padding(8.dp),
                     text = "Всего ${results.size} результатов",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 

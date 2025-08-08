@@ -27,6 +27,7 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
             TopBarWithClip(title = "Мои регистрации") {
                 component.obtainEvent(RegistrationsStore.Intent.Pop)
             }
+
         }) {
         Column(
             modifier = Modifier

@@ -1,7 +1,6 @@
-package com.markettwits.sportsouce.start.presentation.membres.filter
+package com.markettwits.sportsouce.start.presentation.membres.models
 
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 sealed interface MembersFilterItem {
@@ -17,5 +16,5 @@ sealed interface MembersFilterItem {
 @Serializable
 data class MembersFilterGroup(
     val title: String,
-    val items: List<MembersFilterItem>
+    val items: List<MembersFilterItem>,
 )

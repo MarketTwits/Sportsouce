@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.start.presentation.membres.list.models
+package com.markettwits.sportsouce.start.presentation.membres.models
 
 import kotlinx.serialization.Serializable
 

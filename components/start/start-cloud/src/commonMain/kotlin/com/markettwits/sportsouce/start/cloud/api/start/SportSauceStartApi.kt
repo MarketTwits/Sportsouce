@@ -9,7 +9,9 @@ import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationRespon
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
+import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
 import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
+import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResultRows
 import com.markettwits.sportsouce.start.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
@@ -25,7 +27,18 @@ interface SportSauceStartApi {
 
     suspend fun filters(startId: Int): FiltersRemote
 
+    @Deprecated("Use membersFiltered(startId, ...) with server-side filtering and sorting")
     suspend fun members(startId: Int): List<StartMember>
+
+    suspend fun membersFiltered(
+        startId: Int,
+        filterText: String = "",
+        skipCount: Int = 0,
+        maxResultCount: Int = 20,
+        distances: List<Int> = emptyList(),
+        genders: List<String> = emptyList(),
+        sorting: String? = null,
+    ): StartMembersRemote
 
     suspend fun membersResults(
         maxResultCount: Int,
@@ -43,5 +56,4 @@ interface SportSauceStartApi {
     suspend fun writeComment(startCommentRequest: StartCommentRequest, token: String): Comment
 
     suspend fun writeSubComment(subComment: StartSubCommentRequest, token: String): Reply
-
 }

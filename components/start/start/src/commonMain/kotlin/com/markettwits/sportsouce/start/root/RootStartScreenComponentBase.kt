@@ -16,12 +16,8 @@ import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponentBase
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStoreFactory
-import com.markettwits.sportsouce.start.presentation.membres.filter.HandleMembersFilterBase
-import com.markettwits.sportsouce.start.presentation.membres.filter.MembersFilterGroup
-import com.markettwits.sportsouce.start.presentation.membres.filter.StartMembersFilterScreenComponent
-import com.markettwits.sportsouce.start.presentation.membres.list.component.StartMembersScreenComponent
-import com.markettwits.sportsouce.start.presentation.membres.list.models.MembersFilterBase
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentComponentBase
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
@@ -72,7 +68,7 @@ class RootStartScreenComponentBase(
                     },
                     storeFactory = scope.get(),
                     members = { id: Int, list: List<StartMembersUi> ->
-                        openMembersScreen(startId = id, items = list, filter = emptyList())
+                        navigation.pushNew(RootStartScreenComponent.Config.StartMembers(id, list))
                     },
                     album = {
                         navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
@@ -114,27 +110,12 @@ class RootStartScreenComponentBase(
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
                     componentContext = componentContext,
-                    membersUi = config.items,
-                    openFilterScreen = ::openMembersFilter,
+                    startId = config.startId,
+                    initialMembersUi = config.items,
                     onBack = navigation::pop,
-                    membersFilter = MembersFilterBase()
+                    storeFactory = scope.get(),
+                    repository = scope.get()
                 ),
-            )
-
-            is RootStartScreenComponent.Config.StartMembersFilter -> RootStartScreenComponent.Child.StartMembersFilter(
-                StartMembersFilterScreenComponent(
-                    context = componentContext,
-                    items = config.items,
-                    handleMembersFilter = HandleMembersFilterBase(),
-                    apply = { filter ->
-                        navigation.pop { // Pop ItemDetailsComponent
-                            (childStack.value.active.instance as? RootStartScreenComponent.Child.StartMembers)?.component?.updateFilter(
-                                filter = filter
-                            )
-                        }
-                    },
-                    back = navigation::pop
-                )
             )
 
             is RootStartScreenComponent.Config.StartRegistration -> RootStartScreenComponent.Child.StartRegistration(
@@ -164,15 +145,4 @@ class RootStartScreenComponentBase(
             )
         }
 
-    private fun openMembersScreen(
-        startId: Int,
-        items: List<StartMembersUi>,
-        filter: List<MembersFilterGroup>
-    ) {
-        navigation.pushNew(RootStartScreenComponent.Config.StartMembers(startId, items, filter))
-    }
-
-    private fun openMembersFilter(items: List<MembersFilterGroup>) {
-        navigation.pushNew(RootStartScreenComponent.Config.StartMembersFilter(items))
-    }
 }

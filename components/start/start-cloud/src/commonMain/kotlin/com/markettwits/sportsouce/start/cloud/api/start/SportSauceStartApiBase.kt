@@ -52,16 +52,40 @@ internal class SportSauceStartApiBase(
     }
 
     override suspend fun filters(startId: Int): FiltersRemote {
-        val response = client.get("member-start/$startId/filters")
+        val response = client.get("member-start/$startId/filters") {
+            parameter("start_id", startId)
+        }
         return json.decodeFromString(response.body<String>())
     }
 
+    @Deprecated("Use membersFiltered(startId, ...) with server-side filtering and sorting")
     override suspend fun members(startId: Int): List<StartMember> {
         val response = client.get("member-start/paid") {
             parameter("start_id", startId)
             parameter("maxResultCount", 1000)
         }
         return json.decodeFromString<StartMembersRemote>(response.body<String>()).rows
+    }
+
+    override suspend fun membersFiltered(
+        startId: Int,
+        filterText: String,
+        skipCount: Int,
+        maxResultCount: Int,
+        distances: List<Int>,
+        genders: List<String>,
+        sorting: String?,
+    ): StartMembersRemote {
+        val response = client.get("member-start/paid") {
+            parameter("start_id", startId)
+            parameter("skipCount", skipCount)
+            parameter("maxResultCount", maxResultCount)
+            if (filterText.isNotBlank()) parameter("filterText", filterText)
+            distances.forEach { parameter("distances[]", it) }
+            genders.forEach { parameter("genders[]", it) }
+            if (!sorting.isNullOrBlank()) parameter("sorting", sorting)
+        }
+        return json.decodeFromString<StartMembersRemote>(response.body<String>())
     }
 
     override suspend fun membersResults(

@@ -44,5 +44,7 @@ abstract class OffsetAndLimitPagingSourceNew<Value : Any>(
         }
     }
 
+    abstract suspend fun getTotalCount(): Int
+
     abstract suspend fun load(offset: Int, limit: Int): List<Value>
 }

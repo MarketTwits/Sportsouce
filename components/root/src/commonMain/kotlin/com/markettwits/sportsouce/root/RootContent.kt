@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.root
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -28,10 +27,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
     component.slotChild.child?.instance?.also {
         when (it) {
             is RootComponent.Navigation.BottomBar -> {
-                BottomBarScaffold(
-                    component = it.component, modifier = modifier
-                        .windowInsetsPadding(NavigationBarDefaults.windowInsets)
-                ) {
+                BottomBarScaffold(component = it.component) {
                     NestedContent(
                         component = component,
                         modifier = Modifier

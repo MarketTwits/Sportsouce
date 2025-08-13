@@ -1,7 +1,7 @@
 [versions]
 #plugins
 versionName = "1.4.4"
-versionCode = "10404"
+versionCode = "10405"
 jvm = "11"
 kotlin = "2.1.20"
 gradle = "8.9.2" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility

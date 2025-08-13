@@ -1,27 +1,14 @@
 package com.markettwits.sportsouce.start.presentation.start.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
-import com.markettwits.sportsouce.start.presentation.start.components.StartAlbums
-import com.markettwits.sportsouce.start.presentation.start.components.StartConditionPanel
-import com.markettwits.sportsouce.start.presentation.start.components.StartDescription
-import com.markettwits.sportsouce.start.presentation.start.components.StartExtraFieldsPanel
-import com.markettwits.sportsouce.start.presentation.start.components.StartMembersPanel
-import com.markettwits.sportsouce.start.presentation.start.components.StartMembersResultPanel
-import com.markettwits.sportsouce.start.presentation.start.components.StartMembersStatistics
-import com.markettwits.sportsouce.start.presentation.start.components.StartRegistrationPanel
-import com.markettwits.sportsouce.start.presentation.start.components.StartResult
-import com.markettwits.sportsouce.start.presentation.start.components.StartTitle
-import com.markettwits.sportsouce.start.presentation.start.components.StartsRecommendationPanel
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.start.components.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun StartScreenInnerContent(
@@ -67,7 +54,7 @@ internal fun StartScreenInnerContent(
         })
         StartMembersStatistics(
             modifier = innerModifier,
-            membersUi = data.membersUi
+            membersUi = data.startMembersUi
         )
         StartResult(
             modifier = innerModifier,
@@ -92,9 +79,9 @@ internal fun StartScreenInnerContent(
         )
         StartMembersPanel(
             modifier = innerModifier,
-            membersCount = data.membersUi.size
+            membersCount = data.startMembersUi.size
         ) {
-            onClickMembers(data.membersUi)
+            onClickMembers(data.startMembersUi)
         }
         StartMembersResultPanel(
             modifier = innerModifier,
@@ -109,10 +96,4 @@ internal fun StartScreenInnerContent(
         donations(innerModifier)
     }
     comments(modifier)
-}
-
-@Composable
-@Preview
-private fun prev(){
-    Box(Modifier.fillMaxSize()) {}
 }

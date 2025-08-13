@@ -26,7 +26,8 @@ import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.start.components.StartShareActionButton
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -44,9 +45,10 @@ internal fun StartScreenContent(
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
+    onClickShare: () -> Unit,
     onClickRecommendedStart: (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
-    donations: @Composable (Modifier) -> Unit
+    donations: @Composable (Modifier) -> Unit,
 ) {
     PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
         onClickRetry()
@@ -120,8 +122,15 @@ internal fun StartScreenContent(
                     )
                 }
             }
-            BackFloatingActionButton {
+            BackFloatingActionButton(
+                modifier = Modifier.align(Alignment.TopStart),
+            ) {
                 onClickBack()
+            }
+            StartShareActionButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+            ) {
+                onClickShare()
             }
         }
     }

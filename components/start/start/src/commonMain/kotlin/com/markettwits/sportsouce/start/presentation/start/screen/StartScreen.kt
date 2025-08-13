@@ -3,11 +3,16 @@ package com.markettwits.sportsouce.start.presentation.start.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FailedScreen
@@ -113,6 +118,9 @@ fun StartScreen(
                     },
                     onClickRecommendedStart = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickStartRecommended(it))
+                    },
+                    onClickShare = {
+                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickShare)
                     }
                 )
                 if (fullImage) {
@@ -126,15 +134,13 @@ fun StartScreen(
                     }
                 )
             }
-            if (state.isError) {
-                FailedScreen(
-                    message = state.message,
-                    onClickBack = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
-                    }
-                ) {
+            state.error?.mapToSauceError()?.SauceErrorScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                onClickRetry = {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                }
+                })
             }
             EventEffect(
                 event = state.event,
@@ -147,6 +153,4 @@ fun StartScreen(
                 snackBarHostState.showLongMessageWithDismiss(message = it.message)
             }
         }
-    }
-
 }

@@ -14,13 +14,25 @@ import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
+import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote as CloudFiltersRemote
+import com.markettwits.sportsouce.start.domain.FiltersRemote
+import com.markettwits.sportsouce.start.domain.FilterItem
+import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.domain.StartRepository
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import app.cash.paging.Pager
+import app.cash.paging.PagingConfig
+import app.cash.paging.PagingData
+import app.cash.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import com.markettwits.sportsouce.start.domain.StartMembersPagingParams
 
 internal class StartRepositoryBase(
     private val startService: SportSauceStartApi,
@@ -139,5 +151,45 @@ internal class StartRepositoryBase(
             errorLog { "Error ${it.message}" }
             emptyList()
         })
+    }
+
+    override suspend fun membersFilters(startId: Int): Result<FiltersRemote> =
+        retryRunCatchingAsync {
+            val cloudFilters = startService.filters(startId)
+            mapToDomainFilters(cloudFilters)
+        }
+
+    override fun pagingMembers(
+        startId: Int,
+        params: StartMembersPagingParams,
+    ): Flow<PagingData<Pair<StartMembersUi, Int>>> {
+        val pagingConfig = PagingConfig(
+            pageSize = START_MEMBERS_ITEMS_PAGE_SIZE,
+            initialLoadSize = START_MEMBERS_ITEMS_PAGE_SIZE,
+        )
+        val pagingSource = StartMembersPagingSource(
+            startId = startId,
+            startNetworkApi = startService,
+            params = params
+        )
+        val pager: Pager<Int, StartMember> = run {
+            Pager(pagingConfig, null) { pagingSource }
+        }
+        return pager.flow.map { pagingData ->
+            pagingData.map { item ->
+                val item = StartMembersNewToUiMapper().map(item)
+                Pair(item, pagingSource.getTotalCount())
+            }
+        }
+    }
+
+    private fun mapToDomainFilters(cloudFilters: CloudFiltersRemote): FiltersRemote {
+        return FiltersRemote(
+            cities = cloudFilters.cities.map { FilterItem(it.value, it.count) },
+            distances = cloudFilters.distances.map { FilterItem(it.value, it.count, it.id) },
+            genders = cloudFilters.genders.map { FilterItem(it.value, it.count) },
+            groups = cloudFilters.groups.map { FilterItem(it.value, it.count, it.id) },
+            teams = cloudFilters.teams.map { FilterItem(it.value, it.count) }
+        )
     }
 }

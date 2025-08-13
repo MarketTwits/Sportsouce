@@ -11,6 +11,8 @@ class ShopCatalogPagingSource(
     private val params: ShopCatalogParams,
     ) : OffsetAndLimitPagingSourceNew<Product>(SHOP_ITEMS_PAGE_SIZE) {
 
+    override suspend fun getTotalCount(): Int = 0
+
     override suspend fun load(offset: Int, limit: Int): List<Product> {
         return when (params) {
             is ShopCatalogParams.WithFilter -> shopApi.products(

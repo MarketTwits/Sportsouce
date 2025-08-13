@@ -21,6 +21,7 @@ kotlin {
         implementation(projects.components.core.cache)
         implementation(projects.components.core.decompose)
         implementation(projects.components.core.errors)
+        implementation(projects.components.core.paging)
         implementation(projects.components.bottombar)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)

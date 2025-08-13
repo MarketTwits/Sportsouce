@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory

@@ -17,7 +17,7 @@ import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersTo
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 internal class StartRemoteToUiMapperBase(
@@ -30,7 +30,7 @@ internal class StartRemoteToUiMapperBase(
 ) : StartRemoteToUiMapper {
     override fun map(
         startRemote: StartRemote,
-        startMember: List<StartMember>,
+        startMembers: List<StartMember>,
         startMemberResults: List<StartMemberResult>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,
@@ -55,7 +55,6 @@ internal class StartRemoteToUiMapperBase(
                     description = startRemote.description ?: "",
                     paymentDisabled = startRemote.paymentDisabled ?: false,
                     organizers = startRemote.organizers,
-                    membersUi = StartMembersNewToUiMapper().map(startMember),
                     commentsRemote = commentsMapper.map(commentsRemote),
                     conditionFile = if (startRemote.conditionFile != null) {
                         StartItem.ConditionFile.Base(startRemote.conditionFile?.fullPath ?: "")
@@ -89,7 +88,8 @@ internal class StartRemoteToUiMapperBase(
                     ),
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
                     distanceMapNew = startRemote.distances,
-                    membersResults = membersResultsMapper.map(startMemberResults)
+                    membersResults = membersResultsMapper.map(startMemberResults),
+                    startMembersUi = StartMembersNewToUiMapper().map(startMembers)
                 )
             }
 
@@ -111,7 +111,6 @@ internal class StartRemoteToUiMapperBase(
                     description = startRemote.startData.description ?: "",
                     paymentDisabled = startRemote.startData.paymentDisabled ?: false,
                     organizers = startRemote.startData.organizers,
-                    membersUi = emptyList(),
                     commentsRemote = commentsMapper.map(commentsRemote),
                     conditionFile = if (startRemote.startData.conditionFile != null) {
                         StartItem.ConditionFile.Base(
@@ -148,6 +147,7 @@ internal class StartRemoteToUiMapperBase(
                     distanceInfoNew = emptyList(),
                     distanceMapNew = emptyList(),
                     membersResults = membersResultsMapper.map(startMemberResults),
+                    startMembersUi = StartMembersNewToUiMapper().map(startMembers),
                     slug = ""
                 )
             }

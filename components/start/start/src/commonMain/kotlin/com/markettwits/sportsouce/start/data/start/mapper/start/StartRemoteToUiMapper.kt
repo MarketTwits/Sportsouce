@@ -7,14 +7,14 @@ import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 interface StartRemoteToUiMapper {
 
     fun map(
         startRemote: StartRemote,
-        startMember: List<StartMember>,
+        startMembers: List<StartMember>,
         startMemberResults : List<StartMemberResult>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,

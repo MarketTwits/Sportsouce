@@ -3,7 +3,7 @@ package com.markettwits.sportsouce.start.domain
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
-import com.markettwits.sportsouce.start.presentation.membres.list.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 data class StartItem(
@@ -12,6 +12,7 @@ data class StartItem(
     val startPlace: String,
     val slug : String,
     val image: String,
+    val startMembersUi: List<StartMembersUi>,
     val startStatus: StartStatus,
     val startData: String,
     val startAlbum: List<Album>,
@@ -23,7 +24,6 @@ data class StartItem(
     val distanceMapNew : List<Distance>,
     val paymentType: String,
     val organizers: List<Organizer>,
-    val membersUi: List<StartMembersUi>,
     val membersResults : List<MemberResult>,
     val conditionFile: ConditionFile,
     val commentsRemote: Comments,

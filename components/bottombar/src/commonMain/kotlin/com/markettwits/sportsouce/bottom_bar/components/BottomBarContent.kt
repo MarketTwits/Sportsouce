@@ -30,7 +30,7 @@ internal fun BottomBarContent(
     items: List<BottomNavigationItem>,
     selectedTab: BottomBarConfiguration,
     onClickTab: (BottomBarConfiguration) -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val state = rememberNavigationSuiteScaffoldState()
 

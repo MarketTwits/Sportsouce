@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class StartScreenComponentComponentBase(
     componentContext: ComponentContext,
-    private val startId: Int,
+    private val input: StartScreenInput,
     private val back: () -> Unit,
     private val registerNew: (StartDistancesInput) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
@@ -28,7 +28,7 @@ class StartScreenComponentComponentBase(
 ) : ComponentContext by componentContext, StartScreenComponent {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(startId)
+        storeFactory.create(input)
     }
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -44,7 +44,7 @@ class StartScreenComponentComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartScreenStore.Label.OnClickBack -> back()
-                    is StartScreenStore.Label.OnClickMembers -> members(startId, it.members)
+                    is StartScreenStore.Label.OnClickMembers -> members(it.startId, it.members)
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
                     is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.membersResult)
                     is StartScreenStore.Label.OnClickDistanceNew -> registerNew(

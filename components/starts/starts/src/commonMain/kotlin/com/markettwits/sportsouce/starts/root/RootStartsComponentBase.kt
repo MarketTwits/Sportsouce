@@ -7,14 +7,17 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.settings.root.RootSettingsComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponentBase
 import com.markettwits.sportsouce.starts.starts.di.startsModule
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsScreenComponent
 
 class RootStartsComponentBase(
-    private val componentContext: ComponentContext
+    private val componentContext: ComponentContext,
+    private val deeplink: Deeplink.Starts? = null
 ) : RootStartsComponent, ComponentContext by componentContext {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -30,10 +33,63 @@ class RootStartsComponentBase(
     override val configStack = childStack(
         source = navigation,
         serializer = RootStartsComponent.Config.serializer(),
-        initialConfiguration = RootStartsComponent.Config.Starts,
+        initialStack = { getInitialStack() },
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    private fun getInitialStack(): List<RootStartsComponent.Config> {
+        return when (deeplink) {
+            is Deeplink.Starts.StartDetail -> {
+                val startId = when {
+                    deeplink.startId != null -> deeplink.startId.toString()
+                    deeplink.startSlug != null -> deeplink.startSlug
+                    else -> null
+                }
+                if (startId != null) {
+                    // Create navigation stack: Starts -> Start(startId)
+                    listOf(
+                        RootStartsComponent.Config.Starts,
+                        RootStartsComponent.Config.Start(startId)
+                    )
+                } else {
+                    listOf(RootStartsComponent.Config.Starts)
+                }
+            }
+
+            is Deeplink.Starts.StartsList -> listOf(RootStartsComponent.Config.Starts)
+            null -> listOf(RootStartsComponent.Config.Starts)
+        }
+    }
+
+
+    override fun handleDeeplink(deeplink: Deeplink.Starts) {
+        when (deeplink) {
+            is Deeplink.Starts.StartDetail -> {
+                val startId = when {
+                    deeplink.startId != null -> deeplink.startId.toString()
+                    deeplink.startSlug != null -> deeplink.startSlug
+                    else -> null
+                }
+                if (startId != null) {
+                    navigation.pushNew(RootStartsComponent.Config.Start(startId))
+                }
+            }
+
+            is Deeplink.Starts.StartsList -> {
+                // Already at starts list, no action needed
+            }
+        }
+    }
+
+    private fun createStartScreenInput(startId: String): StartScreenInput {
+        val numericId = startId.toIntOrNull()
+        return if (numericId != null) {
+            StartScreenInput.Id(numericId)
+        } else {
+            StartScreenInput.Slug(startId)
+        }
+    }
 
     private fun child(
         config: RootStartsComponent.Config,
@@ -43,7 +99,7 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Start -> RootStartsComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    startId = config.startId,
+                    input = createStartScreenInput(config.startId),
                     pop = navigation::pop
                 )
             )
@@ -54,7 +110,7 @@ class RootStartsComponentBase(
                         componentContext = componentContext,
                         dataSource = scope.get(),
                         toDetail = {
-                            navigation.pushNew(RootStartsComponent.Config.Start(it))
+                            navigation.pushNew(RootStartsComponent.Config.Start(it.toString()))
                         },
                         toSearch = {
                             navigation.pushNew(RootStartsComponent.Config.Search)
@@ -68,7 +124,8 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Search -> RootStartsComponent.Child.Search(
                 RootStartsSearchComponentBase(
                     context = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    deeplink = deeplink
                 )
             )
 

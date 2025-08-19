@@ -1,12 +1,7 @@
 package com.markettwits.sportsouce.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -20,6 +15,7 @@ import com.markettwits.sportsouce.start.presentation.membres.component.StartMemb
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
 import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
 import com.markettwits.sportsouce.start.support.di.startSupportModule
@@ -27,9 +23,15 @@ import com.markettwits.sportsouce.start.support.presentation.component.StartSupp
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
-    private val startId: Int,
+    private val input: StartScreenInput,
     private val pop: () -> Unit,
 ) : RootStartScreenComponent, ComponentContext by context {
+
+    // Extract startId for cases where we need the actual ID
+    private val startId: String = when (input) {
+        is StartScreenInput.Id -> input.startId.toString()
+        is StartScreenInput.Slug -> input.slug
+    }
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext(false)
@@ -58,7 +60,7 @@ class RootStartScreenComponentBase(
             is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
                 component = StartScreenComponentComponentBase(
                     componentContext = componentContext,
-                    startId = config.startId,
+                    input = input,
                     back = {
                         if (config.index == 0) {
                             pop()
@@ -86,7 +88,7 @@ class RootStartScreenComponentBase(
                     pushStart = {
                         navigation.pushNew(
                             RootStartScreenComponent.Config.Start(
-                                it,
+                                startId,
                                 config.index + 1
                             )
                         )
@@ -94,7 +96,7 @@ class RootStartScreenComponentBase(
                 ),
                 commentsComponent = StartCommentsComponentBase(
                     context = componentContext,
-                    startId = config.startId,
+                    startId = config.startId.toIntOrNull() ?: 0,
                     storeFactory = StartCommentsStoreFactory(
                         storeFactory = DefaultStoreFactory(),
                         service = scope.get(),
@@ -103,7 +105,7 @@ class RootStartScreenComponentBase(
                 supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    startId = config.startId
+                    startId = config.startId.toIntOrNull() ?: 0
                 )
             )
 

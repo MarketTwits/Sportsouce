@@ -23,6 +23,7 @@ kotlin {
         implementation(projects.components.core.errors)
         implementation(projects.components.core.paging)
         implementation(projects.components.bottombar)
+        implementation(projects.components.deeplink.api)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)

@@ -1,11 +1,7 @@
 package com.markettwits.sportsouce.starts.popular.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -35,6 +31,19 @@ class RootStartsPopularComponentBase(
         childFactory = ::child,
     )
 
+    private fun createStartScreenInput(startId: String): com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput {
+        // Check if startId is numeric or slug
+        val numericId = startId.toIntOrNull()
+
+        return if (numericId != null) {
+            // startId is numeric, use as ID
+            com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(numericId)
+        } else {
+            // startId is not numeric, treat as slug
+            com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Slug(startId)
+        }
+    }
+
     private fun child(
         config: RootStartsPopularComponent.Config,
         componentContext: ComponentContext,
@@ -46,7 +55,7 @@ class RootStartsPopularComponentBase(
                     storeFactory = scope.get(),
                     pop = pop,
                     start = {
-                        navigation.pushNew(RootStartsPopularComponent.Config.Start(it))
+                        navigation.pushNew(RootStartsPopularComponent.Config.Start(it.toString()))
                     },
                 )
             )
@@ -54,7 +63,7 @@ class RootStartsPopularComponentBase(
             is RootStartsPopularComponent.Config.Start -> RootStartsPopularComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    startId = config.startId,
+                    input = createStartScreenInput(config.startId),
                     pop = navigation::pop
                 )
             )

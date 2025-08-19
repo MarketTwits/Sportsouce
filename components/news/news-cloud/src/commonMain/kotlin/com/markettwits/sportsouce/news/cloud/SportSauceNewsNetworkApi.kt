@@ -6,9 +6,9 @@ import com.markettwits.sportsouce.news.cloud.model.categories.NetworkCategory
 import com.markettwits.sportsouce.news.cloud.model.hashtags.NetworkHashtag
 import com.markettwits.sportsouce.news.cloud.model.hashtags.NetworkHashtags
 import com.markettwits.sportsouce.news.cloud.model.news.NetworkNews
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
+import com.markettwits.sportsouce.news.cloud.model.news.NetworkNewsItem
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 class SportSauceNewsNetworkApi(
     httpClient: HttpClientProvider,
@@ -16,6 +16,8 @@ class SportSauceNewsNetworkApi(
     private val json = httpClient.json()
 
     private val client = httpClient.provide()
+
+    suspend fun news(newsId: String) = client.get("news/$newsId").body<NetworkNewsItem>()
 
     suspend fun news(limit: Int = 10, offset: Int = 0): NetworkNews {
         val response = client.get("news") {

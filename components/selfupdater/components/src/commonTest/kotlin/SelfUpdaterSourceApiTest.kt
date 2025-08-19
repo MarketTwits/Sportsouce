@@ -1,5 +1,5 @@
-import com.flipperdevices.selfupdater.impl.api.SelfUpdaterApiImpl
-import com.flipperdevices.selfupdater.models.SelfUpdateResult
+import com.markettwits.selfupdater.impl.api.SelfUpdaterApiImpl
+import com.markettwits.selfupdater.models.SelfUpdateResult
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationListener
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
 import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification

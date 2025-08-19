@@ -20,11 +20,10 @@ import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
-import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Intent
-import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
+import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label.*
-import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.State
-import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory.Msg.*
+import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory.Msg.TriggerEvent
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.launch
 
@@ -56,7 +55,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
     )
 
     sealed interface Label {
-        data class OnClickMembers(val members: List<StartMembersUi>) : Label
+        data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
         data class OnClickMembersResult(val membersResult: List<MemberResult>) : Label
         data class OnClickDistanceNew(
             val startId: Int,
@@ -79,12 +78,12 @@ class StartScreenStoreFactory(
     private val exceptionTracker: ExceptionTracker,
     private val intentAction: IntentAction
 ) {
-    fun create(startID: Int): StartScreenStore =
+    fun create(input: StartScreenInput): StartScreenStore =
         object : StartScreenStore, Store<Intent, State, Label> by storeFactory.create(
             name = "StartScreenStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { ExecutorImpl(startID, exceptionTracker, intentAction) },
+            executorFactory = { ExecutorImpl(input, exceptionTracker, intentAction) },
             reducer = ReducerImpl
         ) {}
 
@@ -98,7 +97,7 @@ class StartScreenStoreFactory(
     }
 
     private inner class ExecutorImpl(
-        private val startId: Int,
+        private val startId: StartScreenInput,
         private val exceptionTracker: ExceptionTracker,
         private val intentAction: IntentAction
     ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>(), LogTagProvider {
@@ -107,8 +106,12 @@ class StartScreenStoreFactory(
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
-                is Intent.OnClickBack -> publish(Label.OnClickBack)
-                is Intent.OnClickMembers -> publish(OnClickMembers(intent.members))
+                is Intent.OnClickBack -> publish(OnClickBack)
+                is Intent.OnClickMembers -> {
+                    state().startItem?.let { startItem ->
+                        publish(OnClickMembers(startItem.id, intent.members))
+                    }
+                }
                 is Intent.OnClickRetry -> launch(startId, true)
                 is Intent.OnClickFullAlbum -> {
                     val images =
@@ -129,7 +132,7 @@ class StartScreenStoreFactory(
                         if (value.distanceInfoNew.isNotEmpty() && value.startStatus.code == 3)
                             publish(
                                 OnClickDistanceNew(
-                                    startId = startId,
+                                    startId = state().startItem?.id ?: 0,
                                     startTitle = value.title,
                                     distanceInfo = value.distanceInfoNew,
                                     paymentDisabled = value.paymentDisabled,
@@ -154,10 +157,14 @@ class StartScreenStoreFactory(
             launch(startId = startId, false)
         }
 
-        private fun launch(startId: Int, relaunch: Boolean) {
+        private fun launch(startId: StartScreenInput, relaunch: Boolean) {
+            val startIdString = when (startId) {
+                is StartScreenInput.Id -> startId.startId.toString()
+                is StartScreenInput.Slug -> startId.slug
+            }
             scope.launch {
                 dispatch(Msg.Loading)
-                service.start(startId, relaunch).fold(
+                service.start(startIdString, relaunch).fold(
                     onFailure = {
                         if (!it.isNetworkConnectionError()) {
                             exceptionTracker.setKey(Pair("startId", startId.toString()))
@@ -172,7 +179,7 @@ class StartScreenStoreFactory(
                 )
             }
             scope.launch {
-                service.startsRecommended(startId).onSuccess {
+                service.startsRecommended(startIdString).onSuccess {
                     dispatch(Msg.StartsRecommendedSuccess(it))
                 }
             }
@@ -186,7 +193,7 @@ class StartScreenStoreFactory(
                 is Msg.StartInfoSuccess -> copy(startItem = msg.data, isLoading = false, error = null)
                 is Msg.Loading -> copy(isLoading = true, error = null)
                 is Msg.OnConsumedEvent -> copy(event = consumed())
-                is Msg.TriggerEvent -> copy(
+                is TriggerEvent -> copy(
                     event = triggered(
                         EventContent(
                             msg.status,

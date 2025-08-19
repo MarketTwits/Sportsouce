@@ -1,8 +1,8 @@
 package com.markettwits.selfupdater.thirdparty.api
 
 import android.content.Context
-import com.flipperdevices.selfupdater.api.SelfUpdaterSourceApi
-import com.flipperdevices.selfupdater.googleplay.api.SelfUpdaterGooglePlay
+import com.markettwits.selfupdater.api.SelfUpdaterSourceApi
+import com.markettwits.selfupdater.googleplay.api.SelfUpdaterGooglePlay
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent
 

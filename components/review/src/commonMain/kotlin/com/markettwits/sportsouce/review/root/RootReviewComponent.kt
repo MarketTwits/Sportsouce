@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
+import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.root.RootClubComponent
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 import com.markettwits.sportsouce.news.common.model.NewsItem
@@ -22,6 +23,8 @@ import kotlinx.serialization.Serializable
 interface RootReviewComponent {
     val childStack: Value<ChildStack<*, Child>>
     val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<ConfigSlot, ChildSlot>>
+
+    fun handleDeeplink(deeplink: Deeplink.News)
 
     @Serializable
     sealed interface Config {
@@ -43,6 +46,9 @@ interface RootReviewComponent {
 
         @Serializable
         data class NewsEvent(val news: NewsItem) : Config
+
+        @Serializable
+        data class NewsEventById(val newsId: Int) : Config
 
         @Serializable
         data class Notification(val newAppVersion: NewAppVersion) : Config

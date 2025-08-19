@@ -6,6 +6,8 @@ import com.markettwits.sportsouce.news.common.model.NewsItem
 
 interface NewsRepository {
 
+    suspend fun newsItem(id: Int): Result<NewsItem>
+
     suspend fun news(): Result<List<NewsItem>>
 
     suspend fun categories(): Result<List<NewsCategory>>

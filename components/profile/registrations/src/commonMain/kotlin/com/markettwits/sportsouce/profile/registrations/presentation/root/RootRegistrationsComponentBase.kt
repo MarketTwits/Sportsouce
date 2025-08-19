@@ -46,7 +46,9 @@ class RootRegistrationsComponentBase(
             is RootRegistrationsComponent.ConfigStack.Start -> RootRegistrationsComponent.ChildStack.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    startId = configStack.startId,
+                    input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(
+                        configStack.startId
+                    ),
                     pop = stackNavigation::pop
                 )
             )

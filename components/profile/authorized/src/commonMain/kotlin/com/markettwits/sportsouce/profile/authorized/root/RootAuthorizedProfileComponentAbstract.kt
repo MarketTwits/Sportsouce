@@ -1,16 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.getOrCreateKoinScope
@@ -110,7 +102,7 @@ abstract class RootAuthorizedProfileComponentAbstract(
         is RootAuthorizedProfileComponent.Config.Start -> RootAuthorizedProfileComponent.Child.Start(
             RootStartScreenComponentBase(
                 context = componentContext,
-                startId = config.startId,
+                input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(config.startId),
                 pop = navigation::pop
             )
         )

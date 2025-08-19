@@ -9,9 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.Log
-import com.flipperdevices.selfupdater.api.SelfUpdaterSourceApi
-import com.flipperdevices.selfupdater.models.SelfUpdateResult
-import com.flipperdevices.selfupdater.models.SemVer
+import com.markettwits.selfupdater.api.SelfUpdaterSourceApi
+import com.markettwits.selfupdater.models.SelfUpdateResult
+import com.markettwits.selfupdater.models.SemVer
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
 import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 

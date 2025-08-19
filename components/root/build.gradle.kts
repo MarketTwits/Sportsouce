@@ -16,6 +16,7 @@ kotlin {
             implementation(projects.components.review)
             implementation(projects.components.core.ui)
             implementation(projects.components.core.koin)
+            implementation(projects.components.deeplink.api)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.koin.core)
         }

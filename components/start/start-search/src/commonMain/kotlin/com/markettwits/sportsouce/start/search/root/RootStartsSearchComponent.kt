@@ -17,7 +17,7 @@ interface RootStartsSearchComponent {
         data object Search : ConfigStack
 
         @Serializable
-        data class Start(val startId: Int) : ConfigStack
+        data class Start(val startId: String) : ConfigStack
 
 //        @Serializable
 //        data object Filter : ConfigStack

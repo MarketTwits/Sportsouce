@@ -1,13 +1,10 @@
 package com.markettwits.selfupdater.components.selft_update.store.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.flipperdevices.selfupdater.api.SelfUpdaterApi
-import com.flipperdevices.selfupdater.models.SelfUpdateResult
+import com.markettwits.selfupdater.api.SelfUpdaterApi
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
-import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStore.Intent
-import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStore.Label
-import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStore.Message
-import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStore.State
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStore.*
+import com.markettwits.selfupdater.models.SelfUpdateResult
 import kotlinx.coroutines.launch
 
 class SelfUpdateExecutor(private val selfUpdaterApi: SelfUpdaterApi) :

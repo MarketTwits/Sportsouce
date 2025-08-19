@@ -11,7 +11,6 @@ import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemot
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
 import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResultRows
 import com.markettwits.sportsouce.start.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
@@ -19,7 +18,7 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 
 interface SportSauceStartApi {
 
-    suspend fun start(startId: Int): StartRemote
+    suspend fun start(startId: String): StartRemote
 
     suspend fun kindOfSports() : KindOfSportRemote
 

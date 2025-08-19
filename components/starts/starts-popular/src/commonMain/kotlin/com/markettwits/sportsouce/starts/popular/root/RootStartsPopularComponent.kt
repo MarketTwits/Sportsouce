@@ -15,7 +15,7 @@ interface RootStartsPopularComponent {
         data object Popular : Config
 
         @Serializable
-        data class Start(val startId: Int) : Config
+        data class Start(val startId: String) : Config
     }
 
     sealed interface Child {

@@ -18,15 +18,9 @@ import com.markettwits.sportsouce.start.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbumRemote
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.client.request.parameter
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 internal class SportSauceStartApiBase(
     private val httpClient: HttpClientProvider
@@ -36,7 +30,7 @@ internal class SportSauceStartApiBase(
 
     private val client = httpClient.provide(true)
 
-    override suspend fun start(startId: Int): StartRemote {
+    override suspend fun start(startId: String): StartRemote {
         val response = client.get("start/$startId")
         return json.decodeFromString(response.body<String>())
     }

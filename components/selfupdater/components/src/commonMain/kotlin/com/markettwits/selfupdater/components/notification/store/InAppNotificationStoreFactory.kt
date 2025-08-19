@@ -3,7 +3,7 @@ package com.markettwits.selfupdater.components.notification.store
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.flipperdevices.selfupdater.api.SelfUpdaterApi
+import com.markettwits.selfupdater.api.SelfUpdaterApi
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Intent
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Label
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.State

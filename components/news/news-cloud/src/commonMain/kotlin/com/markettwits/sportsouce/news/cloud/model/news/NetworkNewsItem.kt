@@ -6,26 +6,26 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkNewsItem(
-    @SerialName("categoryId")
-    val categoryId: Int,
-    @SerialName("createdAt")
-    val createdAt: String,
-    @SerialName("full_description")
-    val fullDescription: String,
-    @SerialName("hashtags")
-    val hashtags: List<NetworkHashtag>,
     @SerialName("id")
     val id: Int,
+    @SerialName("categoryId")
+    val categoryId: Int? = null,
+    @SerialName("createdAt")
+    val createdAt: String? = null,
+    @SerialName("full_description")
+    val fullDescription: String? = null,
+    @SerialName("hashtags")
+    val hashtags: List<NetworkHashtag>? = null,
     @SerialName("images")
-    val images: List<NetworkImage>,
+    val images: List<NetworkImage>? = null,
     @SerialName("main_image")
-    val mainImage: NetworkImage?,
+    val mainImage: NetworkImage? = null,
     @SerialName("short_description")
-    val shortDescription: String,
+    val shortDescription: String? = null,
     @SerialName("title")
-    val title: String,
+    val title: String? = null,
     @SerialName("updatedAt")
-    val updatedAt: String,
+    val updatedAt: String? = null,
     @SerialName("viewsCount")
-    val viewsCount: Int
+    val viewsCount: Int? = null
 )

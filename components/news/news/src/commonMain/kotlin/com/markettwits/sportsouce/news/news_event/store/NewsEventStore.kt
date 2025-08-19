@@ -10,10 +10,13 @@ interface NewsEventStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Pop : Intent
+        data object Retry : Intent
     }
 
     data class State(
-        val news: NewsItem
+        val isLoading: Boolean = false,
+        val news: NewsItem? = null,
+        val error: Throwable? = null
     )
 
     sealed interface Label {

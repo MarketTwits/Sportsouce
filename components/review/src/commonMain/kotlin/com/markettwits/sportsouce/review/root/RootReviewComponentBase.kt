@@ -4,11 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -16,9 +12,11 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
+import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.root.RootClubComponentBase
 import com.markettwits.sportsouce.news.di.newsModule
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBase
+import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
 import com.markettwits.sportsouce.review.review.di.reviewModule
@@ -33,7 +31,10 @@ import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponent
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponentBase
 
 
-class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
+class RootReviewComponentBase(
+    context: ComponentContext,
+    private val deeplink: Deeplink.News? = null
+) : RootReviewComponent,
     ComponentContext by context {
 
     private val navigation = StackNavigation<RootReviewComponent.Config>()
@@ -56,10 +57,34 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
         source = navigation,
         serializer = RootReviewComponent.Config.serializer(),
-        initialConfiguration = RootReviewComponent.Config.Review,
+        initialStack = { getInitialStack() },
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    private fun getInitialStack(): List<RootReviewComponent.Config> {
+        return when (deeplink) {
+            is Deeplink.News.NewsDetail -> {
+                // Create navigation stack: Review -> NewsEventById
+                // This ensures users can navigate back from news detail to the main review screen
+                listOf(
+                    RootReviewComponent.Config.Review,
+                    RootReviewComponent.Config.NewsEventById(deeplink.newsId)
+                )
+            }
+
+            null -> listOf(RootReviewComponent.Config.Review)
+        }
+    }
+
+    override fun handleDeeplink(deeplink: Deeplink.News) {
+        when (deeplink) {
+            is Deeplink.News.NewsDetail -> {
+                navigation.pushNew(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
+            }
+        }
+    }
+
     override val childSlot: Value<ChildSlot<RootReviewComponent.ConfigSlot, RootReviewComponent.ChildSlot>> =
         childSlot(
             source = slotNavigation,
@@ -106,8 +131,8 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
 
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
                 RootStartScreenComponentBase(
-                    componentContext,
-                    startId = config.startId,
+                    context = componentContext,
+                    input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(config.startId),
                     pop = navigation::pop
                 )
             )
@@ -138,8 +163,23 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             is RootReviewComponent.Config.NewsEvent -> RootReviewComponent.Child.NewsEvent(
                 NewsEventComponentBase(
                     context = componentContext,
-                    item = config.news,
-                    storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
+                    input = NewsEventInput.Item(config.news),
+                    storeFactory = NewsEventStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        newsRepository = scope.get()
+                    ),
+                    onBack = navigation::pop
+                )
+            )
+
+            is RootReviewComponent.Config.NewsEventById -> RootReviewComponent.Child.NewsEvent(
+                NewsEventComponentBase(
+                    context = componentContext,
+                    input = NewsEventInput.Id(config.newsId),
+                    storeFactory = NewsEventStoreFactory(
+                        storeFactory = DefaultStoreFactory(),
+                        newsRepository = scope.get()
+                    ),
                     onBack = navigation::pop
                 )
             )

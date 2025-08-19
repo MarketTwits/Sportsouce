@@ -13,6 +13,7 @@ kotlin {
             implementation(projects.components.core.ui)
             implementation(projects.components.core.koin)
             implementation(projects.components.core.errors)
+            implementation(projects.components.deeplink.api)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
             implementation(projects.components.starts.startsCommon)

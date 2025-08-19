@@ -11,6 +11,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentBase
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentHandle
 import com.markettwits.sportsouce.bottom_bar.di.bottomBarModule
@@ -21,6 +22,7 @@ import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
 
 class RootComponentBase(
     componentContext: ComponentContext,
+    private val deeplink: Deeplink.SportSauce? = null
 ) : ComponentContext by componentContext, RootComponent {
 
     private val scope = instanceKeeper.getOrCreate {
@@ -34,9 +36,18 @@ class RootComponentBase(
     override val childStack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = stackNavigation,
         serializer = RootComponent.Configuration.serializer(),
-        initialStack = { listOf(RootComponent.Configuration.Review) },
+        initialStack = { getInitialStack() },
         childFactory = ::createChild,
     )
+
+    private fun getInitialStack(): List<RootComponent.Configuration> {
+        return when (deeplink) {
+            is Deeplink.Starts.StartsList -> listOf(RootComponent.Configuration.Starts)
+            is Deeplink.Starts.StartDetail -> listOf(RootComponent.Configuration.Starts)
+            is Deeplink.News.NewsDetail -> listOf(RootComponent.Configuration.Review)
+            null -> listOf(RootComponent.Configuration.Review)
+        }
+    }
 
     override val slotChild: Value<ChildSlot<*, RootComponent.Navigation>> = childSlot(
         source = slotNavigation,
@@ -52,7 +63,8 @@ class RootComponentBase(
         when (configuration) {
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
-                    componentContext = componentContext
+                    componentContext = componentContext,
+                    deeplink = if (isInitialCreation()) deeplink as? Deeplink.Starts else null
                 )
             )
 
@@ -64,10 +76,53 @@ class RootComponentBase(
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 RootReviewComponentBase(
-                    context = componentContext
+                    context = componentContext,
+                    deeplink = if (isInitialCreation()) deeplink as? Deeplink.News else null
                 )
             )
         }
+
+    private fun isInitialCreation(): Boolean {
+        // Check if this is the initial creation (childStack is empty or not yet initialized)
+        return try {
+            childStack.value.items.isEmpty()
+        } catch (e: Exception) {
+            true // If childStack is not yet initialized, this is initial creation
+        }
+    }
+
+    /**
+     * Handle deeplink navigation without recreating the component
+     */
+    fun handleDeeplink(deeplink: Deeplink.SportSauce) {
+        val targetConfiguration = when (deeplink) {
+            is Deeplink.Starts.StartsList -> RootComponent.Configuration.Starts
+            is Deeplink.Starts.StartDetail -> RootComponent.Configuration.Starts
+            is Deeplink.News.NewsDetail -> RootComponent.Configuration.Review
+        }
+
+        // Navigate to the target configuration without recreating the component
+        stackNavigation.bringToFront(targetConfiguration)
+
+        // Pass the deeplink to the child component for further navigation
+        when (deeplink) {
+            is Deeplink.Starts -> {
+                // Get the current starts component and handle the deeplink
+                val currentChild = childStack.value.active.instance
+                if (currentChild is RootComponent.Child.Starts) {
+                    currentChild.component.handleDeeplink(deeplink)
+                }
+            }
+
+            is Deeplink.News -> {
+                // Get the current review component and handle the deeplink
+                val currentChild = childStack.value.active.instance
+                if (currentChild is RootComponent.Child.Review) {
+                    currentChild.component.handleDeeplink(deeplink)
+                }
+            }
+        }
+    }
 
     private fun createBottomBar(
         configuration: RootComponent.SlotConfiguration,

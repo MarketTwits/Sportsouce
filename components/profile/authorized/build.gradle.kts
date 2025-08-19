@@ -17,6 +17,7 @@ kotlin {
         implementation(projects.components.core.koin)
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
+        implementation(projects.components.deeplink.api)
 
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.composable)

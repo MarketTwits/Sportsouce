@@ -6,6 +6,10 @@ import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
 import com.markettwits.crashlitics.configuration.AnalyticsConfiguration
 import com.markettwits.crashlitics.configuration.AnalyticsConfigurationBase
+import com.markettwits.initKoin
+import com.markettwits.sportsauce.deeplink.impl.di.deepLinkModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext
 
 class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigurationBase() {
 
@@ -14,5 +18,17 @@ class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigur
         CurrentActivityHolder.register(this)
         InStorageCacheDirectory.path = cacheDir.path
         InStorageFileDirectory.path = filesDir.path
+
+        if (GlobalContext.getOrNull() == null) {
+            try {
+                initKoin(
+                    modules = listOf(deepLinkModule)
+                ) {
+                    androidContext(this@SportSouceApp)
+                }
+            } catch (_: Exception) {
+                // Koin already started, continue
+            }
+        }
     }
 }

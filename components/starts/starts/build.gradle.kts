@@ -17,6 +17,7 @@ kotlin {
         implementation(projects.components.start.startSearch)
         implementation(projects.components.core.ui)
         implementation(projects.components.starts.startsCommon)
+        implementation(projects.components.deeplink.api)
         implementation(libs.koin.core)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.kotlinx.serialization.json)

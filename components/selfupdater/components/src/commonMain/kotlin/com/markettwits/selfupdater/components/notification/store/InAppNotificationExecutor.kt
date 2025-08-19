@@ -1,7 +1,7 @@
 package com.markettwits.selfupdater.components.notification.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.flipperdevices.selfupdater.api.SelfUpdaterApi
+import com.markettwits.selfupdater.api.SelfUpdaterApi
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Intent
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore.Label

@@ -6,6 +6,7 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterComponentBase
 import com.markettwits.sportsouce.start.search.root.di.rootStartsSearchModule
@@ -16,7 +17,6 @@ import com.markettwits.sportsouce.start.search.search.presentation.store.StartsS
 class RootStartsSearchComponentBase(
     context: ComponentContext,
     private val pop: () -> Unit,
-    private val deeplink: com.markettwits.sportsauce.deeplink.model.Deeplink.SportSauce? = null
 ) : RootStartsSearchComponent,
     ComponentContext by context {
     private val stackNavigation = StackNavigation<RootStartsSearchComponent.ConfigStack>()
@@ -44,19 +44,6 @@ class RootStartsSearchComponentBase(
         childFactory = ::childSlot
     )
 
-    private fun createStartScreenInput(startId: String): com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput {
-        // Check if startId is numeric or slug
-        val numericId = startId.toIntOrNull()
-
-        return if (numericId != null) {
-            // startId is numeric, use as ID
-            com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(numericId)
-        } else {
-            // startId is not numeric, treat as slug
-            com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Slug(startId)
-        }
-    }
-
     private fun child(
         config: RootStartsSearchComponent.ConfigStack,
         componentContext: ComponentContext,
@@ -65,7 +52,7 @@ class RootStartsSearchComponentBase(
             is RootStartsSearchComponent.ConfigStack.Start -> RootStartsSearchComponent.ChildStack.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    input = createStartScreenInput(config.startId),
+                    input = StartScreenInput.Item(config.startItem),
                     pop = stackNavigation::pop
                 )
             )
@@ -79,7 +66,7 @@ class RootStartsSearchComponentBase(
                         slotNavigation.activate(RootStartsSearchComponent.ConfigSlot.Filter(it))
                     },
                     start = {
-                        stackNavigation.pushNew(RootStartsSearchComponent.ConfigStack.Start(it.toString()))
+                        stackNavigation.pushNew(RootStartsSearchComponent.ConfigStack.Start(it))
                     }
                 )
             )

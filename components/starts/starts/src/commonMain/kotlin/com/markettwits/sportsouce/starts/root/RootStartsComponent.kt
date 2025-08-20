@@ -6,6 +6,7 @@ import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.start.root.RootStartScreenComponent
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsScreenComponent
 import kotlinx.serialization.Serializable
 
@@ -18,7 +19,7 @@ interface RootStartsComponent {
     @Serializable
     sealed class Config {
         @Serializable
-        data class Start(val startId: String) : Config()
+        data class Start(val startItem: StartsListItem? = null, val startId: String) : Config()
 
         @Serializable
         data object Starts : Config()

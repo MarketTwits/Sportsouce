@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.start.root.RootStartScreenComponent
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterComponent
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.presentation.component.StartsSearchComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.serialization.Serializable
 
 interface RootStartsSearchComponent {
@@ -17,16 +18,13 @@ interface RootStartsSearchComponent {
         data object Search : ConfigStack
 
         @Serializable
-        data class Start(val startId: String) : ConfigStack
+        data class Start(val startItem: StartsListItem) : ConfigStack
 
-//        @Serializable
-//        data object Filter : ConfigStack
     }
 
     sealed class ChildStack {
         data class Start(val component: RootStartScreenComponent) : ChildStack()
 
-        //data class Filter(val component: RootStartFilterComponent) : ChildStack()
         data class Search(val component: StartsSearchComponent) : ChildStack()
     }
 

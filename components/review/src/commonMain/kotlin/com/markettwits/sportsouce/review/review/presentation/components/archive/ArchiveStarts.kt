@@ -16,7 +16,7 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 @Composable
 fun ArchiveStarts(
     modifier: Modifier = Modifier, starts: List<StartsListItem>,
-    onClick: (Int) -> Unit
+    onClick: (StartsListItem) -> Unit,
 ) {
     Text(
         modifier = modifier.padding(horizontal = 10.dp),
@@ -26,10 +26,10 @@ fun ArchiveStarts(
         fontSize = 18.sp
     )
     LazyRow(modifier = modifier) {
-        items(starts, key = { it.id }) {
+        items(starts, key = { it.id }) { item ->
             StartCardSimple(
-                start = it, onItemClick = {
-                    onClick(it)
+                start = item, onItemClick = {
+                    onClick(item)
                 })
         }
     }

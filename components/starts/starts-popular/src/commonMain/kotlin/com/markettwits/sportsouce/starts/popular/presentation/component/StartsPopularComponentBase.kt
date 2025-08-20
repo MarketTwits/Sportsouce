@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore
 import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,7 @@ internal class StartsPopularComponentBase(
     context: ComponentContext,
     private val storeFactory: StartsPopularStoreFactory,
     private val pop: () -> Unit,
-    private val start: (Int) -> Unit
+    private val start: (StartsListItem) -> Unit,
 ) : StartsPopularComponent, ComponentContext by context {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -38,7 +39,7 @@ internal class StartsPopularComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartsPopularStore.Label.OnClickBack -> pop()
-                    is StartsPopularStore.Label.OnClickStart -> start(it.id)
+                    is StartsPopularStore.Label.OnClickStart -> start(it.startItem)
                 }
             }
         }

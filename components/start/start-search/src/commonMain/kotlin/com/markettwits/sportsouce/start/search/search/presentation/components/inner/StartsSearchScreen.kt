@@ -85,9 +85,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
             } else {
                 SearchResultColumn(
                     starts = state.starts,
-                    onClickStart = { startId, startTitle ->
+                    onClickStart = { startItem, startTitle ->
                         component.obtainEvent(
-                            StartsSearchStore.Intent.OnClickStart(startId, startTitle)
+                            StartsSearchStore.Intent.OnClickStart(startItem)
                         )
                     }
                 )

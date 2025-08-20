@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import com.markettwits.sportsouce.starts.common.presentation.StartCard
+import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
 
 @Composable
 fun ActualStarts(
     modifier: Modifier = Modifier,
     starts: List<StartsListItem>,
-    onClick: (Int) -> Unit
+    onClick: (StartsListItem) -> Unit,
 ) {
     Text(
         modifier = modifier.padding(horizontal = 10.dp),
@@ -33,7 +33,7 @@ fun ActualStarts(
         maxItemsInEachRow = if (isPortrait) 1 else 2
     ) {
         items.forEach { item ->
-            StartCard(
+            StartCardV2(
                 modifier = Modifier.weight(1f),
                 start = item, onItemClick = {
                     onClick(it)

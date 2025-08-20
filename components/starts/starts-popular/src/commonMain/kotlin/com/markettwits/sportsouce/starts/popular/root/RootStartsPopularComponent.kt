@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.starts.popular.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.start.root.RootStartScreenComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.presentation.component.StartsPopularComponent
 import kotlinx.serialization.Serializable
 
@@ -15,7 +16,7 @@ interface RootStartsPopularComponent {
         data object Popular : Config
 
         @Serializable
-        data class Start(val startId: String) : Config
+        data class Start(val startItem: StartsListItem) : Config
     }
 
     sealed interface Child {

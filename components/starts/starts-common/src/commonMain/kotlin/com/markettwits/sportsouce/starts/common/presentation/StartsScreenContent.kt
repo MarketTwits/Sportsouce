@@ -16,7 +16,7 @@ fun StartsScreenContent(
     modifier: Modifier = Modifier,
     items: List<StartsListItem>,
     isMaxWith: Boolean = false,
-    onClick: (Int) -> Unit
+    onClick: (StartsListItem) -> Unit,
 ) {
     if (isMaxWith) {
         val size = rememberScreenSizeInfo()
@@ -25,10 +25,10 @@ fun StartsScreenContent(
             columns = GridCells.Fixed(if (size.isPortrait()) 1 else 2)
         ) {
             items(items) {
-                StartCard(
+                StartCardV2(
                     modifier = Modifier,
                     start = it,
-                    onItemClick = { startId ->
+                    onItemClick = { startId: StartsListItem ->
                         onClick(startId)
                     }
                 )
@@ -37,10 +37,10 @@ fun StartsScreenContent(
     } else {
         LazyColumn(modifier) {
             items(items, key = { it.id }) {
-                StartCard(
+                StartCardV2(
                     modifier = Modifier.animateItem(fadeInSpec = tween(600)),
                     start = it,
-                    onItemClick = { startId ->
+                    onItemClick = { startId: StartsListItem ->
                         onClick(startId)
                     }
                 )

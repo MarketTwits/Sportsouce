@@ -16,6 +16,7 @@ import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponent
 import com.markettwits.sportsouce.start.root.RootStartScreenComponent
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponent
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponent
 import kotlinx.serialization.Serializable
@@ -25,6 +26,7 @@ interface RootReviewComponent {
     val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<ConfigSlot, ChildSlot>>
 
     fun handleDeeplink(deeplink: Deeplink.News)
+    fun handleDeeplink(deeplink: Deeplink.Clubs)
 
     @Serializable
     sealed interface Config {
@@ -33,7 +35,7 @@ interface RootReviewComponent {
         data object Review : Config
 
         @Serializable
-        data class Start(val startId: Int) : Config
+        data class Start(val startItem: StartsListItem) : Config
 
         @Serializable
         data object Random : Config

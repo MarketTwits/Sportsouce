@@ -6,10 +6,8 @@ import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.data.repository.StartsSearchRepository
 import com.markettwits.sportsouce.start.search.search.domain.StartsSearch
-import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.Intent
-import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.Label
-import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.Message
-import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.State
+import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.*
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -23,7 +21,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
             is Intent.OnClickBack -> publish(Label.OnClickBack)
             is Intent.OnClickBrushText -> onClickBrush(state())
             is Intent.OnClickFilter -> publish(Label.OnClickFilter(state().filter))
-            is Intent.OnClickStart -> onClickStart(intent.id, intent.startTitle)
+            is Intent.OnClickStart -> onClickStart(intent.startItem)
             is Intent.OnClickHistoryItem -> {
                 onValueChanged(state(), intent.value)
             }
@@ -54,10 +52,10 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
         }
     }
 
-    private fun onClickStart(startId: Int, startTitle: String) {
+    private fun onClickStart(startListItem: StartsListItem) {
         scope.launch {
-            repository.addToHistory(startTitle)
-            publish(Label.OnClickStart(startId))
+            repository.addToHistory(startListItem.name)
+            publish(Label.OnClickStart(startListItem))
         }
     }
 

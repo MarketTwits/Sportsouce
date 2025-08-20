@@ -9,11 +9,13 @@ data class StartsListItem(
     val image: String,
     val date: String,
     val statusCode: StatusCode,
+    val description: String,
+    val slug: String,
     val place: String,
     val onMainPage: Boolean,
     val distance: String,
     val kindOfSports: List<KindOfSport> = emptyList(),
-    val views: Int
+    val views: Int,
 ) {
     @Serializable
     data class StatusCode(val id: Int, val message: String)

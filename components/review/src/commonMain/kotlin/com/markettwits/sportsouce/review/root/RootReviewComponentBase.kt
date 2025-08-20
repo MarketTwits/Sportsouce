@@ -13,6 +13,8 @@ import com.markettwits.selfupdater.components.notification.component.InAppNotifi
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.sportsauce.deeplink.model.Deeplink
+import com.markettwits.sportsouce.club.dashboard.di.clubDashboardModule
+import com.markettwits.sportsouce.club.registration.di.workoutRegistrationModule
 import com.markettwits.sportsouce.club.root.RootClubComponentBase
 import com.markettwits.sportsouce.news.di.newsModule
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBase
@@ -25,6 +27,7 @@ import com.markettwits.sportsouce.review.root.di.reviewRootModule
 import com.markettwits.sportsouce.settings.root.RootSettingsComponentBase
 import com.markettwits.sportsouce.shop.catalog.di.shopCatalogModule
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponentBase
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponentBase
@@ -33,7 +36,8 @@ import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRando
 
 class RootReviewComponentBase(
     context: ComponentContext,
-    private val deeplink: Deeplink.News? = null
+    private val newsDeeplink: Deeplink.News? = null,
+    private val clubsDeeplink: Deeplink.Clubs? = null,
 ) : RootReviewComponent,
     ComponentContext by context {
 
@@ -50,7 +54,9 @@ class RootReviewComponentBase(
             newsModule,
             reviewModule,
             notificationModule,
-            shopCatalogModule
+            shopCatalogModule,
+            clubDashboardModule,
+            workoutRegistrationModule
         )
     )
 
@@ -63,24 +69,43 @@ class RootReviewComponentBase(
     )
 
     private fun getInitialStack(): List<RootReviewComponent.Config> {
-        return when (deeplink) {
-            is Deeplink.News.NewsDetail -> {
+        return when {
+            newsDeeplink is Deeplink.News.NewsDetail -> {
                 // Create navigation stack: Review -> NewsEventById
                 // This ensures users can navigate back from news detail to the main review screen
                 listOf(
                     RootReviewComponent.Config.Review,
-                    RootReviewComponent.Config.NewsEventById(deeplink.newsId)
+                    RootReviewComponent.Config.NewsEventById(newsDeeplink.newsId)
                 )
             }
 
-            null -> listOf(RootReviewComponent.Config.Review)
+            clubsDeeplink is Deeplink.Clubs.ClubsList -> {
+                // Create navigation stack: Review -> Club
+                // This ensures users can navigate back from club to the main review screen
+                listOf(
+                    RootReviewComponent.Config.Review,
+                    RootReviewComponent.Config.Club
+                )
+            }
+
+            else -> listOf(RootReviewComponent.Config.Review)
         }
     }
 
     override fun handleDeeplink(deeplink: Deeplink.News) {
         when (deeplink) {
             is Deeplink.News.NewsDetail -> {
-                navigation.pushNew(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
+                // Replace the entire stack with the target configuration to prevent accumulation
+                navigation.replaceAll(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
+            }
+        }
+    }
+
+    override fun handleDeeplink(deeplink: Deeplink.Clubs) {
+        when (deeplink) {
+            is Deeplink.Clubs.ClubsList -> {
+                // Replace the entire stack with the target configuration to prevent accumulation
+                navigation.replaceAll(RootReviewComponent.Config.Club)
             }
         }
     }
@@ -132,7 +157,7 @@ class RootReviewComponentBase(
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(config.startId),
+                    input = StartScreenInput.Item(config.startItem),
                     pop = navigation::pop
                 )
             )

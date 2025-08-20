@@ -9,6 +9,7 @@ import com.markettwits.sportsauce.deeplink.model.Deeplink
 private val SUPPORTED_HOSTS = listOf("sportsauce.ru")
 private const val STARTS_PATH = "starts"
 private const val NEWS_PATH = "news"
+private const val CLUBS_PATH = "clubs"
 
 class DeepLinkSportSauce : DeepLinkParserDelegate {
 
@@ -27,10 +28,10 @@ class DeepLinkSportSauce : DeepLinkParserDelegate {
         val pathSegments = intent.data?.pathSegments
             ?: return null
 
-        // Check if path starts with "starts" or "news"
+        // Check if path starts with "starts", "news", or "clubs"
         if (pathSegments.isNotEmpty()) {
             val firstPath = pathSegments.first()
-            if (firstPath == STARTS_PATH || firstPath == NEWS_PATH) {
+            if (firstPath == STARTS_PATH || firstPath == NEWS_PATH || firstPath == CLUBS_PATH) {
                 return DeepLinkParserDelegatePriority.HIGH
             }
         }
@@ -54,6 +55,7 @@ class DeepLinkSportSauce : DeepLinkParserDelegate {
         return when (firstPath) {
             STARTS_PATH -> handleStartsPath(pathSegments)
             NEWS_PATH -> handleNewsPath(pathSegments)
+            CLUBS_PATH -> handleClubsPath(pathSegments)
             else -> null
         }
     }
@@ -92,6 +94,15 @@ class DeepLinkSportSauce : DeepLinkParserDelegate {
             } else {
                 null
             }
+        }
+
+        return null
+    }
+
+    private fun handleClubsPath(pathSegments: List<String>): Deeplink? {
+        // /clubs - goes to clubs list
+        if (pathSegments.size == 1) {
+            return Deeplink.Clubs.ClubsList
         }
 
         return null

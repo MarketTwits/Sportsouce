@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.start.presentation.membres.models.StartMembers
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.sportsouce.start.register.root.RootStartRegister
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
@@ -18,19 +19,11 @@ interface RootStartScreenComponent {
 
     val childStack: Value<ChildStack<*, Child>>
 
-    sealed class Input {
-
-        data class Id(val startId: Int) : Input()
-
-        data class Slug(val slug: String) : Input()
-
-    }
-
     @Serializable
     sealed class Config {
 
         @Serializable
-        data class Start(val startId: String, val index: Int = 0) : Config()
+        data class Start(val startScreenInput: StartScreenInput, val index: Int = 0) : Config()
 
         @Serializable
         data class StartMembers(

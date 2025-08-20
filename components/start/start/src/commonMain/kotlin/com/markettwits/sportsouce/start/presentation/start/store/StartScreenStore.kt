@@ -18,6 +18,7 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.domain.StartRepository
+import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
@@ -52,9 +53,11 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
         val event: StateEventWithContent<EventContent> = consumed(),
+        val isPartialData: Boolean = false,
     )
 
     sealed interface Label {
+        data class OnApplyStartId(val startId: Int) : Label
         data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
         data class OnClickMembersResult(val membersResult: List<MemberResult>) : Label
         data class OnClickDistanceNew(
@@ -94,6 +97,7 @@ class StartScreenStoreFactory(
         data class StartInfoSuccess(val data: StartItem) : Msg
         data class StartInfoFailed(val exception: Throwable) : Msg
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
+        data class SetPartialStartItem(val data: StartItem) : Msg
     }
 
     private inner class ExecutorImpl(
@@ -148,12 +152,20 @@ class StartScreenStoreFactory(
 
                 is Intent.OnClickStartRecommended -> publish(OnClickStartRecommended(intent.startId))
                 is Intent.OnClickShare -> {
-                    intentAction.sharePlainText("https://sportsauce.ru/starts/$startId")
+                    val path = state().startItem?.let {
+                        it.slug.ifEmpty { it.id.toString() }
+                    }
+                    intentAction.sharePlainText("https://sportsauce.ru/starts/$path")
                 }
             }
         }
 
         override fun executeAction(action: Unit) {
+            // If input is StartsListItem, immediately show partial data
+            if (startId is StartScreenInput.Item) {
+                val partialStartItem = StartsListItemToStartItemMapper.mapToPartialStartItem(startId.item)
+                dispatch(Msg.SetPartialStartItem(partialStartItem))
+            }
             launch(startId = startId, false)
         }
 
@@ -161,7 +173,9 @@ class StartScreenStoreFactory(
             val startIdString = when (startId) {
                 is StartScreenInput.Id -> startId.startId.toString()
                 is StartScreenInput.Slug -> startId.slug
+                is StartScreenInput.Item -> startId.item.id.toString()
             }
+
             scope.launch {
                 dispatch(Msg.Loading)
                 service.start(startIdString, relaunch).fold(
@@ -174,6 +188,7 @@ class StartScreenStoreFactory(
                         dispatch(Msg.StartInfoFailed(it))
                     },
                     onSuccess = {
+                        publish(OnApplyStartId(it.id))
                         dispatch(Msg.StartInfoSuccess(it))
                     }
                 )
@@ -189,8 +204,13 @@ class StartScreenStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State =
             when (msg) {
-                is Msg.StartInfoFailed -> copy(isLoading = false, error = msg.exception)
-                is Msg.StartInfoSuccess -> copy(startItem = msg.data, isLoading = false, error = null)
+                is Msg.StartInfoFailed -> copy(isLoading = false, error = msg.exception, isPartialData = false)
+                is Msg.StartInfoSuccess -> copy(
+                    startItem = msg.data,
+                    isLoading = false,
+                    error = null,
+                    isPartialData = false
+                )
                 is Msg.Loading -> copy(isLoading = true, error = null)
                 is Msg.OnConsumedEvent -> copy(event = consumed())
                 is TriggerEvent -> copy(
@@ -202,6 +222,7 @@ class StartScreenStoreFactory(
                     )
                 )
                 is Msg.StartsRecommendedSuccess -> copy(startsRecommended = msg.data)
+                is Msg.SetPartialStartItem -> copy(startItem = msg.data, isPartialData = true, error = null)
             }
     }
 }

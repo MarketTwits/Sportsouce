@@ -18,14 +18,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import com.markettwits.sportsouce.starts.common.presentation.StartCard
+import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
 
 
 @Composable
 internal fun StartsPopularContent(
     modifier: Modifier = Modifier,
     items: List<StartsListItem>,
-    onClick: (Int) -> Unit
+    onClick: (StartsListItem) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -60,7 +60,7 @@ internal fun StartsPopularContent(
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
                     )
-                    StartCard(
+                    StartCardV2(
                         start = item,
                         onItemClick = { startId ->
                             onClick(startId)

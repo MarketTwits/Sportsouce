@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStoreFactory
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,7 +20,7 @@ class StartsSearchComponentBase(
     private val storeFactory: StartsSearchStoreFactory,
     private val back: () -> Unit,
     private val filter: (StartFilterUi) -> Unit,
-    private val start: (Int) -> Unit
+    private val start: (StartsListItem) -> Unit,
 ) : StartsSearchComponent,
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -41,7 +42,7 @@ class StartsSearchComponentBase(
                 when (it) {
                     is StartsSearchStore.Label.OnClickBack -> back()
                     is StartsSearchStore.Label.OnClickFilter -> filter(it.filter)
-                    is StartsSearchStore.Label.OnClickStart -> start(it.id)
+                    is StartsSearchStore.Label.OnClickStart -> start(it.startItem)
                 }
             }
         }

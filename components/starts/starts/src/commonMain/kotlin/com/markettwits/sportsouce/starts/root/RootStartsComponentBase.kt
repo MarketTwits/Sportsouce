@@ -1,10 +1,7 @@
 package com.markettwits.sportsouce.starts.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.sportsauce.deeplink.model.Deeplink
@@ -12,6 +9,7 @@ import com.markettwits.sportsouce.settings.root.RootSettingsComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponentBase
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.di.startsModule
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsScreenComponent
 
@@ -50,7 +48,7 @@ class RootStartsComponentBase(
                     // Create navigation stack: Starts -> Start(startId)
                     listOf(
                         RootStartsComponent.Config.Starts,
-                        RootStartsComponent.Config.Start(startId)
+                        RootStartsComponent.Config.Start(null, startId)
                     )
                 } else {
                     listOf(RootStartsComponent.Config.Starts)
@@ -72,17 +70,20 @@ class RootStartsComponentBase(
                     else -> null
                 }
                 if (startId != null) {
-                    navigation.pushNew(RootStartsComponent.Config.Start(startId))
+                    // Replace the entire stack with the target configuration to prevent accumulation
+                    navigation.replaceAll(RootStartsComponent.Config.Start(null, startId))
                 }
             }
 
             is Deeplink.Starts.StartsList -> {
-                // Already at starts list, no action needed
+                // Replace with clean starts list stack
+                navigation.replaceAll(RootStartsComponent.Config.Starts)
             }
         }
     }
 
-    private fun createStartScreenInput(startId: String): StartScreenInput {
+    private fun createStartScreenInput(startId: String, start: StartsListItem?): StartScreenInput {
+        if (start != null) return StartScreenInput.Item(start)
         val numericId = startId.toIntOrNull()
         return if (numericId != null) {
             StartScreenInput.Id(numericId)
@@ -99,7 +100,7 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Start -> RootStartsComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    input = createStartScreenInput(config.startId),
+                    input = createStartScreenInput(config.startId, config.startItem),
                     pop = navigation::pop
                 )
             )
@@ -110,7 +111,7 @@ class RootStartsComponentBase(
                         componentContext = componentContext,
                         dataSource = scope.get(),
                         toDetail = {
-                            navigation.pushNew(RootStartsComponent.Config.Start(it.toString()))
+                            navigation.pushNew(RootStartsComponent.Config.Start(it, it.name))
                         },
                         toSearch = {
                             navigation.pushNew(RootStartsComponent.Config.Search)
@@ -125,7 +126,6 @@ class RootStartsComponentBase(
                 RootStartsSearchComponentBase(
                     context = componentContext,
                     pop = navigation::pop,
-                    deeplink = deeplink
                 )
             )
 

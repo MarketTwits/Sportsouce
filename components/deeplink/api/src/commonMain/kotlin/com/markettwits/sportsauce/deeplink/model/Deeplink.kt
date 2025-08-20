@@ -29,4 +29,11 @@ sealed interface Deeplink {
             val newsId: Int
         ) : News
     }
+
+    // Clubs-specific deeplinks
+    @Serializable
+    sealed interface Clubs : SportSauce {
+        @Serializable
+        data object ClubsList : Clubs
+    }
 }

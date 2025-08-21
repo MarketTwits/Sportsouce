@@ -1,15 +1,13 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushNew
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
+import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponent.Config.Start
 
 internal fun handleAuthorizedProfileEvent(
     outPut: AuthorizedProfileComponent.Output,
     navigation: StackNavigation<RootAuthorizedProfileComponent.Config>,
-    slotNavigation: SlotNavigation<RootAuthorizedProfileComponent.SlotConfig>
 ) {
     when (outPut) {
         is AuthorizedProfileComponent.Output.EditProfile -> navigation.pushNew(
@@ -25,17 +23,11 @@ internal fun handleAuthorizedProfileEvent(
         )
 
         is AuthorizedProfileComponent.Output.Start -> navigation.pushNew(
-            RootAuthorizedProfileComponent.Config.Start(outPut.startId)
-        )
-
-        is AuthorizedProfileComponent.Output.StartOrder -> slotNavigation.activate(
-            RootAuthorizedProfileComponent.SlotConfig.StartOrder(
-                outPut.startOrderInfo
-            )
+            Start(outPut.startId)
         )
 
         is AuthorizedProfileComponent.Output.AllRegistries -> navigation.pushNew(
-            RootAuthorizedProfileComponent.Config.UserStarts
+            RootAuthorizedProfileComponent.Config.MyRegistries
         )
 
         is AuthorizedProfileComponent.Output.Members -> navigation.pushNew(
@@ -52,6 +44,10 @@ internal fun handleAuthorizedProfileEvent(
 
         is AuthorizedProfileComponent.Output.Club -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.Club
+        )
+
+        is AuthorizedProfileComponent.Output.StartOrder -> navigation.pushNew(
+            RootAuthorizedProfileComponent.Config.MyRegistries
         )
     }
 }

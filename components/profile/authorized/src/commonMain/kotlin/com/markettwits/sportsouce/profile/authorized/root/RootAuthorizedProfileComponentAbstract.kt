@@ -1,19 +1,17 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.*
-import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.sportsouce.club.root.RootClubComponentBase
 import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileComponentBase
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponentBase
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersComponentBase
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponentBase
-import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponentBase
-import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponentBase
 import com.markettwits.sportsouce.settings.root.RootSettingsComponentBase
 import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrdersComponent
@@ -31,16 +29,6 @@ abstract class RootAuthorizedProfileComponentAbstract(
 
     private val navigation = StackNavigation<RootAuthorizedProfileComponent.Config>()
 
-    private val slotNavigation = SlotNavigation<RootAuthorizedProfileComponent.SlotConfig>()
-
-    override val childSlot: Value<ChildSlot<*, RootAuthorizedProfileComponent.SlotChild>> =
-        childSlot(
-            source = slotNavigation,
-            serializer = RootAuthorizedProfileComponent.SlotConfig.serializer(),
-            handleBackButton = true,
-            childFactory = ::childSlot
-        )
-
     override val childStack: Value<ChildStack<*, RootAuthorizedProfileComponent.Child>> =
         childStack(
             source = navigation,
@@ -49,22 +37,6 @@ abstract class RootAuthorizedProfileComponentAbstract(
             handleBackButton = true,
             childFactory = ::childStack,
         )
-
-    private fun childSlot(
-        config: RootAuthorizedProfileComponent.SlotConfig,
-        componentContext: ComponentContext,
-    ): RootAuthorizedProfileComponent.SlotChild =
-        when (config) {
-            is RootAuthorizedProfileComponent.SlotConfig.StartOrder -> RootAuthorizedProfileComponent.SlotChild.StartOrder(
-                StartOrderComponentBase(
-                    componentContext = componentContext,
-                    start = config.startOrderInfo,
-                    storeFactory = scope.get(),
-                    openStart = { navigation.pushNew(RootAuthorizedProfileComponent.Config.Start(it)) },
-                    dismiss = slotNavigation::dismiss
-                )
-            )
-        }
 
 
     private fun childStack(
@@ -75,12 +47,15 @@ abstract class RootAuthorizedProfileComponentAbstract(
             AuthorizedProfileComponentBase(
                 componentContext = componentContext,
                 storeFactory = scope.get(),
-                event = { handleAuthorizedProfileEvent(it, navigation, slotNavigation) }
+                event = { handleAuthorizedProfileEvent(it, navigation) }
             )
         )
 
         is RootAuthorizedProfileComponent.Config.MyRegistries -> RootAuthorizedProfileComponent.Child.MyRegistries(
-            RootRegistrationsComponentBase(componentContext, pop = navigation::pop)
+            component = RootRegistrationsComponentBase(
+                context = componentContext,
+                pop = navigation::pop
+            )
         )
 
         is RootAuthorizedProfileComponent.Config.EditProfileMenu -> RootAuthorizedProfileComponent.Child.EditProfileMenu(
@@ -107,23 +82,6 @@ abstract class RootAuthorizedProfileComponentAbstract(
             )
         )
 
-        is RootAuthorizedProfileComponent.Config.UserStarts -> RootAuthorizedProfileComponent.Child.UserStarts(
-            RegistrationsComponentBase(
-                component = componentContext,
-                storeFactory = RegistrationsDataStoreFactory(
-                    storeFactory = DefaultStoreFactory(),
-                    dataSource = scope.get()
-                ),
-                pop = navigation::pop,
-                onItemClick = {
-                    slotNavigation.activate(
-                        RootAuthorizedProfileComponent.SlotConfig.StartOrder(
-                            it
-                        )
-                    )
-                },
-            )
-        )
 
         is RootAuthorizedProfileComponent.Config.Members -> RootAuthorizedProfileComponent.Child.Members(
             RootMembersComponentBase(

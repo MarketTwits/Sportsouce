@@ -34,7 +34,8 @@ fun ActualStarts(
     ) {
         items.forEach { item ->
             StartCardV2(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f),
                 start = item, onItemClick = {
                     onClick(it)
                 })

@@ -27,6 +27,7 @@ interface RootReviewComponent {
 
     fun handleDeeplink(deeplink: Deeplink.News)
     fun handleDeeplink(deeplink: Deeplink.Clubs)
+    fun handleDeeplink(deeplink: Deeplink.Shop)
 
     @Serializable
     sealed interface Config {

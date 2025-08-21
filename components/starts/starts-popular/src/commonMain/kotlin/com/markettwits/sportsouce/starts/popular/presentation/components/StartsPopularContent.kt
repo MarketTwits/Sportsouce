@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
@@ -25,51 +26,57 @@ import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
 internal fun StartsPopularContent(
     modifier: Modifier = Modifier,
     items: List<StartsListItem>,
+    isRefreshing: Boolean = false,
     onClick: (StartsListItem) -> Unit,
+    onRefresh: () -> Unit = {},
 ) {
-    LazyColumn(
+    PullToRefreshScreen(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh
     ) {
-        item {
-            StartsPopularInfo(Modifier.padding(10.dp))
-        }
-        itemsIndexed(items) { index: Int, item: StartsListItem ->
-            Row(
-                modifier = Modifier.animateItem(fadeInSpec = tween(600)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        text = (index + 1).toString(),
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.bold(),
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Column {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        text = "Просмотры : ${item.views}",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.bold(),
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    StartCardV2(
-                        start = item,
-                        onItemClick = { startId ->
-                            onClick(startId)
-                        }
-                    )
-                }
-
+        LazyColumn(
+            verticalArrangement = Arrangement.Center,
+            modifier = modifier
+        ) {
+            item {
+                StartsPopularInfo(Modifier.padding(10.dp))
             }
-
+            itemsIndexed(items) { index: Int, item: StartsListItem ->
+                Row(
+                    modifier = Modifier.animateItem(fadeInSpec = tween(600)),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            text = (index + 1).toString(),
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = FontNunito.bold(),
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Column {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            text = "Просмотры : ${item.views}",
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontFamily = FontNunito.bold(),
+                            fontSize = 14.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        StartCardV2(
+                            start = item,
+                            onItemClick = { startId ->
+                                onClick(startId)
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }

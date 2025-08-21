@@ -1,12 +1,6 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,16 +8,17 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
@@ -42,97 +38,49 @@ fun OrderStartCard(
     item: StartOrderInfo,
     onClickStart: (Int) -> Unit,
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    var isHovered by remember { mutableStateOf(false) }
-
-    val scale by animateFloatAsState(
-        targetValue = when {
-            isPressed -> 0.96f
-            isHovered -> 1.02f
-            else -> 1f
-        },
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
+    OnBackgroundCard(
+        modifier = modifier,
+        shape = RoundedCornerShape(
+            topStart = 20.dp,
+            topEnd = 20.dp,
+            bottomStart = 12.dp,
+            bottomEnd = 12.dp
         ),
-        label = "scale"
-    )
-
-    val elevation by animateFloatAsState(
-        targetValue = if (isPressed) 2.dp.value else 8.dp.value,
-        animationSpec = tween(200),
-        label = "elevation"
-    )
-
-    Card(
-        modifier = modifier
-            .scale(scale)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        isPressed = true
-                        tryAwaitRelease()
-                        isPressed = false
-                    },
-                    onTap = {
-                        onClickStart(item.startId)
-                    }
-                )
-            },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = elevation.dp,
-            pressedElevation = 2.dp,
-            hoveredElevation = 12.dp
-        )
+        onClick = {
+            onClickStart(item.startId)
+        }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
-                        )
-                    )
+        Column {
+            Box {
+                RegistrationsCardImageCard(
+                    image = item.image,
+                    modifier = Modifier.fillMaxWidth()
                 )
-        ) {
-            Column {
-                Box {
-                    RegistrationsCardImageCard(
-                        image = item.image,
-                        modifier = Modifier.fillMaxWidth()
-                    )
 
-                    PaymentStatusBadge(
-                        paymentStatus = item.payment,
+                PaymentStatusBadge(
+                    paymentStatus = item.payment,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp)
+                )
+
+                if (item.members.any { it.results.isNotEmpty() }) {
+                    ResultsBadge(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
+                            .align(Alignment.BottomStart)
                             .padding(12.dp)
                     )
-
-                    if (item.members.any { it.results.isNotEmpty() }) {
-                        ResultsBadge(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(12.dp)
-                        )
-                    }
                 }
-
-                RegistrationsCardContentInfo(
-                    title = item.startTitle,
-                    startDate = item.dateStartPreview,
-                    orderId = item.id,
-                    cost = item.cost,
-                    membersCount = item.members.size,
-                    modifier = Modifier.padding(16.dp)
-                )
             }
+
+            RegistrationsCardContentInfo(
+                title = item.startTitle,
+                startDate = item.dateStartPreview,
+                orderId = item.id,
+                cost = item.cost,
+                membersCount = item.members.size,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
@@ -147,9 +95,9 @@ private fun PaymentStatusBadge(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = statusColor.copy(alpha = 0.8f),
-        shadowElevation = 4.dp
+        shape = RoundedCornerShape(8.dp),
+        color = statusColor.copy(alpha = 0.9f),
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -159,12 +107,12 @@ private fun PaymentStatusBadge(
             Icon(
                 imageVector = statusIcon,
                 contentDescription = null,
-                modifier = Modifier.size(14.dp),
+                modifier = Modifier.size(12.dp),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = paymentStatus.title,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 fontFamily = FontNunito.bold(),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondary
@@ -179,24 +127,24 @@ private fun ResultsBadge(
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
-        shadowElevation = 4.dp
+        shadowElevation = 2.dp
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.EmojiEvents,
                 contentDescription = "Есть результаты",
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(12.dp),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Есть результаты",
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 fontFamily = FontNunito.bold(),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSecondary
@@ -215,18 +163,18 @@ private fun RegistrationsCardContentInfo(
     membersCount: Int,
 ) {
     Column(
-        modifier = modifier.animateContentSize(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
             text = title,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontFamily = FontNunito.bold(),
             fontWeight = FontWeight.Bold,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 22.sp
+            lineHeight = 20.sp
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,

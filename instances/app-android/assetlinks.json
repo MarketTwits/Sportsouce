@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.markettwits.sportsouce",
+      "sha256_cert_fingerprints": [
+        "B8:7C:53:D4:BC:96:1C:A8:3B:4A:FD:E1:A3:82:14:A7:0B:B8:D0:3C:EB:F4:0E:51:BB:30:AF:CA:3D:23:19:C6",
+        "E5:75:0F:05:4D:DF:3C:D2:24:B4:02:AC:6A:55:82:23:66:DF:6D:9E:88:39:4E:66:7D:FC:B1:62:1F:C9:CA:9E"
+      ]
+    }
+  }
+]

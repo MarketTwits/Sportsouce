@@ -1,17 +1,17 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
+import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent.ChildStack.*
 import com.markettwits.sportsouce.profile.registrations.presentation.root.di.userStartRegistrationModule
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 
 class RootRegistrationsComponentBase(
@@ -28,7 +28,6 @@ class RootRegistrationsComponentBase(
 
     private val stackNavigation = StackNavigation<RootRegistrationsComponent.ConfigStack>()
 
-
     override val childStack: Value<ChildStack<*, RootRegistrationsComponent.ChildStack>> =
         childStack(
             source = stackNavigation,
@@ -43,17 +42,17 @@ class RootRegistrationsComponentBase(
         componentContext: ComponentContext
     ): RootRegistrationsComponent.ChildStack {
         return when (configStack) {
-            is RootRegistrationsComponent.ConfigStack.Start -> RootRegistrationsComponent.ChildStack.Start(
+            is RootRegistrationsComponent.ConfigStack.Start -> Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(
+                    input = Id(
                         configStack.startId
                     ),
                     pop = stackNavigation::pop
                 )
             )
 
-            is RootRegistrationsComponent.ConfigStack.Registrations -> RootRegistrationsComponent.ChildStack.Registrations(
+            is RootRegistrationsComponent.ConfigStack.Registrations -> Registrations(
                 RegistrationsComponentBase(
                     component = componentContext,
                     storeFactory = RegistrationsDataStoreFactory(
@@ -61,7 +60,21 @@ class RootRegistrationsComponentBase(
                         dataSource = scope.get()
                     ),
                     pop = pop::invoke,
-                    onItemClick = {},
+                    onItemClick = {
+                        stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Registration(it))
+                    },
+                )
+            )
+
+            is RootRegistrationsComponent.ConfigStack.Registration -> Registration(
+                component = StartOrderComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    start = configStack.order,
+                    dismiss = stackNavigation::pop,
+                    openStart = {
+                        stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Start(it))
+                    }
                 )
             )
         }

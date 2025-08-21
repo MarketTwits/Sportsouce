@@ -28,6 +28,7 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 internal fun StartScreenContent(
     data: StartItem,
     starts: List<StartsListItem>,
+    error: Throwable? = null,
     isLoading: Boolean,
     isPartialData: Boolean = false,
     onClickRetry: () -> Unit,
@@ -81,6 +82,7 @@ internal fun StartScreenContent(
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
+                            error = error,
                             starts = starts,
                             isPartialData = isPartialData,
                             onClickRegistration = onClickRegistration,
@@ -88,8 +90,8 @@ internal fun StartScreenContent(
                             onClickRecommendedStart = onClickRecommendedStart,
                             onClickMembersResults = onClickMembersResults,
                             onClickUrl = onClickUrl,
-                            onClickPhone = onClickPhone,
                             onClickFullAlbum = onClickFullAlbum,
+                            onClickRetry = onClickRetry,
                             donations = donations,
                             comments = comments
                         )
@@ -104,6 +106,7 @@ internal fun StartScreenContent(
                     StartScreenInnerContent(
                         modifier = Modifier,
                         data = data,
+                        error = error,
                         starts = starts,
                         isPartialData = isPartialData,
                         onClickRegistration = onClickRegistration,
@@ -111,7 +114,7 @@ internal fun StartScreenContent(
                         onClickMembersResults = onClickMembersResults,
                         onClickRecommendedStart = onClickRecommendedStart,
                         onClickUrl = onClickUrl,
-                        onClickPhone = onClickPhone,
+                        onClickRetry = onClickRetry,
                         onClickFullAlbum = onClickFullAlbum,
                         donations = donations,
                         comments = comments

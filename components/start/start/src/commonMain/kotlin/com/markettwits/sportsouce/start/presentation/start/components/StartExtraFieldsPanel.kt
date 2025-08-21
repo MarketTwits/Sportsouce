@@ -29,7 +29,8 @@ internal fun StartExtraFieldsPanel(
     modifier: Modifier = Modifier,
     place: String,
     organizers: List<Organizer>,
-    startDate: String
+    startDate: String,
+    isPartialData: Boolean = false,
 ) {
     // Create a unique key for this data combination
     val dataKey = "${startDate}_${place}_${organizers.joinToString { it.name }}"
@@ -41,8 +42,8 @@ internal fun StartExtraFieldsPanel(
     var hasAnimated by rememberSaveable(dataKey) { mutableStateOf(false) }
 
     // Staggered animation timing - trigger when data changes
-    LaunchedEffect(startDate, place, organizers) {
-        if (!hasAnimated) {
+    LaunchedEffect(startDate, place, organizers, isPartialData) {
+        if (!hasAnimated && !isPartialData) {
             delay(50) // Small delay to ensure reset
 
             if (startDate.isNotEmpty()) {
@@ -57,8 +58,8 @@ internal fun StartExtraFieldsPanel(
                 showOrganizersRow = true
             }
             hasAnimated = true
-        } else {
-            // Show immediately if already animated
+        } else if (hasAnimated && !isPartialData) {
+            // Show immediately if already animated and data is fully loaded
             if (startDate.isNotEmpty()) showDateRow = true
             if (place.isNotEmpty()) showPlaceRow = true
             if (organizers.isNotEmpty()) showOrganizersRow = true
@@ -69,10 +70,11 @@ internal fun StartExtraFieldsPanel(
         if (startDate.isNotEmpty()) {
             AnimatedVisibility(
                 visible = showDateRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) + slideInVertically(
-                    animationSpec = tween(durationMillis = 600, easing = EaseOutCubic),
-                    initialOffsetY = { it / 4 } // Smoother, shorter slide distance
-                )
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
             ) {
                 StartExtraFiledRow(
                     icon = Icons.Outlined.DateRange,
@@ -83,10 +85,11 @@ internal fun StartExtraFieldsPanel(
         if (place.isNotEmpty()) {
             AnimatedVisibility(
                 visible = showPlaceRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) + slideInVertically(
-                    animationSpec = tween(durationMillis = 600, easing = EaseOutCubic),
-                    initialOffsetY = { it / 4 } // Smoother, shorter slide distance
-                )
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
             ) {
                 StartExtraFiledRow(
                     icon = Icons.Outlined.Place,
@@ -97,10 +100,11 @@ internal fun StartExtraFieldsPanel(
         if (organizers.isNotEmpty()) {
             AnimatedVisibility(
                 visible = showOrganizersRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) + slideInVertically(
-                    animationSpec = tween(durationMillis = 600, easing = EaseOutCubic),
-                    initialOffsetY = { it / 4 } // Smoother, shorter slide distance
-                )
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
             ) {
                 StartExtraFiledRow(
                     icon = Icons.Outlined.PersonOutline,

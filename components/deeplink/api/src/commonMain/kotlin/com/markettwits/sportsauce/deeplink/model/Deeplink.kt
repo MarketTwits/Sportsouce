@@ -36,4 +36,16 @@ sealed interface Deeplink {
         @Serializable
         data object ClubsList : Clubs
     }
+
+    // Shop-specific deeplinks
+    @Serializable
+    sealed interface Shop : SportSauce {
+        @Serializable
+        data object ShopRoot : Shop
+
+        @Serializable
+        data class ShopProduct(
+            val productId: String,
+        ) : Shop
+    }
 }

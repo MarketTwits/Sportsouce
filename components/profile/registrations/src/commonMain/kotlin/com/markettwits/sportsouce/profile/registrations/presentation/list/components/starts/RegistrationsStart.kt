@@ -98,13 +98,6 @@ fun RegistrationsStart(
                                                 onClickFilter(filterItem)
                                             }
                                         )
-//                                        RegistrationsFilterItem(
-//                                            value = filterItem.value,
-//                                            checked = filterItem.checked,
-//                                            onClick = {
-//                                                onClickFilter(filterItem)
-//                                            }
-//                                        )
                                     }
                                 }
                             }

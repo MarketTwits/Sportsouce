@@ -14,7 +14,6 @@ import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.root.RootComponentBase
 import com.markettwits.sportsouce.root.RootContent
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.core.context.GlobalContext
 
 
@@ -66,10 +65,14 @@ class MainActivity : ComponentActivity() {
     private fun setupComponents(deeplink: Deeplink.SportSauce?) {
         val defaultComponentContext = defaultComponentContext()
         rootComponent = RootComponentBase(
-            componentContext = defaultComponentContext,
-            deeplink = deeplink
+            componentContext = defaultComponentContext
         )
         themeComponent = ThemeComponentBase(componentContext = defaultComponentContext)
+
+        // Handle initial deeplink after components are created
+        deeplink?.let { initialDeeplink ->
+            rootComponent?.handleDeeplink(initialDeeplink)
+        }
 
         setContent {
             SportSauceTheme(

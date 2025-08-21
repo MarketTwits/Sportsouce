@@ -9,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.start.components.*
@@ -19,6 +21,7 @@ import kotlinx.coroutines.delay
 internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
+    error: Throwable? = null,
     starts: List<StartsListItem>,
     isPartialData: Boolean = false,
     onClickRegistration: () -> Unit,
@@ -26,7 +29,7 @@ internal fun StartScreenInnerContent(
     onClickMembersResults: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
-    onClickPhone: (String) -> Unit,
+    onClickRetry: () -> Unit,
     onClickRecommendedStart: (Int) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
@@ -53,8 +56,8 @@ internal fun StartScreenInnerContent(
         // Only trigger animations if we haven't animated before and under specific conditions
         if (!hasAnimated) {
             if (previousPartialState && !isPartialData) {
-                // Wait for StartExtraFieldsPanel to complete its internal animations (~650ms)
-                delay(700) // Allow time for StartExtraFieldsPanel animations to complete
+                // Wait for StartExtraFieldsPanel to complete its internal animations (~550ms)
+                delay(600) // Allow time for StartExtraFieldsPanel animations to complete
                 showRegistrationPanel = true
                 delay(120)
                 showAlbums = true
@@ -71,7 +74,7 @@ internal fun StartScreenInnerContent(
                 hasAnimated = true
             } else if (!previousPartialState && !isPartialData) {
                 // If not partial data from the start (direct load), show with staggered timing
-                delay(700) // Account for StartExtraFieldsPanel timing even on direct load
+                delay(600) // Account for StartExtraFieldsPanel timing even on direct load
                 showRegistrationPanel = true
                 delay(120)
                 showAlbums = true
@@ -101,7 +104,8 @@ internal fun StartScreenInnerContent(
             modifier = innerModifier,
             place = data.startPlace,
             organizers = data.organizers,
-            startDate = data.startTime
+            startDate = data.startTime,
+            isPartialData = isPartialData
         )
         AnimatedVisibility(
             visible = showRegistrationPanel,
@@ -193,6 +197,13 @@ internal fun StartScreenInnerContent(
             onItemClick = onClickRecommendedStart
         )
         donations(innerModifier)
+        if (isPartialData && error != null) {
+            error.mapToSauceError().SauceErrorSimpleContent(
+                modifier = innerModifier,
+            ) {
+                onClickRetry()
+            }
+        }
     }
     comments(modifier)
 }

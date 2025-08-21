@@ -36,8 +36,6 @@ import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRando
 
 class RootReviewComponentBase(
     context: ComponentContext,
-    private val newsDeeplink: Deeplink.News? = null,
-    private val clubsDeeplink: Deeplink.Clubs? = null,
 ) : RootReviewComponent,
     ComponentContext by context {
 
@@ -69,34 +67,16 @@ class RootReviewComponentBase(
     )
 
     private fun getInitialStack(): List<RootReviewComponent.Config> {
-        return when {
-            newsDeeplink is Deeplink.News.NewsDetail -> {
-                // Create navigation stack: Review -> NewsEventById
-                // This ensures users can navigate back from news detail to the main review screen
-                listOf(
-                    RootReviewComponent.Config.Review,
-                    RootReviewComponent.Config.NewsEventById(newsDeeplink.newsId)
-                )
-            }
-
-            clubsDeeplink is Deeplink.Clubs.ClubsList -> {
-                // Create navigation stack: Review -> Club
-                // This ensures users can navigate back from club to the main review screen
-                listOf(
-                    RootReviewComponent.Config.Review,
-                    RootReviewComponent.Config.Club
-                )
-            }
-
-            else -> listOf(RootReviewComponent.Config.Review)
-        }
+        // Always start with default Review configuration
+        // Deeplinks will be handled through handleDeeplink method to preserve existing navigation
+        return listOf(RootReviewComponent.Config.Review)
     }
 
     override fun handleDeeplink(deeplink: Deeplink.News) {
         when (deeplink) {
             is Deeplink.News.NewsDetail -> {
-                // Replace the entire stack with the target configuration to prevent accumulation
-                navigation.replaceAll(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
+                // Navigate to news detail while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
             }
         }
     }
@@ -104,8 +84,27 @@ class RootReviewComponentBase(
     override fun handleDeeplink(deeplink: Deeplink.Clubs) {
         when (deeplink) {
             is Deeplink.Clubs.ClubsList -> {
-                // Replace the entire stack with the target configuration to prevent accumulation
-                navigation.replaceAll(RootReviewComponent.Config.Club)
+                // Navigate to clubs while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Club)
+            }
+        }
+    }
+
+    override fun handleDeeplink(deeplink: Deeplink.Shop) {
+        when (deeplink) {
+            is Deeplink.Shop.ShopRoot -> {
+                // Navigate to shop while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Shop)
+            }
+
+            is Deeplink.Shop.ShopProduct -> {
+                // Navigate to shop while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Shop)
+                // Pass the product deeplink to the shop component
+                val currentChild = childStack.value.active.instance
+                if (currentChild is RootReviewComponent.Child.Shop) {
+                    currentChild.component.handleDeeplink(deeplink.productId)
+                }
             }
         }
     }
@@ -242,9 +241,11 @@ class RootReviewComponentBase(
             is RootReviewComponent.Config.Shop -> RootReviewComponent.Child.Shop(
                 RootShopCatalogComponentBase(
                     componentContext = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    initialProductId = null  // Product navigation handled via handleDeeplink method
                 )
             )
+
         }
 
     private fun slotChild(

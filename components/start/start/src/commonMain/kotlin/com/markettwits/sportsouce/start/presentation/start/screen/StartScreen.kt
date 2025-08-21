@@ -1,4 +1,3 @@
-
 package com.markettwits.sportsouce.start.presentation.start.screen
 
 import androidx.compose.animation.AnimatedVisibility
@@ -71,6 +70,7 @@ fun StartScreen(
                     StartScreenContent(
                         data = data,
                         starts = state.startsRecommended,
+                        error = state.error,
                         isLoading = state.isLoading,
                         isPartialData = state.isPartialData,
                         onClickRetry = {
@@ -155,16 +155,16 @@ fun StartScreen(
                 onClickRetry = {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
                 })
-            }
-            EventEffect(
-                event = state.event,
-                onConsumed = {
-                    startComponent.obtainEvent(StartScreenStore.Intent.OnConsumedEvent)
-                },
-            ) {
-                snackBarColor =
-                    if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-                snackBarHostState.showLongMessageWithDismiss(message = it.message)
-            }
         }
+        EventEffect(
+            event = state.event,
+            onConsumed = {
+                startComponent.obtainEvent(StartScreenStore.Intent.OnConsumedEvent)
+            },
+        ) {
+            snackBarColor =
+                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarHostState.showLongMessageWithDismiss(message = it.message)
+        }
+    }
 }

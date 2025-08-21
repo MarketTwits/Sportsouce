@@ -22,7 +22,6 @@ import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
 
 class RootComponentBase(
     componentContext: ComponentContext,
-    private val deeplink: Deeplink.SportSauce? = null
 ) : ComponentContext by componentContext, RootComponent {
 
     private val scope = instanceKeeper.getOrCreate {
@@ -41,13 +40,9 @@ class RootComponentBase(
     )
 
     private fun getInitialStack(): List<RootComponent.Configuration> {
-        return when (deeplink) {
-            is Deeplink.Starts.StartsList -> listOf(RootComponent.Configuration.Starts)
-            is Deeplink.Starts.StartDetail -> listOf(RootComponent.Configuration.Starts)
-            is Deeplink.News.NewsDetail -> listOf(RootComponent.Configuration.Review)
-            is Deeplink.Clubs.ClubsList -> listOf(RootComponent.Configuration.Review)
-            null -> listOf(RootComponent.Configuration.Review)
-        }
+        // Always start with default Review configuration
+        // Deeplinks will be handled through handleDeeplink method to preserve existing navigation
+        return listOf(RootComponent.Configuration.Review)
     }
 
     override val slotChild: Value<ChildSlot<*, RootComponent.Navigation>> = childSlot(
@@ -65,7 +60,7 @@ class RootComponentBase(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
-                    deeplink = if (isInitialCreation()) deeplink as? Deeplink.Starts else null
+                    deeplink = null  // Deeplinks handled via handleDeeplink method
                 )
             )
 
@@ -77,20 +72,11 @@ class RootComponentBase(
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 RootReviewComponentBase(
-                    context = componentContext,
-                    newsDeeplink = if (isInitialCreation()) deeplink as? Deeplink.News else null,
-                    clubsDeeplink = if (isInitialCreation()) deeplink as? Deeplink.Clubs else null
+                    context = componentContext  // Deeplinks handled via handleDeeplink method
                 )
             )
         }
 
-    private fun isInitialCreation(): Boolean {
-        return try {
-            childStack.value.items.isEmpty()
-        } catch (_: Exception) {
-            true
-        }
-    }
 
     /**
      * Handle deeplink navigation without recreating the component
@@ -102,6 +88,8 @@ class RootComponentBase(
             is Deeplink.Starts.StartDetail -> RootComponent.Configuration.Starts
             is Deeplink.News.NewsDetail -> RootComponent.Configuration.Review
             is Deeplink.Clubs.ClubsList -> RootComponent.Configuration.Review
+            is Deeplink.Shop.ShopRoot -> RootComponent.Configuration.Review
+            is Deeplink.Shop.ShopProduct -> RootComponent.Configuration.Review
         }
 
         val currentConfiguration = childStack.value.active.configuration
@@ -129,6 +117,13 @@ class RootComponentBase(
             }
 
             is Deeplink.Clubs -> {
+                val currentChild = childStack.value.active.instance
+                if (currentChild is RootComponent.Child.Review) {
+                    currentChild.component.handleDeeplink(deeplink)
+                }
+            }
+
+            is Deeplink.Shop -> {
                 val currentChild = childStack.value.active.instance
                 if (currentChild is RootComponent.Child.Review) {
                     currentChild.component.handleDeeplink(deeplink)

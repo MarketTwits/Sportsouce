@@ -4,10 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
-import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -40,8 +37,6 @@ class RootComponentBase(
     )
 
     private fun getInitialStack(): List<RootComponent.Configuration> {
-        // Always start with default Review configuration
-        // Deeplinks will be handled through handleDeeplink method to preserve existing navigation
         return listOf(RootComponent.Configuration.Review)
     }
 
@@ -60,7 +55,7 @@ class RootComponentBase(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
-                    deeplink = null  // Deeplinks handled via handleDeeplink method
+                    deeplink = null
                 )
             )
 
@@ -72,16 +67,11 @@ class RootComponentBase(
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 RootReviewComponentBase(
-                    context = componentContext  // Deeplinks handled via handleDeeplink method
+                    context = componentContext
                 )
             )
         }
 
-
-    /**
-     * Handle deeplink navigation without recreating the component
-     * This approach ensures proper navigation flow without timing issues
-     */
     fun handleDeeplink(deeplink: Deeplink.SportSauce) {
         val targetConfiguration = when (deeplink) {
             is Deeplink.Starts.StartsList -> RootComponent.Configuration.Starts
@@ -96,11 +86,9 @@ class RootComponentBase(
 
         // Only navigate if we're not already on the target configuration
         if (currentConfiguration != targetConfiguration) {
-            stackNavigation.bringToFront(targetConfiguration)
+            stackNavigation.pushNew(targetConfiguration)
         }
 
-        // Pass the deeplink to the appropriate child component after ensuring navigation
-        // Use a slight delay to ensure the child component is properly initialized
         when (deeplink) {
             is Deeplink.Starts -> {
                 val currentChild = childStack.value.active.instance

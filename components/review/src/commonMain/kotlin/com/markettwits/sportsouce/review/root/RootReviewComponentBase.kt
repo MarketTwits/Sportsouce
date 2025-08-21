@@ -67,10 +67,13 @@ class RootReviewComponentBase(
     )
 
     private fun getInitialStack(): List<RootReviewComponent.Config> {
-        // Always start with default Review configuration
-        // Deeplinks will be handled through handleDeeplink method to preserve existing navigation
         return listOf(RootReviewComponent.Config.Review)
     }
+
+    private fun createNewsEventStoreFactory() = NewsEventStoreFactory(
+        storeFactory = DefaultStoreFactory(),
+        newsRepository = scope.get()
+    )
 
     override fun handleDeeplink(deeplink: Deeplink.News) {
         when (deeplink) {
@@ -169,14 +172,6 @@ class RootReviewComponentBase(
                 )
             )
 
-//            is RootReviewComponent.Config.Schedule -> RootReviewComponent.Child.Schedule(
-//                RootStartsScheduleComponentBase(
-//                    context = componentContext,
-//                    dependencies = scope.get(),
-//                    pop = navigation::pop
-//                )
-//            )
-
             is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
                 RootStartsPopularComponentBase(
                     context = componentContext,
@@ -188,10 +183,7 @@ class RootReviewComponentBase(
                 NewsEventComponentBase(
                     context = componentContext,
                     input = NewsEventInput.Item(config.news),
-                    storeFactory = NewsEventStoreFactory(
-                        storeFactory = DefaultStoreFactory(),
-                        newsRepository = scope.get()
-                    ),
+                    storeFactory = createNewsEventStoreFactory(),
                     onBack = navigation::pop
                 )
             )
@@ -200,10 +192,7 @@ class RootReviewComponentBase(
                 NewsEventComponentBase(
                     context = componentContext,
                     input = NewsEventInput.Id(config.newsId),
-                    storeFactory = NewsEventStoreFactory(
-                        storeFactory = DefaultStoreFactory(),
-                        newsRepository = scope.get()
-                    ),
+                    storeFactory = createNewsEventStoreFactory(),
                     onBack = navigation::pop
                 )
             )
@@ -242,10 +231,9 @@ class RootReviewComponentBase(
                 RootShopCatalogComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    initialProductId = null  // Product navigation handled via handleDeeplink method
+                    initialProductId = null
                 )
             )
-
         }
 
     private fun slotChild(
@@ -269,7 +257,6 @@ class RootReviewComponentBase(
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
-            // 1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Shop

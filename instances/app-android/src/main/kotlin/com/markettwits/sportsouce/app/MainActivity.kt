@@ -14,79 +14,64 @@ import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.root.RootComponentBase
 import com.markettwits.sportsouce.root.RootContent
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.core.context.GlobalContext
 
 
 class MainActivity : ComponentActivity() {
 
-    private var rootComponent: RootComponentBase? = null
-    private var themeComponent: ThemeComponentBase? = null
+    private lateinit var rootComponent: RootComponentBase
+    private lateinit var themeComponent: ThemeComponentBase
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        handleIntent(intent)
-    }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        handleIntent(intent)
-    }
-
-    private fun handleIntent(intent: Intent?) {
-        lifecycleScope.launch {
-            var parsedDeeplink: Deeplink.SportSauce? = null
-
-            intent?.let { currentIntent ->
-                try {
-                    val deepLinkParser = GlobalContext.get().get<DeepLinkParser>()
-                    val deeplink = deepLinkParser.fromIntent(this@MainActivity, currentIntent)
-                    if (deeplink is Deeplink.SportSauce) {
-                        parsedDeeplink = deeplink
-                    }
-                } catch (_: Exception) {
-                    // Failed to parse deeplink, continue without it
-                }
-            }
-
-            // Create or update components
-            if (rootComponent == null || themeComponent == null) {
-                setupComponents(parsedDeeplink)
-            } else {
-                // App is already initialized, handle deeplink navigation within existing component
-                parsedDeeplink?.let { deeplink ->
-                    rootComponent?.handleDeeplink(deeplink)
-                }
-            }
+        val initialDeeplink = runBlocking {
+            parseDeeplinkOrNull(intent)
         }
-    }
 
-    private fun setupComponents(deeplink: Deeplink.SportSauce?) {
         val defaultComponentContext = defaultComponentContext()
         rootComponent = RootComponentBase(
             componentContext = defaultComponentContext
         )
         themeComponent = ThemeComponentBase(componentContext = defaultComponentContext)
 
-        // Handle initial deeplink after components are created
-        deeplink?.let { initialDeeplink ->
-            rootComponent?.handleDeeplink(initialDeeplink)
-        }
-
+        // Set content once during onCreate
         setContent {
             SportSauceTheme(
-                component = themeComponent!!
+                component = themeComponent
             ) { isDarkTheme ->
                 SportSauceSystemBarColors(isDarkTheme)
-                RootContent(component = rootComponent!!)
+                RootContent(component = rootComponent)
+            }
+        }
+
+        // Handle initial deeplink after components are fully initialized
+        initialDeeplink?.let { deeplink ->
+            rootComponent.handleDeeplink(deeplink)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+
+        // Handle new intent deeplinks without recreating components
+        lifecycleScope.launch {
+            parseDeeplinkOrNull(intent)?.let { deeplink ->
+                rootComponent.handleDeeplink(deeplink)
             }
         }
     }
 
-    override fun onDestroy() {
-        rootComponent = null
-        themeComponent = null
-        super.onDestroy()
+    private suspend fun parseDeeplinkOrNull(intent: Intent): Deeplink.SportSauce? {
+        return try {
+            val deepLinkParser = GlobalContext.get().get<DeepLinkParser>()
+            val deeplink = deepLinkParser.fromIntent(this, intent)
+            deeplink as? Deeplink.SportSauce
+        } catch (_: Exception) {
+            null
+        }
     }
 }

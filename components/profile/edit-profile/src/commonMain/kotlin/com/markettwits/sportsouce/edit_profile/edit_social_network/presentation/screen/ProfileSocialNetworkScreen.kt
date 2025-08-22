@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.edit_profile.edit_profile_change_password.presentation.component.SaveChangesButton
@@ -35,7 +36,6 @@ fun ProfileSocialNetworkScreen(component: EditProfileSocialNetworkComponent) {
         SportSouceColor.SportSouceLighBlue
     }
     Scaffold(
-        floatingActionButtonPosition = FabPosition.Center,
         topBar = {
             TopBarWithClip(
                 title = "Социальные сети",
@@ -56,13 +56,13 @@ fun ProfileSocialNetworkScreen(component: EditProfileSocialNetworkComponent) {
                 )
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             if (state.isLoading) return@Scaffold
             SaveChangesButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .padding(bottom = 12.dp),
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
                 loading = state.isLoading,
                 onClick = {
                     component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnCLickUpdate)
@@ -71,41 +71,43 @@ fun ProfileSocialNetworkScreen(component: EditProfileSocialNetworkComponent) {
             )
         }
     ) { padding ->
-        state.data?.let {
-            Column(
-                modifier = Modifier
-                    .padding(top = padding.calculateTopPadding())
-                    .padding(bottom = padding.calculateBottomPadding())
-                    .verticalScroll(rememberScrollState())
-                    .padding(10.dp)
-            ) {
-                ProfileSocialNetworkInfo(modifier = Modifier.align(Alignment.CenterHorizontally))
-                ProfileSocialNetworkContent(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    user = it,
-                    onUserChange = {
-                        component.obtainEvent(EditProfileSocialNetworkStore.Intent.UpdateState(it))
-                    }
-                )
+        AdaptivePane {
+            state.data?.let {
+                Column(
+                    modifier = Modifier
+                        .padding(top = padding.calculateTopPadding())
+                        .padding(bottom = padding.calculateBottomPadding())
+                        .verticalScroll(rememberScrollState())
+                        .padding(10.dp)
+                ) {
+                    ProfileSocialNetworkInfo(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    ProfileSocialNetworkContent(
+                        modifier = Modifier.padding(vertical = 10.dp),
+                        user = it,
+                        onUserChange = {
+                            component.obtainEvent(EditProfileSocialNetworkStore.Intent.UpdateState(it))
+                        }
+                    )
 
-                // Add bottom spacing to prevent keyboard overlap
-                Spacer(modifier = Modifier.height(250.dp))
+                    // Add bottom spacing to prevent keyboard overlap
+                    Spacer(modifier = Modifier.height(150.dp))
+                }
+            }
+            if (state.isLoading) {
+                LoadingFullScreen(
+                    modifier = Modifier.padding(top = padding.calculateTopPadding())
+                )
             }
         }
-        if (state.isLoading) {
-            LoadingFullScreen(
-                modifier = Modifier.padding(top = padding.calculateTopPadding())
-            )
+        EventEffect(
+            event = state.event,
+            onConsumed = {
+                component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnConsumedEvent)
+            },
+        ) {
+            snackBarColor =
+                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarHostState.showLongMessageWithDismiss(message = it.message)
         }
-    }
-    EventEffect(
-        event = state.event,
-        onConsumed = {
-            component.obtainEvent(EditProfileSocialNetworkStore.Intent.OnConsumedEvent)
-        },
-    ) {
-        snackBarColor =
-            if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-        snackBarHostState.showLongMessageWithDismiss(message = it.message)
     }
 }

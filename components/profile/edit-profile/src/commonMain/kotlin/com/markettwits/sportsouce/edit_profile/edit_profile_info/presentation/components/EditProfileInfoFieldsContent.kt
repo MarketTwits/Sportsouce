@@ -1,9 +1,6 @@
 package com.markettwits.sportsouce.edit_profile.edit_profile_info.presentation.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +23,7 @@ import com.markettwits.core_ui.items.components.textField.*
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -65,7 +63,6 @@ fun EditProfileInfoFieldsContent(
 
     Scaffold(
         modifier = modifier,
-        floatingActionButtonPosition = FabPosition.Center,
         topBar = {
             TopBarWithClip(
                 title = "Редактировать профиль",
@@ -84,13 +81,13 @@ fun EditProfileInfoFieldsContent(
                 )
             }
         },
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             if (state.isLoading) return@Scaffold
             SaveChangesButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .padding(bottom = 12.dp),
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
                 loading = state.isLoading,
                 onClick = {
                     keyboardController?.hide()
@@ -100,158 +97,167 @@ fun EditProfileInfoFieldsContent(
             )
         }
     ) { paddingValues ->
-
-        OnBackgroundCard(
-            modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(bottom = paddingValues.calculateBottomPadding())
-                .padding(12.dp)
-        ) {
+        AdaptivePane {
             state.userData?.let { user ->
                 Column(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
-                        .padding(cardPadding),
-                    verticalArrangement = Arrangement.spacedBy(fieldPadding)
+                        .padding(cardPadding)
+                        .padding(top = paddingValues.calculateTopPadding())
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
                 ) {
-                    // Name field with Next action
-                    OutlinedTextFieldBase(
-                        modifier = Modifier.focusRequester(nameFocusRequester),
-                        value = user.name,
-                        onValueChange = { newValue -> onUserChange(user.copy(name = newValue)) },
-                        label = "Имя",
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                surnameFocusRequester.requestFocus()
+                    OnBackgroundCard {
+
+                        // Name field with Next action
+                        OutlinedTextFieldBase(
+                            modifier = Modifier
+                                .padding(fieldPadding)
+                                .focusRequester(nameFocusRequester),
+                            value = user.name,
+                            onValueChange = { newValue -> onUserChange(user.copy(name = newValue)) },
+                            label = "Имя",
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    surnameFocusRequester.requestFocus()
+                                }
+                            )
+                        )
+
+                        // Surname field with Next action
+                        OutlinedTextFieldBase(
+                            modifier = Modifier
+                                .padding(fieldPadding)
+                                .focusRequester(surnameFocusRequester),
+                            value = user.surname,
+                            onValueChange = { newValue -> onUserChange(user.copy(surname = newValue)) },
+                            label = "Фамилия",
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            )
+                        )
+
+                        // Birthday field (calendar picker)
+                        CalendarTextFiled(
+                            modifier = Modifier
+                                .padding(fieldPadding),
+                            textFiled = { textFieldModifier ->
+                                OutlinedTextFieldBase(
+                                    modifier = textFieldModifier,
+                                    label = "День рождения",
+                                    value = user.birthday,
+                                    isEnabled = false,
+                                    keyboardOptions = KeyboardOptions(
+                                        imeAction = ImeAction.Next
+                                    ),
+                                    keyboardActions = KeyboardActions(
+                                        onNext = {
+                                            phoneNumberFocusRequester.requestFocus()
+                                        }
+                                    )
+                                ) {}
+                            },
+                            onValueChanged = { newValue ->
+                                onUserChange(user.copy(birthday = newValue))
                             }
                         )
-                    )
 
-                    // Surname field with Next action
-                    OutlinedTextFieldBase(
-                        modifier = Modifier.focusRequester(surnameFocusRequester),
-                        value = user.surname,
-                        onValueChange = { newValue -> onUserChange(user.copy(surname = newValue)) },
-                        label = "Фамилия",
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                focusManager.moveFocus(FocusDirection.Down)
+                        // Phone number field with Done action (last editable field)
+                        OutlinePhoneTextFiled(
+                            modifier = Modifier
+                                .padding(fieldPadding)
+                                .focusRequester(phoneNumberFocusRequester),
+                            value = user.phoneNumber,
+                            onValueChange = { newValue -> onUserChange(user.copy(phoneNumber = newValue)) },
+                            label = "Номер телефона",
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Phone,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    keyboardController?.hide()
+                                    focusManager.clearFocus()
+                                }
+                            )
+                        )
+
+                        // Gender selection dropdown
+                        DropDownSpinner(
+                            modifier = Modifier
+                                .padding(fieldPadding),
+                            itemList = sexOptions,
+                            selectedItem = user.sex,
+                            onItemSelected = { _, selectedItem ->
+                                onUserChange(user.copy(sex = selectedItem))
+                            },
+                            textFiled = {
+                                OutlinedTextFieldBase(
+                                    label = "Пол",
+                                    value = user.sex,
+                                    isEnabled = false
+                                ) {}
                             }
                         )
-                    )
 
-                    // Birthday field (calendar picker)
-                    CalendarTextFiled(
-                        modifier = Modifier,
-                        textFiled = { textFieldModifier ->
-                            OutlinedTextFieldBase(
-                                modifier = textFieldModifier,
-                                label = "День рождения",
-                                value = user.birthday,
-                                isEnabled = false,
-                                keyboardOptions = KeyboardOptions(
-                                    imeAction = ImeAction.Next
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onNext = {
-                                        phoneNumberFocusRequester.requestFocus()
-                                    }
-                                )
-                            ) {}
-                        },
-                        onValueChanged = { newValue ->
-                            onUserChange(user.copy(birthday = newValue))
-                        }
-                    )
-
-                    // Phone number field with Done action (last editable field)
-                    OutlinePhoneTextFiled(
-                        modifier = Modifier.focusRequester(phoneNumberFocusRequester),
-                        value = user.phoneNumber,
-                        onValueChange = { newValue -> onUserChange(user.copy(phoneNumber = newValue)) },
-                        label = "Номер телефона",
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Phone,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                                focusManager.clearFocus()
+                        // City selection dialog
+                        ItemsTextFiledDialog(
+                            modifier = Modifier
+                                .padding(fieldPadding),
+                            label = "Город",
+                            value = user.city,
+                            items = state.cities
+                                .sortedBy { it.name }
+                                .map { it.name },
+                            onValueChanged = { newValue ->
+                                onUserChange(user.copy(city = newValue))
                             }
                         )
-                    )
 
-                    // Gender selection dropdown
-                    DropDownSpinner(
-                        modifier = Modifier,
-                        itemList = sexOptions,
-                        selectedItem = user.sex,
-                        onItemSelected = { _, selectedItem ->
-                            onUserChange(user.copy(sex = selectedItem))
-                        },
-                        textFiled = {
-                            OutlinedTextFieldBase(
-                                label = "Пол",
-                                value = user.sex,
-                                isEnabled = false
-                            ) {}
-                        }
-                    )
-
-                    // City selection dialog
-                    ItemsTextFiledDialog(
-                        modifier = Modifier,
-                        label = "Город",
-                        value = user.city,
-                        items = state.cities
-                            .sortedBy { it.name }
-                            .map { it.name },
-                        onValueChanged = { newValue ->
-                            onUserChange(user.copy(city = newValue))
-                        }
-                    )
-
-                    // Team selection dialog
-                    ItemsTextFiledDialog(
-                        modifier = Modifier,
-                        label = "Команда",
-                        value = user.team,
-                        items = state.teams
-                            .sortedBy { it.name }
-                            .map { it.name },
-                        onValueChanged = { newValue ->
-                            onUserChange(user.copy(team = newValue))
-                        }
-                    )
+                        // Team selection dialog
+                        ItemsTextFiledDialog(
+                            modifier = Modifier
+                                .padding(fieldPadding),
+                            label = "Команда",
+                            value = user.team,
+                            items = state.teams
+                                .sortedBy { it.name }
+                                .map { it.name },
+                            onValueChanged = { newValue ->
+                                onUserChange(user.copy(team = newValue))
+                            }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(150.dp))
                 }
             }
-        }
-        if (state.isLoading) {
-            LoadingFullScreen(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
-        }
-        if (state.isError) {
-            FailedScreen(
-                message = state.message,
-                onClickBack = onClickGoBack,
-                onClickRetry = onClickRetry
-            )
-        }
-        EventEffect(
-            event = state.event,
-            onConsumed = onConsume,
-        ) {
-            snackBarColor =
-                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-            snackBarHostState.showLongMessageWithDismiss(message = it.message)
+            if (state.isLoading) {
+                LoadingFullScreen(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
+            }
+            if (state.isError) {
+                FailedScreen(
+                    message = state.message,
+                    onClickBack = onClickGoBack,
+                    onClickRetry = onClickRetry
+                )
+            }
+            EventEffect(
+                event = state.event,
+                onConsumed = onConsume,
+            ) {
+                snackBarColor =
+                    if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+                snackBarHostState.showLongMessageWithDismiss(message = it.message)
+            }
         }
     }
 }

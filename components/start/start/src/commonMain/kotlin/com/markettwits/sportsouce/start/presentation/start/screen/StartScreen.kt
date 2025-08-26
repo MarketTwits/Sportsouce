@@ -154,7 +154,11 @@ fun StartScreen(
                     .verticalScroll(rememberScrollState()),
                 onClickRetry = {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                })
+                },
+                onClickGoBack = {
+                    startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
+                }
+            )
         }
         EventEffect(
             event = state.event,

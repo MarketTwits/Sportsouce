@@ -70,14 +70,37 @@ class RootStartsComponentBase(
                     else -> null
                 }
                 if (startId != null) {
-                    // Replace the entire stack with the target configuration to prevent accumulation
-                    navigation.replaceAll(RootStartsComponent.Config.Start(null, startId))
+                    val targetConfig = RootStartsComponent.Config.Start(null, startId)
+                    // Check if we already have this configuration to avoid duplicates
+                    val existingConfig = configStack.value.items.find { it.configuration == targetConfig }
+                    if (existingConfig != null) {
+                        navigation.bringToFront(targetConfig)
+                    } else {
+                        // Ensure we have the starts list in the stack, then navigate to the detail
+                        val currentStack = configStack.value.items.map { it.configuration }
+                        if (!currentStack.contains(RootStartsComponent.Config.Starts)) {
+                            // If starts list is not in stack, create proper navigation stack
+                            navigation.replaceAll(
+                                RootStartsComponent.Config.Starts,
+                                targetConfig
+                            )
+                        } else {
+                            // Starts list is already in stack, just navigate to detail
+                            navigation.pushNew(targetConfig)
+                        }
+                    }
                 }
             }
 
             is Deeplink.Starts.StartsList -> {
-                // Replace with clean starts list stack
-                navigation.replaceAll(RootStartsComponent.Config.Starts)
+                // Navigate to starts list, or bring it to front if it already exists
+                val targetConfig = RootStartsComponent.Config.Starts
+                val existingConfig = configStack.value.items.find { it.configuration == targetConfig }
+                if (existingConfig != null) {
+                    navigation.bringToFront(targetConfig)
+                } else {
+                    navigation.pushNew(targetConfig)
+                }
             }
         }
     }

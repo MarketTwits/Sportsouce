@@ -22,8 +22,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 BottomBarScaffold(component = it.component) {
                     NestedContent(
                         component = component,
-                        modifier = modifier
-                            .fillMaxSize()
+                        modifier = modifier.fillMaxSize()
                     )
                 }
             }

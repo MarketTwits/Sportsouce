@@ -1,23 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.membres.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,8 +17,8 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.sportsouce.start.presentation.membres.models.MembersFilterItem
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreen
+import com.markettwits.sportsouce.start.presentation.membres.models.MembersFilterItem
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -49,7 +36,8 @@ internal fun StartSearchMember(
     val selectedCount = selectedTitles.size
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         color = MaterialTheme.colorScheme.primary,
         shadowElevation = 4.dp
     ) {
@@ -60,7 +48,8 @@ internal fun StartSearchMember(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(WindowInsets.statusBars.asPaddingValues()),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(

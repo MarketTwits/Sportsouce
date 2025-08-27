@@ -65,7 +65,9 @@ private fun MemberResultsTopBar(
                 .fillMaxWidth(),
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(WindowInsets.statusBars.asPaddingValues())
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 StartMemberResultsSearchBar(

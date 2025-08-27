@@ -26,7 +26,6 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         modifier = Modifier,
         topBar = {
             StartsSearchBarInner(
-                modifier = Modifier,
                 query = state.query,
                 isWithFilter = state.filter.filterIsEmpty(),
                 onQueryChanged = {

@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.SideEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.arkivanov.decompose.defaultComponentContext
 import com.markettwits.core.theme.SportSauceTheme
@@ -25,29 +28,34 @@ class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
 
+        // Configure window to handle display cutouts properly
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        installSplashScreen()
         val initialDeeplink = runBlocking {
             parseDeeplinkOrNull(intent)
         }
 
         val defaultComponentContext = defaultComponentContext()
-        rootComponent = RootComponentBase(
-            componentContext = defaultComponentContext
-        )
-        themeComponent = ThemeComponentBase(componentContext = defaultComponentContext)
+        rootComponent = RootComponentBase(defaultComponentContext)
+        themeComponent = ThemeComponentBase(defaultComponentContext)
 
-        // Set content once during onCreate
         setContent {
             SportSauceTheme(
                 component = themeComponent
             ) { isDarkTheme ->
-                SportSauceSystemBarColors(isDarkTheme)
+                val currentColorScheme = MaterialTheme.colorScheme
+                SideEffect {
+                    sportSauceSystemBarColors(
+                        isDarkTheme = isDarkTheme,
+                        colorScheme = currentColorScheme
+                    )
+                }
                 RootContent(component = rootComponent)
             }
         }
 
-        // Handle initial deeplink after components are fully initialized
         initialDeeplink?.let { deeplink ->
             rootComponent.handleDeeplink(deeplink)
         }
@@ -57,7 +65,6 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
 
-        // Handle new intent deeplinks without recreating components
         lifecycleScope.launch {
             parseDeeplinkOrNull(intent)?.let { deeplink ->
                 rootComponent.handleDeeplink(deeplink)

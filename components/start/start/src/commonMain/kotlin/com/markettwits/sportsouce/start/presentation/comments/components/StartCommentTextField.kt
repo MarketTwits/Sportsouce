@@ -85,7 +85,6 @@ internal fun StartCommentTextField(
     }
     TextField(
         modifier = Modifier
-            .imePadding()
             .focusRequester(focusRequester)
             .fillMaxWidth(),
         value = comment,

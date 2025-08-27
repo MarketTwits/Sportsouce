@@ -2,7 +2,7 @@ package com.markettwits.core_ui.items.components.buttons
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
@@ -11,22 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BackFloatingActionButton(
-    modifier: Modifier = Modifier,
-    back: () -> Unit
-) {
+fun ShareFloatingActionButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     SmallFloatingActionButton(
         modifier = modifier
             .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
             .padding(10.dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.tertiary,
-        onClick = back,
+        onClick = onClick,
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Floating action button."
+            imageVector = Icons.Default.Share,
+            contentDescription = "Share"
         )
     }
 }

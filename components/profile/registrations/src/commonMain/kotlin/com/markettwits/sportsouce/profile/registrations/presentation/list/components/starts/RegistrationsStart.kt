@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.OrderStartCard
@@ -24,25 +23,20 @@ import com.markettwits.sportsouce.profile.registrations.presentation.list.compon
 
 @Composable
 fun RegistrationsStart(
+    modifier: Modifier = Modifier,
     withoutFilterStarts: List<StartOrderInfo>,
     withFilterStarts: List<StartOrderInfo>,
     filter: List<FilterItem>,
-    isRefreshing: Boolean,
     onClick: (StartOrderInfo) -> Unit,
     onClickFilter: (FilterItem) -> Unit,
-    onRefresh: () -> Unit
 ) {
     val gridState = rememberLazyGridState()
     val activeFiltersCount = filter.count { it.checked }
 
-    PullToRefreshScreen(
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh::invoke,
-    ) { innerModifier ->
         AdaptivePane {
             LazyVerticalGrid(
                 state = gridState,
-                modifier = innerModifier,
+                modifier = modifier,
                 columns = GridCells.Adaptive(minSize = 320.dp),
                 contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -161,6 +155,5 @@ fun RegistrationsStart(
             }
         }
     }
-}
 
 

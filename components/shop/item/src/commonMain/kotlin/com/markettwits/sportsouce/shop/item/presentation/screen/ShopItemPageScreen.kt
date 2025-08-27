@@ -1,6 +1,9 @@
 package com.markettwits.sportsouce.shop.item.presentation.screen
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,7 +38,9 @@ fun ShopItemPageScreen(
             },
             cartContent = {
                 ShopCartItemWidget(
-                    modifier = Modifier.padding(bottom = 18.dp),
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .padding(bottom = 8.dp),
                     component = cartComponent
                 )
             }

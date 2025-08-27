@@ -34,6 +34,7 @@ fun ReviewScreen(
         scrollStrategy = ScrollStrategy.EnterAlways,
         toolbar = {
             StartsSearchBarPublic(
+
                 onClickSearchPanel = {
                     component.obtainEvent(ReviewStore.Intent.OnClickSearch)
                 }, onClickSettings = {

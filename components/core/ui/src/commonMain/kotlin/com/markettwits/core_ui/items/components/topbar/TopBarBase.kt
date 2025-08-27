@@ -1,9 +1,7 @@
 package com.markettwits.core_ui.items.components.topbar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
@@ -18,16 +16,26 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun TopBarBase(modifier: Modifier = Modifier, title: String, goBack: () -> Unit) {
+fun TopBarBase(
+    modifier: Modifier = Modifier,
+    title: String,
+    isStatusBarHandle: Boolean = true,
+    goBack: () -> Unit,
+) {
     Box(
         modifier
             .background(MaterialTheme.colorScheme.primary)
+            .padding(
+                top = if (isStatusBarHandle)
+                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                else 0.dp
+            )
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 2.dp)
             .fillMaxWidth()
     ) {
         IconButton(
-            modifier = modifier.align(Alignment.CenterStart),
+            modifier = Modifier.align(Alignment.CenterStart),
             onClick = { goBack() }
         ) {
             Icon(

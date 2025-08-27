@@ -20,12 +20,12 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
         TopBarWithClip(title = "Редактировать профиль", goBack = {
             component.obtainOutPut(EditProfileMenuComponentComponent.OutPut.GoBack)
         })
-    }) {
+    }) { paddingValues ->
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(top = it.calculateTopPadding())
+                .padding(top = paddingValues.calculateTopPadding())
                 .padding(10.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             EditProfileMenu(menu = profileMenu(), onClickItem = {
                 when (it) {

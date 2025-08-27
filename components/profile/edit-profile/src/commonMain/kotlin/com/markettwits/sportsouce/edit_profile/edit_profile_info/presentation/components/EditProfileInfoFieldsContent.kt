@@ -101,10 +101,10 @@ fun EditProfileInfoFieldsContent(
             state.userData?.let { user ->
                 Column(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
                         .padding(cardPadding)
                         .padding(top = paddingValues.calculateTopPadding())
-                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                        .verticalScroll(rememberScrollState())
                 ) {
                     OnBackgroundCard {
 

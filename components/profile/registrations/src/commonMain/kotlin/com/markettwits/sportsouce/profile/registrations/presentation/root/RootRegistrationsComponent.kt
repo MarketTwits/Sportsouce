@@ -22,7 +22,9 @@ interface RootRegistrationsComponent {
     }
 
     sealed class ChildStack {
-        data class Registrations(val component: RegistrationsComponent) : ChildStack()
+        data class Registrations(
+            val component: RegistrationsComponent,
+        ) : ChildStack()
         data class Registration(val component: StartOrderComponent) : ChildStack()
         data class Start(val component: RootStartScreenComponent) : ChildStack()
     }

@@ -20,6 +20,7 @@ kotlin {
         implementation(projects.components.core.log)
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.impl)
+        implementation(projects.components.core.cache)
         implementation(libs.koin.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.bundles.decompose.compose)

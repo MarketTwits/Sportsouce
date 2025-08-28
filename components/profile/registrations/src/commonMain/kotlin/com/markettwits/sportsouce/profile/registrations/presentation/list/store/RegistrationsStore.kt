@@ -81,13 +81,17 @@ class RegistrationsDataStoreFactory(
         private fun launch() {
             scope.launch {
                 dispatch(Msg.Loading)
-                dataSource.registrations()
-                    .onFailure {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
-                    }
-                    .onSuccess { starts ->
+
+                // Collect from registrations Flow
+                try {
+                    dataSource.registrations().collect { starts ->
                         dispatch(Msg.InfoLoaded(starts = starts, filter = createFilter(starts)))
                     }
+                } catch (e: Exception) {
+                    dispatch(Msg.InfoFailed(e.message.toString()))
+                }
+
+                // Get current user
                 dataSource.currentUser().onSuccess { user ->
                     dispatch(Msg.UpdateUserInfo(user))
                 }

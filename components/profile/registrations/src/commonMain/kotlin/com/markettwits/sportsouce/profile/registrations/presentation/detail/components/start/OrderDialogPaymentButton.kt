@@ -68,7 +68,7 @@ internal fun OrderDialogPaymentButton(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Не удалось обновить стоимость заказа",
+                        text = "Не удалось обновить стоимость",
                         fontSize = 14.sp,
                         fontFamily = FontNunito.semiBoldBold(),
                         color = MaterialTheme.colorScheme.onErrorContainer,
@@ -97,8 +97,8 @@ internal fun OrderDialogPaymentButton(
                     .fillMaxWidth()
                     .scale(buttonScale),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                 ),
                 shape = Shapes.large,
                 enabled = priceState is StartOrderStore.StartPriceResult.Success,
@@ -113,7 +113,7 @@ internal fun OrderDialogPaymentButton(
                         is StartOrderStore.StartPriceResult.Loading -> {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.onTertiary,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 strokeCap = StrokeCap.Round,
                                 strokeWidth = 2.dp
                             )
@@ -121,7 +121,7 @@ internal fun OrderDialogPaymentButton(
                                 text = "Загрузка...",
                                 fontSize = 16.sp,
                                 fontFamily = FontNunito.semiBoldBold(),
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
 
@@ -129,14 +129,14 @@ internal fun OrderDialogPaymentButton(
                             Icon(
                                 imageVector = Icons.Default.Payment,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onTertiary,
+                                tint = MaterialTheme.colorScheme.onSecondary,
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
                                 text = "Оплатить ${priceState.price} ₽",
                                 fontSize = 16.sp,
                                 fontFamily = FontNunito.bold(),
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
 

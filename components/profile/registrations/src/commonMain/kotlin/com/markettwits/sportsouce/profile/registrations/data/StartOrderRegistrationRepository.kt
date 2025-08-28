@@ -3,10 +3,11 @@ package com.markettwits.sportsouce.profile.registrations.data
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPrice
+import kotlinx.coroutines.flow.Flow
 
 interface StartOrderRegistrationRepository {
 
-    suspend fun registrations(): Result<List<StartOrderInfo>>
+    fun registrations(): Flow<List<StartOrderInfo>>
 
     suspend fun currentUser() : Result<SharedUser>
 

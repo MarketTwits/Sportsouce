@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StartOrderRegistrationRepository {
 
-    fun registrations(): Flow<List<StartOrderInfo>>
+    fun registrations(forced: Boolean): Flow<List<StartOrderInfo>>
 
     suspend fun currentUser() : Result<SharedUser>
 

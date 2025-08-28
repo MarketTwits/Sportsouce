@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.flow
  * Used when the real service is unavailable
  * Includes 3-second loading delay as requested
  */
+@Suppress("UNUSED")
 class MockStartOrderRegistrationRepository : StartOrderRegistrationRepository {
 
-    override fun registrations(): Flow<List<StartOrderInfo>> = flow {
+    override fun registrations(forced: Boolean): Flow<List<StartOrderInfo>> = flow {
         // 3-second delay as requested
         delay(3000)
 

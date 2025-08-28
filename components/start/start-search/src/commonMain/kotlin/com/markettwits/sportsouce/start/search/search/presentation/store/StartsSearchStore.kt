@@ -24,6 +24,7 @@ interface StartsSearchStore : Store<Intent, State, Label> {
         data class OnFilterApply(val filter: StartFilterUi, val sorted: StartFilter.Sorted) : Intent
         data class ChangeTextFiled(val value: String) : Intent
         data class OnClickHistoryItem(val value: String) : Intent
+        data class OnDeleteHistoryItem(val value: String) : Intent
         data class OnClickStart(val startItem: StartsListItem) : Intent
         data object OnClickBack : Intent
         data object OnClickFilter : Intent
@@ -38,6 +39,7 @@ interface StartsSearchStore : Store<Intent, State, Label> {
         data class InfoFailed(val message: String) : Message
         data class FilterApply(val filter: StartFilterUi, val sorted: StartFilter.Sorted) : Message
         data class Brush(val brushWithItems: Boolean) : Message
+        data class DeleteHistoryItem(val value: String) : Message
     }
 
     sealed interface Label {

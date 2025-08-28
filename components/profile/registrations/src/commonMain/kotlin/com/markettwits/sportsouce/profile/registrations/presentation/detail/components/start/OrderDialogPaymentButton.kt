@@ -17,12 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.GradientDirection
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.animatedFabGradient
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 
 @Composable
@@ -92,13 +95,32 @@ internal fun OrderDialogPaymentButton(
                 animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
             )
 
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .scale(buttonScale),
+                    .scale(buttonScale)
+                    .then(
+                        if (priceState is StartOrderStore.StartPriceResult.Success) {
+                            Modifier.animatedFabGradient(
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                                direction = GradientDirection.Horizontal
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
+                    containerColor = if (priceState is StartOrderStore.StartPriceResult.Success)
+                        Color.Transparent else MaterialTheme.colorScheme.secondary,
                     disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    disabledElevation = 0.dp,
+                    hoveredElevation = 0.dp,
+                    focusedElevation = 0.dp
                 ),
                 shape = Shapes.large,
                 enabled = priceState is StartOrderStore.StartPriceResult.Success,

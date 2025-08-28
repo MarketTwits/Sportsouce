@@ -37,6 +37,7 @@ class RegistrationsComponentBase(
 
     // Filter dialog state management
     private val _showFilterDialog = MutableValue(false)
+
     override val showFilterDialog: Value<Boolean> = _showFilterDialog
 
     override fun openFilter() {

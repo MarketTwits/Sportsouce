@@ -23,9 +23,9 @@ class StartOrderRegistrationRepositoryBase(
     private val executeWithCache: ExecuteWithCache,
 ) : StartOrderRegistrationRepository {
 
-    override fun registrations(): Flow<List<StartOrderInfo>> = flow {
+    override fun registrations(forced: Boolean): Flow<List<StartOrderInfo>> = flow {
         executeWithCache.executeWithCache(
-            forced = false,
+            forced = forced,
             cache = cache,
             launch = ::launchRaw,
             callback = { rawRegistrations ->

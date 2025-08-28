@@ -76,10 +76,18 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 }
             }
             if (state.query.isEmpty() && state.filter.filterIsEmpty()) {
-                SearchHistoryColumn(
-                    items = state.searchHistory
-                ) {
-                    component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
+                if (state.searchHistory.isNotEmpty()) {
+                    SearchHistoryColumn(
+                        items = state.searchHistory,
+                        onClick = {
+                            component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
+                        },
+                        onDelete = {
+                            component.obtainEvent(StartsSearchStore.Intent.OnDeleteHistoryItem(it))
+                        }
+                    )
+                } else {
+                    SearchHistoryEmptyCard()
                 }
             } else {
                 SearchResultColumn(

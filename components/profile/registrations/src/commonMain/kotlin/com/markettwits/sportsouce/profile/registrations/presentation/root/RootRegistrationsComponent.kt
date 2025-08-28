@@ -15,6 +15,7 @@ interface RootRegistrationsComponent {
         @Serializable
         data object Registrations : ConfigStack()
 
+        @Serializable
         data class Registration(val order: StartOrderInfo) : ConfigStack()
 
         @Serializable

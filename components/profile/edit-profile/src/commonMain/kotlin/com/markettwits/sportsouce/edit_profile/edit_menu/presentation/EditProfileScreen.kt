@@ -27,27 +27,30 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
                 .padding(10.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            EditProfileMenu(menu = profileMenu(), onClickItem = {
-                when (it) {
-                    "Мои социальные сети" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoSocialNetwork
-                    )
-
-                    "Изменить учетную запись" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo
-                    )
-
-                    "Изменить фото профиля" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoProfileImage
-                    )
-
-                    "Изменить статус" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoProfileAbout
-                    )
-                }
-            })
             EditProfileMenu(
-                modifier = Modifier.padding(vertical = 10.dp),
+                modifier = Modifier.padding(10.dp),
+                menu = profileMenu(),
+                onClickItem = {
+                    when (it) {
+                        "Мои социальные сети" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoSocialNetwork
+                        )
+
+                        "Изменить учетную запись" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo
+                        )
+
+                        "Изменить фото профиля" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoProfileImage
+                        )
+
+                        "Изменить статус" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoProfileAbout
+                        )
+                    }
+                })
+            EditProfileMenu(
+                modifier = Modifier.padding(10.dp),
                 menu = securityMenu(),
                 onClickItem = {
                     when (it) {

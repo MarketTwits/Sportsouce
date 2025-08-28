@@ -5,6 +5,8 @@ import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.data.repository.StartsSearchRepository
+import com.markettwits.sportsouce.start.search.search.domain.CoroutineDebounceBase
+import com.markettwits.sportsouce.start.search.search.domain.Debouncing
 import com.markettwits.sportsouce.start.search.search.domain.StartsSearch
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -15,6 +17,8 @@ import kotlinx.coroutines.launch
 class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
+    private val debouncing: Debouncing by CoroutineDebounceBase(scope)
+
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.ChangeTextFiled -> onValueChanged(state(), intent.value)
@@ -24,6 +28,10 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
             is Intent.OnClickStart -> onClickStart(intent.startItem)
             is Intent.OnClickHistoryItem -> {
                 onValueChanged(state(), intent.value)
+            }
+
+            is Intent.OnDeleteHistoryItem -> {
+                onDeleteHistoryItem(intent.value)
             }
 
             is Intent.OnFilterApply -> {
@@ -56,6 +64,13 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
         scope.launch {
             repository.addToHistory(startListItem.name)
             publish(Label.OnClickStart(startListItem))
+        }
+    }
+
+    private fun onDeleteHistoryItem(value: String) {
+        scope.launch {
+            repository.deleteFromHistory(value)
+            dispatch(Message.DeleteHistoryItem(value))
         }
     }
 
@@ -96,11 +111,16 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
 
     private fun onValueChanged(state: State, newValue: String) {
         dispatch(Message.ChangeTextFiled(newValue))
-        starts(
-            sorted = state.sorted,
-            filterUi = state.filter,
-            value = newValue,
-        )
+        debouncing.debounce(
+            key = "search_query",
+            delay = 300L
+        ) {
+            starts(
+                sorted = state.sorted,
+                filterUi = state.filter,
+                value = newValue,
+            )
+        }
     }
 
     private fun starts(

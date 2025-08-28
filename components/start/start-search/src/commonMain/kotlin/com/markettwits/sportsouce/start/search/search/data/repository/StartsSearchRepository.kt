@@ -13,4 +13,5 @@ interface StartsSearchRepository {
     ): Flow<StartsSearch>
     suspend fun history(): Flow<List<String>>
     suspend fun addToHistory(value: String)
+    suspend fun deleteFromHistory(value: String)
 }

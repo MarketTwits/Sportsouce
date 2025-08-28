@@ -1,11 +1,9 @@
 package com.markettwits.sportsouce.bottom_bar.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -48,57 +46,69 @@ internal fun BottomBarContent(
     val isLarge = calculateWindowSizeClass().isLarge
 
     if (isLarge) {
-        // Use custom navigation rail for large screens
-        Row(modifier = modifier) {
-            AnimatedVisibility(
-                visible = isShowTopBar,
-                enter = slideInVertically(
-                    initialOffsetY = { -it }
-                ),
-                exit = slideOutVertically(
-                    targetOffsetY = { -it }
-                )
-            ) {
-                CustomNavigationRail(
-                    items = items,
-                    selectedTab = selectedTab,
-                    isShowLabel = isShowLabel,
-                    onClickTab = onClickTab
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary)
-            ) {
-                content()
+        // Use Scaffold with custom navigation rail for large screens
+        Scaffold(
+            modifier = modifier,
+            contentWindowInsets = WindowInsets(0),
+            containerColor = MaterialTheme.colorScheme.primary,
+        ) { paddingValues ->
+            Row {
+                AnimatedVisibility(
+                    visible = isShowTopBar,
+                    enter = slideInVertically(
+                        initialOffsetY = { -it }
+                    ),
+                    exit = slideOutVertically(
+                        targetOffsetY = { -it }
+                    )
+                ) {
+                    CustomNavigationRail(
+                        items = items,
+                        selectedTab = selectedTab,
+                        isShowLabel = isShowLabel,
+                        onClickTab = onClickTab
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    content()
+                }
             }
         }
     } else {
-        // Use custom bottom navigation for mobile screens
-        Column(modifier = modifier) {
+        // Use Scaffold with custom bottom navigation for mobile screens
+        Scaffold(
+            modifier = modifier,
+            containerColor = MaterialTheme.colorScheme.primary,
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = isShowTopBar,
+                    enter = fadeIn(
+                        animationSpec = tween(durationMillis = 300)
+                    ),
+                    exit = fadeOut(
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                ) {
+                    CustomBottomNavigation(
+                        items = items,
+                        selectedTab = selectedTab,
+                        isShowLabel = isShowLabel,
+                        onClickTab = onClickTab
+                    )
+                }
+            },
+            contentWindowInsets = WindowInsets(0),
+        ) { paddingValues ->
             Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .background(MaterialTheme.colorScheme.primary)
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
                 content()
-            }
-            AnimatedVisibility(
-                visible = isShowTopBar,
-                enter = slideInVertically(
-                    initialOffsetY = { it }
-                ),
-                exit = slideOutVertically(
-                    targetOffsetY = { it }
-                )
-            ) {
-                CustomBottomNavigation(
-                    items = items,
-                    selectedTab = selectedTab,
-                    isShowLabel = isShowLabel,
-                    onClickTab = onClickTab
-                )
             }
         }
     }

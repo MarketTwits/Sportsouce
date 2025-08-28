@@ -26,7 +26,7 @@ fun StartsScreenContent(
         ) {
             items(items) {
                 StartCardV2(
-                    modifier = Modifier,
+                    modifier = Modifier.animateItem(fadeInSpec = tween(600)),
                     start = it,
                     onItemClick = { startId: StartsListItem ->
                         onClick(startId)

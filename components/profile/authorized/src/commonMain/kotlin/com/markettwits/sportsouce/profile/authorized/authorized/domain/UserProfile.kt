@@ -17,9 +17,7 @@ data class UserProfile(
         val createdAt: String,
         val status: String,
         val photo: String,
-    ) {
-        fun fullName() = "$surname $name"
-    }
+    )
 
     @Serializable
     data class SocialNetwork(

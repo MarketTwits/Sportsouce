@@ -15,11 +15,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.ClickableText
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -99,32 +101,23 @@ private fun StartCommentCard(
         )
     ) {
         if (userImageUrl.isNotEmpty())
-            AsyncImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .clip(Shapes.large)
                     .size(40.dp)
                     .clickable { isShowAvatarDialog = true },
                 model = userImageUrl,
                 contentDescription = userName,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = {
+                    LoadingAvatar()
+                },
+                error = {
+                    EmptyAvatar(userName = userName)
+                }
             )
         else
-            Box(
-                modifier = Modifier
-                    .clip(Shapes.large)
-                    .size(40.dp)
-                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "",
-                    fontSize = 18.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onTertiary
-                )
-            }
+            EmptyAvatar(userName = userName)
         Spacer(modifier = Modifier.padding(horizontal = 8.dp))
         Column(modifier = modifier) {
             Row {
@@ -242,5 +235,48 @@ private fun StartCommentCard(
             }
         }
     }
+}
+
+@Composable
+private fun EmptyAvatar(
+    modifier: Modifier = Modifier,
+    userName: String,
+) {
+    Box(
+        modifier = modifier
+            .clip(Shapes.large)
+            .size(40.dp)
+            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "",
+            fontSize = 18.sp,
+            fontFamily = FontNunito.semiBoldBold(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onTertiary
+        )
+    }
+}
+
+@Composable
+private fun LoadingAvatar(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .clip(Shapes.large)
+            .size(40.dp)
+            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+            .shimmer(
+                tiltAngle = 30,
+                gradientColors = listOf(
+                    Color.Transparent,
+                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
+                    Color.Transparent,
+                )
+            )
+    ) {}
 }
 

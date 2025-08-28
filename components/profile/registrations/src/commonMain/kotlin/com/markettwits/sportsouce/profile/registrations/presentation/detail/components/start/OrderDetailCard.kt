@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,13 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.extensions.noRippleClickable
+import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
@@ -72,22 +75,21 @@ fun OrderDetailCard(
                             modifier = Modifier
                                 .size(120.dp)
                                 .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f))
+                                .shimmer(
+                                    tiltAngle = 30,
+                                    gradientColors = listOf(
+                                        Color.Transparent,
+                                        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                                        Color.Transparent,
+                                    )
+                                )
                         )
                     },
                     error = {
-                        Box(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.SportsSoccer,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
+                        SubcomposeAsyncImageContent(
+                            modifier = Modifier.fillMaxSize(),
+                            painter = DefaultImages.EmptyImageStart()
+                        )
                     }
                 )
             }

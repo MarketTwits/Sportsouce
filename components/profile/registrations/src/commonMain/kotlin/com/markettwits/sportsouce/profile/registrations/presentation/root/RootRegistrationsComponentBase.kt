@@ -53,7 +53,7 @@ class RootRegistrationsComponentBase(
             )
 
             is RootRegistrationsComponent.ConfigStack.Registrations -> Registrations(
-                RegistrationsComponentBase(
+                component = RegistrationsComponentBase(
                     component = componentContext,
                     storeFactory = RegistrationsDataStoreFactory(
                         storeFactory = DefaultStoreFactory(),

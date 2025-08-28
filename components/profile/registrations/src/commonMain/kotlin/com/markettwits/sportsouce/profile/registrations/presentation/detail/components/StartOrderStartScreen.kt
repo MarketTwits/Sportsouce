@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.profile.registrations.presentation.detail.com
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,11 +23,15 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
 
     Scaffold(
         topBar = {
-            TopBarWithClip(title = "Детали заказа") {
+            TopBarWithClip(title = "Детали регистрации") {
                 component.obtainEvent(StartOrderStore.Intent.Dismiss)
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+
+        },
+        containerColor = MaterialTheme.colorScheme.outlineVariant
     ) { paddingValues ->
         AdaptivePane {
             Column(

@@ -46,7 +46,8 @@ internal fun ProfileClubCards(
                 modifier = Modifier.padding(6.dp),
                 text = "Клуб",
                 fontSize = 16.sp,
-                fontFamily = FontNunito.bold()
+                fontFamily = FontNunito.bold(),
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),

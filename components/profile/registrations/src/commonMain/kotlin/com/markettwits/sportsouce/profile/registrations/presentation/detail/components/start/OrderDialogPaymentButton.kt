@@ -17,12 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.GradientDirection
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.animatedFabGradient
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 
 @Composable
@@ -68,7 +71,7 @@ internal fun OrderDialogPaymentButton(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Не удалось обновить стоимость заказа",
+                        text = "Не удалось обновить стоимость",
                         fontSize = 14.sp,
                         fontFamily = FontNunito.semiBoldBold(),
                         color = MaterialTheme.colorScheme.onErrorContainer,
@@ -92,13 +95,32 @@ internal fun OrderDialogPaymentButton(
                 animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
             )
 
+
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .scale(buttonScale),
+                    .scale(buttonScale)
+                    .then(
+                        if (priceState is StartOrderStore.StartPriceResult.Success) {
+                            Modifier.animatedFabGradient(
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                                direction = GradientDirection.Horizontal
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+                    containerColor = if (priceState is StartOrderStore.StartPriceResult.Success)
+                        Color.Transparent else MaterialTheme.colorScheme.secondary,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 0.dp,
+                    disabledElevation = 0.dp,
+                    hoveredElevation = 0.dp,
+                    focusedElevation = 0.dp
                 ),
                 shape = Shapes.large,
                 enabled = priceState is StartOrderStore.StartPriceResult.Success,
@@ -113,7 +135,7 @@ internal fun OrderDialogPaymentButton(
                         is StartOrderStore.StartPriceResult.Loading -> {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = MaterialTheme.colorScheme.onTertiary,
+                                color = MaterialTheme.colorScheme.onSecondary,
                                 strokeCap = StrokeCap.Round,
                                 strokeWidth = 2.dp
                             )
@@ -121,7 +143,7 @@ internal fun OrderDialogPaymentButton(
                                 text = "Загрузка...",
                                 fontSize = 16.sp,
                                 fontFamily = FontNunito.semiBoldBold(),
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
 
@@ -129,14 +151,14 @@ internal fun OrderDialogPaymentButton(
                             Icon(
                                 imageVector = Icons.Default.Payment,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onTertiary,
+                                tint = MaterialTheme.colorScheme.onSecondary,
                                 modifier = Modifier.size(20.dp)
                             )
                             Text(
                                 text = "Оплатить ${priceState.price} ₽",
                                 fontSize = 16.sp,
                                 fontFamily = FontNunito.bold(),
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
 

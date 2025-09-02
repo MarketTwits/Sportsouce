@@ -1,19 +1,19 @@
 package com.markettwits.sportsouce.start.search.search.presentation.components.inner
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,7 +22,8 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 fun ColumnScope.SearchHistoryColumn(
     items: List<String>,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onDelete: (String) -> Unit,
 ) {
     if (items.isNotEmpty()) {
         Text(
@@ -39,10 +40,10 @@ fun ColumnScope.SearchHistoryColumn(
     items.forEach { item ->
         SearchHistoryItem(
             modifier = Modifier.align(Alignment.Start),
-            value = item
-        ) {
-            onClick(it)
-        }
+            value = item,
+            onClick = { onClick(it) },
+            onDelete = { onDelete(it) }
+        )
     }
 }
 
@@ -50,26 +51,40 @@ fun ColumnScope.SearchHistoryColumn(
 private fun SearchHistoryItem(
     modifier: Modifier = Modifier,
     value: String,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onDelete: (String) -> Unit,
 ) {
-    Row(modifier = modifier
-        .fillMaxWidth()
-        .padding(14.dp)
-        .clickable { onClick(value) }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(14.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onClick(value) },
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Default.AccessTime,
             contentDescription = "time",
             tint = MaterialTheme.colorScheme.tertiary
         )
-        Spacer(modifier = Modifier.padding(horizontal = 4.dp))
         Text(
             text = value,
             color = MaterialTheme.colorScheme.onPrimary,
             fontFamily = FontNunito.semiBoldBold(),
             fontSize = 16.sp,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
         )
+        IconButton(
+            onClick = { onDelete(value) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "delete",
+                tint = MaterialTheme.colorScheme.outline
+            )
+        }
     }
 }

@@ -7,11 +7,7 @@ import com.markettwits.sportsouce.profile.cloud.model.registrations.Group
 import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceResponse
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderMember
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderMemberResult
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPaymentStatus
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPrice
+import com.markettwits.sportsouce.profile.registrations.domain.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
@@ -50,7 +46,7 @@ class UserRegistrationsMapperBase(
             cost = start.price.formatPrice(),
             startTitle = start.start.name,
             promo = start.promocode?.code ?: "",
-            payment = mapPayments(payment = start.payment, startDate = start.start.startDate),
+            payment = mapPayments(payment = start.payment),
         )
     }
 
@@ -69,14 +65,13 @@ class UserRegistrationsMapperBase(
 
     private fun mapPayments(
         payment: Int?,
-        startDate: String
     ): StartOrderPaymentStatus {
         return when (payment) {
-            0 -> StartOrderPaymentStatus.NotPaid(isPaid = mapNotPaidStatus(startDate))
+            0 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
             1 -> StartOrderPaymentStatus.Success()
             2 -> StartOrderPaymentStatus.OnPlace()
             4 -> StartOrderPaymentStatus.Free()
-            3 -> StartOrderPaymentStatus.NotPaid(isPaid = mapNotPaidStatus(startDate))
+            3 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
             else -> StartOrderPaymentStatus.NotPaid()
         }
     }
@@ -97,6 +92,7 @@ class UserRegistrationsMapperBase(
         )
     }
 
+    @Suppress("UNUSED")
     private fun mapNotPaidStatus(startTime: String): Boolean {
         val currentInstant = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds())
         val startInstant = Instant.parse(startTime)

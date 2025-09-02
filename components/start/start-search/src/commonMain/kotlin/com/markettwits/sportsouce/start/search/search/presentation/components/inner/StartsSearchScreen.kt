@@ -26,7 +26,6 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         modifier = Modifier,
         topBar = {
             StartsSearchBarInner(
-                modifier = Modifier,
                 query = state.query,
                 isWithFilter = state.filter.filterIsEmpty(),
                 onQueryChanged = {
@@ -77,17 +76,25 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 }
             }
             if (state.query.isEmpty() && state.filter.filterIsEmpty()) {
-                SearchHistoryColumn(
-                    items = state.searchHistory
-                ) {
-                    component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
+                if (state.searchHistory.isNotEmpty()) {
+                    SearchHistoryColumn(
+                        items = state.searchHistory,
+                        onClick = {
+                            component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
+                        },
+                        onDelete = {
+                            component.obtainEvent(StartsSearchStore.Intent.OnDeleteHistoryItem(it))
+                        }
+                    )
+                } else {
+                    SearchHistoryEmptyCard()
                 }
             } else {
                 SearchResultColumn(
                     starts = state.starts,
-                    onClickStart = { startId, startTitle ->
+                    onClickStart = { startItem, startTitle ->
                         component.obtainEvent(
-                            StartsSearchStore.Intent.OnClickStart(startId, startTitle)
+                            StartsSearchStore.Intent.OnClickStart(startItem)
                         )
                     }
                 )

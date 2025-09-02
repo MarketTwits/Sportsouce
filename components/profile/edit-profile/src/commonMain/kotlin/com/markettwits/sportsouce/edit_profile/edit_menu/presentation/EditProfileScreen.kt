@@ -20,34 +20,37 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
         TopBarWithClip(title = "Редактировать профиль", goBack = {
             component.obtainOutPut(EditProfileMenuComponentComponent.OutPut.GoBack)
         })
-    }) {
+    }) { paddingValues ->
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(top = it.calculateTopPadding())
+                .padding(top = paddingValues.calculateTopPadding())
                 .padding(10.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            EditProfileMenu(menu = profileMenu(), onClickItem = {
-                when (it) {
-                    "Мои социальные сети" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoSocialNetwork
-                    )
-
-                    "Изменить учетную запись" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo
-                    )
-
-                    "Изменить фото профиля" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoProfileImage
-                    )
-
-                    "Изменить статус" -> component.obtainOutPut(
-                        EditProfileMenuComponentComponent.OutPut.GoProfileAbout
-                    )
-                }
-            })
             EditProfileMenu(
-                modifier = Modifier.padding(vertical = 10.dp),
+                modifier = Modifier.padding(10.dp),
+                menu = profileMenu(),
+                onClickItem = {
+                    when (it) {
+                        "Мои социальные сети" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoSocialNetwork
+                        )
+
+                        "Изменить учетную запись" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo
+                        )
+
+                        "Изменить фото профиля" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoProfileImage
+                        )
+
+                        "Изменить статус" -> component.obtainOutPut(
+                            EditProfileMenuComponentComponent.OutPut.GoProfileAbout
+                        )
+                    }
+                })
+            EditProfileMenu(
+                modifier = Modifier.padding(10.dp),
                 menu = securityMenu(),
                 onClickItem = {
                     when (it) {

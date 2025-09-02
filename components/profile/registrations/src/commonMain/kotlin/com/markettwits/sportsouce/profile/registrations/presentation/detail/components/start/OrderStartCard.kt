@@ -1,38 +1,24 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.Receipt
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPaymentStatus
 
@@ -42,278 +28,142 @@ fun OrderStartCard(
     item: StartOrderInfo,
     onClickStart: (Int) -> Unit,
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    var isHovered by remember { mutableStateOf(false) }
-
-    val scale by animateFloatAsState(
-        targetValue = when {
-            isPressed -> 0.96f
-            isHovered -> 1.02f
-            else -> 1f
-        },
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "scale"
-    )
-
-    val elevation by animateFloatAsState(
-        targetValue = if (isPressed) 2.dp.value else 8.dp.value,
-        animationSpec = tween(200),
-        label = "elevation"
-    )
-
-    Card(
-        modifier = modifier
-            .scale(scale)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        isPressed = true
-                        tryAwaitRelease()
-                        isPressed = false
-                    },
-                    onTap = {
-                        onClickStart(item.startId)
-                    }
-                )
-            },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = elevation.dp,
-            pressedElevation = 2.dp,
-            hoveredElevation = 12.dp
-        )
+    OnBackgroundCard(
+        modifier = modifier,
+        onClick = {
+            onClickStart(item.startId)
+        }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
-                        )
-                    )
+        Column {
+            // Image at the very top (edge-to-edge)
+            RegistrationsCardImageCard(
+                image = item.image,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Column(modifier = Modifier.padding(10.dp)) {
+                // Status row with subtle payment status color indication
+                OrderStatusRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    paymentStatus = item.payment,
+                    hasResults = item.members.any { it.results.isNotEmpty() }
                 )
-        ) {
-            Column {
-                Box {
-                    RegistrationsCardImageCard(
-                        image = item.image,
-                        modifier = Modifier.fillMaxWidth()
-                    )
 
-                    PaymentStatusBadge(
-                        paymentStatus = item.payment,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(12.dp)
-                    )
+                // Title with additional padding
+                Text(
+                    text = item.startTitle,
+                    fontSize = 16.sp,
+                    fontFamily = FontNunito.bold(),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
+                )
 
-                    if (item.members.any { it.results.isNotEmpty() }) {
-                        ResultsBadge(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(12.dp)
-                        )
-                    }
+                // Info rows
+                OrderInfoRow(
+                    title = "Дата старта",
+                    value = item.dateStartPreview
+                )
+                OrderInfoRow(
+                    title = "Номер заказа",
+                    value = "№ ${item.id}"
+                )
+                OrderInfoRow(
+                    title = "Участников",
+                    value = "${item.members.size} чел."
+                )
+                if (item.cost.isNotEmpty() && item.cost != "0") {
+                    OrderInfoRow(
+                        title = "Стоимость",
+                        value = "${item.cost} ₽"
+                    )
                 }
-
-                RegistrationsCardContentInfo(
-                    title = item.startTitle,
-                    startDate = item.dateStartPreview,
-                    orderId = item.id,
-                    cost = item.cost,
-                    membersCount = item.members.size,
-                    modifier = Modifier.padding(16.dp)
-                )
             }
         }
     }
 }
 
 @Composable
-private fun PaymentStatusBadge(
-    paymentStatus: StartOrderPaymentStatus,
+private fun OrderStatusRow(
     modifier: Modifier = Modifier,
+    paymentStatus: StartOrderPaymentStatus,
+    hasResults: Boolean,
 ) {
-    val statusColor = mapOrderStatusColor(paymentStatus)
-    val statusIcon = mapOrderStatusIcon(paymentStatus)
-
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = statusColor.copy(alpha = 0.8f),
-        shadowElevation = 4.dp
+    Row(
+        modifier = modifier.padding(4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(
-                imageVector = statusIcon,
-                contentDescription = null,
-                modifier = Modifier.size(14.dp),
-                tint = MaterialTheme.colorScheme.onSecondary
+        Card(
+            shape = Shapes.medium,
+            colors = CardDefaults.cardColors(
+                containerColor = mapOrderStatusColor(paymentStatus).copy(alpha = 0.2f)
             )
+        ) {
             Text(
                 text = paymentStatus.title,
                 fontSize = 12.sp,
-                fontFamily = FontNunito.bold(),
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSecondary
+                fontFamily = FontNunito.medium(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = mapOrderStatusColor(paymentStatus),
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
             )
+        }
+        if (hasResults) {
+            Card(
+                shape = Shapes.medium,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                )
+            ) {
+                Text(
+                    text = "Есть результаты",
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.medium(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ResultsBadge(
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
-        shadowElevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.EmojiEvents,
-                contentDescription = "Есть результаты",
-                modifier = Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Text(
-                text = "Есть результаты",
-                fontSize = 12.sp,
-                fontFamily = FontNunito.bold(),
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        }
-    }
-}
-
-@Composable
-private fun RegistrationsCardContentInfo(
+private fun OrderInfoRow(
     modifier: Modifier = Modifier,
     title: String,
-    startDate: String,
-    orderId: Int,
-    cost: String,
-    membersCount: Int,
+    value: String,
 ) {
-    Column(
-        modifier = modifier.animateContentSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    Row(
+        modifier = modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = title,
-            fontSize = 18.sp,
-            fontFamily = FontNunito.bold(),
-            fontWeight = FontWeight.Bold,
-            maxLines = 2,
+            fontSize = 14.sp,
+            fontFamily = FontNunito.semiBoldBold(),
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 22.sp
+            color = MaterialTheme.colorScheme.onPrimary
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Schedule,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.secondary
-            )
-            Text(
-                text = startDate,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.medium(),
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                InfoChip(
-                    icon = Icons.Default.Receipt,
-                    text = "№ $orderId"
-                )
-                InfoChip(
-                    icon = Icons.Default.Group,
-                    text = "$membersCount участн."
-                )
-            }
-
-            if (cost.isNotEmpty() && cost != "0") {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
-                ) {
-                    Text(
-                        text = "$cost ₽",
-                        fontSize = 16.sp,
-                        fontFamily = FontNunito.bold(),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                    )
-                }
-            }
-        }
+        Text(
+            text = value,
+            fontSize = 14.sp,
+            fontFamily = FontNunito.bold(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
 }
 
-@Composable
-private fun InfoChip(
-    icon: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(12.dp),
-                tint = MaterialTheme.colorScheme.outline
-            )
-            Text(
-                text = text,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.medium(),
-                color = MaterialTheme.colorScheme.outline
-            )
-        }
-    }
-}
 
 @Composable
 fun RegistrationsCardImageCard(
@@ -323,8 +173,8 @@ fun RegistrationsCardImageCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(180.dp)
-            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+            .height(200.dp)
+            .clip(Shapes.medium)
     ) {
         SubcomposeAsyncImage(
             model = image,
@@ -340,21 +190,6 @@ fun RegistrationsCardImageCard(
             success = {
                 SubcomposeAsyncImageContent(modifier = Modifier.fillMaxSize())
             }
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.3f),
-                            Color.Transparent,
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.3f)
-                        )
-                    )
-                )
         )
     }
 }

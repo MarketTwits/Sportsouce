@@ -1,9 +1,9 @@
 [versions]
 #plugins
-versionName = "1.4.4"
-versionCode = "10405"
+versionName = "1.4.5"
+versionCode = "10406"
 jvm = "11"
-kotlin = "2.1.20"
+kotlin = "2.1.20" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 gradle = "8.9.2" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 compose = "1.8.0-rc01" # https://github.com/JetBrains/compose-multiplatform
 kotlinx-serialization = "1.8.0" # https://github.com/Kotlin/kotlinx.serialization

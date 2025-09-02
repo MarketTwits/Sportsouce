@@ -12,6 +12,7 @@ kotlin {
         implementation(projects.components.club.dashboard)
         implementation(projects.components.core.cache)
         implementation(projects.components.core.errors)
+        implementation(projects.components.deeplink.api)
         implementation(projects.components.news.news)
         implementation(projects.components.start.startSearch)
         implementation(projects.components.start.start)

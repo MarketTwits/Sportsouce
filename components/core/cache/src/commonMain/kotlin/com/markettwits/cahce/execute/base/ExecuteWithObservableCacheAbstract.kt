@@ -10,7 +10,7 @@ import kotlinx.serialization.SerializationException
 
 abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
     @OptIn(ExperimentalSerializationApi::class)
-    protected suspend fun <T> executeObservableCacheWithoutForced(
+    protected fun <T> executeObservableCacheWithoutForced(
         cache: ObservableCache<T>,
         launch: suspend () -> T,
     ): Flow<T> = flow {
@@ -43,7 +43,7 @@ abstract class ExecuteWithObservableCacheAbstract : ExecuteWithCacheAbstract() {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    protected suspend fun <T> executeObservableCacheWithForced(
+    protected fun <T> executeObservableCacheWithForced(
         cache: Cache<T>,
         launch: suspend () -> T,
     ): Flow<T> = flow {

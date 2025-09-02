@@ -1,12 +1,7 @@
 package com.markettwits.sportsouce.start.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -15,19 +10,22 @@ import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponentBase
+import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStore
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStoreFactory
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
 import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
 import com.markettwits.sportsouce.start.support.di.startSupportModule
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponentBase
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
-    private val startId: Int,
+    private val input: StartScreenInput,
     private val pop: () -> Unit,
 ) : RootStartScreenComponent, ComponentContext by context {
 
@@ -44,9 +42,9 @@ class RootStartScreenComponentBase(
         childStack(
             source = navigation,
             serializer = RootStartScreenComponent.Config.serializer(),
-            initialConfiguration = RootStartScreenComponent.Config.Start(startId),
+            initialConfiguration = RootStartScreenComponent.Config.Start(input),
             handleBackButton = true,
-            key = startId.toString(),
+            key = input.toString(),
             childFactory = ::child,
         )
 
@@ -55,57 +53,62 @@ class RootStartScreenComponentBase(
         componentContext: ComponentContext,
     ): RootStartScreenComponent.Child =
         when (config) {
-            is RootStartScreenComponent.Config.Start -> RootStartScreenComponent.Child.Start(
-                component = StartScreenComponentComponentBase(
-                    componentContext = componentContext,
-                    startId = config.startId,
-                    back = {
-                        if (config.index == 0) {
-                            pop()
-                        } else {
-                            navigation.popTo(config.index - 1)
-                        }
-                    },
-                    storeFactory = scope.get(),
-                    members = { id: Int, list: List<StartMembersUi> ->
-                        navigation.pushNew(RootStartScreenComponent.Config.StartMembers(id, list))
-                    },
-                    album = {
-                        navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
-                    },
-                    registerNew = {
-                        navigation.pushNew(
-                            RootStartScreenComponent.Config.StartRegistration(it)
-                        )
-                    },
-                    membersResult = {
-                        navigation.pushNew(
-                            RootStartScreenComponent.Config.StartMembersResult(it)
-                        )
-                    },
-                    pushStart = {
-                        navigation.pushNew(
-                            RootStartScreenComponent.Config.Start(
-                                it,
-                                config.index + 1
-                            )
-                        )
-                    }
-                ),
-                commentsComponent = StartCommentsComponentBase(
+            is RootStartScreenComponent.Config.Start -> {
+                val commentsComponent = StartCommentsComponentBase(
                     context = componentContext,
-                    startId = config.startId,
                     storeFactory = StartCommentsStoreFactory(
                         storeFactory = DefaultStoreFactory(),
                         service = scope.get(),
                     )
-                ),
-                supportComponent = StartSupportComponentBase(
+                )
+                val supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
-                    startId = config.startId
                 )
-            )
+                RootStartScreenComponent.Child.Start(
+                    component = StartScreenComponentComponentBase(
+                        componentContext = componentContext,
+                        input = input,
+                        back = {
+                            if (config.index == 0) {
+                                pop()
+                            } else {
+                                navigation.popTo(config.index - 1)
+                            }
+                        },
+                        storeFactory = scope.get(),
+                        members = { id: Int, list: List<StartMembersUi> ->
+                            navigation.pushNew(RootStartScreenComponent.Config.StartMembers(id, list))
+                        },
+                        album = {
+                            navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
+                        },
+                        registerNew = {
+                            navigation.pushNew(
+                                RootStartScreenComponent.Config.StartRegistration(it)
+                            )
+                        },
+                        membersResult = {
+                            navigation.pushNew(
+                                RootStartScreenComponent.Config.StartMembersResult(it)
+                            )
+                        },
+                        pushStart = {
+                            navigation.pushNew(
+                                RootStartScreenComponent.Config.Start(
+                                    input,
+                                    config.index + 1
+                                )
+                            )
+                        },
+                        onApplyStartId = {
+                            commentsComponent.obtainEvent(StartCommentsStore.Intent.ApplyStartId(it))
+                            supportComponent.obtainEvent(StartSupportStore.Intent.ApplyStartId(it))
+                        }
+                    ),
+                    commentsComponent = commentsComponent,
+                    supportComponent = supportComponent)
+            }
 
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(

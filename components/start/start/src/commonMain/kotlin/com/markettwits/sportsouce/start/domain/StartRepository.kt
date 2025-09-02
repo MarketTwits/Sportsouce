@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface StartRepository {
 
-    suspend fun start(startId: Int, relaunch: Boolean): Result<StartItem>
+    suspend fun start(startId: String, relaunch: Boolean): Result<StartItem>
 
     suspend fun startMemberResults(
         startId: Int,
@@ -20,7 +20,7 @@ interface StartRepository {
 
     suspend fun startComments(startId: Int): Result<StartItem.Comments>
 
-    suspend fun startsRecommended(startId : Int): Result<List<StartsListItem>>
+    suspend fun startsRecommended(startId: String): Result<List<StartsListItem>>
 
     suspend fun writeComment(startId: Int, comment: String, id: Int, subComment: Boolean): CommentUiState
 

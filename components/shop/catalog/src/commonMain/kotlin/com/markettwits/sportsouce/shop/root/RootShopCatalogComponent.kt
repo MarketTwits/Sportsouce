@@ -21,6 +21,8 @@ interface RootShopCatalogComponent : ComponentContext {
 
     val childStack: Value<ChildStack<*, Child>>
 
+    fun handleDeeplink(productId: String)
+
     @Serializable
     sealed interface Config {
 

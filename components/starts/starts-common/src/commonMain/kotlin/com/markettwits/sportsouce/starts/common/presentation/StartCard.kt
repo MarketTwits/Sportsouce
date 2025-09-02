@@ -3,15 +3,7 @@ package com.markettwits.sportsouce.starts.common.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,10 +27,10 @@ import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 @Composable
-fun StartCard(
+fun StartCardV2(
     modifier: Modifier = Modifier,
     start: StartsListItem,
-    onItemClick: (Int) -> Unit
+    onItemClick: (StartsListItem) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -47,7 +39,7 @@ fun StartCard(
             .padding(10.dp)
             .clip(Shapes.medium)
             .clickable {
-                onItemClick(start.id)
+                onItemClick(start)
             }
     ) {
         Row {
@@ -104,25 +96,6 @@ private fun ImageCard(
                 ImageCardInfoStatus(status)
             }
         }
-    }
-}
-
-@Composable
-private fun ImageCardInfoStroke(title: String) {
-    Row(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondary)
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = title,
-            color = Color.White,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            fontFamily = FontNunito.bold(),
-            fontSize = 10.sp,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

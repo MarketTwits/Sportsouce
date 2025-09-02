@@ -1,5 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
@@ -8,7 +13,8 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -16,33 +22,96 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun StartExtraFieldsPanel(
     modifier: Modifier = Modifier,
     place: String,
     organizers: List<Organizer>,
-    startDate: String
+    startDate: String,
+    isPartialData: Boolean = false,
 ) {
+    // Create a unique key for this data combination
+    val dataKey = "${startDate}_${place}_${organizers.joinToString { it.name }}"
+
+    // Animation states for staggered appearance (top to bottom)
+    var showDateRow by rememberSaveable(dataKey) { mutableStateOf(false) }
+    var showPlaceRow by rememberSaveable(dataKey) { mutableStateOf(false) }
+    var showOrganizersRow by rememberSaveable(dataKey) { mutableStateOf(false) }
+    var hasAnimated by rememberSaveable(dataKey) { mutableStateOf(false) }
+
+    // Staggered animation timing - trigger when data changes
+    LaunchedEffect(startDate, place, organizers, isPartialData) {
+        if (!hasAnimated && !isPartialData) {
+            delay(50) // Small delay to ensure reset
+
+            if (startDate.isNotEmpty()) {
+                showDateRow = true
+                delay(150) // Slightly longer delay for smoother sequence
+            }
+            if (place.isNotEmpty()) {
+                showPlaceRow = true
+                delay(150)
+            }
+            if (organizers.isNotEmpty()) {
+                showOrganizersRow = true
+            }
+            hasAnimated = true
+        } else if (hasAnimated && !isPartialData) {
+            // Show immediately if already animated and data is fully loaded
+            if (startDate.isNotEmpty()) showDateRow = true
+            if (place.isNotEmpty()) showPlaceRow = true
+            if (organizers.isNotEmpty()) showOrganizersRow = true
+        }
+    }
+    
     Column(modifier = modifier) {
         if (startDate.isNotEmpty()) {
-            StartExtraFiledRow(
-                icon = Icons.Outlined.DateRange,
-                value = startDate,
-            )
+            AnimatedVisibility(
+                visible = showDateRow,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
+            ) {
+                StartExtraFiledRow(
+                    icon = Icons.Outlined.DateRange,
+                    value = startDate,
+                )
+            }
         }
         if (place.isNotEmpty()) {
-            StartExtraFiledRow(
-                icon = Icons.Outlined.Place,
-                value = place,
-            )
+            AnimatedVisibility(
+                visible = showPlaceRow,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
+            ) {
+                StartExtraFiledRow(
+                    icon = Icons.Outlined.Place,
+                    value = place,
+                )
+            }
         }
         if (organizers.isNotEmpty()) {
-            StartExtraFiledRow(
-                icon = Icons.Outlined.PersonOutline,
-                value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
+            AnimatedVisibility(
+                visible = showOrganizersRow,
+                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                            initialOffsetY = { it / 8 } // More subtle slide distance
+                        )
+            ) {
+                StartExtraFiledRow(
+                    icon = Icons.Outlined.PersonOutline,
+                    value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
 
-            )
+                )
+            }
         }
     }
 }

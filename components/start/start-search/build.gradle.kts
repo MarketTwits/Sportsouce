@@ -13,6 +13,7 @@ kotlin {
         implementation(projects.components.core.errors)
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)
+        implementation(projects.components.deeplink.api)
         implementation(projects.components.start.startCloud)
         implementation(projects.components.teamsCity)
         implementation(projects.components.start.start)

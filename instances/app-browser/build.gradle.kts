@@ -20,6 +20,7 @@ kotlin {
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
         implementation(projects.components.root)
+        implementation(projects.components.deeplink.api)
         implementation(projects.components.core.cache)
         implementation(compose.components.resources)
         implementation(libs.bundles.decompose.compose)

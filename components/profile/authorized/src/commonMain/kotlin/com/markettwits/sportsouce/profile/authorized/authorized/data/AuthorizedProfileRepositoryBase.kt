@@ -13,7 +13,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-
 class AuthorizedProfileRepositoryBase(
     private val auth: AuthDataSource,
     private val remote: SportSauceNetworkProfileApi,
@@ -52,7 +51,9 @@ class AuthorizedProfileRepositoryBase(
 
             }
             val deferredRegisters = async {
-                runCatching { remote.userRegistries(user.id, token) }.fold(onSuccess = {
+                runCatching {
+                    remote.userRegistries(user.id, token)
+                }.fold(onSuccess = {
                     it
                 }, onFailure = {
                     emptyList()

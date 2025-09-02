@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
-import com.markettwits.sportsouce.starts.common.presentation.StartCard
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsUiState
 
 
@@ -19,8 +20,8 @@ internal fun StartsScreenList(
     modifier: Modifier = Modifier,
     state: StartsUiState,
     page: Int,
-    onClickItem: (Int) -> Unit,
-    onClickRetry: () -> Unit
+    onClickItem: (StartsListItem) -> Unit,
+    onClickRetry: () -> Unit,
 ) {
     val size = rememberScreenSizeInfo()
     when (state) {
@@ -33,7 +34,7 @@ internal fun StartsScreenList(
                 verticalArrangement = Arrangement.Top
             ) {
                 items(state.items[page], key = { it.id }) {
-                    StartCard(
+                    StartCardV2(
                         start = it,
                         onItemClick = onClickItem
                     )

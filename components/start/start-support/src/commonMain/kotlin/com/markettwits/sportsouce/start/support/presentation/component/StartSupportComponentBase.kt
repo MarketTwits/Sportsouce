@@ -11,11 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 class StartSupportComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: StartSupportStoreFactory,
-    private val startId: Int
 ) : StartSupportComponent,
     ComponentContext by componentContext {
     private val store = instanceKeeper.getStore {
-        storeFactory.create(startId)
+        storeFactory.create()
     }
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<StartSupportStore.State> = store.stateFlow

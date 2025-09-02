@@ -1,14 +1,11 @@
 package com.markettwits.sportsouce.starts.popular.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.popular.di.popularStartsModule
 import com.markettwits.sportsouce.starts.popular.presentation.component.StartsPopularComponentBase
@@ -54,7 +51,7 @@ class RootStartsPopularComponentBase(
             is RootStartsPopularComponent.Config.Start -> RootStartsPopularComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    startId = config.startId,
+                    input = StartScreenInput.Item(config.startItem),
                     pop = navigation::pop
                 )
             )

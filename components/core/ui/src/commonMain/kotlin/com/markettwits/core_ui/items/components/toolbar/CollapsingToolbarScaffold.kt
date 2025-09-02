@@ -23,6 +23,9 @@
 package com.markettwits.core_ui.items.components.toolbar
 
 import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
@@ -93,12 +97,16 @@ fun CollapsingToolbarScaffold(
 ) {
 	val flingBehavior = ScrollableDefaults.flingBehavior()
 	val layoutDirection = LocalLayoutDirection.current
+	val density = LocalDensity.current
 
 	val nestedScrollConnection = remember(scrollStrategy, state) {
 		scrollStrategy.create(state.offsetYState, state.toolbarState, flingBehavior)
 	}
 
 	val toolbarState = state.toolbarState
+	val statusBarHeight = with(density) {
+		WindowInsets.statusBars.asPaddingValues().calculateTopPadding().roundToPx()
+	}
 
 	Layout(
 		content = {
@@ -177,7 +185,11 @@ fun CollapsingToolbarScaffold(
 					placeable.place(offset)
 				}
 			}
-			toolbarPlaceable.placeRelative(0, state.offsetY)
+			// Apply status bar height as base offset to position toolbar below status bar
+			// When collapsed, allow toolbar to hide behind status bar by reducing the offset
+			val baseStatusBarOffset = statusBarHeight
+			val collapseReduction = statusBarHeight * (1f - toolbarState.progress)
+			toolbarPlaceable.placeRelative(0, state.offsetY + baseStatusBarOffset - collapseReduction.toInt())
 		}
 	}
 }

@@ -22,6 +22,7 @@ object StartsSearchReducer : Reducer<State, Message> {
             is Message.ChangeTextFiled -> copy(query = msg.value)
             is Message.Loading -> copy(isLoading = true)
             is Message.FilterApply -> copy(filter = msg.filter, sorted = msg.sorted)
+            is Message.DeleteHistoryItem -> copy(searchHistory = searchHistory.filter { it != msg.value })
         }
     }
 }

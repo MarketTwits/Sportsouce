@@ -18,7 +18,7 @@ fun ReviewContent(
     news: List<NewsItem>,
     actual: List<StartsListItem>,
     archive: List<StartsListItem>,
-    onClickStart: (Int) -> Unit,
+    onClickStart: (StartsListItem) -> Unit,
     onClickNewsInfo: (NewsItem) -> Unit,
     onClickMenu: (Int) -> Unit,
     onClickTelegram: () -> Unit,

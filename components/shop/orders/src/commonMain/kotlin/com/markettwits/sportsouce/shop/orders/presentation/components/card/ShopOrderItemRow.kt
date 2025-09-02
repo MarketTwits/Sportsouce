@@ -19,11 +19,11 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun ShopOrderItemRow(
     modifier: Modifier = Modifier,
-    imageUrl : String,
-    title : String,
-    count : String,
-    totalPrice : String
-    ) {
+    imageUrl: String?,
+    title: String,
+    count: String,
+    totalPrice: String,
+) {
         Row(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically,

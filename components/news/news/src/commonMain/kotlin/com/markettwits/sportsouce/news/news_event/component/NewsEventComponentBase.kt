@@ -5,7 +5,9 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.core.decompose.componentScope
+import com.markettwits.sportsouce.news.common.NewsRepository
 import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStore
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,13 +16,13 @@ import kotlinx.coroutines.launch
 
 class NewsEventComponentBase(
     context: ComponentContext,
-    private val item: NewsItem,
+    private val input: NewsEventInput,
     private val storeFactory: NewsEventStoreFactory,
     private val onBack: () -> Unit,
 ) : NewsEventComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(item)
+        storeFactory.create(input)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -3,26 +3,27 @@ package com.markettwits.sportsouce.start.support.presentation.store
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.sportsouce.start.support.domain.StartSupportUseCase
-import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Intent
-import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Label
-import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Message
-import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.State
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.*
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Message.OnValueChanged
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Message.UpdateStartId
 import kotlinx.coroutines.launch
 
 internal class StartSupportExecutor(
     private val intentAction: IntentAction,
     private val useCase: StartSupportUseCase,
-    private val startId: Int
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            is Intent.OnChangeValue -> dispatch(Message.OnValueChanged(intent.value))
-            is Intent.OnClickSupport -> launch(state().cost)
+            is Intent.OnChangeValue -> dispatch(OnValueChanged(intent.value))
+            is Intent.OnClickSupport -> state().startId?.let { startId ->
+                launch(state().cost, startId)
+            }
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
+            is Intent.ApplyStartId -> dispatch(UpdateStartId(intent.startId))
         }
     }
 
-    private fun launch(cost: String) {
+    private fun launch(cost: String, startId: Int) {
         scope.launch {
             dispatch(Message.Loading)
             useCase.donation(startId, cost).fold(

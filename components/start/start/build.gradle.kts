@@ -9,10 +9,12 @@ android {
 }
 kotlin {
     sourceSets.commonMain.dependencies {
+        api(projects.components.starts.startsCommon)
         implementation(projects.components.core.time)
         implementation(projects.components.analytics.crashlytics)
         implementation(projects.components.start.startCloud)
-        implementation(projects.components.starts.startsCommon)
+        implementation(projects.components.core.intent.api)
+        implementation(projects.components.core.intent.impl)
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)
         implementation(projects.components.auth.authService)
@@ -23,10 +25,9 @@ kotlin {
         implementation(projects.components.core.errors)
         implementation(projects.components.core.paging)
         implementation(projects.components.bottombar)
+        implementation(projects.components.deeplink.api)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)
-        implementation(projects.components.core.intent.api)
-        implementation(projects.components.core.intent.impl)
     }
 }

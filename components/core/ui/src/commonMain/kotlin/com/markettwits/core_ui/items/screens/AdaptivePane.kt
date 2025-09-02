@@ -1,11 +1,7 @@
 package com.markettwits.core_ui.items.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -16,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
+import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -25,10 +22,11 @@ fun AdaptivePane(
     backgroundColor: Color = Color.Transparent,
     content: @Composable (BoxScope) -> Unit
 ) {
+    val screenWidth = rememberScreenSizeInfo().wDP
     val maxWidth = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> Dp.Unspecified
-        WindowWidthSizeClass.Medium -> 800.dp
-        WindowWidthSizeClass.Expanded -> 1350.dp
+        WindowWidthSizeClass.Medium -> (screenWidth * 0.8f).coerceAtMost(800.dp)
+        WindowWidthSizeClass.Expanded -> (screenWidth * 0.7f).coerceAtMost(1350.dp)
         else -> Dp.Unspecified
     }
 

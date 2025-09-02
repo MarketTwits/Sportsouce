@@ -1,9 +1,8 @@
 package com.markettwits.core.errors.api.throwable
 
-import io.ktor.client.call.body
+import io.ktor.client.call.*
 import io.ktor.client.network.sockets.*
-import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.client.plugins.ResponseException
+import io.ktor.client.plugins.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.SerializationException
 
@@ -13,16 +12,21 @@ fun Throwable.mapToSauceError(): SauceError = when {
     this.isNetworkConnectionError() -> SauceError.Connection(this)
     this is HttpRequestTimeoutException -> SauceError.Connection(this)
     this is ResponseException -> {
-        val deferred = CompletableDeferred<String>()
+        val deferred = CompletableDeferred<ResponseError>()
         CoroutineScope(Dispatchers.Main.immediate).launch {
             try {
-                val message = this@mapToSauceError.response.body<ResponseError>().message
-                deferred.complete(message)
+                val responseError = this@mapToSauceError.response.body<ResponseError>()
+                deferred.complete(responseError)
             } catch (e: Exception) {
                 deferred.completeExceptionally(e)
             }
         }
-        SauceError.WrongRequest(Exception(deferred.getCompleted()))
+        val responseError = deferred.getCompleted()
+        if (responseError.statusCode == 404) {
+            SauceError.NotFound(Exception(responseError.message))
+        } else {
+            SauceError.WrongRequest(Exception(responseError.message))
+        }
     }
     this is SerializationException -> SauceError.JsonConverter(this)
     else -> SauceError.General(this)

@@ -2,9 +2,7 @@ package com.markettwits.sportsouce.starts.popular.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore.Intent
-import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore.Label
-import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore.State
+import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore.*
 
 interface StartsPopularStore : Store<Intent, State, Label> {
     data class State(
@@ -17,7 +15,7 @@ interface StartsPopularStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data object Retry : Intent
         data object OnClickBack : Intent
-        data class OnClickStart(val id: Int) : Intent
+        data class OnClickStart(val startItem: StartsListItem) : Intent
     }
 
     sealed interface Message {
@@ -27,7 +25,7 @@ interface StartsPopularStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        data class OnClickStart(val id: Int) : Label
+        data class OnClickStart(val startItem: StartsListItem) : Label
         data object OnClickBack : Label
     }
 

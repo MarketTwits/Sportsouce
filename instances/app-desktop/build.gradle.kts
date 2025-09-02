@@ -30,6 +30,7 @@ kotlin {
         implementation(projects.components.core.ui)
         implementation(libs.koin.core)
         implementation(projects.components.core.koin)
+        implementation(projects.components.deeplink.api)
         implementation(compose.desktop.common)
         implementation(projects.components.root)
         implementation(projects.components.core.theme)

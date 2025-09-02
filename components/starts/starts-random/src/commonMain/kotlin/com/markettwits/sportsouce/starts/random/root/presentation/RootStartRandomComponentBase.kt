@@ -1,11 +1,7 @@
 package com.markettwits.sportsouce.starts.random.root.presentation
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -62,7 +58,7 @@ class RootStartRandomComponentBase(
             is RootStartRandomComponent.Config.Start -> RootStartRandomComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    startId = config.startId,
+                    input = com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id(config.startId),
                     pop = pop::invoke
                 )
             )

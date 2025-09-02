@@ -93,5 +93,7 @@ include(
     ":components:core:decompose",
     ":components:review",
     ":components:bottombar",
+    ":components:deeplink:api",
+    ":components:deeplink:impl",
     ":components:root"
 )

@@ -1,5 +1,9 @@
 🟠 New features
 - Updated start participants screen
-- Changed dialog for choosing colors, application design.
+- Redesigned color theme selection dialog
+- Improved bottom navigation bar (adaptive layout, clearer labels)
+- Starts screen: tabs and pull-to-refresh
+- Registrations: improved start card and list
+- Bug fixes and performance improvements
 
 Thank you for using Sportsauce v$APP_VERSION!

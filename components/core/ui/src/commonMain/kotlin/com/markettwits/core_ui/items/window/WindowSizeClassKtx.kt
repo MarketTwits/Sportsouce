@@ -4,11 +4,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.toSize
 
 
 @Composable
@@ -19,7 +15,8 @@ val WindowSizeClass.isLarge: Boolean
     @Composable get() = when (widthSizeClass) {
         WindowWidthSizeClass.Compact -> false
         WindowWidthSizeClass.Medium -> false
-        WindowWidthSizeClass.Expanded -> true
+        // Treat as large only if width is Expanded AND height is reasonably tall (avoid landscape phones)
+        WindowWidthSizeClass.Expanded -> screenHeightDp.value >= 600f
         else -> false
     }
 

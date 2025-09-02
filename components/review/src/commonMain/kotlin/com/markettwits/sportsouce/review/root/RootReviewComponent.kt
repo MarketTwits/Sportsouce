@@ -5,6 +5,7 @@ import com.arkivanov.decompose.value.Value
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
+import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.root.RootClubComponent
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 import com.markettwits.sportsouce.news.common.model.NewsItem
@@ -15,6 +16,7 @@ import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponent
 import com.markettwits.sportsouce.start.root.RootStartScreenComponent
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponent
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponent
 import kotlinx.serialization.Serializable
@@ -23,6 +25,10 @@ interface RootReviewComponent {
     val childStack: Value<ChildStack<*, Child>>
     val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<ConfigSlot, ChildSlot>>
 
+    fun handleDeeplink(deeplink: Deeplink.News)
+    fun handleDeeplink(deeplink: Deeplink.Clubs)
+    fun handleDeeplink(deeplink: Deeplink.Shop)
+
     @Serializable
     sealed interface Config {
 
@@ -30,7 +36,7 @@ interface RootReviewComponent {
         data object Review : Config
 
         @Serializable
-        data class Start(val startId: Int) : Config
+        data class Start(val startItem: StartsListItem) : Config
 
         @Serializable
         data object Random : Config
@@ -43,6 +49,9 @@ interface RootReviewComponent {
 
         @Serializable
         data class NewsEvent(val news: NewsItem) : Config
+
+        @Serializable
+        data class NewsEventById(val newsId: Int) : Config
 
         @Serializable
         data class Notification(val newAppVersion: NewAppVersion) : Config

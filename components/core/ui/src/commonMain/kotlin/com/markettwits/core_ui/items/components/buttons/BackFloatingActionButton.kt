@@ -1,7 +1,6 @@
 package com.markettwits.core_ui.items.components.buttons
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -17,12 +16,12 @@ fun BackFloatingActionButton(
     back: () -> Unit
 ) {
     SmallFloatingActionButton(
-        modifier = modifier.padding(10.dp),
+        modifier = modifier
+            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+            .padding(10.dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.tertiary,
-        onClick = {
-            back()
-        },
+        onClick = back,
     ) {
         Icon(
             modifier = Modifier.size(20.dp),

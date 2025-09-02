@@ -17,7 +17,7 @@ import com.markettwits.sportsouce.starts.common.presentation.StartsScreenContent
 @Composable
 fun ColumnScope.SearchResultColumn(
     starts: List<StartsListItem>,
-    onClickStart: (Int, String) -> Unit
+    onClickStart: (StartsListItem, String) -> Unit,
 ) {
     if (starts.isNotEmpty()) {
         Text(
@@ -34,7 +34,7 @@ fun ColumnScope.SearchResultColumn(
             items = starts,
             isMaxWith = true
         ) { startId ->
-            val startTitle = starts.find { it.id == startId }?.name
+            val startTitle = starts.find { it.id == startId.id }?.name
             if (startTitle != null)
                 onClickStart(startId, startTitle)
         }

@@ -1,19 +1,12 @@
 package com.markettwits.sportsouce.start.search.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterComponentBase
 import com.markettwits.sportsouce.start.search.root.di.rootStartsSearchModule
@@ -58,8 +51,8 @@ class RootStartsSearchComponentBase(
         when (config) {
             is RootStartsSearchComponent.ConfigStack.Start -> RootStartsSearchComponent.ChildStack.Start(
                 RootStartScreenComponentBase(
-                    componentContext,
-                    startId = config.startId,
+                    context = componentContext,
+                    input = StartScreenInput.Item(config.startItem),
                     pop = stackNavigation::pop
                 )
             )

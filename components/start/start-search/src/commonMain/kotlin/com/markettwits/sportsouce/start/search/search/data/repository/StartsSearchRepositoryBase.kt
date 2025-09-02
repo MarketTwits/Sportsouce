@@ -35,5 +35,9 @@ class StartsSearchRepositoryBase(
         cache.set(value = SearchHistory(value))
     }
 
+    override suspend fun deleteFromHistory(value: String) {
+        (cache as? com.markettwits.cahce.InStorageListCache<SearchHistory>)?.remove(value = SearchHistory(value))
+    }
+
 }
 

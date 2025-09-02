@@ -11,11 +11,11 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.sportsouce.start.presentation.membres.components.StartSearchMember
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreen
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
-import com.markettwits.sportsouce.start.presentation.membres.components.StartMembersItemsContent
 import com.markettwits.sportsouce.start.presentation.membres.components.StartMembersFilterDialog
+import com.markettwits.sportsouce.start.presentation.membres.components.StartMembersItemsContent
+import com.markettwits.sportsouce.start.presentation.membres.components.StartSearchMember
 
 @Composable
 fun StartMembersScreen(component: StartMembersScreen) {
@@ -30,7 +30,6 @@ fun StartMembersScreen(component: StartMembersScreen) {
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {
             StartSearchMember(
-                modifier = Modifier,
                 component = component
             )
         }

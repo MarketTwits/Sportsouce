@@ -1,9 +1,13 @@
-
 package com.markettwits.sportsouce.start.presentation.start.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -15,7 +19,6 @@ import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -58,76 +61,89 @@ fun StartScreen(
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primary)
+                .imePadding()
         ) {
-            state.startItem?.let { data ->
-                StartScreenContent(
-                    data = data,
-                    starts = state.startsRecommended,
-                    isLoading = state.isLoading,
-                    onClickRetry = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                    },
-                    onClickBack = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
-                    },
-                    onClickRegistration = {
-                        startComponent.obtainEvent(
-                            StartScreenStore.Intent.OnClickRegistration
-                        )
-                    },
-                    onClickMembers = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembers(it))
-                    },
-                    onClickUrl = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickUrl(it))
-                    },
-                    onClickPhone = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickPhone(it))
-                    },
-                    onClickImage = {
-                        fullImage = !fullImage
-                    },
-                    onClickFullAlbum = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickFullAlbum)
-                    },
-                    donations = { modifier ->
-                        StartSupport(modifier = modifier, component = startSupportComponent) {
+            AnimatedVisibility(
+                visible = state.startItem != null,
+                enter = fadeIn(animationSpec = tween(durationMillis = 400)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 300))
+            ) {
+                state.startItem?.let { data ->
+                    StartScreenContent(
+                        data = data,
+                        starts = state.startsRecommended,
+                        error = state.error,
+                        isLoading = state.isLoading,
+                        isPartialData = state.isPartialData,
+                        onClickRetry = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
+                        },
+                        onClickBack = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
+                        },
+                        onClickRegistration = {
                             startComponent.obtainEvent(
-                                StartScreenStore.Intent.TriggerEvent(
-                                    it.message,
-                                    it.success
-                                )
+                                StartScreenStore.Intent.OnClickRegistration
                             )
-                        }
-                    },
-                    comments = { modifier ->
-                        StartCommentsContent(
-                            modifier = modifier,
-                            component = startCommentsComponent
-                        ) {
-                            startComponent.obtainEvent(
-                                StartScreenStore.Intent.TriggerEvent(
-                                    it.message,
-                                    it.success
+                        },
+                        onClickMembers = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembers(it))
+                        },
+                        onClickUrl = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickUrl(it))
+                        },
+                        onClickPhone = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickPhone(it))
+                        },
+                        onClickImage = {
+                            fullImage = !fullImage
+                        },
+                        onClickFullAlbum = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickFullAlbum)
+                        },
+                        donations = { modifier ->
+                            StartSupport(modifier = modifier, component = startSupportComponent) {
+                                startComponent.obtainEvent(
+                                    StartScreenStore.Intent.TriggerEvent(
+                                        it.message,
+                                        it.success
+                                    )
                                 )
-                            )
+                            }
+                        },
+                        comments = { modifier ->
+                            StartCommentsContent(
+                                modifier = modifier,
+                                component = startCommentsComponent
+                            ) {
+                                startComponent.obtainEvent(
+                                    StartScreenStore.Intent.TriggerEvent(
+                                        it.message,
+                                        it.success
+                                    )
+                                )
+                            }
+                        },
+                        onClickMembersResults = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembersResult)
+                        },
+                        onClickRecommendedStart = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickStartRecommended(it))
+                        },
+                        onClickShare = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickShare)
                         }
-                    },
-                    onClickMembersResults = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembersResult)
-                    },
-                    onClickRecommendedStart = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickStartRecommended(it))
-                    },
-                    onClickShare = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickShare)
+                    )
+                    if (fullImage) {
+                        FullImageScreen(image = data.image) { fullImage = !fullImage }
                     }
-                )
-                if (fullImage) {
-                    FullImageScreen(image = data.image) { fullImage = !fullImage }
                 }
             }
-            if (state.isLoading && state.startItem == null) {
+            AnimatedVisibility(
+                visible = state.isLoading && state.startItem == null,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 400))
+            ) {
                 LoadingFullScreen(
                     onClickBack = {
                         startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
@@ -140,17 +156,21 @@ fun StartScreen(
                     .verticalScroll(rememberScrollState()),
                 onClickRetry = {
                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                })
-            }
-            EventEffect(
-                event = state.event,
-                onConsumed = {
-                    startComponent.obtainEvent(StartScreenStore.Intent.OnConsumedEvent)
                 },
-            ) {
-                snackBarColor =
-                    if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-                snackBarHostState.showLongMessageWithDismiss(message = it.message)
-            }
+                onClickGoBack = {
+                    startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
+                }
+            )
         }
+        EventEffect(
+            event = state.event,
+            onConsumed = {
+                startComponent.obtainEvent(StartScreenStore.Intent.OnConsumedEvent)
+            },
+        ) {
+            snackBarColor =
+                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarHostState.showLongMessageWithDismiss(message = it.message)
+        }
+    }
 }

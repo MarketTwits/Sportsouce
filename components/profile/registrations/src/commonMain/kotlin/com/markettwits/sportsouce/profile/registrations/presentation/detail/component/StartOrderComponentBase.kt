@@ -4,9 +4,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStoreFactory
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,10 +37,7 @@ class StartOrderComponentBase(
             store.labels.collect {
                 when (it) {
                     is StartOrderStore.Label.Dismiss -> dismiss()
-                    is StartOrderStore.Label.OnClickStart -> {
-                        dismiss()
-                        openStart(it.startId)
-                    }
+                    is StartOrderStore.Label.OnClickStart -> openStart(it.startId)
                 }
             }
         }

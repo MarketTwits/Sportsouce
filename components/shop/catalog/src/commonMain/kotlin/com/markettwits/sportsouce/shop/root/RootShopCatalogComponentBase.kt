@@ -1,12 +1,7 @@
 package com.markettwits.sportsouce.shop.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.bringToFront
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.getOrCreateKoinScope
@@ -46,6 +41,7 @@ import com.markettwits.sportsouce.shop.search.presentation.store.ShopSearchStore
 class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
+    private val initialProductId: String? = null,
 ) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarComponentHandler() {
 
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
@@ -64,10 +60,26 @@ class RootShopCatalogComponentBase(
     override val childStack: Value<ChildStack<*, RootShopCatalogComponent.Child>> = childStack(
         source = stackNavigation,
         serializer = RootShopCatalogComponent.Config.serializer(),
-        initialConfiguration = RootShopCatalogComponent.Config.ShopCatalog,
+        initialStack = { getInitialStack() },
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    private fun getInitialStack(): List<RootShopCatalogComponent.Config> {
+        return if (initialProductId != null) {
+            listOf(
+                RootShopCatalogComponent.Config.ShopCatalog,
+                RootShopCatalogComponent.Config.ShopItem(
+                    ShopItemPageComponentBase.Options(
+                        productId = initialProductId,
+                        shopItem = null
+                    )
+                )
+            )
+        } else {
+            listOf(RootShopCatalogComponent.Config.ShopCatalog)
+        }
+    }
 
     private fun child(
         config: RootShopCatalogComponent.Config,
@@ -268,6 +280,14 @@ class RootShopCatalogComponentBase(
     private inner class ShopUserOrdersComponentOutputsImpl : ShopUserOrdersComponent.Outputs {
         override fun goBack() = stackNavigation.pop()
 
+    }
+
+    override fun handleDeeplink(productId: String) {
+        val options = ShopItemPageComponentBase.Options(
+            productId = productId,
+            shopItem = null
+        )
+        stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopItem(options))
     }
 
     init {

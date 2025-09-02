@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -31,21 +32,25 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
     var snackBarColor by remember {
         mutableStateOf(SportSouceColor.SportSouceLighBlue)
     }
+    val focusManager = LocalFocusManager.current
+    val title = if (state.mode is MemberEditComponent.Mode.Edit) "Редактировать участника" else "Добавить участника"
     ModalBottomSheet(
-        containerColor = MaterialTheme.colorScheme.primary,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = MaterialTheme.colorScheme.background,
         onDismissRequest = {
             component.obtainEvent(MemberEditStore.Intent.Dismiss)
         }) {
-        val focusManager = LocalFocusManager.current
-        Scaffold(topBar = {
-            val title =
-                if (state.mode is MemberEditComponent.Mode.Edit) "Редактировать участника" else "Добавить участника"
-            TopBarWithClip(title = title) {
-                focusManager.clearFocus()
-                component.obtainEvent(MemberEditStore.Intent.Dismiss)
-            }
-        },
+        Scaffold(
+            topBar = {
+                TopBarWithClip(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                    title = title,
+                    isStatusBarHandle = false
+                ) {
+                    focusManager.clearFocus()
+                    component.obtainEvent(MemberEditStore.Intent.Dismiss)
+                }
+            },
             snackbarHost = {
                 SnackbarHost(
                     hostState = snackBarHostState,
@@ -57,11 +62,11 @@ fun MemberEditScreenDialog(component: MemberEditComponent) {
                     )
                 }
             }
-        ) {
+        ) { paddingValues ->
             EditMemberContent(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(top = it.calculateTopPadding()),
+                    .padding(top = paddingValues.calculateTopPadding()),
                 onMemberChange = {
                     component.obtainEvent(MemberEditStore.Intent.OnValueChanged(it))
                 },

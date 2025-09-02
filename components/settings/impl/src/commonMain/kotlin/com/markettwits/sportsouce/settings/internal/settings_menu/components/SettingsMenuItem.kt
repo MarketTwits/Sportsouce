@@ -44,8 +44,8 @@ private fun SettingsMenuElementBase(
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
             text = item.title,
-            fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 16.sp,
             fontFamily = FontNunito.medium(),
         )
     }
@@ -73,7 +73,7 @@ private fun SettingsMenuElementWithDescription(
                 text = item.title,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontFamily = FontNunito.regular(),
+                fontFamily = FontNunito.medium(),
             )
             Text(
                 text = item.description,

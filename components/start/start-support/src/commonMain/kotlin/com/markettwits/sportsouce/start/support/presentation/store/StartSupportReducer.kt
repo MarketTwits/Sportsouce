@@ -30,6 +30,7 @@ internal object StartSupportReducer : Reducer<State, Message> {
                 )
             )
             is Message.OnConsumedEvent -> copy(eventWithContent = consumed())
+            is Message.UpdateStartId -> copy(startId = msg.startId)
         }
     }
 }

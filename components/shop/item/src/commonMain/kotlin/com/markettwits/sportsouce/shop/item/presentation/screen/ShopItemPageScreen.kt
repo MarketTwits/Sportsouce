@@ -1,8 +1,14 @@
 package com.markettwits.sportsouce.shop.item.presentation.screen
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.shop.cart.presentation.page.component.ShopCartPageComponent
 import com.markettwits.sportsouce.shop.cart.presentation.page.components.ShopCartItemWidget
 import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageComponent
@@ -31,7 +37,12 @@ fun ShopItemPageScreen(
                 component.obtainEvent(ShopItemPageStore.Intent.OnClickAddToFavorite)
             },
             cartContent = {
-                ShopCartItemWidget(component = cartComponent)
+                ShopCartItemWidget(
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .padding(bottom = 8.dp),
+                    component = cartComponent
+                )
             }
         )
 }

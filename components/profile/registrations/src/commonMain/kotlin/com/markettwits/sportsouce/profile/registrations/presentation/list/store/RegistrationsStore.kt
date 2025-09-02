@@ -64,10 +64,7 @@ class RegistrationsDataStoreFactory(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
         override fun executeIntent(intent: Intent) {
             when (intent) {
-                is Intent.LoadData -> {
-                    launch()
-                }
-
+                is Intent.LoadData -> launch(true)
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
                 is Intent.OnClickFilter -> updateFilter(intent.item, state())
@@ -75,19 +72,23 @@ class RegistrationsDataStoreFactory(
         }
 
         override fun executeAction(action: Unit) {
-            launch()
+            launch(false)
         }
 
-        private fun launch() {
+        private fun launch(forced: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
-                dataSource.registrations()
-                    .onFailure {
-                        dispatch(Msg.InfoFailed(it.message.toString()))
-                    }
-                    .onSuccess { starts ->
+
+                // Collect from registrations Flow
+                try {
+                    dataSource.registrations(forced).collect { starts ->
                         dispatch(Msg.InfoLoaded(starts = starts, filter = createFilter(starts)))
                     }
+                } catch (e: Exception) {
+                    dispatch(Msg.InfoFailed(e.message.toString()))
+                }
+
+                // Get current user
                 dataSource.currentUser().onSuccess { user ->
                     dispatch(Msg.UpdateUserInfo(user))
                 }

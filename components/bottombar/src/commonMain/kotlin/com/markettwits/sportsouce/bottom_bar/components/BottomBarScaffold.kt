@@ -21,9 +21,9 @@ fun BottomBarScaffold(
         isShowLabel = state.showLabel,
         items = state.items,
         selectedTab = state.selectedTab,
+        content = content,
         onClickTab = { item ->
             component.onClickTabBar(item)
         },
-        content = content
     )
 }

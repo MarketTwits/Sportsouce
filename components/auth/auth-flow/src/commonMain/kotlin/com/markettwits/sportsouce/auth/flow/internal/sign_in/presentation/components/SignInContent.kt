@@ -1,7 +1,10 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.components
 
 import SignInLoginMethodToggle
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -108,53 +111,62 @@ internal fun SignInContent(
 
                 Spacer(Modifier.height(10.dp))
 
-                // Conditional fields based on login method with smooth transitions
-                AnimatedVisibility(
-                    visible = state.loginMethod == LoginMethod.PASSWORD,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 4 }),
-                    exit = fadeOut() + slideOutVertically(targetOffsetY = { -it / 4 })
-                ) {
-                    EnhancedPasswordTextField(
-                        modifier = Modifier.focusRequester(passwordFocusRequester),
-                        label = "Пароль",
-                        value = state.password,
-                        isError = state.passwordError != null,
-                        errorMessage = state.passwordError,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                component.obtainEvent(SignInStore.Intent.Login)
-                                focusManager.clearFocus()
-                            }
-                        ),
-                        onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdatePassword(it)) },
-                        onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetPasswordFocus(it)) }
-                    )
-                }
+                // Conditional fields based on login method with horizontal transitions
+                AnimatedContent(
+                    targetState = state.loginMethod,
+                    transitionSpec = {
+                        if (targetState == LoginMethod.SMS) {
+                            // Moving to SMS (slide in from right, slide out to left)
+                            slideInHorizontally { fullWidth -> fullWidth } togetherWith
+                                    slideOutHorizontally { fullWidth -> -fullWidth }
+                        } else {
+                            // Moving to PASSWORD (slide in from left, slide out to right)
+                            slideInHorizontally { fullWidth -> -fullWidth } togetherWith
+                                    slideOutHorizontally { fullWidth -> fullWidth }
+                        }
+                    }
+                ) { loginMethod ->
+                    when (loginMethod) {
+                        LoginMethod.PASSWORD -> {
+                            EnhancedPasswordTextField(
+                                modifier = Modifier.focusRequester(passwordFocusRequester),
+                                label = "Пароль",
+                                value = state.password,
+                                isError = state.passwordError != null,
+                                errorMessage = state.passwordError,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        component.obtainEvent(SignInStore.Intent.Login)
+                                        focusManager.clearFocus()
+                                    }
+                                ),
+                                onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdatePassword(it)) },
+                                onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetPasswordFocus(it)) }
+                            )
+                        }
 
-                AnimatedVisibility(
-                    visible = state.loginMethod == LoginMethod.SMS,
-                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 4 }),
-                    exit = fadeOut() + slideOutVertically(targetOffsetY = { -it / 4 })
-                ) {
-                    EnhancedSmsCodeTextField(
-                        modifier = Modifier.focusRequester(smsCodeFocusRequester),
-                        label = "СМС код",
-                        value = state.smsCode,
-                        isError = state.smsCodeError != null,
-                        errorMessage = state.smsCodeError,
-                        isSmsCodeSent = state.isSmsCodeSent,
-                        smsCodeSending = state.smsCodeSending,
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                component.obtainEvent(SignInStore.Intent.Login)
-                                focusManager.clearFocus()
-                            }
-                        ),
-                        onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdateSmsCode(it)) },
-                        onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetSmsCodeFocus(it)) },
-                        onSendSmsClick = { component.obtainEvent(SignInStore.Intent.SendSmsCode) }
-                    )
+                        LoginMethod.SMS -> {
+                            EnhancedSmsCodeTextField(
+                                modifier = Modifier.focusRequester(smsCodeFocusRequester),
+                                label = "СМС код",
+                                value = state.smsCode,
+                                isError = state.smsCodeError != null,
+                                errorMessage = state.smsCodeError,
+                                isSmsCodeSent = state.isSmsCodeSent,
+                                smsCodeSending = state.smsCodeSending,
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        component.obtainEvent(SignInStore.Intent.Login)
+                                        focusManager.clearFocus()
+                                    }
+                                ),
+                                onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdateSmsCode(it)) },
+                                onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetSmsCodeFocus(it)) },
+                                onSendSmsClick = { component.obtainEvent(SignInStore.Intent.SendSmsCode) }
+                            )
+                        }
+                    }
                 }
                 SignInUnderFieldsContent(
                     isButtonEnabled = !state.isLoading && state.enabled,

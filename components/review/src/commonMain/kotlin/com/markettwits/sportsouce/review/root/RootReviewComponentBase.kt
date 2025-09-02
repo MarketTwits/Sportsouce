@@ -4,11 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
@@ -16,9 +12,13 @@ import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
 import com.markettwits.selfupdater.components.notification.di.notificationModule
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
+import com.markettwits.sportsauce.deeplink.model.Deeplink
+import com.markettwits.sportsouce.club.dashboard.di.clubDashboardModule
+import com.markettwits.sportsouce.club.registration.di.workoutRegistrationModule
 import com.markettwits.sportsouce.club.root.RootClubComponentBase
 import com.markettwits.sportsouce.news.di.newsModule
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBase
+import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
 import com.markettwits.sportsouce.review.review.di.reviewModule
@@ -27,13 +27,16 @@ import com.markettwits.sportsouce.review.root.di.reviewRootModule
 import com.markettwits.sportsouce.settings.root.RootSettingsComponentBase
 import com.markettwits.sportsouce.shop.catalog.di.shopCatalogModule
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponentBase
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponentBase
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponentBase
 
 
-class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
+class RootReviewComponentBase(
+    context: ComponentContext,
+) : RootReviewComponent,
     ComponentContext by context {
 
     private val navigation = StackNavigation<RootReviewComponent.Config>()
@@ -49,17 +52,66 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             newsModule,
             reviewModule,
             notificationModule,
-            shopCatalogModule
+            shopCatalogModule,
+            clubDashboardModule,
+            workoutRegistrationModule
         )
     )
 
     override val childStack: Value<ChildStack<*, RootReviewComponent.Child>> = childStack(
         source = navigation,
         serializer = RootReviewComponent.Config.serializer(),
-        initialConfiguration = RootReviewComponent.Config.Review,
+        initialStack = { getInitialStack() },
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    private fun getInitialStack(): List<RootReviewComponent.Config> {
+        return listOf(RootReviewComponent.Config.Review)
+    }
+
+    private fun createNewsEventStoreFactory() = NewsEventStoreFactory(
+        storeFactory = DefaultStoreFactory(),
+        newsRepository = scope.get()
+    )
+
+    override fun handleDeeplink(deeplink: Deeplink.News) {
+        when (deeplink) {
+            is Deeplink.News.NewsDetail -> {
+                // Navigate to news detail while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.NewsEventById(deeplink.newsId))
+            }
+        }
+    }
+
+    override fun handleDeeplink(deeplink: Deeplink.Clubs) {
+        when (deeplink) {
+            is Deeplink.Clubs.ClubsList -> {
+                // Navigate to clubs while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Club)
+            }
+        }
+    }
+
+    override fun handleDeeplink(deeplink: Deeplink.Shop) {
+        when (deeplink) {
+            is Deeplink.Shop.ShopRoot -> {
+                // Navigate to shop while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Shop)
+            }
+
+            is Deeplink.Shop.ShopProduct -> {
+                // Navigate to shop while preserving navigation stack
+                navigation.pushNew(RootReviewComponent.Config.Shop)
+                // Pass the product deeplink to the shop component
+                val currentChild = childStack.value.active.instance
+                if (currentChild is RootReviewComponent.Child.Shop) {
+                    currentChild.component.handleDeeplink(deeplink.productId)
+                }
+            }
+        }
+    }
+
     override val childSlot: Value<ChildSlot<RootReviewComponent.ConfigSlot, RootReviewComponent.ChildSlot>> =
         childSlot(
             source = slotNavigation,
@@ -106,8 +158,8 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
 
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
                 RootStartScreenComponentBase(
-                    componentContext,
-                    startId = config.startId,
+                    context = componentContext,
+                    input = StartScreenInput.Item(config.startItem),
                     pop = navigation::pop
                 )
             )
@@ -120,14 +172,6 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
                 )
             )
 
-//            is RootReviewComponent.Config.Schedule -> RootReviewComponent.Child.Schedule(
-//                RootStartsScheduleComponentBase(
-//                    context = componentContext,
-//                    dependencies = scope.get(),
-//                    pop = navigation::pop
-//                )
-//            )
-
             is RootReviewComponent.Config.Popular -> RootReviewComponent.Child.Popular(
                 RootStartsPopularComponentBase(
                     context = componentContext,
@@ -138,8 +182,17 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             is RootReviewComponent.Config.NewsEvent -> RootReviewComponent.Child.NewsEvent(
                 NewsEventComponentBase(
                     context = componentContext,
-                    item = config.news,
-                    storeFactory = NewsEventStoreFactory(DefaultStoreFactory()),
+                    input = NewsEventInput.Item(config.news),
+                    storeFactory = createNewsEventStoreFactory(),
+                    onBack = navigation::pop
+                )
+            )
+
+            is RootReviewComponent.Config.NewsEventById -> RootReviewComponent.Child.NewsEvent(
+                NewsEventComponentBase(
+                    context = componentContext,
+                    input = NewsEventInput.Id(config.newsId),
+                    storeFactory = createNewsEventStoreFactory(),
                     onBack = navigation::pop
                 )
             )
@@ -177,7 +230,8 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
             is RootReviewComponent.Config.Shop -> RootReviewComponent.Child.Shop(
                 RootShopCatalogComponentBase(
                     componentContext = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    initialProductId = null
                 )
             )
         }
@@ -203,7 +257,6 @@ class RootReviewComponentBase(context: ComponentContext) : RootReviewComponent,
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
-            // 1 -> RootReviewComponent.Config.Schedule
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Shop

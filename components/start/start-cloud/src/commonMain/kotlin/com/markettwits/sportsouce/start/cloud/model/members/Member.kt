@@ -26,11 +26,11 @@ data class Member(
     @SerialName("reg_code")
     val regCode: String,
     @SerialName("registration_date")
-    val registrationDate: String,
+    val registrationDate: String? = null,
     @SerialName("stage")
     val stage: MemberStage,
     @SerialName("surname")
     val surname: String,
     @SerialName("team")
-    val team: String
+    val team: String,
 )

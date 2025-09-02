@@ -1,7 +1,7 @@
 package com.markettwits.selfupdater.thirdparty.api
 
-import com.flipperdevices.selfupdater.api.SelfUpdaterSourceApi
-import com.flipperdevices.selfupdater.unknown.api.SelfUpdaterUnknown
+import com.markettwits.selfupdater.api.SelfUpdaterSourceApi
+import com.markettwits.selfupdater.unknown.api.SelfUpdaterUnknown
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

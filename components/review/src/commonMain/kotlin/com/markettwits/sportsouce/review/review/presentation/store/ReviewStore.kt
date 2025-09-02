@@ -4,9 +4,8 @@ package com.markettwits.sportsouce.review.review.presentation.store
 import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.review.review.domain.Review
-import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.Intent
-import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.Label
-import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.State
+import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.*
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 interface ReviewStore : Store<Intent, State, Label> {
 
@@ -14,7 +13,7 @@ interface ReviewStore : Store<Intent, State, Label> {
         data object OnClickSearch : Intent
         data object OnClickSettings : Intent
         data class OnClickNews(val news: NewsItem) : Intent
-        data class OnClickItem(val item : Int) : Intent
+        data class OnClickItem(val item: StartsListItem) : Intent
         data class OnClickMenu(val item : Int) : Intent
         data object OnClickTelegram : Intent
         data object OnClickVk : Intent
@@ -32,7 +31,7 @@ interface ReviewStore : Store<Intent, State, Label> {
         data object OnClickSearch : Label
         data object OnClickSettings : Label
         data class OnClickNews(val news: NewsItem) : Label
-        data class OnClickItem(val item : Int) : Label
+        data class OnClickItem(val item: StartsListItem) : Label
         data class OnClickMenu(val item : Int) : Label
     }
 }

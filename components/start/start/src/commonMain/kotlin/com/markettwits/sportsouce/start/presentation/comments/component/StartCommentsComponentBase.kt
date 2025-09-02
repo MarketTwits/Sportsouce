@@ -11,11 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 class StartCommentsComponentBase(
     context: ComponentContext,
     private val storeFactory: StartCommentsStoreFactory,
-    private val startId: Int,
 ) : ComponentContext by context, StartCommentsComponent {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(startId)
+        storeFactory.create()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

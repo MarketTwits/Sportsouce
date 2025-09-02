@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
@@ -14,7 +13,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun StartShareActionButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     SmallFloatingActionButton(
-        modifier = modifier.padding(10.dp),
+        modifier = modifier
+            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
+            .padding(10.dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.tertiary,
         onClick = onClick,

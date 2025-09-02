@@ -1,9 +1,7 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -25,6 +23,7 @@ internal fun ProfileTopBar(modifier: Modifier = Modifier, goSettings: () -> Unit
         modifier
             .shadow(4.dp, RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
             .background(MaterialTheme.colorScheme.primary)
+            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 5.dp)
             .fillMaxWidth()

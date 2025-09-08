@@ -12,8 +12,9 @@ import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResultRows
+import com.markettwits.sportsouce.start.cloud.model.result.v1.StartMemberResultRowsV1
+import com.markettwits.sportsouce.start.cloud.model.result.v1.StartMemberResultV1
+import com.markettwits.sportsouce.start.cloud.model.result.v2.StartMembersResultRowsV2
 import com.markettwits.sportsouce.start.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
@@ -86,8 +87,8 @@ internal class SportSauceStartApiBase(
         maxResultCount: Int,
         startId: Int,
         filterText: String,
-        sorting: String
-    ): List<StartMemberResult> {
+        sorting: String,
+    ): List<StartMemberResultV1> {
         val response = client.get("member-result") {
             parameter("maxResultCount", maxResultCount.toString())
             parameter("start_id", startId.toString())
@@ -96,7 +97,25 @@ internal class SportSauceStartApiBase(
                 parameter("filterText", filterText)
             }
         }
-        return json.decodeFromString<StartMemberResultRows>(response.body()).rows
+        return json.decodeFromString<StartMemberResultRowsV1>(response.body()).rows
+    }
+
+    override suspend fun membersResultsAnalyze(
+        startId: Int,
+        page: Int,
+        maxResultCount: Int,
+        gender: String,
+        group: String,
+        distance: String,
+    ): StartMembersResultRowsV2 {
+        val response = client.get("race/analyze-results/$startId") {
+            parameter("page", page)
+            parameter("maxResultCount", maxResultCount)
+            if (gender.isNotBlank()) parameter("gender", gender)
+            if (group.isNotBlank()) parameter("group", group)
+            if (distance.isNotBlank()) parameter("distance", distance)
+        }
+        return json.decodeFromString<StartMembersResultRowsV2>(response.body<String>())
     }
 
     override suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse {

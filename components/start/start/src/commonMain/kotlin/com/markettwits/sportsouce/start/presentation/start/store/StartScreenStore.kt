@@ -41,7 +41,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
         data class OnClickUrl(val url: String) : Intent
         data class OnClickPhone(val url: String) : Intent
-        data class OnClickStartRecommended(val startId: Int) : Intent
+        data class OnClickStartRecommended(val startId: StartsListItem) : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
     }
 
@@ -60,7 +60,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnApplyStartId(val startId: Int) : Label
         data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
         data class OnClickMembersResult(val membersResult: List<MemberResult>) : Label
-        data class OnClickStartRecommended(val startId: Int) : Label
+        data class OnClickStartRecommended(val start: StartsListItem) : Label
         data class OnClickFullAlbum(val images: List<String>) : Label
         data class OnClickDistanceNew(
             val startId: Int,
@@ -99,9 +99,9 @@ class StartScreenStoreFactory(
     }
 
     private inner class ExecutorImpl(
-        private val startId: StartScreenInput,
+        private val startInput: StartScreenInput,
         private val exceptionTracker: ExceptionTracker,
-        private val intentAction: IntentAction
+        private val intentAction: IntentAction,
     ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>(), LogTagProvider {
 
         override val tag: String = "StartScreenExecutorImpl"
@@ -114,7 +114,7 @@ class StartScreenStoreFactory(
                         publish(OnClickMembers(startItem.id, intent.members))
                     }
                 }
-                is Intent.OnClickRetry -> launch(startId, true)
+                is Intent.OnClickRetry -> launch(startInput, true)
                 is Intent.OnClickFullAlbum -> {
                     val images = state().startItem?.startAlbum?.flatMap { album ->
                         album.photos.map { photo -> photo.imageUrl }
@@ -166,18 +166,18 @@ class StartScreenStoreFactory(
 
         override fun executeAction(action: Unit) {
             // If input is StartsListItem, immediately show partial data
-            if (startId is StartScreenInput.Item) {
-                val partialStartItem = StartsListItemToStartItemMapper.mapToPartialStartItem(startId.item)
+            if (startInput is StartScreenInput.Item) {
+                val partialStartItem = StartsListItemToStartItemMapper.mapToPartialStartItem(startInput.item)
                 dispatch(Msg.SetPartialStartItem(partialStartItem))
             }
-            launch(startId = startId, false)
+            launch(startInput = startInput, false)
         }
 
-        private fun launch(startId: StartScreenInput, relaunch: Boolean) {
-            val startIdString = when (startId) {
-                is StartScreenInput.Id -> startId.startId.toString()
-                is StartScreenInput.Slug -> startId.slug
-                is StartScreenInput.Item -> startId.item.id.toString()
+        private fun launch(startInput: StartScreenInput, relaunch: Boolean) {
+            val startIdString = when (startInput) {
+                is StartScreenInput.Id -> startInput.startId.toString()
+                is StartScreenInput.Slug -> startInput.slug
+                is StartScreenInput.Item -> startInput.item.id.toString()
             }
 
             scope.launch {
@@ -185,7 +185,7 @@ class StartScreenStoreFactory(
                 service.start(startIdString, relaunch).fold(
                     onFailure = { exception ->
                         if (!exception.isNetworkConnectionError()) {
-                            exceptionTracker.setKey(Pair("startId", startId.toString()))
+                            exceptionTracker.setKey(Pair("startId", startInput.toString()))
                             exceptionTracker.reportException(exception, "StartScreenStore#launch")
                             errorLog { "Fail to fetch start ${exception.message}" }
                         }

@@ -31,10 +31,8 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="https"/>
-                <data android:scheme="https"/>
-                <data android:host="sportsauce.ru"/>
-                <data android:host="shop.sportsauce.ru"/>
+                <data android:scheme="https" android:host="sportsauce.ru"/>
+                <data android:scheme="https" android:host="shop.sportsauce.ru"/>
             </intent-filter>
         </activity>
     </application>

@@ -14,6 +14,7 @@ object SportSouceColor {
     val VeryLighBlue = Color(244, 250, 254)
     val DirtyWhite = Color(224, 224, 224)
     val SecondaryWhite = Color(247, 247, 247)
+    val OnBackgroundLight = Color(61, 60, 60, 255)
     val DarkSecondaryNew = Color(29, 32, 36)
     val DarkSecondaryContainerNew = Color(42, 45, 49)
     val Gray = Color(100,100,100)

@@ -10,7 +10,8 @@ import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
+import com.markettwits.sportsouce.start.cloud.model.result.v1.StartMemberResultV1
+import com.markettwits.sportsouce.start.cloud.model.result.v2.StartMembersResultRowsV2
 import com.markettwits.sportsouce.start.cloud.model.seasons.StartSeasonsRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbum
@@ -43,8 +44,17 @@ interface SportSauceStartApi {
         maxResultCount: Int,
         startId: Int,
         filterText: String = "",
-        sorting: String = "result asc"
-    ): List<StartMemberResult>
+        sorting: String = "result asc",
+    ): List<StartMemberResultV1>
+
+    suspend fun membersResultsAnalyze(
+        startId: Int,
+        page: Int = 1,
+        maxResultCount: Int = 10,
+        gender: String = "",
+        group: String = "",
+        distance: String = "",
+    ): StartMembersResultRowsV2
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
 

@@ -11,12 +11,7 @@ interface StartRepository {
 
     suspend fun start(startId: String, relaunch: Boolean): Result<StartItem>
 
-    suspend fun startMemberResults(
-        startId: Int,
-        query: String,
-        limit: Int,
-        offset: Int,
-    ): Result<List<MemberResult>>
+    suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult>
 
     suspend fun startComments(startId: Int): Result<StartItem.Comments>
 
@@ -24,13 +19,12 @@ interface StartRepository {
 
     suspend fun writeComment(startId: Int, comment: String, id: Int, subComment: Boolean): CommentUiState
 
-    // New API-driven members and filters
     suspend fun membersFilters(startId: Int): Result<FiltersRemote>
 
-    // Paging API for members: repository owns Pager creation
     fun pagingMembers(
         startId: Int,
         params: StartMembersPagingParams,
     ): Flow<PagingData<Pair<StartMembersUi, Int>>>
+
 }
 

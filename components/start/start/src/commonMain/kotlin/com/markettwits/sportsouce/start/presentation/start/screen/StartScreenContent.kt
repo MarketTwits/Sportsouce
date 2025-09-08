@@ -41,7 +41,7 @@ internal fun StartScreenContent(
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
     onClickShare: () -> Unit,
-    onClickRecommendedStart: (Int) -> Unit,
+    onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
 ) {

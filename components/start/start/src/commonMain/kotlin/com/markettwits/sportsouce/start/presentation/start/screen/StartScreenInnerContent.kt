@@ -30,7 +30,7 @@ internal fun StartScreenInnerContent(
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
     onClickRetry: () -> Unit,
-    onClickRecommendedStart: (Int) -> Unit,
+    onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
 ) {

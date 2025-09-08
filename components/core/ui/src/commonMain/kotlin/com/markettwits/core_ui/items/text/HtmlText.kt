@@ -72,7 +72,6 @@ fun HtmlText(
         } else {
             color
         }
-
         state.config.linkColor = actualColor
         state.config.codeSpanColor = actualColor
         state.config.codeSpanBackgroundColor = Color.Transparent

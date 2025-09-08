@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.starts.starts.presentation.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -26,7 +28,7 @@ fun StartsScreen(
     }
 
     CollapsingToolbarScaffold(
-        modifier = Modifier,
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
         state = rememberCollapsingToolbarScaffoldState(),
         toolbar = {

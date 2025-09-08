@@ -7,6 +7,7 @@ import app.cash.paging.map
 import com.markettwits.core.errors.api.throwable.networkExceptionHandler
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
+import com.markettwits.core.log.infoLog
 import com.markettwits.core_ui.items.extensions.fetchFifth
 import com.markettwits.core_ui.items.extensions.retryRunCatchingAsync
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
@@ -15,7 +16,6 @@ import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommen
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteNew
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteOld
@@ -28,6 +28,8 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote as CloudFiltersRemote
@@ -53,11 +55,9 @@ internal class StartRepositoryBase(
         startId: String,
         relaunch: Boolean
     ): Result<StartItem> {
-        // Check if startId is numeric or slug
         val numericId = startId.toIntOrNull()
 
         return if (numericId != null) {
-            // startId is numeric, can use caching logic
             if (relaunch) {
                 launches(startId)
             } else {
@@ -66,22 +66,63 @@ internal class StartRepositoryBase(
                 }.getOrNull() ?: launches(startId)
             }
         } else {
-            // startId is slug, always call API since we need to resolve to ID
             launches(startId)
         }
     }
 
-    override suspend fun startMemberResults(
-        startId: Int,
-        query: String,
-        limit: Int,
-        offset: Int
-    ): Result<List<MemberResult>> =
-        kotlin.runCatching {
-            startService.membersResults(1000, startId, query)
-        }.map {
-            startMapper.map(it)
+    override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> {
+        return coroutineScope {
+            val firstDeferred = async {
+                runCatching {
+                    startService.membersResults(startId = startId, maxResultCount = maxResultCount)
+                }.onFailure {
+                    errorLog { "Fail to fetch start members result ${it.message}" }
+                }.onSuccess {
+                    if (it.isEmpty()) {
+                        errorLog { "Start members result is empty first" }
+                    } else {
+                        infoLog { "Start members result is not empty" }
+                    }
+                }
+            }
+            val secondDeferred = async {
+                runCatching {
+                    startService.membersResultsAnalyze(startId = startId, maxResultCount = 1000)
+                }.onFailure {
+                    errorLog { "Fail to fetch start members result ${it.message}" }
+                }.onSuccess {
+                    if (it.rows.isEmpty()) {
+                        errorLog { "Start members result is empty" }
+                    } else {
+                        infoLog { "Start members result is not empty second" }
+                        errorLog { it.rows.toString() }
+                    }
+                }
+            }
+            val firstResult = firstDeferred.await()
+            val secondResult = secondDeferred.await()
+            return@coroutineScope when {
+                firstResult.isSuccess && firstResult.getOrThrow().isNotEmpty() -> {
+                    startMapper.mapR1(firstResult.getOrThrow())
+                }
+
+                secondResult.isSuccess && secondResult.getOrThrow().rows.isNotEmpty() -> {
+                    startMapper.mapR2(secondResult.getOrThrow().rows)
+                }
+
+                firstResult.isSuccess -> {
+                    startMapper.mapR1(firstResult.getOrThrow())
+                }
+
+                secondResult.isSuccess -> {
+                    startMapper.mapR2(secondResult.getOrThrow().rows)
+                }
+
+                else -> emptyList()
+            }
         }
+    }
+
 
     override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
         retryRunCatchingAsync {
@@ -104,21 +145,28 @@ internal class StartRepositoryBase(
 
     private suspend fun launches(startId: String): Result<StartItem> {
         val result = runCatching {
-            // First, get the start data to extract the actual ID for other API calls
             val startData = startService.start(startId)
             val actualStartId = startData.id
             
             val cloud =
-                fetchFifth<StartRemote, List<StartMember>, List<StartAlbum>, List<Comment>, List<StartMemberResult>>(
+                fetchFifth<StartRemote, List<StartMember>, List<StartAlbum>, List<Comment>, List<MemberResult>>(
                     { startData }, // Use already fetched start data
                     { safeCallStartMembers(actualStartId) },
                     { startService.albums(actualStartId) },
                     { startService.comments(actualStartId) },
-                    { safeCallStartMembersResults(actualStartId) }
+                    { startMembersResult(actualStartId, 10000) }
                 )
             val result =
-                startMapper.map(cloud.first, cloud.second, cloud.fifth, cloud.third, cloud.fourth)
+                startMapper.map(
+                    cloud.first,
+                    cloud.second,
+                    cloud.fifth,
+                    cloud.third,
+                    cloud.fourth
+                )
 
+            errorLog { "StartItem mapped with ${result.membersResults.size} member results" }
+            infoLog { "Start Item :${result.membersResults}" }
             // Cache using the actual ID
             cache.set(value = Result.success(result), key = actualStartId)
             result
@@ -169,16 +217,6 @@ internal class StartRepositoryBase(
             errorLog { "Error ${it.message}" }
             emptyList()
         }
-    }
-
-    private suspend fun safeCallStartMembersResults(startId: Int): List<StartMemberResult> {
-        return kotlin.runCatching {
-            startService.membersResults(1000, startId)
-        }.fold(onSuccess = { it }, onFailure = {
-            errorLog { "Fail to launch startMembersResults start id $startId" }
-            errorLog { "Error ${it.message}" }
-            emptyList()
-        })
     }
 
     override suspend fun membersFilters(startId: Int): Result<FiltersRemote> =

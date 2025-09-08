@@ -1,18 +1,14 @@
-package com.markettwits.sportsouce.start.cloud.model.result
+package com.markettwits.sportsouce.start.cloud.model.result.v1
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.*
 
 @Serializable
-data class StartMemberResult(
+data class StartMemberResultV1(
     @SerialName("birthday")
     val birthday: String? = null,
     @SerialName("body_number")
@@ -47,7 +43,7 @@ data class StartMemberResult(
     @SerialName("updatedAt")
     val updatedAt: String = "",
     @SerialName("user_id")
-    val userId: Int? = null
+    val userId: Int? = null,
 )
 
 object CirclesSerializer : JsonTransformingSerializer<Map<Int, String>>(

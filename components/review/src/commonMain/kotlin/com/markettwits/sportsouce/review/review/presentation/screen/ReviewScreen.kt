@@ -29,7 +29,7 @@ fun ReviewScreen(
 ) {
     val state by component.value.collectAsState()
     CollapsingToolbarScaffold(
-        modifier = Modifier.background(MaterialTheme.colorScheme.primary),
+        modifier = Modifier.background(MaterialTheme.colorScheme.background),
         state = rememberCollapsingToolbarScaffoldState(),
         scrollStrategy = ScrollStrategy.EnterAlways,
         toolbar = {

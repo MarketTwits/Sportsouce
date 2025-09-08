@@ -109,7 +109,6 @@ internal fun StartExtraFieldsPanel(
                 StartExtraFiledRow(
                     icon = Icons.Outlined.PersonOutline,
                     value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
-
                 )
             }
         }
@@ -123,18 +122,18 @@ private fun StartExtraFiledRow(
     value: String,
 ) {
     Row(
-        modifier = modifier.padding(vertical = 6.dp),
+        modifier = modifier.padding(vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = "icon",
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f),
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = value,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f),
             fontFamily = FontNunito.medium(),
             fontSize = 14.sp
         )

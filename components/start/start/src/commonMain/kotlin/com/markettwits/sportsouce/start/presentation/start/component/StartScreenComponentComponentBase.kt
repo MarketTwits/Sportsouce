@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +25,7 @@ class StartScreenComponentComponentBase(
     private val members: (Int, List<StartMembersUi>) -> Unit,
     private val membersResult: (List<MemberResult>) -> Unit,
     private val album: (List<String>) -> Unit,
-    private val pushStart: (Int) -> Unit,
+    private val pushStart: (StartsListItem) -> Unit,
     private val onApplyStartId: (Int) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
 
@@ -58,7 +59,7 @@ class StartScreenComponentComponentBase(
                             mapDistance = it.mapDistance,
                         )
                     )
-                    is StartScreenStore.Label.OnClickStartRecommended -> pushStart(it.startId)
+                    is StartScreenStore.Label.OnClickStartRecommended -> pushStart(it.start)
                     is StartScreenStore.Label.OnApplyStartId -> onApplyStartId(it.startId)
                 }
             }

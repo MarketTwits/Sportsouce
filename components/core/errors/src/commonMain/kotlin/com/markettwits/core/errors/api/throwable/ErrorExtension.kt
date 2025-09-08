@@ -45,8 +45,10 @@ fun SauceError.mapToString(): String = when (this) {
 suspend fun Throwable.networkExceptionHandler(): Exception = when (this) {
     is HttpRequestTimeoutException -> Exception(NETWORK_EXCEPTION_MESSAGE)
     is SocketTimeoutException -> Exception(TIMEOUT_EXCEPTION_MESSAGE)
-    is ResponseException -> Exception(response.body<ResponseError>().message)
     is SerializationException -> Exception(SERIALIZATION_EXCEPTION_MESSAGE)
+    is ResponseException -> runCatching { Exception(response.body<ResponseError>().message) }.getOrNull() ?: Exception(
+        GENERAL_EXCEPTION_MESSAGE
+    )
     else -> Exception(this.message.toString())
 }
 

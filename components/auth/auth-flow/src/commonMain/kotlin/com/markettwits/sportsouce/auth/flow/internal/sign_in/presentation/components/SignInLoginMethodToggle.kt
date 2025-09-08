@@ -4,10 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -30,7 +28,6 @@ internal fun SignInLoginMethodToggle(
     currentLoginMethod: LoginMethod,
     onLoginMethodChange: (LoginMethod) -> Unit,
 ) {
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -45,17 +42,15 @@ internal fun SignInLoginMethodToggle(
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            LoginMethod.entries.forEach {
-                when (it) {
+            LoginMethod.entries.forEach { method ->
+                when (method) {
                     LoginMethod.PASSWORD -> SelectorOption(
                         modifier = Modifier
                             .padding(4.dp)
                             .weight(1f),
                         text = "Пароль",
                         isSelected = currentLoginMethod == LoginMethod.PASSWORD,
-                        onClick = {
-                            onLoginMethodChange(LoginMethod.PASSWORD)
-                        }
+                        onClick = { onLoginMethodChange(LoginMethod.PASSWORD) }
                     )
 
                     LoginMethod.SMS -> SelectorOption(
@@ -64,8 +59,9 @@ internal fun SignInLoginMethodToggle(
                             .weight(1f),
                         text = "SMS",
                         isSelected = currentLoginMethod == LoginMethod.SMS,
-                        onClick = {
-                            onLoginMethodChange(LoginMethod.SMS)
+                        onClick = { onLoginMethodChange(LoginMethod.SMS) },
+                        badge = {
+                            BetaBadge()
                         }
                     )
                 }
@@ -74,13 +70,13 @@ internal fun SignInLoginMethodToggle(
     }
 }
 
-
 @Composable
 fun SelectorOption(
     modifier: Modifier = Modifier,
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
+    badge: (@Composable () -> Unit)? = null,
 ) {
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.tertiary
@@ -103,14 +99,40 @@ fun SelectorOption(
             .clip(Shapes.medium)
             .background(backgroundColor)
             .clickable { onClick() }
-            .padding(horizontal = padding, vertical = 8.dp)
+            .padding(horizontal = padding, vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                color = textColor,
+                fontFamily = FontNunito.semiBoldBold(),
+                fontSize = 18.sp
+            )
+            if (badge != null) {
+                Spacer(Modifier.width(6.dp))
+                badge()
+            }
+        }
+    }
+}
+
+@Composable
+fun BetaBadge() {
+    Box(
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(Color(0xFFFF9800))
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = text,
-            color = textColor,
-            fontFamily = FontNunito.semiBoldBold(),
-            fontSize = 18.sp
+            text = "Beta",
+            color = Color.White,
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }

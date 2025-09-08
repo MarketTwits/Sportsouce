@@ -27,13 +27,19 @@ data class DistanceFilter(
     val isSelected: Boolean
 )
 
+data class GenderFilter(
+    val name: String,
+    val isSelected: Boolean,
+)
+
 data class FilterState(
     val distanceFilters: List<DistanceFilter> = emptyList(),
     val groupFilters: List<GroupFilter> = emptyList(),
     val teamFilters: List<TeamFilter> = emptyList(),
+    val genderFilters: List<GenderFilter> = emptyList(),
     val sortBy: SortBy = SortBy.RESULT,
     val sortOrder: SortOrder = SortOrder.ASC,
-    val searchQuery: String = ""
+    val searchQuery: String = "",
 )
 
 internal fun List<DistanceFilter>.getSelectDistance() : DistanceFilter?
@@ -44,5 +50,7 @@ internal fun List<TeamFilter>.getSelectTeams() : List<TeamFilter>
 
 internal fun List<GroupFilter>.getSelectedGroups() : List<GroupFilter>
         = this.filter { it.isSelected }
+
+internal fun List<GenderFilter>.getSelectedGenders(): List<GenderFilter> = this.filter { it.isSelected }
 
 

@@ -68,7 +68,7 @@ class RootStartScreenComponentBase(
                 RootStartScreenComponent.Child.Start(
                     component = StartScreenComponentComponentBase(
                         componentContext = componentContext,
-                        input = input,
+                        input = config.startScreenInput,
                         back = {
                             if (config.index == 0) {
                                 pop()
@@ -93,10 +93,10 @@ class RootStartScreenComponentBase(
                                 RootStartScreenComponent.Config.StartMembersResult(it)
                             )
                         },
-                        pushStart = {
+                        pushStart = { item ->
                             navigation.pushNew(
                                 RootStartScreenComponent.Config.Start(
-                                    input,
+                                    StartScreenInput.Item(item),
                                     config.index + 1
                                 )
                             )

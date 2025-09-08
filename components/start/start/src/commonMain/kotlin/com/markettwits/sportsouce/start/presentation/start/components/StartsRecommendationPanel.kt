@@ -3,14 +3,7 @@ package com.markettwits.sportsouce.start.presentation.start.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +29,7 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 internal fun StartsRecommendationPanel(
     modifier: Modifier = Modifier,
     items: List<StartsListItem>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (StartsListItem) -> Unit,
 ) {
     if (items.isNotEmpty()) {
         Column(
@@ -66,7 +59,7 @@ internal fun StartsRecommendationPanel(
                     ImageCard(
                         name = item.name,
                         image = item.image,
-                        onClick = { onItemClick(item.id) }
+                        onClick = { onItemClick(item) }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }

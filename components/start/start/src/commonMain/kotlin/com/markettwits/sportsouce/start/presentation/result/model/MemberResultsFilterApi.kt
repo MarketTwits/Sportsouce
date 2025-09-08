@@ -21,10 +21,15 @@ class MemberResultsFilterApi {
             TeamFilter(name = it, isSelected = false)
         }
 
+        val genderFilters = extractGendersFromMembers(members).map {
+            GenderFilter(name = it, isSelected = false)
+        }
+
         return FilterState(
             distanceFilters = distanceFilters,
             groupFilters = groupFilters,
-            teamFilters = teamFilters
+            teamFilters = teamFilters,
+            genderFilters = genderFilters
         )
     }
 
@@ -66,7 +71,9 @@ class MemberResultsFilterApi {
             return false
         }
 
-        return true
+        // Пол
+        val selectedGenders = filterState.genderFilters.filter { it.isSelected }.map { it.name }
+        return !(selectedGenders.isNotEmpty() && member.sex !in selectedGenders)
     }
 
     private fun createComparator(sortBy: SortBy, sortOrder: SortOrder): Comparator<MemberResult> {
@@ -104,5 +111,9 @@ class MemberResultsFilterApi {
 
     fun extractDistancesFromMembers(members: List<MemberResult>): List<String> {
         return members.map { it.distance }.distinct().sorted()
+    }
+
+    fun extractGendersFromMembers(members: List<MemberResult>): List<String> {
+        return members.map { it.sex }.distinct().sorted()
     }
 }

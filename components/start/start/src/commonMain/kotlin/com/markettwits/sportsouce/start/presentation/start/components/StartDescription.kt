@@ -3,8 +3,6 @@ package com.markettwits.sportsouce.start.presentation.start.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.EaseOutCubic
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -30,7 +28,6 @@ internal fun StartDescription(modifier: Modifier, description: String, isPartial
     var expanded by rememberSaveable { mutableStateOf(false) }
     var isVisible by rememberSaveable(description) { mutableStateOf(false) }
     var hasAnimated by rememberSaveable(description) { mutableStateOf(false) }
-    val displayText = if (expanded) description else description.take(250)
 
     LaunchedEffect(description) {
         if (!hasAnimated) {
@@ -48,28 +45,27 @@ internal fun StartDescription(modifier: Modifier, description: String, isPartial
             animationSpec = tween(durationMillis = 600, easing = EaseOutCubic)
         ) + slideInVertically(
             animationSpec = tween(durationMillis = 700, easing = EaseOutCubic),
-            initialOffsetY = { it / 4 } // Smoother, shorter slide distance
+            initialOffsetY = { it / 4 }
         )
     ) {
         Column(modifier) {
             if (description.isNotEmpty()) {
-                val textColor = MaterialTheme.colorScheme.onPrimary
                 HtmlText(
                     modifier = Modifier.animateContentSize(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioNoBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = EaseOutCubic
+                        )
                     ),
-                    text = displayText,
+                    text = if (expanded) description else description.take(350),
                     fontSize = 14.sp,
                     fontFamily = FontNunito.medium(),
                     lineHeight = 16.sp,
                     selectable = true,
-                    color = textColor,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
 
-                if (description.length > 250) {
+                AnimatedVisibility(description.length > 350) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,

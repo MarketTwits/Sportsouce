@@ -1,7 +1,7 @@
 [versions]
 #plugins
-versionName = "1.4.5"
-versionCode = "10406"
+versionName = "1.4.6"
+versionCode = "10407"
 jvm = "11"
 kotlin = "2.1.20" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 gradle = "8.9.2" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
@@ -18,7 +18,7 @@ jetbrainsKotlinWrappers = "2025.4.11" #https://github.com/JetBrains/kotlin-wrapp
 compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
-richeditor = "1.0.0-rc12" # https://github.com/MohamedRejeb/compose-rich-editor
+richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.1.0-beta01"
 composeHotReload = "1.0.0-alpha09" # https://github.com/JetBrains/compose-hot-reload

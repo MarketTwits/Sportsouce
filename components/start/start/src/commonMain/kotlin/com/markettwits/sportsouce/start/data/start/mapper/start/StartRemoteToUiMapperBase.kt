@@ -5,7 +5,8 @@ import com.markettwits.core.time.TimePattern
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMemberItem
-import com.markettwits.sportsouce.start.cloud.model.result.StartMemberResult
+import com.markettwits.sportsouce.start.cloud.model.result.v1.StartMemberResultV1
+import com.markettwits.sportsouce.start.cloud.model.result.v2.StartMemberResultV2
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteNew
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteOld
@@ -31,7 +32,7 @@ internal class StartRemoteToUiMapperBase(
     override fun map(
         startRemote: StartRemote,
         startMembers: List<StartMember>,
-        startMemberResults: List<StartMemberResult>,
+        startMemberResults: List<MemberResult>,
         startAlbum: List<StartAlbum>,
         commentsRemote: List<Comment>,
     ): StartItem {
@@ -88,7 +89,7 @@ internal class StartRemoteToUiMapperBase(
                     ),
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
                     distanceMapNew = startRemote.distances,
-                    membersResults = membersResultsMapper.map(startMemberResults),
+                    membersResults = startMemberResults,
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers)
                 )
             }
@@ -146,7 +147,7 @@ internal class StartRemoteToUiMapperBase(
                     ),
                     distanceInfoNew = emptyList(),
                     distanceMapNew = emptyList(),
-                    membersResults = membersResultsMapper.map(startMemberResults),
+                    membersResults = startMemberResults,
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
                     slug = ""
                 )
@@ -154,8 +155,12 @@ internal class StartRemoteToUiMapperBase(
         }
     }
 
-    override fun map(startMemberResults: List<StartMemberResult>): List<MemberResult> {
-        return membersResultsMapper.map(startMemberResults)
+    override fun mapR1(startMemberResultsV1: List<StartMemberResultV1>): List<MemberResult> {
+        return membersResultsMapper.mapV1(startMemberResultsV1)
+    }
+
+    override fun mapR2(startMembersResultsV2: List<StartMemberResultV2>): List<MemberResult> {
+        return membersResultsMapper.mapV2(startMembersResultsV2)
     }
 
 

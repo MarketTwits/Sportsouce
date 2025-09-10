@@ -6,29 +6,29 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Member(
     @SerialName("age_group")
-    val ageGroup: AgeGroup?,
+    val ageGroup: AgeGroup? = null,
     @SerialName("birthday")
-    val birthday: String,
+    val birthday: String? = null,
     @SerialName("distance_id")
     val distanceId: Int?,
     @SerialName("distance_relation")
     val distanceRelation: DistanceRelation?,
     @SerialName("results")
-    val results: List<MemberResult>,
+    val results: List<MemberResult>? = null,
     @SerialName("gender")
-    val gender: String,
+    val gender: String? = null,
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
     @SerialName("surname")
-    val surname: String,
+    val surname: String? = null,
     @SerialName("team")
-    val team: String,
+    val team: String? = null,
     @DeprecatedField
-    val distance: String?,
+    val distance: String? = null,
     @DeprecatedField
-    val group: String?,
+    val group: String? = null,
     @DeprecatedField
-    val format: String?,
+    val format: String? = null,
 )

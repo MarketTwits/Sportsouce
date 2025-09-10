@@ -3,9 +3,11 @@ package com.markettwits.sportsouce.auth.flow.internal.common
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -25,8 +27,54 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.theme.FontNunito
+
+@Composable
+fun EnhancedPhoneTextField(
+    modifier: Modifier = Modifier,
+    label: String,
+    value: String,
+    isError: Boolean = false,
+    errorMessage: String? = null,
+    hintMessage: String? = null,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    onValueChanged: (String) -> Unit,
+    onFocusChanged: (Boolean) -> Unit = {},
+) {
+    OutlinePhoneTextFiled(
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onFocusChanged(focusState.isFocused)
+            },
+        label = label,
+        value = value,
+        isError = isError,
+        keyboardActions = keyboardActions,
+        supportingText = if (isError && !errorMessage.isNullOrBlank()) {
+            {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.regular()
+                )
+            }
+        } else if (!hintMessage.isNullOrBlank()) {
+            {
+                Text(
+                    text = hintMessage,
+                    color = MaterialTheme.colorScheme.outline,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.regular()
+                )
+            }
+        } else null,
+        onValueChange = onValueChanged
+    )
+}
 
 @Composable
 fun EnhancedEmailOrPhoneTextField(
@@ -35,38 +83,46 @@ fun EnhancedEmailOrPhoneTextField(
     value: String,
     isError: Boolean = false,
     errorMessage: String? = null,
+    hintMessage: String? = null,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChanged: (String) -> Unit,
     onFocusChanged: (Boolean) -> Unit = {},
 ) {
-    Column(modifier = modifier) {
-        OutlinedTextFieldBase(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    onFocusChanged(focusState.isFocused)
-                },
-            label = label,
-            value = value,
-            isError = isError,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = keyboardActions,
-            onValueChange = onValueChanged
-        )
-
-        if (isError && !errorMessage.isNullOrBlank()) {
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.regular(),
-                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
-            )
-        }
-    }
+    OutlinedTextFieldBase(
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusChanged { focusState ->
+                onFocusChanged(focusState.isFocused)
+            },
+        label = label,
+        value = value,
+        isError = isError,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        ),
+        keyboardActions = keyboardActions,
+        supportingText = if (isError && !errorMessage.isNullOrBlank()) {
+            {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.regular()
+                )
+            }
+        } else if (!hintMessage.isNullOrBlank()) {
+            {
+                Text(
+                    text = hintMessage,
+                    color = MaterialTheme.colorScheme.outline,
+                    fontSize = 12.sp,
+                    fontFamily = FontNunito.regular()
+                )
+            }
+        } else null,
+        onValueChange = onValueChanged
+    )
 }
 
 @Composable
@@ -160,19 +216,32 @@ fun EnhancedSmsCodeTextField(
                         onClick = onSendSmsClick,
                         enabled = !smsCodeSending
                     ) {
-                        Text(
-                            text = if (smsCodeSending) "Отправка..." else "Отправить",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.medium(),
-                            color = if (smsCodeSending) {
-                                MaterialTheme.colorScheme.outline
-                            } else {
-                                MaterialTheme.colorScheme.tertiary
-                            }
-                        )
+                        if (smsCodeSending) {
+                            androidx.compose.material3.CircularProgressIndicator(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        } else {
+                            Text(
+                                text = "Отправить",
+                                fontSize = 12.sp,
+                                fontFamily = FontNunito.medium(),
+                                color = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
                     }
                 }
-            } else null,
+            } else {
+                {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "SMS отправлен",
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            },
             onValueChange = { input ->
                 // Only allow digits and limit to 6 characters
                 val filtered = input.filter { it.isDigit() }.take(6)

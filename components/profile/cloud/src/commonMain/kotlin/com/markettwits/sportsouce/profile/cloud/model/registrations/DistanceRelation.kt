@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DistanceRelation(
     @SerialName("format")
-    val format: String,
+    val format: String? = null,
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
 )

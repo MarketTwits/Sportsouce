@@ -6,15 +6,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AgeGroup(
     @SerialName("age_from")
-    val ageFrom: Int?,
+    val ageFrom: Int? = null,
     @SerialName("age_to")
-    val ageTo: Int?,
+    val ageTo: Int? = null,
     @SerialName("format")
-    val format: String,
+    val format: String? = null,
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
     @SerialName("start_id")
-    val startId: Int?
+    val startId: Int? = null,
 )

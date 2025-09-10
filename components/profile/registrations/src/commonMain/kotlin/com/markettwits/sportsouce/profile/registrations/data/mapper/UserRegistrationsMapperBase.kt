@@ -11,6 +11,7 @@ import com.markettwits.sportsouce.profile.registrations.domain.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
 
 class UserRegistrationsMapperBase(
     private val timeMapper: TimeMapper
@@ -19,32 +20,32 @@ class UserRegistrationsMapperBase(
     override fun map(start: UserRegistration): StartOrderInfo {
 
         return StartOrderInfo(
-            id = start.id,
-            startId = start.startId,
-            name = start.start.name,
-            image = start.start.posterLinkFile?.fullPath ?: "",
+            id = start.id ?: Random.nextInt(),
+            startId = start.startId ?: Random.nextInt(),
+            name = start.start?.name ?: "Без названия",
+            image = start.start?.posterLinkFile?.fullPath ?: "",
             dateStartPreview = timeMapper.mapTime(
                 TimePattern.FullWithEmptySpace,
-                start.start.startDate
+                start.start?.startDate ?: ""
             ),
-            dateStartCloud = start.start.startDate,
-            members = start.members.map { member ->
+            dateStartCloud = start.start?.startDate ?: "",
+            members = start.members?.map { member ->
                 val ageGroup = member.ageGroup?.name ?: mapStartGroup(member.group)
                 val distance = member.distanceRelation?.name ?: member.distance ?: ""
                 val format = member.distanceRelation?.format ?: member.format ?: ""
                 StartOrderMember(
-                    name = member.name,
-                    surname = member.surname,
-                    teamName = member.team,
+                    name = member.name ?: "Без имени",
+                    surname = member.surname ?: "Без фамилии",
+                    teamName = member.team ?: "N/A",
                     ageGroupName = ageGroup,
                     distanceName = distance,
-                    genderName = member.gender,
+                    genderName = member.gender ?: "N/A",
                     formatName = format,
-                    results = member.results.map { mapMemberResult(it) }
+                    results = member.results?.map { mapMemberResult(it) } ?: emptyList()
                 )
-            },
+            } ?: emptyList(),
             cost = start.price.formatPrice(),
-            startTitle = start.start.name,
+            startTitle = start.start?.name ?: "",
             promo = start.promocode?.code ?: "",
             payment = mapPayments(payment = start.payment),
         )

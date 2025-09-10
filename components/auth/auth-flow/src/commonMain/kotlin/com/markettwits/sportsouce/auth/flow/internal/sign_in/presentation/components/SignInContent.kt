@@ -91,23 +91,56 @@ internal fun SignInContent(
 
                 Spacer(Modifier.height(10.dp))
 
-                // Email or Phone field (always visible)
-                EnhancedEmailOrPhoneTextField(
-                    label = if (state.loginMethod == LoginMethod.SMS) "Номер телефона" else "Телефон или почта",
-                    value = state.emailOrPhone,
-                    isError = state.emailOrPhoneError != null,
-                    errorMessage = state.emailOrPhoneError,
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            when (state.loginMethod) {
-                                LoginMethod.PASSWORD -> passwordFocusRequester.requestFocus()
-                                LoginMethod.SMS -> smsCodeFocusRequester.requestFocus()
-                            }
+                // Email or Phone field with smooth transition
+                AnimatedContent(
+                    targetState = state.loginMethod,
+                    transitionSpec = {
+                        if (targetState == LoginMethod.SMS) {
+                            slideInHorizontally { fullWidth -> fullWidth } togetherWith
+                                    slideOutHorizontally { fullWidth -> -fullWidth }
+                        } else {
+                            slideInHorizontally { fullWidth -> -fullWidth } togetherWith
+                                    slideOutHorizontally { fullWidth -> fullWidth }
                         }
-                    ),
-                    onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdateEmailOrPhone(it)) },
-                    onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetEmailOrPhoneFocus(it)) }
-                )
+                    }
+                ) { loginMethod ->
+                    if (loginMethod == LoginMethod.SMS) {
+                        EnhancedPhoneTextField(
+                            label = "Номер телефона",
+                            value = state.emailOrPhone,
+                            isError = state.emailOrPhoneError != null,
+                            errorMessage = state.emailOrPhoneError,
+                            hintMessage = if (state.isSmsCodeSent) {
+                                "SMS код отправлен на указанный номер"
+                            } else {
+                                "Введите номер телефона"
+                            },
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    if (state.emailOrPhoneError == null && state.emailOrPhone.isNotBlank() && !state.isSmsCodeSent) {
+                                        component.obtainEvent(SignInStore.Intent.SendSmsCode)
+                                        focusManager.clearFocus()
+                                    }
+                                }
+                            ),
+                            onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdateEmailOrPhone(it)) },
+                            onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetEmailOrPhoneFocus(it)) }
+                        )
+                    } else {
+                        EnhancedEmailOrPhoneTextField(
+                            label = "Телефон или почта",
+                            value = state.emailOrPhone,
+                            isError = state.emailOrPhoneError != null,
+                            errorMessage = state.emailOrPhoneError,
+                            hintMessage = "Номер телефона +79136661217 либо электронная почта",
+                            keyboardActions = KeyboardActions(
+                                onNext = { passwordFocusRequester.requestFocus() }
+                            ),
+                            onValueChanged = { component.obtainEvent(SignInStore.Intent.UpdateEmailOrPhone(it)) },
+                            onFocusChanged = { component.obtainEvent(SignInStore.Intent.SetEmailOrPhoneFocus(it)) }
+                        )
+                    }
+                }
 
                 Spacer(Modifier.height(10.dp))
 
@@ -192,6 +225,13 @@ internal fun SignInContent(
                 scope.launch {
                     snackbarHostState.showLongMessageWithDismiss((state.event as com.markettwits.core_ui.items.event.StateEventWithContentTriggered).content.message)
                     component.obtainEvent(SignInStore.Intent.MessageHasBeenShowed)
+                }
+            }
+
+            // Auto focus SMS code field when SMS is sent
+            LaunchedEffect(state.isSmsCodeSent) {
+                if (state.isSmsCodeSent && state.loginMethod == LoginMethod.SMS) {
+                    smsCodeFocusRequester.requestFocus()
                 }
             }
             BackFloatingActionButton(back = {

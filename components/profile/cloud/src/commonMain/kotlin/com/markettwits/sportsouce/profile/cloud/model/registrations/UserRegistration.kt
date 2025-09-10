@@ -8,39 +8,39 @@ data class UserRegistration(
     @SerialName("combo_id")
     val comboId: Int?,
     @SerialName("createdAt")
-    val createdAt: String,
+    val createdAt: String? = null,
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
     @SerialName("is_refunded")
-    val isRefunded: Boolean,
+    val isRefunded: Boolean? = null,
     @SerialName("members")
-    val members: List<Member>,
+    val members: List<Member>? = null,
     @SerialName("order_number")
-    val orderNumber: String?,
+    val orderNumber: String? = null,
     @SerialName("payment")
-    val payment: Int?,
+    val payment: Int? = null,
     @SerialName("price")
-    val price: Int?,
+    val price: Int? = null,
     @SerialName("price_of_additional_fields")
-    val priceOfAdditionalFields: Int,
+    val priceOfAdditionalFields: Int? = null,
     @SerialName("price_without_discount")
-    val priceWithoutDiscount: Int,
+    val priceWithoutDiscount: Int? = null,
     @SerialName("promocode")
-    val promocode: Promocode?,
+    val promocode: Promocode? = null,
     @SerialName("promocode_id")
-    val promocodeId: Int?,
+    val promocodeId: Int? = null,
     @SerialName("reg_code")
-    val regCode: String,
+    val regCode: String? = null,
     @SerialName("sberbank_id")
-    val sberbankId: String?,
+    val sberbankId: String? = null,
     @SerialName("start")
-    val start: UserRegistrationStart,
+    val start: UserRegistrationStart? = null,
     @SerialName("start_id")
-    val startId: Int,
+    val startId: Int? = null,
     @SerialName("success_payment_reason")
-    val successPaymentReason: String?,
+    val successPaymentReason: String? = null,
     @SerialName("updatedAt")
-    val updatedAt: String,
+    val updatedAt: String? = null,
     @SerialName("user_id")
-    val userId: Int
+    val userId: Int? = null,
 )

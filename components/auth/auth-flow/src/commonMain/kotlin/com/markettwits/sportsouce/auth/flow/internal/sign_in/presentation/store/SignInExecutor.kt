@@ -117,7 +117,28 @@ class SignInExecutor(
     private fun updateEmailOrPhone(input: String) {
         dispatch(SignInReducer.Message.UpdateEmailOrPhone(input))
 
-        // Don't validate in real-time, only update button state
+        // Validate in real-time as user types
+        if (input.isNotBlank()) {
+            val inputType = detectInputType(input)
+            val validation = ValidationUtils.validateInput(input, inputType)
+            dispatch(
+                SignInReducer.Message.SetFieldError(
+                    emailOrPhoneError = validation.errorMessage,
+                    passwordError = state().passwordError,
+                    smsCodeError = state().smsCodeError
+                )
+            )
+        } else {
+            // Clear error when field is empty
+            dispatch(
+                SignInReducer.Message.SetFieldError(
+                    emailOrPhoneError = null,
+                    passwordError = state().passwordError,
+                    smsCodeError = state().smsCodeError
+                )
+            )
+        }
+
         updateButtonState()
     }
 

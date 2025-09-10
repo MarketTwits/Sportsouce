@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserRegistrationStart(
     @SerialName("id")
-    val id: Int,
+    val id: Int? = null,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
     @SerialName("posterLinkFile")
-    val posterLinkFile: PosterLinkFile?,
+    val posterLinkFile: PosterLinkFile? = null,
     @SerialName("start_date")
-    val startDate: String,
+    val startDate: String? = null,
     @DeprecatedField
     val start_status: CloudStartStatus? = null,
     @DeprecatedField

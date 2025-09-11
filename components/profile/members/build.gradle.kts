@@ -17,6 +17,7 @@ kotlin {
         implementation(projects.components.auth.authService)
         implementation(projects.components.core.koin)
         implementation(projects.components.teamsCity)
+        implementation(projects.components.analytics.crashlytics)
         implementation(libs.koin.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.bundles.decompose.compose)

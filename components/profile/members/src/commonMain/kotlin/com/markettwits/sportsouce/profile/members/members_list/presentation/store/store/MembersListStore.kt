@@ -1,17 +1,15 @@
 package com.markettwits.sportsouce.profile.members.members_list.presentation.store.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Intent
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Label
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.State
+import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.*
 
 interface MembersListStore : Store<Intent, State, Label> {
     data class State(
         val isLoading: Boolean = false,
-        val isError: Boolean = false,
+        val error: SauceError? = null,
         val isSuccess: Boolean = false,
-        val message: String = "",
         val members: List<ProfileMember> = emptyList(),
     )
 
@@ -25,7 +23,7 @@ interface MembersListStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
-        data class Error(val message: String) : Message
+        data class Error(val error: SauceError) : Message
         data class Loaded(val members: List<ProfileMember>) : Message
     }
 

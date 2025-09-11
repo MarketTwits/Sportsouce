@@ -12,9 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.profile.members.members_list.presentation.component.MembersListComponent
 import com.markettwits.sportsouce.profile.members.members_list.presentation.components.components.MembersList
 import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore
@@ -35,7 +36,7 @@ fun MembersScreen(component: MembersListComponent) {
             AnimatedContent(
                 targetState = when {
                     state.isSuccess -> "success"
-                    state.isError -> "error"
+                    state.error != null -> "error"
                     else -> "loading"
                 },
                 transitionSpec = {
@@ -48,7 +49,7 @@ fun MembersScreen(component: MembersListComponent) {
                     "success" -> {
                         MembersList(
                             modifier = Modifier
-                                .padding(paddingValues)
+                                .padding(top = paddingValues.calculateTopPadding())
                                 .fillMaxSize(),
                             items = state.members,
                             isRefreshing = state.isLoading,
@@ -65,19 +66,18 @@ fun MembersScreen(component: MembersListComponent) {
                     }
 
                     "error" -> {
-                        FailedScreen(
-                            message = state.message,
+                        state.error?.SauceErrorScreen(
+                            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
                             onClickRetry = {
                                 component.obtainEvent(MembersListStore.Intent.Retry)
-                            },
-                            onClickBack = {
-                                component.obtainEvent(MembersListStore.Intent.GoBack)
                             }
                         )
                     }
 
-                    else -> {
-                        // Loading state handled by PullToRefreshScreen
+                    "loading" -> {
+                        LoadingFullScreen(
+                            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
+                        )
                     }
                 }
             }

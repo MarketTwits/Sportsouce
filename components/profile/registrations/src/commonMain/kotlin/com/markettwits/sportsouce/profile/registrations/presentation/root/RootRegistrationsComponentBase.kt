@@ -57,7 +57,8 @@ class RootRegistrationsComponentBase(
                     component = componentContext,
                     storeFactory = RegistrationsDataStoreFactory(
                         storeFactory = DefaultStoreFactory(),
-                        dataSource = scope.get()
+                        dataSource = scope.get(),
+                        exceptionTracker = scope.get()
                     ),
                     pop = pop::invoke,
                     onItemClick = {

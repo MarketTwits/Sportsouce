@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.review.review.presentation.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -11,10 +12,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.markettwits.core.errors.api.composable.SauceErrorMediumContent
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponent
@@ -76,12 +78,12 @@ fun ReviewScreen(
                 if (state.review.actualStarts.isEmpty() && state.isLoading) {
                     LoadingFullScreen(modifier = Modifier.align(Alignment.CenterHorizontally))
                 }
-                if (state.isError) {
-                    FailedScreen(
-                        message = state.message,
-                    ) {
-                        component.obtainEvent(ReviewStore.Intent.Launch(true))
-                    }
+                state.error?.SauceErrorMediumContent(
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .align(Alignment.CenterHorizontally),
+                ) {
+                    component.obtainEvent(ReviewStore.Intent.Launch(true))
                 }
             }
         }

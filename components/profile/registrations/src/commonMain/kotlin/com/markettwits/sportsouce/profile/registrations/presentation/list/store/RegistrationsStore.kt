@@ -5,6 +5,10 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
@@ -27,10 +31,9 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val filtered: List<StartOrderInfo> = base,
         val sharedUser: SharedUser? = null,
         val filter: List<FilterItem> = emptyList(),
+        val exception: SauceError? = null,
         val isLoading: Boolean = false,
-        val isError: Boolean = false,
         val isSuccess: Boolean = false,
-        val message: String = ""
     )
 
     sealed interface Label {
@@ -41,7 +44,8 @@ interface RegistrationsStore : Store<Intent, State, Label> {
 
 class RegistrationsDataStoreFactory(
     private val storeFactory: StoreFactory,
-    private val dataSource: StartOrderRegistrationRepository
+    private val dataSource: StartOrderRegistrationRepository,
+    private val exceptionTracker: ExceptionTracker,
 ) {
 
     fun create(): RegistrationsStore =
@@ -55,7 +59,7 @@ class RegistrationsDataStoreFactory(
 
     private sealed interface Msg {
         data object Loading : Msg
-        data class InfoFailed(val message: String) : Msg
+        data class InfoFailed(val sauceError: SauceError) : Msg
         data class InfoLoaded(val starts: List<StartOrderInfo>, val filter: List<FilterItem>) : Msg
         data class UpdateList(val starts: List<StartOrderInfo>, val filter: List<FilterItem>) : Msg
         data class UpdateUserInfo(val sharedUser: SharedUser) : Msg
@@ -72,25 +76,29 @@ class RegistrationsDataStoreFactory(
         }
 
         override fun executeAction(action: Unit) {
+            scope.launch {
+                dataSource.currentUser().onSuccess { user ->
+                    dispatch(Msg.UpdateUserInfo(user))
+                }
+            }
             launch(false)
         }
 
         private fun launch(forced: Boolean) {
             scope.launch {
                 dispatch(Msg.Loading)
-
-                // Collect from registrations Flow
                 try {
                     dataSource.registrations(forced).collect { starts ->
                         dispatch(Msg.InfoLoaded(starts = starts, filter = createFilter(starts)))
                     }
                 } catch (e: Exception) {
-                    dispatch(Msg.InfoFailed(e.message.toString()))
-                }
-
-                // Get current user
-                dataSource.currentUser().onSuccess { user ->
-                    dispatch(Msg.UpdateUserInfo(user))
+                    dispatch(Msg.InfoFailed(e.mapToSauceError()))
+                    if (!e.isNetworkConnectionError()) {
+                        state().sharedUser?.let { user ->
+                            exceptionTracker.setUserId(user.id.toString())
+                        }
+                        exceptionTracker.reportException(e, "RegistrationsDataStoreFactory#launch")
+                    }
                 }
             }
         }
@@ -137,13 +145,12 @@ class RegistrationsDataStoreFactory(
             return when (msg) {
                 is Msg.InfoFailed -> State(
                     base = emptyList(),
-                    isError = true,
+                    exception = msg.sauceError,
                     isLoading = false,
                     isSuccess = false,
-                    message = msg.message
                 )
 
-                is Msg.Loading -> copy(isLoading = true, isError = false)
+                is Msg.Loading -> copy(isLoading = true, exception = null)
                 is Msg.UpdateList -> copy(filtered = msg.starts, filter = msg.filter)
                 is Msg.InfoLoaded -> copy(
                     base = msg.starts,
@@ -151,7 +158,6 @@ class RegistrationsDataStoreFactory(
                     filter = msg.filter,
                     isSuccess = true,
                     isLoading = false,
-                    isError = false,
                 )
                 is Msg.UpdateUserInfo -> copy(sharedUser = msg.sharedUser)
             }

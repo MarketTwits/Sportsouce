@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.review.review.presentation.store
 
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.*
@@ -22,8 +23,7 @@ interface ReviewStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoading : Boolean = false,
-        val isError : Boolean = false,
-        val message : String = "",
+        val error: SauceError? = null,
         val review: Review = Review(),
     )
 

@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.core.time.BaseTimeMapper
+import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
 import com.markettwits.sportsouce.auth.service.api.authDataSourceModule
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
@@ -21,6 +22,7 @@ val userStartRegistrationModule = module {
 
     includes(
         authDataSourceModule,
+        crashlyticsModule,
         sportSauceNetworkProfileModule,
         intentActionModule
     )

@@ -13,14 +13,14 @@ class MembersMapperBase(private val timeMapper: TimeMapper) : MembersMapper {
             ProfileMember(
                 id = it.id,
                 userId = it.userId,
-                name = it.name,
-                surname = it.surname,
-                phone = it.phone,
-                gender = it.gender,
-                team = it.team,
-                birthday = timeMapper.mapTime(TimePattern.FullWithDots, it.birthday),
+                name = it.name ?: "N/A",
+                surname = it.surname ?: "N/A",
+                phone = it.phone ?: "",
+                gender = it.gender ?: "",
+                team = it.team ?: "",
+                birthday = timeMapper.mapTime(TimePattern.FullWithDots, it.birthday ?: ""),
                 type = it.type ?: "Партнер по команде",
-                email = it.email,
+                email = it.email ?: "",
                 child = it.child ?: false
             )
         }

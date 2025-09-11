@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -43,13 +43,9 @@ internal fun StartsScreenList(
         }
 
         is StartsUiState.Failed -> {
-
-            FailedScreen(
-                message = (state).message,
-                onClickRetry = {
-                    onClickRetry()
-                })
-
+            state.error.SauceErrorScreen(
+                onClickRetry = onClickRetry
+            )
         }
 
         is StartsUiState.Loading -> {

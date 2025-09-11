@@ -79,17 +79,17 @@ class UserRegistrationsMapperBase(
 
     private fun mapMemberResult(memberResult: MemberResult): StartOrderMemberResult {
         return StartOrderMemberResult(
-            bodyNumber = memberResult.bodyNumber,
-            circles = memberResult.circles,
-            distance = memberResult.distance,
+            bodyNumber = memberResult.bodyNumber ?: "",
+            circles = memberResult.circles ?: emptyMap(),
+            distance = memberResult.distance ?: "",
             id = memberResult.id,
             memberStartId = memberResult.memberStartId,
-            userName = memberResult.name,
-            place = memberResult.place,
-            result = memberResult.result,
-            sex = memberResult.sex,
-            shift = memberResult.shift,
-            team = memberResult.team
+            userName = memberResult.name ?: "",
+            place = memberResult.place ?: 999,
+            result = memberResult.result ?: "",
+            sex = memberResult.sex ?: "",
+            shift = memberResult.shift ?: "",
+            team = memberResult.team ?: "",
         )
     }
 

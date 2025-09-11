@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.starts.starts.data
 
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsUiState
 
@@ -15,7 +16,7 @@ interface StartsCloudToUiMapper {
     class Base : StartsCloudToUiMapper {
 
         override fun map(exception: Throwable): StartsUiState =
-             StartsUiState.Failed(exception.message ?: "")
+            StartsUiState.Failed(exception.mapToSauceError())
 
         override fun mapSuccess(items: List<List<StartsListItem>>): StartsUiState =
              StartsUiState.Success(items)

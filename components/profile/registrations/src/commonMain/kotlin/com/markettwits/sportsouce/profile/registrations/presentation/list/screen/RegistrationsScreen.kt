@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponent
@@ -54,14 +54,11 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
             if (state.base.isEmpty() && state.isLoading) {
                 LoadingFullScreen()
             }
-            if (state.isError) {
-                FailedScreen(
-                    message = state.message,
-                    onClickRetry = {
-                        component.obtainEvent(RegistrationsStore.Intent.LoadData)
-                    }
-                )
-            }
+            state.exception?.SauceErrorScreen(
+                onClickRetry = {
+                    component.obtainEvent(RegistrationsStore.Intent.LoadData)
+                }
+            )
         }
 
         // Filter Dialog

@@ -7,14 +7,13 @@ import com.markettwits.sportsouce.profile.members.members_list.presentation.stor
 object MembersListReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Error -> copy(isLoading = false, isError = true, message = msg.message)
+            is Message.Error -> copy(isLoading = false, error = msg.error)
             is Message.Loaded -> copy(
                 isLoading = false,
-                isError = false,
+                error = null,
                 isSuccess = true,
                 members = msg.members
             )
-
             is Message.Loading -> copy(isLoading = true)
         }
     }

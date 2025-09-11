@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.profile.members.members_list.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.sportsouce.profile.members.member_common.di.membersCommonModule
 import com.markettwits.sportsouce.profile.members.members_list.domain.MembersListUseCase
 import com.markettwits.sportsouce.profile.members.members_list.domain.MembersListUseCaseBase
@@ -11,7 +12,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val membersListModule = module {
-    includes(membersCommonModule)
+    includes(membersCommonModule, crashlyticsModule)
     singleOf(::MembersListStoreFactory)
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::MembersListUseCaseBase) bind MembersListUseCase::class

@@ -5,51 +5,47 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.*
 
 @Serializable
 data class MemberResult(
     @SerialName("birthday")
-    val birthday: String,
+    val birthday: String? = null,
     @SerialName("body_number")
-    val bodyNumber: String,
+    val bodyNumber: String? = null,
     @SerialName("circles")
     @Serializable(with = CirclesSerializer::class)
-    val circles: Map<Int, String>,
+    val circles: Map<Int, String>? = null,
     @SerialName("createdAt")
-    val createdAt: String,
+    val createdAt: String? = null,
     @SerialName("distance")
-    val distance: String,
+    val distance: String? = null,
     @SerialName("group")
-    val group: String,
+    val group: String? = null,
     @SerialName("id")
     val id: Int,
     @SerialName("member_start_id")
     val memberStartId: Int,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
     @SerialName("place")
-    val place: Int,
+    val place: Int? = null,
     @SerialName("registration_id")
     val registrationId: Int? = null,
     @SerialName("result")
-    val result: String,
+    val result: String? = null,
     @SerialName("sex")
-    val sex: String,
+    val sex: String? = null,
     @SerialName("shift")
-    val shift: String,
+    val shift: String? = null,
     @SerialName("start_id")
     val startId: Int,
     @SerialName("team")
-    val team: String,
+    val team: String? = null,
     @SerialName("updatedAt")
-    val updatedAt: String,
+    val updatedAt: String? = null,
     @SerialName("user_id")
-    val userId: Int? = null
+    val userId: Int? = null,
 )
 
 object CirclesSerializer : JsonTransformingSerializer<Map<Int, String>>(

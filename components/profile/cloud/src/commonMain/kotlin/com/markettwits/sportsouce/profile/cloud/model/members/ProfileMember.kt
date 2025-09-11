@@ -13,29 +13,25 @@ data class ProfileMembers(
     @Serializable
     data class ProfileMember(
         @SerialName("birthday")
-        val birthday: String,
+        val birthday: String? = null,
         @SerialName("child")
         val child: Boolean?,
-        @SerialName("createdAt")
-        val createdAt: String,
         @SerialName("email")
-        val email: String,
+        val email: String? = null,
         @SerialName("gender")
-        val gender: String,
+        val gender: String? = null,
         @SerialName("id")
         val id: Int,
         @SerialName("name")
-        val name: String,
+        val name: String? = null,
         @SerialName("phone")
-        val phone: String,
+        val phone: String? = null,
         @SerialName("surname")
-        val surname: String,
+        val surname: String? = null,
         @SerialName("team")
-        val team: String,
+        val team: String? = null,
         @SerialName("type")
         val type: String? = null,
-        @SerialName("updatedAt")
-        val updatedAt: String,
         @SerialName("user_id")
         val userId: Int,
     )

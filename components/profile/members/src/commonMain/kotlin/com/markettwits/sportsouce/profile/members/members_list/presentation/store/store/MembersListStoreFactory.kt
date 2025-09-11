@@ -3,14 +3,14 @@ package com.markettwits.sportsouce.profile.members.members_list.presentation.sto
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.profile.members.members_list.domain.MembersListUseCase
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Intent
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.Label
-import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.State
+import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore.*
 
 class MembersListStoreFactory(
     private val storeFactory: StoreFactory,
-    private val useCase: MembersListUseCase
+    private val useCase: MembersListUseCase,
+    private val exceptionTracker: ExceptionTracker,
 ) {
     fun create(): MembersListStore = MembersListStoreImpl(useCase)
 
@@ -20,7 +20,7 @@ class MembersListStoreFactory(
             name = "MembersListStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { MembersListExecutor(useCase) },
+            executorFactory = { MembersListExecutor(useCase, exceptionTracker) },
             reducer = MembersListReducer
         )
 }

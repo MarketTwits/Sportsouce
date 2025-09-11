@@ -6,7 +6,8 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.sportsouce.review.review.domain.Review
@@ -34,7 +35,7 @@ class ReviewStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(val review: Review) : Msg
-        data class InfoFailed(val message: String) : Msg
+        data class InfoFailed(val error: SauceError) : Msg
     }
 
     private inner class ExecutorImpl(
@@ -68,7 +69,7 @@ class ReviewStoreFactory(
                     }
                     .catch {
                         errorLog(it) { "Failed when launch review content" }
-                        dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
+                        dispatch(Msg.InfoFailed(it.mapToSauceError()))
                     }
                     .collect { result ->
                         dispatch(Msg.InfoLoaded(result))
@@ -86,16 +87,15 @@ class ReviewStoreFactory(
         override fun ReviewStore.State.reduce(msg: Msg): ReviewStore.State =
             when (msg) {
                 is Msg.InfoFailed -> copy(
-                    isError = true,
                     isLoading = false,
-                    message = msg.message
+                    error = msg.error,
                 )
 
-                is Msg.Loading -> copy(isLoading = true, isError = false)
+                is Msg.Loading -> copy(isLoading = true, error = null)
 
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,
-                    isError = false,
+                    error = null,
                     review = msg.review
                 )
             }

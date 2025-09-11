@@ -8,7 +8,7 @@ import kotlin.math.pow
 
 actual class CacheManagerImpl : CacheManager {
 
-    override suspend fun getCacheSize(): Long = withContext(Dispatchers.IO) {
+    actual override suspend fun getCacheSize(): Long = withContext(Dispatchers.IO) {
         try {
             val cacheDir = File(InStorageCacheDirectory.path)
             if (cacheDir.exists() && cacheDir.isDirectory) {
@@ -21,7 +21,7 @@ actual class CacheManagerImpl : CacheManager {
         }
     }
 
-    override suspend fun clearCache(): Boolean = withContext(Dispatchers.IO) {
+    actual override suspend fun clearCache(): Boolean = withContext(Dispatchers.IO) {
         try {
             val cacheDir = File(InStorageCacheDirectory.path)
             if (cacheDir.exists() && cacheDir.isDirectory) {
@@ -34,7 +34,7 @@ actual class CacheManagerImpl : CacheManager {
         }
     }
 
-    override fun formatCacheSize(sizeInBytes: Long): String {
+    actual override fun formatCacheSize(sizeInBytes: Long): String {
         if (sizeInBytes <= 0) return "0 B"
 
         val units = arrayOf("B", "KB", "MB", "GB", "TB")

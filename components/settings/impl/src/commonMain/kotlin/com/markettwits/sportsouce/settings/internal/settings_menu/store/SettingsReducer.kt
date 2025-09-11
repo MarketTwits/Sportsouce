@@ -8,6 +8,8 @@ object SettingsReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.CurrentVersion -> copy(version = msg.version)
+            is Message.CacheSizeUpdated -> copy(cacheSize = msg.size)
+            is Message.ShowClearCacheDialog -> copy(showClearCacheDialog = msg.show)
         }
     }
 }

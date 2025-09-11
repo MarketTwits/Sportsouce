@@ -4,9 +4,8 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
-import com.markettwits.sportsouce.settings.internal.settings_menu.store.SettingsStore.Intent
-import com.markettwits.sportsouce.settings.internal.settings_menu.store.SettingsStore.Label
-import com.markettwits.sportsouce.settings.internal.settings_menu.store.SettingsStore.State
+import com.markettwits.cahce.CacheManagerImpl
+import com.markettwits.sportsouce.settings.internal.settings_menu.store.SettingsStore.*
 import com.markettwits.version.ApplicationVersionManager
 
 class SettingsStoreFactory(
@@ -26,7 +25,7 @@ class SettingsStoreFactory(
             name = "SettingsStore",
             initialState = State(null),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { SettingsExecutor(intentAction, versionManager) },
+            executorFactory = { SettingsExecutor(intentAction, versionManager, CacheManagerImpl()) },
             reducer = SettingsReducer
         )
 }

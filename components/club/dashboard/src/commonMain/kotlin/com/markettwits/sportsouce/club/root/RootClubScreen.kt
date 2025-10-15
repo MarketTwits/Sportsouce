@@ -6,8 +6,9 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.sportsouce.club.dashboard.presentation.screen.ClubDashboardScreen
-import com.markettwits.sportsouce.club.info.presentation.screen.ClubInfoScreen
 import com.markettwits.sportsouce.club.registration.presentation.screen.WorkoutRegistrationScreen
+import com.markettwits.sportsouce.club.schedule.presentation.screen.ScheduleScreen
+import com.markettwits.sportsouce.club.subscription.presentation.screen.SubscriptionPricingScreen
 
 @Composable
 fun RootClubScreen(component: RootClubComponent) {
@@ -17,10 +18,9 @@ fun RootClubScreen(component: RootClubComponent) {
 
     childSlot.child?.instance?.also { child ->
         when (child) {
-            is RootClubComponent.SlotChild.ClubInfo -> ClubInfoScreen(component = child.component)
-            is RootClubComponent.SlotChild.WorkoutRegistration -> WorkoutRegistrationScreen(
-                component = child.component
-            )
+            is RootClubComponent.SlotChild.WorkoutRegistration -> {
+                WorkoutRegistrationScreen(component = child.component)
+            }
         }
     }
 
@@ -29,7 +29,17 @@ fun RootClubScreen(component: RootClubComponent) {
         animation = stackAnimation(fade())
     ) {
         when (val child = it.instance) {
-            is RootClubComponent.StackChild.Dashboard -> ClubDashboardScreen(child.component)
+            is RootClubComponent.StackChild.Dashboard -> {
+                ClubDashboardScreen(child.component)
+            }
+
+            is RootClubComponent.StackChild.SubscriptionPricing -> {
+                SubscriptionPricingScreen(component = child.component)
+            }
+
+            is RootClubComponent.StackChild.Schedule -> {
+                ScheduleScreen(component = child.component)
+            }
         }
     }
 }

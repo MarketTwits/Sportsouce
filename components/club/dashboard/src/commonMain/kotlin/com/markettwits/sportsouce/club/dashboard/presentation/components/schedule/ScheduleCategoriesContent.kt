@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -68,7 +67,7 @@ private fun ScheduleButton(
                 fontSize = 12.sp,
                 overflow = TextOverflow.Clip,
                 fontFamily = FontNunito.bold(),
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     )

@@ -1,15 +1,16 @@
 package com.markettwits.sportsouce.club.info.presentation.components.trainings
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
@@ -29,31 +31,22 @@ fun TrainingsContent(
     modifier: Modifier = Modifier,
     trainings: List<Training>
 ) {
-    Column(modifier = modifier.padding(10.dp)) {
-        Text(
-            textAlign = TextAlign.Start,
-            text = "Тренировки, которые выбирают",
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        TrainingsContents(
-            modifier = Modifier.padding(10.dp),
-            trainings = trainings
-        )
+    var selectedImageUrl by rememberSaveable {
+        mutableStateOf("")
     }
-}
 
-@Composable
-fun TrainingsContents(
-    modifier: Modifier = Modifier,
-    trainings: List<Training>
-) {
+    if (selectedImageUrl.isNotEmpty()) {
+        FullImageScreen(image = selectedImageUrl, onDismiss = { selectedImageUrl = "" })
+    }
+
     LazyColumn(modifier = modifier) {
         items(trainings) { training ->
             TrainingItemContent(
-                training = training
-            )
+                modifier = Modifier.padding(8.dp),
+                training = training,
+            ) {
+                selectedImageUrl = training.imageUrl
+            }
         }
     }
 }
@@ -61,7 +54,8 @@ fun TrainingsContents(
 @Composable
 fun TrainingItemContent(
     modifier: Modifier = Modifier,
-    training: Training
+    training: Training,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -70,7 +64,8 @@ fun TrainingItemContent(
         AsyncImage(
             modifier = Modifier
                 .size(100.dp)
-                .clip(Shapes.medium),
+                .clip(Shapes.medium)
+                .clickable(onClick = onClick),
             model = imageRequestCrossfade(training.imageUrl),
             contentDescription = "image",
             contentScale = ContentScale.FillBounds

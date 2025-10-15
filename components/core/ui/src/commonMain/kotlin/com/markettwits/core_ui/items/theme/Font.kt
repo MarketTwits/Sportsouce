@@ -5,13 +5,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.font.FontFamily
 import org.jetbrains.compose.resources.Font
-import sportsouce.components.core.ui.generated.resources.Res
-import sportsouce.components.core.ui.generated.resources.nunito_bold
-import sportsouce.components.core.ui.generated.resources.nunito_extra_bold
-import sportsouce.components.core.ui.generated.resources.nunito_light
-import sportsouce.components.core.ui.generated.resources.nunito_medium
-import sportsouce.components.core.ui.generated.resources.nunito_regular
-import sportsouce.components.core.ui.generated.resources.nunito_semi_bold
+import sportsouce.components.core.ui.generated.resources.*
 
 @Immutable
 @Stable
@@ -33,4 +27,7 @@ object FontNunito {
 
     @Composable
     fun extraBold() = FontFamily(Font(Res.font.nunito_extra_bold))
+
+    @Composable
+    fun black() = FontFamily(Font(Res.font.nunito_black))
 }

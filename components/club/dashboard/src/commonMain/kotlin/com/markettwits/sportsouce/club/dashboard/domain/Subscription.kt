@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.club.dashboard.domain
 
+import com.markettwits.sportsouce.club.cloud.models.subscription.SubscriptionColor
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,4 +13,5 @@ data class Subscription(
     val priceDependsOnCount : Boolean,
     val maxAmount : Int,
     val type: String,
+    val color: SubscriptionColor,
 )

@@ -1,31 +1,32 @@
 package com.markettwits.sportsouce.club.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.DelicateDecomposeApi
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.sportsouce.bottom_bar.di.bottomBarModule
 import com.markettwits.sportsouce.club.dashboard.di.clubDashboardModule
 import com.markettwits.sportsouce.club.dashboard.di.createDashboardComponent
 import com.markettwits.sportsouce.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.sportsouce.club.info.di.clubInfoModule
-import com.markettwits.sportsouce.club.info.di.createClubInfoComponent
 import com.markettwits.sportsouce.club.registration.di.createClubRegistrationComponent
 import com.markettwits.sportsouce.club.registration.di.workoutRegistrationModule
 import com.markettwits.sportsouce.club.registration.presentation.component.WorkoutRegistrationComponent
+import com.markettwits.sportsouce.club.root.RootClubComponent.SlotConfig.WorkoutRegistration
+import com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponentBase
+import com.markettwits.sportsouce.club.subscription.presentation.component.SubscriptionPricingComponent
+import com.markettwits.sportsouce.club.subscription.presentation.component.SubscriptionPricingComponentBase
 
 class RootClubComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
 ) : ComponentContext by componentContext, RootClubComponent {
+
+    private var dashboardComponent: ClubDashboardComponent? = null
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
@@ -49,7 +50,7 @@ class RootClubComponentBase(
             source = slotNavigation,
             serializer = RootClubComponent.SlotConfig.serializer(),
             handleBackButton = true,
-            childFactory = ::childSlot
+            childFactory = ::createSlotChild
         )
 
     override val stackChildStack: Value<ChildStack<*, RootClubComponent.StackChild>> =
@@ -61,23 +62,12 @@ class RootClubComponentBase(
             childFactory = ::childStack,
         )
 
-    private fun childSlot(
+    private fun createSlotChild(
         config: RootClubComponent.SlotConfig,
         componentContext: ComponentContext,
-    ): RootClubComponent.SlotChild =
-        when (config) {
-            is RootClubComponent.SlotConfig.ClubInfo -> RootClubComponent.SlotChild.ClubInfo(
-                scope.createClubInfoComponent(
-                    componentContext = componentContext,
-                    index = config.index,
-                    items = config.items,
-                    goBack = {
-                        slotNavigation.dismiss()
-                    },
-                )
-            )
-
-            is RootClubComponent.SlotConfig.WorkoutRegistration -> RootClubComponent.SlotChild.WorkoutRegistration(
+    ): RootClubComponent.SlotChild {
+        return when (config) {
+            is WorkoutRegistration -> RootClubComponent.SlotChild.WorkoutRegistration(
                 createClubRegistrationComponent(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
@@ -87,34 +77,68 @@ class RootClubComponentBase(
                 }
             )
         }
+    }
 
     private fun childStack(
         stackConfig: RootClubComponent.StackConfig,
         componentContext: ComponentContext,
     ): RootClubComponent.StackChild =
         when (stackConfig) {
-            RootClubComponent.StackConfig.Dashboard -> RootClubComponent.StackChild.Dashboard(
-                scope.createDashboardComponent(
+            RootClubComponent.StackConfig.Dashboard -> {
+                val component = scope.createDashboardComponent(
                     componentContext = componentContext,
                     output = {
                         dashboardOuPuts(it)
-                    })
-            )
+                    }
+                )
+                dashboardComponent = component
+                RootClubComponent.StackChild.Dashboard(component)
+            }
+
+            is RootClubComponent.StackConfig.SubscriptionPricing -> {
+                val storeFactory = scope.get<StoreFactory>()
+                val clubRepository = scope.get<com.markettwits.sportsouce.club.common.domain.ClubRepository>()
+                val component = SubscriptionPricingComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = storeFactory,
+                    clubRepository = clubRepository,
+                    output = { subscriptionPricingOutputs(it) },
+                )
+                RootClubComponent.StackChild.SubscriptionPricing(component)
+            }
+
+            is RootClubComponent.StackConfig.Schedule -> {
+                val storeFactory = scope.get<StoreFactory>()
+                val component = ScheduleComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = storeFactory,
+                    output = { scheduleOutputs(it) },
+                    repository = scope.get()
+                )
+                RootClubComponent.StackChild.Schedule(component)
+            }
         }
 
+    @OptIn(DelicateDecomposeApi::class)
     private fun dashboardOuPuts(output: ClubDashboardComponent.Output) {
         when (output) {
             is ClubDashboardComponent.Output.Dismiss -> pop()
-            is ClubDashboardComponent.Output.GoInfo ->
-                slotNavigation.activate(
-                    RootClubComponent.SlotConfig.ClubInfo(
-                        output.index,
-                        output.clubInfo
-                    )
-                )
             is ClubDashboardComponent.Output.Subscription -> slotNavigation.activate(
-                RootClubComponent.SlotConfig.WorkoutRegistration(output.type)
+                WorkoutRegistration(output.type)
             )
+
+            is ClubDashboardComponent.Output.GoSubscriptions -> {
+                stackNavigation.push(
+                    RootClubComponent.StackConfig.SubscriptionPricing("default")
+                )
+            }
+
+            is ClubDashboardComponent.Output.GoSchedule -> {
+                val schedules = getSchedulesFromState()
+                stackNavigation.push(
+                    RootClubComponent.StackConfig.Schedule(schedules)
+                )
+            }
         }
     }
 
@@ -124,5 +148,42 @@ class RootClubComponentBase(
                 slotNavigation.dismiss()
             }
         }
+    }
+
+    @OptIn(DelicateDecomposeApi::class)
+    private fun subscriptionPricingOutputs(output: SubscriptionPricingComponent.Output) {
+        when (output) {
+            is SubscriptionPricingComponent.Output.Dismiss -> {
+                stackNavigation.pop()
+            }
+
+            is SubscriptionPricingComponent.Output.Registration -> {
+                slotNavigation.activate(
+                    WorkoutRegistration(output.type)
+                )
+            }
+        }
+    }
+
+    @OptIn(DelicateDecomposeApi::class)
+    private fun scheduleOutputs(output: com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output) {
+        when (output) {
+            is com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output.Dismiss -> {
+                stackNavigation.pop()
+            }
+
+            is com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output.Registration -> {
+                slotNavigation.activate(
+                    WorkoutRegistration(output.type)
+                )
+            }
+        }
+    }
+
+    private fun getSchedulesFromState(): List<com.markettwits.sportsouce.club.info.domain.models.Schedule> {
+        return dashboardComponent?.state?.value?.subscription?.clubInfo
+            ?.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Schedules>()
+            ?.flatMap { it.schedule }
+            ?: emptyList()
     }
 }

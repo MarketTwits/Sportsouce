@@ -22,7 +22,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
@@ -79,9 +78,11 @@ fun FullImageScreenInternal(
     selectedImageUrl: String? = null,
     onDismiss: () -> Unit
 ) {
-    Dialog(
+    SauceDialog(
         onDismissRequest = { onDismiss() },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+        )
     ) {
         val rawIndex = selectedIndex ?: image.indexOf(selectedImageUrl)
         val initialIndex = if (rawIndex in 0 until image.size) rawIndex else 0
@@ -182,7 +183,7 @@ internal fun FullImageScreenInternal(
     painter: Painter? = null,
     onDismiss: () -> Unit
 ) {
-    Dialog(
+    SauceDialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
@@ -278,3 +279,9 @@ internal fun ImageItem(
     )
 }
 
+@Composable
+expect fun SauceDialog(
+    onDismissRequest: () -> Unit,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable (() -> Unit),
+)

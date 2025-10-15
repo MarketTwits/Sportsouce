@@ -2,13 +2,7 @@ package com.markettwits.sportsouce.club.info.presentation.components.questions
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -35,14 +29,7 @@ internal fun QuestionsContent(
 
     val questionsState = remember { questions.map { it.copy() }.toMutableStateList() }
 
-    Column(modifier = modifier.padding(10.dp)) {
-        Text(
-            textAlign = TextAlign.Start,
-            text = "Часто задаваемые вопросы",
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+    Column(modifier = modifier) {
         Column {
             questionsState.forEachIndexed { index, item ->
                 QuestionItemContent(
@@ -149,13 +136,12 @@ private fun QuestionItemIcon(
             .clip(RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp))
             .background(MaterialTheme.colorScheme.secondary)
     ) {
-        val icon = if (isSelected) "-" else "+"
         Text(
             modifier = Modifier
                 .padding(4.dp)
                 .align(Alignment.Center),
             textAlign = TextAlign.Center,
-            text = icon,
+            text = if (isSelected) "-" else "+",
             fontSize = 50.sp,
             fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.onSecondary

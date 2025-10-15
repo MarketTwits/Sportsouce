@@ -12,6 +12,7 @@ internal object ClubDashboardReducer : Reducer<State, Message> {
             is Message.Loading -> copy(isLoading = true, error = null)
             is Message.UpdateState -> copy(subscription = msg.state)
             is Message.UpdateSubscriptionPanelState -> copy(subscriptionPanelState = msg.state)
+            is Message.UpdateBottomSheetData -> copy(bottomSheetData = msg.data)
         }
     }
 }

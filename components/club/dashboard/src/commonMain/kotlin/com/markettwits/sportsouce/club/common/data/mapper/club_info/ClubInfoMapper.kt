@@ -1,15 +1,11 @@
 package com.markettwits.sportsouce.club.common.data.mapper.club_info
 
-import com.markettwits.sportsouce.club.info.domain.models.Question
-import com.markettwits.sportsouce.club.info.domain.models.Schedule
-import com.markettwits.sportsouce.club.info.domain.models.Statistic
-import com.markettwits.sportsouce.club.info.domain.models.Trainer
-import com.markettwits.sportsouce.club.info.domain.models.Training
 import com.markettwits.sportsouce.club.cloud.models.club_settings.ClubSettingsRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.questions.QuestionRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.schedule.ScheduleRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.trainer.TrainersRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.workout.WorkoutRemoteRow
+import com.markettwits.sportsouce.club.info.domain.models.*
 
 interface ClubInfoMapper {
 
@@ -22,5 +18,9 @@ interface ClubInfoMapper {
     fun mapTraining(workoutRemoteRow: List<WorkoutRemoteRow>): List<Training>
 
     fun mapSchedule(scheduleRemote: List<ScheduleRemoteRow>): List<Schedule>
+
+    fun mapMainImage(settingsRemoteRow: List<ClubSettingsRemoteRow>): ClubMainImage?
+
+    fun mapFeatures(settingsRemoteRow: List<ClubSettingsRemoteRow>): List<ClubFeature>
 
 }

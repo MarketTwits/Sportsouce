@@ -7,10 +7,7 @@ import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.club.common.domain.ClubRepository
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Intent
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Label
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Message
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.State
+import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.*
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutPriceForm
 import kotlinx.coroutines.flow.catch
@@ -56,16 +53,17 @@ internal class ClubDashboardExecutor(
                 launchUpdatePrice(state(), true)
             }
 
-            is Intent.OnClickInfo -> publish(
-                Label.OnClickInfo(
-                    index = intent.index,
-                    items = state().subscription.clubInfo
-                )
-            )
-
             is Intent.OnClickRegistration -> publish(Label.OnClickRegistration(intent.type))
 
             is Intent.OnClickRegistrationSubscription -> onClickRegistrationSubscription(state().subscription)
+
+            is Intent.OnClickSubscriptions -> {
+                publish(Label.OnClickSubscriptions)
+            }
+
+            is Intent.OnClickSchedule -> {
+                publish(Label.OnClickSchedule)
+            }
         }
     }
 
@@ -110,8 +108,10 @@ internal class ClubDashboardExecutor(
     }
 
     private suspend fun launchClubInfo(state: SubscriptionUiState) {
-        clubRepository.clubInfo().onSuccess {
-            dispatch(Message.Loaded(state.copy(clubInfo = it)))
+        clubRepository.clubInfo().onSuccess { clubInfoList ->
+            dispatch(Message.Loaded(state.copy(clubInfo = clubInfoList)))
+            val bottomSheetData = extractBottomSheetData(clubInfoList)
+            dispatch(Message.UpdateBottomSheetData(bottomSheetData))
         }.onFailure {
             errorLog { "can't load List<ClubInfo : ${it.message}" }
             if (!it.isNetworkConnectionError())
@@ -122,8 +122,38 @@ internal class ClubDashboardExecutor(
         }
     }
 
+    private fun extractBottomSheetData(clubInfoList: List<com.markettwits.sportsouce.club.info.domain.models.ClubInfo>): BottomSheetData {
+        val trainers =
+            clubInfoList.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Commands>()
+                .flatMap { it.trainers }
+
+        val trainings =
+            clubInfoList.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Trainings>()
+                .flatMap { it.training }
+
+        val statistics =
+            clubInfoList.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Statistics>()
+                .flatMap { it.statistics }
+
+        val questions =
+            clubInfoList.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Questions>()
+                .flatMap { it.questions }
+
+        val features =
+            clubInfoList.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Features>()
+                .flatMap { it.features }
+
+        return BottomSheetData(
+            trainers = trainers,
+            trainings = trainings,
+            statistics = statistics,
+            questions = questions,
+            features = features
+        )
+    }
+
     private fun launchUpdatePrice(
-        state: ClubDashboardStore.State,
+        state: State,
         isIncrease: Boolean
     ) {
         scope.launch {

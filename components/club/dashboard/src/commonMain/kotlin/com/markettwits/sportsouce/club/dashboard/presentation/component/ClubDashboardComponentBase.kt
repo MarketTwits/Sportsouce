@@ -38,14 +38,18 @@ internal class ClubDashboardComponentBase(
         store.labels.onEach {
             when (it) {
                 is ClubDashboardStore.Label.GoBack -> output(ClubDashboardComponent.Output.Dismiss)
-                is ClubDashboardStore.Label.OnClickInfo -> output(
-                    ClubDashboardComponent.Output.GoInfo(it.index, it.items)
-                )
                 is ClubDashboardStore.Label.OnClickRegistration -> output(
                     ClubDashboardComponent.Output.Subscription(
                         it.type
                     )
                 )
+                is ClubDashboardStore.Label.OnClickSubscriptions -> {
+                    output(ClubDashboardComponent.Output.GoSubscriptions)
+                }
+
+                is ClubDashboardStore.Label.OnClickSchedule -> {
+                    output(ClubDashboardComponent.Output.GoSchedule)
+                }
             }
         }.launchIn(scope)
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)

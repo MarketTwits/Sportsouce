@@ -69,7 +69,8 @@ class SubscriptionMapperBase : SubscriptionMapper {
             type = it.type,
             price = it.price,
             priceDependsOnCount = it.isPriseDependsOnCount,
-            maxAmount = it.maxAmount ?: 1
+            maxAmount = it.maxAmount ?: 1,
+            color = it.color
         )
     }
 

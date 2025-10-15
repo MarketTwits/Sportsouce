@@ -8,11 +8,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
@@ -35,19 +31,10 @@ fun CommandContent(
     var fullImageContent by remember {
         mutableStateOf("")
     }
-    Column(modifier = modifier.padding(10.dp)) {
+    Column(modifier = modifier) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(150.dp)
         ) {
-            item {
-                Text(
-                    textAlign = TextAlign.Start,
-                    text = "Наша команда",
-                    fontSize = 20.sp,
-                    fontFamily = FontNunito.bold(),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
             items(trainers) {
                 TrainerItemContent(
                     modifier = Modifier.padding(10.dp),

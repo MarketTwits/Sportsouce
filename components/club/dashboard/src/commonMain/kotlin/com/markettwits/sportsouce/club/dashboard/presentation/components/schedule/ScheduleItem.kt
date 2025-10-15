@@ -128,7 +128,7 @@ private fun ScheduleSubscriptionButton(
                 text = "Записаться на пробную",
                 fontSize = 12.sp,
                 fontFamily = FontNunito.bold(),
-                color = Color.White
+                color = MaterialTheme.colorScheme.onSecondary
             )
         },
     )

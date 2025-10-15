@@ -3,11 +3,9 @@ package com.markettwits.sportsouce.club.dashboard.presentation.store
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.markettwits.sportsouce.club.common.domain.ClubRepository
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Intent
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.Label
-import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.State
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
+import com.markettwits.sportsouce.club.common.domain.ClubRepository
+import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore.*
 
 internal class ClubDashboardStoreFactory(
     private val storeFactory: StoreFactory,
@@ -20,9 +18,8 @@ internal class ClubDashboardStoreFactory(
 
     private inner class ClubDashboardStoreImpl(
         private val repository: ClubRepository,
-        private val exceptionTracker: ExceptionTracker
-    ) :
-        ClubDashboardStore,
+        private val exceptionTracker: ExceptionTracker,
+    ) : ClubDashboardStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ClubDashboardStore",
             initialState = State(),

@@ -1,15 +1,11 @@
 package com.markettwits.sportsouce.club.common.data.mapper.club_info
 
-import com.markettwits.sportsouce.club.info.domain.models.Question
-import com.markettwits.sportsouce.club.info.domain.models.Schedule
-import com.markettwits.sportsouce.club.info.domain.models.Statistic
-import com.markettwits.sportsouce.club.info.domain.models.Trainer
-import com.markettwits.sportsouce.club.info.domain.models.Training
 import com.markettwits.sportsouce.club.cloud.models.club_settings.ClubSettingsRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.questions.QuestionRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.schedule.ScheduleRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.trainer.TrainersRemoteRow
 import com.markettwits.sportsouce.club.cloud.models.workout.WorkoutRemoteRow
+import com.markettwits.sportsouce.club.info.domain.models.*
 
 internal class ClubInfoMapperBase : ClubInfoMapper {
 
@@ -73,4 +69,29 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
                 workoutTitle = it.workout?.type ?: ""
             )
         }
+
+    override fun mapMainImage(settingsRemoteRow: List<ClubSettingsRemoteRow>): ClubMainImage? =
+        settingsRemoteRow
+            .filter { it.key == "main_image" }
+            .firstOrNull()
+            ?.takeIf { it.image != null }
+            ?.let {
+                ClubMainImage(
+                    id = it.id,
+                    name = it.name,
+                    imageUrl = it.image!!.fullPath
+                )
+            }
+
+    override fun mapFeatures(settingsRemoteRow: List<ClubSettingsRemoteRow>): List<ClubFeature> =
+        settingsRemoteRow
+            .filter { it.key == "features" }
+            .map {
+                ClubFeature(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description ?: "",
+                    imageUrl = it.image?.fullPath
+                )
+            }
 }

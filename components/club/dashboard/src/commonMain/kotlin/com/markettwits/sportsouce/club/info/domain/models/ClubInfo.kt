@@ -30,6 +30,14 @@ sealed interface ClubInfo {
     data class Schedules(val schedule: List<Schedule>) : ClubInfo {
         override val id: Int = 4
     }
+
+    data class Features(val features: List<ClubFeature>) : ClubInfo {
+        override val id: Int = 5
+    }
+
+    data class MainImage(val url: ClubMainImage) : ClubInfo {
+        override val id: Int = 6
+    }
 }
 
 fun List<ClubInfo>.findFirstSchedule(): ClubInfo.Schedules? =

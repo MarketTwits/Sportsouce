@@ -23,7 +23,6 @@ internal class SportSauceClubsNetworkApiBase(
     httpClient: HttpClientProvider
 ) : SportSauceClubsNetworkApi {
 
-
     private val json = httpClient.json()
 
     private val client = httpClient.provide(true)
@@ -38,8 +37,10 @@ internal class SportSauceClubsNetworkApiBase(
         return json.decodeFromString<WorkoutRemote>(response.body<String>()).rows
     }
 
-    override suspend fun schedule(): List<ScheduleRemoteRow> {
-        val response = client.get("schedule")
+    override suspend fun schedule(workoutId: Int?): List<ScheduleRemoteRow> {
+        val response = client.get("schedule") {
+            parameter("workoutId", workoutId)
+        }
         return json.decodeFromString<ScheduleRemote>(response.body<String>()).rows
     }
 

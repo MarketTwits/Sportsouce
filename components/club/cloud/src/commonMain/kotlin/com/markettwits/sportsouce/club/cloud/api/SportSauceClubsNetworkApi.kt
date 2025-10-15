@@ -17,7 +17,7 @@ interface SportSauceClubsNetworkApi {
 
     suspend fun workout(): List<WorkoutRemoteRow>
 
-    suspend fun schedule(): List<ScheduleRemoteRow>
+    suspend fun schedule(workoutId: Int? = null): List<ScheduleRemoteRow>
 
     suspend fun subscription(): List<SubscriptionItemsRemote>
 

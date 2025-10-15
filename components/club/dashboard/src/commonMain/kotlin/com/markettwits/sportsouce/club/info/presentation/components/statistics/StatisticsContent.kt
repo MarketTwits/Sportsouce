@@ -17,23 +17,6 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.club.info.domain.models.Statistic
 
 @Composable
-fun StatisticsContent(
-    modifier: Modifier = Modifier,
-    statistics: List<Statistic>
-) {
-    Column(modifier = modifier.padding(10.dp)) {
-        Text(
-            textAlign = TextAlign.Start,
-            text = "Наш опыт и немного статистики",
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
-        StatisticContents(statistics = statistics)
-    }
-}
-
-@Composable
 private fun StatisticContents(modifier: Modifier = Modifier, statistics: List<Statistic>) {
     Column(
         modifier = modifier

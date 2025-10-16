@@ -28,6 +28,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.components.progress.shimmer
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
@@ -154,6 +155,7 @@ fun FullImageScreenInternal(
 
             Row(
                 modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.navigationBars)
                     .padding(12.dp)
                     .alpha(bgAlpha)
                     .clip(MaterialTheme.shapes.medium)
@@ -259,7 +261,7 @@ internal fun ImageItem(
 ) {
     val zoomState = rememberZoomState(maxScale = 25f)
     SubcomposeAsyncImage(
-        model = image ?: painter,
+        model = imageRequestCrossfade(image ?: painter),
         filterQuality = FilterQuality.High,
         contentDescription = "",
         contentScale = ContentScale.Fit,

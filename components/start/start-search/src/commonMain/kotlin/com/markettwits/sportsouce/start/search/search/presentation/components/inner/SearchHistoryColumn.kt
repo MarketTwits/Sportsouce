@@ -20,30 +20,35 @@ import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
-fun ColumnScope.SearchHistoryColumn(
+fun SearchHistoryColumn(
+    modifier: Modifier = Modifier,
     items: List<String>,
     onClick: (String) -> Unit,
     onDelete: (String) -> Unit,
 ) {
-    if (items.isNotEmpty()) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(10.dp),
-            text = "НЕДАВНИЕ",
-            color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.bold(),
-            fontSize = 14.sp,
-            overflow = TextOverflow.Visible
-        )
-    }
-    items.forEach { item ->
-        SearchHistoryItem(
-            modifier = Modifier.align(Alignment.Start),
-            value = item,
-            onClick = { onClick(it) },
-            onDelete = { onDelete(it) }
-        )
+    Column(
+        modifier
+    ) {
+        if (items.isNotEmpty()) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(10.dp),
+                text = "НЕДАВНИЕ",
+                color = MaterialTheme.colorScheme.outline,
+                fontFamily = FontNunito.bold(),
+                fontSize = 14.sp,
+                overflow = TextOverflow.Visible
+            )
+        }
+        items.forEach { item ->
+            SearchHistoryItem(
+                modifier = Modifier.align(Alignment.Start),
+                value = item,
+                onClick = { onClick(it) },
+                onDelete = { onDelete(it) }
+            )
+        }
     }
 }
 
@@ -57,10 +62,11 @@ private fun SearchHistoryItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(14.dp)
+            .padding(horizontal = 14.dp)
+            .padding(vertical = 4.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable { onClick(value) },
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

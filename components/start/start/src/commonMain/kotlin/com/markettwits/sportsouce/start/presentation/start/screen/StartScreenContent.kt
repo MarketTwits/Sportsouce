@@ -1,11 +1,9 @@
 package com.markettwits.sportsouce.start.presentation.start.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,11 +46,7 @@ internal fun StartScreenContent(
     PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
         onClickRetry()
     }) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary)
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             val windowSize = calculateWindowSizeClass()
             if (windowSize.isLarge) {
                 Row(

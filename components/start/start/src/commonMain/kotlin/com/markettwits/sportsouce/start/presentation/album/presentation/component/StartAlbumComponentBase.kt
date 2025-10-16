@@ -4,6 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStore
 import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +18,8 @@ class StartAlbumComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: StartAlbumStoreFactory,
     private val images: List<String>,
-    private val pop: () -> Unit
-) : StartAlbumComponent, ComponentContext by componentContext {
+    private val pop: () -> Unit,
+) : StartAlbumComponent, BottomBarComponentHandler(), ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
@@ -38,5 +40,6 @@ class StartAlbumComponentBase(
                 }
             }
         }
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 }

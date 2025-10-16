@@ -2,8 +2,8 @@ package com.markettwits.sportsouce.club.info.presentation.components.common
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -12,64 +12,49 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
-fun SportHeaderSection(
+internal fun SportHeaderSection(
     title: String,
     subtitle: String? = null,
     description: String? = null,
     badge: String? = null,
-    hazeState: HazeState,
     height: Int = 400,
     primaryColor: Color = SportSouceColor.SportSouceRegistryOpenGreen,
-    backgroundImage: Painter? = null,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "background_animation")
 
-    val animatedOffset1 by infiniteTransition.animateFloat(
+    val animatedRotation by infiniteTransition.animateFloat(
         initialValue = 0f,
-        targetValue = 30f,
+        targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
+            animation = tween(30000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
         ),
-        label = "offset1"
+        label = "rotation"
     )
 
-    val animatedOffset2 by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = -20f,
+    val animatedScale by infiniteTransition.animateFloat(
+        initialValue = 0.9f,
+        targetValue = 1.1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(3500, easing = FastOutSlowInEasing),
+            animation = tween(12000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "offset2"
-    )
-
-    val animatedAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.15f,
-        targetValue = 0.3f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "alpha"
+        label = "scale"
     )
 
     Box(
@@ -77,131 +62,25 @@ fun SportHeaderSection(
             .fillMaxWidth()
             .height(height.dp)
     ) {
-        // Background image layer (bottom)
-        backgroundImage?.let { painter ->
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier
-                    .matchParentSize()
-                    .blur(2.dp)
-                    .alpha(0.6f),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        // Color gradient layer (above image)
+        // Neutral background
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            primaryColor.copy(alpha = if (backgroundImage != null) 0.7f else 1f),
-                            primaryColor.copy(alpha = if (backgroundImage != null) 0.5f else 0.8f)
-                        ),
-                        start = Offset(0f, 0f),
-                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                    )
-                )
         )
 
-        // Blur эффект
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .hazeEffect(
-                    state = hazeState,
-                    style = HazeStyle(
-                        tint = HazeTint(primaryColor.copy(alpha = 0.3f)),
-                        blurRadius = 24.dp
-                    )
-                )
-        )
-
-        // Анимированные геометрические узоры в правом углу
+        // Animated floating shapes background
         Canvas(
             modifier = Modifier
-                .size(200.dp)
-                .align(Alignment.TopEnd)
-                .offset(x = 50.dp, y = (-50).dp)
-                .alpha(animatedAlpha)
+                .fillMaxSize()
         ) {
-            val circleRadius = 80.dp.toPx()
-
-            // Большой круг с анимацией
-            drawCircle(
-                color = Color.White.copy(alpha = 0.2f),
-                radius = circleRadius,
-                center = Offset(
-                    size.width * 0.6f + animatedOffset1,
-                    size.height * 0.4f + animatedOffset2
-                )
-            )
-
-            // Средний круг с анимацией
-            drawCircle(
-                color = Color.White.copy(alpha = 0.15f),
-                radius = circleRadius * 0.6f,
-                center = Offset(
-                    size.width * 0.8f - animatedOffset2,
-                    size.height * 0.2f + animatedOffset1
-                )
-            )
-
-            // Малый круг с анимацией
-            drawCircle(
-                color = Color.White.copy(alpha = 0.1f),
-                radius = circleRadius * 0.3f,
-                center = Offset(
-                    size.width * 0.9f + animatedOffset1 * 0.5f,
-                    size.height * 0.6f - animatedOffset2 * 0.5f
-                )
+            drawFloatingShapes(
+                primaryColor = primaryColor,
+                rotation = animatedRotation,
+                scale = animatedScale
             )
         }
 
-        // Дополнительный анимированный паттерн слева
-        Canvas(
-            modifier = Modifier
-                .size(150.dp)
-                .align(Alignment.BottomStart)
-                .offset(x = (-30).dp, y = 30.dp)
-                .alpha(animatedAlpha * 0.7f)
-        ) {
-            val circleRadius = 60.dp.toPx()
-
-            drawCircle(
-                color = Color.White.copy(alpha = 0.12f),
-                radius = circleRadius * 0.8f,
-                center = Offset(
-                    size.width * 0.3f - animatedOffset1 * 0.8f,
-                    size.height * 0.5f + animatedOffset2 * 0.8f
-                )
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Transparent,
-                            Color.Transparent,
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.2f),
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.4f),
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.7f),
-                            MaterialTheme.colorScheme.background
-                        ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
-                    )
-                )
-        )
-
-        // Контейнер с правильным расположением элементов
+        // Content container
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -210,12 +89,12 @@ fun SportHeaderSection(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Badge сверху с отступом
+            // Badge at top
             badge?.let {
                 Box(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
+                            primaryColor.copy(alpha = 0.15f),
                             RoundedCornerShape(20.dp)
                         )
                         .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -224,18 +103,17 @@ fun SportHeaderSection(
                         text = it,
                         fontSize = 14.sp,
                         fontFamily = FontNunito.black(),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = primaryColor,
                         letterSpacing = 1.sp
                     )
                 }
             }
 
-            // Spacer для гибкого распределения пространства
             if (badge != null) {
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Центральный контент с ограничением роста
+            // Main content
             Column(
                 modifier = Modifier.weight(1f, fill = false),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,7 +146,7 @@ fun SportHeaderSection(
                         text = it,
                         fontSize = 16.sp,
                         fontFamily = FontNunito.medium(),
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -276,5 +154,123 @@ fun SportHeaderSection(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+private fun DrawScope.drawFloatingShapes(
+    primaryColor: Color,
+    rotation: Float,
+    scale: Float,
+) {
+    val width = size.width
+    val height = size.height
+
+    // Draw floating rectangles with primaryColor variations
+    val shapes = listOf(
+        Triple(primaryColor, 0.35f, 1.2f),
+        Triple(primaryColor, 0.28f, 0.8f),
+        Triple(primaryColor, 0.20f, 1.5f),
+        Triple(primaryColor, 0.15f, 0.6f)
+    )
+
+    shapes.forEachIndexed { index, (color, alpha, speedMultiplier) ->
+        val shapeCount = 4 + index * 2
+
+        for (i in 0 until shapeCount) {
+            val angle = (i * 360f / shapeCount + rotation * speedMultiplier) * kotlin.math.PI / 180
+            val distance = (width / 4) + (index * 30)
+
+            val x = width / 2 + cos(angle).toFloat() * distance * scale
+            val y = height / 2 + sin(angle).toFloat() * distance * scale
+
+            val shapeSize = (20f + index * 10f) * scale
+
+            // Draw rounded rectangles
+            val path = Path()
+            val cornerRadius = shapeSize / 4
+
+            path.addRoundRect(
+                androidx.compose.ui.geometry.RoundRect(
+                    left = x - shapeSize / 2,
+                    top = y - shapeSize / 2,
+                    right = x + shapeSize / 2,
+                    bottom = y + shapeSize / 2,
+                    radiusX = cornerRadius,
+                    radiusY = cornerRadius
+                )
+            )
+
+            drawPath(
+                path = path,
+                color = color.copy(alpha = alpha)
+            )
+        }
+    }
+
+    // Add scattered dots for texture
+    for (i in 0 until 30) {
+        val x = (width * 0.05f) + (i % 6) * (width * 0.15f) +
+                cos((rotation + i * 24f) * kotlin.math.PI / 180).toFloat() * 25f
+        val y = (height * 0.08f) + (i / 6) * (height * 0.16f) +
+                sin((rotation + i * 24f) * kotlin.math.PI / 180).toFloat() * 25f
+
+        drawCircle(
+            color = primaryColor.copy(alpha = 0.25f),
+            radius = 4f * scale,
+            center = Offset(x, y)
+        )
+    }
+
+    // Add some triangular shapes for variety
+    for (i in 0 until 8) {
+        val angle = (i * 45f + rotation * 0.5f) * kotlin.math.PI / 180
+        val distance = width / 3 + (i % 2) * 40f
+        val x = width / 2 + cos(angle).toFloat() * distance * scale
+        val y = height / 2 + sin(angle).toFloat() * distance * scale
+
+        val triangleSize = (15f + i % 3 * 5f) * scale
+        val path = Path()
+
+        // Create triangle
+        path.moveTo(x, y - triangleSize)
+        path.lineTo(x - triangleSize * 0.8f, y + triangleSize * 0.5f)
+        path.lineTo(x + triangleSize * 0.8f, y + triangleSize * 0.5f)
+        path.close()
+
+        drawPath(
+            path = path,
+            color = primaryColor.copy(alpha = 0.12f)
+        )
+    }
+}
+
+@Composable
+internal fun SubscribeGradientButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(
+                brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                    colors = listOf(
+                        Color(0xFF5AE4C0),
+                        Color(0xFF70BFF5)
+                    )
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Записаться",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
     }
 }

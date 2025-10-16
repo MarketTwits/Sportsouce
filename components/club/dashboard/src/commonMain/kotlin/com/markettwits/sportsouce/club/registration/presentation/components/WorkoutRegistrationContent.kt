@@ -45,6 +45,10 @@ fun WorkoutRegistrationContent(
             fontFamily = FontNunito.bold(),
             fontSize = 20.sp
         )
+        WorkoutRegistrationType(
+            modifier = Modifier.padding(4.dp),
+            registrationType = form.type,
+        )
         ClickableText(
             modifier = Modifier.padding(4.dp),
             text = defaultText,

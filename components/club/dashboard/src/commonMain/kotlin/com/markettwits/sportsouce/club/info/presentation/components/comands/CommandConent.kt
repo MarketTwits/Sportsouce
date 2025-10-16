@@ -1,49 +1,59 @@
 package com.markettwits.sportsouce.club.info.presentation.components.comands
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.club.info.domain.models.Trainer
+import com.markettwits.sportsouce.club.info.presentation.components.common.SubscribeGradientButton
 
 @Composable
-fun CommandContent(
+internal fun CommandContent(
     modifier: Modifier = Modifier,
-    trainers: List<Trainer>
+    trainers: List<Trainer>,
+    onRegisterClick: (Trainer) -> Unit = {},
 ) {
     var fullImageContent by remember {
         mutableStateOf("")
     }
-    Column(modifier = modifier) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(150.dp)
+    LazyVerticalStaggeredGrid(
+        modifier = modifier.fillMaxSize(),
+        columns = StaggeredGridCells.Adaptive(160.dp),
+        verticalItemSpacing = 16.dp,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(trainers) { trainer ->
+            TrainerItemContent(
+                trainer = trainer,
+                onClickImage = {
+                    fullImageContent = trainer.imageUrl
+                },
+                onRegisterClick = { onRegisterClick(trainer) }
+            )
+        }
+        item(
+            span = StaggeredGridItemSpan.FullLine,
         ) {
-            items(trainers) {
-                TrainerItemContent(
-                    modifier = Modifier.padding(10.dp),
-                    trainer = it,
-                    onClickImage = {
-                        fullImageContent = it
-                    }
-                )
-            }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
     if (fullImageContent.isNotEmpty()) {
@@ -58,45 +68,69 @@ fun CommandContent(
 private fun TrainerItemContent(
     modifier: Modifier = Modifier,
     trainer: Trainer,
-    onClickImage: (String) -> Unit
+    onClickImage: () -> Unit,
+    onRegisterClick: () -> Unit,
 ) {
     OnBackgroundCard(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = it
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
-                    .clip(Shapes.medium)
-                    .clickable {
-                        onClickImage(trainer.imageUrl)
-                    },
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable(onClick = onClickImage),
+                contentScale = ContentScale.Crop,
                 model = imageRequestCrossfade(trainer.imageUrl),
-                contentDescription = trainer.name
+                contentDescription = trainer.name,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .shimmer()
+                    )
+                }
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             Text(
-                textAlign = TextAlign.Start,
                 text = trainer.fullName(),
-                fontSize = 14.sp,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
                 fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onPrimary
             )
-            HtmlText(
-                textAlign = TextAlign.Start,
-                text = trainer.description,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.outline
-            )
+
+            if (trainer.description.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                HtmlText(
+                    text = trainer.description,
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.regular(),
+                    color = MaterialTheme.colorScheme.outline,
+                    lineHeight = 18.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                textAlign = TextAlign.Start,
                 text = trainer.sports(),
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontNunito.semiBoldBold(),
                 color = MaterialTheme.colorScheme.secondary
             )
-        }
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SubscribeGradientButton(
+                onClick = onRegisterClick,
+            )
+        }
     }
 }

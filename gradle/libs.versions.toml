@@ -19,7 +19,6 @@ compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
-haze = "1.6.10" # https://chrisbanes.github.io/haze/latest/platforms/
 multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.1.0-beta01"
 composeHotReload = "1.0.0-alpha09" # https://github.com/JetBrains/compose-hot-reload
@@ -80,10 +79,6 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "ktor" }
 coil-network-okkhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "ktor" }
 coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "ktor" }
-
-#Haze
-haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
-haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 
 #Decompose
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }

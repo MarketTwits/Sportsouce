@@ -60,7 +60,7 @@ fun StartScreen(
     ) {
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.background)
                 .imePadding()
         ) {
             AnimatedVisibility(

@@ -132,6 +132,11 @@ fun StartAlbumScreenContent(
                         )
                     }
                 }
+                item(
+                    span = { GridItemSpan(columnCount) },
+                ) {
+                    Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+                }
             }
         )
 

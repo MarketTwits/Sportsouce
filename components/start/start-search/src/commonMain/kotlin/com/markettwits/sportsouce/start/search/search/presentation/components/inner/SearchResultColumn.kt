@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,7 +35,7 @@ fun ColumnScope.SearchResultColumn(
         label = "search_results"
     ) { hasResults ->
         if (hasResults) {
-            Column {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
@@ -47,6 +48,7 @@ fun ColumnScope.SearchResultColumn(
                 )
                 StartsScreenContent(
                     items = starts,
+                    isMaxWith = true
                 ) { startId ->
                     val startTitle = starts.find { it.id == startId.id }?.name
                     if (startTitle != null)

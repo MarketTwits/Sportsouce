@@ -68,10 +68,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+                .padding(top = paddingValues.calculateTopPadding())
                 .background(MaterialTheme.colorScheme.background)
         ) {
             val screenState = when {

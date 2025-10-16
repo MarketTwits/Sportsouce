@@ -26,7 +26,7 @@ fun ClubInfoCard(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
         onClick = onClick
-    ) { _ ->
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
             verticalAlignment = Alignment.CenterVertically

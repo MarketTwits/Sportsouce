@@ -1,10 +1,6 @@
 package com.markettwits.core_ui.items.components.bottom_sheet
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -22,8 +18,7 @@ fun DefaultModalBottomSheet(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
-        modifier = modifier
-            .padding(bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()),
+        modifier = modifier,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded),
         containerColor = MaterialTheme.colorScheme.primary,
         dragHandle = dragHandle,

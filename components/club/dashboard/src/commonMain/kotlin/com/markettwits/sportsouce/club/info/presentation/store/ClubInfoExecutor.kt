@@ -1,33 +1,39 @@
 package com.markettwits.sportsouce.club.info.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.sportsouce.club.common.domain.ClubRepository
-import com.markettwits.sportsouce.club.info.domain.models.ClubInfo
 import com.markettwits.sportsouce.club.info.presentation.store.ClubInfoStore.*
-import kotlinx.coroutines.launch
+import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 
-internal class ClubInfoExecutor(
-    private val repository: ClubRepository,
-) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+internal class ClubInfoExecutor : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-        }
-    }
 
-    override fun executeAction(action: Unit) {
-        launch(false, state().info)
-    }
-
-    private fun launch(forced: Boolean, items: List<ClubInfo>) {
-        if (items.isEmpty() || forced) {
-            scope.launch {
-                repository.clubInfo().onSuccess {
-                    dispatch(Message.Loaded(it))
-                }
+            is Intent.OnTrainerRegister -> {
+                publish(
+                    Label.OpenRegistration(
+                        RegistrationType.Trainer(
+                            intent.trainer.id,
+                            intent.trainer.fullName()
+                        )
+                    )
+                )
             }
-        } else {
-            dispatch(Message.Loaded(items))
+
+            is Intent.OnTrainingRegister -> {
+                publish(
+                    Label.OpenRegistration(
+                        RegistrationType.Workout(
+                            intent.training.id,
+                            intent.training.type
+                        )
+                    )
+                )
+            }
+
+            is Intent.OnClickSubscribe -> {
+                publish(Label.OpenSchedule)
+            }
         }
     }
 }

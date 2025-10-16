@@ -24,24 +24,23 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 internal fun QuestionsContent(
     modifier: Modifier = Modifier,
-    questions: List<QuestionUi>
+    questions: List<QuestionUi>,
 ) {
 
     val questionsState = remember { questions.map { it.copy() }.toMutableStateList() }
 
     Column(modifier = modifier) {
-        Column {
-            questionsState.forEachIndexed { index, item ->
-                QuestionItemContent(
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    question = item,
-                    isSelected = item.isSelected,
-                    onClick = {
-                        questionsState[index] = item.onChecked()
-                    }
-                )
-            }
+        questionsState.forEachIndexed { index, item ->
+            QuestionItemContent(
+                modifier = Modifier.padding(vertical = 10.dp),
+                question = item,
+                isSelected = item.isSelected,
+                onClick = {
+                    questionsState[index] = item.onChecked()
+                }
+            )
         }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -68,7 +67,7 @@ private fun QuestionItemRow(
     modifier: Modifier = Modifier,
     question: QuestionUi,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val background =
         if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
@@ -129,7 +128,7 @@ private fun AnswerItemRow(modifier: Modifier = Modifier, answer: String) {
 @Composable
 private fun QuestionItemIcon(
     modifier: Modifier = Modifier,
-    isSelected: Boolean
+    isSelected: Boolean,
 ) {
     Box(
         modifier = modifier

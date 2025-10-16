@@ -5,22 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +37,7 @@ import com.markettwits.sportsouce.start.domain.StartItem
 internal fun StartAlbums(
     modifier: Modifier = Modifier,
     albums: List<StartItem.Album>,
-    onCLickFullAlbum: () -> Unit
+    onCLickFullAlbum: () -> Unit,
 ) {
     if (albums.isNotEmpty()) {
         StartContentBasePanel(modifier = modifier, label = albums[0].name) {
@@ -61,24 +52,28 @@ internal fun StartAlbums(
 private fun StartAlbumsContent(
     modifier: Modifier = Modifier,
     album: StartItem.Album,
-    onCLickFullAlbum: () -> Unit
+    onCLickFullAlbum: () -> Unit,
 ) {
     var fullImage by rememberSaveable {
         mutableStateOf(false)
     }
-    var selectedImage by rememberSaveable {
-        mutableStateOf("")
+    var selectedImageIndex by rememberSaveable {
+        mutableIntStateOf(-1)
     }
     LazyRow(
         modifier = modifier,
     ) {
-        items(album.photos.take(6), key = { it.id }) {
+        itemsIndexed(
+            items = album.photos
+                .take(6)
+                .reversed()
+        ) { index, item ->
             StartAlbumItemContent(
                 modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null, placementSpec = tween(600)),
-                image = it.imageUrl,
-                hashtag = it.tags.values.firstOrNull() ?: "",
+                image = item.imageUrl,
+                hashtag = item.tags.values.firstOrNull() ?: "",
                 onClickImage = {
-                    selectedImage = it.imageUrl
+                    selectedImageIndex = index
                     fullImage = true
                 }
             )
@@ -92,9 +87,9 @@ private fun StartAlbumsContent(
         }
     }
     if (fullImage) {
-        FullImageScreen(image = selectedImage) {
+        FullImageScreen(selectedImageIndex = selectedImageIndex, image = album.photos.map { it.imageUrl }) {
             fullImage = !fullImage
-            selectedImage = ""
+            selectedImageIndex = -1
         }
     }
 }
@@ -166,7 +161,7 @@ private fun StartAlbumItemContent(
 @Composable
 private fun StartAlbumItemContentEmpty(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     var sizeImage by remember { mutableStateOf(IntSize.Zero) }
     val color =

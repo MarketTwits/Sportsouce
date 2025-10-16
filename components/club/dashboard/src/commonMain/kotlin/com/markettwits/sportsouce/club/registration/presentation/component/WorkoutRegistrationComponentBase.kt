@@ -6,8 +6,8 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
-import com.markettwits.sportsouce.club.registration.presentation.store.store.WorkoutRegistrationStore
-import com.markettwits.sportsouce.club.registration.presentation.store.store.WorkoutRegistrationStoreFactory
+import com.markettwits.sportsouce.club.registration.presentation.store.WorkoutRegistrationStore
+import com.markettwits.sportsouce.club.registration.presentation.store.WorkoutRegistrationStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

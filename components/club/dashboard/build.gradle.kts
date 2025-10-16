@@ -24,7 +24,6 @@ kotlin {
             implementation(projects.components.core.errors)
             implementation(projects.components.core.log)
             implementation(libs.compottie)
-            implementation(libs.haze)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)

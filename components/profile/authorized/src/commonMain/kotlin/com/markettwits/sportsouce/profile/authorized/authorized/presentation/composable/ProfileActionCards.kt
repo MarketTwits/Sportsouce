@@ -1,21 +1,12 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Light
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +30,7 @@ internal fun ProfileActionCards(
 
     Row(modifier = modifier) {
         ProfileActionCard(
+            modifier = Modifier.weight(1f),
             icon = Icons.Default.Light,
             title = "Мои Старты",
             description = startsDescription,
@@ -46,6 +38,7 @@ internal fun ProfileActionCards(
         )
         Spacer(Modifier.width(8.dp))
         ProfileActionCard(
+            modifier = Modifier.weight(1f),
             icon = Icons.Default.ShoppingCart,
             title = "Мои заказы",
             description = "Посмотреть",

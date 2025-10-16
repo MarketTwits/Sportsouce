@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -253,12 +254,18 @@ internal fun InfoContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
+                modifier = Modifier.weight(0.9f),
                 text = title,
                 fontSize = 20.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 fontFamily = FontNunito.bold(),
                 color = MaterialTheme.colorScheme.onPrimary
             )
-            IconButton(onClick = onDismiss) {
+            IconButton(
+                modifier = Modifier.weight(0.1f),
+                onClick = onDismiss
+            ) {
                 Text("✕", fontSize = 18.sp)
             }
         }

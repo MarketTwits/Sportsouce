@@ -27,9 +27,6 @@ class RootClubComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
 ) : ComponentContext by componentContext, RootClubComponent {
-
-    private var dashboardComponent: ClubDashboardComponent? = null
-
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
     }
@@ -113,7 +110,6 @@ class RootClubComponentBase(
                         dashboardOuPuts(it)
                     }
                 )
-                dashboardComponent = component
                 RootClubComponent.StackChild.Dashboard(component)
             }
 

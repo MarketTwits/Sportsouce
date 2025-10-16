@@ -56,25 +56,6 @@ fun ClubDashboardScreen(
                         .padding(horizontal = 16.dp)
                 ) {
 
-                    state.error?.SauceErrorSimpleContent(
-                        onClickRetry = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
-                    )
-
-                    if (state.isLoading) {
-                        ClubShimmerInfoCard()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ClubShimmerMenuGrid()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ClubShimmerInfoCard()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ShimmerMoreSection()
-                    }
                     if (state.error == null && !state.isLoading) {
                         SubscriptionInfoCard {
                             component.obtainEvent(ClubDashboardStore.Intent.OnClickSubscriptions)
@@ -144,6 +125,26 @@ fun ClubDashboardScreen(
                             }
                         )
                     }
+
+                    if (state.isLoading) {
+                        ClubShimmerInfoCard()
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        ClubShimmerMenuGrid()
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        ClubShimmerInfoCard()
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        ShimmerMoreSection()
+                    }
+
+                    state.error?.SauceErrorSimpleContent(
+                        onClickRetry = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
+                    )
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }

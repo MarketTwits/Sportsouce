@@ -13,13 +13,15 @@ import com.markettwits.sportsouce.club.dashboard.di.clubDashboardModule
 import com.markettwits.sportsouce.club.dashboard.di.createDashboardComponent
 import com.markettwits.sportsouce.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.sportsouce.club.info.di.clubInfoModule
+import com.markettwits.sportsouce.club.info.presentation.component.ClubInfoComponentBase
 import com.markettwits.sportsouce.club.registration.di.createClubRegistrationComponent
 import com.markettwits.sportsouce.club.registration.di.workoutRegistrationModule
 import com.markettwits.sportsouce.club.registration.presentation.component.WorkoutRegistrationComponent
 import com.markettwits.sportsouce.club.root.RootClubComponent.SlotConfig.WorkoutRegistration
-import com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponentBase
-import com.markettwits.sportsouce.club.subscription.presentation.component.SubscriptionPricingComponent
-import com.markettwits.sportsouce.club.subscription.presentation.component.SubscriptionPricingComponentBase
+import com.markettwits.sportsouce.club.schedule.component.ScheduleComponent
+import com.markettwits.sportsouce.club.schedule.component.ScheduleComponentBase
+import com.markettwits.sportsouce.club.subscription.component.SubscriptionPricingComponent
+import com.markettwits.sportsouce.club.subscription.component.SubscriptionPricingComponentBase
 
 class RootClubComponentBase(
     componentContext: ComponentContext,
@@ -75,6 +77,26 @@ class RootClubComponentBase(
                 ) {
                     workoutRegistrationOuPuts(it)
                 }
+            )
+
+            is RootClubComponent.SlotConfig.ClubInfoDetail -> RootClubComponent.SlotChild.ClubInfoDetail(
+                ClubInfoComponentBase(
+                    componentContext = componentContext,
+                    dismiss = { slotNavigation.dismiss() },
+                    onOpenRegistration = { type ->
+                        slotNavigation.dismiss {
+                            slotNavigation.activate(WorkoutRegistration(type))
+                        }
+                    },
+                    onOpenSchedule = {
+                        slotNavigation.dismiss {
+                            stackNavigation.pushNew(RootClubComponent.StackConfig.Schedule)
+                        }
+                    },
+                    selectedTab = config.selectedTab,
+                    bottomSheetData = config.bottomSheetData,
+                    storeFactory = scope.get()
+                )
             )
         }
     }
@@ -134,9 +156,17 @@ class RootClubComponentBase(
             }
 
             is ClubDashboardComponent.Output.GoSchedule -> {
-                val schedules = getSchedulesFromState()
                 stackNavigation.push(
-                    RootClubComponent.StackConfig.Schedule(schedules)
+                    RootClubComponent.StackConfig.Schedule
+                )
+            }
+
+            is ClubDashboardComponent.Output.OpenClubInfoDetail -> {
+                slotNavigation.activate(
+                    RootClubComponent.SlotConfig.ClubInfoDetail(
+                        selectedTab = output.selectedTab,
+                        bottomSheetData = output.bottomSheetData
+                    )
                 )
             }
         }
@@ -166,13 +196,13 @@ class RootClubComponentBase(
     }
 
     @OptIn(DelicateDecomposeApi::class)
-    private fun scheduleOutputs(output: com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output) {
+    private fun scheduleOutputs(output: ScheduleComponent.Output) {
         when (output) {
-            is com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output.Dismiss -> {
+            is ScheduleComponent.Output.Dismiss -> {
                 stackNavigation.pop()
             }
 
-            is com.markettwits.sportsouce.club.schedule.presentation.component.ScheduleComponent.Output.Registration -> {
+            is ScheduleComponent.Output.Registration -> {
                 slotNavigation.activate(
                     WorkoutRegistration(output.type)
                 )
@@ -180,10 +210,4 @@ class RootClubComponentBase(
         }
     }
 
-    private fun getSchedulesFromState(): List<com.markettwits.sportsouce.club.info.domain.models.Schedule> {
-        return dashboardComponent?.state?.value?.subscription?.clubInfo
-            ?.filterIsInstance<com.markettwits.sportsouce.club.info.domain.models.ClubInfo.Schedules>()
-            ?.flatMap { it.schedule }
-            ?: emptyList()
-    }
 }

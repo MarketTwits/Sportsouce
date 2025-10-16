@@ -50,6 +50,10 @@ internal class ClubDashboardComponentBase(
                 is ClubDashboardStore.Label.OnClickSchedule -> {
                     output(ClubDashboardComponent.Output.GoSchedule)
                 }
+
+                is ClubDashboardStore.Label.OpenClubInfoDetail -> {
+                    output(ClubDashboardComponent.Output.OpenClubInfoDetail(it.selectedTab, it.bottomSheetData))
+                }
             }
         }.launchIn(scope)
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)

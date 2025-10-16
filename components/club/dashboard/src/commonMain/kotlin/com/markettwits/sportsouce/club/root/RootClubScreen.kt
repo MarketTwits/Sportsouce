@@ -6,9 +6,10 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.sportsouce.club.dashboard.presentation.screen.ClubDashboardScreen
+import com.markettwits.sportsouce.club.info.presentation.screen.ClubInfoDetailBottomSheet
 import com.markettwits.sportsouce.club.registration.presentation.screen.WorkoutRegistrationScreen
-import com.markettwits.sportsouce.club.schedule.presentation.screen.ScheduleScreen
-import com.markettwits.sportsouce.club.subscription.presentation.screen.SubscriptionPricingScreen
+import com.markettwits.sportsouce.club.schedule.screen.ScheduleScreen
+import com.markettwits.sportsouce.club.subscription.screen.SubscriptionPricingScreen
 
 @Composable
 fun RootClubScreen(component: RootClubComponent) {
@@ -20,6 +21,10 @@ fun RootClubScreen(component: RootClubComponent) {
         when (child) {
             is RootClubComponent.SlotChild.WorkoutRegistration -> {
                 WorkoutRegistrationScreen(component = child.component)
+            }
+
+            is RootClubComponent.SlotChild.ClubInfoDetail -> {
+                ClubInfoDetailBottomSheet(component = child.component)
             }
         }
     }

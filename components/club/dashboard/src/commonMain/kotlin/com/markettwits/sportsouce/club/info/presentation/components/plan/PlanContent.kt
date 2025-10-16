@@ -1,10 +1,7 @@
 package com.markettwits.sportsouce.club.info.presentation.components.plan
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,18 +11,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.sportsouce.club.info.presentation.components.common.SubscribeGradientButton
+
 
 @Composable
-internal fun PlanContent(
-    onDismiss: () -> Unit,
-    onClickSubscribe: () -> Unit,
-) {
-    ClubPlanContent(onDismiss = onDismiss, onClickSubscribe = onClickSubscribe)
-}
-
-@Composable
-private fun ClubPlanContent(
-    onDismiss: () -> Unit,
+internal fun ClubPlanContent(
     onClickSubscribe: () -> Unit,
 ) {
     Column(
@@ -33,77 +23,43 @@ private fun ClubPlanContent(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(start = 10.dp),
         ) {
-            Text(
-                text = "План как начать",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimary
+            PlanStep(
+                stepNumber = 1,
+                text = "Записаться и прийти на пробную тренировку",
+                isLast = false,
+                hasGradientBackground = false
             )
-            IconButton(onClick = onDismiss) {
-                Text("✕", fontSize = 18.sp)
-            }
+
+            PlanStep(
+                stepNumber = 2,
+                text = "После тренировки поможем выбрать абонемент и нужное количество тренировок",
+                isLast = false,
+                hasGradientBackground = false
+            )
+
+            PlanStep(
+                stepNumber = 3,
+                text = "Выберем цель. Если необходимо можно добавить индивидуальный план",
+                isLast = false,
+                hasGradientBackground = false
+            )
+
+            PlanStep(
+                stepNumber = 4,
+                text = "Получаем удовольствие от тренировок, общения в команде, и эффективно достигаем результата",
+                isLast = true,
+                hasGradientBackground = true
+            )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
 
-        PlanStep(
-            stepNumber = 1,
-            text = "Записаться и прийти на пробную тренировку",
-            isLast = false,
-            hasGradientBackground = false
-        )
-
-        PlanStep(
-            stepNumber = 2,
-            text = "После тренировки поможем выбрать абонемент и нужное количество тренировок",
-            isLast = false,
-            hasGradientBackground = false
-        )
-
-        PlanStep(
-            stepNumber = 3,
-            text = "Выберем цель. Если необходимо можно добавить индивидуальный план",
-            isLast = false,
-            hasGradientBackground = false
-        )
-
-        PlanStep(
-            stepNumber = 4,
-            text = "Получаем удовольствие от тренировок, общения в команде, и эффективно достигаем результата",
-            isLast = true,
-            hasGradientBackground = true
-        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(
-                    brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
-                        colors = listOf(
-                            Color(0xFF5AE4C0),
-                            Color(0xFF70BFF5)
-                        )
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .clickable { onClickSubscribe() },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Записаться",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        }
+        SubscribeGradientButton(onClick = onClickSubscribe)
 
         Spacer(modifier = Modifier.height(20.dp))
     }

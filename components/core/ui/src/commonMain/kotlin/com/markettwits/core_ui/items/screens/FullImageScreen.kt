@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -153,8 +154,11 @@ fun FullImageScreenInternal(
 
             Row(
                 modifier = Modifier
-                    .alpha(bgAlpha)
                     .padding(12.dp)
+                    .alpha(bgAlpha)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
                     .align(Alignment.BottomCenter),
                 verticalAlignment = Alignment.CenterVertically
             ) {

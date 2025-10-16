@@ -3,33 +3,34 @@ package com.markettwits.sportsouce.club.info.presentation.store
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.markettwits.sportsouce.club.common.domain.ClubRepository
-import com.markettwits.sportsouce.club.info.domain.models.ClubInfo
-import com.markettwits.sportsouce.club.info.presentation.store.ClubInfoStore.Intent
-import com.markettwits.sportsouce.club.info.presentation.store.ClubInfoStore.Label
-import com.markettwits.sportsouce.club.info.presentation.store.ClubInfoStore.State
+import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore
+import com.markettwits.sportsouce.club.info.presentation.components.bottomsheet.MenuBottomSheetType
+import com.markettwits.sportsouce.club.info.presentation.store.ClubInfoStore.*
 
 internal class ClubInfoStoreFactory(
     private val storeFactory: StoreFactory,
-    private val repository: ClubRepository
 ) {
 
-    fun create(index: Int, items: List<ClubInfo>): ClubInfoStore = ClubInfoStoreImpl(
-        index,
-        items,
-        repository
+    fun create(
+        selectedTab: MenuBottomSheetType,
+        bottomSheetData: ClubDashboardStore.BottomSheetData,
+    ): ClubInfoStore = ClubInfoStoreImpl(
+        selectedTab,
+        bottomSheetData,
     )
 
     private inner class ClubInfoStoreImpl(
-        private val index: Int,
-        private val items: List<ClubInfo>,
-        private val repository: ClubRepository
+        private val selectedTab: MenuBottomSheetType,
+        private val bottomSheetData: ClubDashboardStore.BottomSheetData,
     ) : ClubInfoStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "ClubInfoStore",
-            initialState = State(currentIndex = index, info = items),
+            initialState = State(
+                selectedTab = selectedTab,
+                bottomSheetData = bottomSheetData
+            ),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { ClubInfoExecutor(repository) },
+            executorFactory = { ClubInfoExecutor() },
             reducer = ClubInfoReducer
         )
 }

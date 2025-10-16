@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -17,8 +18,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -40,17 +42,21 @@ internal fun ClubFeaturesContent(
         )
     }
 
-    Column(modifier = modifier) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            verticalItemSpacing = 12.dp,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(features) { feature ->
-                FeatureItemContent(feature = feature) {
-                    fullImageContent = feature.imageUrl ?: ""
-                }
+    LazyVerticalStaggeredGrid(
+        modifier = modifier.fillMaxSize(),
+        columns = StaggeredGridCells.Adaptive(180.dp),
+        verticalItemSpacing = 16.dp,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(features) { feature ->
+            FeatureItemContent(feature = feature) {
+                fullImageContent = feature.imageUrl ?: ""
             }
+        }
+        item(
+            span = StaggeredGridItemSpan.FullLine,
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
@@ -70,15 +76,22 @@ private fun FeatureItemContent(
                 .padding(16.dp)
         ) {
             if (!feature.imageUrl.isNullOrBlank()) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = feature.imageUrl,
                     contentDescription = feature.name,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
+                        .height(140.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .clickable(onClick = onClick),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmer()
+                        )
+                    }
                 )
             } else {
                 Box(

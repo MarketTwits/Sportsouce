@@ -22,7 +22,7 @@ fun TopBarBase(
     isStatusBarHandle: Boolean = true,
     goBack: () -> Unit,
 ) {
-    Box(
+    Row(
         modifier
             .background(MaterialTheme.colorScheme.primary)
             .padding(
@@ -32,10 +32,13 @@ fun TopBarBase(
             )
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 2.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
         IconButton(
-            modifier = Modifier.align(Alignment.CenterStart),
+            modifier = Modifier
+                .weight(0.15f),
             onClick = { goBack() }
         ) {
             Icon(
@@ -44,14 +47,20 @@ fun TopBarBase(
                 tint = MaterialTheme.colorScheme.tertiary,
             )
         }
-        Text(
+        Box(
             modifier = Modifier
-                .align(Alignment.Center)
-                .padding(start = 30.dp),
-            text = title,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 18.sp
-        )
+                .weight(0.85f)
+                .fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = title,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontFamily = FontNunito.bold(),
+                fontSize = 18.sp
+            )
+        }
+
     }
 }

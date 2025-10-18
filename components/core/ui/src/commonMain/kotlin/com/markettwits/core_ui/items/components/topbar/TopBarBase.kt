@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -22,8 +24,8 @@ fun TopBarBase(
     isStatusBarHandle: Boolean = true,
     goBack: () -> Unit,
 ) {
-    Row(
-        modifier
+    Box(
+        modifier = modifier
             .background(MaterialTheme.colorScheme.primary)
             .padding(
                 top = if (isStatusBarHandle)
@@ -32,13 +34,11 @@ fun TopBarBase(
             )
             .padding(start = 5.dp, end = 8.dp)
             .padding(vertical = 2.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+            .fillMaxWidth()
     ) {
         IconButton(
             modifier = Modifier
-                .weight(0.15f),
+                .align(Alignment.CenterStart),
             onClick = { goBack() }
         ) {
             Icon(
@@ -47,20 +47,18 @@ fun TopBarBase(
                 tint = MaterialTheme.colorScheme.tertiary,
             )
         }
-        Box(
-            modifier = Modifier
-                .weight(0.85f)
-                .fillMaxWidth()
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = title,
-                color = MaterialTheme.colorScheme.tertiary,
-                fontFamily = FontNunito.bold(),
-                fontSize = 18.sp
-            )
-        }
 
+        Text(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 48.dp),
+            text = title,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontFamily = FontNunito.bold(),
+            fontSize = 18.sp,
+            textAlign = TextAlign.Start,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

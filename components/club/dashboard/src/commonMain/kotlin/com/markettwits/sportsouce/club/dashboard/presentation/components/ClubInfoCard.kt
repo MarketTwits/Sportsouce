@@ -1,8 +1,12 @@
 package com.markettwits.sportsouce.club.dashboard.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,14 +52,22 @@ fun ClubInfoCard(
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            AnimatedIconBackground(
-                colors = colors,
-                modifier = Modifier.size(56.dp)
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                            colors = colors.map { it.copy(alpha = 0.15f) },
+                            radius = 60f
+                        ),
+                        shape = androidx.compose.foundation.shape.CircleShape
+                    ),
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = LocalContentColor.current,
+                    tint = colors.first(),
                     modifier = Modifier.size(28.dp)
                 )
             }

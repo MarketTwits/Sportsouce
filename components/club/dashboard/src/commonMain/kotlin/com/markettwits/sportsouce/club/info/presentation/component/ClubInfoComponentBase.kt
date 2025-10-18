@@ -24,8 +24,7 @@ internal class ClubInfoComponentBase(
     private val selectedTab: MenuBottomSheetType,
     private val bottomSheetData: ClubDashboardStore.BottomSheetData,
     private val storeFactory: ClubInfoStoreFactory,
-) : ClubInfoComponent,
-    ComponentContext by componentContext {
+) : ClubInfoComponent, ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 

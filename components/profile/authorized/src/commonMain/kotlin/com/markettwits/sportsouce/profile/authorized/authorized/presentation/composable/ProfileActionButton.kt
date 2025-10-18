@@ -1,14 +1,9 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 
@@ -28,7 +24,7 @@ internal fun ProfileActionButton(
     actionIcon: ImageVector = Icons.Default.ChevronRight,
     onClick: () -> Unit
 ) {
-    Button(
+    OnBackgroundCard(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
@@ -38,7 +34,7 @@ internal fun ProfileActionButton(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(18.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(

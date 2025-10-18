@@ -87,7 +87,7 @@ fun StartAlbumScreenContent(
                             scrollableState.animateScrollToItem(0)
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.secondary,
                     elevation = FloatingActionButtonDefaults.elevation(
                         defaultElevation = 6.dp,

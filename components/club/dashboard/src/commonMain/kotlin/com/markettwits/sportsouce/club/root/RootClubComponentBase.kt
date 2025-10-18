@@ -146,13 +146,13 @@ class RootClubComponentBase(
             )
 
             is ClubDashboardComponent.Output.GoSubscriptions -> {
-                stackNavigation.push(
+                stackNavigation.pushNew(
                     RootClubComponent.StackConfig.SubscriptionPricing("default")
                 )
             }
 
             is ClubDashboardComponent.Output.GoSchedule -> {
-                stackNavigation.push(
+                stackNavigation.pushNew(
                     RootClubComponent.StackConfig.Schedule
                 )
             }

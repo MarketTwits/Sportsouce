@@ -38,19 +38,4 @@ fun StartAlbumScreen(component: StartAlbumComponent) {
         )
 
     }
-
-//    CollapsingToolbarScaffold(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(MaterialTheme.colorScheme.background),
-//        scrollStrategy = ScrollStrategy.EnterAlwaysCollapsed,
-//        state = scrollState,
-//        toolbar = {
-//            TopBarWithClip(title = "Альбом") {
-//                component.obtainEvent(StartAlbumStore.Intent.GoBack)
-//            }
-//        }
-//    ) {
-//
-//    }
 }

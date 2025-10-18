@@ -20,6 +20,7 @@ internal val LightColorScheme = lightColorScheme(
     onBackground = SportSouceColor.OnBackgroundLight,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
     outline = SportSouceColor.Gray,
+    surfaceTint = Color.Black.copy(alpha = 0.05f),
     outlineVariant = SportSouceColor.SecondaryWhite,
 )
 internal val DarkColorScheme = darkColorScheme(
@@ -35,6 +36,7 @@ internal val DarkColorScheme = darkColorScheme(
     onTertiaryContainer = SportSouceColor.DirtyWhite,
     onErrorContainer = SportSouceColor.SportSouceLightRed,
     outline = SportSouceColor.GrayForDarkTheme,
+    surfaceTint = Color.White.copy(alpha = 0.05f),
     outlineVariant = SportSouceColor.DarkSecondaryContainerNew,
     onBackground = Color.White,
     background = Color.Black

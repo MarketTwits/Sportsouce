@@ -1,5 +1,6 @@
-package com.markettwits.sportsouce.profile.registrations.presentation.detail.components
+package com.markettwits.sportsouce.profile.registrations.presentation.detail.screen
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
@@ -64,10 +66,10 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
             }
         },
         floatingActionButton = {
-            androidx.compose.animation.AnimatedVisibility(
+            AnimatedVisibility(
                 visible = showFab,
-                enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.scaleIn(),
-                exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.scaleOut()
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut()
             ) {
                 ExtendedFloatingActionButton(
                     onClick = {
@@ -75,7 +77,7 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                             scrollState.animateScrollTo(paymentButtonTop.toInt())
                         }
                     },
-                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                    containerColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     elevation = FloatingActionButtonDefaults.elevation(
                         defaultElevation = 0.dp,

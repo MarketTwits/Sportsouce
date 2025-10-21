@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.StartOrderStartScreen
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.screen.StartOrderStartScreen
 import com.markettwits.sportsouce.profile.registrations.presentation.list.screen.MyRegistrationsScreen
 import com.markettwits.sportsouce.start.root.RootStartScreen
 

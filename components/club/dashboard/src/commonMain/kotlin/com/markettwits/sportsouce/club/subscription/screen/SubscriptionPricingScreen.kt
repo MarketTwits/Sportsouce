@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.components.buttons.ScrollToTopBabButton
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.components.progress.shimmer
@@ -89,7 +89,6 @@ fun SubscriptionPricingScreen(
             SubscriptionHeader(
                 primaryColor = animatedSubscriptionColor
             )
-
             Column(
                 modifier = Modifier
                     .offset(y = (-35).dp)
@@ -132,17 +131,19 @@ fun SubscriptionPricingScreen(
                     }
 
                     state.error != null -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 32.dp)
-                        ) {
-                            state.error?.let {
-                                it.SauceErrorSimpleContent(
-                                    onClickRetry = {
-                                        component.obtainEvent(SubscriptionPricingStore.Intent.RetryRequest)
-                                    }
-                                )
+                        AdaptivePane {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 32.dp)
+                            ) {
+                                state.error?.let {
+                                    it.SauceErrorSimpleContent(
+                                        onClickRetry = {
+                                            component.obtainEvent(SubscriptionPricingStore.Intent.RetryRequest)
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -150,35 +151,49 @@ fun SubscriptionPricingScreen(
 
                     state.subscriptions.isNotEmpty() -> {
                         // Filter chips for pager navigation
-                        OnBackgroundCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            )
-                        ) {
-                            FlowRow(
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                maxLines = 3,
-                                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+                        AdaptivePane {
+                            Card(
+                                modifier = Modifier
+                                    .padding(vertical = 16.dp)
+                                    .fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primary
+                                ),
+                                shape = RoundedCornerShape(
+                                    topStart = 16.dp,
+                                    topEnd = 16.dp,
+                                    bottomStart = 8.dp,
+                                    bottomEnd = 8.dp
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                             ) {
-                                state.subscriptions.forEachIndexed { index, subscriptionItem ->
-                                    AnimatedFilterChip(
-                                        selected = pagerState.currentPage == index,
-                                        onClick = {
-                                            scope.launch {
-                                                pagerState.animateScrollToPage(index)
-                                            }
-                                        },
-                                        label = subscriptionItem.groupName
-                                    )
+                                FlowRow(
+
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    maxLines = 3,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(horizontal = 20.dp, vertical = 16.dp)
+                                ) {
+                                    state.subscriptions.forEachIndexed { index, subscriptionItem ->
+                                        AnimatedFilterChip(
+                                            selected = pagerState.currentPage == index,
+                                            onClick = {
+                                                scope.launch {
+                                                    pagerState.animateScrollToPage(index)
+                                                }
+                                            },
+                                            label = subscriptionItem.groupName
+                                        )
+                                    }
                                 }
                             }
+
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
-
                         AdaptivePane {
+                            Spacer(modifier = Modifier.height(20.dp))
+
                             // HorizontalPager with subscription grids
                             HorizontalPager(
                                 state = pagerState,
@@ -258,24 +273,16 @@ fun SubscriptionPricingScreen(
                 .windowInsetsPadding(WindowInsets.systemBars)
                 .padding(16.dp)
         ) {
-            FloatingActionButton(
+            ScrollToTopBabButton(
                 onClick = {
                     scope.launch {
                         scrollState.animateScrollTo(0)
                     }
                 },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = "Scroll to top"
-                )
-            }
+            )
         }
     }
 }
-
 
 @Composable
 private fun SubscriptionHeader(

@@ -5,6 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.extensions.noRippleClickable
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
@@ -61,45 +67,82 @@ internal fun ShopItemImageContent(
 private fun FullImageContent(
     modifier: Modifier = Modifier,
     imageUrl: List<String>,
-    onClickImage: (String) -> Unit
+    onClickImage: (String) -> Unit,
 ) {
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { imageUrl.size })
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .heightIn(max = 400.dp)
     ) {
-        HorizontalPager(
-            modifier = Modifier.align(Alignment.Center),
-            state = pagerState,
-            verticalAlignment = Alignment.CenterVertically,
-        ) { index ->
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .background(Color.White)
-                    .align(Alignment.Center)
-                    .fillMaxSize()
-                    .clip(Shapes.large)
-                    .noRippleClickable {
-                        onClickImage(imageUrl[index])
-                    },
-                model = imageUrl[index],
-                contentDescription = "",
-                contentScale = ContentScale.Fit,
-                error = {
-                    SubcomposeAsyncImageContent()
-                },
-                success = {
-                    SubcomposeAsyncImageContent(modifier = modifier)
-                }
-            )
-        }
         if (imageUrl.isNotEmpty()) {
+            val pagerState = rememberPagerState(initialPage = 0, pageCount = { imageUrl.size })
+
+            HorizontalPager(
+                modifier = Modifier.align(Alignment.Center),
+                state = pagerState,
+                verticalAlignment = Alignment.CenterVertically,
+            ) { index ->
+                SubcomposeAsyncImage(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .align(Alignment.Center)
+                        .fillMaxSize()
+                        .clip(Shapes.large)
+                        .noRippleClickable {
+                            onClickImage(imageUrl[index])
+                        },
+                    model = imageRequestCrossfade(imageUrl[index]),
+                    contentDescription = "",
+                    contentScale = ContentScale.Fit,
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.outlineVariant)
+                                .shimmer()
+                        )
+                    },
+                    error = {
+                        SubcomposeAsyncImageContent()
+                    },
+                    success = {
+                        SubcomposeAsyncImageContent(modifier = modifier)
+                    }
+                )
+            }
             ShopItemImagePageIndicator(
                 currentPageIndex = pagerState.targetPage,
                 pageCount = pagerState.pageCount,
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .clip(Shapes.large),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = "No image",
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.outline
+                    )
+                    Text(
+                        text = "Изображение отсутствует",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = FontNunito.medium(),
+                        color = MaterialTheme.colorScheme.outline,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -126,4 +169,3 @@ private fun BoxScope.ShopItemImagePageIndicator(
         )
     }
 }
-

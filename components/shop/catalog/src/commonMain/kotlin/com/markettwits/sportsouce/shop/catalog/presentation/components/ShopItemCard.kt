@@ -2,18 +2,7 @@ package com.markettwits.sportsouce.shop.catalog.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -111,8 +100,14 @@ private fun ImageCard(
                 loading = {
                     Box(
                         modifier = modifier
-                            .shimmer(tiltAngle = 30)
-                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .shimmer(
+                                tiltAngle = 30,
+                                gradientColors = listOf(
+                                    Color.Transparent,
+                                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
+                                    Color.Transparent,
+                                )
+                            ).background(MaterialTheme.colorScheme.primaryContainer)
                     )
                 },
                 success = {
@@ -127,7 +122,7 @@ private fun ImageCard(
                 modifier = Modifier.weight(0.05f),
                 pagerState = pagerState
             )
-        }else{
+        } else {
             Spacer(modifier = Modifier.weight(0.05f))
         }
         if (image.isEmpty()) {
@@ -151,7 +146,7 @@ private fun ImageCard(
 @Composable
 private fun ShopImagePageIndicator(
     modifier: Modifier = Modifier,
-    pagerState: PagerState
+    pagerState: PagerState,
 ) {
     Row(
         modifier

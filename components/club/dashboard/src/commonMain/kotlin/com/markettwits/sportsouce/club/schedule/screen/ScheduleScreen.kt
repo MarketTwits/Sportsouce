@@ -7,7 +7,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
@@ -20,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.components.buttons.ScrollToTopBabButton
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
 import com.markettwits.core_ui.items.components.progress.shimmer
@@ -117,42 +121,41 @@ private fun ScheduleContent(
             ) {
                 state.error?.SauceErrorSimpleContent(onClickRetry = onRetry)
 
-                if (state.allWorkoutTypes.isNotEmpty()) {
-                    Card(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            topEnd = 16.dp,
-                            bottomStart = 8.dp,
-                            bottomEnd = 8.dp
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier.padding(16.dp)
+                AdaptivePane {
+                    if (state.allWorkoutTypes.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            shape = RoundedCornerShape(
+                                topStart = 16.dp,
+                                topEnd = 16.dp,
+                                bottomStart = 8.dp,
+                                bottomEnd = 8.dp
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
                             WorkoutTypeFilter(
+                                modifier = Modifier.padding(16.dp),
                                 workoutTypes = state.allWorkoutTypes,
                                 selectedWorkoutId = state.selectedWorkoutId,
                                 onWorkoutTypeClick = onClickWorkoutType,
                             )
                         }
-                    }
 
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                    )
+                        HorizontalDivider(
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                        )
+                    }
                 }
 
-                AdaptivePane {
-                    when {
-                        state.isLoading -> {
+                when {
+                    state.isLoading -> {
+                        AdaptivePane {
                             Card(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
@@ -182,8 +185,10 @@ private fun ScheduleContent(
                                 }
                             }
                         }
+                    }
 
-                        state.schedules.isNotEmpty() -> {
+                    state.schedules.isNotEmpty() -> {
+                        AdaptivePane {
                             FlowRow(
                                 horizontalArrangement = Arrangement.spacedBy(24.dp),
                                 verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -210,17 +215,18 @@ private fun ScheduleContent(
                                 }
                             }
                         }
+                    }
 
-                        state.schedules.isEmpty() && !state.isLoading && state.error == null -> {
+                    state.schedules.isEmpty() && !state.isLoading && state.error == null -> {
+                        AdaptivePane {
                             EmptyScheduleMessage(isLargeScreen = isLargeScreen)
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(100.dp))
             }
-        }
 
+            Spacer(modifier = Modifier.height(100.dp))
+        }
         // Scroll to top FAB
         val showScrollToTop by remember {
             derivedStateOf { scrollState.value > 200 }
@@ -235,31 +241,25 @@ private fun ScheduleContent(
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
-            FloatingActionButton(
+            ScrollToTopBabButton(
                 onClick = {
                     scope.launch {
                         scrollState.animateScrollTo(0)
                     }
                 },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.secondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowUp,
-                    contentDescription = "Scroll to top"
-                )
-            }
+            )
         }
     }
 }
-
 @Composable
-private fun WorkoutTypeFilter(
+private fun ColumnScope.WorkoutTypeFilter(
+    modifier: Modifier = Modifier,
     workoutTypes: List<String>,
     selectedWorkoutId: Int?,
     onWorkoutTypeClick: (Int?) -> Unit,
 ) {
     FlowRow(
+        modifier = modifier.align(Alignment.CenterHorizontally),
         maxItemsInEachRow = 3,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

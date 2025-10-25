@@ -18,6 +18,7 @@ import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.start.components.StartRegistrationButton
 import com.markettwits.sportsouce.start.presentation.start.components.StartShareActionButton
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
@@ -43,11 +44,12 @@ internal fun StartScreenContent(
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
 ) {
+    val windowSize = calculateWindowSizeClass()
+
     PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
         onClickRetry()
     }) {
         Box(modifier = Modifier.fillMaxSize()) {
-            val windowSize = calculateWindowSizeClass()
             if (windowSize.isLarge) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -68,50 +70,76 @@ internal fun StartScreenContent(
                             isPortrait = false
                         )
                     }
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            StartScreenInnerContent(
+                                modifier = Modifier,
+                                data = data,
+                                error = error,
+                                starts = starts,
+                                isPartialData = isPartialData,
+                                onClickMembers = onClickMembers,
+                                onClickRecommendedStart = onClickRecommendedStart,
+                                onClickMembersResults = onClickMembersResults,
+                                onClickUrl = onClickUrl,
+                                onClickPhone = onClickPhone,
+                                onClickFullAlbum = onClickFullAlbum,
+                                onClickRetry = onClickRetry,
+                                donations = donations,
+                                comments = comments
+                            )
+                        }
+                        StartRegistrationButton(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(10.dp),
+                            startStatus = data.startStatus,
+                            regLink = data.regLink,
+                            onClickRegistration = onClickRegistration
+                        )
+                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
+                        FullImageContent(
+                            modifier = Modifier.clickable { onClickImage() },
+                            imageUrl = data.image
+                        )
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
                             error = error,
                             starts = starts,
                             isPartialData = isPartialData,
-                            onClickRegistration = onClickRegistration,
                             onClickMembers = onClickMembers,
-                            onClickRecommendedStart = onClickRecommendedStart,
                             onClickMembersResults = onClickMembersResults,
+                            onClickRecommendedStart = onClickRecommendedStart,
                             onClickUrl = onClickUrl,
-                            onClickFullAlbum = onClickFullAlbum,
+                            onClickPhone = onClickPhone,
                             onClickRetry = onClickRetry,
+                            onClickFullAlbum = onClickFullAlbum,
                             donations = donations,
                             comments = comments
                         )
                     }
-                }
-            } else {
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    FullImageContent(
-                        modifier = Modifier.clickable { onClickImage() },
-                        imageUrl = data.image
-                    )
-                    StartScreenInnerContent(
-                        modifier = Modifier,
-                        data = data,
-                        error = error,
-                        starts = starts,
-                        isPartialData = isPartialData,
-                        onClickRegistration = onClickRegistration,
-                        onClickMembers = onClickMembers,
-                        onClickMembersResults = onClickMembersResults,
-                        onClickRecommendedStart = onClickRecommendedStart,
-                        onClickUrl = onClickUrl,
-                        onClickRetry = onClickRetry,
-                        onClickFullAlbum = onClickFullAlbum,
-                        donations = donations,
-                        comments = comments
+                    StartRegistrationButton(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(10.dp),
+                        startStatus = data.startStatus,
+                        regLink = data.regLink,
+                        onClickRegistration = onClickRegistration
                     )
                 }
             }

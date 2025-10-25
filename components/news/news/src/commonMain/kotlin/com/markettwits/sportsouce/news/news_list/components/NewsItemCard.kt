@@ -27,7 +27,7 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (Ne
     Column(
         modifier = modifier
             .padding(10.dp)
-            .size(width = 240.dp, height = 210.dp)
+            .size(width = 270.dp, height = 250.dp)
             .clip(Shapes.medium)
             .clickable { onClick(newsInfo) }
     ) {

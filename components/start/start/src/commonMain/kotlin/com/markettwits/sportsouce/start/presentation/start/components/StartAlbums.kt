@@ -5,9 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -40,10 +45,15 @@ internal fun StartAlbums(
     onCLickFullAlbum: () -> Unit,
 ) {
     if (albums.isNotEmpty()) {
-        StartContentBasePanel(modifier = modifier, label = albums[0].name) {
-            StartAlbumsContent(album = albums[0], onCLickFullAlbum = {
-                onCLickFullAlbum()
-            })
+        StartContentBasePanel(
+            modifier = modifier,
+            label = albums[0].name,
+            icon = Icons.Default.PhotoLibrary
+        ) {
+            StartAlbumsContent(
+                album = albums[0],
+                onCLickFullAlbum = { onCLickFullAlbum() }
+            )
         }
     }
 }
@@ -111,13 +121,15 @@ private fun StartAlbumItemContent(
     )
     Box(
         modifier = modifier
-            .padding(10.dp)
-            .size(width = 150.dp, height = 180.dp)
-            .clip(Shapes.medium)
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), Shapes.medium)
-            .clickable {
-                onClickImage()
-            }
+            .padding(8.dp)
+            .size(width = 160.dp, height = 200.dp)
+            .clip(Shapes.large)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                shape = Shapes.large
+            )
+            .clickable { onClickImage() }
     ) {
         Box(modifier = modifier.fillMaxSize()) {
             SubcomposeAsyncImage(
@@ -173,13 +185,15 @@ private fun StartAlbumItemContentEmpty(
     )
     Box(
         modifier = modifier
-            .padding(10.dp)
-            .size(width = 150.dp, height = 180.dp)
-            .clip(Shapes.medium)
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), Shapes.medium)
-            .clickable {
-                onClick()
-            }
+            .padding(8.dp)
+            .size(width = 160.dp, height = 200.dp)
+            .clip(Shapes.large)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                shape = Shapes.large
+            )
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -207,29 +221,24 @@ private fun StartAlbumItemContentEmpty(
 private fun HashtagLabel(modifier: Modifier, hashtag: String) {
     Box(
         modifier = modifier
-            .size(width = 90.dp, height = 40.dp)
             .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.2f))
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(5.dp)
-                .clip(Shapes.medium)
-                .align(Alignment.Center)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondary),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                text = hashtag,
-                fontSize = 12.sp,
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onSecondary
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.secondary,
+                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
+                    )
+                )
             )
-        }
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+    ) {
+        Text(
+            text = hashtag,
+            fontSize = 11.sp,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            fontFamily = FontNunito.bold(),
+            color = MaterialTheme.colorScheme.onSecondary
+        )
     }
 }

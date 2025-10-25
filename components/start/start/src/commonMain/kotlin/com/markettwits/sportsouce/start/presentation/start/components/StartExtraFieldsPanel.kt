@@ -10,9 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -65,54 +63,68 @@ internal fun StartExtraFieldsPanel(
             if (organizers.isNotEmpty()) showOrganizersRow = true
         }
     }
-    
-    Column(modifier = modifier) {
-        if (startDate.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showDateRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
+
+    if (!isPartialData)
+        Card(
+            modifier = modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 1.dp
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.DateRange,
-                    value = startDate,
-                )
+                if (startDate.isNotEmpty()) {
+                    AnimatedVisibility(
+                        visible = showDateRow,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                                slideInVertically(
+                                    animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                                    initialOffsetY = { it / 8 } // More subtle slide distance
+                                )
+                    ) {
+                        StartExtraFiledRow(
+                            icon = Icons.Outlined.DateRange,
+                            value = startDate,
+                        )
+                    }
+                }
+                if (place.isNotEmpty()) {
+                    AnimatedVisibility(
+                        visible = showPlaceRow,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                                slideInVertically(
+                                    animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                                    initialOffsetY = { it / 8 } // More subtle slide distance
+                                )
+                    ) {
+                        StartExtraFiledRow(
+                            icon = Icons.Outlined.Place,
+                            value = place,
+                        )
+                    }
+                }
+                if (organizers.isNotEmpty()) {
+                    AnimatedVisibility(
+                        visible = showOrganizersRow,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
+                                slideInVertically(
+                                    animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
+                                    initialOffsetY = { it / 8 } // More subtle slide distance
+                                )
+                    ) {
+                        StartExtraFiledRow(
+                            icon = Icons.Outlined.PersonOutline,
+                            value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
+                        )
+                    }
+                }
             }
         }
-        if (place.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showPlaceRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
-            ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.Place,
-                    value = place,
-                )
-            }
-        }
-        if (organizers.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showOrganizersRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
-            ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.PersonOutline,
-                    value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
-                )
-            }
-        }
-    }
 }
 
 @Composable
@@ -122,20 +134,24 @@ private fun StartExtraFiledRow(
     value: String,
 ) {
     Row(
-        modifier = modifier.padding(vertical = 3.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = "icon",
-            tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f),
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(20.dp)
         )
-        Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = value,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
             fontFamily = FontNunito.medium(),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            modifier = Modifier.weight(1f)
         )
     }
 }

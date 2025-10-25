@@ -2,7 +2,6 @@ package com.markettwits.core_ui.items.image
 
 import androidx.compose.runtime.Composable
 import coil3.compose.LocalPlatformContext
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 
@@ -10,7 +9,6 @@ import coil3.request.crossfade
 fun imageRequestCrossfade(model: Any?): ImageRequest =
     ImageRequest
         .Builder(LocalPlatformContext.current)
-        .diskCachePolicy(CachePolicy.DISABLED)
         .crossfade(true)
         .data(model)
         .build()

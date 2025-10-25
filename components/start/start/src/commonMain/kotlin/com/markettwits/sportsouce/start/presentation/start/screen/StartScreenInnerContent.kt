@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,11 +26,11 @@ internal fun StartScreenInnerContent(
     error: Throwable? = null,
     starts: List<StartsListItem>,
     isPartialData: Boolean = false,
-    onClickRegistration: () -> Unit,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
     onClickFullAlbum: () -> Unit,
     onClickUrl: (String) -> Unit,
+    onClickPhone: (String) -> Unit,
     onClickRetry: () -> Unit,
     onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
@@ -37,11 +39,12 @@ internal fun StartScreenInnerContent(
     val innerModifier = Modifier.padding(10.dp)
 
     // Animation states for staggered appearance
-    var showRegistrationPanel by rememberSaveable { mutableStateOf(false) }
+    var showDistanceInfo by rememberSaveable { mutableStateOf(false) }
     var showAlbums by rememberSaveable { mutableStateOf(false) }
     var showMembersStatistics by rememberSaveable { mutableStateOf(false) }
     var showResults by rememberSaveable { mutableStateOf(false) }
     var showUsefulLinks by rememberSaveable { mutableStateOf(false) }
+    var showOrganizers by rememberSaveable { mutableStateOf(false) }
     var showConditionPanel by rememberSaveable { mutableStateOf(false) }
     var showMembersPanel by rememberSaveable { mutableStateOf(false) }
 
@@ -58,7 +61,7 @@ internal fun StartScreenInnerContent(
             if (previousPartialState && !isPartialData) {
                 // Wait for StartExtraFieldsPanel to complete its internal animations (~550ms)
                 delay(600) // Allow time for StartExtraFieldsPanel animations to complete
-                showRegistrationPanel = true
+                showDistanceInfo = true
                 delay(120)
                 showAlbums = true
                 delay(120)
@@ -67,6 +70,8 @@ internal fun StartScreenInnerContent(
                 showResults = true
                 delay(120)
                 showUsefulLinks = true
+                delay(120)
+                showOrganizers = true
                 delay(120)
                 showConditionPanel = true
                 delay(120)
@@ -75,7 +80,7 @@ internal fun StartScreenInnerContent(
             } else if (!previousPartialState && !isPartialData) {
                 // If not partial data from the start (direct load), show with staggered timing
                 delay(600) // Account for StartExtraFieldsPanel timing even on direct load
-                showRegistrationPanel = true
+                showDistanceInfo = true
                 delay(120)
                 showAlbums = true
                 delay(120)
@@ -84,6 +89,8 @@ internal fun StartScreenInnerContent(
                 showResults = true
                 delay(120)
                 showUsefulLinks = true
+                delay(120)
+                showOrganizers = true
                 delay(120)
                 showConditionPanel = true
                 delay(120)
@@ -98,7 +105,6 @@ internal fun StartScreenInnerContent(
         StartTitle(
             modifier = innerModifier,
             title = data.title,
-            place = data.startPlace
         )
         StartExtraFieldsPanel(
             modifier = innerModifier,
@@ -107,21 +113,16 @@ internal fun StartScreenInnerContent(
             startDate = data.startTime,
             isPartialData = isPartialData
         )
+        StartDescription(modifier = innerModifier, description = data.description, isPartialData = isPartialData)
         AnimatedVisibility(
-            visible = showRegistrationPanel,
+            visible = showDistanceInfo,
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
         ) {
-            StartRegistrationPanel(
+            StartDistanceInfo(
                 modifier = innerModifier,
-                distance = data.distanceInfoNew,
-                startStatus = data.startStatus,
-                regLink = data.regLink,
-                onClickRegistration = {
-                    onClickRegistration()
-                },
+                distances = data.distanceInfoNew
             )
         }
-        StartDescription(modifier = innerModifier, description = data.description, isPartialData = isPartialData)
         AnimatedVisibility(
             visible = showAlbums,
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
@@ -166,6 +167,17 @@ internal fun StartScreenInnerContent(
             )
         }
         AnimatedVisibility(
+            visible = showOrganizers,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500))
+        ) {
+            StartOrganizers(
+                modifier = innerModifier,
+                organizer = data.organizers,
+                onClickUrl = onClickUrl,
+                onClickPhone = onClickPhone
+            )
+        }
+        AnimatedVisibility(
             visible = showConditionPanel,
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
         ) {
@@ -204,6 +216,9 @@ internal fun StartScreenInnerContent(
                 onClickRetry()
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
     }
-    comments(modifier)
+    comments(Modifier)
+    if (data.startStatus.code == 3)
+        Spacer(modifier = Modifier.height(77.dp))
 }

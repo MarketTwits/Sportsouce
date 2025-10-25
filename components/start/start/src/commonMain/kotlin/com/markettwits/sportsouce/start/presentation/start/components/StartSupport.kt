@@ -1,15 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,30 +30,53 @@ internal fun StartSupport(
     var isShowSupportDialog by rememberSaveable {
         mutableStateOf(false)
     }
-    Row(
+
+    Card(
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .noRippleClickable {
                 isShowSupportDialog = true
             },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        )
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "Поддержать проект",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 18.sp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = "Поддержать проект",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontFamily = FontNunito.bold(),
+                    fontSize = 18.sp
+                )
+            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.size(20.dp)
             )
         }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.outline
-        )
     }
-    Spacer(modifier = Modifier.padding(5.dp))
 
     if (isShowSupportDialog) {
         DefaultModalBottomSheet(

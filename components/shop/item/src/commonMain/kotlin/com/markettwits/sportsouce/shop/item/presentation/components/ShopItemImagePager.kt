@@ -50,8 +50,8 @@ internal fun ShopItemImagePager(
                 loading = {
                     Box(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.outlineVariant)
                             .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.outlineVariant)
                             .shimmer(
                                 tiltAngle = 30,
                                 gradientColors = listOf(

@@ -98,7 +98,6 @@ private fun FullImageContent(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.outlineVariant)
                                 .shimmer()
                         )
                     },

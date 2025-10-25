@@ -1,33 +1,28 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
-import kotlin.random.Random
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun StartMembersStatistics(
@@ -35,28 +30,45 @@ internal fun StartMembersStatistics(
     membersUi: List<StartMembersUi>
 ) {
     if (membersUi.isNotEmpty()) {
+        var isExpanded by rememberSaveable { mutableStateOf(false) }
+
         StartContentBasePanel(
             modifier = modifier,
             label = "Регистрации по дистанциям",
+            icon = Icons.Default.BarChart
         ) {
             val distances = membersUi.mapToRegistrationDistance()
-            Column(modifier = modifier) {
-                ColorPalette(members = distances)
-                Spacer(Modifier.padding(4.dp))
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    maxItemsInEachRow = 2,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+            val maxCount = distances.maxOfOrNull { it.count } ?: 1
+            val displayedDistances = if (isExpanded) distances else distances.take(3)
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                displayedDistances.forEach { member ->
+                    AnimatedBarChartItem(
+                        member = member,
+                        maxCount = maxCount
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = distances.size > 3,
+                    enter = fadeIn(animationSpec = tween(300)) + expandVertically(animationSpec = tween(300)),
+                    exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
                 ) {
-                    distances.forEach { member ->
-                        BarChartItem(
-                            modifier = Modifier.padding(4.dp),
-                            member = member
+                    TextButton(
+                        onClick = { isExpanded = !isExpanded },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (isExpanded) "Свернуть" else "Ещё ${distances.size - 3} дистанций",
+                            fontFamily = FontNunito.semiBoldBold(),
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
                 }
-
             }
         }
     }
@@ -64,69 +76,92 @@ internal fun StartMembersStatistics(
 
 
 @Composable
-private fun ColorPalette(
-    modifier: Modifier = Modifier,
-    members: List<StartRegistrationDistanceStatistics>
+private fun AnimatedBarChartItem(
+    member: StartRegistrationDistanceStatistics,
+    maxCount: Int,
 ) {
-    Row(
-        modifier = modifier
-            .border(0.3.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), shape = Shapes.small)
-            .fillMaxWidth()
-            .clip(Shapes.small),
-        horizontalArrangement = Arrangement.End
+    var animationPlayed by remember { mutableStateOf(false) }
+    val progress by animateFloatAsState(
+        targetValue = if (animationPlayed) member.count.toFloat() / maxCount else 0f,
+        animationSpec = tween(durationMillis = 800, delayMillis = 100),
+        label = "bar_animation"
+    )
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        animationPlayed = true
+    }
+
+    AnimatedVisibility(
+        visible = true,
+        enter = fadeIn(animationSpec = tween(300)) + expandVertically(animationSpec = tween(300)),
+        exit = fadeOut(animationSpec = tween(300)) + shrinkVertically(animationSpec = tween(300))
     ) {
-        members.forEach {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = member.distance,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontFamily = FontNunito.semiBoldBold(),
+                fontSize = 12.sp,
+                modifier = Modifier.width(100.dp)
+            )
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(30.dp)
-                    .background(it.color)
-                    .weight(it.count.toFloat())
+                    .weight(1f)
+                    .height(20.dp)
+                    .clip(Shapes.small)
+                    .background(MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(progress)
+                        .fillMaxHeight()
+                        .clip(Shapes.small)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    member.color,
+                                    member.color.copy(alpha = 0.8f)
+                                )
+                            )
+                        )
+                )
+            }
+            Text(
+                text = member.count.toString(),
+                color = MaterialTheme.colorScheme.secondary,
+                fontFamily = FontNunito.bold(),
+                fontSize = 12.sp,
+                modifier = Modifier.width(30.dp)
             )
         }
     }
 }
 
-@Composable
-private fun BarChartItem(
-    modifier: Modifier = Modifier,
-    member: StartRegistrationDistanceStatistics,
-) {
-    Row(
-        modifier = modifier.padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .border(0.2.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f), shape = Shapes.small)
-                .clip(Shapes.small)
-                .size(20.dp)
-                .background(member.color)
-        )
-        Text(
-            text = member.distance,
-            color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.semiBoldBold(),
-            fontSize = 14.sp,
-            modifier = Modifier.padding(start = 6.dp)
-        )
-        Text(
-            text = member.count.toString(),
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 14.sp,
-            modifier = Modifier.padding(start = 6.dp)
-        )
-    }
-}
 
 @Composable
 private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistrationDistanceStatistics> {
-    val baseColor = MaterialTheme.colorScheme.secondary
-    val availableColors = List(10) { index ->
-        val factor = index / 9f
-        lerp(Color.White, baseColor, factor)
-    }.shuffled()
+    val brightColors = listOf(
+        Color(0xFFFF6B6B),
+        Color(0xFF4ECDC4),
+        Color(0xFFFFE66D),
+        Color(0xFF95E1D3),
+        Color(0xFFFF8C42),
+        Color(0xFF6C5CE7),
+        Color(0xFFFD79A8),
+        Color(0xFF00B894),
+        Color(0xFFFECE2F),
+        Color(0xFF0984E3),
+        Color(0xFFE17055),
+        Color(0xFFA29BFE),
+        Color(0xFF55EFC4),
+        Color(0xFFFF7675),
+        Color(0xFF74B9FF)
+    )
 
     return this
         .groupBy { it.distance }
@@ -135,17 +170,11 @@ private fun List<StartMembersUi>.mapToRegistrationDistance(): List<StartRegistra
             StartRegistrationDistanceStatistics(
                 count = pair.second.size,
                 distance = pair.first,
-                color = availableColors.getOrNull(index) ?: baseColor
+                color = brightColors[index % brightColors.size]
             )
         }
 }
 
-private fun Color.Companion.random(): Color {
-    val red = Random.nextInt(256)
-    val green = Random.nextInt(256)
-    val blue = Random.nextInt(256)
-    return Color(red, green, blue)
-}
 
 @Stable
 @Immutable
@@ -154,4 +183,3 @@ private data class StartRegistrationDistanceStatistics(
     val distance: String,
     val color: Color
 )
-

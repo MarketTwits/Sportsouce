@@ -5,6 +5,7 @@ import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,12 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: String) {
+internal fun StartTitle(modifier: Modifier = Modifier, title: String) {
     var isVisible by rememberSaveable(title) { mutableStateOf(false) }
     var hasAnimated by rememberSaveable(title) { mutableStateOf(false) }
 
@@ -37,17 +39,21 @@ internal fun StartTitle(modifier: Modifier = Modifier, title: String, place: Str
             animationSpec = tween(durationMillis = 600, easing = EaseOutCubic)
         ) + slideInVertically(
             animationSpec = tween(durationMillis = 700, easing = EaseOutCubic),
-            initialOffsetY = { it / 4 } // Smoother, shorter slide distance
+            initialOffsetY = { it / 4 }
         )
     ) {
-        Column(modifier = modifier) {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Text(
                 text = title,
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 fontFamily = FontNunito.extraBold(),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onBackground,
+                lineHeight = 28.sp
             )
         }
     }

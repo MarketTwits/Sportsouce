@@ -5,6 +5,8 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -26,6 +28,9 @@ interface StartCommentsStore : Store<Intent, State, Label> {
         data object OnClickCloseReply : Intent
         data object OnConsumedEvent : Intent
         data class OnClickSendComment(val value: String) : Intent
+        data object OnClickGoBack : Intent
+        data class OnClickShowReplies(val commentId: Int) : Intent
+        data object OnRefresh : Intent
     }
 
     data class State(
@@ -33,12 +38,16 @@ interface StartCommentsStore : Store<Intent, State, Label> {
         val comments: StartItem.Comments = StartItem.Comments(0, emptyList()),
         val mode: CommentMode = CommentMode.Base,
         val comment: String = "",
-        val isLoading: Boolean = false,
-        val isError: Boolean = false,
+        val isLoadingComments: Boolean = false,
+        val isLoadingSendComment: Boolean = false,
+        val error: SauceError? = null,
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
-    sealed interface Label
+    sealed interface Label {
+        data object OnGoBack : Label
+        data class OnNavigateToReplies(val commentId: Int) : Label
+    }
 }
 
 class StartCommentsStoreFactory(
@@ -46,10 +55,10 @@ class StartCommentsStoreFactory(
     private val service: StartRepository
 ) {
 
-    fun create(): StartCommentsStore =
+    fun create(mode: CommentMode = CommentMode.Base): StartCommentsStore =
         object : StartCommentsStore, Store<Intent, State, Label> by storeFactory.create(
             name = "CommentsStore",
-            initialState = State(),
+            initialState = State(mode = mode),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { ExecutorImpl() },
             reducer = ReducerImpl
@@ -62,8 +71,10 @@ class StartCommentsStoreFactory(
         data class OnClickSendComment(val value: String) : Msg
         data class ShowEvent(val success: Boolean, val message: String) : Msg
         data object OnConsumedEvent : Msg
-        data object Loading : Msg
+        data object LoadingComments : Msg
+        data object LoadingSendComment : Msg
         data class Loaded(val state: StartItem.Comments) : Msg
+        data class Error(val error: Throwable) : Msg
     }
 
     private inner class ExecutorImpl() :
@@ -88,19 +99,29 @@ class StartCommentsStoreFactory(
                     launch(intent.startId)
                 }
 
-            }
-        }
-
-        private fun launch(startId: Int) {
-            scope.launch {
-                service.startComments(startId).onSuccess {
-                    dispatch(Loaded(it))
+                is Intent.OnClickGoBack -> publish(Label.OnGoBack)
+                is Intent.OnClickShowReplies -> publish(Label.OnNavigateToReplies(intent.commentId))
+                is Intent.OnRefresh -> state().startId?.let { startId ->
+                    launch(startId)
                 }
             }
         }
 
+        private fun launch(startId: Int) {
+            dispatch(LoadingComments)
+            scope.launch {
+                service.startComments(startId)
+                    .onSuccess {
+                        dispatch(Loaded(it))
+                    }
+                    .onFailure {
+                        dispatch(Error(it))
+                    }
+            }
+        }
+
         private fun sendComment(mode: CommentMode, comment: String, startId: Int) {
-            dispatch(Loading)
+            dispatch(LoadingSendComment)
             scope.launch {
                 val value = if (mode is Reply) {
                     service.writeComment(
@@ -124,11 +145,22 @@ class StartCommentsStoreFactory(
 
         private fun handleCommentUiState(value: CommentUiState, startId: Int) {
             when (value) {
-                is CommentUiState.Error -> dispatch(ShowEvent(false, value.message))
-                is CommentUiState.Loading -> dispatch(Loading)
+                is CommentUiState.Error -> {
+                    dispatch(ShowEvent(false, value.message))
+                }
+
+                is CommentUiState.Loading -> dispatch(LoadingSendComment)
                 is CommentUiState.Success -> {
                     dispatch(ShowEvent(true, "Комментарий успешно добавлен"))
-                    launch(startId)
+                    scope.launch {
+                        service.startComments(startId)
+                            .onSuccess {
+                                dispatch(Loaded(it))
+                            }
+                            .onFailure {
+                                dispatch(Error(it))
+                            }
+                    }
                 }
             }
         }
@@ -137,16 +169,39 @@ class StartCommentsStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State =
             when (msg) {
-                is Loading -> copy(isLoading = true)
+                is LoadingComments -> copy(isLoadingComments = true, error = null)
+                is LoadingSendComment -> copy(isLoadingSendComment = true)
                 is OnClickCloseReply -> copy(mode = CommentMode.Base)
-                is OnClickReply -> copy(
-                    mode = Reply(
-                        replier = msg.replier,
-                        messageId = msg.commentId
-                    )
-                )
+                is OnClickReply -> {
+                    val comment = comments.rows.find { it.id == msg.commentId }
+                    if (comment != null) {
+                        val commentData = com.markettwits.sportsouce.start.presentation.start.component.CommentData(
+                            userName = "${comment.user.surname} ${comment.user.name}",
+                            userPhoto = comment.user.photo ?: "",
+                            commentText = comment.comment,
+                            createdAt = comment.createdAt,
+                            replies = comment.replies.map { reply ->
+                                com.markettwits.sportsouce.start.presentation.start.component.ReplyData(
+                                    userName = "${reply.user.surname} ${reply.user.name}",
+                                    userPhoto = reply.user.photo ?: "",
+                                    commentText = reply.comment,
+                                    createdAt = reply.createdAt
+                                )
+                            }
+                        )
+                        copy(
+                            mode = Reply(
+                                replier = msg.replier,
+                                messageId = msg.commentId,
+                                parentComment = commentData
+                            )
+                        )
+                    } else {
+                        this
+                    }
+                }
 
-                is OnClickSendComment -> copy(isLoading = true)
+                is OnClickSendComment -> copy(isLoadingSendComment = true)
                 is ShowEvent -> copy(
                     event = triggered(
                         EventContent(
@@ -154,10 +209,11 @@ class StartCommentsStoreFactory(
                             message = msg.message
                         )
                     ),
-                    isLoading = false
+                    isLoadingSendComment = false
                 )
 
-                is Loaded -> copy(comments = msg.state, isLoading = false, isError = false)
+                is Loaded -> copy(comments = msg.state, isLoadingComments = false, error = null)
+                is Error -> copy(error = msg.error.mapToSauceError(), isLoadingComments = false)
                 is OnConsumedEvent -> copy(event = consumed())
                 is UpdateStartId -> copy(startId = msg.startId)
             }

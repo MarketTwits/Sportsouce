@@ -34,7 +34,7 @@ internal fun SignInLoginMethodToggle(
             .padding(9.dp)
             .shadow(2.dp, shape = Shapes.medium),
         shape = Shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row(
             modifier = Modifier

@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.auth.flow.api.root
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
@@ -13,7 +14,9 @@ import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.screen
 @Composable
 fun RootAuthFlowScreen(component: RootAuthFlowComponent) {
     val childStack by component.childStack.subscribeAsState()
-    AdaptivePane {
+    AdaptivePane(
+        backgroundColor = MaterialTheme.colorScheme.background,
+    ) {
         com.arkivanov.decompose.extensions.compose.stack.Children(
             stack = childStack,
             animation = stackAnimation(fade())

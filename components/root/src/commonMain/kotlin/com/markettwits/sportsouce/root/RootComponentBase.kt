@@ -84,9 +84,10 @@ class RootComponentBase(
 
         val currentConfiguration = childStack.value.active.configuration
 
-        // Only navigate if we're not already on the target configuration
         if (currentConfiguration != targetConfiguration) {
-            stackNavigation.pushNew(targetConfiguration)
+            stackNavigation.navigate { stack ->
+                stack.dropLastWhile { it == targetConfiguration } + targetConfiguration
+            }
         }
 
         when (deeplink) {

@@ -28,7 +28,6 @@ fun RootStartsSearchScreen(component: RootStartsSearchComponent) {
         when (val child = it.instance) {
             is RootStartsSearchComponent.ChildStack.Search -> StartsSearchScreen(component = child.component)
             is RootStartsSearchComponent.ChildStack.Start -> RootStartScreen(child.component)
-            // is RootStartsSearchComponent.ChildStack.Filter -> RootStartFilterScreen(component = child.component)
         }
     }
 }

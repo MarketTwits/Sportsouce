@@ -27,6 +27,7 @@ class StartScreenComponentComponentBase(
     private val album: (List<String>) -> Unit,
     private val pushStart: (StartsListItem) -> Unit,
     private val onApplyStartId: (Int) -> Unit,
+    private val onOpenStartCommentsScreen: (Int, CommentMode) -> Unit = { _, _ -> },
 ) : ComponentContext by componentContext, StartScreenComponent {
 
     private val store = instanceKeeper.getStore {
@@ -61,6 +62,10 @@ class StartScreenComponentComponentBase(
                     )
                     is StartScreenStore.Label.OnClickStartRecommended -> pushStart(it.start)
                     is StartScreenStore.Label.OnApplyStartId -> onApplyStartId(it.startId)
+                    is StartScreenStore.Label.OnOpenStartCommentsScreen -> onOpenStartCommentsScreen(
+                        it.startId,
+                        it.mode
+                    )
                 }
             }
         }

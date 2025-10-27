@@ -1,10 +1,7 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.components
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -53,7 +50,6 @@ internal fun SignUpScreenContent(
 
     LaunchedEffect(key1 = state.currentStage) {
         coroutineScope.launch {
-            // Convert 1-based stage index to 0-based pager index
             pagerState.animateScrollToPage(
                 page = state.currentStage.index - 1,
                 animationSpec = tween(durationMillis = 500)
@@ -62,6 +58,7 @@ internal fun SignUpScreenContent(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState,
@@ -73,7 +70,7 @@ internal fun SignUpScreenContent(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             AuthAlreadySomeActionBox(
                 onClick = onClickSignIn,

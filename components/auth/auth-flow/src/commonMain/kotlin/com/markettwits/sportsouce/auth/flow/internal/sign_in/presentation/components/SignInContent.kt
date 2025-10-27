@@ -5,7 +5,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -48,6 +47,7 @@ internal fun SignInContent(
     val smsCodeFocusRequester = remember { FocusRequester() }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -59,7 +59,7 @@ internal fun SignInContent(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             AuthAlreadySomeActionBox(
                 onClick = {
@@ -75,7 +75,6 @@ internal fun SignInContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primary)
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = paddingValues.calculateBottomPadding())
                     .padding(30.dp),

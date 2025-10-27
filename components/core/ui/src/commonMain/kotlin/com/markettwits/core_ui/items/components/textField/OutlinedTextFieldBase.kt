@@ -15,7 +15,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 fun OutlinedTextFieldBase(
@@ -76,10 +75,11 @@ fun defaultOutlineTextFiledColors() = TextFieldDefaults.colors(
     unfocusedLabelColor = Color.Gray,
     focusedTextColor = MaterialTheme.colorScheme.onBackground,
     unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-    errorTextColor = MaterialTheme.colorScheme.error,
-    errorIndicatorColor = SportSouceColor.SportSouceLightRed,
+    errorTextColor = MaterialTheme.colorScheme.onErrorContainer,
+    errorIndicatorColor = MaterialTheme.colorScheme.error,
     errorContainerColor = Color.Transparent,
-    errorLabelColor = SportSouceColor.SportSouceLightRed,
+    errorLabelColor = MaterialTheme.colorScheme.error,
+    errorSupportingTextColor = MaterialTheme.colorScheme.onErrorContainer,
     disabledContainerColor = Color.Transparent,
     disabledIndicatorColor = Color.Gray,
     disabledLabelColor = Color.Gray,

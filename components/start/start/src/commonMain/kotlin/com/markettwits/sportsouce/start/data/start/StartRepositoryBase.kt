@@ -167,7 +167,6 @@ internal class StartRepositoryBase(
 
             errorLog { "StartItem mapped with ${result.membersResults.size} member results" }
             infoLog { "Start Item :${result.membersResults}" }
-            // Cache using the actual ID
             cache.set(value = Result.success(result), key = actualStartId)
             result
         }

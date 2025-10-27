@@ -1,11 +1,7 @@
 package com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.screen
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,7 +24,7 @@ internal fun ForgotPasswordScreen(component: ForgotPasswordComponent) {
         SportSouceColor.SportSouceLighBlue
     }
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState,

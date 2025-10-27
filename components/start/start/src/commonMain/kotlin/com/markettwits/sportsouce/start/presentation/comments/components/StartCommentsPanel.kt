@@ -27,24 +27,55 @@ import com.markettwits.core_ui.items.text.ClickableText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.start.components.StartContentBasePanel
 
 
 @Composable
-internal fun StartCommentsPanel(
+fun StartCommentsCompactPanel(
     modifier: Modifier = Modifier,
     comments: StartItem.Comments,
+    maxComments: Int = 5,
+    onClickViewAll: () -> Unit,
     onClickReply: (String, Int) -> Unit,
+    onClickTextField: () -> Unit,
 ) {
-    StartContentBasePanel(
-        modifier = modifier,
-        label = "Комментарии"
-    ) {
-        Column {
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Комментарии",
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+
             if (comments.rows.isNotEmpty()) {
-                comments.rows.forEach {
+                Box(
+                    modifier = Modifier
+                        .clip(Shapes.small)
+                        .clickable { onClickViewAll() }
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "Показать все (${comments.rows.size})",
+                        fontSize = 14.sp,
+                        fontFamily = FontNunito.semiBoldBold(),
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
+        }
+
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            if (comments.rows.isNotEmpty()) {
+                val displayComments = comments.rows.take(maxComments)
+                displayComments.forEach {
                     StartCommentCard(
-                        modifier = modifier,
+                        modifier = Modifier,
                         userImageUrl = it.user.photo ?: "",
                         userName = "${it.user.surname} ${it.user.name}",
                         commentCreateDate = it.createdAt,
@@ -52,12 +83,16 @@ internal fun StartCommentsPanel(
                         onClickReply = {
                             onClickReply(it.user.name, it.id)
                         },
-                        replies = it.replies
+                        replies = it.replies,
+                        showRepliesButton = false,
+                        onClickShowReplies = null
                     )
                 }
             } else {
                 Text(
-                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 16.dp),
                     text = "Комментариев пока нет",
                     fontSize = 15.sp,
                     fontFamily = FontNunito.medium(),
@@ -66,11 +101,20 @@ internal fun StartCommentsPanel(
                 )
             }
         }
+        StartCommentTextField(
+            modifier = Modifier.padding(top = 8.dp),
+            isLoading = false,
+            mode = com.markettwits.sportsouce.start.presentation.start.component.CommentMode.Base,
+            readOnly = true,
+            onClickTextField = onClickTextField,
+            onClickCloseReply = {},
+            sendComment = {}
+        )
     }
 }
 
 @Composable
-private fun StartCommentCard(
+internal fun StartCommentCard(
     modifier: Modifier = Modifier,
     userImageUrl: String,
     userName: String,
@@ -79,6 +123,8 @@ private fun StartCommentCard(
     replies: List<StartItem.Comments.Reply> = emptyList(),
     onClickReply: () -> Unit,
     isReply: Boolean = false,
+    showRepliesButton: Boolean = true,
+    onClickShowReplies: (() -> Unit)? = null,
 ) {
     var showReply by rememberSaveable {
         mutableStateOf(false)
@@ -94,117 +140,139 @@ private fun StartCommentCard(
         }
     }
 
-    Row(
-        modifier = modifier.padding(
-            vertical = 10.dp,
-            horizontal = 5.dp,
-        )
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
     ) {
-        if (userImageUrl.isNotEmpty())
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .clip(Shapes.large)
-                    .size(40.dp)
-                    .clickable { isShowAvatarDialog = true },
-                model = userImageUrl,
-                contentDescription = userName,
-                contentScale = ContentScale.Crop,
-                loading = {
-                    LoadingAvatar()
-                },
-                error = {
-                    EmptyAvatar(userName = userName)
-                }
-            )
-        else
-            EmptyAvatar(userName = userName)
-        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-        Column(modifier = modifier) {
-            Row {
+        Row {
+            Box {
+                if (userImageUrl.isNotEmpty())
+                    SubcomposeAsyncImage(
+                        modifier = Modifier
+                            .clip(Shapes.large)
+                            .size(36.dp)
+                            .clickable { isShowAvatarDialog = true },
+                        model = userImageUrl,
+                        contentDescription = userName,
+                        contentScale = ContentScale.Crop,
+                        loading = {
+                            LoadingAvatar(size = 36.dp)
+                        },
+                        error = {
+                            EmptyAvatar(userName = userName, size = 36.dp)
+                        }
+                    )
+                else
+                    EmptyAvatar(userName = userName, size = 36.dp)
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = userName,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 15.sp,
+                    fontFamily = FontNunito.bold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
-                Spacer(modifier = Modifier.padding(horizontal = 5.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = commentCreateDate,
-                    fontSize = 10.sp,
+                    fontSize = 13.sp,
                     fontFamily = FontNunito.regular(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.outline
                 )
             }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
             ClickableText(
                 text = message,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.medium(),
-                maxLines = 5,
-                lineHeight = 16.sp,
-                overflow = TextOverflow.Ellipsis,
+                fontSize = 15.sp,
+                fontFamily = FontNunito.regular(),
+                lineHeight = 20.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
-            if (!isReply) {
-                Text(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = 6.dp,
-                            vertical = 4.dp
-                        )
-                        .clip(Shapes.small)
-                        .clickable {
-                            onClickReply()
-                        },
-                    text = "Ответить",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.bold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            }
 
-            if (replies.isNotEmpty()) {
-                if (!showReply) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = 6.dp,
-                                vertical = 4.dp
+                Column(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (!isReply) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(Shapes.small)
+                                    .clickable { onClickReply() }
+                                    .padding(horizontal = 4.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = "Ответить",
+                                    fontSize = 13.sp,
+                                    fontFamily = FontNunito.semiBoldBold(),
+                                    color = MaterialTheme.colorScheme.outline
+                                )
+                            }
+                        }
+
+                        if (replies.isNotEmpty() && !showRepliesButton) {
+                            Text(
+                                text = "${replies.size} ${if (replies.size == 1) "ответ" else if (replies.size < 5) "ответа" else "ответов"}",
+                                fontSize = 13.sp,
+                                fontFamily = FontNunito.regular(),
+                                color = MaterialTheme.colorScheme.outline
                             )
+                        }
+                    }
+
+                    if (!isReply && replies.isNotEmpty() && showRepliesButton && !showReply) {
+                        Box(
+                        modifier = Modifier
                             .clip(Shapes.small)
                             .clickable {
-                                showReply = !showReply
-                            },
-                        text = "Показать ${replies.size} ответов",
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                                if (onClickShowReplies != null) {
+                                    onClickShowReplies()
+                                } else {
+                                    showReply = !showReply
+                                }
+                            }
+                            .padding(horizontal = 4.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = "Показать ${replies.size} ${if (replies.size == 1) "ответ" else if (replies.size < 5) "ответа" else "ответов"}",
+                                fontSize = 14.sp,
+                                fontFamily = FontNunito.bold(),
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
+                    }
                 }
+
+                if (!isReply && replies.isNotEmpty() && showRepliesButton) {
+
                 AnimatedVisibility(
                     visible = showReply,
                     enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 300
-                        )
+                        animationSpec = tween(durationMillis = 300)
                     ),
                     exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 300
-                        )
+                        animationSpec = tween(durationMillis = 300)
                     )
                 ) {
-                    Column {
+                    Column(modifier = Modifier.padding(start = 12.dp, top = 8.dp)) {
                         replies.forEach {
                             StartCommentCard(
-                                modifier = modifier,
+                                modifier = Modifier,
                                 isReply = true,
                                 userName = "${it.user.surname} ${it.user.name}",
                                 commentCreateDate = it.createdAt,
@@ -213,27 +281,26 @@ private fun StartCommentCard(
                                 onClickReply = {}
                             )
                         }
-                        Text(
+                        Box(
                             modifier = Modifier
-                                .padding(
-                                    horizontal = 6.dp,
-                                    vertical = 4.dp
-                                )
+                                .padding(top = 8.dp)
                                 .clip(Shapes.small)
-                                .clickable {
-                                showReply = !showReply
-                            },
-                            text = "Скрыть",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.bold(),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
+                                .clickable { showReply = !showReply }
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = "Скрыть",
+                                fontSize = 14.sp,
+                                fontFamily = FontNunito.bold(),
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
                     }
+                }
                 }
             }
         }
+
     }
 }
 
@@ -241,17 +308,18 @@ private fun StartCommentCard(
 private fun EmptyAvatar(
     modifier: Modifier = Modifier,
     userName: String,
+    size: androidx.compose.ui.unit.Dp = 40.dp,
 ) {
     Box(
         modifier = modifier
             .clip(Shapes.large)
-            .size(40.dp)
+            .size(size)
             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "",
-            fontSize = 18.sp,
+            fontSize = (size.value * 0.45f).sp,
             fontFamily = FontNunito.semiBoldBold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -263,11 +331,12 @@ private fun EmptyAvatar(
 @Composable
 private fun LoadingAvatar(
     modifier: Modifier = Modifier,
+    size: androidx.compose.ui.unit.Dp = 40.dp,
 ) {
     Box(
         modifier = modifier
             .clip(Shapes.large)
-            .size(40.dp)
+            .size(size)
             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
             .shimmer(
                 tiltAngle = 30,

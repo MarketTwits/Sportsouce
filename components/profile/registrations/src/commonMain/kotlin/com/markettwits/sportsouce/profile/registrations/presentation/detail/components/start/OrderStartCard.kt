@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +18,9 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
@@ -34,50 +38,58 @@ fun OrderStartCard(
             onClickStart(item.startId)
         }
     ) {
-        Column {
-            // Image at the very top (edge-to-edge)
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
             RegistrationsCardImageCard(
                 image = item.image,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
             )
 
-            Column(modifier = Modifier.padding(10.dp)) {
-                // Status row with subtle payment status color indication
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 OrderStatusRow(
                     modifier = Modifier.fillMaxWidth(),
                     paymentStatus = item.payment,
                     hasResults = item.members.any { it.results.isNotEmpty() }
                 )
 
-                // Title with additional padding
                 Text(
                     text = item.startTitle,
                     fontSize = 16.sp,
                     fontFamily = FontNunito.bold(),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier.padding(top = 6.dp, bottom = 4.dp)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
-                // Info rows
-                OrderInfoRow(
-                    title = "Дата старта",
-                    value = item.dateStartPreview
-                )
-                OrderInfoRow(
-                    title = "Номер заказа",
-                    value = "№ ${item.id}"
-                )
-                OrderInfoRow(
-                    title = "Участников",
-                    value = "${item.members.size} чел."
-                )
-                if (item.cost.isNotEmpty() && item.cost != "0") {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     OrderInfoRow(
-                        title = "Стоимость",
-                        value = "${item.cost} ₽"
+                        title = "Дата:",
+                        value = item.dateStartPreview
                     )
+                    OrderInfoRow(
+                        title = "№ заказа:",
+                        value = "${item.id}"
+                    )
+                    OrderInfoRow(
+                        title = "Участников:",
+                        value = "${item.members.size}"
+                    )
+                    if (item.cost.isNotEmpty() && item.cost != "0") {
+                        OrderInfoRow(
+                            title = "Стоимость:",
+                            value = "${item.cost} ₽"
+                        )
+                    }
                 }
             }
         }
@@ -91,41 +103,41 @@ private fun OrderStatusRow(
     hasResults: Boolean,
 ) {
     Row(
-        modifier = modifier.padding(4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Card(
-            shape = Shapes.medium,
+            shape = Shapes.small,
             colors = CardDefaults.cardColors(
-                containerColor = mapOrderStatusColor(paymentStatus).copy(alpha = 0.2f)
+                containerColor = mapOrderStatusColor(paymentStatus).copy(alpha = 0.15f)
             )
         ) {
             Text(
                 text = paymentStatus.title,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.medium(),
+                fontSize = 10.sp,
+                fontFamily = FontNunito.semiBoldBold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = mapOrderStatusColor(paymentStatus),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
             )
         }
         if (hasResults) {
             Card(
-                shape = Shapes.medium,
+                shape = Shapes.small,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                    containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f)
                 )
             ) {
                 Text(
-                    text = "Есть результаты",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.medium(),
+                    text = "Результаты",
+                    fontSize = 10.sp,
+                    fontFamily = FontNunito.semiBoldBold(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
         }
@@ -139,27 +151,25 @@ private fun OrderInfoRow(
     value: String,
 ) {
     Row(
-        modifier = modifier
-            .padding(4.dp)
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             fontSize = 14.sp,
-            fontFamily = FontNunito.semiBoldBold(),
+            fontFamily = FontNunito.medium(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )
         Text(
             text = value,
             fontSize = 14.sp,
-            fontFamily = FontNunito.bold(),
+            fontFamily = FontNunito.semiBoldBold(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -170,26 +180,36 @@ fun RegistrationsCardImageCard(
     modifier: Modifier = Modifier,
     image: String,
 ) {
-    Box(
+    SubcomposeAsyncImage(
+        model = imageRequestCrossfade(image.takeIf { it.isNotEmpty() }),
+        contentDescription = "",
+        contentScale = ContentScale.Crop,
         modifier = modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .clip(Shapes.medium)
-    ) {
-        SubcomposeAsyncImage(
-            model = image,
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            error = {
-                SubcomposeAsyncImageContent(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = DefaultImages.EmptyImageStart()
-                )
-            },
-            success = {
-                SubcomposeAsyncImageContent(modifier = Modifier.fillMaxSize())
-            }
-        )
-    }
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)),
+        loading = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shimmer(
+                        gradientColors = listOf(
+                            androidx.compose.ui.graphics.Color.Transparent,
+                            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                            androidx.compose.ui.graphics.Color.Transparent,
+                        ),
+                        tiltAngle = 30
+                    )
+            )
+        },
+        error = {
+            SubcomposeAsyncImageContent(
+                modifier = Modifier.fillMaxSize(),
+                painter = DefaultImages.EmptyImageStart()
+            )
+        },
+        success = {
+            SubcomposeAsyncImageContent(modifier = Modifier.fillMaxSize())
+        }
+    )
 }

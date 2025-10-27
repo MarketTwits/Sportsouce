@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -22,8 +21,8 @@ import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponent
-import com.markettwits.sportsouce.start.presentation.comments.components.StartCommentsContent
+import com.markettwits.sportsouce.start.presentation.comments.components.StartCommentsCompactPanel
+import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.components.StartSupport
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
@@ -32,7 +31,6 @@ import com.markettwits.sportsouce.start.support.presentation.component.StartSupp
 @Composable
 fun StartScreen(
     startComponent: StartScreenComponent,
-    startCommentsComponent: StartCommentsComponent,
     startSupportComponent: StartSupportComponent,
 ) {
     val state by startComponent.start.collectAsState()
@@ -56,12 +54,10 @@ fun StartScreen(
                     snackbarData = it
                 )
             }
-        }
+        },
     ) {
         Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .imePadding()
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {
             AnimatedVisibility(
                 visible = state.startItem != null,
@@ -112,17 +108,26 @@ fun StartScreen(
                             }
                         },
                         comments = { modifier ->
-                            StartCommentsContent(
+                            StartCommentsCompactPanel(
                                 modifier = modifier,
-                                component = startCommentsComponent
-                            ) {
-                                startComponent.obtainEvent(
-                                    StartScreenStore.Intent.TriggerEvent(
-                                        it.message,
-                                        it.success
+                                comments = data.commentsRemote,
+                                maxComments = 5,
+                                onClickViewAll = {
+                                    startComponent.obtainEvent(
+                                        StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
                                     )
-                                )
-                            }
+                                },
+                                onClickReply = { _, _ ->
+                                    startComponent.obtainEvent(
+                                        StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
+                                    )
+                                },
+                                onClickTextField = {
+                                    startComponent.obtainEvent(
+                                        StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
+                                    )
+                                }
+                            )
                         },
                         onClickMembersResults = {
                             startComponent.obtainEvent(StartScreenStore.Intent.OnClickMembersResult)

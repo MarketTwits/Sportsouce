@@ -29,10 +29,10 @@ fun RegistrationsStart(
             LazyVerticalGrid(
                 state = gridState,
                 modifier = modifier,
-                columns = GridCells.Adaptive(minSize = 320.dp),
-                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                columns = GridCells.Adaptive(minSize = 250.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 if (withoutFilterStarts.isNotEmpty()) {
                     item(span = { GridItemSpan(maxLineSpan) }) {

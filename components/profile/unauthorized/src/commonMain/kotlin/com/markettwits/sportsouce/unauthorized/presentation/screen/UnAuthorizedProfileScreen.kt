@@ -20,7 +20,7 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfileComponent) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         when (state) {
             is UnAuthorizedProfileUiState.Base -> {}

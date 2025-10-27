@@ -1,7 +1,8 @@
 🟠 New features
-- The club section has been completely updated
-- Fixed an issue with displaying album images on the start screen
-- The album browsing screen has been updated
-- Changed the design of the starts
+- Redesigned start order details screen with tabs (Overview, Members, Payment)
+- Added pulsing payment status indicator
+- Updated start registration button design
+- Improved club dashboard scrolling behavior
+- Enhanced start order payment status handling
 
 Thank you for using Sportsauce v$APP_VERSION!

@@ -43,6 +43,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickPhone(val url: String) : Intent
         data class OnClickStartRecommended(val startId: StartsListItem) : Intent
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
+        data class OpenStartCommentsScreen(val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode) :
+            Intent
     }
 
     data class State(
@@ -69,6 +71,10 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
+        ) : Label
+        data class OnOpenStartCommentsScreen(
+            val startId: Int,
+            val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode,
         ) : Label
     }
 }
@@ -160,6 +166,11 @@ class StartScreenStoreFactory(
                         startItem.slug.ifEmpty { startItem.id.toString() }
                     }
                     intentAction.sharePlainText("https://sportsauce.ru/starts/$path")
+                }
+                is Intent.OpenStartCommentsScreen -> {
+                    state().startItem?.let { startItem ->
+                        publish(OnOpenStartCommentsScreen(startItem.id, intent.mode))
+                    }
                 }
             }
         }

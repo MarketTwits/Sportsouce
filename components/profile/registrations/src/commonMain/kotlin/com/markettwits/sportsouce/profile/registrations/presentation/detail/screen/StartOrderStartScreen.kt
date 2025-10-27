@@ -1,63 +1,35 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.screen
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponent
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.GradientDirection
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.gradients.animatedFabGradient
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.*
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.PulsingIndicator
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderMembersTab
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderOverviewTab
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderPaymentTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import kotlinx.coroutines.launch
 
 @Composable
 fun StartOrderStartScreen(component: StartOrderComponent) {
     val state by component.state.collectAsState()
-    val scrollState = rememberScrollState()
+    val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
-
-    var paymentButtonTop by remember { mutableStateOf(0f) }
-    var paymentButtonHeight by remember { mutableStateOf(0) }
-    var screenHeight by remember { mutableStateOf(0) }
-
-    // Calculate if payment button is visible
-    val isPaymentButtonVisible by remember {
-        derivedStateOf {
-            if (paymentButtonTop == 0f || paymentButtonHeight == 0 || screenHeight == 0) {
-                false
-            } else {
-                val buttonBottom = paymentButtonTop + paymentButtonHeight
-                val scrollOffset = scrollState.value
-                val visibleTop = scrollOffset.toFloat()
-                val visibleBottom = scrollOffset + screenHeight
-
-                // Button is visible if it overlaps with visible area
-                buttonBottom > visibleTop && paymentButtonTop < visibleBottom
-            }
-        }
-    }
-
-    // Show FAB only when price is Success and payment button is not visible
-    val showFab by remember {
-        derivedStateOf {
-            state.startPriceResult is StartOrderStore.StartPriceResult.Success &&
-                    !isPaymentButtonVisible
-        }
-    }
-
 
     Scaffold(
         topBar = {
@@ -65,96 +37,122 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                 component.obtainEvent(StartOrderStore.Intent.Dismiss)
             }
         },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showFab,
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut()
+        containerColor = MaterialTheme.colorScheme.background
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = paddingValues.calculateTopPadding())
+        ) {
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.tertiary,
+                indicator = { tabPositions ->
+                    if (pagerState.currentPage < tabPositions.size) {
+                        TabRowDefaults.SecondaryIndicator(
+                            Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                    }
+                }
             ) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(paymentButtonTop.toInt())
-                        }
-                    },
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp,
-                        focusedElevation = 0.dp,
-                        hoveredElevation = 0.dp
-                    ),
-                    modifier = Modifier.animatedFabGradient(
-                        shape = RoundedCornerShape(16.dp),
-                        direction = GradientDirection.Diagonal
-                    ),
+                Tab(
+                    selected = pagerState.currentPage == 0,
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     text = {
-                        Text("Требуется оплата", color = MaterialTheme.colorScheme.onSecondary)
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            tint = MaterialTheme.colorScheme.onSecondary,
-                            contentDescription = null
+                        Box(contentAlignment = Alignment.CenterStart) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "Обзор",
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = 1,
+                                    fontSize = 14.sp,
+                                    color = if (pagerState.currentPage == 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
+                                    fontFamily = FontNunito.bold(),
+                                )
+                                if (state.startPriceResult is StartOrderStore.StartPriceResult.Success &&
+                                    !state.startOrderInfo.payment.isPaid
+                                ) {
+                                    PulsingIndicator(
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+                Tab(
+                    selected = pagerState.currentPage == 1,
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(1) } },
+                    text = {
+                        Box(contentAlignment = Alignment.CenterStart) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = "Участники",
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = 1,
+                                    fontSize = 14.sp,
+                                    color = if (pagerState.currentPage == 1) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
+                                    fontFamily = FontNunito.bold(),
+                                )
+                                if (state.startOrderInfo.members.any { it.results.isNotEmpty() }) {
+                                    PulsingIndicator(
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
+                Tab(
+                    selected = pagerState.currentPage == 2,
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(2) } },
+                    text = {
+                        Text(
+                            text = "Оплата",
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = if (pagerState.currentPage == 2) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
+                            fontFamily = FontNunito.bold(),
                         )
                     }
                 )
             }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        containerColor = MaterialTheme.colorScheme.outlineVariant,
-        modifier = Modifier.onGloballyPositioned { coordinates ->
-            screenHeight = coordinates.size.height
-        }
-    ) { paddingValues ->
-        AdaptivePane {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(12.dp))
+            AdaptivePane {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    when (page) {
+                        0 -> OrderOverviewTab(
+                            orderInfo = state.startOrderInfo,
+                            priceState = state.startPriceResult,
+                            onClickStart = { component.obtainEvent(StartOrderStore.Intent.OnClickStart(it)) },
+                            onClickPay = { component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id)) },
+                            onUpdatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) },
+                            onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) }
+                        )
 
-                OrderDetailCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    orderInfo = state.startOrderInfo,
-                    onClick = {
-                        component.obtainEvent(StartOrderStore.Intent.OnClickStart(state.startOrderInfo.startId))
+                        1 -> OrderMembersTab(
+                            members = state.startOrderInfo.members
+                        )
+
+                        2 -> OrderPaymentTab(
+                            orderInfo = state.startOrderInfo,
+                            priceState = state.startPriceResult
+                        )
                     }
-                )
-
-                OrderMembersCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    startOrderMembers = state.startOrderInfo.members
-                )
-
-                OrderDialogPaymentStatus(
-                    modifier = Modifier.fillMaxWidth(),
-                    paymentStatus = state.startOrderInfo.payment
-                )
-
-                OrderPromocodeCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    promocode = state.startOrderInfo.promo
-                )
-
-                OrderDialogPaymentButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { coordinates ->
-                            paymentButtonTop = coordinates.positionInParent().y
-                            paymentButtonHeight = coordinates.size.height
-                        },
-                    priceState = state.startPriceResult,
-                ) {
-                    component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id))
                 }
-
-                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }

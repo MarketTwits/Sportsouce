@@ -4,12 +4,10 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Intent
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Label
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Message
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.State
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.*
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Label.OnClickStart
 import kotlinx.coroutines.launch
 
 class StartOrderStoreExecutor(
@@ -23,7 +21,9 @@ class StartOrderStoreExecutor(
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
             is Intent.OnClickPay -> getPaymentUrl(intent.orderId)
-            is Intent.OnClickStart -> publish(Label.OnClickStart(intent.startId))
+            is Intent.OnClickStart -> publish(OnClickStart(intent.startId))
+            is Intent.OnClickUpdatePrice -> getActualPrice(state().startOrderInfo)
+            is Intent.OnClickHelp -> intentAction.openWebPage("https://t.me/sportsoyuznsk")
         }
     }
 

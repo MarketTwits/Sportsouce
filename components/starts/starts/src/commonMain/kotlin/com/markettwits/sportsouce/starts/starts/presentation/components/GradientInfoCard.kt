@@ -31,8 +31,8 @@ internal fun GradientInfoCard(
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
-                        color.copy(alpha = 0.2f),
-                        color.copy(alpha = 0.1f)
+                        color.copy(alpha = 0.1f),
+                        color.copy(alpha = 0.05f)
                     )
                 ),
                 shape = RoundedCornerShape(16.dp)

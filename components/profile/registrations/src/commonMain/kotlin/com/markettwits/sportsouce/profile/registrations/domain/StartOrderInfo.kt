@@ -15,4 +15,6 @@ data class StartOrderInfo(
     val members: List<StartOrderMember>,
     val startTitle: String,
     val cost: String,
+    val costWithoutDiscount: String = cost,
+    val additionalFieldsCost: String = "",
 )

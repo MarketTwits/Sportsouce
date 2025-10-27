@@ -101,6 +101,8 @@ internal fun StartScreenContent(
                                 .padding(10.dp),
                             startStatus = data.startStatus,
                             regLink = data.regLink,
+                            isLoading = isLoading,
+                            hasError = error != null,
                             onClickRegistration = onClickRegistration
                         )
                     }
@@ -139,6 +141,8 @@ internal fun StartScreenContent(
                             .padding(10.dp),
                         startStatus = data.startStatus,
                         regLink = data.regLink,
+                        isLoading = isLoading,
+                        hasError = error != null,
                         onClickRegistration = onClickRegistration
                     )
                 }

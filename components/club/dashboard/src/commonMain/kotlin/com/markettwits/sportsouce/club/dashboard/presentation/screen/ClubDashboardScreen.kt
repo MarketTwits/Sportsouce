@@ -36,6 +36,7 @@ fun ClubDashboardScreen(
     component: ClubDashboardComponent,
 ) {
     val state by component.state.collectAsState()
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -44,8 +45,8 @@ fun ClubDashboardScreen(
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(scrollState)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
             ClubDashboardHeader()
 
@@ -54,6 +55,7 @@ fun ClubDashboardScreen(
                     modifier = Modifier
                         .offset(y = (-100).dp)
                         .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
                 ) {
 
                     if (state.error == null && !state.isLoading) {

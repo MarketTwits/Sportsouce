@@ -1,10 +1,8 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.store
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Intent
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Label
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.State
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.*
 
 interface StartOrderStore : Store<Intent, State, Label> {
 
@@ -24,6 +22,8 @@ interface StartOrderStore : Store<Intent, State, Label> {
         data object Dismiss : Intent
         data class OnClickPay(val orderId: Int) : Intent
         data class OnClickStart(val startId: Int) : Intent
+        data object OnClickUpdatePrice : Intent
+        data object OnClickHelp : Intent
     }
 
     sealed interface Message {

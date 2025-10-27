@@ -78,7 +78,7 @@ private fun OrRowContent(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Text(
                 modifier = Modifier

@@ -21,19 +21,22 @@ sealed interface StartOrderPaymentStatus {
     @Serializable
     data class Success(
         override val isPaid: Boolean = true,
-        override val title: String = "Оплачено"
+        override val title: String = "Оплачено",
+        val paymentReason: String = "",
     ) : StartOrderPaymentStatus
 
     @Serializable
     data class Free(
         override val isPaid: Boolean = true,
-        override val title: String = "Бесплатно"
+        override val title: String = "Бесплатно",
+        val paymentReason: String = "",
     ) : StartOrderPaymentStatus
 
     @Serializable
     data class OnPlace(
         override val isPaid: Boolean = true,
-        override val title: String = "На месте старта"
+        override val title: String = "На месте старта",
+        val paymentReason: String = "",
     ) : StartOrderPaymentStatus
 
     @Serializable

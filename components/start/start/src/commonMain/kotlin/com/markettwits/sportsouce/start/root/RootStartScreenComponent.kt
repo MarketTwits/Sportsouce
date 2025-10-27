@@ -8,6 +8,7 @@ import com.markettwits.sportsouce.start.presentation.membres.component.StartMemb
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
@@ -39,13 +40,15 @@ interface RootStartScreenComponent {
 
         @Serializable
         data class StartAlbum(val images: List<String>) : Config()
+
+        @Serializable
+        data class StartComments(val startId: Int, val mode: CommentMode) : Config()
     }
 
     sealed class Child {
 
         data class Start(
             val component: StartScreenComponent,
-            val commentsComponent: StartCommentsComponent,
             val supportComponent: StartSupportComponent
         ) : Child()
 
@@ -56,5 +59,7 @@ interface RootStartScreenComponent {
         data class StartMembers(val component: StartMembersScreenComponent) : Child()
 
         data class StartMembersResults(val component: StartMemberResultsComponent) : Child()
+
+        data class StartComments(val component: StartCommentsComponent) : Child()
     }
 }

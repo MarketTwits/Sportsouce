@@ -27,8 +27,10 @@ internal fun StartCommentTextField(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
     mode: CommentMode,
+    readOnly: Boolean = false,
+    onClickTextField: () -> Unit = {},
     onClickCloseReply: () -> Unit,
-    sendComment: (String) -> Unit
+    sendComment: (String) -> Unit,
 ) {
     var comment by rememberSaveable {
         mutableStateOf("")
@@ -39,26 +41,25 @@ internal fun StartCommentTextField(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(mode) {
-        if (mode is CommentMode.Reply) {
+        if (mode is CommentMode.Reply && !readOnly) {
             focusRequester.requestFocus()
             keyboardController?.show()
         }
     }
 
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
-            .padding(3.dp),
-    ) {
+    Column(modifier = modifier) {
         if (mode is CommentMode.Reply) {
-            Row(
-                modifier = modifier
-                    .align(Alignment.CenterStart),
-                verticalAlignment = Alignment.CenterVertically,
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .shadow(elevation = 20.dp)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
                         text = "Ответ для ${mode.replier}",
                         fontSize = 12.sp,
@@ -82,50 +83,66 @@ internal fun StartCommentTextField(
                 }
             }
         }
-    }
-    TextField(
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .fillMaxWidth(),
-        value = comment,
-        maxLines = 3,
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.tertiary,
-            focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-            unfocusedTextColor = MaterialTheme.colorScheme.outline
-        ),
-        placeholder = {
-            Text(
-                text = "Ваш комментарий",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.regular(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = Color.Gray
-            )
-        },
-        trailingIcon = {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(30.dp),
-                    color = MaterialTheme.colorScheme.tertiary,
+        TextField(
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .fillMaxWidth()
+                .then(
+                    if (readOnly) {
+                        Modifier.clickable { onClickTextField() }
+                    } else {
+                        Modifier
+                    }
+                ),
+            value = comment,
+            maxLines = 3,
+            readOnly = readOnly,
+            enabled = !readOnly,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.tertiary,
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.outline,
+                disabledTextColor = MaterialTheme.colorScheme.outline
+            ),
+            placeholder = {
+                Text(
+                    text = "Ваш комментарий",
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.regular(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.Gray
                 )
-            } else {
-                IconButton(
-                    onClick = {
-                        sendComment(comment)
-                    }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "send comment",
-                        tint = MaterialTheme.colorScheme.tertiary
-                    )
+            },
+            trailingIcon = {
+                if (!readOnly) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(30.dp),
+                            color = MaterialTheme.colorScheme.tertiary,
+                        )
+                    } else {
+                        IconButton(
+                            onClick = {
+                                sendComment(comment)
+                                comment = ""
+                            }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Send,
+                                contentDescription = "send comment",
+                                tint = MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                    }
                 }
-            }
-        },
-        onValueChange = {
-            comment = it
-        })
+            },
+            onValueChange = {
+                if (!readOnly) {
+                    comment = it
+                }
+            })
+    }
 }

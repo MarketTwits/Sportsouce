@@ -45,9 +45,14 @@ class UserRegistrationsMapperBase(
                 )
             } ?: emptyList(),
             cost = start.price.formatPrice(),
+            costWithoutDiscount = start.priceWithoutDiscount.formatPrice(),
+            additionalFieldsCost = start.priceOfAdditionalFields.formatPrice(),
             startTitle = start.start?.name ?: "",
             promo = start.promocode?.code ?: "",
-            payment = mapPayments(payment = start.payment),
+            payment = mapPayments(
+                payment = start.payment,
+                successPaymentReason = start.successPaymentReason
+            ),
         )
     }
 
@@ -66,12 +71,14 @@ class UserRegistrationsMapperBase(
 
     private fun mapPayments(
         payment: Int?,
+        successPaymentReason: String?,
     ): StartOrderPaymentStatus {
+        val reason = successPaymentReason ?: ""
         return when (payment) {
             0 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
-            1 -> StartOrderPaymentStatus.Success()
-            2 -> StartOrderPaymentStatus.OnPlace()
-            4 -> StartOrderPaymentStatus.Free()
+            1 -> StartOrderPaymentStatus.Success(paymentReason = reason)
+            2 -> StartOrderPaymentStatus.OnPlace(paymentReason = reason)
+            4 -> StartOrderPaymentStatus.Free(paymentReason = reason)
             3 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
             else -> StartOrderPaymentStatus.NotPaid()
         }

@@ -10,11 +10,11 @@ import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponentBase
-import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStore
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStoreFactory
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
@@ -54,13 +54,6 @@ class RootStartScreenComponentBase(
     ): RootStartScreenComponent.Child =
         when (config) {
             is RootStartScreenComponent.Config.Start -> {
-                val commentsComponent = StartCommentsComponentBase(
-                    context = componentContext,
-                    storeFactory = StartCommentsStoreFactory(
-                        storeFactory = DefaultStoreFactory(),
-                        service = scope.get(),
-                    )
-                )
                 val supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
@@ -102,11 +95,12 @@ class RootStartScreenComponentBase(
                             )
                         },
                         onApplyStartId = {
-                            commentsComponent.obtainEvent(StartCommentsStore.Intent.ApplyStartId(it))
                             supportComponent.obtainEvent(StartSupportStore.Intent.ApplyStartId(it))
+                        },
+                        onOpenStartCommentsScreen = { startId, mode ->
+                            navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
                         }
                     ),
-                    commentsComponent = commentsComponent,
                     supportComponent = supportComponent)
             }
 
@@ -146,6 +140,37 @@ class RootStartScreenComponentBase(
                     goBack = navigation::pop,
                 )
             )
+
+            is RootStartScreenComponent.Config.StartComments -> {
+                val commentsStoreFactory = StartCommentsStoreFactory(
+                    storeFactory = DefaultStoreFactory(),
+                    service = scope.get(),
+                )
+
+                val component = StartCommentsComponentBase(
+                    context = componentContext,
+                    storeFactory = commentsStoreFactory,
+                    startId = config.startId,
+                    mode = config.mode,
+                    onBack = navigation::pop,
+                    onNavigateToReplies = { commentId: Int, replier: String, commentData: com.markettwits.sportsouce.start.presentation.start.component.CommentData ->
+                        navigation.pushNew(
+                            RootStartScreenComponent.Config.StartComments(
+                                startId = config.startId,
+                                mode = CommentMode.Reply(
+                                    replier = replier,
+                                    messageId = commentId,
+                                    parentComment = commentData
+                                )
+                            )
+                        )
+                    }
+                )
+                RootStartScreenComponent.Child.StartComments(component)
+            }
         }
 
+    fun navigateToComments(startId: Int, mode: CommentMode) {
+        navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
+    }
 }

@@ -16,6 +16,7 @@ koin = "3.5.3" # https://github.com/InsertKoinIO/koin
 ktor = "3.0.1" # https://github.com/ktorio/ktor
 jetbrainsKotlinWrappers = "2025.4.11" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
+androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
@@ -35,6 +36,7 @@ tracer = "0.2.15" # https://apptracer.ru/
 [libraries]
 
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }

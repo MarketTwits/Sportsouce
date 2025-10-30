@@ -3,7 +3,11 @@ package com.markettwits
 import java.awt.Desktop
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
+import java.io.File
+import java.io.FileOutputStream
 import java.net.URI
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 class IntentActionBase : IntentAction {
     override fun openWebPage(url: String) {
@@ -26,6 +30,22 @@ class IntentActionBase : IntentAction {
             }
         } else {
             println("Desktop is not supported on your system")
+        }
+    }
+
+    override fun shareImage(byteArray: ByteArray) {
+        val chooser = JFileChooser().apply {
+            dialogTitle = "Save image"
+            fileFilter = FileNameExtensionFilter("PNG Image", "png")
+        }
+
+        val result = chooser.showSaveDialog(null)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            var file = chooser.selectedFile
+            if (!file.name.endsWith(".png", ignoreCase = true)) {
+                file = File(file.absolutePath + ".png")
+            }
+            FileOutputStream(file).use { it.write(byteArray) }
         }
     }
 

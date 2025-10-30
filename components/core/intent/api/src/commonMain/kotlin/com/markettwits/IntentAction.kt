@@ -24,6 +24,13 @@ interface IntentAction {
     fun openPhone(phone: String)
 
     /**
+     * Initiates an action to share image.
+     *
+     * @param byteArray the byteArray of the file
+     */
+    fun shareImage(byteArray: ByteArray)
+
+    /**
      * Copies the provided text to the system clipboard.
      *
      * @param text the text to copy to the clipboard. The clipboard content will be

@@ -22,13 +22,14 @@ import com.markettwits.sportsouce.profile.registrations.presentation.detail.comp
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderMembersTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderOverviewTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderPaymentTab
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderShareTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import kotlinx.coroutines.launch
 
 @Composable
 fun StartOrderStartScreen(component: StartOrderComponent) {
     val state by component.state.collectAsState()
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -127,6 +128,20 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                         )
                     }
                 )
+                Tab(
+                    selected = pagerState.currentPage == 3,
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(3) } },
+                    text = {
+                        Text(
+                            text = "Поделиться",
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = if (pagerState.currentPage == 3) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
+                            fontFamily = FontNunito.bold(),
+                        )
+                    }
+                )
             }
             AdaptivePane {
                 HorizontalPager(
@@ -151,6 +166,8 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                             orderInfo = state.startOrderInfo,
                             priceState = state.startPriceResult
                         )
+
+                        3 -> OrderShareTab(state.startOrderInfo)
                     }
                 }
             }

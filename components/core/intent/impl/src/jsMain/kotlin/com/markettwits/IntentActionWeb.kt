@@ -2,7 +2,12 @@ package com.markettwits
 
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.khronos.webgl.Uint8Array
+import org.w3c.dom.HTMLAnchorElement
 import org.w3c.dom.HTMLTextAreaElement
+import org.w3c.dom.url.URL
+import org.w3c.files.Blob
+import org.w3c.files.BlobPropertyBag
 
 class IntentActionWeb : IntentAction {
     override fun openWebPage(url: String) {
@@ -14,6 +19,21 @@ class IntentActionWeb : IntentAction {
 
     override fun openPhone(phone: String) {
         window.open("tel:${phone.filter { it.isDigit() }}", "_self")
+    }
+
+    override fun shareImage(byteArray: ByteArray) {
+        val uint8Array = Uint8Array(byteArray.toTypedArray())
+        val blob = Blob(arrayOf(uint8Array), BlobPropertyBag(type = "image/png"))
+        val url = URL.createObjectURL(blob)
+
+        val link = (document.createElement("a") as HTMLAnchorElement).apply {
+            href = url
+            download = "image.png"
+        }
+        document.body?.appendChild(link)
+        link.click()
+        document.body?.removeChild(link)
+        URL.revokeObjectURL(url)
     }
 
     override fun copyToSystemBuffer(text: String) {

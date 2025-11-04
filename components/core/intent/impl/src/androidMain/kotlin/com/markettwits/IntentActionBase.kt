@@ -1,11 +1,10 @@
 package com.markettwits
 
-import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
@@ -48,12 +47,12 @@ class IntentActionBase(
         Toast.makeText(context, "Скопировано в буфер обмена", Toast.LENGTH_SHORT).show()
     }
 
-    override fun shareImage(byteArray: ByteArray) {
+    override fun shareImage(byteArray: ByteArray, filename: String) {
         val context = context.applicationContext
         val cachePath = File(context.cacheDir, "images")
         cachePath.mkdirs()
 
-        val file = File(cachePath, "shared_image.png")
+        val file = File(cachePath, "$filename.png")
         FileOutputStream(file).use { it.write(byteArray) }
 
         val contentUri = FileProvider.getUriForFile(
@@ -72,6 +71,59 @@ class IntentActionBase(
             Intent.createChooser(shareIntent, "Share image via")
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         )
+    }
+
+    override fun saveImage(byteArray: ByteArray, filename: String) {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, "$filename.png")
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                }
+
+                val resolver = context.contentResolver
+                val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+                uri?.let {
+                    resolver.openOutputStream(it)?.use { outputStream ->
+                        outputStream.write(byteArray)
+                    }
+                    Toast.makeText(
+                        context,
+                        "Изображение сохранено в Downloads",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } ?: throw Exception("Failed to create MediaStore entry")
+            } else {
+                val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                downloadsDir.mkdirs()
+
+                val file = File(downloadsDir, "$filename.png")
+                var counter = 1
+                var finalFile = file
+
+                while (finalFile.exists()) {
+                    finalFile = File(downloadsDir, "$filename($counter).png")
+                    counter++
+                }
+
+                FileOutputStream(finalFile).use { it.write(byteArray) }
+
+                Toast.makeText(
+                    context,
+                    "Изображение сохранено в Downloads: ${finalFile.name}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        } catch (e: Exception) {
+            Log.e("mt05", "Ошибка при сохранении изображения", e)
+            Toast.makeText(
+                context,
+                "Ошибка при сохранении изображения",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun sharePlainText(text: String) {

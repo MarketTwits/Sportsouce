@@ -9,7 +9,7 @@ import java.net.URI
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class IntentActionBase : IntentAction {
+class IntentActionJVM : IntentAction {
     override fun openWebPage(url: String) {
         val desktop = Desktop.getDesktop()
         desktop.browse(URI.create(url))
@@ -33,10 +33,28 @@ class IntentActionBase : IntentAction {
         }
     }
 
-    override fun shareImage(byteArray: ByteArray) {
+    override fun shareImage(byteArray: ByteArray, filename: String) {
         val chooser = JFileChooser().apply {
             dialogTitle = "Save image"
             fileFilter = FileNameExtensionFilter("PNG Image", "png")
+            selectedFile = File("$filename.png")
+        }
+
+        val result = chooser.showSaveDialog(null)
+        if (result == JFileChooser.APPROVE_OPTION) {
+            var file = chooser.selectedFile
+            if (!file.name.endsWith(".png", ignoreCase = true)) {
+                file = File(file.absolutePath + ".png")
+            }
+            FileOutputStream(file).use { it.write(byteArray) }
+        }
+    }
+
+    override fun saveImage(byteArray: ByteArray, filename: String) {
+        val chooser = JFileChooser().apply {
+            dialogTitle = "Сохранить изображение"
+            fileFilter = FileNameExtensionFilter("PNG Image", "png")
+            selectedFile = File("$filename.png")
         }
 
         val result = chooser.showSaveDialog(null)

@@ -10,3 +10,9 @@ expect fun ImageBitmap.toByteArray(
 enum class CompressionFormat {
     JPEG, PNG
 }
+
+enum class QualityFormat(val value: Int) {
+    MAX(100),
+    NORMAL(75),
+    HALF(50)
+}

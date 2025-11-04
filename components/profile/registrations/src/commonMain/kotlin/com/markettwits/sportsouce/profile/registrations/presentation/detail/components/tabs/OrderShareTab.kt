@@ -3,10 +3,7 @@ package com.markettwits.sportsouce.profile.registrations.presentation.detail.com
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -26,14 +23,16 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.SubcomposeAsyncImage
-import com.markettwits.capturable.Capturable
-import com.markettwits.capturable.CompressionFormat
-import com.markettwits.capturable.rememberCaptureController
-import com.markettwits.capturable.toByteArray
+import com.markettwits.IntentAction
+import com.markettwits.capturable.*
+import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
@@ -42,7 +41,7 @@ import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 
 @Composable
 fun OrderShareTab(
-    startOrderInfo: StartOrderInfo
+    startOrderInfo: StartOrderInfo,
 ) {
     ShareOrderTab(startOrderInfo)
 }
@@ -50,86 +49,68 @@ fun OrderShareTab(
 @Composable
 fun ShareOrderTab(
     orderInfo: StartOrderInfo,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    var selectedCardIndex by remember { mutableStateOf(0) }
-    val pagerState = rememberPagerState(pageCount = { 5 })
-    val capture = rememberCaptureController()
+    val pagerState = rememberPagerState(pageCount = { 2 })
     val intent = rememberIntentActionByPlatform()
-
-    LaunchedEffect(pagerState.currentPage) {
-        selectedCardIndex = pagerState.currentPage
-    }
+    var showPreviewDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Выберите дизайн карточки",
-            style = MaterialTheme.typography.headlineSmall.copy(
-                fontFamily = FontNunito.bold()
-            ),
+            fontSize = 18.sp,
+            fontFamily = FontNunito.bold(),
             color = MaterialTheme.colorScheme.onBackground
         )
-
         Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 500.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                contentPadding = PaddingValues(horizontal = 32.dp),
+                pageSpacing = 16.dp,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                val scale by animateFloatAsState(
+                    targetValue = if (pagerState.currentPage == page) 1f else 0.85f,
+                    animationSpec = tween(300)
+                )
 
-        Text(
-            text = "Создайте красивую карточку для публикации",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontNunito.regular()
-            ),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        HorizontalPager(
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 32.dp),
-            pageSpacing = 16.dp,
-            modifier = Modifier.weight(1f)
-        ) { page ->
-            val scale by animateFloatAsState(
-                targetValue = if (pagerState.currentPage == page) 1f else 0.85f,
-                animationSpec = tween(300)
-            )
-            Capturable(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.Transparent)
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    },
-                captureController = capture,
-                onCaptured = {
-                    intent.shareImage(it.toByteArray(CompressionFormat.PNG, 100))
-                }
-            ) {
-
-                when (page) {
-                    0 -> ImageBackgroundCardVariant(orderInfo)
-                    1 -> GradientCardVariant(orderInfo)
-                    2 -> ModernVibrantCardVariant(orderInfo)
-                    3 -> ResultsCompactCardVariant(orderInfo)
-                    4 -> ResultsCardVariant(orderInfo)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                ) {
+                    when (page) {
+                        0 -> ImageBackgroundCard(orderInfo, RoundedCornerShape(16.dp))
+                        1 -> CleanBackgroundCard(orderInfo, RoundedCornerShape(16.dp))
+                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        // Индикаторы страниц
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
-            repeat(4) { index ->
+            repeat(2) { index ->
                 val isSelected = index == pagerState.currentPage
                 Box(
                     modifier = Modifier
@@ -153,19 +134,22 @@ fun ShareOrderTab(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { capture.capture() },
+            onClick = {
+                showPreviewDialog = true
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Share,
                 contentDescription = null,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -175,18 +159,30 @@ fun ShareOrderTab(
                 )
             )
         }
+        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+    }
+
+    if (showPreviewDialog) {
+        SharePreviewDialog(
+            orderInfo = orderInfo,
+            currentPage = pagerState.currentPage,
+            onDismiss = { showPreviewDialog = false },
+            intent = intent
+        )
     }
 }
 
 @Composable
-private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+private fun ImageBackgroundCard(
+    orderInfo: StartOrderInfo,
+    shape: RoundedCornerShape = RoundedCornerShape(0.dp),
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Фоновое изображение
             SubcomposeAsyncImage(
                 model = orderInfo.image,
                 contentDescription = null,
@@ -208,7 +204,6 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                 }
             )
 
-            // Градиентный оверлей для читаемости
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -223,14 +218,22 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                     )
             )
 
-            // Контент
+            Image(
+                painter = DefaultImages.SportSauceLightLogo(),
+                contentDescription = "SportSauce Logo",
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+                    .height(40.dp),
+                contentScale = ContentScale.Fit
+            )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Верхняя часть
                 Column {
                     Box(
                         modifier = Modifier
@@ -250,12 +253,12 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                                 imageVector = Icons.Default.DateRange,
                                 contentDescription = null,
                                 tint = Color.White,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = orderInfo.dateStartPreview,
-                                style = MaterialTheme.typography.bodyLarge.copy(
+                                style = MaterialTheme.typography.bodyMedium.copy(
                                     fontFamily = FontNunito.bold(),
                                     color = Color.White
                                 )
@@ -263,14 +266,14 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
                         text = orderInfo.name,
-                        style = MaterialTheme.typography.displaySmall.copy(
+                        style = MaterialTheme.typography.headlineMedium.copy(
                             fontFamily = FontNunito.black(),
                             color = Color.White,
-                            lineHeight = 36.sp,
+                            lineHeight = 28.sp,
                             shadow = Shadow(
                                 color = Color.Black.copy(alpha = 0.5f),
                                 offset = Offset(2f, 2f),
@@ -282,7 +285,8 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                     )
                 }
 
-                // Нижняя часть с участниками
+                val hasResults = orderInfo.members.any { it.results.isNotEmpty() }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -295,75 +299,175 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
                             Color.White.copy(alpha = 0.3f),
                             RoundedCornerShape(16.dp)
                         )
-                        .padding(20.dp)
+                        .padding(16.dp)
                 ) {
                     Text(
-                        text = "УЧАСТНИКИ",
-                        style = MaterialTheme.typography.labelLarge.copy(
+                        text = if (hasResults) "РЕЗУЛЬТАТЫ" else "УЧАСТНИКИ",
+                        style = MaterialTheme.typography.labelMedium.copy(
                             fontFamily = FontNunito.extraBold(),
                             color = Color.White.copy(alpha = 0.9f),
-                            letterSpacing = 1.5.sp
+                            letterSpacing = 1.sp
                         )
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                    orderInfo.members.take(3).forEachIndexed { index, member ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .background(
-                                        Brush.linearGradient(
-                                            colors = listOf(
-                                                SportSouceColor.SportSouceLighBlue,
-                                                SportSouceColor.SportSouceRegistryOpenGreen
+                    if (hasResults) {
+                        orderInfo.members.filter { it.results.isNotEmpty() }.take(3)
+                            .forEachIndexed { index, member ->
+                                val result = member.results.firstOrNull()
+                                if (result != null) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.weight(1f),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(36.dp)
+                                                    .background(
+                                                        when (result.place) {
+                                                            1 -> Brush.linearGradient(
+                                                                colors = listOf(
+                                                                    Color(0xFFFFD700),
+                                                                    Color(0xFFFFA000)
+                                                                )
+                                                            )
+
+                                                            2 -> Brush.linearGradient(
+                                                                colors = listOf(
+                                                                    Color(0xFFC0C0C0),
+                                                                    Color(0xFF9E9E9E)
+                                                                )
+                                                            )
+
+                                                            3 -> Brush.linearGradient(
+                                                                colors = listOf(
+                                                                    Color(0xFFCD7F32),
+                                                                    Color(0xFF8D6E63)
+                                                                )
+                                                            )
+
+                                                            else -> Brush.linearGradient(
+                                                                colors = listOf(
+                                                                    SportSouceColor.SportSouceLighBlue,
+                                                                    SportSouceColor.SportSouceRegistryOpenGreen
+                                                                )
+                                                            )
+                                                        },
+                                                        CircleShape
+                                                    )
+                                                    .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    text = "${result.place}",
+                                                    style = MaterialTheme.typography.titleMedium.copy(
+                                                        fontFamily = FontNunito.extraBold(),
+                                                        color = Color.White
+                                                    )
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(10.dp))
+                                            Column(modifier = Modifier.weight(1f)) {
+                                                Text(
+                                                    text = "${member.name} ${member.surname}",
+                                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                                        fontFamily = FontNunito.bold(),
+                                                        color = Color.White
+                                                    ),
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                                Text(
+                                                    text = member.ageGroupName,
+                                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                                        fontFamily = FontNunito.medium(),
+                                                        color = Color.White.copy(alpha = 0.85f)
+                                                    )
+                                                )
+                                            }
+                                        }
+
+                                        Text(
+                                            text = result.result,
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontFamily = FontNunito.black(),
+                                                color = Color.White
                                             )
-                                        ),
-                                        CircleShape
-                                    )
-                                    .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape),
-                                contentAlignment = Alignment.Center
+                                        )
+                                    }
+                                    if (index < minOf(
+                                            2,
+                                            orderInfo.members.filter { it.results.isNotEmpty() }.size - 1
+                                        )
+                                    ) {
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                    }
+                                }
+                            }
+                    } else {
+                        orderInfo.members.take(3).forEachIndexed { index, member ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "${member.name.firstOrNull()}${member.surname.firstOrNull()}",
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        fontFamily = FontNunito.extraBold(),
-                                        color = Color.White
+                                Box(
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .background(
+                                            Brush.linearGradient(
+                                                colors = listOf(
+                                                    SportSouceColor.SportSouceLighBlue,
+                                                    SportSouceColor.SportSouceRegistryOpenGreen
+                                                )
+                                            ),
+                                            CircleShape
+                                        )
+                                        .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "${member.name.firstOrNull()}${member.surname.firstOrNull()}",
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontFamily = FontNunito.extraBold(),
+                                            color = Color.White
+                                        )
                                     )
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(
-                                    text = "${member.name} ${member.surname}",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontFamily = FontNunito.bold(),
-                                        color = Color.White
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = member.ageGroupName,
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontFamily = FontNunito.medium(),
-                                        color = Color.White.copy(alpha = 0.85f)
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = "${member.name} ${member.surname}",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontFamily = FontNunito.bold(),
+                                            color = Color.White
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
                                     )
-                                )
+                                    Text(
+                                        text = member.ageGroupName,
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontFamily = FontNunito.medium(),
+                                            color = Color.White.copy(alpha = 0.85f)
+                                        )
+                                    )
+                                }
                             }
-                        }
-                        if (index < minOf(2, orderInfo.members.size - 1)) {
-                            Spacer(modifier = Modifier.height(14.dp))
+                            if (index < minOf(2, orderInfo.members.size - 1)) {
+                                Spacer(modifier = Modifier.height(10.dp))
+                            }
                         }
                     }
 
                     if (orderInfo.members.size > 3) {
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "+${orderInfo.members.size - 3} участников",
+                            text = "+${orderInfo.members.size - 3} ${if (hasResults) "результатов" else "участников"}",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontFamily = FontNunito.bold(),
                                 color = Color.White.copy(alpha = 0.8f)
@@ -377,679 +481,204 @@ private fun ImageBackgroundCardVariant(orderInfo: StartOrderInfo) {
 }
 
 @Composable
-private fun GradientCardVariant(orderInfo: StartOrderInfo) {
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+private fun CleanBackgroundCard(
+    orderInfo: StartOrderInfo,
+    shape: RoundedCornerShape = RoundedCornerShape(0.dp),
+) {
+    val hasResults = orderInfo.members.any { it.results.isNotEmpty() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 650.dp)
+            .clip(shape)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF1E88E5),
-                            Color(0xFF6A1B9A),
-                            Color(0xFFD81B60)
-                        ),
-                        start = Offset.Zero,
-                        end = Offset.Infinite
-                    )
-                )
+                .background(MaterialTheme.colorScheme.primary)
         ) {
-            // Декоративные элементы
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.1f),
-                    radius = size.width * 0.5f,
-                    center = Offset(size.width * 1.1f, -size.height * 0.2f)
-                )
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.08f),
-                    radius = size.width * 0.4f,
-                    center = Offset(-size.width * 0.2f, size.height * 1.1f)
-                )
-            }
-
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth()
+                    .weight(0.35f)
             ) {
-                Column {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Text(
-                        text = orderInfo.name,
-                        style = MaterialTheme.typography.displaySmall.copy(
-                            fontFamily = FontNunito.black(),
-                            color = Color.White,
-                            lineHeight = 36.sp
-                        ),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    // Нижняя секция с участниками
-                    Column {
-                        Divider(
-                            color = Color.White.copy(alpha = 0.3f),
-                            thickness = 2.dp,
-                            modifier = Modifier.fillMaxWidth(0.3f)
+                SubcomposeAsyncImage(
+                    model = orderInfo.image,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            MaterialTheme.colorScheme.secondary,
+                                            MaterialTheme.colorScheme.tertiary
+                                        )
+                                    )
+                                )
                         )
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        orderInfo.members.take(3).forEach { member ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row(
-                                    modifier = Modifier.weight(1f),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(12.dp)
-                                            .background(
-                                                SportSouceColor.SportSouceLighBlue,
-                                                CircleShape
-                                            )
-                                    )
-                                    Spacer(modifier = Modifier.width(12.dp))
-                                    Column {
-                                        Text(
-                                            text = "${member.name} ${member.surname}",
-                                            style = MaterialTheme.typography.bodyLarge.copy(
-                                                fontFamily = FontNunito.bold(),
-                                                color = Color.White
-                                            ),
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                        Text(
-                                            text = member.ageGroupName,
-                                            style = MaterialTheme.typography.bodyMedium.copy(
-                                                fontFamily = FontNunito.medium(),
-                                                color = Color.White.copy(alpha = 0.7f)
-                                            )
-                                        )
-                                    }
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .border(
-                                            2.dp,
-                                            Color.White.copy(alpha = 0.3f),
-                                            CircleShape
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = SportSouceColor.SportSouceLighBlue,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-
-                        if (orderInfo.members.size > 3) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(12.dp)
-                                        .background(
-                                            Color.White.copy(alpha = 0.5f),
-                                            CircleShape
-                                        )
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Text(
-                                    text = "Ещё ${orderInfo.members.size - 3} участников",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontFamily = FontNunito.semiBoldBold(),
-                                        color = Color.White.copy(alpha = 0.8f)
-                                    ),
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Default.DateRange,
-                                        contentDescription = null,
-                                        tint = Color.White.copy(alpha = 0.9f),
-                                        modifier = Modifier.size(22.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = orderInfo.dateStartPreview,
-                                        style = MaterialTheme.typography.titleLarge.copy(
-                                            fontFamily = FontNunito.bold(),
-                                            color = Color.White.copy(alpha = 0.95f)
-                                        )
-                                    )
-                                }
-                            }
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(
-                                        Color.White,
-                                        RoundedCornerShape(20.dp)
-                                    )
-                                    .padding(20.dp)
-                            ) {
-                                Text(
-                                    text = "УЧАСТНИКИ",
-                                    style = MaterialTheme.typography.labelLarge.copy(
-                                        fontFamily = FontNunito.extraBold(),
-                                        color = Color(0xFF6A1B9A),
-                                        letterSpacing = 1.5.sp
-                                    )
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-
-                                orderInfo.members.take(3).forEachIndexed { index, member ->
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(44.dp)
-                                                .background(
-                                                    when (index) {
-                                                        0 -> Brush.linearGradient(
-                                                            colors = listOf(Color(0xFF1E88E5), Color(0xFF42A5F5))
-                                                        )
-
-                                                        1 -> Brush.linearGradient(
-                                                            colors = listOf(Color(0xFF6A1B9A), Color(0xFF9C27B0))
-                                                        )
-
-                                                        else -> Brush.linearGradient(
-                                                            colors = listOf(Color(0xFFD81B60), Color(0xFFF06292))
-                                                        )
-                                                    },
-                                                    CircleShape
-                                                ),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = "${member.name.firstOrNull()}${member.surname.firstOrNull()}",
-                                                style = MaterialTheme.typography.titleMedium.copy(
-                                                    fontFamily = FontNunito.extraBold(),
-                                                    color = Color.White
-                                                )
-                                            )
-                                        }
-                                        Spacer(modifier = Modifier.width(14.dp))
-                                        Column {
-                                            Text(
-                                                text = "${member.name} ${member.surname}",
-                                                style = MaterialTheme.typography.bodyLarge.copy(
-                                                    fontFamily = FontNunito.bold(),
-                                                    color = Color.Black.copy(alpha = 0.9f)
-                                                ),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                            Text(
-                                                text = member.ageGroupName,
-                                                style = MaterialTheme.typography.bodyMedium.copy(
-                                                    fontFamily = FontNunito.medium(),
-                                                    color = Color.Black.copy(alpha = 0.6f)
-                                                )
-                                            )
-                                        }
-                                    }
-                                    if (index < minOf(2, orderInfo.members.size - 1)) {
-                                        Spacer(modifier = Modifier.height(14.dp))
-                                    }
-                                }
-
-                                if (orderInfo.members.size > 3) {
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    Text(
-                                        text = "+${orderInfo.members.size - 3} участников",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            fontFamily = FontNunito.bold(),
-                                            color = Color(0xFF6A1B9A)
-                                        )
-                                    )
-                                }
-                            }
-                        }
                     }
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun ModernVibrantCardVariant(orderInfo: StartOrderInfo) {
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            SportSouceColor.SportSouceRegistryCommingSoonYellow,
-                            Color(0xFFFF6F00),
-                            SportSouceColor.SportSouceStartEndedPink
-                        ),
-                        center = Offset(100f, 100f),
-                        radius = 1200f
-                    )
                 )
-        ) {
-            // Декоративная графика
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                // Большие круги
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.15f),
-                    radius = size.width * 0.4f,
-                    center = Offset(size.width * 0.9f, size.height * 0.2f)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                                ),
+                                startY = 0f,
+                                endY = Float.POSITIVE_INFINITY
+                            )
+                        )
                 )
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.1f),
-                    radius = size.width * 0.35f,
-                    center = Offset(size.width * 0.1f, size.height * 0.8f)
+
+                Image(
+                    painter = DefaultImages.SportSauceLightLogo(),
+                    contentDescription = "SportSauce Logo",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp)
+                        .height(48.dp),
+                    contentScale = ContentScale.Fit
                 )
             }
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp)
+                    .fillMaxWidth()
+                    .weight(0.65f)
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
             ) {
-                // Верхний бейдж
-                Row(
-                    modifier = Modifier
-                        .background(
-                            Color.Black.copy(alpha = 0.3f),
-                            RoundedCornerShape(20.dp)
-                        )
-                        .padding(horizontal = 18.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(22.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "СТАРТ",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontFamily = FontNunito.extraBold(),
-                            color = Color.White,
-                            letterSpacing = 1.sp
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = orderInfo.name,
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontFamily = FontNunito.black(),
-                        color = Color.White,
-                        lineHeight = 36.sp,
-                        shadow = Shadow(
-                            color = Color.Black.copy(alpha = 0.3f),
-                            offset = Offset(2f, 2f),
-                            blurRadius = 6f
-                        )
-                    ),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(
-                            Color.Black.copy(alpha = 0.25f),
-                            RoundedCornerShape(16.dp)
-                        )
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp)
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = orderInfo.dateStartPreview,
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        style = MaterialTheme.typography.bodySmall.copy(
                             fontFamily = FontNunito.bold(),
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                // Белый блок с участниками
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            Color.White,
-                            RoundedCornerShape(20.dp)
-                        )
-                        .padding(20.dp)
-                ) {
+                Text(
+                    text = orderInfo.name,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = FontNunito.black(),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        lineHeight = 22.sp
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (hasResults) {
+                    val membersWithResults = orderInfo.members.filter { it.results.isNotEmpty() }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            text = "КОМАНДА",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontFamily = FontNunito.extraBold(),
-                                color = Color(0xFFFF6F00),
-                                letterSpacing = 1.sp
-                            )
+                        InfoCard(
+                            icon = Icons.Default.Person,
+                            value = "${membersWithResults.size}",
+                            label = "участников",
+                            modifier = Modifier.weight(1f),
+                            isCleanCard = true
                         )
-                        Text(
-                            text = "${orderInfo.members.size} чел.",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontFamily = FontNunito.bold(),
-                                color = Color.Black.copy(alpha = 0.5f)
+
+                        val topPlace = membersWithResults.mapNotNull {
+                            it.results.firstOrNull()?.place
+                        }.minOrNull() ?: 0
+
+                        if (topPlace > 0) {
+                            InfoCard(
+                                icon = Icons.Default.Star,
+                                value = "$topPlace",
+                                label = "место",
+                                modifier = Modifier.weight(1f),
+                                highlighted = topPlace <= 3,
+                                isCleanCard = true
                             )
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    orderInfo.members.take(3).forEachIndexed { index, member ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .background(
-                                        when (index) {
-                                            0 -> Brush.linearGradient(
-                                                colors = listOf(
-                                                    SportSouceColor.SportSouceRegistryCommingSoonYellow,
-                                                    Color(0xFFFF6F00)
-                                                )
-                                            )
-
-                                            1 -> Brush.linearGradient(
-                                                colors = listOf(
-                                                    Color(0xFFFF6F00),
-                                                    SportSouceColor.SportSouceStartEndedPink
-                                                )
-                                            )
-
-                                            else -> Brush.linearGradient(
-                                                colors = listOf(
-                                                    SportSouceColor.SportSouceStartEndedPink,
-                                                    Color(0xFFD81B60)
-                                                )
-                                            )
-                                        },
-                                        CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "${member.name.firstOrNull()}${member.surname.firstOrNull()}",
-                                    style = MaterialTheme.typography.titleLarge.copy(
-                                        fontFamily = FontNunito.extraBold(),
-                                        color = Color.White
-                                    )
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(14.dp))
-                            Column {
-                                Text(
-                                    text = "${member.name} ${member.surname}",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontFamily = FontNunito.bold(),
-                                        color = Color.Black.copy(alpha = 0.9f)
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = member.ageGroupName,
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontFamily = FontNunito.medium(),
-                                        color = Color.Black.copy(alpha = 0.6f)
-                                    )
-                                )
-                            }
-                        }
-                        if (index < minOf(2, orderInfo.members.size - 1)) {
-                            Spacer(modifier = Modifier.height(14.dp))
                         }
                     }
 
-                    if (orderInfo.members.size > 3) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Divider(color = Color.Black.copy(alpha = 0.1f), thickness = 1.dp)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "И ещё ${orderInfo.members.size - 3} участников",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontFamily = FontNunito.semiBoldBold(),
-                                color = Color(0xFFFF6F00)
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
+                    Spacer(modifier = Modifier.height(8.dp))
 
-@Composable
-private fun ResultsCardVariant(orderInfo: StartOrderInfo) {
-    // Проверяем, есть ли результаты хотя бы у одного участника
-    val hasResults = orderInfo.members.any { it.results.isNotEmpty() }
+                    val topMember = membersWithResults.minByOrNull { it.results.first().place }
+                    if (topMember != null) {
+                        val topResult = topMember.results.first()
 
-    if (!hasResults) return
-
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF00C853),
-                            Color(0xFF00897B),
-                            Color(0xFF00695C)
-                        )
-                    )
-                )
-        ) {
-            // Декоративные элементы - трофеи
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                // Полупрозрачные круги
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.08f),
-                    radius = size.width * 0.4f,
-                    center = Offset(size.width * 0.85f, size.height * 0.15f)
-                )
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.06f),
-                    radius = size.width * 0.35f,
-                    center = Offset(size.width * 0.15f, size.height * 0.9f)
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Верхняя секция
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                        Column(
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .background(
-                                    Color.White.copy(alpha = 0.25f),
-                                    RoundedCornerShape(12.dp)
+                                    MaterialTheme.colorScheme.tertiaryContainer,
+                                    RoundedCornerShape(10.dp)
                                 )
                                 .border(
                                     1.dp,
-                                    Color.White.copy(alpha = 0.3f),
-                                    RoundedCornerShape(12.dp)
+                                    MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                                    RoundedCornerShape(10.dp)
                                 )
-                                .padding(horizontal = 16.dp, vertical = 10.dp)
+                                .padding(10.dp)
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Icon(
-                                    imageVector = Icons.Default.DateRange,
+                                    imageVector = Icons.Default.Star,
                                     contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(18.dp)
+                                    tint = Color(0xFFFFD700),
+                                    modifier = Modifier.size(12.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(3.dp))
                                 Text(
-                                    text = orderInfo.dateStartPreview,
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontFamily = FontNunito.bold(),
-                                        color = Color.White
+                                    text = "ЛУЧШИЙ РЕЗУЛЬТАТ",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontFamily = FontNunito.extraBold(),
+                                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        letterSpacing = 0.3.sp,
+                                        fontSize = 10.sp
                                     )
                                 )
                             }
-                        }
 
-                        // Иконка трофея
-                        Box(
-                            modifier = Modifier
-                                .size(56.dp)
-                                .background(
-                                    Color.White.copy(alpha = 0.2f),
-                                    CircleShape
-                                )
-                                .border(
-                                    2.dp,
-                                    Color.White.copy(alpha = 0.3f),
-                                    CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = null,
-                                tint = Color(0xFFFFD700), // Золотой цвет
-                                modifier = Modifier.size(32.dp)
-                            )
-                        }
-                    }
+                            Spacer(modifier = Modifier.height(6.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = orderInfo.name,
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontFamily = FontNunito.black(),
-                            color = Color.White,
-                            lineHeight = 32.sp,
-                            shadow = Shadow(
-                                color = Color.Black.copy(alpha = 0.3f),
-                                offset = Offset(2f, 2f),
-                                blurRadius = 6f
-                            )
-                        ),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = "РЕЗУЛЬТАТЫ",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontFamily = FontNunito.extraBold(),
-                            color = Color(0xFFFFD700),
-                            letterSpacing = 2.sp
-                        )
-                    )
-                }
-
-                // Нижняя секция - результаты участников
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            Color.White,
-                            RoundedCornerShape(20.dp)
-                        )
-                        .padding(20.dp)
-                ) {
-                    orderInfo.members.filter { it.results.isNotEmpty() }.take(3).forEachIndexed { index, member ->
-                        val result = member.results.firstOrNull()
-                        if (result != null) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(
-                                    modifier = Modifier.weight(1f),
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
                                 ) {
-                                    // Место
                                     Box(
                                         modifier = Modifier
-                                            .size(48.dp)
+                                            .size(28.dp)
                                             .background(
-                                                when (result.place) {
+                                                when (topResult.place) {
                                                     1 -> Brush.linearGradient(
                                                         colors = listOf(Color(0xFFFFD700), Color(0xFFFFA000))
                                                     )
@@ -1063,436 +692,392 @@ private fun ResultsCardVariant(orderInfo: StartOrderInfo) {
                                                     )
 
                                                     else -> Brush.linearGradient(
-                                                        colors = listOf(Color(0xFF00C853), Color(0xFF00897B))
+                                                        colors = listOf(
+                                                            MaterialTheme.colorScheme.secondary,
+                                                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f)
+                                                        )
                                                     )
                                                 },
-                                                CircleShape
-                                            )
-                                            .border(
-                                                2.dp,
-                                                Color.Black.copy(alpha = 0.1f),
                                                 CircleShape
                                             ),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text = "${result.place}",
-                                            style = MaterialTheme.typography.headlineSmall.copy(
+                                            text = "${topResult.place}",
+                                            style = MaterialTheme.typography.titleSmall.copy(
                                                 fontFamily = FontNunito.black(),
-                                                color = Color.White,
-                                                shadow = Shadow(
-                                                    color = Color.Black.copy(alpha = 0.3f),
-                                                    offset = Offset(1f, 1f),
-                                                    blurRadius = 2f
-                                                )
+                                                color = Color.White
                                             )
                                         )
                                     }
 
-                                    Spacer(modifier = Modifier.width(14.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
 
-                                    Column {
+                                    Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "${member.name} ${member.surname}",
-                                            style = MaterialTheme.typography.bodyLarge.copy(
+                                            text = "${topMember.name} ${topMember.surname}",
+                                            style = MaterialTheme.typography.bodySmall.copy(
                                                 fontFamily = FontNunito.bold(),
-                                                color = Color.Black.copy(alpha = 0.9f)
+                                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                                fontSize = 12.sp
                                             ),
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis
                                         )
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Text(
-                                                text = member.ageGroupName,
-                                                style = MaterialTheme.typography.bodySmall.copy(
-                                                    fontFamily = FontNunito.medium(),
-                                                    color = Color.Black.copy(alpha = 0.5f)
-                                                )
-                                            )
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(4.dp)
-                                                    .background(
-                                                        Color.Black.copy(alpha = 0.3f),
-                                                        CircleShape
-                                                    )
-                                            )
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                            Text(
-                                                text = result.distance,
-                                                style = MaterialTheme.typography.bodySmall.copy(
-                                                    fontFamily = FontNunito.medium(),
-                                                    color = Color.Black.copy(alpha = 0.5f)
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-
-                                // Время
-                                Column(horizontalAlignment = Alignment.End) {
-                                    Text(
-                                        text = result.result,
-                                        style = MaterialTheme.typography.titleLarge.copy(
-                                            fontFamily = FontNunito.black(),
-                                            color = Color(0xFF00C853)
-                                        )
-                                    )
-                                    if (result.bodyNumber.isNotEmpty()) {
                                         Text(
-                                            text = "№${result.bodyNumber}",
+                                            text = "${topMember.ageGroupName}",
                                             style = MaterialTheme.typography.bodySmall.copy(
-                                                fontFamily = FontNunito.semiBoldBold(),
-                                                color = Color.Black.copy(alpha = 0.4f)
-                                            )
+                                                fontFamily = FontNunito.medium(),
+                                                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
+                                                fontSize = 10.sp
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
                                         )
                                     }
                                 }
-                            }
 
-                            if (index < minOf(2, orderInfo.members.filter { it.results.isNotEmpty() }.size - 1)) {
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Divider(
-                                    color = Color.Black.copy(alpha = 0.08f),
-                                    thickness = 1.dp,
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                            }
-                        }
-                    }
-
-                    val membersWithResults = orderInfo.members.filter { it.results.isNotEmpty() }
-                    if (membersWithResults.size > 3) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    Color(0xFF00C853).copy(alpha = 0.1f),
-                                    RoundedCornerShape(12.dp)
-                                )
-                                .padding(12.dp)
-                        ) {
-                            Text(
-                                text = "И ещё ${membersWithResults.size - 3} результатов",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontFamily = FontNunito.bold(),
-                                    color = Color(0xFF00C853)
-                                ),
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ResultsCompactCardVariant(orderInfo: StartOrderInfo) {
-    val hasResults = orderInfo.members.any { it.results.isNotEmpty() }
-
-    if (!hasResults) return
-
-    Card(
-        modifier = Modifier.fillMaxSize(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Фоновое изображение
-            SubcomposeAsyncImage(
-                model = orderInfo.image,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        Color(0xFFFF6B6B),
-                                        Color(0xFFEE5A6F),
-                                        Color(0xFFC44569)
+                                Text(
+                                    text = topResult.result,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        fontFamily = FontNunito.black(),
+                                        color = MaterialTheme.colorScheme.secondary
                                     )
                                 )
-                            )
-                    )
-                }
-            )
-
-            // Градиентный оверлей
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFFF6B6B).copy(alpha = 0.85f),
-                                Color(0xFFEE5A6F).copy(alpha = 0.75f),
-                                Color(0xFFC44569).copy(alpha = 0.9f)
-                            )
-                        )
-                    )
-            )
-
-            // Декор
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.1f),
-                    radius = size.width * 0.45f,
-                    center = Offset(size.width * 1.1f, size.height * 0.3f)
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp)
-            ) {
-                // Логотип сверху по центру
-                Image(
-                    painter = DefaultImages.SportSauceLightLogo(),
-                    contentDescription = "SportSauce Logo",
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .height(48.dp),
-                    contentScale = ContentScale.Fit
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Заголовок
-                Column {
-                    Text(
-                        text = orderInfo.name,
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontFamily = FontNunito.black(),
-                            color = Color.White,
-                            lineHeight = 28.sp
-                        ),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = orderInfo.dateStartPreview,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontFamily = FontNunito.medium(),
-                            color = Color.White.copy(alpha = 0.9f)
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Статистика
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    val membersWithResults = orderInfo.members.filter { it.results.isNotEmpty() }
-
-                    StatBadge(
-                        icon = Icons.Default.Person,
-                        value = "${membersWithResults.size}",
-                        label = "Участников",
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    val topPlace = membersWithResults.mapNotNull {
-                        it.results.firstOrNull()?.place
-                    }.minOrNull() ?: 0
-
-                    if (topPlace > 0) {
-                        StatBadge(
-                            icon = Icons.Default.Star,
-                            value = "$topPlace",
-                            label = "Место",
-                            modifier = Modifier.weight(1f),
-                            highlighted = topPlace <= 3
-                        )
+                            }
+                        }
                     }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Топ результат
-                val topMember = orderInfo.members
-                    .filter { it.results.isNotEmpty() }
-                    .minByOrNull { it.results.first().place }
-
-                if (topMember != null) {
-                    val topResult = topMember.results.first()
-
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                Color.White,
-                                RoundedCornerShape(20.dp)
+                                MaterialTheme.colorScheme.tertiaryContainer,
+                                RoundedCornerShape(10.dp)
                             )
-                            .padding(20.dp)
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                                RoundedCornerShape(10.dp)
+                            )
+                            .padding(10.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = null,
-                                tint = Color(0xFFFFD700),
-                                modifier = Modifier.size(24.dp)
+                        Text(
+                            text = "УЧАСТНИКИ",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontFamily = FontNunito.extraBold(),
+                                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                letterSpacing = 0.5.sp,
+                                fontSize = 10.sp
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "ЛУЧШИЙ РЕЗУЛЬТАТ",
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontFamily = FontNunito.extraBold(),
-                                    color = Color(0xFFC44569),
-                                    letterSpacing = 1.sp
-                                )
-                            )
-                        }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        orderInfo.members.take(3).forEachIndexed { index, member ->
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(56.dp)
+                                        .size(28.dp)
                                         .background(
-                                            when (topResult.place) {
-                                                1 -> Brush.linearGradient(
-                                                    colors = listOf(Color(0xFFFFD700), Color(0xFFFFA000))
-                                                )
-
-                                                2 -> Brush.linearGradient(
-                                                    colors = listOf(Color(0xFFC0C0C0), Color(0xFF9E9E9E))
-                                                )
-
-                                                3 -> Brush.linearGradient(
-                                                    colors = listOf(Color(0xFFCD7F32), Color(0xFF8D6E63))
-                                                )
-
-                                                else -> Brush.linearGradient(
-                                                    colors = listOf(Color(0xFFFF6B6B), Color(0xFFC44569))
-                                                )
-                                            },
+                                            MaterialTheme.colorScheme.secondary,
                                             CircleShape
                                         ),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = "${topResult.place}",
-                                        style = MaterialTheme.typography.headlineMedium.copy(
-                                            fontFamily = FontNunito.black(),
-                                            color = Color.White
+                                        text = "${member.name.firstOrNull()}${member.surname.firstOrNull()}",
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontFamily = FontNunito.extraBold(),
+                                            color = Color.White,
+                                            fontSize = 11.sp
                                         )
                                     )
                                 }
-
-                                Spacer(modifier = Modifier.width(16.dp))
-
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Column {
                                     Text(
-                                        text = "${topMember.name} ${topMember.surname}",
-                                        style = MaterialTheme.typography.titleMedium.copy(
+                                        text = "${member.name} ${member.surname}",
+                                        style = MaterialTheme.typography.bodySmall.copy(
                                             fontFamily = FontNunito.bold(),
-                                            color = Color.Black.copy(alpha = 0.9f)
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                                            fontSize = 12.sp
                                         ),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
-                                        text = "${topMember.ageGroupName} • ${topResult.distance}",
-                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                        text = member.ageGroupName,
+                                        style = MaterialTheme.typography.bodySmall.copy(
                                             fontFamily = FontNunito.medium(),
-                                            color = Color.Black.copy(alpha = 0.6f)
+                                            color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
+                                            fontSize = 10.sp
                                         )
                                     )
                                 }
                             }
+                            if (index < minOf(2, orderInfo.members.size - 1)) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
 
+                        if (orderInfo.members.size > 3) {
+                            Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = topResult.result,
-                                style = MaterialTheme.typography.headlineMedium.copy(
-                                    fontFamily = FontNunito.black(),
-                                    color = Color(0xFFFF6B6B)
+                                text = "+${orderInfo.members.size - 3} участников",
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = FontNunito.bold(),
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
+                                    fontSize = 10.sp
                                 )
                             )
                         }
                     }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                            RoundedCornerShape(10.dp)
+                        )
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                            RoundedCornerShape(10.dp)
+                        )
+                        .padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = orderInfo.dateStartPreview,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontFamily = FontNunito.bold(),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        ),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
     }
 }
 
-
 @Composable
-private fun StatBadge(
+private fun InfoCard(
     icon: ImageVector,
     value: String,
     label: String,
     modifier: Modifier = Modifier,
-    highlighted: Boolean = false
+    highlighted: Boolean = false,
+    isCleanCard: Boolean = false,
 ) {
     Column(
         modifier = modifier
             .background(
                 if (highlighted)
-                    Color(0xFFFFD700).copy(alpha = 0.3f)
+                    Color(0xFFFFD700).copy(alpha = 0.15f)
+                else if (isCleanCard)
+                    MaterialTheme.colorScheme.tertiaryContainer
                 else
-                    Color.White.copy(alpha = 0.2f),
-                RoundedCornerShape(16.dp)
+                    MaterialTheme.colorScheme.secondaryContainer,
+                RoundedCornerShape(12.dp)
             )
             .border(
                 1.dp,
                 if (highlighted)
-                    Color(0xFFFFD700).copy(alpha = 0.5f)
+                    Color(0xFFFFD700).copy(alpha = 0.3f)
                 else
-                    Color.White.copy(alpha = 0.3f),
-                RoundedCornerShape(16.dp)
+                    MaterialTheme.colorScheme.outline.copy(alpha = 0.1f),
+                RoundedCornerShape(12.dp)
             )
-            .padding(16.dp),
+            .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (highlighted) Color(0xFFFFD700) else Color.White,
-            modifier = Modifier.size(24.dp)
+            tint = if (highlighted) Color(0xFFFFD700) else MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(16.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
-            style = MaterialTheme.typography.headlineMedium.copy(
+            style = MaterialTheme.typography.titleMedium.copy(
                 fontFamily = FontNunito.black(),
-                color = Color.White
+                color = if (isCleanCard) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
             )
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall.copy(
                 fontFamily = FontNunito.medium(),
-                color = Color.White.copy(alpha = 0.8f)
+                color = if (isCleanCard)
+                    MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f)
+                else
+                    MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
             )
         )
+    }
+}
+
+@Composable
+private fun SharePreviewDialog(
+    orderInfo: StartOrderInfo,
+    currentPage: Int,
+    onDismiss: () -> Unit,
+    intent: IntentAction,
+) {
+    val captureController = rememberCaptureController()
+    var capturedBytes by remember { mutableStateOf<ByteArray?>(null) }
+    val filename = remember { "${orderInfo.startTitle}-${orderInfo.dateStartPreview}" }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            Capturable(
+                modifier = Modifier.fillMaxSize(),
+                captureController = captureController,
+                onCaptured = { bitmap ->
+                    capturedBytes = bitmap.toByteArray(CompressionFormat.PNG, QualityFormat.MAX.value)
+                }
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    when (currentPage) {
+                        0 -> ImageBackgroundCard(orderInfo, RoundedCornerShape(0.dp))
+                        1 -> CleanBackgroundCard(orderInfo, RoundedCornerShape(0.dp))
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .align(Alignment.TopStart)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 0.5f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+
+            BackFloatingActionButton(
+                modifier = Modifier.align(Alignment.TopStart),
+                back = onDismiss
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.6f)
+                            )
+                        )
+                    )
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(
+                    onClick = {
+                        captureController.capture()
+                        capturedBytes?.let { bytes ->
+                            intent.shareImage(bytes, filename)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Поделиться",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontFamily = FontNunito.semiBoldBold(),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        captureController.capture()
+                        capturedBytes?.let { bytes ->
+                            intent.saveImage(bytes, filename)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(3.dp, MaterialTheme.colorScheme.secondary)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Скачать",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontFamily = FontNunito.semiBoldBold(),
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    )
+                }
+            }
+        }
     }
 }

@@ -5,5 +5,5 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val intentActionModule = module {
-    singleOf(::IntentActionBase) bind IntentAction::class
+    singleOf(::IntentActionJVM) bind IntentAction::class
 }

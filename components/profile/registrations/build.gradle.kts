@@ -25,6 +25,7 @@ kotlin {
         implementation(projects.components.core.cache)
         implementation(projects.components.core.errors)
         implementation(projects.components.analytics.crashlytics)
+        implementation(projects.components.bottombar)
         implementation(libs.koin.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.bundles.decompose.compose)

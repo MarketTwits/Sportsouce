@@ -21,14 +21,29 @@ class IntentActionWeb : IntentAction {
         window.open("tel:${phone.filter { it.isDigit() }}", "_self")
     }
 
-    override fun shareImage(byteArray: ByteArray) {
+    override fun shareImage(byteArray: ByteArray, filename: String) {
         val uint8Array = Uint8Array(byteArray.toTypedArray())
         val blob = Blob(arrayOf(uint8Array), BlobPropertyBag(type = "image/png"))
         val url = URL.createObjectURL(blob)
 
         val link = (document.createElement("a") as HTMLAnchorElement).apply {
             href = url
-            download = "image.png"
+            download = "$filename.png"
+        }
+        document.body?.appendChild(link)
+        link.click()
+        document.body?.removeChild(link)
+        URL.revokeObjectURL(url)
+    }
+
+    override fun saveImage(byteArray: ByteArray, filename: String) {
+        val uint8Array = Uint8Array(byteArray.toTypedArray())
+        val blob = Blob(arrayOf(uint8Array), BlobPropertyBag(type = "image/png"))
+        val url = URL.createObjectURL(blob)
+
+        val link = (document.createElement("a") as HTMLAnchorElement).apply {
+            href = url
+            download = "$filename.png"
         }
         document.body?.appendChild(link)
         link.click()

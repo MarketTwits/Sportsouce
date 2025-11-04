@@ -27,8 +27,20 @@ interface IntentAction {
      * Initiates an action to share image.
      *
      * @param byteArray the byteArray of the file
+     * @param filename the name of the file (without extension)
      */
-    fun shareImage(byteArray: ByteArray)
+    fun shareImage(byteArray: ByteArray, filename: String = "image")
+
+    /**
+     * Saves an image to device storage.
+     * On Android: Opens system file picker with Downloads folder as default
+     * On Desktop: Opens save dialog
+     * On Web: Downloads the file directly
+     *
+     * @param byteArray the byteArray of the file
+     * @param filename the name of the file (without extension)
+     */
+    fun saveImage(byteArray: ByteArray, filename: String = "image")
 
     /**
      * Copies the provided text to the system clipboard.

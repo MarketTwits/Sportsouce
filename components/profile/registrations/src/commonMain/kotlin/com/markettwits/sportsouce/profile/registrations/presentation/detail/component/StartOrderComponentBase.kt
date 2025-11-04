@@ -4,6 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStoreFactory
@@ -18,8 +20,8 @@ class StartOrderComponentBase(
     private val start: StartOrderInfo,
     private val storeFactory: StartOrderStoreFactory,
     private val dismiss: () -> Unit,
-    private val openStart: (Int) -> Unit
-) : StartOrderComponent,
+    private val openStart: (Int) -> Unit,
+) : StartOrderComponent, BottomBarComponentHandler(),
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
     private val store = instanceKeeper.getStore {
@@ -33,6 +35,7 @@ class StartOrderComponentBase(
     }
 
     init {
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
         scope.launch {
             store.labels.collect {
                 when (it) {

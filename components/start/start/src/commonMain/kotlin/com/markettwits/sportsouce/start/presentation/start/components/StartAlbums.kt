@@ -51,7 +51,7 @@ internal fun StartAlbums(
             icon = Icons.Default.PhotoLibrary
         ) {
             StartAlbumsContent(
-                album = albums[0],
+                album = albums[0].photos.take(6).reversed(),
                 onCLickFullAlbum = { onCLickFullAlbum() }
             )
         }
@@ -61,7 +61,7 @@ internal fun StartAlbums(
 @Composable
 private fun StartAlbumsContent(
     modifier: Modifier = Modifier,
-    album: StartItem.Album,
+    album: List<StartItem.Album.Photo>,
     onCLickFullAlbum: () -> Unit,
 ) {
     var fullImage by rememberSaveable {
@@ -74,9 +74,7 @@ private fun StartAlbumsContent(
         modifier = modifier,
     ) {
         itemsIndexed(
-            items = album.photos
-                .take(6)
-                .reversed()
+            items = album
         ) { index, item ->
             StartAlbumItemContent(
                 modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null, placementSpec = tween(600)),
@@ -88,7 +86,7 @@ private fun StartAlbumsContent(
                 }
             )
         }
-        if (album.photos.size > 6) {
+        if (album.size > 6) {
             item {
                 StartAlbumItemContentEmpty {
                     onCLickFullAlbum()
@@ -97,7 +95,7 @@ private fun StartAlbumsContent(
         }
     }
     if (fullImage) {
-        FullImageScreen(selectedImageIndex = selectedImageIndex, image = album.photos.map { it.imageUrl }) {
+        FullImageScreen(selectedImageIndex = selectedImageIndex, image = album.map { it.imageUrl }) {
             fullImage = !fullImage
             selectedImageIndex = -1
         }
@@ -122,7 +120,7 @@ private fun StartAlbumItemContent(
     Box(
         modifier = modifier
             .padding(8.dp)
-            .size(width = 160.dp, height = 200.dp)
+            .size(width = 180.dp, height = 220.dp)
             .clip(Shapes.large)
             .border(
                 width = 2.dp,

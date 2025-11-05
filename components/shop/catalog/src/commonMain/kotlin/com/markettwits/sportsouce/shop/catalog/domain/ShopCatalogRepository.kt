@@ -17,4 +17,6 @@ interface ShopCatalogRepository {
         query : String
     ) : Flow<PagingData<ShopItem>>
 
+    suspend fun salesProducts(): Result<List<ShopItem>>
+
 }

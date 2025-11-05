@@ -20,7 +20,6 @@ fun MemberSelectMember(
         modifier = modifier.fillMaxWidth()
     ) {
         DropDownSpinner(
-            defaultText = "",
             selectedItem = null,
             onItemSelected = { index, user ->
                 if (user != null) onMemberSelected(members[index])

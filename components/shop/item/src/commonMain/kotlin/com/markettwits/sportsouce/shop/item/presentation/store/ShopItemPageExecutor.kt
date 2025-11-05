@@ -1,12 +1,10 @@
 package com.markettwits.sportsouce.shop.item.presentation.store
 
+import app.cash.paging.cachedIn
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.sportsouce.shop.item.domain.ShopItemRepository
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.Intent
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.Label
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.Message
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.State
+import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.*
 import kotlinx.coroutines.launch
 
 class ShopItemPageExecutor(
@@ -32,6 +30,7 @@ class ShopItemPageExecutor(
             Message.Loaded(item = item, emptyList())
         }
         launch(productId)
+        loadSimilarProducts(item?.categories?.firstOrNull()?.id)
     }
 
     private fun launch(itemId: String?) {
@@ -41,10 +40,19 @@ class ShopItemPageExecutor(
                 onSuccess = {
                     dispatch(Message.Loaded(item = it.first, shopItemOptions = it.second))
                     publish(Label.UpdateItem(it.first))
+                    loadSimilarProducts(it.first.categories.firstOrNull()?.id)
                 }, onFailure = {
                     dispatch(Message.Failed(it.message.toString()))
                 }
             )
         }
+    }
+
+    private fun loadSimilarProducts(categoryId: Int?) {
+        dispatch(
+            Message.SimilarProductsLoaded(
+                repository.similarProducts(categoryId).cachedIn(scope)
+            )
+        )
     }
 }

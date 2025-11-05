@@ -2,14 +2,14 @@ package com.markettwits.sportsouce.shop.catalog.data
 
 
 import app.cash.paging.*
-import com.markettwits.sportsouce.shop.cloud.api.SportSauceShopApi
-import com.markettwits.sportsouce.shop.cloud.model.product.Product
-import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.sportsouce.shop.domain.mapper.ShopProductsMapper
-import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.catalog.domain.SHOP_ITEMS_PAGE_SIZE
 import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogPagingSource
 import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogParams
+import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
+import com.markettwits.sportsouce.shop.cloud.api.SportSauceShopApi
+import com.markettwits.sportsouce.shop.cloud.model.product.Product
+import com.markettwits.sportsouce.shop.domain.mapper.ShopProductsMapper
+import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -47,5 +47,18 @@ class ShopCatalogRepositoryBase(
             }
         }
         return pager.flow.map { it.map { value -> productMapper.map(value) } }
+    }
+
+    override suspend fun salesProducts(): Result<List<ShopItem>> = runCatching {
+        val items = cloudService.products(
+            limit = 20,
+            offset = 0,
+            categoryId = SALES_CATEGORY_ID_PROD
+        )
+        productMapper.map(items)
+    }
+
+    companion object {
+        const val SALES_CATEGORY_ID_PROD = 577
     }
 }

@@ -41,7 +41,6 @@ internal fun AdditionalFieldSingleSelect(
 
         DropDownSpinner(
             itemList = visibleList,
-            defaultText = "",
             selectedItem = field.answer.singleSelect,
             onItemSelected = { id, item ->
                 onFieldChanged(

@@ -16,6 +16,7 @@ object ShopItemPageReducer : Reducer<State, Message> {
             )
 
             is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.SimilarProductsLoaded -> copy(similarProducts = msg.similarProducts)
         }
     }
 }

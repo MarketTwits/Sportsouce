@@ -8,11 +8,17 @@ import com.markettwits.sportsouce.review.review.data.ReviewRepositoryBase
 import com.markettwits.sportsouce.review.review.data.cache.ReviewCache
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStoreFactory
+import com.markettwits.sportsouce.shop.catalog.di.shopCatalogModule
 import com.markettwits.sportsouce.starts.common.di.startsCommonModule
 import org.koin.dsl.module
 
 val reviewModule = module {
-    includes(intentActionModule, startsCommonModule, newsModule)
+    includes(
+        intentActionModule,
+        startsCommonModule,
+        shopCatalogModule,
+        newsModule
+    )
     single<ReviewStoreFactory> {
         ReviewStoreFactory(
             storeFactory = DefaultStoreFactory(),
@@ -24,6 +30,7 @@ val reviewModule = module {
         ReviewRepositoryBase(
             startsService = get(),
             cache = ReviewCache(),
+            productsService = get(),
             executor = ExecuteWithCacheBase(),
             newsService = get()
         )

@@ -23,7 +23,6 @@ import com.markettwits.core_ui.items.theme.FontNunito
 @Composable
 fun <E> DropDownSpinner(
     modifier: Modifier = Modifier,
-    defaultText: String = "Select...",
     selectedItem: E,
     onItemSelected: (Int, E) -> Unit,
     itemList: List<E>?,
@@ -35,18 +34,10 @@ fun <E> DropDownSpinner(
         modifier,
         contentAlignment = Alignment.CenterStart
     ) {
-        if (selectedItem == null || selectedItem.toString().isEmpty()) {
-            Text(
-                text = defaultText,
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, bottom = 3.dp),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
         textFiled()
         DropdownMenu(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.onPrimaryContainer),
+                .background(MaterialTheme.colorScheme.primary),
             expanded = isOpen,
             onDismissRequest = {
                 isOpen = false

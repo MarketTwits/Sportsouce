@@ -159,12 +159,26 @@ private fun CustomBottomNavigation(
                         .padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Icon(
-                        modifier = Modifier.scale(iconScale(isSelected = isSelected)),
-                        imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = item.title,
-                        tint = color
-                    )
+                    Box {
+                        Box(
+                            modifier = Modifier
+                                .size(64.dp, 32.dp)
+                                .scale(animatedBackgroundScale(isSelected))
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.align(Alignment.Center)
+                        ) {
+                            Icon(
+                                modifier = Modifier.scale(iconScale(isSelected = isSelected)),
+                                imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
+                                contentDescription = item.title,
+                                tint = color
+                            )
+                        }
+                    }
                     if (isShowLabel) {
                         Spacer(Modifier.height(4.dp))
                         Text(

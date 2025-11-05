@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStoreFactory
+import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class ReviewComponentBase(
     private val onClickMenu: (Int) -> Unit,
     private val onStartClick: (StartsListItem) -> Unit,
     private val onClickNews: (NewsItem) -> Unit,
+    private val onClickProduct: (ShopItem) -> Unit,
     private val onClickSearch: () -> Unit,
     private val onClickSettings: () -> Unit,
 ) : ReviewComponent, ComponentContext by context {
@@ -44,6 +46,7 @@ class ReviewComponentBase(
                 is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
                 is ReviewStore.Label.OnClickSearch -> onClickSearch()
                 is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
+                is ReviewStore.Label.OnClickProduct -> onClickProduct(it.product)
                 is ReviewStore.Label.OnClickSettings -> onClickSettings()
             }
         }.launchIn(scope)

@@ -15,26 +15,26 @@ interface RootMembersComponent {
     @Serializable
     sealed interface ChildStack {
         data class MembersList(val component: MembersListComponent) : ChildStack
+        data class MemberEdit(val component: MemberEditComponent) : ChildStack
     }
 
     @Serializable
     sealed interface ConfigStack {
         @Serializable
         data object MembersList : ConfigStack
+
+        @Serializable
+        data class MemberEdit(val member: ProfileMember?) : ConfigStack
     }
 
     sealed interface ChildSlot {
         @Serializable
         data class MemberDetail(val component: MemberDetailComponent) : ChildSlot
-        data class MemberEdit(val component: MemberEditComponent) : ChildSlot
         data object MemberIdle : ChildSlot
     }
 
     @Serializable
     sealed interface ConfigSlot {
-        @Serializable
-        data class MemberEdit(val member: ProfileMember?) : ConfigSlot
-
         @Serializable
         data class MemberDetail(val member: ProfileMember) : ConfigSlot
     }

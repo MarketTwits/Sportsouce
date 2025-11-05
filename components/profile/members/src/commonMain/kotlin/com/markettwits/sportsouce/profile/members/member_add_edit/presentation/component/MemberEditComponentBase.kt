@@ -4,6 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore
 import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStoreFactory
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
@@ -21,6 +23,7 @@ class MemberEditComponentBase(
     private val pop: () -> Unit,
     private val apply: (ProfileMember) -> Unit,
 ) : MemberEditComponent,
+    BottomBarComponentHandler(),
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
@@ -39,6 +42,7 @@ class MemberEditComponentBase(
     }
 
     init {
+        subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
         scope.launch {
             store.labels.collect {
                 when (it) {

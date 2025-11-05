@@ -1,8 +1,7 @@
 🟠 New features
-- Redesigned start order details screen with tabs (Overview, Members, Payment)
-- Added pulsing payment status indicator
-- Updated start registration button design
-- Improved club dashboard scrolling behavior
-- Enhanced start order payment status handling
+- Added the ability to share a card with information about a paid start
+- Completely redesigned the ability to comment on starts
+- Updated the screen for adding and editing participant information in the user profile
+- Fixed a bug where the selected image in the album could display incorrectly
 
 Thank you for using Sportsauce v$APP_VERSION!

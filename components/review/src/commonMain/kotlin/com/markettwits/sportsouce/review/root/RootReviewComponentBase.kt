@@ -145,7 +145,11 @@ class RootReviewComponentBase(
                     },
                     onClickSettings = {
                         navigation.pushNew(RootReviewComponent.Config.Settings)
+                    },
+                    onClickProduct = {
+                        handleDeeplink(Deeplink.Shop.ShopProduct(it.id))
                     }
+
                 ),
                 newsComponent = NewsComponentBase(
                     context = componentContext,

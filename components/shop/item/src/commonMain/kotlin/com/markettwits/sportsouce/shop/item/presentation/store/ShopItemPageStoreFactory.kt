@@ -6,9 +6,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.IntentAction
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.domain.ShopItemRepository
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.Intent
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.Label
-import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.State
+import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.*
+import kotlinx.coroutines.flow.emptyFlow
 
 class ShopItemPageStoreFactory(
     private val storeFactory: StoreFactory,
@@ -29,7 +28,7 @@ class ShopItemPageStoreFactory(
         ShopItemPageStore, Store<Intent, State, Label> by storeFactory.create(
         name = "ShopItemPageStore",
         initialState = State(
-            false, false, "", shopItem = shopItem, emptyList()
+            false, false, "", shopItem = shopItem, emptyList(), emptyFlow()
         ),
         bootstrapper = SimpleBootstrapper(Unit),
         executorFactory = { ShopItemPageExecutor(repository, intentAction, id) },

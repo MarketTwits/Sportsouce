@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components.MemberEditScreenDialog
+import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.screen.MemberEditScreen
 import com.markettwits.sportsouce.profile.members.member_detail.presentation.components.MemberDetailScreenDialog
 import com.markettwits.sportsouce.profile.members.members_list.presentation.components.MembersScreen
 
@@ -18,7 +18,6 @@ fun RootMembersScreen(component: RootMembersComponent) {
     childSlot.child?.instance?.also { child ->
         when (child) {
             is RootMembersComponent.ChildSlot.MemberDetail -> MemberDetailScreenDialog(component = child.component)
-            is RootMembersComponent.ChildSlot.MemberEdit -> MemberEditScreenDialog(component = child.component)
             RootMembersComponent.ChildSlot.MemberIdle -> {}
         }
     }
@@ -29,6 +28,7 @@ fun RootMembersScreen(component: RootMembersComponent) {
     ) {
         when (val child = it.instance) {
             is RootMembersComponent.ChildStack.MembersList -> MembersScreen(component = child.component)
+            is RootMembersComponent.ChildStack.MemberEdit -> MemberEditScreen(component = child.component)
         }
     }
 }

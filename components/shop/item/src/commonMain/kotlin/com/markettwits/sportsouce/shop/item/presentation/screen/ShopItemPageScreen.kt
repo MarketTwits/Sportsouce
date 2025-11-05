@@ -36,6 +36,9 @@ fun ShopItemPageScreen(
             onClickAddToFavorite = {
                 component.obtainEvent(ShopItemPageStore.Intent.OnClickAddToFavorite)
             },
+            onClickItem = {
+                component.obtainEvent(ShopItemPageStore.Intent.OnClickOption(it))
+            },
             cartContent = {
                 ShopCartItemWidget(
                     modifier = Modifier

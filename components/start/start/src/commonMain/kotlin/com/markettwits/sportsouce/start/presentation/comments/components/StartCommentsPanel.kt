@@ -5,13 +5,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -171,34 +171,42 @@ internal fun StartCommentCard(
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = userName,
-                    fontSize = 15.sp,
-                    fontFamily = FontNunito.bold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+                    Text(
+                        text = userName,
+                        fontSize = 15.sp,
+                        fontFamily = FontNunito.bold(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = commentCreateDate,
-                    fontSize = 13.sp,
-                    fontFamily = FontNunito.regular(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            }
+                    Text(
+                        text = commentCreateDate,
+                        fontSize = 13.sp,
+                        fontFamily = FontNunito.regular(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-            ClickableText(
-                text = message,
-                fontSize = 15.sp,
-                fontFamily = FontNunito.regular(),
-                lineHeight = 20.sp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+                val selectionColor = TextSelectionColors(
+                    handleColor = MaterialTheme.colorScheme.tertiary,
+                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
+                )
+                CompositionLocalProvider(LocalTextSelectionColors provides selectionColor) {
+                    SelectionContainer {
+                        ClickableText(
+                            text = message,
+                            fontSize = 15.sp,
+                            fontFamily = FontNunito.regular(),
+                            lineHeight = 20.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
 
                 Column(
                     modifier = Modifier.padding(top = 8.dp),
@@ -237,16 +245,16 @@ internal fun StartCommentCard(
 
                     if (!isReply && replies.isNotEmpty() && showRepliesButton && !showReply) {
                         Box(
-                        modifier = Modifier
-                            .clip(Shapes.small)
-                            .clickable {
-                                if (onClickShowReplies != null) {
-                                    onClickShowReplies()
-                                } else {
-                                    showReply = !showReply
+                            modifier = Modifier
+                                .clip(Shapes.small)
+                                .clickable {
+                                    if (onClickShowReplies != null) {
+                                        onClickShowReplies()
+                                    } else {
+                                        showReply = !showReply
+                                    }
                                 }
-                            }
-                            .padding(horizontal = 4.dp, vertical = 4.dp)
+                                .padding(horizontal = 4.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = "Показать ${replies.size} ${if (replies.size == 1) "ответ" else if (replies.size < 5) "ответа" else "ответов"}",
@@ -260,43 +268,43 @@ internal fun StartCommentCard(
 
                 if (!isReply && replies.isNotEmpty() && showRepliesButton) {
 
-                AnimatedVisibility(
-                    visible = showReply,
-                    enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(
-                        animationSpec = tween(durationMillis = 300)
-                    ),
-                    exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(
-                        animationSpec = tween(durationMillis = 300)
-                    )
-                ) {
-                    Column(modifier = Modifier.padding(start = 12.dp, top = 8.dp)) {
-                        replies.forEach {
-                            StartCommentCard(
-                                modifier = Modifier,
-                                isReply = true,
-                                userName = "${it.user.surname} ${it.user.name}",
-                                commentCreateDate = it.createdAt,
-                                message = it.comment,
-                                userImageUrl = it.user.photo ?: "",
-                                onClickReply = {}
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .clip(Shapes.small)
-                                .clickable { showReply = !showReply }
-                                .padding(horizontal = 4.dp, vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = "Скрыть",
-                                fontSize = 14.sp,
-                                fontFamily = FontNunito.bold(),
-                                color = MaterialTheme.colorScheme.secondary
-                            )
+                    AnimatedVisibility(
+                        visible = showReply,
+                        enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(
+                            animationSpec = tween(durationMillis = 300)
+                        ),
+                        exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(
+                            animationSpec = tween(durationMillis = 300)
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(start = 12.dp, top = 8.dp)) {
+                            replies.forEach {
+                                StartCommentCard(
+                                    modifier = Modifier,
+                                    isReply = true,
+                                    userName = "${it.user.surname} ${it.user.name}",
+                                    commentCreateDate = it.createdAt,
+                                    message = it.comment,
+                                    userImageUrl = it.user.photo ?: "",
+                                    onClickReply = {}
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .clip(Shapes.small)
+                                    .clickable { showReply = !showReply }
+                                    .padding(horizontal = 4.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = "Скрыть",
+                                    fontSize = 14.sp,
+                                    fontFamily = FontNunito.bold(),
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
                         }
                     }
-                }
                 }
             }
         }

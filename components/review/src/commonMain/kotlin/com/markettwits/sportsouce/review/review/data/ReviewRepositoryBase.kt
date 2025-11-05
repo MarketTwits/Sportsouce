@@ -1,10 +1,12 @@
 package com.markettwits.sportsouce.review.review.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
+import com.markettwits.core_ui.items.extensions.Fourth
 import com.markettwits.sportsouce.news.common.NewsRepository
 import com.markettwits.sportsouce.review.review.data.cache.ReviewCache
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository
+import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -15,6 +17,7 @@ import kotlinx.coroutines.withContext
 class ReviewRepositoryBase(
     private val startsService: SportSauceStartsApi,
     private val newsService: NewsRepository,
+    private val productsService: ShopCatalogRepository,
     private val cache: ReviewCache,
     private val executor: ExecuteWithCache,
 ) : ReviewRepository {
@@ -24,14 +27,20 @@ class ReviewRepositoryBase(
         launch = this::launch,
     )
     private suspend fun launch(): Review {
-        val (actual, archive, news) = coroutineScope {
+        val (actual, archive, news, products) = coroutineScope {
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { startsService.fetchStartMain() }
                 val deferredPaste = async { startsService.fetchPasteStarts() }
                 val deferredNews = async { newsService.news().getOrThrow() }
-                Triple(deferredActual.await(), deferredPaste.await(), deferredNews.await())
+                val deferredProducts = async { productsService.salesProducts().getOrDefault(emptyList()) }
+                Fourth(
+                    deferredActual.await(),
+                    deferredPaste.await(),
+                    deferredNews.await(),
+                    deferredProducts.await()
+                )
             }
         }
-        return Review(news, actual, archive.reversed())
+        return Review(news, actual, archive.reversed(), products.reversed())
     }
 }

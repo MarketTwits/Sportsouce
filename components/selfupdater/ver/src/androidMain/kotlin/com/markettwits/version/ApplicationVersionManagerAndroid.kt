@@ -10,6 +10,7 @@ class ApplicationVersionManagerAndroid(
 
     private val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
 
+    @Suppress("DEPRECATION")
     override fun currentDistribution(): ApplicationVersion =
         ApplicationVersion(
             versionName = packageInfo.versionName ?: "",

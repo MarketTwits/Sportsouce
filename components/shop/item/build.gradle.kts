@@ -17,6 +17,7 @@ kotlin {
             implementation(projects.components.shop.cart)
             implementation(projects.components.core.ui)
             implementation(projects.components.core.koin)
+            implementation(projects.components.core.paging)
             implementation(projects.components.core.intent.api)
             implementation(projects.components.core.intent.impl)
         }

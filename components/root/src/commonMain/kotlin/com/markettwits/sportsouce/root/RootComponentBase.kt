@@ -86,7 +86,7 @@ class RootComponentBase(
 
         if (currentConfiguration != targetConfiguration) {
             stackNavigation.navigate { stack ->
-                stack.dropLastWhile { it == targetConfiguration } + targetConfiguration
+                stack.filterNot { it == targetConfiguration } + targetConfiguration
             }
         }
 

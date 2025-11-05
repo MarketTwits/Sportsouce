@@ -14,7 +14,8 @@ internal fun ShopItemPageContent(
     onClickGoBack: () -> Unit,
     onClickAddToFavorite: () -> Unit,
     onClickShare: () -> Unit,
-    cartContent: @Composable (Modifier) -> Unit
+    onClickItem: (String) -> Unit,
+    cartContent: @Composable (Modifier) -> Unit,
 ) {
     if (state.isError && state.shopItem == null) {
         FailedScreen(
@@ -31,11 +32,13 @@ internal fun ShopItemPageContent(
             item = state.shopItem,
             options = state.shopItemOptions,
             isLoading = state.isLoading,
+            similarProducts = state.similarProducts,
             onClickOption = onClickOption,
             onClickGoBack = onClickGoBack,
             onRefresh = onClickRetry,
             onClickAddToFavorite = onClickAddToFavorite,
             onClickShare = onClickShare,
+            onClickItem = onClickItem,
             cartContent = cartContent
         )
     }

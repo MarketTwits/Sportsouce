@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components.components
+package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

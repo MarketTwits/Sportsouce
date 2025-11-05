@@ -9,8 +9,10 @@ import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.news.news_list.components.NewsContent
 import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStarts
 import com.markettwits.sportsouce.review.review.presentation.components.archive.ArchiveStarts
+import com.markettwits.sportsouce.review.review.presentation.components.products.SalesProductsContent
 import com.markettwits.sportsouce.review.review.presentation.components.review_menu.ReviewMenu
 import com.markettwits.sportsouce.review.review.presentation.components.social_network.SocialNetwork
+import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 @Composable
@@ -18,9 +20,12 @@ fun ReviewContent(
     news: List<NewsItem>,
     actual: List<StartsListItem>,
     archive: List<StartsListItem>,
+    products: List<ShopItem>,
     onClickStart: (StartsListItem) -> Unit,
     onClickNewsInfo: (NewsItem) -> Unit,
     onClickMenu: (Int) -> Unit,
+    onClickProduct: (ShopItem) -> Unit,
+    onClickShowMoreProducts: () -> Unit,
     onClickTelegram: () -> Unit,
     onClickVk: () -> Unit,
     notification: @Composable ((Modifier) -> Unit),
@@ -38,6 +43,14 @@ fun ReviewContent(
         HorizontalDivider(modifier = Modifier.padding(10.dp))
         ActualStarts(starts = actual) {
             onClickStart(it)
+        }
+        if (products.isNotEmpty()) {
+            HorizontalDivider(modifier = Modifier.padding(10.dp))
+            SalesProductsContent(
+                items = products,
+                onClickItem = onClickProduct,
+                onClickShowMoreProducts = onClickShowMoreProducts
+            )
         }
         HorizontalDivider(modifier = Modifier.padding(10.dp))
         ArchiveStarts(starts = archive) {

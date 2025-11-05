@@ -1,14 +1,8 @@
 package com.markettwits.sportsouce.profile.members.member_root.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
@@ -63,9 +57,25 @@ class RootMembersComponentBase(
                         slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(it))
                     },
                     addMember = {
-                        slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberEdit(null))
+                        stackNavigation.push(RootMembersComponent.ConfigStack.MemberEdit(null))
                     }
                 ))
+
+            is RootMembersComponent.ConfigStack.MemberEdit -> RootMembersComponent.ChildStack.MemberEdit(
+                MemberEditComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = scope.get(),
+                    profileMember = config.member,
+                    pop = {
+                        stackNavigation.pop()
+                    },
+                    apply = { member ->
+                        stackNavigation.pop()
+                        updateMembersList(withDismiss = false)
+                        slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(member))
+                    }
+                )
+            )
         }
 
     private fun childSlot(
@@ -80,27 +90,13 @@ class RootMembersComponentBase(
                     member = config.member,
                     dismiss = slotNavigation::dismiss,
                     onClickEdit = {
-                        slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberEdit(it))
+                        slotNavigation.dismiss()
+                        stackNavigation.push(RootMembersComponent.ConfigStack.MemberEdit(it))
                     },
                     memberDeleted = {
                         updateMembersList()
                     }
 
-                )
-            )
-
-            is RootMembersComponent.ConfigSlot.MemberEdit -> RootMembersComponent.ChildSlot.MemberEdit(
-                MemberEditComponentBase(
-                    componentContext = componentContext,
-                    storeFactory = scope.get(),
-                    profileMember = config.member,
-                    pop = {
-                        slotNavigation.dismiss()
-                    },
-                    apply = { member ->
-                        updateMembersList()
-                        slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(member))
-                    }
                 )
             )
         }

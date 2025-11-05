@@ -88,6 +88,7 @@ include(
     ":components:core:log",
     ":components:core:cloud",
     ":components:core:cache",
+    ":components:core:capturable",
     ":components:core:koin",
     ":components:core:paging",
     ":components:core:decompose",

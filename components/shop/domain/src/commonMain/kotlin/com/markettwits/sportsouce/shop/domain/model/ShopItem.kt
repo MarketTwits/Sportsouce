@@ -12,7 +12,13 @@ data class ShopItem(
     val price: Price,
     val visual: Visual,
     val options: List<Option>,
+    val categories: List<Category> = emptyList(),
 ) {
+    @Serializable
+    data class Category(
+        val id: Int,
+        val title: String,
+    )
     @Serializable
     data class Price(
         val currentPrice: String,

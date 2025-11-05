@@ -21,7 +21,10 @@ class ShopProductsMapperBase : ShopProductsMapper {
             visual = calculateVisual(productsRemoteRow),
             options = calculateOptions(productsRemoteRow),
             quantity = productsRemoteRow.quantity,
-            fullPathUrl = "$DEFAULT_SHOP_PRODUCT_PATH${productsRemoteRow.id}"
+            fullPathUrl = "$DEFAULT_SHOP_PRODUCT_PATH${productsRemoteRow.id}",
+            categories = productsRemoteRow.categories.map {
+                ShopItem.Category(id = it.id, title = it.title)
+            }
         )
     }
 

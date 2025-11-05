@@ -28,8 +28,8 @@ fun MemberDetailButtons(
                 .weight(1f)
                 .padding(horizontal = 5.dp)
                 .height(35.dp),
-            containerColor = MaterialTheme.colorScheme.tertiary,
-            textColor = MaterialTheme.colorScheme.onTertiary,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            textColor = MaterialTheme.colorScheme.onSecondary,
             title = "Редактировать",
             onClick = { onClickEdit() }
         )

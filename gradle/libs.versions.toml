@@ -1,32 +1,34 @@
 [versions]
 #plugins
-versionName = "1.4.12"
-versionCode = "10413"
+versionName = "1.5.0"
+versionCode = "10414"
 jvm = "11"
-kotlin = "2.1.20" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
-gradle = "8.9.2" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
-compose = "1.8.0-rc01" # https://github.com/JetBrains/compose-multiplatform
-kotlinx-serialization = "1.8.0" # https://github.com/Kotlin/kotlinx.serialization
+kotlin = "2.2.21" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
+gradle = "8.9.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
+compose = "1.9.2" # https://github.com/JetBrains/compose-multiplatform
+kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.6.2" # https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime-ext = "1.3.2" # https://github.com/RaedGhazal/kotlinx-datetime-ext
 kstore = "0.9.1" # https://github.com/xxfast/KStore
 kermit = "2.0.4" # https://kermit.touchlab.co/docs/
-koin = "3.5.3" # https://github.com/InsertKoinIO/koin
-ktor = "3.0.1" # https://github.com/ktorio/ktor
+koin = "4.1.1" # https://github.com/InsertKoinIO/koin
+ktor = "3.3.0" # https://github.com/ktorio/ktor
 jetbrainsKotlinWrappers = "2025.4.11" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
+androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.0.1" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
-multiplatformMarkdownRendererM3 = "0.14.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
+multiplatformMarkdownRendererM3 = "0.38.1" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.1.0-beta01"
-composeHotReload = "1.0.0-alpha09" # https://github.com/JetBrains/compose-hot-reload
-composeMaterial3AdaptiveNavigationSuite = "1.8.0-alpha03"
-buildConfigPlugin = "5.5.4" # https://github.com/gmazzo/gradle-buildconfig-plugin
-compose-activity = "1.10.1"
-compose-preview = "1.7.8"
-appcompat = "1.7.0" # https://developer.android.com/jetpack/androidx/releases/appcompat
+composeMaterial3WindowSizeClass = "1.9.0"
+composeHotReload = "1.0.0-rc02" # https://github.com/JetBrains/compose-hot-reload
+composeMaterial3AdaptiveNavigationSuite = "1.9.0"
+buildConfigPlugin = "5.7.1" # https://github.com/gmazzo/gradle-buildconfig-plugin
+compose-activity = "1.11.0"
+compose-preview = "1.9.4"
+appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.3.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.2.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
@@ -35,10 +37,11 @@ tracer = "0.2.15" # https://apptracer.ru/
 [libraries]
 
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-preview" }
-composeMaterial3WindowSize = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "compose" }
+composeMaterial3WindowSize = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "composeMaterial3WindowSizeClass" }
 composeMaterial3Adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version.ref = "composeMaterial3Adaptive" }
 composeMaterial3AdaptiveNavigationSuite = {group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "composeMaterial3AdaptiveNavigationSuite"}
 compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }

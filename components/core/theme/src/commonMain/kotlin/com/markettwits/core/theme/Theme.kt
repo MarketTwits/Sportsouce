@@ -14,8 +14,8 @@ import com.markettwits.core.theme.component.ThemeComponent
 import com.markettwits.core.theme.components.asyncImageLoader
 import com.markettwits.core.theme.components.isDark
 import com.markettwits.core.theme.components.systemColorPallet
+import com.markettwits.core_ui.items.theme.AppTypography
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
-import com.markettwits.core_ui.items.theme.Typography
 
 @Composable
 fun SportSauceTheme(
@@ -46,7 +46,7 @@ private fun SportSauceTheme(
     MaterialTheme(
         shapes = Shapes(medium = RoundedCornerShape(size = 10.dp)),
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography(),
     ) {
         CompositionLocalProvider(LocalDarkOrLightTheme provides isDark, content = content)
     }

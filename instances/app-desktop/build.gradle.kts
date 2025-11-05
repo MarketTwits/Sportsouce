@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.reload.ComposeHotRun
 
 plugins {
     kotlin("multiplatform")
@@ -15,9 +14,6 @@ tasks {
         manifest {
             attributes["Main-Class"] = desktopMainPath
         }
-    }
-    withType<ComposeHotRun>().configureEach {
-        mainClass.set(desktopMainPath)
     }
 }
 

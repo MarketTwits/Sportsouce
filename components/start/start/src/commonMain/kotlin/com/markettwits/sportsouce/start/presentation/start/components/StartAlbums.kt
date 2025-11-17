@@ -52,6 +52,7 @@ internal fun StartAlbums(
         ) {
             StartAlbumsContent(
                 album = albums[0].photos.take(6).reversed(),
+                hasMorePhotos = albums[0].photos.size > 6,
                 onCLickFullAlbum = { onCLickFullAlbum() }
             )
         }
@@ -62,6 +63,7 @@ internal fun StartAlbums(
 private fun StartAlbumsContent(
     modifier: Modifier = Modifier,
     album: List<StartItem.Album.Photo>,
+    hasMorePhotos: Boolean,
     onCLickFullAlbum: () -> Unit,
 ) {
     var fullImage by rememberSaveable {
@@ -86,7 +88,7 @@ private fun StartAlbumsContent(
                 }
             )
         }
-        if (album.size > 6) {
+        if (hasMorePhotos) {
             item {
                 StartAlbumItemContentEmpty {
                     onCLickFullAlbum()
@@ -184,7 +186,7 @@ private fun StartAlbumItemContentEmpty(
     Box(
         modifier = modifier
             .padding(8.dp)
-            .size(width = 160.dp, height = 200.dp)
+            .size(width = 180.dp, height = 220.dp)
             .clip(Shapes.large)
             .border(
                 width = 2.dp,

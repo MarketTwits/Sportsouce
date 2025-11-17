@@ -21,6 +21,7 @@ class ShopItemPageExecutor(
             is Intent.OnClickShare -> state().shopItem?.let {
                 intentAction.sharePlainText(it.fullPathUrl)
             }
+            is Intent.OnClickProduct -> publish(Label.PushProduct(intent.item))
         }
     }
 

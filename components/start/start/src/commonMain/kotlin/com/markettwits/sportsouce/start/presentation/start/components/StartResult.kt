@@ -73,22 +73,3 @@ internal fun StartResult(
         }
     }
 }
-
-@Composable
-internal fun StartResultContent(
-    modifier: Modifier = Modifier,
-    results: List<StartItem.Result>,
-    onClickResult: (String) -> Unit
-) {
-    Column(modifier = Modifier.wrapContentSize()) {
-        results.forEach {
-            StartFileContent(
-                modifier = modifier,
-                onClick = {
-                    onClickResult(it.url)
-                },
-                fileName = it.name
-            )
-        }
-    }
-}

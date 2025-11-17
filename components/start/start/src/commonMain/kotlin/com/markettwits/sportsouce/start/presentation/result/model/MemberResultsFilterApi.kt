@@ -101,10 +101,6 @@ class MemberResultsFilterApi {
         }
     }
 
-    fun extractGroupsFromMembers(members: List<MemberResult>): List<String> {
-        return members.map { it.group }.distinct().sorted()
-    }
-
     fun extractTeamsFromMembers(members: List<MemberResult>): List<String> {
         return members.map { it.team }.distinct().sorted()
     }

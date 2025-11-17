@@ -4,10 +4,12 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
 import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.*
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 
 class RegistrationMemberExecutor(private val validation: RegistrationMemberValidator) :
@@ -43,6 +45,7 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
             dispatch(Message.ChangeAllerDialogState(false))
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun StartStatement.updateAge(): StartStatement {
         return if (birthday.isNotEmpty()) {
             val birthLocalDate = try {
@@ -55,8 +58,8 @@ class RegistrationMemberExecutor(private val validation: RegistrationMemberValid
             val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
             val years = currentDate.year - birthLocalDate.year - if (
-                currentDate.monthNumber < birthLocalDate.monthNumber ||
-                (currentDate.monthNumber == birthLocalDate.monthNumber && currentDate.dayOfMonth < birthLocalDate.dayOfMonth)
+                currentDate.month.number < birthLocalDate.month.number ||
+                (currentDate.month.number == birthLocalDate.month.number && currentDate.day < birthLocalDate.day)
             ) 1 else 0
 
             copy(age = years.toString())

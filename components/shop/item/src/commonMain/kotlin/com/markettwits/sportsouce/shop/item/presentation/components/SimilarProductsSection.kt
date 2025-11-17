@@ -18,7 +18,7 @@ import kotlin.math.min
 fun LazyListScope.similarProductsItems(
     items: LazyPagingItems<ShopItem>,
     columns: Int,
-    onClickItem: (String) -> Unit,
+    onClickItem: (ShopItem) -> Unit,
 ) {
     val isInitialLoading = items.loadState.refresh is LoadStateLoading && items.itemCount == 0
 
@@ -62,7 +62,7 @@ fun LazyListScope.similarProductsItems(
                             ShopItemSimilarCard(
                                 modifier = Modifier.weight(1f),
                                 shopItem = shopItem,
-                                onItemClick = { onClickItem(it.id) }
+                                onItemClick = { onClickItem(it) }
                             )
                         } ?: Box(modifier = Modifier.weight(1f)) {
                             ShopItemSimilarShimmerCard()

@@ -10,18 +10,15 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.AdditionalField
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Stage
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationFieldPrice
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStage
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStageWithStatement
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.*
 import com.markettwits.sportsouce.teams_city.domain.City
 import com.markettwits.sportsouce.teams_city.domain.Team
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.todayIn
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class StartRegistrationPageMapper(
     private val timeMapper: TimeMapper
@@ -139,6 +136,7 @@ class StartRegistrationPageMapper(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun calculateAge(birthdaySimple: String): Int {
         return try {
             val parts = birthdaySimple.split(".") // Разбиваем строку "dd.MM.yyyy"
@@ -147,8 +145,8 @@ class StartRegistrationPageMapper(
             val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
             val years = currentDate.year - birthLocalDate.year - if (
-                currentDate.monthNumber < birthLocalDate.monthNumber ||
-                (currentDate.monthNumber == birthLocalDate.monthNumber && currentDate.dayOfMonth < birthLocalDate.dayOfMonth)
+                currentDate.month.number < birthLocalDate.month.number ||
+                (currentDate.month.number == birthLocalDate.month.number && currentDate.day < birthLocalDate.day)
             ) 1 else 0
 
             years

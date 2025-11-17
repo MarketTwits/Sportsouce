@@ -24,6 +24,7 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
         data object OnClickGoBack : Intent
         data object OnClickShare : Intent
         data object OnClickAddToFavorite : Intent
+        data class OnClickProduct(val item: ShopItem) : Intent
     }
 
     sealed interface Message {
@@ -36,6 +37,7 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
     sealed interface Label {
         data object GoBack : Label
         data class UpdateItem(val shopPageItem: ShopItem) : Label
+        data class PushProduct(val item: ShopItem) : Label
     }
 
 }

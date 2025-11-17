@@ -24,7 +24,7 @@ internal fun StartFileContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .noRippleClickable { onClick() },
+            .noRippleClickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer
         ),

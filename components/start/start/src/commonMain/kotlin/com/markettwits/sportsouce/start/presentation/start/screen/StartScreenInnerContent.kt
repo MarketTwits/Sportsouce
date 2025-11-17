@@ -219,6 +219,6 @@ internal fun StartScreenInnerContent(
         Spacer(modifier = Modifier.height(16.dp))
     }
     comments(Modifier)
-    if (data.startStatus.code == 3)
+    if (data.startStatus.code == 3 || data.startStatus.code == 2)
         Spacer(modifier = Modifier.height(77.dp))
 }

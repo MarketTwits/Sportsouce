@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.dp
 import coil3.compose.setSingletonImageLoaderFactory
 import com.markettwits.core.theme.component.ThemeComponent
-import com.markettwits.core.theme.components.asyncImageLoader
 import com.markettwits.core.theme.components.isDark
 import com.markettwits.core.theme.components.systemColorPallet
+import com.markettwits.core_ui.items.image.asyncImageLoader
 import com.markettwits.core_ui.items.theme.AppTypography
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 

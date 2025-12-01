@@ -19,3 +19,14 @@ fun startStatusCompactMessage(statusCode : Int) : String =
         6 -> "Завершен"
         else -> "Отложен"
     }
+
+fun startStatusMessage(statusCode: Int): String =
+    when (statusCode) {
+        1 -> "Временно отложен"
+        2 -> "Регистрация скоро начнется"
+        3 -> "Регистрация открыта"
+        4 -> "Регистрация закрыта, ожидайте начало старта"
+        5 -> "Старт проходит"
+        6 -> "Старт завершен"
+        else -> "Временно отложен"
+    }

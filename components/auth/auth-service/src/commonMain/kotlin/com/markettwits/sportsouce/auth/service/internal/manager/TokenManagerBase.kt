@@ -1,10 +1,11 @@
 package com.markettwits.sportsouce.auth.service.internal.manager
 
-import io.ktor.utils.io.core.toByteArray
-import kotlinx.datetime.Clock
+import io.ktor.utils.io.core.*
 import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class TokenManagerBase : TokenManager {
 
@@ -23,6 +24,7 @@ internal class TokenManagerBase : TokenManager {
         return Json.decodeFromString<Payload>(payloadJson)
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun isExpired(expired: Long): Boolean {
         val time = Clock.System.now().epochSeconds
         return expired > time

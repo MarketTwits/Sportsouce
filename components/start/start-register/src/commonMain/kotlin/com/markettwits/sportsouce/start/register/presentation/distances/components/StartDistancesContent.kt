@@ -1,11 +1,13 @@
 package com.markettwits.sportsouce.start.register.presentation.distances.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +36,8 @@ internal fun StartDistancesContent(
     modifier: Modifier = Modifier,
     state: StartDistancesInput,
     onClickGoBack: () -> Unit,
-    onClickSelectedDistance: (DistinctDistance) -> Unit
+    onClickSelectedDistance: (DistinctDistance) -> Unit,
+    onClickUrl: (String) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -64,7 +68,8 @@ internal fun StartDistancesContent(
                             distances = state.mapDistance,
                             paymentType = state.paymentType,
                             paymentDisabled = state.paymentDisabled,
-                            onClick = { onClickSelectedDistance(it) }
+                            onClick = { onClickSelectedDistance(it) },
+                            onClickUrl = onClickUrl
                         )
                     }
                 }
@@ -119,6 +124,7 @@ private fun DistanceItem(
     paymentDisabled: Boolean,
     paymentType: String,
     onClick: () -> Unit,
+    onClickUrl: (String) -> Unit = {},
 ) {
 
     val title = getDistanceTitle(
@@ -128,6 +134,12 @@ private fun DistanceItem(
     )
 
     val enabled = if (item.infiniteSlots) true else if (item.openSlots!! > 0) true else false
+
+    val hasAdditionalInfo = item.detailedDescription != null ||
+            item.schemeImage != null ||
+            item.trackLink != null
+
+    var isExpanded by rememberSaveable(item.id) { mutableStateOf(false) }
 
     OnBackgroundCard(
         modifier = Modifier
@@ -141,64 +153,230 @@ private fun DistanceItem(
             }
         }
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    fontSize = 16.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                if (!item.infiniteSlots && (item.openSlots ?: 0) > 0) {
-                    Text(text = "${item.openSlots} слота", fontSize = 14.sp, color = MaterialTheme.colorScheme.outline)
-                } else {
-                    Spacer(modifier = Modifier.height(14.dp))
+        Column {
+            Row(
+                modifier = Modifier.padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = title,
+                            fontSize = 16.sp,
+                            fontFamily = FontNunito.semiBoldBold(),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        if (hasAdditionalInfo) {
+                            Box(
+                                modifier = Modifier
+                                    .size(6.dp)
+                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                    .background(MaterialTheme.colorScheme.secondary)
+                            )
+                        }
+                    }
+                    if (!item.infiniteSlots && (item.openSlots ?: 0) > 0) {
+                        Text(
+                            text = "${item.openSlots} слота",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.height(14.dp))
+                    }
                 }
-            }
-            if (item.stages.size > 1) {
-                Box(
-                    modifier = Modifier
-                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                if (item.stages.size > 1) {
+                    Box(
+                        modifier = Modifier
+                            .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "${item.stages.size} этапа",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                Button(
+                    onClick = {
+                        if (enabled) {
+                            onClick()
+                        }
+                    },
+                    enabled = enabled,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    ),
                 ) {
-                    Text(
-                        text = "${item.stages.size} этапа",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.outline
-                    )
+                    if (enabled) {
+                        val price =
+                            if (paymentDisabled && paymentType.isNotEmpty()) paymentType
+                            else
+                                "Цена : " + item.staticPrice.formatPrice() + " ₽"
+                        Text(
+                            text = price,
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    } else {
+                        Text(
+                            text = "Слоты закончились",
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.width(8.dp))
             }
 
-            Button(
-                onClick = {
-                    if (enabled) {
-                        onClick()
-                    }
-                },
-                enabled = enabled,
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                ),
-            ) {
-                if (enabled) {
-                    val price =
-                        if (paymentDisabled && paymentType.isNotEmpty()) paymentType
-                        else
-                            "Цена : " + item.staticPrice.formatPrice() + " ₽"
+            // Additional info section toggle button
+            if (hasAdditionalInfo) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { isExpanded = !isExpanded }
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = price,
-                        color = MaterialTheme.colorScheme.onSecondary
+                        text = if (isExpanded) "Скрыть детали" else "Показать детали",
+                        fontSize = 14.sp,
+                        fontFamily = FontNunito.medium(),
+                        color = MaterialTheme.colorScheme.secondary
                     )
-                } else {
-                    Text(text = "Слоты закончились", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSecondary)
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .rotate(if (isExpanded) 180f else 0f)
+                    )
+                }
+
+                // Expandable additional info section
+                AnimatedVisibility(
+                    visible = isExpanded,
+                    enter = fadeIn(animationSpec = tween(300)) +
+                            expandVertically(animationSpec = tween(300)),
+                    exit = fadeOut(animationSpec = tween(300)) +
+                            shrinkVertically(animationSpec = tween(300))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Detailed description
+                        item.detailedDescription?.let { description ->
+                            if (description.isNotEmpty()) {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "Описание",
+                                        fontFamily = FontNunito.bold(),
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.outline
+                                    )
+                                    Text(
+                                        text = description.replace(Regex("<[^>]*>"), ""),
+                                        fontFamily = FontNunito.regular(),
+                                        fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.onPrimary
+                                    )
+                                }
+                            }
+                        }
+
+                        // Scheme image file
+                        item.schemeImage?.let { file ->
+                            DistanceFileCard(
+                                title = "Схема трассы",
+                                fileName = file.name,
+                                onClick = { onClickUrl(file.fullPath) }
+                            )
+                        }
+
+                        // Track link file
+                        item.trackLink?.let { file ->
+                            DistanceFileCard(
+                                title = "Файл трека",
+                                fileName = file.name,
+                                onClick = { onClickUrl(file.fullPath) }
+                            )
+                        }
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DistanceFileCard(
+    title: String,
+    fileName: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        ),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = title,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+                Text(
+                    text = fileName,
+                    fontFamily = FontNunito.medium(),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(-90f) // Point to the right
+            )
         }
     }
 }

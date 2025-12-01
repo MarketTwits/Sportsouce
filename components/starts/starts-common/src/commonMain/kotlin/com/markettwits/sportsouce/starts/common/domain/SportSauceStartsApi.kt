@@ -7,7 +7,9 @@ interface SportSauceStartsApi {
 
     suspend fun fetchPasteStarts(): List<StartsListItem>
 
-    suspend fun fetchPreview(): List<StartsListItem>
+    suspend fun fetchPreviewStarts(): List<StartsListItem>
+
+    suspend fun fetchRelatedStarts(seriesId: Int): List<StartsListItem>
 
     suspend fun fetchStartMain(): List<StartsListItem>
 }

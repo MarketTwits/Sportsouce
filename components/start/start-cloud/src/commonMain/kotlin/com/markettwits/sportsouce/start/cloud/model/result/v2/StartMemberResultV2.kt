@@ -30,6 +30,8 @@ data class StartMemberResultV2(
     val secondName: String? = "",
     @SerialName("team")
     val team: String? = "",
+    // Computed field for pagination - not from API
+    val computedPlace: Int? = null,
 )
 
 @Serializable

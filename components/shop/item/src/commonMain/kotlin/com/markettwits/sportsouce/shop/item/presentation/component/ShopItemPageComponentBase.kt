@@ -38,6 +38,7 @@ class ShopItemPageComponentBase(
             when (it) {
                 is ShopItemPageStore.Label.GoBack -> outputs.goBack()
                 is ShopItemPageStore.Label.UpdateItem -> outputs.updateItem(it.shopPageItem)
+                is ShopItemPageStore.Label.PushProduct -> outputs.pushProduct(it.item)
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
     }

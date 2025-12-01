@@ -5,10 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -110,12 +107,12 @@ fun StartAlbumScreenContent(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(4.dp),
             content = {
-                items(
-                    count = loadedItems.size,
-                    key = { index -> loadedItems[index] }
-                ) { index ->
+                itemsIndexed(
+                    items = loadedItems,
+                    key = { index, item -> item + index }
+                ) { index, content ->
                     ImageCardContent(
-                        imageUrl = loadedItems[index],
+                        imageUrl = content,
                         onClick = { selectedIndex = index }
                     )
                 }

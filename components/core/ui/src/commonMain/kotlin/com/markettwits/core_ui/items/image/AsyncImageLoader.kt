@@ -1,20 +1,11 @@
-package com.markettwits.core.theme.components
+package com.markettwits.core_ui.items.image
 
+import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.intercept.Interceptor
-import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.ImageResult
-import coil3.util.DebugLogger
 
-internal fun PlatformContext.asyncImageLoader() =
-    coil3.ImageLoader
-        .Builder(this)
-        .components {
-            add(KtorNetworkFetcherFactory())
-            add(ProxyInterceptor())
-        }
-        .logger(DebugLogger())
-        .build()
+expect fun PlatformContext.asyncImageLoader(): ImageLoader
 
 
 internal class ProxyInterceptor : Interceptor {

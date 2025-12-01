@@ -1,17 +1,17 @@
-package com.markettwits.sportsouce.teams_city.data.network;
+package com.markettwits.sportsouce.teams_city.data.network
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.sportsouce.teams_city.data.network.model.NetworkCities
 import com.markettwits.sportsouce.teams_city.data.network.model.NetworkTeams
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 internal class SportSauceNetworkTeamsCityApi(
     httpClient: HttpClientProvider
 ) {
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     suspend fun teams(): NetworkTeams {
         val response = client.get("team")

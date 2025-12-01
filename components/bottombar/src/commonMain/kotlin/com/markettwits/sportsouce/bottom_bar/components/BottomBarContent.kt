@@ -139,7 +139,7 @@ private fun CustomBottomNavigation(
             items.forEach { item ->
                 val isSelected = selectedTab == item.bottomBarConfiguration
                 val selectedColor = MaterialTheme.colorScheme.tertiary
-                val unselectedColor = Color.Gray.copy(alpha = 0.8F)
+                val unselectedColor = MaterialTheme.colorScheme.outline
                 val color = if (isSelected) selectedColor else unselectedColor
                 val interactionSource = remember { MutableInteractionSource() }
 

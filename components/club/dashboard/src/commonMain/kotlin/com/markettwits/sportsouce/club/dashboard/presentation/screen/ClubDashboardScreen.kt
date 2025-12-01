@@ -2,8 +2,7 @@ package com.markettwits.sportsouce.club.dashboard.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.sportsouce.club.dashboard.presentation.components.*
 import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore
@@ -36,119 +36,122 @@ fun ClubDashboardScreen(
     component: ClubDashboardComponent,
 ) {
     val state by component.state.collectAsState()
-    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize()
-        ) {
-            ClubDashboardHeader()
+        PullToRefreshScreen(
+            isRefreshing = state.bottomSheetData.features.isNotEmpty() && state.isLoading,
+            onRefresh = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
+        ) { modifier ->
+            LazyColumn(modifier = modifier) {
+                item {
+                    ClubDashboardHeader()
+                }
+                item {
+                    AdaptivePane {
+                        Column(
+                            modifier = Modifier
+                                .offset(y = (-100).dp)
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                        ) {
 
-            AdaptivePane {
-                Column(
-                    modifier = Modifier
-                        .offset(y = (-100).dp)
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                ) {
+                            if (state.error == null && !state.isLoading) {
+                                SubscriptionInfoCard {
+                                    component.obtainEvent(ClubDashboardStore.Intent.OnClickSubscriptions)
+                                }
 
-                    if (state.error == null && !state.isLoading) {
-                        SubscriptionInfoCard {
-                            component.obtainEvent(ClubDashboardStore.Intent.OnClickSubscriptions)
-                        }
+                                Spacer(modifier = Modifier.height(24.dp))
 
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ClubMenuGrid(
-                            onPlanClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.Plan,
-                                        state.bottomSheetData
-                                    )
+                                ClubMenuGrid(
+                                    onPlanClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.Plan,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    },
+                                    onTrainingsClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.Trainings,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    },
+                                    onClubBonusesClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.ClubBonuses,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    },
+                                    onOurTeamClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.OurTeam,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    }
                                 )
-                            },
-                            onTrainingsClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.Trainings,
-                                        state.bottomSheetData
-                                    )
-                                )
-                            },
-                            onClubBonusesClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.ClubBonuses,
-                                        state.bottomSheetData
-                                    )
-                                )
-                            },
-                            onOurTeamClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.OurTeam,
-                                        state.bottomSheetData
-                                    )
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                ClubScheduleCard {
+                                    component.obtainEvent(ClubDashboardStore.Intent.OnClickSchedule)
+                                }
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                ClubMoreSection(
+                                    onFaqClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.Faq,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    },
+                                    onStatisticClick = {
+                                        component.obtainEvent(
+                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
+                                                MenuBottomSheetType.Statistics,
+                                                state.bottomSheetData
+                                            )
+                                        )
+                                    }
                                 )
                             }
-                        )
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                            if (state.isLoading) {
+                                ClubShimmerInfoCard()
 
-                        ClubScheduleCard {
-                            component.obtainEvent(ClubDashboardStore.Intent.OnClickSchedule)
-                        }
+                                Spacer(modifier = Modifier.height(24.dp))
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                                ClubShimmerMenuGrid()
 
-                        ClubMoreSection(
-                            onFaqClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.Faq,
-                                        state.bottomSheetData
-                                    )
-                                )
-                            },
-                            onStatisticClick = {
-                                component.obtainEvent(
-                                    ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                        MenuBottomSheetType.Statistics,
-                                        state.bottomSheetData
-                                    )
-                                )
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                ClubShimmerInfoCard()
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                ShimmerMoreSection()
                             }
-                        )
+
+                            state.error?.SauceErrorSimpleContent(
+                                onClickRetry = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
+                            )
+
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
                     }
-
-                    if (state.isLoading) {
-                        ClubShimmerInfoCard()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ClubShimmerMenuGrid()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ClubShimmerInfoCard()
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        ShimmerMoreSection()
-                    }
-
-                    state.error?.SauceErrorSimpleContent(
-                        onClickRetry = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }

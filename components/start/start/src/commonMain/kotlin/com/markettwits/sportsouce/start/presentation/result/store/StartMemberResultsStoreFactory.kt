@@ -1,29 +1,24 @@
 package com.markettwits.sportsouce.start.presentation.result.store
 
-import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
+import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
-import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.Intent
-import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.Label
-import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.State
+import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore.*
+import kotlinx.coroutines.flow.flowOf
 
 class StartMemberResultsStoreFactory(
     private val storeFactory: StoreFactory,
+    private val repository: StartRepository,
+    private val startId: Int,
 ) {
 
-    fun create(membersResult: List<MemberResult>): StartMemberResultsStore =
-         StartMemberResultsStoreImpl(membersResult)
-
-    private inner class StartMemberResultsStoreImpl(
-        private val memberResult: List<MemberResult>
-    ) :
-        StartMemberResultsStore,
+    fun create(initialMemberResult: List<MemberResult>): StartMemberResultsStore = object : StartMemberResultsStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "StartMemberResultsStore",
-            initialState = State(memberResult, memberResult),
-            bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { StartMemberResultsExecutor() },
+            initialState = State(membersItems = flowOf(PagingData.empty())),
+            executorFactory = { StartMemberResultsExecutor(repository, startId, initialMemberResult) },
             reducer = StartMemberResultsReducer
-        )
+        ) {}
 }

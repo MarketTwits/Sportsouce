@@ -8,8 +8,6 @@ import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceResponse
 import com.markettwits.sportsouce.profile.registrations.domain.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
@@ -100,12 +98,6 @@ class UserRegistrationsMapperBase(
         )
     }
 
-    @Suppress("UNUSED")
-    private fun mapNotPaidStatus(startTime: String): Boolean {
-        val currentInstant = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds())
-        val startInstant = Instant.parse(startTime)
-        return startInstant < currentInstant
-    }
 
     private fun mapStartGroup(group: String?): String {
         val json = Json {

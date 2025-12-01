@@ -1,13 +1,15 @@
 package com.markettwits.sportsouce.start.register.presentation.distances.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.markettwits.IntentAction
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationInput
 
 class StartDistancesComponentBase(
     componentContext: ComponentContext,
     private val input: StartDistancesInput,
-    private val output: StartDistancesOutput
+    private val output: StartDistancesOutput,
+    private val intentAction: IntentAction,
 ) : ComponentContext by componentContext, StartDistancesComponent {
 
     override val state: StartDistancesInput = input
@@ -18,6 +20,10 @@ class StartDistancesComponentBase(
 
     override fun onClickGoBack() {
         output.onClickGoBack()
+    }
+
+    override fun onClickUrl(url: String) {
+        intentAction.openWebPage(url)
     }
 
     private fun getSelectedDistance(

@@ -35,7 +35,7 @@ internal fun ShopItemProductScreen(
     onRefresh: () -> Unit,
     onClickAddToFavorite: () -> Unit,
     onClickShare: () -> Unit,
-    onClickItem: (String) -> Unit,
+    onClickItem: (ShopItem) -> Unit,
     cartContent: @Composable (Modifier) -> Unit,
 ) {
 

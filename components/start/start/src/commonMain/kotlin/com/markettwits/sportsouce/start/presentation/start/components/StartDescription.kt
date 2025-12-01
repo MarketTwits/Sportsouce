@@ -60,7 +60,7 @@ internal fun StartDescription(modifier: Modifier, description: String, isPartial
                     text = if (expanded) description else description.take(350),
                     fontSize = 15.sp,
                     fontFamily = FontNunito.medium(),
-                    lineHeight = 17.sp,
+                    lineHeight = 18.sp,
                     selectable = true,
                     color = MaterialTheme.colorScheme.onBackground,
                 )

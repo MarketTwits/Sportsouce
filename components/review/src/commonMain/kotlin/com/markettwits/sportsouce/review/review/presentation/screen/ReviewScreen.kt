@@ -58,7 +58,7 @@ fun ReviewScreen(
                     news = state.review.news,
                     actual = state.review.actualStarts,
                     archive = state.review.archiveStarts,
-                    products = state.review.products,
+                    products = state.review.products ?: emptyList(),
                     notification = notification,
                     onClickStart = {
                         component.obtainEvent(ReviewStore.Intent.OnClickItem(it))

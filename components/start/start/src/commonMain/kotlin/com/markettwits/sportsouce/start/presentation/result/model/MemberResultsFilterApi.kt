@@ -3,23 +3,16 @@ package com.markettwits.sportsouce.start.presentation.result.model
 class MemberResultsFilterApi {
 
     fun createInitialFilterState(members: List<MemberResult>): FilterState {
-        val distanceFilters = extractDistancesFromMembers(members).mapIndexed { index, filter ->
-            DistanceFilter(name = filter, isSelected = index == 0)
+        val distanceFilters = extractDistancesFromMembers(members).map { filter ->
+            DistanceFilter(name = filter, isSelected = false)
         }
 
-        val selectedDistance = distanceFilters.firstOrNull { it.isSelected }?.name
-
         val groupFilters = members
-            .filter { it.distance == selectedDistance }
             .map { it.group }
             .distinct()
             .map {
                 GroupFilter(name = it, isSelected = false)
             }
-
-        val teamFilters = extractTeamsFromMembers(members).map {
-            TeamFilter(name = it, isSelected = false)
-        }
 
         val genderFilters = extractGendersFromMembers(members).map {
             GenderFilter(name = it, isSelected = false)
@@ -28,7 +21,6 @@ class MemberResultsFilterApi {
         return FilterState(
             distanceFilters = distanceFilters,
             groupFilters = groupFilters,
-            teamFilters = teamFilters,
             genderFilters = genderFilters
         )
     }
@@ -65,12 +57,6 @@ class MemberResultsFilterApi {
             }
         }
 
-        // Команда
-        val selectedTeams = filterState.teamFilters.filter { it.isSelected }.map { it.name }
-        if (selectedTeams.isNotEmpty() && member.team !in selectedTeams) {
-            return false
-        }
-
         // Пол
         val selectedGenders = filterState.genderFilters.filter { it.isSelected }.map { it.name }
         return !(selectedGenders.isNotEmpty() && member.sex !in selectedGenders)
@@ -99,14 +85,6 @@ class MemberResultsFilterApi {
         } catch (e: Exception) {
             Long.MAX_VALUE // Put invalid results at the end
         }
-    }
-
-    fun extractGroupsFromMembers(members: List<MemberResult>): List<String> {
-        return members.map { it.group }.distinct().sorted()
-    }
-
-    fun extractTeamsFromMembers(members: List<MemberResult>): List<String> {
-        return members.map { it.team }.distinct().sorted()
     }
 
     fun extractDistancesFromMembers(members: List<MemberResult>): List<String> {

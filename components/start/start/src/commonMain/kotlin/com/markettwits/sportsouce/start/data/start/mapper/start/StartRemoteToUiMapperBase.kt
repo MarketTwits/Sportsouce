@@ -87,10 +87,39 @@ internal class StartRemoteToUiMapperBase(
                         beginningStart = startRemote.startDate,
                         endStart = ""
                     ),
+                    startSeries = startRemote.series?.let {
+                        StartItem.StartSeries.Value(
+                            id = it.id,
+                            name = it.name,
+                            description = it.description,
+                        )
+                    } ?: StartItem.StartSeries.Empty,
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
+                    kindOfSports = startRemote.kindOfSports?.map {
+                        StartItem.KindOfSport(
+                            id = it.id,
+                            name = it.name
+                        )
+                    } ?: emptyList(),
+                    sponsors = startRemote.sponsors?.map {
+                        StartItem.Sponsor(
+                            id = it.id,
+                            name = it.name,
+                            imageUrl = it.file.fullPath,
+                            link = it.site
+                        )
+                    } ?: emptyList(),
                     distanceMapNew = startRemote.distances,
                     membersResults = startMemberResults,
-                    startMembersUi = StartMembersNewToUiMapper().map(startMembers)
+                    startMembersUi = StartMembersNewToUiMapper().map(startMembers),
+                    conditionDetails = buildList {
+                        val regulation = startRemote.regulation
+                        val statement = startRemote.extractStatement
+                        if (!regulation.isNullOrBlank())
+                            add(StartItem.ConditionDetail.Regulation(regulation))
+                        if (!statement.isNullOrBlank())
+                            add(StartItem.ConditionDetail.Statement(statement))
+                    }
                 )
             }
 
@@ -130,6 +159,12 @@ internal class StartRemoteToUiMapperBase(
                             url = it.file?.fullPath ?: ""
                         )
                     },
+                    kindOfSports = startRemote.startData.kindOfSports?.map {
+                        StartItem.KindOfSport(
+                            id = it.id,
+                            name = it.name
+                        )
+                    } ?: emptyList(),
                     usefulLinks = startRemote.startData.usefulLinks?.map {
                         StartItem.Result(
                             id = it.id,
@@ -146,9 +181,12 @@ internal class StartRemoteToUiMapperBase(
                         endStart = startRemote.startData.endDate
                     ),
                     distanceInfoNew = emptyList(),
+                    startSeries = StartItem.StartSeries.Empty,
                     distanceMapNew = emptyList(),
                     membersResults = startMemberResults,
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
+                    sponsors = emptyList(),
+                    conditionDetails = emptyList(),
                     slug = ""
                 )
             }

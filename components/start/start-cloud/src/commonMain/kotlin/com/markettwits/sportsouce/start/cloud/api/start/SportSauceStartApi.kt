@@ -54,6 +54,7 @@ interface SportSauceStartApi {
         gender: String = "",
         group: String = "",
         distance: String = "",
+        searchQuery: String = "",
     ): StartMembersResultRowsV2
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse

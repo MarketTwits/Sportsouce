@@ -52,10 +52,11 @@ internal fun StartMemberResultsSearchBar(
                 .weight(1f)
                 .padding(top = 5.dp),
             value = query,
-            onValueChange = onValueChange,
+            onValueChange = { newValue ->
+                onValueChange(newValue)
+            },
             placeholder = {
                 Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
                     text = "Поиск участника (Фамилия Имя)",
                     color = MaterialTheme.colorScheme.outline,
                     fontFamily = FontNunito.bold(),

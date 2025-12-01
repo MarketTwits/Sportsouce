@@ -2,8 +2,8 @@ package com.markettwits.sportsouce.starts.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 class SportSauceNetworkStartsApi(
     httpClient: HttpClientProvider
@@ -11,7 +11,7 @@ class SportSauceNetworkStartsApi(
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     suspend fun startWithFilter(request: Map<String, String>): NetworkStartsRemote {
         val response = client.get("start") {
@@ -43,6 +43,12 @@ class SportSauceNetworkStartsApi(
         val serializer = NetworkStartsRemote.serializer()
         val response =
             client.get("start?maxResultCount=20&group=true&status=2")
+        return json.decodeFromString(serializer, response.body<String>())
+    }
+
+    suspend fun fetchSeries(seriesId: Int): NetworkStartsRemote {
+        val serializer = NetworkStartsRemote.serializer()
+        val response = client.get("start/$seriesId/related-start-series")
         return json.decodeFromString(serializer, response.body<String>())
     }
 

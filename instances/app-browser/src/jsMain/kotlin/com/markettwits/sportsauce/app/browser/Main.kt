@@ -17,7 +17,6 @@ import org.jetbrains.skiko.wasm.onWasmReady
 fun main() {
     val lifecycle = LifecycleRegistry()
     val componentContext = DefaultComponentContext(lifecycle = lifecycle)
-    InitPlatformLocaleForWeb()
     InitStorageForWeb()
     initKoin {
         val root = RootComponentBase(componentContext)

@@ -10,9 +10,12 @@ data class StartItem(
     val id: Int,
     val title: String,
     val startPlace: String,
-    val slug : String,
+    val slug: String,
     val image: String,
     val startMembersUi: List<StartMembersUi>,
+    val kindOfSports: List<KindOfSport>,
+    val sponsors: List<Sponsor>,
+    val startSeries: StartSeries,
     val startStatus: StartStatus,
     val startData: String,
     val startAlbum: List<Album>,
@@ -20,25 +23,52 @@ data class StartItem(
     val description: String,
     val paymentDisabled: Boolean,
     val regLink: String,
-    val distanceInfoNew : List<DistinctDistance>,
-    val distanceMapNew : List<Distance>,
+    val distanceInfoNew: List<DistinctDistance>,
+    val conditionDetails: List<ConditionDetail>,
+    val distanceMapNew: List<Distance>,
     val paymentType: String,
     val organizers: List<Organizer>,
-    val membersResults : List<MemberResult>,
+    val membersResults: List<MemberResult>,
     val conditionFile: ConditionFile,
     val commentsRemote: Comments,
     val result: List<Result>,
     val usefulLinks: List<Result>,
     val startTimes: StartTimes,
 ) {
+    sealed class ConditionDetail(open val value: String) {
+        class Regulation(override val value: String) : ConditionDetail(value)
+        class Statement(override val value: String) : ConditionDetail(value)
+    }
+
+    sealed class StartSeries {
+        data object Empty : StartSeries()
+        data class Value(
+            val id: Int,
+            val name: String,
+            val description: String,
+        ) : StartSeries()
+    }
+
     sealed class ConditionFile {
         data class Base(val url: String) : ConditionFile()
         data object Empty : ConditionFile()
     }
 
+    data class Sponsor(
+        val id: Int,
+        val name: String,
+        val imageUrl: String,
+        val link: String,
+    )
+
+    data class KindOfSport(
+        val id: Int,
+        val name: String,
+    )
+
     data class StartStatus(
-        val code : Int,
-        val name : String
+        val code: Int,
+        val name: String,
     )
 
     data class Album(
@@ -65,12 +95,12 @@ data class StartItem(
     data class Result(
         val id: Int,
         val name: String,
-        val url: String
+        val url: String,
     )
 
     data class Comments(
         val id: Int,
-        val rows: List<Row>
+        val rows: List<Row>,
     ) {
         data class Row(
             val comment: String,
@@ -80,21 +110,21 @@ data class StartItem(
             val personId: String,
             val replies: List<Reply>,
             val updatedAt: String,
-            val user: User
+            val user: User,
         )
 
         data class User(
             val id: Int,
             val name: String,
             val photo: String?,
-            val surname: String
+            val surname: String,
         )
 
         data class Reply(
             val comment: String,
             val createdAt: String,
             val id: Int,
-            val user: User
+            val user: User,
         )
     }
 }

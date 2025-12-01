@@ -8,17 +8,16 @@ import com.markettwits.sportsouce.shop.cloud.model.product.Product
 import com.markettwits.sportsouce.shop.cloud.model.product.ProductRemote
 import com.markettwits.sportsouce.shop.cloud.model.products.ProductsRemote
 import com.markettwits.sportsouce.shop.cloud.model.renderFilter.RenderFilterRemote
-import io.ktor.client.call.body
-import io.ktor.client.request.get
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 internal class SportSauceShopApiBase(
     httpClient: HttpClientProvider,
-    isLoggerEnabled: Boolean = false,
 ) : SportSauceShopApi {
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(isLoggerEnabled)
+    private val client = httpClient.provide()
 
     override suspend fun renderFilter(categoryId: Int): RenderFilterRemote {
         val response = client.get("${Endpoints.PRODUCT}/${Endpoints.RENDER_FILTER}") {

@@ -20,6 +20,7 @@ import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.start.presentation.comments.components.StartCommentsCompactPanel
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
@@ -43,6 +44,8 @@ fun StartScreen(
     var snackBarColor by remember {
         mutableStateOf(SportSouceColor.SportSouceLightRed)
     }
+    val backgroundColor =
+        if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
     Scaffold(
         snackbarHost = {
             SnackbarHost(
@@ -57,7 +60,7 @@ fun StartScreen(
         },
     ) {
         Column(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier.background(backgroundColor)
         ) {
             AnimatedVisibility(
                 visible = state.startItem != null,
@@ -67,7 +70,9 @@ fun StartScreen(
                 state.startItem?.let { data ->
                     StartScreenContent(
                         data = data,
-                        starts = state.startsRecommended,
+                        backgroundColor = backgroundColor,
+                        recommendedStarts = state.startsRecommended,
+                        seriesStarts = state.startsSeries,
                         error = state.error,
                         isLoading = state.isLoading,
                         isPartialData = state.isPartialData,
@@ -95,17 +100,25 @@ fun StartScreen(
                             fullImage = !fullImage
                         },
                         onClickFullAlbum = {
-                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickFullAlbum)
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickFullAlbum(it))
                         },
                         donations = { modifier ->
-                            StartSupport(modifier = modifier, component = startSupportComponent) {
-                                startComponent.obtainEvent(
-                                    StartScreenStore.Intent.TriggerEvent(
-                                        it.message,
-                                        it.success
+                            StartSupport(
+                                modifier = modifier,
+                                component = startSupportComponent,
+                                sponsors = data.sponsors,
+                                onClickSponsorUrl = { url ->
+                                    startComponent.obtainEvent(StartScreenStore.Intent.OnClickUrl(url))
+                                },
+                                eventContent = {
+                                    startComponent.obtainEvent(
+                                        StartScreenStore.Intent.TriggerEvent(
+                                            it.message,
+                                            it.success
+                                        )
                                     )
-                                )
-                            }
+                                }
+                            )
                         },
                         comments = { modifier ->
                             StartCommentsCompactPanel(
@@ -134,6 +147,9 @@ fun StartScreen(
                         },
                         onClickRecommendedStart = {
                             startComponent.obtainEvent(StartScreenStore.Intent.OnClickStartRecommended(it))
+                        },
+                        onClickRelatedStarts = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickRelatedStarts)
                         },
                         onClickShare = {
                             startComponent.obtainEvent(StartScreenStore.Intent.OnClickShare)

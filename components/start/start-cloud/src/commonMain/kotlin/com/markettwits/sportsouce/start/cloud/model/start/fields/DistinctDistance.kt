@@ -13,6 +13,8 @@ data class DistinctDistance(
     val comboDiscountValue: Int?,
     @SerialName("description")
     val description: String?,
+    @SerialName("detailed_description")
+    val detailedDescription: String? = null,
     @SerialName("format")
     val format: String?,
     @SerialName("id")
@@ -27,6 +29,10 @@ data class DistinctDistance(
     val orderNumber: Int,
     @SerialName("slots")
     val slots: Int?,
+    @SerialName("scheme_image")
+    val schemeImage: File? = null,
+    @SerialName("track_link")
+    val trackLink: File? = null,
     @SerialName("stages")
     val stages: List<Stage>,
     @SerialName("static_price")

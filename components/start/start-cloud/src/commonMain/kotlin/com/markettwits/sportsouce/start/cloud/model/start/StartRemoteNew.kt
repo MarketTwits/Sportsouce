@@ -1,13 +1,6 @@
 package com.markettwits.sportsouce.start.cloud.model.start
 
-import com.markettwits.sportsouce.start.cloud.model.start.fields.ConditionFile
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
-import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
-import com.markettwits.sportsouce.start.cloud.model.start.fields.PosterLinkFile
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Result
-import com.markettwits.sportsouce.start.cloud.model.start.fields.StartStatus
-import com.markettwits.sportsouce.start.cloud.model.start.fields.UsefulLinks
+import com.markettwits.sportsouce.start.cloud.model.start.fields.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,6 +20,16 @@ data class StartRemoteNew(
     val coordinates: String?,
     @SerialName("description")
     val description: String?,
+    @SerialName("extract_statement")
+    val extractStatement: String? = "",
+    @SerialName("regulation")
+    val regulation: String? = "",
+    @SerialName("series")
+    val series: Series? = null,
+    @SerialName("sponsors")
+    val sponsors: List<Sponsor>?,
+    @SerialName("kindOfSports")
+    val kindOfSports: List<KindOfSport>? = null,
     @SerialName("distances")
     val distances: List<Distance>,
     @SerialName("distinctDistances")
@@ -60,7 +63,8 @@ data class StartRemoteNew(
     @SerialName("useful_links")
     val usefulLinks: List<UsefulLinks>?,
     @SerialName("results")
-    val results : List<Result>?
+    val results: List<Result>?,
+
 ) : StartRemote {
 
     @Deprecated("Use for isOpen field, don't use now")

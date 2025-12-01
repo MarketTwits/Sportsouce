@@ -14,7 +14,7 @@ internal fun ShopItemPageContent(
     onClickGoBack: () -> Unit,
     onClickAddToFavorite: () -> Unit,
     onClickShare: () -> Unit,
-    onClickItem: (String) -> Unit,
+    onClickItem: (com.markettwits.sportsouce.shop.domain.model.ShopItem) -> Unit,
     cartContent: @Composable (Modifier) -> Unit,
 ) {
     if (state.isError && state.shopItem == null) {

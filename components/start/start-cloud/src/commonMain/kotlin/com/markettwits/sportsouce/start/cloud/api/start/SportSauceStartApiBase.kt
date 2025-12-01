@@ -29,7 +29,7 @@ internal class SportSauceStartApiBase(
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     override suspend fun start(startId: String): StartRemote {
         val response = client.get("start/$startId")
@@ -107,6 +107,7 @@ internal class SportSauceStartApiBase(
         gender: String,
         group: String,
         distance: String,
+        searchQuery: String,
     ): StartMembersResultRowsV2 {
         val response = client.get("race/analyze-results/$startId") {
             parameter("page", page)
@@ -114,6 +115,7 @@ internal class SportSauceStartApiBase(
             if (gender.isNotBlank()) parameter("gender", gender)
             if (group.isNotBlank()) parameter("group", group)
             if (distance.isNotBlank()) parameter("distance", distance)
+            if (searchQuery.isNotBlank()) parameter("filterText", searchQuery)
         }
         return json.decodeFromString<StartMembersResultRowsV2>(response.body<String>())
     }

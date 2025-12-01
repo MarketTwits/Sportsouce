@@ -211,6 +211,17 @@ class RootShopCatalogComponentBase(
                 ShopItemCart(item)
             )
         }
+
+        override fun pushProduct(item: ShopItem) {
+            stackNavigation.pushNew(
+                RootShopCatalogComponent.Config.ShopItem(
+                    ShopItemPageComponentBase.Options(
+                        productId = item.id,
+                        shopItem = item
+                    )
+                )
+            )
+        }
     }
 
     private inner class ShopFilterComponentOutputsImpl : ShopFilterComponent.Output {

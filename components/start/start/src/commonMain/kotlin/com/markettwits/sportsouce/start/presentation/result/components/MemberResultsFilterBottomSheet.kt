@@ -1,6 +1,5 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,20 +12,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.textField.defaultOutlineTextFiledColors
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.presentation.result.model.DistanceFilter
+import com.markettwits.sportsouce.start.presentation.result.model.GenderFilter
 import com.markettwits.sportsouce.start.presentation.result.model.GroupFilter
-import com.markettwits.sportsouce.start.presentation.result.model.TeamFilter
 import com.markettwits.sportsouce.start.presentation.result.model.getSelectDistance
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore
 
@@ -120,16 +115,16 @@ private fun FilterBottomSheetContent(
                 }
             }
 
+            // Пол
             item {
-
                 FilterSection(
-                    title = "Команды",
-                    icon = Icons.Default.PeopleAlt
+                    title = "Пол",
+                    icon = Icons.Default.Person
                 ) {
-                    MobileTeamsSearchFilter(
-                        teams = state.filterState.teamFilters,
-                        onTeamToggle = { team ->
-                            onIntent(StartMemberResultsStore.Intent.OnTeamFilterToggle(team.name))
+                    MobileGendersFilter(
+                        genders = state.filterState.genderFilters,
+                        onGenderToggle = { gender ->
+                            onIntent(StartMemberResultsStore.Intent.OnGenderFilterToggle(gender.name))
                         }
                     )
                 }
@@ -338,173 +333,24 @@ private fun MobileGroupsFilter(
 }
 
 @Composable
-private fun MobileTeamsSearchFilter(
-    teams: List<TeamFilter>,
-    onTeamToggle: (TeamFilter) -> Unit,
+private fun MobileGendersFilter(
+    genders: List<GenderFilter>,
+    onGenderToggle: (GenderFilter) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var searchQuery by remember { mutableStateOf("") }
-
-    val selectedTeams = teams.filter { it.isSelected }
-    val filteredTeams = if (searchQuery.isEmpty()) {
-        teams
-    } else {
-        teams.filter { it.name.contains(searchQuery, ignoreCase = true) }
-    }
-
-    Column(
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth()
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier.heightIn(max = 300.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(selectedTeams) { team ->
-                FilterChip(
-                    modifier = Modifier.animateItem(),
-                    selected = true,
-                    onClick = { onTeamToggle(team) },
-                    label = {
-                        Text(
-                            text = team.name,
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.tertiary
-                    )
-                )
-            }
-        }
-    }
+        items(genders) { gender ->
+            val isSelected = gender.isSelected
 
-    Column {
-        // Поле поиска
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = { searchQuery = it },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text(
-                    text = "Поиск команд...",
-                    fontFamily = FontNunito.medium(),
-                    fontSize = 14.sp
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline
-                )
-            },
-            trailingIcon = if (searchQuery.isNotEmpty()) {
-                {
-                    IconButton(
-                        onClick = { searchQuery = "" }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Clear,
-                            contentDescription = "Очистить поиск",
-                            tint = MaterialTheme.colorScheme.outline
-                        )
-                    }
-                }
-            } else null,
-            singleLine = true,
-            colors = defaultOutlineTextFiledColors()
-        )
-
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Список команд
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            filteredTeams.forEach { team ->
-                TeamSelectionItem(
-                    team = team,
-                    isSelected = team.isSelected,
-                    onToggle = { onTeamToggle(team) }
-                )
-            }
-
-            if (filteredTeams.isEmpty() && searchQuery.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Команды не найдены",
-                        fontFamily = FontNunito.medium(),
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TeamSelectionItem(
-    team: TeamFilter,
-    isSelected: Boolean,
-    onToggle: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onToggle() },
-        color = if (isSelected) {
-            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.1f)
-        } else {
-            Color.Transparent
-        }
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = isSelected,
-                onCheckedChange = { onToggle() },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.tertiary,
-                    checkmarkColor = MaterialTheme.colorScheme.onTertiary,
-                    uncheckedColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            Text(
-                text = team.name,
-                fontFamily = FontNunito.medium(),
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.weight(1f)
+            MobileFilterChip(
+                isSelected = isSelected,
+                value = gender.name,
+                onClick = { onGenderToggle(gender) }
             )
         }
     }

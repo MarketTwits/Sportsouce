@@ -37,7 +37,7 @@ internal class StartMembersResultsToUiMapperBase : StartMembersResultsToUiMapper
                 startId = 0,
                 team = memberResult.team ?: "",
                 group = memberResult.group ?: "",
-                place = index,
+                place = memberResult.computedPlace ?: (index + 1),
                 name = "${memberResult.name ?: ""} ${memberResult.secondName ?: ""}".trim(),
             )
         }

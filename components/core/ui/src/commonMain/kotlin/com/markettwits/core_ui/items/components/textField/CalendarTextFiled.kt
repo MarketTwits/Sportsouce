@@ -8,11 +8,12 @@ import androidx.compose.ui.graphics.Color
 import com.markettwits.core.time.BaseTimeMapper
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.core.time.TimePattern
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun CalendarTextFiled(
     modifier: Modifier = Modifier,

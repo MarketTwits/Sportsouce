@@ -23,12 +23,11 @@ import com.markettwits.sportsouce.start.domain.StartItem
 internal fun StartRegistrationButton(
     modifier: Modifier = Modifier,
     startStatus: StartItem.StartStatus,
-    regLink: String,
     isLoading: Boolean = false,
     hasError: Boolean = false,
     onClickRegistration: () -> Unit,
 ) {
-    if (startStatus.code == 3 || regLink.isNotEmpty()) {
+    if (startStatus.code == 3) {
         val infiniteTransition = rememberInfiniteTransition()
 
         val dotCount by infiniteTransition.animateValue(
@@ -41,15 +40,25 @@ internal fun StartRegistrationButton(
             )
         )
 
+        val baseColor = MaterialTheme.colorScheme.secondary
+
+        val isUpcoming = startStatus.code == 2
+
         val containerColor by animateColorAsState(
-            targetValue = if (isLoading || hasError)
-                MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-            else
-                MaterialTheme.colorScheme.secondary,
+            targetValue = when {
+                isLoading || hasError -> MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                isUpcoming -> baseColor.copy(alpha = 0.7f)
+                else -> baseColor
+            },
             animationSpec = tween(300, easing = FastOutSlowInEasing)
         )
 
-        val isEnabled = !isLoading && !hasError
+        val isEnabled = !isLoading && !hasError && !isUpcoming
+        val buttonText = if (startStatus.code == 3) {
+            if (isLoading) "Загрузка${".".repeat(dotCount)}" else "Зарегестрироваться"
+        } else {
+            "Регистрация скоро начнется"
+        }
 
         Button(
             modifier = modifier
@@ -63,12 +72,14 @@ internal fun StartRegistrationButton(
                 disabledContainerColor = containerColor,
                 disabledContentColor = MaterialTheme.colorScheme.onSecondary
             ),
-            shape = RoundedCornerShape(16.dp),
             elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 0.dp,
-                pressedElevation = 0.dp,
+                defaultElevation = 4.dp,
+                pressedElevation = 6.dp,
+                focusedElevation = 4.dp,
+                hoveredElevation = 5.dp,
                 disabledElevation = 0.dp
-            )
+            ),
+            shape = RoundedCornerShape(16.dp),
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -76,7 +87,7 @@ internal fun StartRegistrationButton(
             ) {
                 Text(
                     modifier = Modifier.padding(2.dp),
-                    text = if (isLoading) "Загрузка${".".repeat(dotCount)}" else "Зарегестрироваться",
+                    text = buttonText,
                     color = MaterialTheme.colorScheme.onSecondary,
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,

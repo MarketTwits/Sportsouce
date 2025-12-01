@@ -14,8 +14,9 @@ import com.markettwits.sportsouce.start.presentation.comments.store.StartComment
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
+import com.markettwits.sportsouce.start.presentation.series.component.StartSeriesComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
-import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentComponentBase
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
 import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
@@ -59,7 +60,7 @@ class RootStartScreenComponentBase(
                     storeFactory = scope.get(),
                 )
                 RootStartScreenComponent.Child.Start(
-                    component = StartScreenComponentComponentBase(
+                    component = StartScreenComponentBase(
                         componentContext = componentContext,
                         input = config.startScreenInput,
                         back = {
@@ -81,9 +82,9 @@ class RootStartScreenComponentBase(
                                 RootStartScreenComponent.Config.StartRegistration(it)
                             )
                         },
-                        membersResult = {
+                        membersResult = { startId, membersResult ->
                             navigation.pushNew(
-                                RootStartScreenComponent.Config.StartMembersResult(it)
+                                RootStartScreenComponent.Config.StartMembersResult(startId, membersResult)
                             )
                         },
                         pushStart = { item ->
@@ -99,6 +100,9 @@ class RootStartScreenComponentBase(
                         },
                         onOpenStartCommentsScreen = { startId, mode ->
                             navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
+                        },
+                        relatedStarts = { startId, relatedStarts ->
+                            navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(relatedStarts, startId))
                         }
                     ),
                     supportComponent = supportComponent)
@@ -136,7 +140,9 @@ class RootStartScreenComponentBase(
                 StartMemberResultsComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
+                    repository = scope.get(),
                     memberResult = config.items,
+                    startId = config.startId,
                     goBack = navigation::pop,
                 )
             )
@@ -168,9 +174,23 @@ class RootStartScreenComponentBase(
                 )
                 RootStartScreenComponent.Child.StartComments(component)
             }
+            is RootStartScreenComponent.Config.RelatedStarts -> RootStartScreenComponent.Child.StartSeries(
+                StartSeriesComponentBase(
+                    componentContext = componentContext,
+                    storeFactory = DefaultStoreFactory(),
+                    items = config.starts,
+                    currentStartId = config.currentStartId,
+                    onClickBack = {
+                        navigation.pop()
+                    },
+                    onClickStart = {
+                        navigation.pushNew(
+                            RootStartScreenComponent.Config.Start(
+                                StartScreenInput.Item(it)
+                            )
+                        )
+                    }
+                )
+            )
         }
-
-    fun navigateToComments(startId: Int, mode: CommentMode) {
-        navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
-    }
 }

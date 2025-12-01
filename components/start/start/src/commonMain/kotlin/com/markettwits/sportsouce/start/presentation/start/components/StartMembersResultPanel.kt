@@ -24,7 +24,7 @@ internal fun StartMembersResultPanel(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .noRippleClickable { onClick() },
+                .noRippleClickable(onClick = onClick),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer
             ),

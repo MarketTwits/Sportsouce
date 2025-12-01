@@ -20,8 +20,11 @@ internal class SportSauceStartsApiBase(
         mapper.mapSingle(startsCloudApi.fetchPasteStarts().rows)
 
 
-    override suspend fun fetchPreview(): List<StartsListItem> =
+    override suspend fun fetchPreviewStarts(): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchPreview().rows)
+
+    override suspend fun fetchRelatedStarts(seriesId: Int): List<StartsListItem> =
+        mapper.mapSingle(startsCloudApi.fetchSeries(seriesId).rows)
 
     override suspend fun fetchStartMain(): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchStartMain().rows)

@@ -13,6 +13,7 @@ plugins {
 
 android {
     namespace = "com.markettwits.buildkonfig"
+    buildFeatures.buildConfig = true
 }
 
 buildConfig {

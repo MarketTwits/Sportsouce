@@ -15,6 +15,8 @@ interface ShopItemPageComponent {
         fun goBack()
 
         fun updateItem(item : ShopItem)
+
+        fun pushProduct(item: ShopItem)
     }
 
 }

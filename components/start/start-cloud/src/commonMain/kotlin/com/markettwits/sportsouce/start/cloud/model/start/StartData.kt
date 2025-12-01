@@ -1,16 +1,6 @@
 package com.markettwits.sportsouce.start.cloud.model.start
 
-import com.markettwits.sportsouce.start.cloud.model.start.fields.City
-import com.markettwits.sportsouce.start.cloud.model.start.fields.ConditionFile
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Discount
-import com.markettwits.sportsouce.start.cloud.model.start.fields.KindOfSport
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
-import com.markettwits.sportsouce.start.cloud.model.start.fields.PosterLinkFile
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Result
-import com.markettwits.sportsouce.start.cloud.model.start.fields.Season
-import com.markettwits.sportsouce.start.cloud.model.start.fields.SocialNetwork
-import com.markettwits.sportsouce.start.cloud.model.start.fields.StartStatus
-import com.markettwits.sportsouce.start.cloud.model.start.fields.UsefulLinks
+import com.markettwits.sportsouce.start.cloud.model.start.fields.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,7 +15,7 @@ data class StartData(
     @SerialName("hashtags") val hashtags: List<String>?,
     @SerialName("id") val id: Int,
     @SerialName("isClosed") val isClosed: Boolean?,
-    @SerialName("kindOfSports") val kindOfSports: List<KindOfSport>,
+    @SerialName("kindOfSports") val kindOfSports: List<KindOfSport>?,
     @SerialName("name") val name: String,
     @SerialName("discount") val discount: List<Discount>,
     @SerialName("organizers") val organizers: List<Organizer>,
@@ -49,5 +39,5 @@ data class StartData(
     @SerialName("start_time") val startTime: String?,
     @SerialName("status") val status: String?,
     @SerialName("useful_links") val usefulLinks: List<UsefulLinks>?,
-    @SerialName("viewsCount") val viewsCount: Int
+    @SerialName("viewsCount") val viewsCount: Int,
 )

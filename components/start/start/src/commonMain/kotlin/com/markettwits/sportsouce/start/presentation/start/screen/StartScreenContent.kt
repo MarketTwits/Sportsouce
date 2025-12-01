@@ -4,10 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.extensions.noRippleClickable
@@ -26,7 +28,9 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
-    starts: List<StartsListItem>,
+    backgroundColor: Color,
+    recommendedStarts: List<StartsListItem>,
+    seriesStarts: List<StartsListItem>,
     error: Throwable? = null,
     isLoading: Boolean,
     isPartialData: Boolean = false,
@@ -36,10 +40,11 @@ internal fun StartScreenContent(
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
     onClickImage: () -> Unit,
-    onClickFullAlbum: () -> Unit,
+    onClickFullAlbum: (StartItem.Album) -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
     onClickShare: () -> Unit,
+    onClickRelatedStarts: () -> Unit,
     onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
@@ -66,6 +71,7 @@ internal fun StartScreenContent(
                                 .align(Alignment.Center)
                                 .fillMaxSize()
                                 .noRippleClickable { onClickImage() },
+                            backgroundColor = MaterialTheme.colorScheme.primary,
                             imageUrl = data.image,
                             isPortrait = false
                         )
@@ -82,7 +88,8 @@ internal fun StartScreenContent(
                                 modifier = Modifier,
                                 data = data,
                                 error = error,
-                                starts = starts,
+                                recommendedStarts = recommendedStarts,
+                                seriesStarts = seriesStarts,
                                 isPartialData = isPartialData,
                                 onClickMembers = onClickMembers,
                                 onClickRecommendedStart = onClickRecommendedStart,
@@ -91,6 +98,7 @@ internal fun StartScreenContent(
                                 onClickPhone = onClickPhone,
                                 onClickFullAlbum = onClickFullAlbum,
                                 onClickRetry = onClickRetry,
+                                onClickRelatedStarts = onClickRelatedStarts,
                                 donations = donations,
                                 comments = comments
                             )
@@ -115,13 +123,15 @@ internal fun StartScreenContent(
                     ) {
                         FullImageContent(
                             modifier = Modifier.clickable { onClickImage() },
+                            backgroundColor = MaterialTheme.colorScheme.primary,
                             imageUrl = data.image
                         )
                         StartScreenInnerContent(
                             modifier = Modifier,
                             data = data,
                             error = error,
-                            starts = starts,
+                            recommendedStarts = recommendedStarts,
+                            seriesStarts = seriesStarts,
                             isPartialData = isPartialData,
                             onClickMembers = onClickMembers,
                             onClickMembersResults = onClickMembersResults,
@@ -131,6 +141,7 @@ internal fun StartScreenContent(
                             onClickRetry = onClickRetry,
                             onClickFullAlbum = onClickFullAlbum,
                             donations = donations,
+                            onClickRelatedStarts = onClickRelatedStarts,
                             comments = comments
                         )
                     }

@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface StartMemberResultsComponent {
     val state: StateFlow<StartMemberResultsStore.State>
+    val filterValue: StateFlow<String>
 
     fun obtainEvent(intent: StartMemberResultsStore.Intent)
+    fun handleTextFiled(value: String)
 }

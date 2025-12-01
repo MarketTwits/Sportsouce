@@ -9,22 +9,16 @@ import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.SignInRespon
 import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.User
 import com.markettwits.sportsouce.auth.cloud.model.sign_up.SignUpRequest
 import com.markettwits.sportsouce.auth.cloud.model.sign_up.SignUpResponse
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 class SportSauceNetworkAuthApi(
     private val httpClient: HttpClientProvider
 ) {
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     suspend fun changeProfileInfo(
         profile: ChangeProfileInfoRequest,

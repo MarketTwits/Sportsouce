@@ -16,6 +16,7 @@ import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommen
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
+import com.markettwits.sportsouce.start.cloud.model.result.v2.StartMemberResultV2
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemote
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteNew
 import com.markettwits.sportsouce.start.cloud.model.start.StartRemoteOld
@@ -28,8 +29,6 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote as CloudFiltersRemote
@@ -71,56 +70,22 @@ internal class StartRepositoryBase(
     }
 
     override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> {
-        return coroutineScope {
-            val firstDeferred = async {
-                runCatching {
-                    startService.membersResults(startId = startId, maxResultCount = maxResultCount)
-                }.onFailure {
-                    errorLog { "Fail to fetch start members result ${it.message}" }
-                }.onSuccess {
-                    if (it.isEmpty()) {
-                        errorLog { "Start members result is empty first" }
-                    } else {
-                        infoLog { "Start members result is not empty" }
-                    }
-                }
+        return runCatching {
+            val response = startService.membersResultsAnalyze(
+                startId = startId,
+                page = 1,
+                maxResultCount = maxResultCount
+            )
+            startMapper.mapR2(response.rows)
+        }.onFailure {
+            errorLog { "Fail to fetch start members result ${it.message}" }
+        }.onSuccess {
+            if (it.isEmpty()) {
+                errorLog { "Start members result is empty" }
+            } else {
+                infoLog { "Start members result is not empty, count: ${it.size}" }
             }
-            val secondDeferred = async {
-                runCatching {
-                    startService.membersResultsAnalyze(startId = startId, maxResultCount = 1000)
-                }.onFailure {
-                    errorLog { "Fail to fetch start members result ${it.message}" }
-                }.onSuccess {
-                    if (it.rows.isEmpty()) {
-                        errorLog { "Start members result is empty" }
-                    } else {
-                        infoLog { "Start members result is not empty second" }
-                        errorLog { it.rows.toString() }
-                    }
-                }
-            }
-            val firstResult = firstDeferred.await()
-            val secondResult = secondDeferred.await()
-            return@coroutineScope when {
-                firstResult.isSuccess && firstResult.getOrThrow().isNotEmpty() -> {
-                    startMapper.mapR1(firstResult.getOrThrow())
-                }
-
-                secondResult.isSuccess && secondResult.getOrThrow().rows.isNotEmpty() -> {
-                    startMapper.mapR2(secondResult.getOrThrow().rows)
-                }
-
-                firstResult.isSuccess -> {
-                    startMapper.mapR1(firstResult.getOrThrow())
-                }
-
-                secondResult.isSuccess -> {
-                    startMapper.mapR2(secondResult.getOrThrow().rows)
-                }
-
-                else -> emptyList()
-            }
-        }
+        }.getOrDefault(emptyList())
     }
 
 
@@ -132,9 +97,7 @@ internal class StartRepositoryBase(
 
     override suspend fun startsRecommended(startId: String): Result<List<StartsListItem>> =
         runCatching {
-            // Check if startId is numeric or slug and extract numeric ID for filtering
             val numericStartId = startId.toIntOrNull() ?: run {
-                // startId is slug, resolve to ID by calling the API
                 val startData = startService.start(startId)
                 startData.id
             }
@@ -142,6 +105,10 @@ internal class StartRepositoryBase(
                 .filter { it.id != numericStartId }
                 .shuffled()
         }
+
+    override suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>> = runCatching {
+        startsService.fetchRelatedStarts(seriesId)
+    }
 
     private suspend fun launches(startId: String): Result<StartItem> {
         val result = runCatching {
@@ -197,7 +164,9 @@ internal class StartRepositoryBase(
                     startCommentRequest = StartCommentRequest(
                         comment = comment,
                         startId = id,
-                        personId = userId.toString()
+                        personId = userId.toString(),
+                        isReview = false, //TODO replace after add review selector
+                        averageScore = 0.0 //TODO replace after add review selector
                     ),
                     token = token
                 )
@@ -248,6 +217,34 @@ internal class StartRepositoryBase(
             pagingData.map { item ->
                 val item = StartMembersNewToUiMapper().map(item)
                 Pair(item, pagingSource.getTotalCount())
+            }
+        }
+    }
+
+    override fun pagingMembersResults(
+        startId: Int,
+        params: StartMembersResultsPagingParams,
+    ): Flow<PagingData<Pair<MemberResult, Int>>> {
+        val pagingConfig = PagingConfig(
+            pageSize = START_MEMBERS_RESULTS_PAGE_SIZE,
+            initialLoadSize = START_MEMBERS_RESULTS_PAGE_SIZE,
+            prefetchDistance = START_MEMBERS_RESULTS_PAGE_SIZE / 2,
+            enablePlaceholders = false,
+            maxSize = Int.MAX_VALUE,
+            jumpThreshold = Int.MIN_VALUE
+        )
+        val pagingSource = StartMembersResultsPagingSource(
+            startId = startId,
+            startNetworkApi = startService,
+            params = params
+        )
+        val pager: Pager<Int, StartMemberResultV2> = run {
+            Pager(pagingConfig, null) { pagingSource }
+        }
+        return pager.flow.map { pagingData ->
+            pagingData.map { item ->
+                val memberResult = startMapper.mapR2(listOf(item)).first()
+                Pair(memberResult, pagingSource.getTotalCount())
             }
         }
     }

@@ -118,31 +118,22 @@ class StartDistanceFeature(
         answers: List<StartRegistrationStatementAnswer>,
         startRegisterAnswer: StartRegistrationStatementAnswer
     ): List<StartRegistrationStatementAnswer> {
-        val isAnswerEmpty = startRegisterAnswer.answer.let { answer ->
-            answer.string.isNullOrEmpty() &&
-                    answer.number == null &&
-                    answer.bool == null &&
-                    answer.date.isNullOrEmpty() &&
-                    answer.multiSelect.isNullOrEmpty() &&
-                    answer.singleSelect == null
-        }
+        val fieldId = startRegisterAnswer.field.id
+        val answerExists = answers.any { it.field.id == fieldId }
 
-        return answers.map { existingAnswer ->
-            if (existingAnswer.field.id == startRegisterAnswer.field.id) {
-                if (isAnswerEmpty) {
-                    existingAnswer.copy()
-                } else {
-                    startRegisterAnswer.copy()
-                }
-            } else {
-                existingAnswer.copy()
+        return if (answerExists) {
+            answers.map { if (it.field.id == fieldId) startRegisterAnswer else it }
+        } else {
+            val isAnswerEmpty = startRegisterAnswer.answer.let { answer ->
+                answer.string.isNullOrEmpty() &&
+                        answer.number == null &&
+                        answer.bool == null &&
+                        answer.date.isNullOrEmpty() &&
+                        answer.multiSelect.isNullOrEmpty() &&
+                        answer.singleSelect == null
             }
-        }.let { updatedAnswers ->
-            if (!isAnswerEmpty && updatedAnswers.none { it.field.id == startRegisterAnswer.field.id }) {
-                updatedAnswers + startRegisterAnswer.copy()
-            } else {
-                updatedAnswers
-            }
+
+            if (isAnswerEmpty) answers else answers + startRegisterAnswer
         }
     }
 

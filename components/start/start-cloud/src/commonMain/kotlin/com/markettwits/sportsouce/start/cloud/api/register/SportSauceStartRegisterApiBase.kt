@@ -5,18 +5,15 @@ import com.markettwits.sportsouce.start.cloud.model.register.on_start.StartRegis
 import com.markettwits.sportsouce.start.cloud.model.register.price.StartRegisterPriceRequest
 import com.markettwits.sportsouce.start.cloud.model.register.price.StartRegisterPriceResponse
 import com.markettwits.sportsouce.start.cloud.model.register.promocode.PromocodeResponse
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.HttpHeaders
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 class SportSauceStartRegisterApiBase(httpClient: HttpClientProvider) : SportSauceStartRegisterApi {
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     override suspend fun price(
         request: StartRegisterPriceRequest,

@@ -8,12 +8,14 @@ import com.markettwits.sportsouce.start.presentation.membres.component.StartMemb
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import com.markettwits.sportsouce.start.presentation.series.component.StartSeriesComponent
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.sportsouce.start.register.root.RootStartRegister
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.serialization.Serializable
 
 interface RootStartScreenComponent {
@@ -33,13 +35,16 @@ interface RootStartScreenComponent {
         ) : Config()
 
         @Serializable
-        data class StartMembersResult(val items: List<MemberResult>) : Config()
+        data class StartMembersResult(val startId: Int, val items: List<MemberResult>) : Config()
 
         @Serializable
         data class StartRegistration(val input: StartDistancesInput) : Config()
 
         @Serializable
         data class StartAlbum(val images: List<String>) : Config()
+
+        @Serializable
+        data class RelatedStarts(val starts: List<StartsListItem>, val currentStartId: Int) : Config()
 
         @Serializable
         data class StartComments(val startId: Int, val mode: CommentMode) : Config()
@@ -61,5 +66,7 @@ interface RootStartScreenComponent {
         data class StartMembersResults(val component: StartMemberResultsComponent) : Child()
 
         data class StartComments(val component: StartCommentsComponent) : Child()
+
+        data class StartSeries(val component: StartSeriesComponent) : Child()
     }
 }

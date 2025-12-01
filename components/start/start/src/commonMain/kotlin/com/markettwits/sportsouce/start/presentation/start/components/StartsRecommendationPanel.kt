@@ -43,7 +43,7 @@ internal fun StartsRecommendationPanel(
         ) {
             Text(
                 text = "Также рекомендуем",
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -153,14 +153,35 @@ private fun ImageCard(
                     lineHeight = 20.sp
                 )
 
-                HtmlText(
-                    text = item.distance.ifEmpty { item.description },
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    fontSize = 13.sp,
-                    fontFamily = FontNunito.regular(),
-                    lineHeight = 16.sp,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ) {
+                    HtmlText(
+                        text = item.distance.ifEmpty { item.description },
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                        fontSize = 13.sp,
+                        fontFamily = FontNunito.regular(),
+                        lineHeight = 16.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp)
+                            .align(Alignment.BottomCenter)
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                )
+                            )
+                    )
+                }
             }
         }
     }

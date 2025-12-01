@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.start.domain.StartItem
 
 @Composable
@@ -28,7 +27,7 @@ internal fun StartRegistrationButton(
     hasError: Boolean = false,
     onClickRegistration: () -> Unit,
 ) {
-    if (startStatus.code == 3 || startStatus.code == 2) {
+    if (startStatus.code == 3) {
         val infiniteTransition = rememberInfiniteTransition()
 
         val dotCount by infiniteTransition.animateValue(
@@ -41,11 +40,7 @@ internal fun StartRegistrationButton(
             )
         )
 
-        val baseColor = if (startStatus.code == 3) {
-            MaterialTheme.colorScheme.secondary
-        } else {
-            SportSouceColor.SportSouceRegistryCommingSoonYellow
-        }
+        val baseColor = MaterialTheme.colorScheme.secondary
 
         val isUpcoming = startStatus.code == 2
 

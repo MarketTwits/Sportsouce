@@ -10,4 +10,6 @@ interface StartDistancesComponent {
 
     fun onClickGoBack()
 
+    fun onClickUrl(url: String)
+
 }

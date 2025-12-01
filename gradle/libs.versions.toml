@@ -1,12 +1,12 @@
 [versions]
 #plugins
-browser = "1.9.0"
 versionName = "1.5.1"
-versionCode = "10415"
+versionCode = "10416"
 jvm = "11"
 kotlin = "2.2.21" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 gradle = "8.9.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 compose = "1.9.3" # https://github.com/JetBrains/compose-multiplatform
+browser = "1.9.0"
 kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime

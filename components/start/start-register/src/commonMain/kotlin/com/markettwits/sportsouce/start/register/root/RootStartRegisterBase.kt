@@ -5,6 +5,7 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
+import com.markettwits.IntentAction
 import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponentBase
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesComponentBase
@@ -33,6 +34,8 @@ class RootStartRegisterBase(
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(startRegistrationModule)
     )
+
+    private val intentAction: IntentAction = scope.get()
 
     private val stackNavigation = StackNavigation<RootStartRegister.Config>()
 
@@ -84,7 +87,8 @@ class RootStartRegisterBase(
                 StartDistancesComponentBase(
                     componentContext = componentContext,
                     input = config.input,
-                    output = StartDistancesOutputImpl()
+                    output = StartDistancesOutputImpl(),
+                    intentAction = intentAction
                 )
             )
         }

@@ -1,7 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +29,7 @@ internal fun StartContentBasePanel(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
+            defaultElevation = 0.5.dp
         )
     ) {
         Column(
@@ -35,16 +38,16 @@ internal fun StartContentBasePanel(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                icon?.let {
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+//                icon?.let {
+//                    Icon(
+//                        imageVector = it,
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colorScheme.secondary,
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                }
                 Text(
                     text = label,
                     fontSize = 18.sp,

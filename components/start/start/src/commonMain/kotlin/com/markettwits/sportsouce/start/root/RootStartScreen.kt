@@ -7,6 +7,7 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.screen.S
 import com.markettwits.sportsouce.start.presentation.comments.screen.StartCommentsScreen
 import com.markettwits.sportsouce.start.presentation.membres.screen.StartMembersScreen
 import com.markettwits.sportsouce.start.presentation.result.screen.StartMemberResultsScreen
+import com.markettwits.sportsouce.start.presentation.series.screen.StartSeriesScreen
 import com.markettwits.sportsouce.start.presentation.start.screen.StartScreen
 import com.markettwits.sportsouce.start.register.root.RootStartRegisterScreen
 
@@ -30,6 +31,8 @@ fun RootStartScreen(component: RootStartScreenComponent) {
             is RootStartScreenComponent.Child.StartComments -> StartCommentsScreen(
                 component = child.component,
             )
+
+            is RootStartScreenComponent.Child.StartSeries -> StartSeriesScreen(child.component)
         }
     }
 }

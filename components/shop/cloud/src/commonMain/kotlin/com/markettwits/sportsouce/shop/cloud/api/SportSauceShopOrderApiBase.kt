@@ -7,22 +7,17 @@ import com.markettwits.sportsouce.shop.cloud.model.order.common.Order
 import com.markettwits.sportsouce.shop.cloud.model.order.request.CreateShopOrderRequest
 import com.markettwits.sportsouce.shop.cloud.model.order.response.CreateShopOrderResponse
 import com.markettwits.sportsouce.shop.cloud.model.orders.UserOrdersRemote
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.HttpHeaders
-import io.ktor.http.parameters
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 class SportSauceShopOrderApiBase(
     httpClient: HttpClientProvider,
-    isLoggerEnabled: Boolean = true,
 ) : SportSauceShopOrderApi {
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(isLoggerEnabled)
+    private val client = httpClient.provide()
 
     override suspend fun createOrder(
         request: CreateShopOrderRequest,

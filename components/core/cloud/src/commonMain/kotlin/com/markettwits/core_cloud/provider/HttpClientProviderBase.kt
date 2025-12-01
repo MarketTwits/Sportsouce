@@ -1,21 +1,13 @@
 package com.markettwits.core_cloud.provider
 
 import com.markettwits.buildkonfig.BuildKonfig
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.header
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.URLBuilder
-import io.ktor.http.encodedPath
-import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 class HttpClientProviderBase(
@@ -30,7 +22,7 @@ class HttpClientProviderBase(
         }
         if (loggerEnabled) {
             install(Logging) {
-                logger = Logger.DEFAULT
+                logger = Logger.SIMPLE
                 level = LogLevel.ALL
             }
         }

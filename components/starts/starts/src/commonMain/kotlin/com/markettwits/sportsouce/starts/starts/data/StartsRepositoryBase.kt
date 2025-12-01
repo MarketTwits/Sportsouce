@@ -2,8 +2,11 @@ package com.markettwits.sportsouce.starts.starts.data
 
 import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.cahce.execute.list.ExecuteListWithCache
+import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core_ui.items.extensions.Fourth
+import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.domain.StartsRepository
@@ -18,7 +21,10 @@ internal class StartsRepositoryBase(
     private val cache: StartsMainCache,
     private val execute: ExecuteListWithCache,
     private val mapper: StartsCloudToUiMapper,
-) : StartsRepository {
+    private val exceptionTracker: ExceptionTracker,
+) : StartsRepository, LogTagProvider {
+
+    override val tag: String = "StartsRepositoryBase"
 
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
 
@@ -33,6 +39,8 @@ internal class StartsRepositoryBase(
                 },
             )
         }.onFailure {
+            if (!it.isNetworkConnectionError())
+                exceptionTracker.reportException(it)
             starts.value = mapper.map(it.networkExceptionHandler())
         }
     }
@@ -42,7 +50,7 @@ internal class StartsRepositoryBase(
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { service.fetchActualStarts() }
                 val deferredPaste = async { service.fetchPasteStarts().reversed() }
-                val deferredPreview = async { service.fetchPreview() }
+                val deferredPreview = async { service.fetchPreviewStarts() }
                 val deferredMain = async { service.fetchStartMain() }
                 Fourth(
                     deferredMain.await(),

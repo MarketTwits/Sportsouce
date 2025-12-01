@@ -24,14 +24,16 @@ internal fun StartScreenInnerContent(
     modifier: Modifier,
     data: StartItem,
     error: Throwable? = null,
-    starts: List<StartsListItem>,
+    recommendedStarts: List<StartsListItem>,
+    seriesStarts: List<StartsListItem>,
     isPartialData: Boolean = false,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
-    onClickFullAlbum: () -> Unit,
+    onClickFullAlbum: (StartItem.Album) -> Unit,
     onClickUrl: (String) -> Unit,
     onClickPhone: (String) -> Unit,
     onClickRetry: () -> Unit,
+    onClickRelatedStarts: () -> Unit,
     onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
@@ -39,19 +41,18 @@ internal fun StartScreenInnerContent(
     val innerModifier = Modifier.padding(10.dp)
 
     // Animation states for staggered appearance
+    var showConditionGrid by rememberSaveable { mutableStateOf(false) }
     var showDistanceInfo by rememberSaveable { mutableStateOf(false) }
     var showAlbums by rememberSaveable { mutableStateOf(false) }
-    var showMembersStatistics by rememberSaveable { mutableStateOf(false) }
-    var showResults by rememberSaveable { mutableStateOf(false) }
-    var showUsefulLinks by rememberSaveable { mutableStateOf(false) }
+    var showAllFiles by rememberSaveable { mutableStateOf(false) }
     var showOrganizers by rememberSaveable { mutableStateOf(false) }
+    var showStartSeries by rememberSaveable { mutableStateOf(false) }
+
     var showConditionPanel by rememberSaveable { mutableStateOf(false) }
     var showMembersPanel by rememberSaveable { mutableStateOf(false) }
 
-    // Track animation state to ensure animations only play once
     var hasAnimated by rememberSaveable { mutableStateOf(false) }
 
-    // Track previous partial state to detect transition from partial to full data
     var previousPartialState by rememberSaveable { mutableStateOf(isPartialData) }
 
     // Staggered animation timing - trigger when transitioning from partial to full data
@@ -61,38 +62,40 @@ internal fun StartScreenInnerContent(
             if (previousPartialState && !isPartialData) {
                 // Wait for StartExtraFieldsPanel to complete its internal animations (~550ms)
                 delay(600) // Allow time for StartExtraFieldsPanel animations to complete
+                showConditionGrid = true
+                delay(120)
                 showDistanceInfo = true
                 delay(120)
                 showAlbums = true
                 delay(120)
-                showMembersStatistics = true
-                delay(120)
-                showResults = true
-                delay(120)
-                showUsefulLinks = true
+                showAllFiles = true
                 delay(120)
                 showOrganizers = true
                 delay(120)
-                showConditionPanel = true
+                showStartSeries = true
+                delay(120)
+                delay(120)
+                showAllFiles = true
                 delay(120)
                 showMembersPanel = true
                 hasAnimated = true
             } else if (!previousPartialState && !isPartialData) {
                 // If not partial data from the start (direct load), show with staggered timing
                 delay(600) // Account for StartExtraFieldsPanel timing even on direct load
+                showConditionGrid = true
+                delay(120)
                 showDistanceInfo = true
                 delay(120)
                 showAlbums = true
                 delay(120)
-                showMembersStatistics = true
-                delay(120)
-                showResults = true
-                delay(120)
-                showUsefulLinks = true
+                showAllFiles = true
                 delay(120)
                 showOrganizers = true
                 delay(120)
-                showConditionPanel = true
+                showStartSeries = true
+                delay(120)
+                delay(1200)
+                showAllFiles = true
                 delay(120)
                 showMembersPanel = true
                 hasAnimated = true
@@ -102,25 +105,46 @@ internal fun StartScreenInnerContent(
     }
 
     Column(modifier = modifier) {
-        StartTitle(
-            modifier = innerModifier,
-            title = data.title,
-        )
-        StartExtraFieldsPanel(
-            modifier = innerModifier,
-            place = data.startPlace,
-            organizers = data.organizers,
-            startDate = data.startTime,
-            isPartialData = isPartialData
-        )
-        StartDescription(modifier = innerModifier, description = data.description, isPartialData = isPartialData)
+        StartTopCard {
+            StartTitle(
+                modifier = innerModifier,
+                title = data.title,
+            )
+            StartStatus(
+                organizers = data.organizers,
+                kindOfSports = data.kindOfSports,
+                startStatus = data.startStatus
+            )
+            StartExtraFieldsPanel(
+                modifier = innerModifier,
+                place = data.startPlace,
+                organizers = data.organizers,
+                startDate = data.startTime,
+                isPartialData = isPartialData
+            )
+            StartDescription(
+                modifier = innerModifier,
+                description = data.description,
+                isPartialData = isPartialData
+            )
+        }
+        AnimatedVisibility(
+            visible = showConditionGrid,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500))
+        ) {
+            StartConditionGrid(
+                modifier = innerModifier,
+                conditionItems = data.conditionDetails
+            )
+        }
         AnimatedVisibility(
             visible = showDistanceInfo,
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
         ) {
             StartDistanceInfo(
                 modifier = innerModifier,
-                distances = data.distanceInfoNew
+                distances = data.distanceInfoNew,
+                membersUi = data.startMembersUi
             )
         }
         AnimatedVisibility(
@@ -128,41 +152,20 @@ internal fun StartScreenInnerContent(
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
         ) {
             StartAlbums(modifier = innerModifier, albums = data.startAlbum, onCLickFullAlbum = {
-                onClickFullAlbum()
+                onClickFullAlbum(it)
             })
         }
         AnimatedVisibility(
-            visible = showMembersStatistics,
+            visible = showAllFiles,
             enter = fadeIn(animationSpec = tween(durationMillis = 500))
         ) {
-            StartMembersStatistics(
-                modifier = innerModifier,
-                membersUi = data.startMembersUi
-            )
-        }
-        AnimatedVisibility(
-            visible = showResults,
-            enter = fadeIn(animationSpec = tween(durationMillis = 500))
-        ) {
-            StartResult(
+            StartAllFiles(
                 modifier = innerModifier,
                 results = data.result,
-                title = "Результаты",
-                onClickResult = {
-                    onClickUrl(it)
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible = showUsefulLinks,
-            enter = fadeIn(animationSpec = tween(durationMillis = 500))
-        ) {
-            StartResult(
-                modifier = innerModifier,
-                results = data.usefulLinks,
-                title = "Полезные ссылки",
-                onClickResult = {
-                    onClickUrl(it)
+                usefulLinks = data.usefulLinks,
+                conditionFile = data.conditionFile,
+                onClickFile = { url ->
+                    onClickUrl(url)
                 }
             )
         }
@@ -175,6 +178,18 @@ internal fun StartScreenInnerContent(
                 organizer = data.organizers,
                 onClickUrl = onClickUrl,
                 onClickPhone = onClickPhone
+            )
+        }
+        AnimatedVisibility(
+            visible = showStartSeries,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500))
+        ) {
+            StartSeriesPanel(
+                modifier = innerModifier,
+                currentStartId = data.id,
+                items = seriesStarts,
+                onClickRelatedStarts = onClickRelatedStarts,
+                onItemClick = onClickRecommendedStart,
             )
         }
         AnimatedVisibility(
@@ -205,7 +220,7 @@ internal fun StartScreenInnerContent(
         )
         StartsRecommendationPanel(
             modifier = innerModifier,
-            items = starts,
+            items = recommendedStarts,
             onItemClick = onClickRecommendedStart
         )
         donations(innerModifier)

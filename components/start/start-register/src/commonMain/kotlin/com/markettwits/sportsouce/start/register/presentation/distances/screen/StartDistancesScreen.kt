@@ -13,6 +13,7 @@ fun StartDistancesScreen(
     StartDistancesContent(
         state = state,
         onClickGoBack = component::onClickGoBack,
-        onClickSelectedDistance = component::onClickDistance
+        onClickSelectedDistance = component::onClickDistance,
+        onClickUrl = component::onClickUrl
     )
 }

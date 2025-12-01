@@ -17,6 +17,8 @@ interface StartRepository {
 
     suspend fun startsRecommended(startId: String): Result<List<StartsListItem>>
 
+    suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>>
+
     suspend fun writeComment(startId: Int, comment: String, id: Int, subComment: Boolean): CommentUiState
 
     suspend fun membersFilters(startId: Int): Result<FiltersRemote>
@@ -25,6 +27,11 @@ interface StartRepository {
         startId: Int,
         params: StartMembersPagingParams,
     ): Flow<PagingData<Pair<StartMembersUi, Int>>>
+
+    fun pagingMembersResults(
+        startId: Int,
+        params: StartMembersResultsPagingParams = StartMembersResultsPagingParams(),
+    ): Flow<PagingData<Pair<MemberResult, Int>>>
 
 }
 

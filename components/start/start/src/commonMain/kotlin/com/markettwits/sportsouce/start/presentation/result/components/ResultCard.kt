@@ -1,17 +1,17 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,52 +27,9 @@ import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Composable
-fun StartMemberResultsItemsContent(
-    results: List<MemberResult>,
-    onClickMemberResult: (MemberResult) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        LazyColumn(
-            contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-
-            item {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = "Всего ${results.size} результатов",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                )
-            }
-
-            itemsIndexed(results) { index, result ->
-                ResultCard(
-                    result = result,
-                    onClickMemberResult = onClickMemberResult,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem(tween(300))
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-private fun ResultCard(
+internal fun ResultCard(
     modifier: Modifier = Modifier,
     result: MemberResult,
     onClickMemberResult: (MemberResult) -> Unit,
@@ -92,7 +49,6 @@ private fun ResultCard(
             modifier = modifier.fillMaxWidth()
         )
 }
-
 
 @Composable
 private fun CompactResultCard(
@@ -312,7 +268,6 @@ private fun ExpandedResultCard(
     }
 }
 
-// АВАТАРЫ ДЛЯ РАЗНЫХ РАЗМЕРОВ
 @Composable
 private fun PlaceAvatar(
     modifier: Modifier = Modifier,
@@ -393,7 +348,6 @@ private fun CompactResultItem(
     }
 }
 
-
 @Composable
 private fun ExpandedResultItem(
     modifier: Modifier = Modifier,
@@ -437,7 +391,6 @@ private fun String.formatNames(): String {
     val names = split("\\").map { it.trim() }
     return names.joinToString("\n")
 }
-
 
 private fun String.toAbbreviation(maxLetters: Int = 3): String {
     val words = this

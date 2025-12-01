@@ -12,15 +12,13 @@ internal fun StartConditionPanel(
 ) {
     when (file) {
         is StartItem.ConditionFile.Base -> {
-            StartContentBasePanel(modifier = modifier, label = "Положение") {
-                StartFileContent(
-                    modifier = modifier,
-                    fileName = "Положение",
-                    onClick = {
-                        onClickFile(file.url)
-                    }
-                )
-            }
+            StartConditionButton(
+                modifier = modifier,
+                fileName = "Положение",
+                onClick = {
+                    onClickFile(file.url)
+                }
+            )
         }
 
         is StartItem.ConditionFile.Empty -> {}

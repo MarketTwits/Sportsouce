@@ -35,7 +35,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data object OnClickRetry : Intent
         data object OnClickRegistration : Intent
         data object OnClickMembersResult : Intent
-        data object OnClickFullAlbum : Intent
+        data class OnClickFullAlbum(val album: StartItem.Album) : Intent
         data object OnConsumedEvent : Intent
         data object OnClickShare : Intent
         data class OnClickMembers(val members: List<StartMembersUi>) : Intent
@@ -45,6 +45,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class TriggerEvent(val message: String, val status: Boolean) : Intent
         data class OpenStartCommentsScreen(val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode) :
             Intent
+
+        data object OnClickRelatedStarts : Intent
     }
 
     data class State(
@@ -53,15 +55,17 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val error: Throwable? = null,
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
+        val startsSeries: List<StartsListItem> = emptyList(),
         val event: StateEventWithContent<EventContent> = consumed(),
         val isPartialData: Boolean = false,
     )
 
     sealed interface Label {
         data object OnClickBack : Label
+        data class OnClickRelatedStarts(val startId: Int, val relatedStarts: List<StartsListItem>) : Label
         data class OnApplyStartId(val startId: Int) : Label
         data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
-        data class OnClickMembersResult(val membersResult: List<MemberResult>) : Label
+        data class OnClickMembersResult(val startId: Int, val members: List<MemberResult>) : Label
         data class OnClickStartRecommended(val start: StartsListItem) : Label
         data class OnClickFullAlbum(val images: List<String>) : Label
         data class OnClickDistanceNew(
@@ -72,6 +76,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentType: String,
             val startTitle: String,
         ) : Label
+
         data class OnOpenStartCommentsScreen(
             val startId: Int,
             val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode,
@@ -83,7 +88,7 @@ class StartScreenStoreFactory(
     private val storeFactory: StoreFactory,
     private val service: StartRepository,
     private val exceptionTracker: ExceptionTracker,
-    private val intentAction: IntentAction
+    private val intentAction: IntentAction,
 ) {
     fun create(input: StartScreenInput): StartScreenStore =
         object : StartScreenStore, Store<Intent, State, Label> by storeFactory.create(
@@ -101,6 +106,7 @@ class StartScreenStoreFactory(
         data class StartInfoSuccess(val data: StartItem) : Msg
         data class StartInfoFailed(val exception: Throwable) : Msg
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
+        data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
     }
 
@@ -115,17 +121,20 @@ class StartScreenStoreFactory(
         override fun executeIntent(intent: Intent) {
             when (intent) {
                 is Intent.OnClickBack -> publish(OnClickBack)
+
                 is Intent.OnClickMembers -> {
                     state().startItem?.let { startItem ->
                         publish(OnClickMembers(startItem.id, intent.members))
                     }
                 }
+
                 is Intent.OnClickRetry -> launch(startInput, true)
+
                 is Intent.OnClickFullAlbum -> {
-                    val images = state().startItem?.startAlbum?.flatMap { album ->
-                        album.photos.map { photo -> photo.imageUrl }
+                    val images = intent.album.photos.map { album ->
+                        album.imageUrl
                     }
-                    if (!images.isNullOrEmpty()) {
+                    if (images.isNotEmpty()) {
                         publish(OnClickFullAlbum(images))
                     }
                 }
@@ -156,20 +165,40 @@ class StartScreenStoreFactory(
 
                 is Intent.OnClickMembersResult -> {
                     state().startItem?.let { startItem ->
-                        publish(OnClickMembersResult(startItem.membersResults))
+                        publish(
+                            OnClickMembersResult(
+                                startItem.id,
+                                startItem.membersResults
+                            )
+                        )
                     }
                 }
 
                 is Intent.OnClickStartRecommended -> publish(OnClickStartRecommended(intent.startId))
+
                 is Intent.OnClickShare -> {
                     val path = state().startItem?.let { startItem ->
                         startItem.slug.ifEmpty { startItem.id.toString() }
                     }
                     intentAction.sharePlainText("https://sportsauce.ru/starts/$path")
                 }
+
                 is Intent.OpenStartCommentsScreen -> {
                     state().startItem?.let { startItem ->
                         publish(OnOpenStartCommentsScreen(startItem.id, intent.mode))
+                    }
+                }
+
+                is Intent.OnClickRelatedStarts -> {
+                    state().let { state ->
+                        if (state.startsSeries.isNotEmpty() || state.startItem != null) {
+                            publish(
+                                OnClickRelatedStarts(
+                                    state.startItem?.id ?: 0,
+                                    state.startsSeries
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -205,14 +234,28 @@ class StartScreenStoreFactory(
                     onSuccess = {
                         publish(OnApplyStartId(it.id))
                         dispatch(Msg.StartInfoSuccess(it))
+                        getSeriesStarts(it.startSeries)
                     }
                 )
             }
+            getRecommendedStarts(startIdString)
+        }
+
+        private fun getRecommendedStarts(startIdString: String) {
             scope.launch {
                 service.startsRecommended(startIdString).onSuccess {
                     dispatch(Msg.StartsRecommendedSuccess(it))
                 }
             }
+        }
+
+        private fun getSeriesStarts(startSeries: StartItem.StartSeries) {
+            if (startSeries is StartItem.StartSeries.Value)
+                scope.launch {
+                    service.startsSeries(startSeries.id).onSuccess {
+                        dispatch(Msg.StartsSeriesSuccess(it))
+                    }
+                }
         }
     }
 
@@ -242,6 +285,10 @@ class StartScreenStoreFactory(
 
             is Msg.StartsRecommendedSuccess -> copy(
                 startsRecommended = msg.data
+            )
+
+            is Msg.StartsSeriesSuccess -> copy(
+                startsSeries = msg.data
             )
 
             is Msg.SetPartialStartItem -> copy(

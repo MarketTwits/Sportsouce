@@ -12,3 +12,4 @@ fun imageRequestCrossfade(model: Any?): ImageRequest =
         .crossfade(true)
         .data(model)
         .build()
+

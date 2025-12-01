@@ -1,10 +1,6 @@
 package com.markettwits.sportsouce.review.review.presentation.components.review_menu
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
@@ -59,13 +55,6 @@ private fun menu() = listOf<ReviewMenuItem>(
         SportSouceColor.SportSouceStartEndedPink.copy(alpha = 0.1f),
         SportSouceColor.SportSouceStartEndedPink
     ),
-//    ReviewMenuItem(
-//        1,
-//        "Расписание",
-//        Icons.Filled.TableChart,
-//        SportSouceColor.SportSouceLighBlue.copy(alpha = 0.1f),
-//        SportSouceColor.SportSouceLighBlue
-//    ),
     ReviewMenuItem(
         2,
         "Клуб",
@@ -75,7 +64,7 @@ private fun menu() = listOf<ReviewMenuItem>(
     ),
     ReviewMenuItem(
         3,
-        "Фильтр",
+        "Поиск",
         Icons.Filled.Settings,
         SportSouceColor.SportSouceRegistryOpenGreen.copy(alpha = 0.1f),
         SportSouceColor.SportSouceRegistryOpenGreen

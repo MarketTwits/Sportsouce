@@ -18,20 +18,17 @@ internal fun AdditionalFieldNumber(
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
-
-    val text = if (field.answer.number == null) ""
-        else field.answer.number.toString()
+    val text = field.answer.number?.toString() ?: ""
 
     Column(modifier = modifier) {
-        AdditionalFiledTitle(field = field.field)
         OutlinedTextFieldBase(
             value = text,
-            onValueChange = {
-                if (it.all { char -> char.isDigit() }) {
+            onValueChange = { newValue ->
+                if (newValue.isEmpty() || newValue.all { char -> char.isDigit() }) {
                     onFieldChanged(
                         field.copy(
                             answer = field.answer.copy(
-                                number = it.toInt(),
+                                number = newValue.toIntOrNull(),
                             )
                         )
                     )

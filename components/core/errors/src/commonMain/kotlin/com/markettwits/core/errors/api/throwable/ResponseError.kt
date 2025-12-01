@@ -1,6 +1,5 @@
 package com.markettwits.core.errors.api.throwable
 
-import io.ktor.client.plugins.ResponseException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 
@@ -13,4 +12,6 @@ data class ResponseError(
 )
 
 fun Throwable.isResponseException(): Boolean =
-    (this is ResponseException || this is SerializationException)
+    (this.message?.contains("error", ignoreCase = true) == true ||
+            this.message?.contains("response", ignoreCase = true) == true ||
+            this is SerializationException)

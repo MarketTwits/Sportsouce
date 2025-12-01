@@ -25,7 +25,7 @@ internal class SportSauceClubsNetworkApiBase(
 
     private val json = httpClient.json()
 
-    private val client = httpClient.provide(true)
+    private val client = httpClient.provide()
 
     override suspend fun trainers(): List<TrainersRemoteRow> {
         val response = client.get("trainer")

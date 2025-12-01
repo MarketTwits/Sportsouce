@@ -5,6 +5,7 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
 import web.dom.DocumentVisibilityState
+import web.dom.visible
 
 internal fun LifecycleRegistry.attachToDocument() {
     fun onVisibilityChanged() {

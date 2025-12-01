@@ -16,18 +16,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class StartScreenComponentComponentBase(
+class StartScreenComponentBase(
     componentContext: ComponentContext,
     private val input: StartScreenInput,
     private val back: () -> Unit,
     private val registerNew: (StartDistancesInput) -> Unit,
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
-    private val membersResult: (List<MemberResult>) -> Unit,
+    private val membersResult: (Int, List<MemberResult>) -> Unit,
     private val album: (List<String>) -> Unit,
     private val pushStart: (StartsListItem) -> Unit,
     private val onApplyStartId: (Int) -> Unit,
     private val onOpenStartCommentsScreen: (Int, CommentMode) -> Unit = { _, _ -> },
+    private val relatedStarts: (Int, List<StartsListItem>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent {
 
     private val store = instanceKeeper.getStore {
@@ -49,7 +50,7 @@ class StartScreenComponentComponentBase(
                     is StartScreenStore.Label.OnClickBack -> back()
                     is StartScreenStore.Label.OnClickMembers -> members(it.startId, it.members)
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
-                    is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.membersResult)
+                    is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.startId, it.members)
                     is StartScreenStore.Label.OnClickDistanceNew -> registerNew(
                         StartDistancesInput(
                             startId = it.startId,
@@ -66,6 +67,8 @@ class StartScreenComponentComponentBase(
                         it.startId,
                         it.mode
                     )
+
+                    is StartScreenStore.Label.OnClickRelatedStarts -> relatedStarts(it.startId, it.relatedStarts)
                 }
             }
         }

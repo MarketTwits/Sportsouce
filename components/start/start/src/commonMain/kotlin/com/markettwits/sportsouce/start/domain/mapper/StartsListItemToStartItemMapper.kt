@@ -17,13 +17,19 @@ object StartsListItemToStartItemMapper {
             slug = "", // Not available in StartsListItem
             image = startsListItem.image,
             startMembersUi = emptyList(), // Not available in StartsListItem
+            kindOfSports = startsListItem.kindOfSports.map { kindOfSport ->
+                StartItem.KindOfSport(
+                    id = kindOfSport.id,
+                    name = kindOfSport.name
+                )
+            },
             startStatus = StartItem.StartStatus(
                 code = startsListItem.statusCode.id,
                 name = startsListItem.statusCode.message
             ),
             startData = startsListItem.date,
             startAlbum = emptyList(), // Not available in StartsListItem
-            startTime = "", // Not available in StartsListItem  
+            startTime = "", // Not available in StartsListItem
             description = startsListItem.description,
             paymentDisabled = false, // Not available in StartsListItem
             regLink = "", // Not available in StartsListItem
@@ -38,7 +44,10 @@ object StartsListItemToStartItemMapper {
                 rows = emptyList()
             ), // Not available in StartsListItem
             result = emptyList(), // Not available in StartsListItem
-            usefulLinks = emptyList(), // Not available in StartsListItem
+            usefulLinks = emptyList(), // Not available in StartsListItem,
+            startSeries = StartItem.StartSeries.Empty,
+            sponsors = emptyList(),
+            conditionDetails = emptyList(),
             startTimes = StartItem.StartTimes(
                 beginningRegistry = "",
                 endRegistry = "",

@@ -3,11 +3,12 @@ package com.markettwits.sportsouce.start.presentation.result.components
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,7 @@ import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.DropDownSpinnerStage
 import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.start.presentation.result.model.*
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStore
 
@@ -27,6 +28,7 @@ fun StartMemberMemberResultsTopbar(
     state: StartMemberResultsStore.State,
     windowSizeClass: WindowSizeClass,
     onIntent: (StartMemberResultsStore.Intent) -> Unit,
+    component: StartMemberResultsComponent? = null,
     modifier: Modifier = Modifier,
 ) {
     val isWideScreen = windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Medium
@@ -35,7 +37,8 @@ fun StartMemberMemberResultsTopbar(
         modifier = modifier.fillMaxWidth(),
         state = state,
         isWideScreen = isWideScreen,
-        onIntent = onIntent
+        onIntent = onIntent,
+        component = component
     )
     if (state.isFilterDialogOpen && !isWideScreen) {
         FilterBottomSheet(
@@ -52,6 +55,7 @@ private fun MemberResultsTopBar(
     state: StartMemberResultsStore.State,
     isWideScreen: Boolean,
     onIntent: (StartMemberResultsStore.Intent) -> Unit,
+    component: StartMemberResultsComponent? = null,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -77,7 +81,7 @@ private fun MemberResultsTopBar(
                     onClickGoBack = { onIntent(StartMemberResultsStore.Intent.OnClickGoBack) },
                     onClickBrush = {
                         onIntent(StartMemberResultsStore.Intent.OnClickBrushQuery)
-                    }
+                    },
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -97,13 +101,6 @@ private fun MemberResultsTopBar(
                         )
                     }
                 }
-
-                SortButton(
-                    sortBy = state.filterState.sortBy,
-                    sortOrder = state.filterState.sortOrder,
-                    onSortByChange = { onIntent(StartMemberResultsStore.Intent.OnSortByChange(it)) },
-                    onSortOrderChange = { onIntent(StartMemberResultsStore.Intent.OnSortOrderChange(it)) }
-                )
 
                 if (!isWideScreen) {
                     BadgedBox(badge = {
@@ -136,97 +133,24 @@ private fun MemberResultsTopBar(
                 )
             }
 
-            val teams = state.filterState.teamFilters.getSelectTeams()
             val groups = state.filterState.groupFilters.getSelectedGroups()
             val distances = state.filterState.distanceFilters.getSelectDistance()
+            val genders = state.filterState.genderFilters.getSelectedGenders()
 
             SelectedFiltersPane(
-                selectedTeams = teams,
                 selectedGroups = groups,
                 selectedDistance = distances,
-                onClickTeam = {
-                    onIntent(StartMemberResultsStore.Intent.OnTeamFilterToggle(it.name))
-                },
+                selectedGenders = genders,
                 onClickGroup = {
                     onIntent(StartMemberResultsStore.Intent.OnGroupFilterToggle(it.name))
                 },
                 onClickDistance = { distance ->
                     onIntent(StartMemberResultsStore.Intent.OnDistanceFilterToggle(distance))
+                },
+                onClickGender = {
+                    onIntent(StartMemberResultsStore.Intent.OnGenderFilterToggle(it.name))
                 }
             )
-        }
-    }
-}
-
-@Composable
-private fun SortButton(
-    sortBy: SortBy,
-    sortOrder: SortOrder,
-    onSortByChange: (SortBy) -> Unit,
-    onSortOrderChange: (SortOrder) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var showSortMenu by remember { mutableStateOf(false) }
-
-    Box(modifier = modifier) {
-        IconButton(
-            onClick = { showSortMenu = true }
-        ) {
-            Icon(
-                imageVector = if (sortOrder == SortOrder.ASC) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
-                contentDescription = "Sort",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        }
-
-        DropdownMenu(
-            expanded = showSortMenu,
-            onDismissRequest = { showSortMenu = false },
-            containerColor = MaterialTheme.colorScheme.primary,
-        ) {
-            Column(
-                modifier = Modifier.padding(8.dp),
-            ) {
-                Text(
-                    text = "Сортировать по :",
-                    fontFamily = FontNunito.semiBoldBold(),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                SortBy.entries.forEach { sort ->
-                    DropdownMenuItem(
-                        text = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    sort.displayName,
-                                    fontFamily = FontNunito.semiBoldBold(),
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    fontSize = 14.sp,
-                                )
-                                if (sortBy == sort) {
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Icon(
-                                        imageVector = Icons.Default.Check,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.tertiary,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                }
-                            }
-                        },
-                        onClick = {
-                            if (sortBy == sort) {
-                                onSortOrderChange(if (sortOrder == SortOrder.ASC) SortOrder.DESC else SortOrder.ASC)
-                            } else {
-                                onSortByChange(sort)
-                            }
-                            showSortMenu = false
-                        }
-                    )
-                }
-            }
         }
     }
 }
@@ -237,7 +161,6 @@ private fun WideScreenFilters(
     onIntent: (StartMemberResultsStore.Intent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
@@ -260,11 +183,11 @@ private fun WideScreenFilters(
                 }
             )
             Spacer(modifier = Modifier.width(8.dp))
-            TeamsDropDownFilter(
+            GendersDropDownFilter(
                 modifier = Modifier,
-                teams = state.filterState.teamFilters,
-                onChoseTeamFilter = {
-                    onIntent(StartMemberResultsStore.Intent.OnTeamFilterToggle(it.name))
+                genders = state.filterState.genderFilters,
+                onChoseGenderFilter = {
+                    onIntent(StartMemberResultsStore.Intent.OnGenderFilterToggle(it.name))
                 }
             )
         }
@@ -319,22 +242,22 @@ private fun GroupsDropdownFilter(
 }
 
 @Composable
-private fun TeamsDropDownFilter(
+private fun GendersDropDownFilter(
     modifier: Modifier,
-    teams: List<TeamFilter>,
-    onChoseTeamFilter: (TeamFilter) -> Unit,
+    genders: List<GenderFilter>,
+    onChoseGenderFilter: (GenderFilter) -> Unit,
 ) {
-    val selectedTeam = teams.getSelectTeams()
+    val selectedGender = genders.getSelectedGenders()
 
     ItemsTextFiledDialog(
         modifier.sizeIn(maxHeight = 60.dp, maxWidth = 180.dp),
-        label = "Команды",
-        items = teams.map { it.name },
-        values = selectedTeam.map { it.name },
+        label = "Пол",
+        items = genders.map { it.name },
+        values = selectedGender.map { it.name },
         onValueChanged = { newValues ->
-            val team = teams.find { it.name == newValues }
-            if (team != null)
-                onChoseTeamFilter(team)
+            val gender = genders.find { it.name == newValues }
+            if (gender != null)
+                onChoseGenderFilter(gender)
         }
     )
 }
@@ -342,12 +265,12 @@ private fun TeamsDropDownFilter(
 @Composable
 private fun SelectedFiltersPane(
     modifier: Modifier = Modifier,
-    selectedTeams: List<TeamFilter>,
     selectedDistance: DistanceFilter?,
     selectedGroups: List<GroupFilter>,
-    onClickTeam: (TeamFilter) -> Unit,
+    selectedGenders: List<GenderFilter>,
     onClickGroup: (GroupFilter) -> Unit,
     onClickDistance: (DistanceFilter) -> Unit,
+    onClickGender: (GenderFilter) -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
@@ -368,11 +291,11 @@ private fun SelectedFiltersPane(
                 label = group.name
             )
         }
-        selectedTeams.forEach { team ->
+        selectedGenders.forEach { gender ->
             FilterChipBase(
                 selected = true,
-                onClick = { onClickTeam(team) },
-                label = team.name
+                onClick = { onClickGender(gender) },
+                label = gender.name
             )
         }
     }
@@ -383,7 +306,7 @@ private fun hasActiveFilters(filterState: FilterState): Boolean {
     return filterState.searchQuery.isNotBlank() ||
             filterState.distanceFilters.any { it.isSelected } ||
             filterState.groupFilters.any { it.isSelected } ||
-            filterState.teamFilters.any { it.isSelected }
+            filterState.genderFilters.any { it.isSelected }
 }
 
 fun getActiveFiltersCount(filterState: FilterState): Int {
@@ -391,6 +314,6 @@ fun getActiveFiltersCount(filterState: FilterState): Int {
     if (filterState.searchQuery.isNotBlank()) count++
     count += filterState.distanceFilters.count { it.isSelected }
     count += filterState.groupFilters.count { it.isSelected }
-    count += filterState.teamFilters.count { it.isSelected }
+    count += filterState.genderFilters.count { it.isSelected }
     return count
 }

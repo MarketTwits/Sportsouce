@@ -4,7 +4,7 @@ import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase
 import com.markettwits.selfupdater.thirdparty.api.SelfUpdateParserApi
 import com.markettwits.selfupdater.thirdparty.github.parser.GithubParser
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -15,6 +15,6 @@ val thirdPartyGitHubModule = module {
         HttpClientProviderBase(
             json = JsonProviderBase().provide(),
             baseUrl = "https://api.github.com"
-        ).provide(false)
+        ).provide()
     }
 }

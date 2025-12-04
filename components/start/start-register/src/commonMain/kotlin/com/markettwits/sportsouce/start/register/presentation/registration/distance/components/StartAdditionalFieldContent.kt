@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.start.register.presentation.registration.dist
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,13 +15,7 @@ import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldMultiselect
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldNumber
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldSingleSelect
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldText
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldTextData
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFieldTextTime
-import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.AdditionalFiledCheckBox
+import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.*
 
 @Composable
 internal fun RenderAdditionalFields(
@@ -33,7 +28,9 @@ internal fun RenderAdditionalFields(
             .fillMaxWidth()
     ) {
         if (fields.isNotEmpty())
-            OnBackgroundCard {
+            OnBackgroundCard(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+            ) {
                 Column(modifier = Modifier.padding(10.dp)) {
                     Text(
                         text = "Дополнительные поля",

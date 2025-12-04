@@ -112,6 +112,7 @@ internal class StartRemoteToUiMapperBase(
                     distanceMapNew = startRemote.distances,
                     membersResults = startMemberResults,
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
+                    regOnSite = startRemote.regOnSite ?: false,
                     conditionDetails = buildList {
                         val regulation = startRemote.regulation
                         val statement = startRemote.extractStatement
@@ -187,6 +188,7 @@ internal class StartRemoteToUiMapperBase(
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
                     sponsors = emptyList(),
                     conditionDetails = emptyList(),
+                    regOnSite = startRemote.startData.regOnSite ?: false,
                     slug = ""
                 )
             }

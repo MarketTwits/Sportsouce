@@ -47,6 +47,7 @@ object StartsListItemToStartItemMapper {
             usefulLinks = emptyList(), // Not available in StartsListItem,
             startSeries = StartItem.StartSeries.Empty,
             sponsors = emptyList(),
+            regOnSite = false,
             conditionDetails = emptyList(),
             startTimes = StartItem.StartTimes(
                 beginningRegistry = "",

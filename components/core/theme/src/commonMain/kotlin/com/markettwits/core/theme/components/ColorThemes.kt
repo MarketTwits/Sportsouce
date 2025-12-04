@@ -42,7 +42,7 @@ internal val DarkColorScheme = darkColorScheme(
     tertiaryContainer = SportSouceColor.DarkSecondaryContainerNew,
     onTertiaryContainer = SportSouceColor.OnPrimaryDark,
     error = SportSouceColor.SportSouceDarkRed,
-    onError = Color.Black,
+    onError = Color.White,
     errorContainer = SportSouceColor.SportSouceDarkRed.copy(alpha = 0.15f),
     onErrorContainer = SportSouceColor.SportSouceDarkRed,
     outline = SportSouceColor.GrayForDarkTheme,

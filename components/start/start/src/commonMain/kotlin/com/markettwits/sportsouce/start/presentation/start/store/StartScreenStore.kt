@@ -13,6 +13,7 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
+import com.markettwits.core_ui.items.extensions.isLooseUrl
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
@@ -145,20 +146,19 @@ class StartScreenStoreFactory(
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickRegistration -> {
                     state().startItem?.let { startItem ->
-                        if (startItem.regLink.isNotEmpty()) {
-                            intentAction.openWebPage(startItem.regLink)
-                        }
-                        if (startItem.distanceInfoNew.isNotEmpty() && startItem.startStatus.code == 3) {
-                            publish(
-                                OnClickDistanceNew(
-                                    startId = state().startItem?.id ?: 0,
-                                    startTitle = startItem.title,
-                                    distanceInfo = startItem.distanceInfoNew,
-                                    paymentDisabled = startItem.paymentDisabled,
-                                    paymentType = startItem.paymentType,
-                                    mapDistance = startItem.distanceMapNew
-                                )
-                            )
+                        when {
+                            startItem.isExternalLinkRegistration() -> {
+                                intentAction.openWebPage(startItem.regLink)
+                            }
+
+                            startItem.isDistanceRegistration() -> {
+                                publish(startItem.toOnClickDistanceNew())
+                            }
+
+                            else -> {
+                                dispatch(TriggerEvent("Не удалось найти подходящий старт", false))
+                                errorLog { "Can't registration with startItem Id:${startItem.id}" }
+                            }
                         }
                     }
                 }
@@ -258,6 +258,24 @@ class StartScreenStoreFactory(
                 }
         }
     }
+
+    private fun StartItem.isExternalLinkRegistration(): Boolean {
+        return regLink.trim().isNotEmpty() && !regOnSite && regLink.isLooseUrl()
+    }
+
+    private fun StartItem.isDistanceRegistration(): Boolean {
+        return distanceInfoNew.isNotEmpty() && startStatus.code == 3
+    }
+
+    private fun StartItem.toOnClickDistanceNew(): OnClickDistanceNew =
+        OnClickDistanceNew(
+            startId = id,
+            startTitle = title,
+            distanceInfo = distanceInfoNew,
+            paymentDisabled = paymentDisabled,
+            paymentType = paymentType,
+            mapDistance = distanceMapNew
+        )
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State = when (msg) {

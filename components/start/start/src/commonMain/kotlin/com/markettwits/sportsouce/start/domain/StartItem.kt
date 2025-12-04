@@ -23,6 +23,7 @@ data class StartItem(
     val description: String,
     val paymentDisabled: Boolean,
     val regLink: String,
+    val regOnSite: Boolean,
     val distanceInfoNew: List<DistinctDistance>,
     val conditionDetails: List<ConditionDetail>,
     val distanceMapNew: List<Distance>,

@@ -12,5 +12,5 @@ kotlin {
     }
 }
 android {
-    namespace = "com.markettwits.starts_cloud"
+    namespace = "com.markettwits.starts.cloud"
 }

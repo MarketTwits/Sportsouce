@@ -12,7 +12,7 @@ data class StartMember(
     @SerialName("is_refunded")
     val isRefunded: Boolean,
     @SerialName("member_start_group_id")
-    val memberStartGroupId: Int,
+    val memberStartGroupId: Int? = null,
     @SerialName("members")
     val members: List<Member>,
     @SerialName("payment")
@@ -20,11 +20,9 @@ data class StartMember(
     @SerialName("reg_code")
     val regCode: String,
     @SerialName("registration_date")
-    val registrationDate: String,
+    val registrationDate: String? = null,
     @SerialName("start_id")
     val startId: Int,
-    @SerialName("updatedAt")
-    val updatedAt: String,
     @SerialName("user_id")
-    val userId: Int
+    val userId: Int,
 )

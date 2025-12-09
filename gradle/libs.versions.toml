@@ -4,9 +4,9 @@ versionName = "1.5.2"
 versionCode = "10417"
 jvm = "11"
 kotlin = "2.2.21" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
-gradle = "8.9.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
+gradle = "8.12.0" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 compose = "1.9.3" # https://github.com/JetBrains/compose-multiplatform
-browser = "1.9.0"
+kotlin-browser = "1.9.0"
 kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
@@ -14,8 +14,8 @@ kstore = "1.0.0" # https://github.com/xxfast/KStore
 kermit = "2.0.8" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.3.0" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "2025.11.10" #https://github.com/JetBrains/kotlin-wrappers
-compottie = "1.1.2" # https://github.com/alexzhirkevich/compottie
+jetbrainsKotlinWrappers = "2025.12.1" #https://github.com/JetBrains/kotlin-wrappers
+compottie = "2.0.2" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.2.0" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
@@ -23,11 +23,11 @@ richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
 multiplatformMarkdownRendererM3 = "0.38.1" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.2.0"
 composeMaterial3WindowSizeClass = "1.9.0"
-composeHotReload = "1.0.0-rc03" # https://github.com/JetBrains/compose-hot-reload
+composeHotReload = "1.0.0" # https://github.com/JetBrains/compose-hot-reload
 composeMaterial3AdaptiveNavigationSuite = "1.9.0"
-buildConfigPlugin = "5.7.1" # https://github.com/gmazzo/gradle-buildconfig-plugin
-compose-activity = "1.11.0"
-compose-preview = "1.9.4"
+buildConfigPlugin = "6.0.6" # https://github.com/gmazzo/gradle-buildconfig-plugin
+compose-activity = "1.12.1"
+compose-preview = "1.10.0"
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.4.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.4.0" # https://github.com/badoo/Reaktive
@@ -36,7 +36,7 @@ tracer = "0.2.15" # https://apptracer.ru/
 
 [libraries]
 
-androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "kotlin-browser" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }

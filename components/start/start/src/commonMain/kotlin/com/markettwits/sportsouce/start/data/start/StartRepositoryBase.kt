@@ -24,11 +24,13 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.domain.*
+import com.markettwits.sportsouce.start.domain.mapper.StartItemToStartsListItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import com.markettwits.sportsouce.starts.favorites.domain.StartFavoritesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote as CloudFiltersRemote
@@ -38,10 +40,14 @@ internal class StartRepositoryBase(
     private val authService: AuthDataSource,
     private val startMapper: StartRemoteToUiMapper,
     private val startsService: SportSauceStartsApi,
-    private val cache: StartMemoryCache
+    private val cache: StartMemoryCache,
+    private val favoritesRepository: StartFavoritesRepository,
 ) : StartRepository, LogTagProvider {
 
     override val tag: String = "StartRepository"
+
+    // Delegate favorites flow to favorites repository
+    override val favoritesFlow = favoritesRepository.favorites
 
     // Helper extension to extract ID from StartRemote implementations
     private val StartRemote.id: Int
@@ -67,6 +73,26 @@ internal class StartRepositoryBase(
         } else {
             launches(startId)
         }
+    }
+
+    override suspend fun refreshFavorites(): Result<List<StartsListItem>> {
+        return favoritesRepository.refresh()
+    }
+
+    override suspend fun startAddToFavorite(startItem: StartItem): Result<Boolean> = runCatching {
+        val startsListItem = StartItemToStartsListItemMapper.map(startItem)
+        favoritesRepository.add(startsListItem)
+        isStartInFavorite(startItem.id).getOrDefault(false)
+    }
+
+    override suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean> = runCatching {
+        val startsListItem = StartItemToStartsListItemMapper.map(startItem)
+        favoritesRepository.remove(startsListItem)
+        isStartInFavorite(startItem.id).getOrDefault(false)
+    }
+
+    override suspend fun isStartInFavorite(startId: Int): Result<Boolean> {
+        return favoritesRepository.isStartInFavorite(startId)
     }
 
     override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> {

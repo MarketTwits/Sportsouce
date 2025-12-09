@@ -104,32 +104,31 @@ fun StartCommentsScreen(
             }
 
             else -> {
-                PullToRefreshScreen(
-                    isRefreshing = state.isLoadingComments,
-                    onRefresh = {
-                        component.obtainEvent(StartCommentsStore.Intent.OnRefresh)
-                    }
-                ) { innerModifier ->
-                    AdaptivePane {
-
-                        when (state.mode) {
-                            is CommentMode.Base -> {
-                                if (state.comments.rows.isEmpty()) {
-                                    EmptyCommentsView(
-                                        modifier = innerModifier
-                                            .padding(
-                                                top = paddingValues.calculateTopPadding(),
-                                                bottom = paddingValues.calculateBottomPadding(),
-                                            )
-                                            .fillMaxSize()
-                                    )
-                                } else {
+                AdaptivePane {
+                    when (state.mode) {
+                        is CommentMode.Base -> {
+                            if (state.comments.rows.isEmpty()) {
+                                EmptyCommentsView(
+                                    modifier = Modifier
+                                        .padding(
+                                            top = paddingValues.calculateTopPadding(),
+                                            bottom = paddingValues.calculateBottomPadding(),
+                                        )
+                                        .fillMaxSize()
+                                )
+                            } else {
+                                PullToRefreshScreen(
+                                    modifier = Modifier.padding(
+                                        top = paddingValues.calculateTopPadding(),
+                                        bottom = paddingValues.calculateBottomPadding(),
+                                    ),
+                                    isRefreshing = state.isLoadingComments,
+                                    onRefresh = {
+                                        component.obtainEvent(StartCommentsStore.Intent.OnRefresh)
+                                    }
+                                ) {
                                     LazyColumn(
-                                        modifier = innerModifier
-                                            .padding(
-                                                top = paddingValues.calculateTopPadding(),
-                                                bottom = paddingValues.calculateBottomPadding(),
-                                            )
+                                        modifier = Modifier
                                             .fillMaxSize(),
                                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
                                     ) {
@@ -160,16 +159,23 @@ fun StartCommentsScreen(
                                     }
                                 }
                             }
+                        }
 
-                            is CommentMode.Reply -> {
-                                val replyMode = state.mode as CommentMode.Reply
-                                val parentComment = state.comments.rows.find { it.id == replyMode.messageId }
+                        is CommentMode.Reply -> {
+                            val replyMode = state.mode as CommentMode.Reply
+                            val parentComment = state.comments.rows.find { it.id == replyMode.messageId }
+                            PullToRefreshScreen(
+                                modifier = Modifier.padding(
+                                    top = paddingValues.calculateTopPadding(),
+                                    bottom = paddingValues.calculateBottomPadding(),
+                                ),
+                                isRefreshing = state.isLoadingComments,
+                                onRefresh = {
+                                    component.obtainEvent(StartCommentsStore.Intent.OnRefresh)
+                                }
+                            ) {
                                 LazyColumn(
-                                    modifier = innerModifier
-                                        .padding(
-                                            top = paddingValues.calculateTopPadding(),
-                                            bottom = paddingValues.calculateBottomPadding(),
-                                        )
+                                    modifier = Modifier
                                         .fillMaxSize(),
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
                                 ) {
@@ -221,17 +227,17 @@ fun StartCommentsScreen(
                 }
             }
         }
+    }
 
-        EventEffect(
-            event = state.event,
-            onConsumed = {
-                component.obtainEvent(StartCommentsStore.Intent.OnConsumedEvent)
-            },
-        ) {
-            snackBarColor =
-                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
-            snackBarHostState.showLongMessageWithDismiss(message = it.message)
-        }
+    EventEffect(
+        event = state.event,
+        onConsumed = {
+            component.obtainEvent(StartCommentsStore.Intent.OnConsumedEvent)
+        },
+    ) {
+        snackBarColor =
+            if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+        snackBarHostState.showLongMessageWithDismiss(message = it.message)
     }
 }
 

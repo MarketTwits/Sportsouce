@@ -1,8 +1,8 @@
 package com.markettwits.sportsouce.shop.cloud.di
 
-import com.markettwits.buildkonfig.BuildKonfig
 import com.markettwits.core_cloud.provider.HttpClientProviderBase
 import com.markettwits.core_cloud.provider.JsonProviderBase
+import com.markettwits.core_cloud.provider.SportSauceBaseUrl
 import com.markettwits.sportsouce.shop.cloud.api.SportSauceShopApi
 import com.markettwits.sportsouce.shop.cloud.api.SportSauceShopApiBase
 import com.markettwits.sportsouce.shop.cloud.api.SportSauceShopOrderApi
@@ -14,7 +14,7 @@ val sportSauceShopCloudModule = module {
         SportSauceShopApiBase(
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                baseUrl = BuildKonfig.SPORTSAUCE_API_PATH
+                baseUrl = SportSauceBaseUrl
             ),
         )
     }
@@ -23,7 +23,7 @@ val sportSauceShopCloudModule = module {
         SportSauceShopOrderApiBase(
             httpClient = HttpClientProviderBase(
                 json = JsonProviderBase().provide(),
-                baseUrl = BuildKonfig.SPORTSAUCE_API_PATH
+                baseUrl = SportSauceBaseUrl
             ),
         )
     }

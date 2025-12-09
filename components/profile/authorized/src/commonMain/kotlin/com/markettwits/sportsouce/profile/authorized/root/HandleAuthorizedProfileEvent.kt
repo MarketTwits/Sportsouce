@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushNew
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponent.Config.Start
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 
 internal fun handleAuthorizedProfileEvent(
     outPut: AuthorizedProfileComponent.Output,
@@ -23,7 +24,7 @@ internal fun handleAuthorizedProfileEvent(
         )
 
         is AuthorizedProfileComponent.Output.Start -> navigation.pushNew(
-            Start(outPut.startId)
+            Start(StartScreenInput.Id(outPut.startId))
         )
 
         is AuthorizedProfileComponent.Output.AllRegistries -> navigation.pushNew(
@@ -48,6 +49,10 @@ internal fun handleAuthorizedProfileEvent(
 
         is AuthorizedProfileComponent.Output.StartOrder -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.MyRegistries
+        )
+
+        is AuthorizedProfileComponent.Output.Favorites -> navigation.pushNew(
+            RootAuthorizedProfileComponent.Config.Favorites
         )
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Light
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -23,7 +24,8 @@ internal fun ProfileActionCards(
     modifier: Modifier = Modifier,
     startsCount: Int,
     onClickStarts: () -> Unit,
-    onClickOrders: () -> Unit
+    onClickOrders: () -> Unit,
+    onClickFavorites: () -> Unit,
 ) {
 
     val startsDescription = if (startsCount != 0) "$startsCount стартов" else "Нет регистраций"
@@ -43,6 +45,14 @@ internal fun ProfileActionCards(
             title = "Мои заказы",
             description = "Посмотреть",
             onClick = onClickOrders
+        )
+        Spacer(Modifier.width(8.dp))
+        ProfileActionCard(
+            modifier = Modifier.weight(1f),
+            icon = Icons.Default.Favorite,
+            title = "Избранные",
+            description = "Старты",
+            onClick = onClickFavorites
         )
     }
 }
@@ -78,7 +88,8 @@ private fun ProfileActionCard(
                     text = title,
                     fontSize = 16.sp,
                     fontFamily = FontNunito.bold(),
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(Modifier.height(4.dp))
@@ -86,7 +97,8 @@ private fun ProfileActionCard(
                     text = description,
                     fontSize = 14.sp,
                     fontFamily = FontNunito.regular(),
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                     color = MaterialTheme.colorScheme.outline
                 )
             }

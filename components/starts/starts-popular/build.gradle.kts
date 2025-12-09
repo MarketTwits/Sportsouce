@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 android {
-    namespace = "com.markettwits.popular"
+    namespace = "com.markettwits.starts.popular"
 }
 kotlin {
     sourceSets {

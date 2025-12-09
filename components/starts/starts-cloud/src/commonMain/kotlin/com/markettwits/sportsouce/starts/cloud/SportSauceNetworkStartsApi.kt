@@ -1,9 +1,11 @@
 package com.markettwits.sportsouce.starts.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.starts.cloud.model.NetworkStartFavoritesRequest
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 
 class SportSauceNetworkStartsApi(
     httpClient: HttpClientProvider
@@ -12,6 +14,38 @@ class SportSauceNetworkStartsApi(
     private val json = httpClient.json()
 
     private val client = httpClient.provide()
+
+    suspend fun fetchFavorites(userId: String, token: String): NetworkStartsRemote {
+        val response = client.get("favorites/$userId") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
+    suspend fun addFavorites(startId: Int, userId: String, token: String) {
+        val request = NetworkStartFavoritesRequest(startId = startId, userId = userId)
+        client.post("favorites") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
+    }
+
+    suspend fun removeFavorites(startId: Int, userId: String, token: String) {
+        val request = NetworkStartFavoritesRequest(startId = startId, userId = userId)
+        client.delete("favorites") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+            setBody(request)
+        }
+    }
 
     suspend fun startWithFilter(request: Map<String, String>): NetworkStartsRemote {
         val response = client.get("start") {

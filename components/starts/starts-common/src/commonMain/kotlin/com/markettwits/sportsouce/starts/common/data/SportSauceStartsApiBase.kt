@@ -7,11 +7,10 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 internal class SportSauceStartsApiBase(
     private val startsCloudApi: SportSauceNetworkStartsApi,
-    private val mapper: StartsCloudToListMapper
+    private val mapper: StartsCloudToListMapper,
 ) : SportSauceStartsApi {
     override suspend fun startWithFilter(request: Map<String, String>): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.startWithFilter(request).rows)
-
 
     override suspend fun fetchActualStarts(): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchActualStarts().rows)
@@ -28,4 +27,17 @@ internal class SportSauceStartsApiBase(
 
     override suspend fun fetchStartMain(): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchStartMain().rows)
+
+    override suspend fun fetchFavoriteStarts(userId: Int, token: String): List<StartsListItem> {
+        val request = startsCloudApi.fetchFavorites(userId = userId.toString(), token = token)
+        return mapper.mapSingle(request.rows)
+    }
+
+    override suspend fun addToFavorite(userId: Int, token: String, startId: Int) {
+        startsCloudApi.addFavorites(startId = startId, token = token, userId = userId.toString())
+    }
+
+    override suspend fun removeFromFavorite(userId: Int, token: String, startId: Int) {
+        startsCloudApi.removeFavorites(startId = startId, token = token, userId = userId.toString())
+    }
 }

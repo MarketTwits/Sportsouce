@@ -50,7 +50,6 @@ fun StartsScreen(
                 TabBar(
                     content = { page ->
                         StartsScreenList(
-                            modifier = it,
                             state = state,
                             page = page,
                             onClickRetry = component::retry,

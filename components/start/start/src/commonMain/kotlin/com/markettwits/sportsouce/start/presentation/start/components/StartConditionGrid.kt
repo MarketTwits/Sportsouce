@@ -10,9 +10,15 @@ import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,7 +40,9 @@ fun StartConditionGrid(
     val statement = conditionItems.filterIsInstance<StartItem.ConditionDetail.Statement>().firstOrNull()
 
     // State for managing which bottom sheet is open
-    var selectedCondition by remember { mutableStateOf<ConditionItem?>(null) }
+    var selectedCondition by rememberSaveable(
+        stateSaver = ConditionItemSaver
+    ) { mutableStateOf<ConditionItem?>(null) }
 
     if (regulation == null && statement == null) {
         // Don't show anything if both are null
@@ -173,7 +181,7 @@ private fun ConditionGridItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ConditionDetailBottomSheet(
+fun ConditionDetailBottomSheet(
     title: String,
     htmlContent: String,
     onDismiss: () -> Unit,
@@ -188,53 +196,57 @@ private fun ConditionDetailBottomSheet(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
         dragHandle = {
-            Surface(
+            Box(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
-                    .width(32.dp)
-                    .height(4.dp),
-                shape = RoundedCornerShape(2.dp),
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
-            ) {}
+                    .width(40.dp)
+                    .height(5.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f))
+            )
         }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.9f)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
+                .navigationBarsPadding()
+                .imePadding()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            // Header
             ConditionDetailHeader(
                 title = title,
                 onDismiss = onDismiss
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Content
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .clip(RoundedCornerShape(12.dp))
             ) {
-                HtmlText(
-                    text = htmlContent,
-                    fontSize = 15.sp,
-                    fontFamily = FontNunito.medium(),
-                    lineHeight = 20.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    selectable = true
-                )
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(12.dp)
+                ) {
+                    HtmlText(
+                        text = htmlContent,
+                        fontSize = 16.sp,
+                        fontFamily = FontNunito.medium(),
+                        lineHeight = 22.sp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        selectable = true
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ConditionDetailHeader(
+fun ConditionDetailHeader(
     title: String,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -251,10 +263,7 @@ private fun ConditionDetailHeader(
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.size(40.dp)
-        ) {
+        IconButton(onClick = onDismiss) {
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Закрыть",
@@ -264,7 +273,15 @@ private fun ConditionDetailHeader(
     }
 }
 
+
 private data class ConditionItem(
     val title: String,
     val htmlContent: String,
+)
+
+private val ConditionItemSaver = Saver<ConditionItem?, List<String>>(
+    save = { item -> item?.let { listOf(it.title, it.htmlContent) } },
+    restore = { data ->
+        ConditionItem(data[0], data[1])
+    }
 )

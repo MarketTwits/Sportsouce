@@ -57,6 +57,9 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                         onClickEditProfile = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
                         },
+                        onClickFavorites = {
+                            component.obtainOutput(AuthorizedProfileComponent.Output.Favorites)
+                        },
                         onClickClub = {
                             component.obtainOutput(AuthorizedProfileComponent.Output.Club)
                         },

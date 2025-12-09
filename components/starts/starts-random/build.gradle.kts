@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 android {
-    namespace = "com.markettwits.random"
+    namespace = "com.markettwits.starts.random"
 }
 kotlin {
     sourceSets.commonMain.dependencies {

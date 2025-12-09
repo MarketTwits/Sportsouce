@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.unauthorized.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
-import io.github.alexzhirkevich.compottie.LottieAnimation
+import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
-import io.github.alexzhirkevich.compottie.LottieConstants
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import sportsouce.components.profile.unauthorized.generated.resources.Res
 
 
@@ -32,7 +33,7 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
             "files/un_auth_animation.json"
         ).decodeToString()
     }
-    val composition by rememberLottieComposition(spec = LottieCompositionSpec.JsonString(file))
+    val composition by rememberLottieComposition { LottieCompositionSpec.JsonString(file) }
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -40,12 +41,15 @@ internal fun BoxScope.UnAuthorizedProfileContent(onClickAuth: () -> Unit) {
             .padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LottieAnimation(
-            iterations = LottieConstants.IterateForever,
+        Image(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .height(300.dp),
-            composition = composition
+            painter = rememberLottiePainter(
+                composition = composition,
+                iterations = Compottie.IterateForever,
+            ),
+            contentDescription = null,
         )
         Text(
             modifier = Modifier

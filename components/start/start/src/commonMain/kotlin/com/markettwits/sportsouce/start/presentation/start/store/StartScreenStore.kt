@@ -22,6 +22,7 @@ import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label.*
@@ -48,17 +49,19 @@ interface StartScreenStore : Store<Intent, State, Label> {
             Intent
 
         data object OnClickRelatedStarts : Intent
+        data object OnClickFavorite : Intent
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val isPartialData: Boolean = false,
         val message: String = "",
         val error: Throwable? = null,
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
         val startsSeries: List<StartsListItem> = emptyList(),
+        val favoriteState: StartFavoriteState = StartFavoriteState.Loading(),
         val event: StateEventWithContent<EventContent> = consumed(),
-        val isPartialData: Boolean = false,
     )
 
     sealed interface Label {
@@ -109,6 +112,7 @@ class StartScreenStoreFactory(
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
         data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
+        data class StartFavoriteUpdated(val state: StartFavoriteState) : Msg
     }
 
     private inner class ExecutorImpl(
@@ -201,6 +205,10 @@ class StartScreenStoreFactory(
                         }
                     }
                 }
+
+                Intent.OnClickFavorite -> scope.launch {
+                    onClickToFavorite()
+                }
             }
         }
 
@@ -239,6 +247,44 @@ class StartScreenStoreFactory(
                 )
             }
             getRecommendedStarts(startIdString)
+            state().startItem?.let { startItem ->
+                getFavoriteStatus(startItem.id)
+            }
+        }
+
+        private fun onClickToFavorite() = scope.launch {
+            val favorite = state().favoriteState
+            dispatch(
+                Msg.StartFavoriteUpdated(
+                    StartFavoriteState.Loading(
+                        favorite.isFavorite
+                    )
+                )
+            )
+            state().startItem?.let { item ->
+                if (favorite is StartFavoriteState.Default) {
+                    when (favorite.isFavorite) {
+                        true -> service.startRemoveFromFavorites(item)
+                        false -> service.startAddToFavorite(item)
+                    }.onSuccess {
+                        dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                    }.onFailure {
+                        dispatch(Msg.StartFavoriteUpdated(favorite))
+                        dispatch(TriggerEvent(it.message.toString(), false))
+                    }
+                }
+            }
+        }
+
+        private fun getFavoriteStatus(startId: Int) {
+            scope.launch {
+                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading()))
+                service.isStartInFavorite(startId).onSuccess {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                }.onFailure {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(false)))
+                }
+            }
         }
 
         private fun getRecommendedStarts(startIdString: String) {
@@ -322,6 +368,10 @@ class StartScreenStoreFactory(
                         message = msg.message
                     )
                 )
+            )
+
+            is Msg.StartFavoriteUpdated -> copy(
+                favoriteState = msg.state
             )
         }
     }

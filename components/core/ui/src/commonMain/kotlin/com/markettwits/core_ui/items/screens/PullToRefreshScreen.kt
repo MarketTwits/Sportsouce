@@ -16,11 +16,12 @@ fun PullToRefreshScreen(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    content: @Composable (Modifier) -> Unit
+    content: @Composable () -> Unit,
 ) {
     if (isUsingPullToRefreshAvailable) {
         val state = rememberPullToRefreshState()
         PullToRefreshBox(
+            modifier = modifier,
             isRefreshing = isRefreshing,
             state = state,
             onRefresh = onRefresh,
@@ -34,11 +35,11 @@ fun PullToRefreshScreen(
                 )
             },
             content = {
-                content(modifier)
+                content()
             }
         )
     } else {
-        content(modifier)
+        content()
     }
 }
 

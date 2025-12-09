@@ -29,9 +29,9 @@ sealed interface DistanceItem {
 
     @Serializable
     data class Price(
-        val c_to: String,
-        val c_from: String,
-        val value: Int
+        val c_to: String? = null,
+        val c_from: String? = null,
+        val value: Int,
     )
 
     @Serializable

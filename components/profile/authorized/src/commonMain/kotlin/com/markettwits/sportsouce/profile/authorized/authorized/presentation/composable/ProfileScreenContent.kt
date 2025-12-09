@@ -26,13 +26,14 @@ import com.markettwits.intent.composable.rememberIntentActionByPlatform
 internal fun ProfileScreenContent(
     modifier: Modifier = Modifier,
     userName: String,
-    userRegistrationsCount : Int,
+    userRegistrationsCount: Int,
     userImageUrl: String,
     onClickMembers: () -> Unit,
     onClickClub: () -> Unit,
     onClickStarts: () -> Unit,
     onClickOrders: () -> Unit,
-    onClickEditProfile: () -> Unit
+    onClickFavorites: () -> Unit,
+    onClickEditProfile: () -> Unit,
 ) {
 
     var isFullImage by rememberSaveable { mutableStateOf(false) }
@@ -57,9 +58,10 @@ internal fun ProfileScreenContent(
                 onClickEditProfile = onClickEditProfile
             )
             ProfileActionCards(
-                onClickOrders = onClickOrders,
                 startsCount = userRegistrationsCount,
-                onClickStarts = onClickStarts
+                onClickOrders = onClickOrders,
+                onClickStarts = onClickStarts,
+                onClickFavorites = onClickFavorites,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))

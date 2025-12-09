@@ -48,17 +48,17 @@ internal fun MembersList(
             PullToRefreshScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = onRefresh
-            ) { innerModifier ->
+            ) {
                 if (items.isEmpty()) {
                     MembersEmptyCard(
-                        modifier = innerModifier
+                        modifier = Modifier
                             .padding(paddingValues)
                             .padding(16.dp)
                             .padding(bottom = paddingValues.calculateBottomPadding())
                     )
                 } else {
                     LazyColumn(
-                        modifier = innerModifier
+                        modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp)
                             .padding(bottom = paddingValues.calculateBottomPadding()),

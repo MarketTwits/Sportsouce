@@ -14,6 +14,7 @@ import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRe
 import com.markettwits.sportsouce.settings.root.RootSettingsScreen
 import com.markettwits.sportsouce.shop.orders.presentation.screen.ShopUserOrdersScreen
 import com.markettwits.sportsouce.start.root.RootStartScreen
+import com.markettwits.sportsouce.starts.favorites.presentation.screen.FavoriteStartsScreen
 
 @Composable
 fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
@@ -59,6 +60,10 @@ fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
             )
 
             is RootAuthorizedProfileComponent.Child.ClubDashboard -> RootClubScreen(component = child.component)
+
+            is RootAuthorizedProfileComponent.Child.StartsFavorites -> FavoriteStartsScreen(
+                component = child.component
+            )
         }
     }
 }

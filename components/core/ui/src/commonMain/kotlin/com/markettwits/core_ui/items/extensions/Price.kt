@@ -73,3 +73,23 @@ fun Int?.formatRubles(): String {
         formatted
     }.getOrDefault("0")
 }
+
+fun String.formatRussianPhone(): String {
+    val digits = filter { it.isDigit() }
+    if (digits.length != 11) return this
+    val normalized = if (digits.startsWith("8")) {
+        "7" + digits.drop(1)
+    } else digits
+    return buildString {
+        append("+")
+        append(normalized[0])
+        append(" (")
+        append(normalized.substring(1, 4))
+        append(") ")
+        append(normalized.substring(4, 7))
+        append("-")
+        append(normalized.substring(7, 9))
+        append("-")
+        append(normalized.substring(9, 11))
+    }
+}

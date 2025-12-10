@@ -14,6 +14,7 @@ data class UserProfile(
     data class UserInfo(
         val name: String,
         val surname: String,
+        val phoneNumber: String,
         val createdAt: String,
         val status: String,
         val photo: String,

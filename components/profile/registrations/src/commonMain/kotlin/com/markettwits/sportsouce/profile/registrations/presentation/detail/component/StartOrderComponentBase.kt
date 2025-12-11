@@ -21,6 +21,7 @@ class StartOrderComponentBase(
     private val storeFactory: StartOrderStoreFactory,
     private val dismiss: () -> Unit,
     private val openStart: (Int) -> Unit,
+    private val onReRegistration: (startId: Int, orderId: Int) -> Unit,
 ) : StartOrderComponent, BottomBarComponentHandler(),
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
@@ -41,6 +42,7 @@ class StartOrderComponentBase(
                 when (it) {
                     is StartOrderStore.Label.Dismiss -> dismiss()
                     is StartOrderStore.Label.OnClickStart -> openStart(it.startId)
+                    is StartOrderStore.Label.OnClickReRegistration -> onReRegistration(it.startId, it.orderId)
                 }
             }
         }

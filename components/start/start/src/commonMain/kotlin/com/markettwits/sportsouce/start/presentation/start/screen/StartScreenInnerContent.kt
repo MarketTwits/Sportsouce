@@ -134,7 +134,9 @@ internal fun StartScreenInnerContent(
         ) {
             StartConditionGrid(
                 modifier = innerModifier,
-                conditionItems = data.conditionDetails
+                conditionItems = data.conditionDetails,
+                conditionFile = data.conditionFile,
+                onClickFile = onClickUrl
             )
         }
         AnimatedVisibility(

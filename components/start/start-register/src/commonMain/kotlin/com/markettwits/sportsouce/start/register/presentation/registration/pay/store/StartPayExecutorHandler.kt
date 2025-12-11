@@ -9,11 +9,9 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.crashlitics.api.logging.ExceptionLoggingTracker
 import com.markettwits.crashlitics.api.logging.errorShaker
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
+import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.StartRegistrationRepository
-import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStore.Intent
-import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStore.Label
-import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStore.Message
-import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStore.State
+import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStore.*
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
 import kotlinx.coroutines.launch
 
@@ -27,15 +25,15 @@ abstract class StartPayExecutorHandler(
     override val tag: String = "StartPayExecutor"
 
     fun obtainPromoSuccess(
-        promo : String
-    ){
+        promo: String,
+    ) {
         dispatch(Message.UpdatePromoSuccess(promo))
         publish(Label.SendEvent(EventContent(true, PROMO_APPLY_SUCCESS)))
     }
 
     fun obtainStartRegistrationResult(
-        statePage : StartRegistrationStagePage.Pay,
-        isPayOnline : Boolean,
+        statePage: StartRegistrationStagePage.Pay,
+        isPayOnline: Boolean,
     ) {
         scope.launch {
             dispatch(Message.UpdatePriceLoadingStarted)
@@ -45,12 +43,17 @@ abstract class StartPayExecutorHandler(
                 promo = statePage.startInfo.promo,
                 registrationWithoutPayment = !isPayOnline,
                 distances = statePage.distances,
+                regType = statePage.startInfo.regType
             ).fold(onSuccess = {
                 if (it.isSuccess) {
                     if (it.paymentUrl.isNotEmpty()) {
                         intentAction.openWebPage(it.paymentUrl)
                     } else {
-                        publish(Label.SendEvent(EventContent(true, REGISTRATION_SUCCESS_MESSAGE)))
+                        val message =
+                            if (statePage.startInfo.regType is StartRegType.ReReg)
+                                RE_REGISTRATION_SUCCESS_MESSAGE
+                            else REGISTRATION_SUCCESS_MESSAGE
+                        publish(Label.SendEvent(EventContent(true, message)))
                     }
                     publish(Label.GoSuccess)
                 }
@@ -66,8 +69,8 @@ abstract class StartPayExecutorHandler(
     }
 
     fun obtainStartPriceResult(
-        startRegistrationStage : StartRegistrationStagePage.Pay
-    ){
+        startRegistrationStage: StartRegistrationStagePage.Pay,
+    ) {
         scope.launch {
             dispatch(Message.UpdatePriceLoadingStarted)
             repository.getStartPrice(
@@ -75,6 +78,7 @@ abstract class StartPayExecutorHandler(
                 startId = startRegistrationStage.startInfo.startId,
                 promo = startRegistrationStage.startInfo.promo,
                 distances = startRegistrationStage.distances,
+                regType = startRegistrationStage.startInfo.regType
             ).fold(onSuccess = {
                 dispatch(Message.UpdatePrice(it))
                 dispatch(Message.UpdatePriceLoadingFinished)
@@ -93,6 +97,7 @@ abstract class StartPayExecutorHandler(
 
     private companion object {
         const val REGISTRATION_SUCCESS_MESSAGE = "Вы успешно зарегестрировались на старт"
+        const val RE_REGISTRATION_SUCCESS_MESSAGE = "Вы обновили регистрацию на старт"
         const val PROMO_APPLY_SUCCESS = "Промокод успешно применен"
     }
 

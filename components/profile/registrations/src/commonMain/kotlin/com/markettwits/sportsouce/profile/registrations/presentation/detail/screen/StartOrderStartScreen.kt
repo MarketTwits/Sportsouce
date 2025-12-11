@@ -66,7 +66,15 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                             onClickStart = { component.obtainEvent(StartOrderStore.Intent.OnClickStart(it)) },
                             onClickPay = { component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id)) },
                             onUpdatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) },
-                            onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) }
+                            onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) },
+                            onReRegistration = {
+                                component.obtainEvent(
+                                    StartOrderStore.Intent.OnClickReRegistration(
+                                        state.startOrderInfo.startId,
+                                        state.startOrderInfo.id
+                                    )
+                                )
+                            }
                         )
 
                         1 -> OrderMembersTab(

@@ -7,6 +7,9 @@ import kotlinx.serialization.Serializable
 sealed class StartScreenInput {
 
     @Serializable
+    data class ReReg(val orderId: Int, val startId: Int) : StartScreenInput()
+
+    @Serializable
     data class Id(val startId: Int) : StartScreenInput()
 
     @Serializable

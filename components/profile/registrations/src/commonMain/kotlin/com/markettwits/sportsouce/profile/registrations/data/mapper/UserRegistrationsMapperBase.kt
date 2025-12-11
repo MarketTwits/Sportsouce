@@ -8,14 +8,18 @@ import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceResponse
 import com.markettwits.sportsouce.profile.registrations.domain.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 class UserRegistrationsMapperBase(
-    private val timeMapper: TimeMapper
+    private val timeMapper: TimeMapper,
 ) : UserRegistrationsMapper {
 
     override fun map(start: UserRegistration): StartOrderInfo {
+        val dateStartCloud = start.start?.startDate ?: ""
+        val orderType = mapOrderType(start.previousGroupId)
 
         return StartOrderInfo(
             id = start.id ?: Random.nextInt(),
@@ -24,9 +28,9 @@ class UserRegistrationsMapperBase(
             image = start.start?.posterLinkFile?.fullPath ?: "",
             dateStartPreview = timeMapper.mapTime(
                 TimePattern.FullWithEmptySpace,
-                start.start?.startDate ?: ""
+                dateStartCloud
             ),
-            dateStartCloud = start.start?.startDate ?: "",
+            dateStartCloud = dateStartCloud,
             members = start.members?.map { member ->
                 val ageGroup = member.ageGroup?.name ?: mapStartGroup(member.group)
                 val distance = member.distanceRelation?.name ?: member.distance ?: ""
@@ -47,10 +51,12 @@ class UserRegistrationsMapperBase(
             additionalFieldsCost = start.priceOfAdditionalFields.formatPrice(),
             startTitle = start.start?.name ?: "",
             promo = start.promocode?.code ?: "",
+            orderType = orderType,
             payment = mapPayments(
                 payment = start.payment,
                 successPaymentReason = start.successPaymentReason
             ),
+            isReRegistrationAvailable = isReRegistrationAvailable(dateStartCloud, orderType),
         )
     }
 
@@ -107,6 +113,24 @@ class UserRegistrationsMapperBase(
             json.decodeFromString<Group>(group ?: "").name
         } catch (e: Exception) {
             ""
+        }
+    }
+
+    private fun mapOrderType(groupId: Int?): StartOrderType =
+        groupId?.let { groupId ->
+            StartOrderType.ReRegistration(groupId)
+        } ?: StartOrderType.Default
+
+    @OptIn(kotlin.time.ExperimentalTime::class)
+    private fun isReRegistrationAvailable(dateStartCloud: String, orderType: StartOrderType): Boolean {
+        if (dateStartCloud.isEmpty() || orderType is StartOrderType.ReRegistration) return false
+
+        return try {
+            val startInstant = kotlin.time.Instant.parse(dateStartCloud)
+            val currentInstant = kotlin.time.Clock.System.now()
+            startInstant > currentInstant
+        } catch (e: Exception) {
+            false
         }
     }
 }

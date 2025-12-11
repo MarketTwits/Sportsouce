@@ -63,7 +63,7 @@ internal fun StartsFavoritesContent(
                         Text(
                             modifier = Modifier.padding(bottom = 8.dp),
                             text = "Всего ${items.size} избранных стартов",
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                         )
                     }

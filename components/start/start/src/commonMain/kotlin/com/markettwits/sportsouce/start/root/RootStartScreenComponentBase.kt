@@ -6,6 +6,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
+import com.markettwits.core.log.LogTagProvider
+import com.markettwits.core.log.infoLog
 import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
@@ -19,6 +21,7 @@ import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponentBase
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.register.di.startRegistrationModule
+import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
 import com.markettwits.sportsouce.start.support.di.startSupportModule
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponentBase
@@ -26,9 +29,11 @@ import com.markettwits.sportsouce.start.support.presentation.store.StartSupportS
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
-    private val input: StartScreenInput,
+    input: StartScreenInput,
     private val pop: () -> Unit,
-) : RootStartScreenComponent, ComponentContext by context {
+) : RootStartScreenComponent, ComponentContext by context, LogTagProvider {
+
+    override val tag: String = "RootStartScreenComponentBase"
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext(false)
@@ -52,9 +57,11 @@ class RootStartScreenComponentBase(
     private fun child(
         config: RootStartScreenComponent.Config,
         componentContext: ComponentContext,
-    ): RootStartScreenComponent.Child =
-        when (config) {
+    ): RootStartScreenComponent.Child {
+        infoLog { "child called with config: ${config::class.simpleName}" }
+        return when (config) {
             is RootStartScreenComponent.Config.Start -> {
+                infoLog { "Creating Start child with input: ${config.startScreenInput}" }
                 val supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
@@ -78,9 +85,11 @@ class RootStartScreenComponentBase(
                             navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
                         },
                         registerNew = {
-                            navigation.pushNew(
-                                RootStartScreenComponent.Config.StartRegistration(it)
-                            )
+                            val config = RootStartScreenComponent.Config.StartRegistration(it)
+                            if (it.regType is StartRegType.ReReg)
+                                navigation.replaceAll(config)
+                            else
+                                navigation.pushNew(config)
                         },
                         membersResult = { startId, membersResult ->
                             navigation.pushNew(
@@ -122,7 +131,11 @@ class RootStartScreenComponentBase(
             is RootStartScreenComponent.Config.StartRegistration -> RootStartScreenComponent.Child.StartRegistration(
                 RootStartRegisterBase(
                     componentContext = componentContext,
-                    pop = navigation::pop,
+                    pop = {
+                        navigation.pop {
+                            if (!it) pop()
+                        }
+                    },
                     input = config.input,
                 )
             )
@@ -174,6 +187,7 @@ class RootStartScreenComponentBase(
                 )
                 RootStartScreenComponent.Child.StartComments(component)
             }
+
             is RootStartScreenComponent.Config.RelatedStarts -> RootStartScreenComponent.Child.StartSeries(
                 StartSeriesComponentBase(
                     componentContext = componentContext,
@@ -193,4 +207,5 @@ class RootStartScreenComponentBase(
                 )
             )
         }
+    }
 }

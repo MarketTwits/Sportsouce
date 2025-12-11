@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMemb
 import com.markettwits.sportsouce.start.cloud.api.register.SportSauceStartRegisterApi
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.register.domain.StartPromo
+import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegisterPriceMapper
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegisterResultMapper
 import com.markettwits.sportsouce.start.register.presentation.registration.common.data.mapper.StartRegistrationPageMapper
@@ -35,21 +36,30 @@ class StartRegistrationRepositoryBase(
         comboId: Int?,
         startId: Int,
         promo: String,
-        registrationWithoutPayment : Boolean,
+        registrationWithoutPayment: Boolean,
         distances: List<StartRegistrationDistance>,
-    ): Result<StartRegistrationResult>  = runCatching{
-        val request = priceMapper.mapPrice(comboId, startId, promo, registrationWithoutPayment, distances)
+        regType: StartRegType,
+    ): Result<StartRegistrationResult> = runCatching {
+        val request = priceMapper.mapPrice(
+            comboId = comboId,
+            startId = startId,
+            promo = promo,
+            registrationWithoutPayment = registrationWithoutPayment,
+            distances = distances,
+            regType = regType,
+        )
         val token = authService.updateToken().getOrThrow()
         resultMapper.mapResult(startRegistrationService.register(request, token))
     }
 
     override suspend fun getStartPrice(
-        comboId : Int?,
-        startId : Int,
+        comboId: Int?,
+        startId: Int,
         promo: String,
         distances: List<StartRegistrationDistance>,
+        regType: StartRegType,
     ): Result<StartRegistrationPriceResult> = runCatching {
-        val request = priceMapper.mapPrice(comboId, startId, promo, null, distances)
+        val request = priceMapper.mapPrice(comboId, startId, promo, regType, null, distances)
         val token = authService.updateToken().getOrThrow()
         priceMapper.mapPriceResponse(startRegistrationService.price(request, token))
     }
@@ -57,9 +67,9 @@ class StartRegistrationRepositoryBase(
     override suspend fun getStartPromo(
         value: String,
         startId: Int,
-        distancesId: List<Int>
-    ): Result<StartPromo>  = runCatching {
-        promoMapper.map(startRegistrationService.promo(value, startId,distancesId))
+        distancesId: List<Int>,
+    ): Result<StartPromo> = runCatching {
+        promoMapper.map(startRegistrationService.promo(value, startId, distancesId))
     }
 
     override suspend fun getStartDistances(distances: List<DistinctDistance>): Result<List<StartRegistrationDistance>> =

@@ -6,6 +6,7 @@ import com.markettwits.sportsouce.start.cloud.model.register.price.StartRegister
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterDistance
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterMember
+import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
@@ -15,8 +16,8 @@ import com.markettwits.sportsouce.start.register.presentation.registration.commo
 class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
 
     fun mapPriceResponse(
-        priceResponse: StartRegisterPriceResponse
-    ) : StartRegistrationPriceResult {
+        priceResponse: StartRegisterPriceResponse,
+    ): StartRegistrationPriceResult {
         return if (priceResponse.isPaymentRequired)
             StartRegistrationPriceResult.Value(
                 additionalFieldsPrice = priceResponse.additionalFieldsPrice,
@@ -28,24 +29,30 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
     }
 
     fun mapPrice(
-        comboId : Int?,
-        startId : Int,
+        comboId: Int?,
+        startId: Int,
         promo: String,
-        registrationWithoutPayment : Boolean?,
+        regType: StartRegType,
+        registrationWithoutPayment: Boolean?,
         distances: List<StartRegistrationDistance>,
-    ) : StartRegisterPriceRequest =
+    ): StartRegisterPriceRequest =
 
         StartRegisterPriceRequest(
             comboId = comboId,
             promocode = promo,
             startId = startId,
             registrationWithoutPayment = registrationWithoutPayment,
+            isReRegistration = (regType is StartRegType.ReReg),
+            previousOrderId = when (regType) {
+                is StartRegType.ReReg -> regType.startOrderId
+                is StartRegType.Default -> null
+            },
             distances = mapDistances(distances)
         )
 
     private fun mapDistances(
         distances: List<StartRegistrationDistance>,
-    ) : List<StartRegisterDistance>{
+    ): List<StartRegisterDistance> {
         return distances.map { distance ->
             StartRegisterDistance(
                 distanceId = distance.id,
@@ -59,13 +66,14 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
             )
         }
     }
+
     private fun StartStatement.mapToStartRegisterMember(
-        stageId : Int,
+        stageId: Int,
         commonAnswers: List<StartRegistrationStatementAnswer>,
-        statementAnswers : List<StartRegistrationStatementAnswer>,
-    ) : StartRegisterMember {
-        val items : MutableList<StartRegistrationStatementAnswer>
-                = emptyList<StartRegistrationStatementAnswer>().toMutableList()
+        statementAnswers: List<StartRegistrationStatementAnswer>,
+    ): StartRegisterMember {
+        val items: MutableList<StartRegistrationStatementAnswer> =
+            emptyList<StartRegistrationStatementAnswer>().toMutableList()
 
         statementAnswers.forEach { value ->
             items.add(value)
@@ -92,7 +100,7 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
         return member
     }
 
-    private fun mapAnswers(answers: List<StartRegistrationStatementAnswer>) : List<StartRegisterAnswer>{
+    private fun mapAnswers(answers: List<StartRegistrationStatementAnswer>): List<StartRegisterAnswer> {
         return answers.filter { statementAnswer ->
 
             val field = statementAnswer.field

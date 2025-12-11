@@ -11,12 +11,13 @@ import com.markettwits.sportsouce.profile.registrations.presentation.list.compon
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent.ChildStack.*
 import com.markettwits.sportsouce.profile.registrations.presentation.root.di.userStartRegistrationModule
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput.Id
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 
 class RootRegistrationsComponentBase(
     context: ComponentContext,
-    private val pop: () -> Unit
+    private val pop: () -> Unit,
 ) : RootRegistrationsComponent, ComponentContext by context {
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
@@ -39,15 +40,16 @@ class RootRegistrationsComponentBase(
 
     private fun child(
         configStack: RootRegistrationsComponent.ConfigStack,
-        componentContext: ComponentContext
+        componentContext: ComponentContext,
     ): RootRegistrationsComponent.ChildStack {
         return when (configStack) {
             is RootRegistrationsComponent.ConfigStack.Start -> Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
-                    input = Id(
-                        configStack.startId
-                    ),
+                    input = if (configStack.orderId == null)
+                        Id(
+                            configStack.startId
+                        ) else StartScreenInput.ReReg(configStack.orderId, configStack.startId),
                     pop = stackNavigation::pop
                 )
             )
@@ -75,6 +77,9 @@ class RootRegistrationsComponentBase(
                     dismiss = stackNavigation::pop,
                     openStart = {
                         stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Start(it))
+                    },
+                    onReRegistration = { startId, orderId ->
+                        stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Start(startId, orderId))
                     }
                 )
             )

@@ -9,6 +9,7 @@ import com.markettwits.IntentAction
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
+import com.markettwits.core.log.infoLog
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -79,6 +80,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
+            val isReReg: Boolean = false,
+            val prevOrderId: Int?,
         ) : Label
 
         data class OnOpenStartCommentsScreen(
@@ -156,7 +159,11 @@ class StartScreenStoreFactory(
                             }
 
                             startItem.isDistanceRegistration() -> {
-                                publish(startItem.toOnClickDistanceNew())
+                                publish(
+                                    startItem.toOnClickDistanceNew(
+                                        isReReg = false,
+                                    )
+                                )
                             }
 
                             else -> {
@@ -226,10 +233,13 @@ class StartScreenStoreFactory(
                 is StartScreenInput.Id -> startInput.startId.toString()
                 is StartScreenInput.Slug -> startInput.slug
                 is StartScreenInput.Item -> startInput.item.id.toString()
+                is StartScreenInput.ReReg -> startInput.startId.toString()
             }
 
+            infoLog { "launch called with startIdString: $startIdString, relaunch: $relaunch" }
             scope.launch {
                 dispatch(Msg.Loading)
+                infoLog { "Calling service.start for startId: $startIdString" }
                 service.start(startIdString, relaunch).fold(
                     onFailure = { exception ->
                         if (!exception.isNetworkConnectionError()) {
@@ -239,17 +249,17 @@ class StartScreenStoreFactory(
                         }
                         dispatch(Msg.StartInfoFailed(exception))
                     },
-                    onSuccess = {
-                        publish(OnApplyStartId(it.id))
-                        dispatch(Msg.StartInfoSuccess(it))
-                        getSeriesStarts(it.startSeries)
+                    onSuccess = { startItem ->
+                        infoLog { "service.start onSuccess for startId: ${startItem.id}, title: ${startItem.title}" }
+                        publish(OnApplyStartId(startItem.id))
+                        getFavoriteStatus(startItem.id)
+                        dispatch(Msg.StartInfoSuccess(startItem))
+                        handleReRegistrationIfNeeded(startInput, startItem)
+                        getSeriesStarts(startItem.startSeries)
                     }
                 )
             }
             getRecommendedStarts(startIdString)
-            state().startItem?.let { startItem ->
-                getFavoriteStatus(startItem.id)
-            }
         }
 
         private fun onClickToFavorite() = scope.launch {
@@ -303,6 +313,31 @@ class StartScreenStoreFactory(
                     }
                 }
         }
+
+        private fun handleReRegistrationIfNeeded(input: StartScreenInput, startItem: StartItem) {
+            if (input is StartScreenInput.ReReg) {
+                when {
+                    startItem.isExternalLinkRegistration() -> {
+                        dispatch(TriggerEvent("Регистрация доступна только через внешнюю ссылку", false))
+                    }
+
+                    startItem.isDistanceRegistration() -> {
+                        publish(
+                            startItem.toOnClickDistanceNew(
+                                isReReg = true,
+                                prevOrderId = input.orderId
+                            )
+                        )
+                    }
+
+                    else -> {
+                        dispatch(TriggerEvent("Регистрация на данный старт закрыта", false))
+                    }
+                }
+            } else {
+                errorLog { "Input is not ReReg, it's: ${input::class.simpleName}" }
+            }
+        }
     }
 
     private fun StartItem.isExternalLinkRegistration(): Boolean {
@@ -313,14 +348,16 @@ class StartScreenStoreFactory(
         return distanceInfoNew.isNotEmpty() && startStatus.code == 3
     }
 
-    private fun StartItem.toOnClickDistanceNew(): OnClickDistanceNew =
+    private fun StartItem.toOnClickDistanceNew(isReReg: Boolean, prevOrderId: Int? = null): OnClickDistanceNew =
         OnClickDistanceNew(
             startId = id,
             startTitle = title,
             distanceInfo = distanceInfoNew,
             paymentDisabled = paymentDisabled,
             paymentType = paymentType,
-            mapDistance = distanceMapNew
+            mapDistance = distanceMapNew,
+            isReReg = isReReg,
+            prevOrderId = prevOrderId,
         )
 
     private object ReducerImpl : Reducer<State, Msg> {

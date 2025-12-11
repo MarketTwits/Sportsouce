@@ -37,8 +37,8 @@ data class StartItem(
     val startTimes: StartTimes,
 ) {
     sealed class ConditionDetail(open val value: String) {
-        class Regulation(override val value: String) : ConditionDetail(value)
-        class Statement(override val value: String) : ConditionDetail(value)
+        data class Regulation(override val value: String) : ConditionDetail(value)
+        data class Statement(override val value: String) : ConditionDetail(value)
     }
 
     sealed class StartSeries {

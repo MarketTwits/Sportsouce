@@ -4,14 +4,15 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.core.decompose.componentScope
+import com.markettwits.core.log.LogTagProvider
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
+import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -29,12 +30,13 @@ class StartScreenComponentBase(
     private val onApplyStartId: (Int) -> Unit,
     private val onOpenStartCommentsScreen: (Int, CommentMode) -> Unit = { _, _ -> },
     private val relatedStarts: (Int, List<StartsListItem>) -> Unit,
-) : ComponentContext by componentContext, StartScreenComponent {
+) : ComponentContext by componentContext, StartScreenComponent, LogTagProvider {
+
+    override val tag: String = "StartScreenComponentBase"
 
     private val store = instanceKeeper.getStore {
         storeFactory.create(input)
     }
-    private val scope = CoroutineScope(Dispatchers.Main)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val start: StateFlow<StartScreenStore.State> = store.stateFlow
@@ -44,23 +46,27 @@ class StartScreenComponentBase(
     }
 
     init {
-        scope.launch {
+        componentScope.launch {
             store.labels.collect {
                 when (it) {
                     is StartScreenStore.Label.OnClickBack -> back()
                     is StartScreenStore.Label.OnClickMembers -> members(it.startId, it.members)
                     is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
                     is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.startId, it.members)
-                    is StartScreenStore.Label.OnClickDistanceNew -> registerNew(
-                        StartDistancesInput(
-                            startId = it.startId,
-                            startTitle = it.startTitle,
-                            paymentType = it.paymentType,
-                            distance = it.distanceInfo,
-                            paymentDisabled = it.paymentDisabled,
-                            mapDistance = it.mapDistance,
+                    is StartScreenStore.Label.OnClickDistanceNew -> {
+                        registerNew(
+                            StartDistancesInput(
+                                startId = it.startId,
+                                startTitle = it.startTitle,
+                                paymentType = it.paymentType,
+                                distance = it.distanceInfo,
+                                paymentDisabled = it.paymentDisabled,
+                                mapDistance = it.mapDistance,
+                                regType = if (it.isReReg && it.prevOrderId != null) StartRegType.ReReg(it.prevOrderId) else StartRegType.Default,
+                            )
                         )
-                    )
+                    }
+
                     is StartScreenStore.Label.OnClickStartRecommended -> pushStart(it.start)
                     is StartScreenStore.Label.OnApplyStartId -> onApplyStartId(it.startId)
                     is StartScreenStore.Label.OnOpenStartCommentsScreen -> onOpenStartCommentsScreen(

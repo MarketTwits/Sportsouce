@@ -24,6 +24,7 @@ interface StartOrderStore : Store<Intent, State, Label> {
         data class OnClickStart(val startId: Int) : Intent
         data object OnClickUpdatePrice : Intent
         data object OnClickHelp : Intent
+        data class OnClickReRegistration(val startId: Int, val orderId: Int) : Intent
     }
 
     sealed interface Message {
@@ -36,6 +37,7 @@ interface StartOrderStore : Store<Intent, State, Label> {
     sealed interface Label {
         data object Dismiss : Label
         data class OnClickStart(val startId: Int) : Label
+        data class OnClickReRegistration(val startId: Int, val orderId: Int) : Label
     }
 
 }

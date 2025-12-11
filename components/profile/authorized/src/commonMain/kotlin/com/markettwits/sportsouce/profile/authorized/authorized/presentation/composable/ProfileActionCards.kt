@@ -53,7 +53,7 @@ private fun PaymentStatistics.getSegments(): List<PaymentSegment> {
             PaymentSegment(
                 "На месте",
                 onPlaceCount,
-                SportSouceColor.SportSouceRegistryCommingSoonYellow
+                MaterialTheme.colorScheme.secondary,
             )
         )
         if (notPaidCount > 0) add(PaymentSegment("Не оплачено", notPaidCount, SportSouceColor.SportSouceLightRed))
@@ -158,7 +158,7 @@ private fun ProfileActionCard(
             ) {
                 Text(
                     text = title,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontFamily = FontNunito.bold(),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
@@ -207,17 +207,17 @@ private fun ProfileActionCardLarge(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
-                    modifier = Modifier.size(24.dp),
+                    modifier = Modifier.size(22.dp),
                     imageVector = icon,
                     contentDescription = title,
                     tint = accent
@@ -236,7 +236,7 @@ private fun ProfileActionCardLarge(
                     }
                     Text(
                         text = title,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontFamily = FontNunito.bold(),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -252,19 +252,13 @@ private fun ProfileActionCardLarge(
             if (count > 0) {
                 val segments = statistics.getSegments()
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    MiniDonutChart(
-                        statistics = statistics,
-                        segments = segments,
-                        size = 60.dp
-                    )
-
                     Column(
                         horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         segments.forEach { segment ->
                             LegendItem(
@@ -274,6 +268,12 @@ private fun ProfileActionCardLarge(
                             )
                         }
                     }
+
+                    MiniDonutChart(
+                        statistics = statistics,
+                        segments = segments,
+                        size = 72.dp
+                    )
                 }
             }
         }
@@ -331,20 +331,27 @@ private fun LegendItem(
     fontSize: androidx.compose.ui.unit.TextUnit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    Surface(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        shape = RoundedCornerShape(10.dp),
+        color = color.copy(alpha = 0.12f),
+        shadowElevation = 0.dp,
+        tonalElevation = 0.dp
     ) {
-        Canvas(modifier = Modifier.size(8.dp)) {
-            drawCircle(color = color)
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Canvas(modifier = Modifier.size(8.dp)) {
+                drawCircle(color = color)
+            }
+            Text(
+                text = text,
+                fontSize = fontSize,
+                fontFamily = FontNunito.regular(),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
-        Text(
-            text = text,
-            fontSize = fontSize,
-            fontFamily = FontNunito.regular(),
-            color = MaterialTheme.colorScheme.outline
-        )
     }
 }
-

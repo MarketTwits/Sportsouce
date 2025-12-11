@@ -1,12 +1,11 @@
 [versions]
 #plugins
-versionName = "1.5.2"
-versionCode = "10417"
+versionName = "1.5.3"
+versionCode = "10418"
 jvm = "11"
 kotlin = "2.2.21" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
-gradle = "8.12.0" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
+gradle = "8.12.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 compose = "1.9.3" # https://github.com/JetBrains/compose-multiplatform
-kotlin-browser = "1.9.0"
 kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
@@ -14,7 +13,7 @@ kstore = "1.0.0" # https://github.com/xxfast/KStore
 kermit = "2.0.8" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.3.0" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "2025.12.1" #https://github.com/JetBrains/kotlin-wrappers
+jetbrainsKotlinWrappers = "2025.12.3" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "2.0.2" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.2.0" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
@@ -35,8 +34,6 @@ mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
 tracer = "0.2.15" # https://apptracer.ru/
 
 [libraries]
-
-androidx-browser = { module = "androidx.browser:browser", version.ref = "kotlin-browser" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -64,7 +61,6 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
-#kotlinx-datetime-ext = { group = "com.raedghazal", name = "kotlinx_datetime_ext", version.ref = "kotlinx-datetime-ext" }
 
 kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
 kstore-file = { module = "io.github.xxfast:kstore-file", version.ref = "kstore" }

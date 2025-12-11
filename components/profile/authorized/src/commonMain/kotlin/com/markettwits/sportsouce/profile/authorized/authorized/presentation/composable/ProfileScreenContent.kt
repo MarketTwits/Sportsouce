@@ -34,6 +34,7 @@ import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 @Composable
 internal fun ProfileScreenContent(
     modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
     userName: String,
     userPhoneNumber: String,
     userRegistrationsCount: Int,
@@ -69,24 +70,22 @@ internal fun ProfileScreenContent(
     }
 
     PullToRefreshScreen(
-        isRefreshing = false,
+        isRefreshing = isRefreshing,
         onRefresh = onRefresh
     ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(backgroundColor)
-                .windowInsetsPadding(WindowInsets.statusBars)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars))
-
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
+                Spacer(modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars))
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.TopCenter
@@ -137,6 +136,8 @@ internal fun ProfileScreenContent(
                         onClickMembers = onClickMembers,
                         onClickSettings = oClickSettings
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    ProfileExtraInfoContent()
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             }

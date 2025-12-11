@@ -25,6 +25,7 @@ import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.topbar.TopBarBase
 import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
@@ -293,8 +294,8 @@ private fun DistanceItem(
                                         fontSize = 12.sp,
                                         color = MaterialTheme.colorScheme.outline
                                     )
-                                    Text(
-                                        text = description.replace(Regex("<[^>]*>"), ""),
+                                    HtmlText(
+                                        text = description,
                                         fontFamily = FontNunito.regular(),
                                         fontSize = 13.sp,
                                         color = MaterialTheme.colorScheme.onPrimary

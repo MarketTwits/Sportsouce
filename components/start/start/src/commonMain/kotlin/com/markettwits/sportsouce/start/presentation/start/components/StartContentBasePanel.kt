@@ -40,14 +40,6 @@ internal fun StartContentBasePanel(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-//                icon?.let {
-//                    Icon(
-//                        imageVector = it,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.secondary,
-//                        modifier = Modifier.size(24.dp)
-//                    )
-//                }
                 Text(
                     text = label,
                     fontSize = 18.sp,

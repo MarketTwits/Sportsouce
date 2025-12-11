@@ -3,12 +3,15 @@ package com.markettwits.sportsouce.start.presentation.start.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,11 +32,14 @@ import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.sportsouce.start.domain.StartItem.ConditionFile
 
 @Composable
 fun StartConditionGrid(
     modifier: Modifier = Modifier,
     conditionItems: List<StartItem.ConditionDetail>,
+    conditionFile: ConditionFile = ConditionFile.Empty,
+    onClickFile: (String) -> Unit = {},
 ) {
     // Filter items by type
     val regulation = conditionItems.filterIsInstance<StartItem.ConditionDetail.Regulation>().firstOrNull()
@@ -64,7 +70,9 @@ fun StartConditionGrid(
                     onClick = {
                         selectedCondition = ConditionItem(
                             title = "Регламент",
-                            htmlContent = regulation.value
+                            htmlContent = regulation.value,
+                            conditionFile = null,
+                            type = ConditionType.REGULATION
                         )
                     }
                 )
@@ -82,7 +90,9 @@ fun StartConditionGrid(
                     onClick = {
                         selectedCondition = ConditionItem(
                             title = "Положение",
-                            htmlContent = statement.value
+                            htmlContent = statement.value,
+                            conditionFile = conditionFile.takeIf { it is ConditionFile.Base },
+                            type = ConditionType.STATEMENT
                         )
                     }
                 )
@@ -97,7 +107,10 @@ fun StartConditionGrid(
         ConditionDetailBottomSheet(
             title = condition.title,
             htmlContent = condition.htmlContent,
-            onDismiss = { selectedCondition = null }
+            conditionFile = condition.conditionFile,
+            conditionType = condition.type,
+            onDismiss = { selectedCondition = null },
+            onClickFile = onClickFile
         )
     }
 }
@@ -181,10 +194,13 @@ private fun ConditionGridItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConditionDetailBottomSheet(
+private fun ConditionDetailBottomSheet(
     title: String,
     htmlContent: String,
+    conditionFile: ConditionFile? = null,
+    conditionType: ConditionType = ConditionType.REGULATION,
     onDismiss: () -> Unit,
+    onClickFile: (String) -> Unit = {},
 ) {
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -220,6 +236,11 @@ fun ConditionDetailBottomSheet(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            if (conditionType == ConditionType.STATEMENT && conditionFile is ConditionFile.Base) {
+                FileHint()
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -239,6 +260,14 @@ fun ConditionDetailBottomSheet(
                         color = MaterialTheme.colorScheme.onBackground,
                         selectable = true
                     )
+
+                    if (conditionType == ConditionType.STATEMENT && conditionFile is ConditionFile.Base) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ConditionFileCard(
+                            fileName = "Положение",
+                            onClick = { onClickFile(conditionFile.url) }
+                        )
+                    }
                 }
             }
         }
@@ -277,11 +306,129 @@ fun ConditionDetailHeader(
 private data class ConditionItem(
     val title: String,
     val htmlContent: String,
+    val conditionFile: ConditionFile?,
+    val type: ConditionType,
 )
 
 private val ConditionItemSaver = Saver<ConditionItem?, List<String>>(
-    save = { item -> item?.let { listOf(it.title, it.htmlContent) } },
+    save = { item ->
+        item?.let {
+            listOf(
+                it.title,
+                it.htmlContent,
+                (it.conditionFile as? ConditionFile.Base)?.url.orEmpty(),
+                it.type.name
+            )
+        }
+    },
     restore = { data ->
-        ConditionItem(data[0], data[1])
+        if (data.size < 4) null else {
+            ConditionItem(
+                data[0],
+                data[1],
+                data.getOrNull(2)?.takeIf { it.isNotEmpty() }?.let { ConditionFile.Base(it) },
+                ConditionType.valueOf(data[3])
+            )
+        }
     }
 )
+
+private enum class ConditionType { REGULATION, STATEMENT }
+
+@Composable
+private fun ConditionFileCard(
+    modifier: Modifier = Modifier,
+    fileName: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        onClick = onClick,
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shadowElevation = 6.dp,
+        tonalElevation = 0.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.18f),
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Description,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(28.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = fileName,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 16.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "Файл доступен ниже — откройте или скачайте",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.regular(),
+                    fontSize = 12.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun FileHint() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.secondary
+            )
+            Text(
+                text = "Файл положения ниже — прокрутите текст",
+                color = MaterialTheme.colorScheme.onBackground,
+                fontFamily = FontNunito.regular(),
+                fontSize = 13.sp
+            )
+        }
+    }
+}

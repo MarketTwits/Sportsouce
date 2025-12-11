@@ -24,6 +24,7 @@ class StartOrderStoreExecutor(
             is Intent.OnClickStart -> publish(OnClickStart(intent.startId))
             is Intent.OnClickUpdatePrice -> getActualPrice(state().startOrderInfo)
             is Intent.OnClickHelp -> intentAction.openWebPage("https://t.me/sportsoyuznsk")
+            is Intent.OnClickReRegistration -> publish(Label.OnClickReRegistration(intent.startId, intent.orderId))
         }
     }
 

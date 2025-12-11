@@ -109,10 +109,11 @@ internal fun ProfileClubCards(
                 fontFamily = FontNunito.bold(),
                 fontSize = 18.sp
             )
+            Spacer(Modifier.height(12.dp))
             HorizontalPager(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(170.dp),
+                    .fillMaxWidth(),
+                //  .height(170.dp),
                 state = pagerState,
                 pageSpacing = 14.dp,
             ) { page ->
@@ -122,6 +123,7 @@ internal fun ProfileClubCards(
                     onClick = onClick,
                 )
             }
+            Spacer(Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier

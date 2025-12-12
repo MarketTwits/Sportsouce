@@ -43,6 +43,7 @@ class StartDistancesComponentBase(
                 comboId = comboId,
                 startTitle = input.startTitle,
                 distances = distances,
+                regType = it.regType,
                 isPaymentDisabled = input.paymentDisabled
             )
         }

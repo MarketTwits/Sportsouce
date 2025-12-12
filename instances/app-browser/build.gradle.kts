@@ -24,7 +24,6 @@ kotlin {
         implementation(projects.components.core.cache)
         implementation(compose.components.resources)
         implementation(libs.bundles.decompose.compose)
-        // implementation(libs.kotlinx.datetime.ext)
         implementation(libs.koin.core)
         implementation(projects.components.core.koin)
         implementation(project.dependencies.enforcedPlatform(libs.jetbrains.kotlinWrappers.kotlinWrappersBom))

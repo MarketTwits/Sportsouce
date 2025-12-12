@@ -16,6 +16,7 @@ import com.markettwits.sportsouce.start.data.start.mapper.comments.StartComments
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapper
+import com.markettwits.sportsouce.start.data.start.mapper.review.StartReviewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.time.StartTimesMapper
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
@@ -27,7 +28,8 @@ internal class StartRemoteToUiMapperBase(
     private val membersResultsMapper: StartMembersResultsToUiMapper,
     private val commentsMapper: StartCommentsToUiMapper,
     private val albumsMapper: StartAlbumsToUiMapper,
-    private val startTimesMapper: StartTimesMapper
+    private val startTimesMapper: StartTimesMapper,
+    private val reviewMapper: StartReviewToUiMapper,
 ) : StartRemoteToUiMapper {
     override fun map(
         startRemote: StartRemote,
@@ -112,6 +114,12 @@ internal class StartRemoteToUiMapperBase(
                     distanceMapNew = startRemote.distances,
                     membersResults = startMemberResults,
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
+                    reviewState = reviewMapper.map(
+                        averageLocationScore = startRemote.averageLocationScore,
+                        averageReviewScore = startRemote.averageReviewScore,
+                        averageRoadScore = startRemote.averageRoadScore,
+                        averageTeamScore = startRemote.averageTeamScore,
+                    ),
                     regOnSite = startRemote.regOnSite ?: false,
                     conditionDetails = buildList {
                         val regulation = startRemote.regulation
@@ -188,6 +196,7 @@ internal class StartRemoteToUiMapperBase(
                     startMembersUi = StartMembersNewToUiMapper().map(startMembers),
                     sponsors = emptyList(),
                     conditionDetails = emptyList(),
+                    reviewState = StartItem.ReviewState.NoReviews,
                     regOnSite = startRemote.startData.regOnSite ?: false,
                     slug = ""
                 )
@@ -211,7 +220,7 @@ internal class StartRemoteToUiMapperBase(
 
     override fun map(
         startMember: List<StartMemberItem>,
-        paymentDisabled: Boolean
+        paymentDisabled: Boolean,
     ): List<StartMembersUi> {
         return membersMapper.map(startMember, paymentDisabled)
     }

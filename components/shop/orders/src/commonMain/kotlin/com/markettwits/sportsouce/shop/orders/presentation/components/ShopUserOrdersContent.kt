@@ -32,10 +32,9 @@ fun ShopUserOrdersContent(
         PullToRefreshScreen(
             isRefreshing = isLoading && items.isNotEmpty(),
             onRefresh = onClickRetry
-        ) { innerModifier ->
+        ) {
             AdaptivePane {
                 ShopUserOrdersItemsContent(
-                    modifier = innerModifier,
                     paddingValues = paddingValues,
                     isSuccess = isSuccess,
                     items = items

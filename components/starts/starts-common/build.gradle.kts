@@ -17,5 +17,5 @@ kotlin {
     }
 }
 android {
-    namespace = "com.markettwits.starts_common"
+    namespace = "com.markettwits.starts.common"
 }

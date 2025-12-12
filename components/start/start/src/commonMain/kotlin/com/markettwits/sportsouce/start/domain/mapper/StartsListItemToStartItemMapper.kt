@@ -49,6 +49,7 @@ object StartsListItemToStartItemMapper {
             sponsors = emptyList(),
             regOnSite = false,
             conditionDetails = emptyList(),
+            reviewState = StartItem.ReviewState.NoReviews,
             startTimes = StartItem.StartTimes(
                 beginningRegistry = "",
                 endRegistry = "",

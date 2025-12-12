@@ -16,33 +16,33 @@ import com.markettwits.sportsouce.start.register.presentation.registration.commo
 internal fun AdditionalFiledCheckBox(
     modifier: Modifier = Modifier,
     field: StartRegistrationStatementAnswer,
-    onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
+    onFieldChanged: (StartRegistrationStatementAnswer) -> Unit,
 ) {
     val isChecked = field.answer.bool ?: false
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .fillMaxWidth()
-                .clickable {
-                    onChange(isChecked, field,onFieldChanged)
-                }
-        ) {
-            CheckBoxBase(
-                checked = isChecked,
-                onValueChanged = {
-                    onChange(isChecked, field,onFieldChanged)
-                }
-            )
-            AdditionalFiledTitle(field = field.field)
-        }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onChange(isChecked, field, onFieldChanged)
+            }
+    ) {
+        CheckBoxBase(
+            checked = isChecked,
+            onValueChanged = {
+                onChange(isChecked, field, onFieldChanged)
+            }
+        )
+        AdditionalFiledTitle(field = field.field)
+    }
     Spacer(modifier = Modifier.height(8.dp))
 }
 
 private fun onChange(
-    isChecked : Boolean,
+    isChecked: Boolean,
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit,
-){
+) {
     onFieldChanged(
         field.copy(
             answer = field.answer.copy(

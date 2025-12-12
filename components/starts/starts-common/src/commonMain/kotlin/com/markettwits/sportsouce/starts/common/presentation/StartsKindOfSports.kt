@@ -9,17 +9,18 @@ import androidx.compose.material.icons.filled.Pool
 import androidx.compose.material.icons.filled.Terrain
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 
 fun startKindOfSportsColor(kindOfSports: StartsListItem.KindOfSport): Color {
     return when (kindOfSports.name.lowercase()) {
-        "велоспорт" -> Color(0xFF1E88E5)
+        "велоспорт" -> Color(0xFFBA1EE5)
         "триатлон" -> Color(0xFFD81B60)
         "плавание" -> Color(0xFF00ACC1)
         "бег" -> Color(0xFF43A047)
         "гонка с препятствиями" -> Color(0xFFF4511E)
-        "лыжные гонки" -> Color(0xFF6D4C41)
+        "лыжные гонки" -> SportSouceColor.SportSouceLighBlue
         else -> Color.Gray
     }
 }

@@ -6,10 +6,27 @@ import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface StartRepository {
 
     suspend fun start(startId: String, relaunch: Boolean): Result<StartItem>
+
+    /**
+     * Observable state of favorite starts
+     */
+    val favoritesFlow: StateFlow<List<StartsListItem>>
+
+    /**
+     * Refreshes favorites from network
+     */
+    suspend fun refreshFavorites(): Result<List<StartsListItem>>
+
+    suspend fun startAddToFavorite(startItem: StartItem): Result<Boolean>
+
+    suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean>
+
+    suspend fun isStartInFavorite(startId: Int): Result<Boolean>
 
     suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult>
 

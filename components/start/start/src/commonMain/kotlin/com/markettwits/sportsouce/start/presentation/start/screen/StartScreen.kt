@@ -70,7 +70,7 @@ fun StartScreen(
                 state.startItem?.let { data ->
                     StartScreenContent(
                         data = data,
-                        backgroundColor = backgroundColor,
+                        favoriteState = state.favoriteState,
                         recommendedStarts = state.startsRecommended,
                         seriesStarts = state.startsSeries,
                         error = state.error,
@@ -153,6 +153,9 @@ fun StartScreen(
                         },
                         onClickShare = {
                             startComponent.obtainEvent(StartScreenStore.Intent.OnClickShare)
+                        },
+                        onClickAddToFavourites = {
+                            startComponent.obtainEvent(StartScreenStore.Intent.OnClickFavorite)
                         }
                     )
                     if (fullImage) {

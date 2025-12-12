@@ -7,8 +7,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
+import com.markettwits.core.log.infoLog
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -22,6 +25,7 @@ import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.*
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label.*
@@ -48,17 +52,19 @@ interface StartScreenStore : Store<Intent, State, Label> {
             Intent
 
         data object OnClickRelatedStarts : Intent
+        data object OnClickFavorite : Intent
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val isPartialData: Boolean = false,
         val message: String = "",
         val error: Throwable? = null,
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
         val startsSeries: List<StartsListItem> = emptyList(),
+        val favoriteState: StartFavoriteState = StartFavoriteState.Loading(),
         val event: StateEventWithContent<EventContent> = consumed(),
-        val isPartialData: Boolean = false,
     )
 
     sealed interface Label {
@@ -76,6 +82,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
             val paymentDisabled: Boolean,
             val paymentType: String,
             val startTitle: String,
+            val isReReg: Boolean = false,
+            val prevOrderId: Int?,
         ) : Label
 
         data class OnOpenStartCommentsScreen(
@@ -109,6 +117,7 @@ class StartScreenStoreFactory(
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
         data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
+        data class StartFavoriteUpdated(val state: StartFavoriteState) : Msg
     }
 
     private inner class ExecutorImpl(
@@ -152,7 +161,11 @@ class StartScreenStoreFactory(
                             }
 
                             startItem.isDistanceRegistration() -> {
-                                publish(startItem.toOnClickDistanceNew())
+                                publish(
+                                    startItem.toOnClickDistanceNew(
+                                        isReReg = false,
+                                    )
+                                )
                             }
 
                             else -> {
@@ -201,6 +214,10 @@ class StartScreenStoreFactory(
                         }
                     }
                 }
+
+                Intent.OnClickFavorite -> scope.launch {
+                    onClickToFavorite()
+                }
             }
         }
 
@@ -218,10 +235,13 @@ class StartScreenStoreFactory(
                 is StartScreenInput.Id -> startInput.startId.toString()
                 is StartScreenInput.Slug -> startInput.slug
                 is StartScreenInput.Item -> startInput.item.id.toString()
+                is StartScreenInput.ReReg -> startInput.startId.toString()
             }
 
+            infoLog { "launch called with startIdString: $startIdString, relaunch: $relaunch" }
             scope.launch {
                 dispatch(Msg.Loading)
+                infoLog { "Calling service.start for startId: $startIdString" }
                 service.start(startIdString, relaunch).fold(
                     onFailure = { exception ->
                         if (!exception.isNetworkConnectionError()) {
@@ -231,14 +251,52 @@ class StartScreenStoreFactory(
                         }
                         dispatch(Msg.StartInfoFailed(exception))
                     },
-                    onSuccess = {
-                        publish(OnApplyStartId(it.id))
-                        dispatch(Msg.StartInfoSuccess(it))
-                        getSeriesStarts(it.startSeries)
+                    onSuccess = { startItem ->
+                        infoLog { "service.start onSuccess for startId: ${startItem.id}, title: ${startItem.title}" }
+                        publish(OnApplyStartId(startItem.id))
+                        getFavoriteStatus(startItem.id)
+                        dispatch(Msg.StartInfoSuccess(startItem))
+                        handleReRegistrationIfNeeded(startInput, startItem)
+                        getSeriesStarts(startItem.startSeries)
                     }
                 )
             }
             getRecommendedStarts(startIdString)
+        }
+
+        private fun onClickToFavorite() = scope.launch {
+            val favorite = state().favoriteState
+            dispatch(
+                Msg.StartFavoriteUpdated(
+                    StartFavoriteState.Loading(
+                        favorite.isFavorite
+                    )
+                )
+            )
+            state().startItem?.let { item ->
+                if (favorite is StartFavoriteState.Default) {
+                    when (favorite.isFavorite) {
+                        true -> service.startRemoveFromFavorites(item)
+                        false -> service.startAddToFavorite(item)
+                    }.onSuccess {
+                        dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                    }.onFailure {
+                        dispatch(Msg.StartFavoriteUpdated(favorite))
+                        dispatch(TriggerEvent(it.mapToSauceError().mapToString(), false))
+                    }
+                }
+            }
+        }
+
+        private fun getFavoriteStatus(startId: Int) {
+            scope.launch {
+                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading()))
+                service.isStartInFavorite(startId).onSuccess {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                }.onFailure {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(false)))
+                }
+            }
         }
 
         private fun getRecommendedStarts(startIdString: String) {
@@ -257,6 +315,31 @@ class StartScreenStoreFactory(
                     }
                 }
         }
+
+        private fun handleReRegistrationIfNeeded(input: StartScreenInput, startItem: StartItem) {
+            if (input is StartScreenInput.ReReg) {
+                when {
+                    startItem.isExternalLinkRegistration() -> {
+                        dispatch(TriggerEvent("Регистрация доступна только через внешнюю ссылку", false))
+                    }
+
+                    startItem.isDistanceRegistration() -> {
+                        publish(
+                            startItem.toOnClickDistanceNew(
+                                isReReg = true,
+                                prevOrderId = input.orderId
+                            )
+                        )
+                    }
+
+                    else -> {
+                        dispatch(TriggerEvent("Регистрация на данный старт закрыта", false))
+                    }
+                }
+            } else {
+                errorLog { "Input is not ReReg, it's: ${input::class.simpleName}" }
+            }
+        }
     }
 
     private fun StartItem.isExternalLinkRegistration(): Boolean {
@@ -267,14 +350,16 @@ class StartScreenStoreFactory(
         return distanceInfoNew.isNotEmpty() && startStatus.code == 3
     }
 
-    private fun StartItem.toOnClickDistanceNew(): OnClickDistanceNew =
+    private fun StartItem.toOnClickDistanceNew(isReReg: Boolean, prevOrderId: Int? = null): OnClickDistanceNew =
         OnClickDistanceNew(
             startId = id,
             startTitle = title,
             distanceInfo = distanceInfoNew,
             paymentDisabled = paymentDisabled,
             paymentType = paymentType,
-            mapDistance = distanceMapNew
+            mapDistance = distanceMapNew,
+            isReReg = isReReg,
+            prevOrderId = prevOrderId,
         )
 
     private object ReducerImpl : Reducer<State, Msg> {
@@ -322,6 +407,10 @@ class StartScreenStoreFactory(
                         message = msg.message
                     )
                 )
+            )
+
+            is Msg.StartFavoriteUpdated -> copy(
+                favoriteState = msg.state
             )
         }
     }

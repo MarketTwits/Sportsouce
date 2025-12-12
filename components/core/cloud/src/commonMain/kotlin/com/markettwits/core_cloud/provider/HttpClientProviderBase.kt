@@ -56,4 +56,5 @@ fun SportSauceHttpClientProvider(
     )
 }
 
-val SportSauceBaseUrl = BuildKonfig.SPORTSAUCE_API_PATH
+val SportSauceBaseUrl: String =
+    BuildKonfig.SPORTSAUCE_API_PATH ?: throw IllegalStateException("SportSauceBaseUrl property is missing")

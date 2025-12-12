@@ -45,8 +45,8 @@ fun ClubDashboardScreen(
         PullToRefreshScreen(
             isRefreshing = state.bottomSheetData.features.isNotEmpty() && state.isLoading,
             onRefresh = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
-        ) { modifier ->
-            LazyColumn(modifier = modifier) {
+        ) {
+            LazyColumn {
                 item {
                     ClubDashboardHeader()
                 }

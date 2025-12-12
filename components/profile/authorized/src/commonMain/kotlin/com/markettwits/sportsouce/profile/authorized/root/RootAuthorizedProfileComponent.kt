@@ -10,7 +10,9 @@ import com.markettwits.sportsouce.profile.members.member_root.component.RootMemb
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrdersComponent
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
+import com.markettwits.sportsouce.starts.favorites.presentation.component.StartsFavoritesComponent
 import kotlinx.serialization.Serializable
 
 interface RootAuthorizedProfileComponent {
@@ -22,7 +24,7 @@ interface RootAuthorizedProfileComponent {
         data object Members : Config()
 
         @Serializable
-        data class Start(val startId: Int) : Config()
+        data class Start(val startInput: StartScreenInput) : Config()
 
         @Serializable
         data object SocialNetwork : Config()
@@ -44,6 +46,9 @@ interface RootAuthorizedProfileComponent {
 
         @Serializable
         data object Club : Config()
+
+        @Serializable
+        data object Favorites : Config()
     }
 
 
@@ -66,6 +71,8 @@ interface RootAuthorizedProfileComponent {
         data class ShopUserOrders(val component : ShopUserOrdersComponent) : Child()
 
         data class ClubDashboard(val component : RootClubComponent) : Child()
+
+        data class StartsFavorites(val component: StartsFavoritesComponent) : Child()
     }
 
 }

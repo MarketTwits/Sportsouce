@@ -25,6 +25,7 @@ import com.markettwits.core_ui.items.extensions.noRippleClickable
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderMember
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.mapOrderStatusColor
@@ -39,6 +40,7 @@ fun OrderOverviewTab(
     onClickPay: () -> Unit,
     onUpdatePrice: () -> Unit,
     onHelp: () -> Unit,
+    onReRegistration: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -59,10 +61,12 @@ fun OrderOverviewTab(
         PaymentStatusCard(orderInfo = orderInfo)
 
         ActionsCard(
+            orderInfo = orderInfo,
             priceState = priceState,
             onClickPay = onClickPay,
             onUpdatePrice = onUpdatePrice,
-            onHelp = onHelp
+            onHelp = onHelp,
+            onReRegistration = onReRegistration
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -304,10 +308,12 @@ private fun PaymentStatusCard(orderInfo: StartOrderInfo) {
 
 @Composable
 private fun ActionsCard(
+    orderInfo: StartOrderInfo,
     priceState: StartOrderStore.StartPriceResult,
     onClickPay: () -> Unit,
     onUpdatePrice: () -> Unit,
     onHelp: () -> Unit,
+    onReRegistration: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -374,6 +380,36 @@ private fun ActionsCard(
                     )
                     Text(
                         text = "Загрузка...",
+                        fontSize = 14.sp,
+                        fontFamily = FontNunito.semiBoldBold(),
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
+            }
+        }
+
+        if (orderInfo.isReRegistrationAvailable) {
+            Button(
+                onClick = onReRegistration,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = SportSouceColor.SportSouceRegistryOpenGreen
+                ),
+                shape = Shapes.small
+            ) {
+                Row(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSecondary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Text(
+                        text = "Изменить регистрацию",
                         fontSize = 14.sp,
                         fontFamily = FontNunito.semiBoldBold(),
                         color = MaterialTheme.colorScheme.onSecondary

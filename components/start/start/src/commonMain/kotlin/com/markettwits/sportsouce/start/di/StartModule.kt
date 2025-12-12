@@ -16,6 +16,8 @@ import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersTo
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapperBase
+import com.markettwits.sportsouce.start.data.start.mapper.review.StartReviewToUiMapper
+import com.markettwits.sportsouce.start.data.start.mapper.review.StartReviewToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.time.StartTimesMapper
@@ -46,6 +48,7 @@ val startModule = module {
     singleOf(::StartCommentsToUiMapperBase) bind StartCommentsToUiMapper::class
     singleOf(::StartRemoteToUiMapperBase) bind StartRemoteToUiMapper::class
     singleOf(::StartTimesMapperBase) bind StartTimesMapper::class
+    singleOf(::StartReviewToUiMapperBase) bind StartReviewToUiMapper::class
     singleOf(::StartMembersResultsToUiMapperBase) bind StartMembersResultsToUiMapper::class
     singleOf(::StartMemberResultsStoreFactory)
     singleOf(::StartMemoryCache)

@@ -7,6 +7,8 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.errors.api.throwable.isNetworkConnectionError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core.log.infoLog
@@ -280,7 +282,7 @@ class StartScreenStoreFactory(
                         dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
                     }.onFailure {
                         dispatch(Msg.StartFavoriteUpdated(favorite))
-                        dispatch(TriggerEvent(it.message.toString(), false))
+                        dispatch(TriggerEvent(it.mapToSauceError().mapToString(), false))
                     }
                 }
             }

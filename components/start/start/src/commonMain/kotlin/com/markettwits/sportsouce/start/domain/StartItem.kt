@@ -24,6 +24,7 @@ data class StartItem(
     val paymentDisabled: Boolean,
     val regLink: String,
     val regOnSite: Boolean,
+    val reviewState: ReviewState,
     val distanceInfoNew: List<DistinctDistance>,
     val conditionDetails: List<ConditionDetail>,
     val distanceMapNew: List<Distance>,
@@ -97,6 +98,19 @@ data class StartItem(
         val id: Int,
         val name: String,
         val url: String,
+    )
+
+    sealed class ReviewState {
+        data object NoReviews : ReviewState()
+        data object LowRating : ReviewState()
+        data class Rated(val scores: ReviewScores) : ReviewState()
+    }
+
+    data class ReviewScores(
+        val review: Float,
+        val location: Int,
+        val road: Int,
+        val team: Int,
     )
 
     data class Comments(

@@ -15,6 +15,10 @@ data class Comment(
     val id: Int,
     @SerialName("personId")
     val personId: String,
+    @SerialName("isReview")
+    val isReview: Boolean? = null,
+    @SerialName("averageScore")
+    val averageScore: String? = null,
     @SerialName("replies")
     val replies: List<Reply>? = null,
     @SerialName("startId")
@@ -22,5 +26,5 @@ data class Comment(
     @SerialName("updatedAt")
     val updatedAt: String,
     @SerialName("user")
-    val user: UserComment
+    val user: UserComment,
 )

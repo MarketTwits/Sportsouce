@@ -14,6 +14,14 @@ import kotlinx.serialization.encoding.Encoder
 data class StartRemoteNew(
     @SerialName("conditionFile")
     val conditionFile: ConditionFile?,
+    @SerialName("averageLocationScore")
+    val averageLocationScore: String? = null,
+    @SerialName("averageReviewScore")
+    val averageReviewScore: String? = null,
+    @SerialName("averageRoadScore")
+    val averageRoadScore: String? = null,
+    @SerialName("averageTeamScore")
+    val averageTeamScore: String? = null,
     @SerialName("condition_short")
     val conditionShort: String?,
     @SerialName("coordinates")
@@ -64,7 +72,6 @@ data class StartRemoteNew(
     val usefulLinks: List<UsefulLinks>?,
     @SerialName("results")
     val results: List<Result>?,
-
 ) : StartRemote {
 
     @Deprecated("Use for isOpen field, don't use now")

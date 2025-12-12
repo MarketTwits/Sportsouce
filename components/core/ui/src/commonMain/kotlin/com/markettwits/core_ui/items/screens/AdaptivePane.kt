@@ -45,3 +45,7 @@ fun AdaptivePane(
         }
     }
 }
+
+enum class AdaptivePaneMode {
+    COLUMN, BOX
+}

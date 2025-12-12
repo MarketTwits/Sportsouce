@@ -1,5 +1,6 @@
 package com.markettwits.core_ui.items.screens
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -16,11 +17,12 @@ fun PullToRefreshScreen(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    content: @Composable (Modifier) -> Unit
+    content: @Composable () -> Unit,
 ) {
     if (isUsingPullToRefreshAvailable) {
         val state = rememberPullToRefreshState()
         PullToRefreshBox(
+            modifier = modifier,
             isRefreshing = isRefreshing,
             state = state,
             onRefresh = onRefresh,
@@ -34,11 +36,15 @@ fun PullToRefreshScreen(
                 )
             },
             content = {
-                content(modifier)
+                content()
             }
         )
     } else {
-        content(modifier)
+        Column(
+            modifier = modifier,
+        ) {
+            content()
+        }
     }
 }
 

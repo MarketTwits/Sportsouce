@@ -15,7 +15,8 @@ internal fun StartShareActionButton(modifier: Modifier = Modifier, onClick: () -
     SmallFloatingActionButton(
         modifier = modifier
             .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
-            .padding(10.dp),
+            .padding(vertical = 10.dp)
+            .padding(horizontal = 4.dp),
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.tertiary,
         onClick = onClick,

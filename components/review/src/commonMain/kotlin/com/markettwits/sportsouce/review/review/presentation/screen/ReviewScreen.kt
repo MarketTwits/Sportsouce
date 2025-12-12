@@ -50,7 +50,7 @@ fun ReviewScreen(
                 component.obtainEvent(ReviewStore.Intent.Launch(true))
             }) {
             Column(
-                modifier = it
+                modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {

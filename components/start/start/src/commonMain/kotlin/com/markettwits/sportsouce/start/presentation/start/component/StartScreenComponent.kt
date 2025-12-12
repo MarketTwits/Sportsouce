@@ -11,6 +11,13 @@ interface StartScreenComponent {
     fun obtainEvent(intent: StartScreenStore.Intent)
 }
 
+sealed class StartFavoriteState(val isFavorite: Boolean) {
+    class Loading(val value: Boolean = false) : StartFavoriteState(value)
+    class Default(value: Boolean) : StartFavoriteState(value)
+
+    fun isLoading(): Boolean = this is Loading
+}
+
 sealed class CommentUiState {
 
     data object Success : CommentUiState()

@@ -10,6 +10,7 @@ android {
 kotlin {
     sourceSets.commonMain.dependencies {
         api(projects.components.starts.startsCommon)
+        api(projects.components.starts.startsFavorites)
         implementation(projects.components.core.time)
         implementation(projects.components.analytics.crashlytics)
         implementation(projects.components.start.startCloud)

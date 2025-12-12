@@ -35,6 +35,7 @@ kotlin {
         implementation(projects.components.shop.orders)
         implementation(projects.components.start.start)
         implementation(projects.components.starts.startsCommon)
+        implementation(projects.components.starts.startsFavorites)
 
         implementation(libs.bundles.decompose.compose)
         implementation(libs.bundles.mviKotlin)

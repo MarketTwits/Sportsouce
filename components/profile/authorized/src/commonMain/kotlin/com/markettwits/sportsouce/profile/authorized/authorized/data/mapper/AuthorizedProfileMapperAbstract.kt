@@ -17,6 +17,7 @@ abstract class AuthorizedProfileMapperAbstract(
         UserProfile.UserInfo(
             name = user.name,
             surname = user.surname,
+            phoneNumber = user.number,
             createdAt = timeMapper.mapTime(TimePattern.Full, user.createdAt),
             status = user.commentForAddress ?: "",
             photo = when (val image = user.photo) {

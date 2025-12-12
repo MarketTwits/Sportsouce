@@ -24,6 +24,7 @@ data class StartItem(
     val paymentDisabled: Boolean,
     val regLink: String,
     val regOnSite: Boolean,
+    val reviewState: ReviewState,
     val distanceInfoNew: List<DistinctDistance>,
     val conditionDetails: List<ConditionDetail>,
     val distanceMapNew: List<Distance>,
@@ -37,8 +38,8 @@ data class StartItem(
     val startTimes: StartTimes,
 ) {
     sealed class ConditionDetail(open val value: String) {
-        class Regulation(override val value: String) : ConditionDetail(value)
-        class Statement(override val value: String) : ConditionDetail(value)
+        data class Regulation(override val value: String) : ConditionDetail(value)
+        data class Statement(override val value: String) : ConditionDetail(value)
     }
 
     sealed class StartSeries {
@@ -97,6 +98,19 @@ data class StartItem(
         val id: Int,
         val name: String,
         val url: String,
+    )
+
+    sealed class ReviewState {
+        data object NoReviews : ReviewState()
+        data object LowRating : ReviewState()
+        data class Rated(val scores: ReviewScores) : ReviewState()
+    }
+
+    data class ReviewScores(
+        val review: Float,
+        val location: Int,
+        val road: Int,
+        val team: Int,
     )
 
     data class Comments(

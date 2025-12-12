@@ -9,7 +9,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.extensions.noRippleClickable
@@ -20,6 +19,8 @@ import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.core_ui.items.window.screenWidthDp
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
+import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
+import com.markettwits.sportsouce.start.presentation.start.components.StartFavoriteActionButton
 import com.markettwits.sportsouce.start.presentation.start.components.StartRegistrationButton
 import com.markettwits.sportsouce.start.presentation.start.components.StartShareActionButton
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -28,7 +29,7 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
-    backgroundColor: Color,
+    favoriteState: StartFavoriteState,
     recommendedStarts: List<StartsListItem>,
     seriesStarts: List<StartsListItem>,
     error: Throwable? = null,
@@ -46,6 +47,7 @@ internal fun StartScreenContent(
     onClickShare: () -> Unit,
     onClickRelatedStarts: () -> Unit,
     onClickRecommendedStart: (StartsListItem) -> Unit,
+    onClickAddToFavourites: () -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
 ) {
@@ -161,11 +163,21 @@ internal fun StartScreenContent(
             ) {
                 onClickBack()
             }
-            StartShareActionButton(
+            Row(
                 modifier = Modifier.align(Alignment.TopEnd),
             ) {
-                onClickShare()
+                StartShareActionButton {
+                    onClickShare()
+                }
+                StartFavoriteActionButton(
+                    isFavorite = favoriteState.isFavorite,
+                    isLoading = favoriteState.isLoading(),
+                    onClick = {
+                        onClickAddToFavourites()
+                    }
+                )
             }
+
         }
     }
 }

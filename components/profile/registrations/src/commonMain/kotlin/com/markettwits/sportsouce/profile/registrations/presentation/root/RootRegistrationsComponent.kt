@@ -19,7 +19,7 @@ interface RootRegistrationsComponent {
         data class Registration(val order: StartOrderInfo) : ConfigStack()
 
         @Serializable
-        data class Start(val startId: Int) : ConfigStack()
+        data class Start(val startId: Int, val orderId: Int? = null) : ConfigStack()
     }
 
     sealed class ChildStack {

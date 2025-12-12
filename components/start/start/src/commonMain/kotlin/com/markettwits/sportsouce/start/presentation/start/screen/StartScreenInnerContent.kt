@@ -49,6 +49,7 @@ internal fun StartScreenInnerContent(
     var showStartSeries by rememberSaveable { mutableStateOf(false) }
 
     var showConditionPanel by rememberSaveable { mutableStateOf(false) }
+    var showReviewPanel by rememberSaveable { mutableStateOf(false) }
     var showMembersPanel by rememberSaveable { mutableStateOf(false) }
 
     var hasAnimated by rememberSaveable { mutableStateOf(false) }
@@ -63,6 +64,8 @@ internal fun StartScreenInnerContent(
                 // Wait for StartExtraFieldsPanel to complete its internal animations (~550ms)
                 delay(600) // Allow time for StartExtraFieldsPanel animations to complete
                 showConditionGrid = true
+                delay(120)
+                showReviewPanel = true
                 delay(120)
                 showDistanceInfo = true
                 delay(120)
@@ -83,6 +86,8 @@ internal fun StartScreenInnerContent(
                 // If not partial data from the start (direct load), show with staggered timing
                 delay(600) // Account for StartExtraFieldsPanel timing even on direct load
                 showConditionGrid = true
+                delay(120)
+                showReviewPanel = true
                 delay(120)
                 showDistanceInfo = true
                 delay(120)
@@ -134,7 +139,18 @@ internal fun StartScreenInnerContent(
         ) {
             StartConditionGrid(
                 modifier = innerModifier,
-                conditionItems = data.conditionDetails
+                conditionItems = data.conditionDetails,
+                conditionFile = data.conditionFile,
+                onClickFile = onClickUrl
+            )
+        }
+        AnimatedVisibility(
+            visible = showReviewPanel,
+            enter = fadeIn(animationSpec = tween(durationMillis = 500))
+        ) {
+            StartReviewPanel(
+                modifier = innerModifier,
+                reviewState = data.reviewState,
             )
         }
         AnimatedVisibility(

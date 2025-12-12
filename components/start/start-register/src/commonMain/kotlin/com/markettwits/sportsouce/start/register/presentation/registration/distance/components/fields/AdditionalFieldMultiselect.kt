@@ -1,11 +1,7 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +27,10 @@ internal fun AdditionalFieldMultiselect(
     val selectedOptions =  field.answer.multiSelect?.toMutableList() ?: emptyList<Int>().toMutableList()
 
     Column(modifier = modifier.fillMaxWidth()) {
-        AdditionalFiledTitle(field = field.field)
+        AdditionalFiledTitle(
+            modifier = Modifier.padding(vertical = 4.dp),
+            field = field.field
+        )
         options.forEach { option ->
             val isSelected = selectedOptions.contains(option.id)
             Row(

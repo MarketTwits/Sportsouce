@@ -11,9 +11,13 @@ data class StartRegisterPriceRequest(
     @SerialName("distances")
     val distances: List<StartRegisterDistance>,
     @SerialName("registration_without_payment")
-    val registrationWithoutPayment : Boolean? = null,
+    val registrationWithoutPayment: Boolean? = null,
+    @SerialName("is_re_registration")
+    val isReRegistration: Boolean? = null,
+    @SerialName("previous_group_id")
+    val previousOrderId: Int? = null,
     @SerialName("promocode")
     val promocode: String,
     @SerialName("start_id")
-    val startId: Int
+    val startId: Int,
 )

@@ -43,7 +43,6 @@ internal fun AdditionalFiledTitle(
         },
         fontSize = 14.sp,
         fontFamily = FontNunito.semiBoldBold(),
-        maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
 }

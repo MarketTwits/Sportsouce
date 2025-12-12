@@ -37,6 +37,8 @@ data class UserRegistration(
     val start: UserRegistrationStart? = null,
     @SerialName("start_id")
     val startId: Int? = null,
+    @SerialName("previous_group_id")
+    val previousGroupId: Int? = null,
     @SerialName("success_payment_reason")
     val successPaymentReason: String? = null,
     @SerialName("updatedAt")

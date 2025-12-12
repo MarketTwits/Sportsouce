@@ -16,6 +16,8 @@ import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersTo
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.result.StartMembersResultsToUiMapperBase
+import com.markettwits.sportsouce.start.data.start.mapper.review.StartReviewToUiMapper
+import com.markettwits.sportsouce.start.data.start.mapper.review.StartReviewToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapperBase
 import com.markettwits.sportsouce.start.data.start.mapper.time.StartTimesMapper
@@ -24,6 +26,7 @@ import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.presentation.result.store.StartMemberResultsStoreFactory
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.sportsouce.starts.common.di.startsCommonModule
+import com.markettwits.sportsouce.starts.favorites.di.startsFavoritesModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -31,6 +34,7 @@ import org.koin.dsl.module
 val startModule = module {
     includes(
         sportSauceStartNetworkModule,
+        startsFavoritesModule,
         startsCommonModule,
         authDataSourceModule,
         crashlyticsModule,
@@ -44,6 +48,7 @@ val startModule = module {
     singleOf(::StartCommentsToUiMapperBase) bind StartCommentsToUiMapper::class
     singleOf(::StartRemoteToUiMapperBase) bind StartRemoteToUiMapper::class
     singleOf(::StartTimesMapperBase) bind StartTimesMapper::class
+    singleOf(::StartReviewToUiMapperBase) bind StartReviewToUiMapper::class
     singleOf(::StartMembersResultsToUiMapperBase) bind StartMembersResultsToUiMapper::class
     singleOf(::StartMemberResultsStoreFactory)
     singleOf(::StartMemoryCache)

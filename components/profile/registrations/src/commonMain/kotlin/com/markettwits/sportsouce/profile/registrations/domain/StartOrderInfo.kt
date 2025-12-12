@@ -13,8 +13,10 @@ data class StartOrderInfo(
     val promo : String,
     val payment: StartOrderPaymentStatus,
     val members: List<StartOrderMember>,
+    val orderType: StartOrderType,
     val startTitle: String,
     val cost: String,
     val costWithoutDiscount: String = cost,
     val additionalFieldsCost: String = "",
+    val isReRegistrationAvailable: Boolean = false,
 )

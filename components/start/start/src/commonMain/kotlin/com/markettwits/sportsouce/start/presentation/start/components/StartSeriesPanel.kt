@@ -38,7 +38,7 @@ internal fun StartSeriesPanel(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 4.dp)
         ) {
             // Header with title and "Show more" button
             Row(

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
+import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 
@@ -32,6 +33,12 @@ internal fun StartsFavoritesContent(
     onAddToFavorites: (StartsListItem) -> Unit,
     onRefresh: () -> Unit,
 ) {
+    val screenSize = rememberScreenSizeInfo()
+    val preferredWidth = 180f
+    val columns = ((screenSize.wDP.value / preferredWidth).toInt())
+        .coerceAtLeast(1)
+        .coerceAtMost(4)
+
     AdaptivePane {
         PullToRefreshScreen(
             modifier = modifier,
@@ -53,10 +60,10 @@ internal fun StartsFavoritesContent(
             if (items.isNotEmpty()) {
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Adaptive(minSize = 320.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    columns = GridCells.Fixed(columns),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     // Show total count
                     item(span = { GridItemSpan(maxLineSpan) }) {

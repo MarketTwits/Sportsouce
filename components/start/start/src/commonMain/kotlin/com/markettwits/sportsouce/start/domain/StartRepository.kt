@@ -26,7 +26,7 @@ interface StartRepository {
 
     suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean>
 
-    suspend fun isStartInFavorite(startId: Int): Result<Boolean>
+    suspend fun isStartInFavorite(startId: String): Result<Boolean>
 
     suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult>
 

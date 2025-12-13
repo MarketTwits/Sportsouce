@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core_ui.items.event.EventEffect
@@ -44,6 +46,8 @@ fun StartScreen(
     var snackBarColor by remember {
         mutableStateOf(SportSouceColor.SportSouceLightRed)
     }
+
+    val isShowRegButton = state.startItem?.startStatus?.code == 3
     val backgroundColor =
         if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
     Scaffold(
@@ -52,6 +56,7 @@ fun StartScreen(
                 hostState = snackBarHostState,
             ) {
                 Snackbar(
+                    modifier = Modifier.padding(bottom = if (isShowRegButton) 60.dp else 10.dp),
                     contentColor = Color.White,
                     containerColor = snackBarColor,
                     snackbarData = it

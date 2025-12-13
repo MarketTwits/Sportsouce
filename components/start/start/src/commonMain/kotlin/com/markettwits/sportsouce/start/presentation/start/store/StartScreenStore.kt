@@ -11,7 +11,6 @@ import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
-import com.markettwits.core.log.infoLog
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -237,11 +236,8 @@ class StartScreenStoreFactory(
                 is StartScreenInput.Item -> startInput.item.id.toString()
                 is StartScreenInput.ReReg -> startInput.startId.toString()
             }
-
-            infoLog { "launch called with startIdString: $startIdString, relaunch: $relaunch" }
             scope.launch {
                 dispatch(Msg.Loading)
-                infoLog { "Calling service.start for startId: $startIdString" }
                 service.start(startIdString, relaunch).fold(
                     onFailure = { exception ->
                         if (!exception.isNetworkConnectionError()) {
@@ -252,9 +248,7 @@ class StartScreenStoreFactory(
                         dispatch(Msg.StartInfoFailed(exception))
                     },
                     onSuccess = { startItem ->
-                        infoLog { "service.start onSuccess for startId: ${startItem.id}, title: ${startItem.title}" }
                         publish(OnApplyStartId(startItem.id))
-                        getFavoriteStatus(startItem.id)
                         dispatch(Msg.StartInfoSuccess(startItem))
                         handleReRegistrationIfNeeded(startInput, startItem)
                         getSeriesStarts(startItem.startSeries)
@@ -262,6 +256,7 @@ class StartScreenStoreFactory(
                 )
             }
             getRecommendedStarts(startIdString)
+            getFavoriteStatus(startIdString)
         }
 
         private fun onClickToFavorite() = scope.launch {
@@ -288,10 +283,10 @@ class StartScreenStoreFactory(
             }
         }
 
-        private fun getFavoriteStatus(startId: Int) {
+        private fun getFavoriteStatus(startIdString: String) {
             scope.launch {
                 dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading()))
-                service.isStartInFavorite(startId).onSuccess {
+                service.isStartInFavorite(startIdString).onSuccess {
                     dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
                 }.onFailure {
                     dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(false)))

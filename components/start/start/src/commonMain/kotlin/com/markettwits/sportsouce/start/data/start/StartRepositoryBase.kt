@@ -82,17 +82,21 @@ internal class StartRepositoryBase(
     override suspend fun startAddToFavorite(startItem: StartItem): Result<Boolean> = runCatching {
         val startsListItem = StartItemToStartsListItemMapper.map(startItem)
         favoritesRepository.add(startsListItem)
-        isStartInFavorite(startItem.id).getOrDefault(false)
+        isStartInFavorite(startItem.id.toString()).getOrDefault(false)
     }
 
     override suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean> = runCatching {
         val startsListItem = StartItemToStartsListItemMapper.map(startItem)
         favoritesRepository.remove(startsListItem)
-        isStartInFavorite(startItem.id).getOrDefault(false)
+        isStartInFavorite(startItem.id.toString()).getOrDefault(false)
     }
 
-    override suspend fun isStartInFavorite(startId: Int): Result<Boolean> {
-        return favoritesRepository.isStartInFavorite(startId)
+    override suspend fun isStartInFavorite(startId: String): Result<Boolean> {
+        val numericStartId = startId.toIntOrNull() ?: run {
+            val startData = startService.start(startId)
+            startData.id
+        }
+        return favoritesRepository.isStartInFavorite(numericStartId)
     }
 
     override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> {

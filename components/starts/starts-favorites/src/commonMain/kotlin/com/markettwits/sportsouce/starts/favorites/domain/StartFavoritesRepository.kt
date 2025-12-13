@@ -27,7 +27,7 @@ interface StartFavoritesRepository {
     suspend fun remove(startsListItem: StartsListItem)
 
     /**
-     * Checks if start is in favorites (uses cache)
+     * Checks if start is in favorites. Refreshes from network if cache is not initialized yet.
      */
     suspend fun isStartInFavorite(startId: Int): Result<Boolean>
 }

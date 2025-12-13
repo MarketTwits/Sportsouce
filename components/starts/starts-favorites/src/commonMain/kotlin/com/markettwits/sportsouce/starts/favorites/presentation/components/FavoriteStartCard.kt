@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +55,7 @@ fun FavoriteStartCard(
             FavoriteStartImageSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp),
+                    .height(140.dp),
                 start = start,
                 isDeleting = isDeleting,
                 isRemoved = isRemoved,
@@ -67,7 +67,7 @@ fun FavoriteStartCard(
             FavoriteStartInfoSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
                 start = start
             )
         }
@@ -112,22 +112,22 @@ private fun FavoriteStartImageSection(
         Column(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(8.dp),
+                .padding(4.dp),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             // Status badge
             Box(
                 modifier = Modifier
                     .clip(Shapes.medium)
-                    .background(startStatusBackground(start.statusCode.id).copy(alpha = 0.95f))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .background(startStatusBackground(start.statusCode.id).copy(alpha = 0.8f))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = startStatusCompactMessage(start.statusCode.id),
                     color = Color.White,
                     fontFamily = FontNunito.bold(),
-                    fontSize = 12.sp
+                    fontSize = 9.sp
                 )
             }
 
@@ -135,14 +135,14 @@ private fun FavoriteStartImageSection(
             Box(
                 modifier = Modifier
                     .clip(Shapes.medium)
-                    .background(SportSouceColor.SportSouceLighBlue.copy(alpha = 0.95f))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .background(SportSouceColor.SportSouceLighBlue.copy(alpha = 0.8f))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = start.date,
                     color = Color.White,
                     fontFamily = FontNunito.semiBoldBold(),
-                    fontSize = 12.sp,
+                    fontSize = 9.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -152,12 +152,12 @@ private fun FavoriteStartImageSection(
         // Favorite button or progress indicator (top right)
         Box(
             modifier = Modifier
-                .padding(8.dp)
-                .size(48.dp)
+                .padding(6.dp)
+                .size(40.dp)
                 .align(Alignment.TopEnd)
                 .clip(CircleShape)
                 .background(
-                    if (isRemoved) MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                    if (isRemoved) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
                     else SportSouceColor.SportSouceBlue.copy(alpha = 0.9f)
                 ),
             contentAlignment = Alignment.Center
@@ -177,10 +177,10 @@ private fun FavoriteStartImageSection(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Favorite,
+                            imageVector = Icons.Rounded.FavoriteBorder,
                             contentDescription = "Add to favorites again",
-                            tint = Color.White.copy(alpha = 0.5f),
-                            modifier = Modifier.size(24.dp)
+                            tint = SportSouceColor.SportSouceStartEndedPink,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -191,10 +191,10 @@ private fun FavoriteStartImageSection(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Favorite,
+                            imageVector = Icons.Rounded.Favorite,
                             contentDescription = "Remove from favorites",
                             tint = Color.White,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -210,13 +210,13 @@ private fun FavoriteStartInfoSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         // Title
         Text(
             text = start.name,
-            fontSize = 20.sp,
-            fontFamily = FontNunito.bold(),
+            fontSize = 16.sp,
+            fontFamily = FontNunito.semiBoldBold(),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onBackground
@@ -225,106 +225,78 @@ private fun FavoriteStartInfoSection(
         // Location
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.LocationOn,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(14.dp)
             )
             Text(
                 text = start.place,
                 color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontFamily = FontNunito.medium(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
         }
 
-        // Distances
-        if (start.distance.isNotEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+        // Sport type and short distance hint
+        if (start.kindOfSports.isNotEmpty() || start.distance.isNotEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
-                    text = "Дистанции",
-                    color = MaterialTheme.colorScheme.outline,
-                    fontSize = 11.sp,
-                    fontFamily = FontNunito.medium()
-                )
-                HtmlText(
-                    text = start.distance,
-                    fontSize = 13.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    fontFamily = FontNunito.medium(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // Sport type and views
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Sport type with icon
-            if (start.kindOfSports.isNotEmpty()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+                if (start.kindOfSports.isNotEmpty()) {
                     val sportColor =
                         com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsColor(start.kindOfSports.first())
                     val sportIcon =
                         com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsIcon(start.kindOfSports.first())
 
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(sportColor.copy(alpha = 0.15f)),
-                        contentAlignment = Alignment.Center
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Icon(
-                            imageVector = sportIcon,
-                            contentDescription = null,
-                            tint = sportColor,
-                            modifier = Modifier.size(20.dp)
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(sportColor.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = sportIcon,
+                                contentDescription = null,
+                                tint = sportColor,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+
+                        Text(
+                            text = start.kindOfSports.first().name,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontFamily = FontNunito.semiBoldBold(),
+                            fontSize = 12.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
+                }
 
-                    Text(
-                        text = start.kindOfSports.first().name,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        fontSize = 14.sp
+                if (start.distance.isNotEmpty()) {
+                    HtmlText(
+                        text = start.distance,
+                        modifier = Modifier.weight(1f, fill = false),
+                        fontSize = 11.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = FontNunito.medium(),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-            }
-
-            // Views indicator
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "${start.views}",
-                    color = MaterialTheme.colorScheme.outline,
-                    fontFamily = FontNunito.medium(),
-                    fontSize = 13.sp
-                )
             }
         }
     }

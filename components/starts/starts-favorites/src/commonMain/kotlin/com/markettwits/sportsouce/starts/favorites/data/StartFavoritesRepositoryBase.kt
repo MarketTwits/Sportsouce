@@ -25,6 +25,7 @@ internal class StartFavoritesRepositoryBase(
 
     private val mutex = Mutex()
     private var isRefreshing = false
+    private var favoritesInitialized = false
 
     /**
      * Loads favorites from network and updates cache
@@ -44,6 +45,7 @@ internal class StartFavoritesRepositoryBase(
             val favoritesList = startsApi.fetchFavoriteStarts(userId, token)
 
             mutex.withLock {
+                favoritesInitialized = true
                 _favorites.value = favoritesList
             }
 
@@ -58,11 +60,15 @@ internal class StartFavoritesRepositoryBase(
 
     override suspend fun add(startsListItem: StartsListItem) {
         // Optimistically update cache first
-        mutex.withLock {
+        val (previousList, wasInitialized) = mutex.withLock {
+            val previousList = _favorites.value
+            val wasInitialized = favoritesInitialized
             if (_favorites.value.none { it.id == startsListItem.id }) {
+                favoritesInitialized = true
                 _favorites.value = _favorites.value + startsListItem
                 infoLog { "Optimistically added start ${startsListItem.id} to favorites" }
             }
+            previousList to wasInitialized
         }
 
         runCatching {
@@ -73,11 +79,15 @@ internal class StartFavoritesRepositoryBase(
                 userId = userId,
                 token = token
             )
+            mutex.withLock {
+                favoritesInitialized = true
+            }
             infoLog { "Successfully added start ${startsListItem.id} to favorites on server" }
         }.onFailure { error ->
             errorLog { "Failed to add start ${startsListItem.id} to favorites: ${error.message}" }
             mutex.withLock {
-                _favorites.value = _favorites.value.filter { it.id != startsListItem.id }
+                favoritesInitialized = wasInitialized
+                _favorites.value = previousList
             }
             throw error
         }
@@ -85,11 +95,13 @@ internal class StartFavoritesRepositoryBase(
 
     override suspend fun remove(startsListItem: StartsListItem) {
         // Store previous state for potential rollback
-        val previousList = _favorites.value
-
-        mutex.withLock {
+        val (previousList, wasInitialized) = mutex.withLock {
+            val previousList = _favorites.value
+            val wasInitialized = favoritesInitialized
             _favorites.value = _favorites.value.filter { it.id != startsListItem.id }
+            favoritesInitialized = true
             infoLog { "Optimistically removed start ${startsListItem.id} from favorites" }
+            previousList to wasInitialized
         }
 
         runCatching {
@@ -100,10 +112,14 @@ internal class StartFavoritesRepositoryBase(
                 userId = userId,
                 token = token
             )
+            mutex.withLock {
+                favoritesInitialized = true
+            }
             infoLog { "Successfully removed start ${startsListItem.id} from favorites on server" }
         }.onFailure { error ->
             errorLog { "Failed to remove start ${startsListItem.id} from favorites: ${error.message}" }
             mutex.withLock {
+                favoritesInitialized = wasInitialized
                 _favorites.value = previousList
             }
             throw error
@@ -111,7 +127,10 @@ internal class StartFavoritesRepositoryBase(
     }
 
     override suspend fun isStartInFavorite(startId: Int): Result<Boolean> = runCatching {
-        // Check cached favorites (no network call needed)
+        if (!favoritesInitialized) {
+            refresh().getOrThrow()
+        }
+        // Cache is initialized at this point, so check local state
         _favorites.value.any { it.id == startId }
     }
 }

@@ -2,10 +2,12 @@ plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.serialization)
 }
-android {
-    namespace = "com.markettwits.selfupdater.thirdparty.api"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.selfupdater.thirdparty.api"
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(projects.components.selfupdater.googleplay)

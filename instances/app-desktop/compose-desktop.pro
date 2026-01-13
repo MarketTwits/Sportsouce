@@ -1,36 +1,41 @@
--keepclasseswithmembers public class com.markettwits.sportsouce.app.MainKt {
+-keepclasseswithmembers public class com.markettwits.sportsouce.app.desktop.MainKt {
     public static void main(java.lang.String[]);
 }
 
--dontwarn kotlinx.coroutines.debug.*
--dontwarn kotlinx.datetime.**
--dontwarn org.slf4j.**
--keep class org.slf4j.**{ *; }
+# Core libs
 -keep class kotlin.** { *; }
 -keep class kotlinx.coroutines.** { *; }
+-keep class kotlinx.serialization.** { *; }
+-keep class org.slf4j.** { *; }
 -keep class org.jetbrains.skia.** { *; }
 -keep class org.jetbrains.skiko.** { *; }
--keep class io.ktor.serialization.** {*;}
--keep class kotlinx.serialization.** {*;}
--dontwarn  org.apache.**
--dontwarn  okhttp3.internal.**
+-keep class com.arkivanov.** { *; }
 
+# Networking/IO
+-keep class io.ktor.** { *; }
+-keep class okhttp3.** { *; }
+-keep class okio.** { *; }
+-keep class kotlinx.io.** { *; }
+
+# Coil ServiceLoader target
+-keep class coil3.network.ktor3.internal.KtorNetworkFetcherServiceLoaderTarget { *; }
+
+# Warning cleanup
+-dontwarn kotlinx.coroutines.debug.*
+-dontwarn kotlinx.datetime.**
+-dontwarn android.util.**
+-dontwarn org.slf4j.**
+-dontwarn org.apache.**
+-dontwarn okhttp3.internal.**
 -dontwarn androidx.compose.**
+-dontnote
 
- -keepclassmembers class kotlinx.serialization.json.** {
-     *** Companion;
- }
- -keepclasseswithmembers class kotlinx.serialization.json.** {
-     kotlinx.serialization.KSerializer serializer(...);
- }
- -keep class com.arkivanov.** {*;}
- -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
- -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
- -keepclassmembernames class kotlinx.** {
-     volatile <fields>;
- }
- -keep class io.koil.io.** {*;}
- -keep class java.time.** {*;}
+-keepclassmembers class kotlinx.serialization.json.** {
+    *** Companion;
+}
+-keepclasseswithmembers class kotlinx.serialization.json.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
 
 -assumenosideeffects public class androidx.compose.runtime.ComposerKt {
     void sourceInformation(androidx.compose.runtime.Composer,java.lang.String);

@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
@@ -28,5 +31,15 @@ kotlin {
         implementation(projects.components.core.koin)
         implementation(project.dependencies.enforcedPlatform(libs.jetbrains.kotlinWrappers.kotlinWrappersBom))
         implementation(libs.kotlin.browser)
+    }
+}
+
+tasks.withType<KotlinWebpack>().configureEach {
+    mode = when {
+        name.contains("development", ignoreCase = true) -> KotlinWebpackConfig.Mode.DEVELOPMENT
+        name.contains("production", ignoreCase = true) ||
+                name.contains("distribution", ignoreCase = true) -> KotlinWebpackConfig.Mode.PRODUCTION
+
+        else -> mode
     }
 }

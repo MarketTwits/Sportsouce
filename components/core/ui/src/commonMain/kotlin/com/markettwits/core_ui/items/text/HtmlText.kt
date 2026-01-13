@@ -1,12 +1,14 @@
 package com.markettwits.core_ui.items.text
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -15,7 +17,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import coil3.compose.AsyncImage
+import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.progress.shimmer
+import com.markettwits.core_ui.items.theme.Shapes
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material.RichText
 
@@ -101,13 +107,10 @@ fun HtmlText(
                 textDecoration = textDecoration,
                 textAlign = textAlign ?: TextAlign.Unspecified,
             )
-            images.forEach { imageUrl ->
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = "Describe image",
-                    modifier = modifier
-                )
-            }
+            HtmlTextImages(
+                images = images,
+                modifier = modifier,
+            )
         }
     }
 
@@ -117,6 +120,39 @@ fun HtmlText(
         }
     } else {
         richText()
+    }
+}
+
+@Composable
+private fun ColumnScope.HtmlTextImages(
+    modifier: Modifier = Modifier,
+    images: List<String>,
+) {
+    images.forEach { imageUrl ->
+        SubcomposeAsyncImage(
+            model = imageUrl,
+            contentDescription = "Describe image",
+            modifier = modifier.clip(Shapes.medium),
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .shimmer(
+                            tiltAngle = 30,
+                            gradientColors = listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
+                                Color.Transparent,
+                            )
+                        )
+                        .background(MaterialTheme.colorScheme.primary)
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            }
+        )
     }
 }
 
@@ -143,7 +179,6 @@ private fun removeColorStylesFromHtml(html: String): String {
         }
         .replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
 }
-
 
 
 private fun extractImageUrlsFromHtml(html: String): List<String> {

@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.markettwits.registrations"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.registrations"
+    }
+
     sourceSets.commonMain.dependencies {
         
         implementation(projects.components.auth.authService)

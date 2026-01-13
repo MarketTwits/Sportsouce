@@ -5,10 +5,12 @@ plugins {
 
 }
 
-android {
-    namespace = "com.markettwits.profile"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.profile"
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.analytics.crashlytics)
 

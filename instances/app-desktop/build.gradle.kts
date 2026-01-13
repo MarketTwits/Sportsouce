@@ -7,12 +7,13 @@ plugins {
     id("org.jetbrains.compose.hot-reload")
 }
 
-val desktopMainPath = "com.markettwits.sportsouce.app.desktop.MainKt"
+val desktopMainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
+val desktopPackageVersion = libs.versions.versionName
 
 tasks {
     withType<Jar> {
         manifest {
-            attributes["Main-Class"] = desktopMainPath
+            attributes["Main-Class"] = desktopMainClass
         }
     }
 }
@@ -27,12 +28,12 @@ kotlin {
         implementation(libs.koin.core)
         implementation(projects.components.core.koin)
         implementation(projects.components.deeplink.api)
-        implementation(compose.desktop.common)
         implementation(projects.components.root)
         implementation(projects.components.core.theme)
         implementation(libs.bundles.decompose.compose)
         implementation(projects.components.core.cache)
         implementation(libs.kotlinx.coroutines.swing)
+        implementation(libs.ktor.client.okhttp)
         implementation(libs.reaktive)
         implementation(libs.coroutines.interop)
     }
@@ -41,13 +42,14 @@ kotlin {
 compose.desktop {
     application {
 
-        mainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
+        mainClass = desktopMainClass
 
         nativeDistributions {
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
 
-            packageName = "Sportsauce"
+            packageName = "SportSauce"
+            packageVersion = desktopPackageVersion.get()
             description = "Sportsauce Desktop Application"
             copyright = "© 2024 Sportsauce."
             vendor = "MarketTwits"
@@ -62,14 +64,11 @@ compose.desktop {
                 iconFile.set(project.file("desktopAppIcons/MacSportSauceIcon.icns"))
                 bundleID = "com.markettwits.sibersspace.desktopApp"
             }
-            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("src/jvmMain/resources"))
         }
 
         buildTypes.release.proguard {
-            configurationFiles.from("compose-desktop.pro")
-            obfuscate.set(false)
-            optimize.set(false)
-            version.set("7.5.0")
+            configurationFiles.from(project.file("compose-desktop.pro"))
         }
     }
 }

@@ -1,10 +1,15 @@
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
 }
-android {
-    namespace = "com.markettwits.intent.impl"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.intent.impl"
+        androidResources {
+            enable = true
+        }
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.core)
@@ -15,4 +20,3 @@ kotlin {
         }
     }
 }
-

@@ -3,9 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android.namespace = "com.markettwits.core.paging"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.core.paging"
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(libs.paging.common)

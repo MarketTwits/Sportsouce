@@ -2,11 +2,11 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android {
-    namespace = "com.markettwits.intent.composable"
-}
-
 kotlin {
+    android {
+        namespace = "com.markettwits.intent.composable"
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.components.core.intent.api)

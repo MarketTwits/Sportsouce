@@ -1,17 +1,30 @@
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.android.build.gradle.BaseExtension
 import com.markettwits.sportsouce.extensions.PROJECT_VERSION_CODE
 import com.markettwits.sportsouce.extensions.PROJECT_VERSION_NAME
 import com.markettwits.sportsouce.sources.ApkConfig
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 fun BaseExtension.commonAndroid(project: Project) {
     configureBuildConfig()
     commonJava(project)
     configureDefaultConfig(project)
+}
+
+fun KotlinMultiplatformAndroidLibraryTarget.commonAndroid() {
+    compileSdk = ApkConfig.COMPILE_SDK_VERSION
+    minSdk = ApkConfig.MIN_SDK_VERSION
+
+    packaging.resources.excludes.addAll(
+        listOf(
+            "META-INF/LICENSE-LGPL-2.1.txt",
+            "META-INF/LICENSE-LGPL-3.txt",
+            "META-INF/LICENSE-W3C-TEST",
+            "META-INF/DEPENDENCIES",
+            "*.proto"
+        )
+    )
 }
 
 private fun BaseExtension.configureBuildConfig() {

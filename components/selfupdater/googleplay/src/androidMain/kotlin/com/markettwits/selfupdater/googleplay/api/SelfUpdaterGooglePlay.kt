@@ -9,7 +9,8 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.markettwits.activityholder.CurrentActivityHolder
-import com.markettwits.inappnotification.api.BuildConfig
+import com.markettwits.buildkonfig.BuildKonfig
+import com.markettwits.buildkonfig.isDebugMode
 import com.markettwits.selfupdater.api.SelfUpdaterSourceApi
 import com.markettwits.selfupdater.models.SelfUpdateResult
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
@@ -36,7 +37,7 @@ class SelfUpdaterGooglePlay(
             InstallStatus.DOWNLOADED -> {
                 val notification = InAppNotification.SelfUpdateReady(
                     action = appUpdateManager::completeUpdate,
-                    actualVersion = BuildConfig.LIBRARY_PACKAGE_NAME,
+                    actualVersion = BuildKonfig.APP_VERSION,
                     description = ""
                 )
                 inAppNotificationStorage.addNotification(notification)
@@ -72,7 +73,7 @@ class SelfUpdaterGooglePlay(
         }
     }
 
-    override fun getInstallSourceName() = "Google Play/" + BuildConfig.BUILD_TYPE
+    override fun getInstallSourceName() = "Google Play/" + if (isDebugMode) "debug" else "release"
 
     override fun isSelfUpdateCanManualCheck(): Boolean = false
 

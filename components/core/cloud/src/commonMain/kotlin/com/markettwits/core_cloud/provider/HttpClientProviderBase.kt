@@ -15,7 +15,7 @@ class HttpClientProviderBase(
     private val baseUrl: String,
 ) : HttpClientProvider {
 
-    override fun provide(loggerEnabled: Boolean) = HttpClient {
+    override fun provide(loggerEnabled: Boolean) = HttpClient(defaultHttpClientEngine()) {
         expectSuccess = true
         install(ContentNegotiation) {
             json(json)
@@ -43,7 +43,6 @@ class HttpClientProviderBase(
 
     override fun json(): Json = json
 }
-
 
 
 fun SportSauceHttpClientProvider(

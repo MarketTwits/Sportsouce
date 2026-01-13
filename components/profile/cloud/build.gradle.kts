@@ -3,6 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.kmp.convention)
 }
 kotlin {
+
+    android {
+        namespace = "com.markettwits.profile.cloud"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.koin.core)
@@ -10,7 +15,4 @@ kotlin {
             implementation(projects.components.core.cloud)
         }
     }
-}
-android {
-    namespace = "com.markettwits.profile.cloud"
 }

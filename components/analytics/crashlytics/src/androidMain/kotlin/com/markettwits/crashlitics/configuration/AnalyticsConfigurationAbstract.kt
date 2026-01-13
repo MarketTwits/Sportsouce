@@ -1,6 +1,6 @@
 package com.markettwits.crashlitics.configuration
 
-import com.markettwits.analitics.crashlytics.BuildConfig
+import com.markettwits.buildkonfig.isDebugMode
 import ru.ok.tracer.CoreTracerConfiguration
 import ru.ok.tracer.TracerConfiguration
 import ru.ok.tracer.crash.report.CrashFreeConfiguration
@@ -10,10 +10,8 @@ import ru.ok.tracer.heap.dumps.HeapDumpConfiguration
 import ru.ok.tracer.profiler.sampling.SamplingProfilerConfiguration
 
 abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
-
-    private val enabled: Boolean = !BuildConfig.DEBUG
-
-    override val defaultTracerConfigurations: MutableList<TracerConfiguration> =
+    override val defaultTracerConfigurations: MutableList<TracerConfiguration> by lazy {
+        val enabled = !isDebugMode
         mutableListOf(
             CoreTracerConfiguration.build {
             },
@@ -37,6 +35,7 @@ abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
                 setProbability(100) // ( 1 / 100 ) * 100% = 1%
             },
         )
+    }
 
     override val tracerConfiguration: MutableList<TracerConfiguration>
         get() = defaultTracerConfigurations

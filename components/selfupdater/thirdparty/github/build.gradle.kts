@@ -1,12 +1,15 @@
-
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
-android.namespace = "com.markettwits.selfupdater.thirdparty.github"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.selfupdater.thirdparty.github"
+    }
+
     jvm()
     sourceSets {
         commonMain.dependencies {
@@ -18,6 +21,9 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
+        }
+        androidMain.dependencies {
+            implementation(projects.components.core.buildConfig)
         }
     }
 }

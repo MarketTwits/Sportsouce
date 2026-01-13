@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 kotlin {
+
+    android {
+        namespace = "com.markettwits.profile.root"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.profile.unauthorized)
@@ -16,7 +21,4 @@ kotlin {
             implementation(libs.bundles.mviKotlin)
         }
     }
-}
-android {
-    namespace = "com.markettwits.profile.root"
 }

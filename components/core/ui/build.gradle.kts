@@ -2,11 +2,12 @@ plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
-android {
-    namespace = "org.markettwits.core.core.ui"
-}
 
 kotlin {
+
+    android {
+        namespace = "org.markettwits.core.core.ui"
+    }
 
     sourceSets {
 
@@ -17,7 +18,7 @@ kotlin {
         }
 
         androidMain.dependencies {
-            api(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.ui.tooling.preview)
             api(libs.ktor.client.okhttp)
             implementation(libs.compose.activity)
         }
@@ -42,7 +43,6 @@ kotlin {
         
         jvmMain.dependencies {
             api(compose.animation)
-            api(libs.compose.ui.tooling.preview)
         }
 
         jsMain.dependencies {

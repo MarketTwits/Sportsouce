@@ -3,10 +3,12 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
-android {
-    namespace = "com.markettwits.start_register"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.start_register"
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.ui)
         implementation(projects.components.core.errors)

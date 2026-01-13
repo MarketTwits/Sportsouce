@@ -1,4 +1,6 @@
 package com.markettwits.buildkonfig
 
+import com.markettwits.activityholder.CurrentActivityHolder
+
 actual val isDebugMode: Boolean
-    get() = BuildConfig.DEBUG
+    get() = CurrentActivityHolder.isDebuggable()

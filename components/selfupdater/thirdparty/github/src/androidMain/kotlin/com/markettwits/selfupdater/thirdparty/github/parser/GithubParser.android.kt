@@ -1,5 +1,5 @@
 package com.markettwits.selfupdater.thirdparty.github.parser
 
-import com.markettwits.selfupdater.thirdparty.github.BuildConfig
+import com.markettwits.buildkonfig.isDebugMode
 
-actual fun GithubParser.isDev(): Boolean = BuildConfig.DEBUG
+actual fun GithubParser.isDev(): Boolean = isDebugMode

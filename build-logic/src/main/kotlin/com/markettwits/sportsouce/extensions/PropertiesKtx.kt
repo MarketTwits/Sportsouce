@@ -41,7 +41,6 @@ fun Properties.propertyDecodedString(key: String): String {
     return try {
         String(Base64.getDecoder().decode(encodedValue))
     } catch (e: IllegalArgumentException) {
-        // Если строка не в Base64, возвращаем как есть (для обратной совместимости)
         encodedValue
     }
 }

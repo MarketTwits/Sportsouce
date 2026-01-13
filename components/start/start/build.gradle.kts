@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android {
-    namespace = "com.markettwits.start"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.start"
+    }
+
     sourceSets.commonMain.dependencies {
         api(projects.components.starts.startsCommon)
         api(projects.components.starts.startsFavorites)

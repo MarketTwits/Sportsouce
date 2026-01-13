@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
 }
-android{
-    namespace = "com.markettwits.core.time"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.core.time"
+    }
+
     sourceSets {
         commonMain.dependencies{
             api(libs.kotlinx.datetime)

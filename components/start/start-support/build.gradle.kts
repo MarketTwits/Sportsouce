@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.markettwits.start_support"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.start_support"
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.impl)

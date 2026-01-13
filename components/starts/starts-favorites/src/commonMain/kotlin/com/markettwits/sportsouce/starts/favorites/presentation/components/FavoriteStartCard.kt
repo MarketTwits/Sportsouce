@@ -237,6 +237,7 @@ private fun FavoriteStartInfoSection(
                 text = start.place,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 12.sp,
+                lineHeight = 14.sp,
                 fontFamily = FontNunito.medium(),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

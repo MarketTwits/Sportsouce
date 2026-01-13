@@ -4,9 +4,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android.namespace = "com.markettwits.inappnotification.api"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.inappnotification.api"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(compose.ui)

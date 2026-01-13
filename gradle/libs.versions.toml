@@ -1,9 +1,9 @@
 [versions]
 #plugins
-versionName = "1.5.4"
-versionCode = "10419"
+versionName = "1.5.5"
+versionCode = "10420"
 jvm = "11"
-kotlin = "2.2.21" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
+kotlin = "2.3.0" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 gradle = "8.12.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 compose = "1.9.3" # https://github.com/JetBrains/compose-multiplatform
 kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
@@ -13,25 +13,25 @@ kstore = "1.0.0" # https://github.com/xxfast/KStore
 kermit = "2.0.8" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.3.0" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "2025.12.3" #https://github.com/JetBrains/kotlin-wrappers
+jetbrainsKotlinWrappers = "2026.1.4" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "2.0.2" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.2.0" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
-multiplatformMarkdownRendererM3 = "0.38.1" # https://github.com/mikepenz/multiplatform-markdown-renderer
-composeMaterial3Adaptive = "1.2.0"
-composeMaterial3WindowSizeClass = "1.9.0"
+multiplatformMarkdownRendererM3 = "0.39.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
+composeMaterial3Adaptive = "1.2.0" # https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
+composeMaterial3WindowSizeClass = "1.9.0" # https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-window-size-class
+composeMaterial3AdaptiveNavigationSuite = "1.9.0" #https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-adaptive-navigation-suite
 composeHotReload = "1.0.0" # https://github.com/JetBrains/compose-hot-reload
-composeMaterial3AdaptiveNavigationSuite = "1.9.0"
-buildConfigPlugin = "6.0.6" # https://github.com/gmazzo/gradle-buildconfig-plugin
-compose-activity = "1.12.1"
-compose-preview = "1.10.0"
+buildConfigPlugin = "6.0.7" # https://github.com/gmazzo/gradle-buildconfig-plugin
+compose-activity = "1.12.2" # https://developer.android.com/jetpack/androidx/releases/activity
+compose-preview = "1.10.0" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.4.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.4.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
-tracer = "0.2.15" # https://apptracer.ru/
+tracer = "1.1.7" # https://apptracer.ru/
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -94,6 +94,7 @@ paging-common = { module = "app.cash.paging:paging-common", version.ref = "pagin
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "pagingCommon" }
 reaktive = { module = "com.badoo.reaktive:reaktive", version.ref = "reaktive" }
 tracer-crash-report = { group = "ru.ok.tracer", name = "tracer-crash-report", version.ref = "tracer" }
+tracer-crash-report-native = { group = "ru.ok.tracer", name = "tracer-crash-report-native", version.ref = "tracer" }
 tracer-heap-dump = { group = "ru.ok.tracer", name = "tracer-heap-dumps", version.ref = "tracer" }
 tracer-disk-usage = { group = "ru.ok.tracer", name = "tracer-disk-usage", version.ref = "tracer" }
 tracer-profiler-sampling = { group = "ru.ok.tracer", name = "tracer-profiler-sampling", version.ref = "tracer" }
@@ -116,6 +117,7 @@ android-library = { id = "com.android.library", version.ref = "gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+tracer-android = { id = "ru.ok.tracer", version.ref = "tracer" }
 build-konfig = {id = "com.github.gmazzo.buildconfig", version.ref = "buildConfigPlugin"}
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }

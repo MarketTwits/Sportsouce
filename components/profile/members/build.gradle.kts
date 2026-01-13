@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.markettwits.members"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.members"
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.time)
         implementation(projects.components.core.cache)

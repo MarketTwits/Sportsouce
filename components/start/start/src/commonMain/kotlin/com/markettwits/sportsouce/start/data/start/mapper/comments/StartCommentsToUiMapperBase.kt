@@ -13,7 +13,7 @@ internal class StartCommentsToUiMapperBase(
         rows = commentsRemote.map {
             StartItem.Comments.Row(
                 id = it.id,
-                comment = it.comment,
+                comment = it.comment.orEmpty(),
                 countSub = it.countSub,
                 createdAt = timeMapper.mapTime(
                     TimePattern.FullWithEmptySpace,
@@ -23,7 +23,7 @@ internal class StartCommentsToUiMapperBase(
                 replies = it.replies?.map { reply ->
                     StartItem.Comments.Reply(
                         id = reply.id,
-                        comment = reply.comment,
+                        comment = reply.comment.orEmpty(),
                         createdAt = timeMapper.mapTime(
                             TimePattern.FullWithEmptySpace,
                             reply.createdAt

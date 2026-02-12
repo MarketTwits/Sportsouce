@@ -11,7 +11,6 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
     ): List<StartMembersUi> =
         convertToStartMembersUiNew(startMember, paymentDisabled)
 
-
     private fun convertToStartMembersUiNew(
         startMember: List<StartMemberItem>,
         paymentDisabled: Boolean
@@ -53,7 +52,7 @@ internal class StartMembersToUiMapperBase : StartMembersToUiMapper {
     private fun createTeam(teamMembers: List<StartMemberItem>): StartMembersUi.Team {
         val teamMemberList = teamMembers.map {
             StartMembersUi.TeamMember(
-                memberId = it.id ?: 0,
+                memberId = it.id,
                 name = it.name,
                 surname = it.surname
             )

@@ -3,19 +3,19 @@ package com.markettwits.sportsouce.start.presentation.membres.component
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarComponentHandler
-import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityStrategy
-import com.markettwits.sportsouce.start.presentation.common.OnClick
-import com.markettwits.sportsouce.start.presentation.membres.models.MembersFilterGroup
-import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
-import com.markettwits.sportsouce.start.presentation.membres.store.StartMembersStoreFactory
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarComponentHandler
+import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityStrategy
 import com.markettwits.sportsouce.start.domain.StartRepository
+import com.markettwits.sportsouce.start.presentation.common.OnClick
+import com.markettwits.sportsouce.start.presentation.membres.models.MembersFilterGroup
 import com.markettwits.sportsouce.start.presentation.membres.models.MembersFilterItem
+import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.membres.store.StartMembersStore
+import com.markettwits.sportsouce.start.presentation.membres.store.StartMembersStoreFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StartMembersScreenComponent(
     componentContext: ComponentContext,
     private val startId: Int,

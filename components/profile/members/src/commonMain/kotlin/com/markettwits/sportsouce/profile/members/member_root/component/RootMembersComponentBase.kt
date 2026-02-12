@@ -57,7 +57,7 @@ class RootMembersComponentBase(
                         slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(it))
                     },
                     addMember = {
-                        stackNavigation.push(RootMembersComponent.ConfigStack.MemberEdit(null))
+                        stackNavigation.pushNew(RootMembersComponent.ConfigStack.MemberEdit(null))
                     }
                 ))
 
@@ -91,7 +91,7 @@ class RootMembersComponentBase(
                     dismiss = slotNavigation::dismiss,
                     onClickEdit = {
                         slotNavigation.dismiss()
-                        stackNavigation.push(RootMembersComponent.ConfigStack.MemberEdit(it))
+                        stackNavigation.pushNew(RootMembersComponent.ConfigStack.MemberEdit(it))
                     },
                     memberDeleted = {
                         updateMembersList()

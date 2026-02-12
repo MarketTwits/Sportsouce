@@ -8,8 +8,6 @@ import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceResponse
 import com.markettwits.sportsouce.profile.registrations.domain.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 

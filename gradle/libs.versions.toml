@@ -5,33 +5,33 @@ versionCode = "10420"
 jvm = "11"
 kotlin = "2.3.0" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 gradle = "8.12.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
-compose = "1.9.3" # https://github.com/JetBrains/compose-multiplatform
-kotlinx-serialization = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
+compose = "1.10.1" # https://github.com/JetBrains/compose-multiplatform
+kotlinx-serialization = "1.10.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
 kstore = "1.0.0" # https://github.com/xxfast/KStore
 kermit = "2.0.8" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.3.0" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "2026.1.4" #https://github.com/JetBrains/kotlin-wrappers
+jetbrainsKotlinWrappers = "2026.2.9" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "2.0.2" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.2.0" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
 richeditor = "1.0.0-rc13" # https://github.com/MohamedRejeb/compose-rich-editor
-multiplatformMarkdownRendererM3 = "0.39.0" # https://github.com/mikepenz/multiplatform-markdown-renderer
+multiplatformMarkdownRendererM3 = "0.39.2" # https://github.com/mikepenz/multiplatform-markdown-renderer
 composeMaterial3Adaptive = "1.2.0" # https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
 composeMaterial3WindowSizeClass = "1.9.0" # https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-window-size-class
 composeMaterial3AdaptiveNavigationSuite = "1.9.0" #https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-adaptive-navigation-suite
 composeHotReload = "1.0.0" # https://github.com/JetBrains/compose-hot-reload
 buildConfigPlugin = "6.0.7" # https://github.com/gmazzo/gradle-buildconfig-plugin
-compose-activity = "1.12.2" # https://developer.android.com/jetpack/androidx/releases/activity
-compose-preview = "1.10.0" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
+compose-activity = "1.12.4" # https://developer.android.com/jetpack/androidx/releases/activity
+compose-preview = "1.10.3" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
 decompose = "3.4.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.4.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
-tracer = "1.1.7" # https://apptracer.ru/
+tracer = "1.2.1" # https://apptracer.ru/
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -68,7 +68,6 @@ kstore-storage = { module = "io.github.xxfast:kstore-storage", version.ref = "ks
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -77,14 +76,11 @@ ktor-client-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version
 #Coil
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "ktor" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "ktor" }
-coil-network-okkhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "ktor" }
 coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "ktor" }
 
 #Decompose
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-compose-extension = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
-decompose-android = { module = "com.arkivanov.decompose:extensions-android", version.ref = "decompose" }
-
 #DI
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }

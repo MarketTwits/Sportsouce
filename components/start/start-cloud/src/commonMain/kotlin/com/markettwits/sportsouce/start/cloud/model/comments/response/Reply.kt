@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Reply(
     @SerialName("comment")
-    val comment: String,
+    val comment: String? = null,
     @SerialName("createdAt")
     val createdAt: String,
     @SerialName("id")
     val id: Int,
     @SerialName("user")
-    val user: UserComment
+    val user: UserComment,
 )

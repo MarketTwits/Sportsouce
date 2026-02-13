@@ -1,13 +1,16 @@
-
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.kotlin.kmp.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
 
-android.namespace = "com.markettwits.selfupdater.components"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.selfupdater.components"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)

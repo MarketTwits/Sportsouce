@@ -1,10 +1,6 @@
 🟠 What's New
-- Re-registration support for events
-- Enhanced favorites and profile design
-- Registration statistics in your profile
-- Social networks integration
-- Distance images and track previews
-- Event reviews and ratings
-- Bug fixes for app links
+- Better media UX: smoother club image loading and full-screen image viewing in rich text.
+- Improved HTML normalization and image extraction.
+- Fixed issues in comments/replies, member edit navigation, additional field price display, and start stats order.
 
 Thank you for using Sportsauce v$APP_VERSION!

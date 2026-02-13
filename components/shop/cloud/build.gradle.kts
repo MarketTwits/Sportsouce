@@ -2,11 +2,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.kmp.convention)
 }
-android {
-    namespace = "com.markettwits.shop.cloud"
-}
 
-kotlin{
+kotlin {
+
+    android {
+        namespace = "com.markettwits.shop.cloud"
+    }
+
     sourceSets{
         commonMain.dependencies {
             api(libs.ktor.client.json)

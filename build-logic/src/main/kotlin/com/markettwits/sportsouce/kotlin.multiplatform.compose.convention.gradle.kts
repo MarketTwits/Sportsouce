@@ -1,3 +1,5 @@
+@file:OptIn(org.jetbrains.kotlin.gradle.ExternalKotlinTargetApi::class)
+
 import com.markettwits.sportsouce.extensions.libs
 
 plugins {
@@ -7,6 +9,11 @@ plugins {
 }
 
 kotlin {
+    android {
+        androidResources {
+            enable = true
+        }
+    }
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)

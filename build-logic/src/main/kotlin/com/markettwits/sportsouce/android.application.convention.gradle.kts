@@ -1,6 +1,5 @@
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.markettwits.sportsouce.extensions.loadFile
 import com.markettwits.sportsouce.extensions.loadProperties
 import com.markettwits.sportsouce.extensions.propertyDecodedString
 import com.markettwits.sportsouce.extensions.propertyString
@@ -31,19 +30,33 @@ tracer {
 configureBundleOutputNames()
 
 private fun BaseAppModuleExtension.configureSigning() {
+    val keystoreFile = rootProject.file("key-store.jks")
+    val secretsFile = rootProject.file("secrets.properties")
+
+    if (!keystoreFile.exists() || !secretsFile.exists()) {
+        project.logger.lifecycle(
+            "Release signing config is skipped: key-store.jks or secrets.properties was not found."
+        )
+        return
+    }
+
     val secretsProps = rootProject.loadProperties("secrets.properties")
 
     signingConfigs {
-        create("release") {
-            storeFile = rootProject.loadFile("key-store.jks")
-            storePassword = secretsProps.propertyDecodedString("storePassword64")
-            keyAlias = secretsProps.propertyDecodedString("keyAlias64")
-            keyPassword = secretsProps.propertyDecodedString("keyPassword64")
+        if (findByName("release") == null) {
+            create("release") {
+                storeFile = keystoreFile
+                storePassword = secretsProps.propertyDecodedString("storePassword64")
+                keyAlias = secretsProps.propertyDecodedString("keyAlias64")
+                keyPassword = secretsProps.propertyDecodedString("keyPassword64")
+            }
         }
     }
 }
 
 private fun BaseAppModuleExtension.configureBuildTypes() {
+    val releaseSigning = signingConfigs.findByName("release")
+
     buildTypes {
         defaultConfig {
             androidResources.localeFilters += listOf("en", "ru")
@@ -56,7 +69,9 @@ private fun BaseAppModuleExtension.configureBuildTypes() {
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (releaseSigning != null) {
+                signingConfig = releaseSigning
+            }
         }
         debug {
             isMinifyEnabled = false
@@ -120,6 +135,5 @@ private fun NamedDomainObjectContainer<TracerConfig>.configureTracer() {
         this.appToken = applicationToken
     }
 }
-
 
 

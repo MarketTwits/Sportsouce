@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.starts.popular.presentation.screen
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,16 +20,15 @@ internal fun PopularStartsScreen(component: StartsPopularComponent) {
     val state by component.state.collectAsState()
 
     Scaffold(
-        modifier = Modifier,
         topBar = {
             TopBarWithClip(title = "Популярное") {
                 component.obtainEvent(StartsPopularStore.Intent.OnClickBack)
             }
         }
     ) { paddingValues ->
+        Spacer(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
         if (state.starts.isNotEmpty()) {
             StartsPopularContent(
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
                 isRefreshing = state.isLoading && state.starts.isNotEmpty(),
                 items = state.starts,
                 onRefresh = {

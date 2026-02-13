@@ -3,11 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
     alias(libs.plugins.kotlin.serialization)
 }
-android {
-    namespace = "com.markettwits.club.dashboard"
-}
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.club.dashboard"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.analytics.crashlytics)

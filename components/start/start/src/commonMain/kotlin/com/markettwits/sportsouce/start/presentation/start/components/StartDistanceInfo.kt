@@ -36,7 +36,7 @@ internal fun StartDistanceInfo(
 ) {
     if (distances.isNotEmpty()) {
         var isExpanded by rememberSaveable { mutableStateOf(false) }
-        var showStatistics by rememberSaveable { mutableStateOf(false) }
+        var showStatistics by rememberSaveable { mutableStateOf(true) }
         val rotationAngle by animateFloatAsState(
             targetValue = if (isExpanded) 180f else 0f,
             animationSpec = tween(durationMillis = 300)

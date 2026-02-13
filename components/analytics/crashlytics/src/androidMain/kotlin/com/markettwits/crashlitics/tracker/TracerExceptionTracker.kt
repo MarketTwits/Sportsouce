@@ -1,6 +1,5 @@
 package com.markettwits.crashlitics.tracker
 
-import com.markettwits.analitics.crashlytics.BuildConfig
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import ru.ok.tracer.Tracer
 import ru.ok.tracer.crash.report.TracerCrashReport

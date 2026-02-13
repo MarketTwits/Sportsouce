@@ -13,9 +13,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun BaseExtension.commonJava(project: Project) {
 
-    project.tasks.withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
+    project.configureJavaCompile()
 
     project.extensions.findByType<JavaPluginExtension>()?.run {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -27,7 +25,26 @@ fun BaseExtension.commonJava(project: Project) {
         compileOptions.targetCompatibility = JavaVersion.VERSION_17
     }
 
-    project.extensions.findByType<KotlinMultiplatformExtension>()?.run {
+    project.configureKotlinJvmTargets()
+}
+
+fun Project.commonKmpJava() {
+    configureJavaCompile()
+    extensions.findByType<JavaPluginExtension>()?.run {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    configureKotlinJvmTargets()
+}
+
+private fun Project.configureJavaCompile() {
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+    }
+}
+
+private fun Project.configureKotlinJvmTargets() {
+    extensions.findByType<KotlinMultiplatformExtension>()?.run {
         targets.filterIsInstance<HasConfigurableKotlinCompilerOptions<*>>()
             .mapNotNull { it.compilerOptions as? KotlinJvmCompilerOptions }
             .onEach { androidTarget ->
@@ -35,7 +52,7 @@ fun BaseExtension.commonJava(project: Project) {
             }
     }
 
-    project.tasks
+    tasks
         .withType<KotlinCompile>()
         .configureEach {
             compilerOptions.jvmTarget.set(JvmTarget.JVM_17)

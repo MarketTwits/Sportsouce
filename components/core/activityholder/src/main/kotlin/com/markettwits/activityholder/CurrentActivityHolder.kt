@@ -2,18 +2,26 @@ package com.markettwits.activityholder
 
 import android.app.Activity
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import java.lang.ref.WeakReference
 
 object CurrentActivityHolder : Application.ActivityLifecycleCallbacks {
 
     private var currentActivity = WeakReference<Activity>(null)
+    private var isDebuggableFlag: Boolean = false
 
     fun register(application: Application) {
+        isDebuggableFlag =
+            (application.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
         application.registerActivityLifecycleCallbacks(this)
     }
 
     fun getCurrentActivity(): Activity? = currentActivity.get()
+
+    fun isDebuggable(): Boolean {
+        return isDebuggableFlag
+    }
 
     override fun onActivityResumed(activity: Activity) {
         currentActivity = WeakReference(activity)

@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.club.info.presentation.components.trainings
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -9,25 +11,24 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.club.info.domain.models.Training
+import com.markettwits.sportsouce.club.info.presentation.components.common.ClubCardImageLoadingPlaceholder
 import com.markettwits.sportsouce.club.info.presentation.components.common.SubscribeGradientButton
 
 @Composable
@@ -45,7 +46,8 @@ internal fun TrainingsContent(
     }
 
     LazyVerticalStaggeredGrid(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize(),
         columns = StaggeredGridCells.Adaptive(160.dp),
         verticalItemSpacing = 16.dp,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -92,10 +94,21 @@ private fun TrainingItemContent(
                     .clickable(onClick = onClick),
                 contentScale = ContentScale.Crop,
                 loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .shimmer()
+                    ClubCardImageLoadingPlaceholder(
+                        modifier = Modifier.fillMaxSize(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                },
+                success = {
+                    var showImage by remember(training.imageUrl) { mutableStateOf(false) }
+                    LaunchedEffect(training.imageUrl) { showImage = true }
+                    val imageAlpha by animateFloatAsState(
+                        targetValue = if (showImage) 1f else 0f,
+                        animationSpec = tween(durationMillis = 320),
+                        label = "training-image-appearance"
+                    )
+                    SubcomposeAsyncImageContent(
+                        modifier = Modifier.alpha(imageAlpha)
                     )
                 }
             )

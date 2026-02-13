@@ -4,10 +4,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.markettwits.sportsauce.bottombar"
-}
 kotlin {
+
+    android {
+        namespace = "com.markettwits.sportsauce.bottombar"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.core.ui)

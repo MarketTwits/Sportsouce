@@ -55,7 +55,7 @@ internal fun StartRegistrationButton(
 
         val isEnabled = !isLoading && !hasError && !isUpcoming
         val buttonText = if (startStatus.code == 3) {
-            if (isLoading) "Загрузка${".".repeat(dotCount)}" else "Зарегестрироваться"
+            if (isLoading) "Загрузка${".".repeat(dotCount)}" else "Зарегистрироваться"
         } else {
             "Регистрация скоро начнется"
         }

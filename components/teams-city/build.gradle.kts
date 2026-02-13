@@ -3,10 +3,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.markettwits.teams_cities"
-}
-kotlin{
+kotlin {
+
+    android {
+        namespace = "com.markettwits.teams_cities"
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.koin)
         implementation(projects.components.core.cloud)

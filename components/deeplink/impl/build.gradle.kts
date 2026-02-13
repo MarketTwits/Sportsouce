@@ -3,9 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android.namespace = "com.markettwits.deeplink.impl"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.deeplink.impl"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.deeplink.api)

@@ -4,9 +4,13 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 
-android.namespace = "com.markettwits.shop.item"
 
 kotlin {
+
+    android {
+        namespace = "com.markettwits.shop.item"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.decompose.compose)

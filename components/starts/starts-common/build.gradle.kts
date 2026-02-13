@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose.convention)
 }
 kotlin {
+
+    android {
+        namespace = "com.markettwits.starts.common"
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.core.buildConfig)
@@ -15,7 +20,4 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
         }
     }
-}
-android {
-    namespace = "com.markettwits.starts.common"
 }

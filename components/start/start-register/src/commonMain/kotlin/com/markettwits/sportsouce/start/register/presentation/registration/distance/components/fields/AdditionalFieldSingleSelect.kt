@@ -52,9 +52,16 @@ internal fun AdditionalFieldSingleSelect(
                 )
             },
             textFiled = {
+                val value = buildString {
+                    append(selectedOption?.title.orEmpty())
+
+                    selectedOption?.price
+                        ?.takeIf { it != 0 }
+                        ?.let { append(" (${it.formatPrice()} ₽)") }
+                }
                 OutlinedTextFieldBase(
                     label = "",
-                    value = selectedOption?.title ?: "",
+                    value = value,
                     isEnabled = false
                 ) {}
             }

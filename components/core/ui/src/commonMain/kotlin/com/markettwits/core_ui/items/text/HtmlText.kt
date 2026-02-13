@@ -1,13 +1,17 @@
 package com.markettwits.core_ui.items.text
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -15,7 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
-import coil3.compose.AsyncImage
+import androidx.compose.ui.unit.dp
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.progress.shimmer
+import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.theme.Shapes
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material.RichText
 
@@ -57,6 +66,7 @@ fun HtmlText(
     overflow: TextOverflow = TextOverflow.Visible,
 ) {
     val state = rememberRichTextState()
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
 
     var images by remember {
         mutableStateOf(emptyList<String>())
@@ -65,7 +75,8 @@ fun HtmlText(
     val spaceColor = MaterialTheme.colorScheme.onBackground
 
     LaunchedEffect(text, color) {
-        val cleanedText = removeColorStylesFromHtml(text)
+        val normalizedText = normalizeHtml(text)
+        val cleanedText = removeColorStylesFromHtml(removeImgTagsFromHtml(normalizedText))
         state.setHtml(cleanedText)
         val actualColor = if (color == Color.Unspecified) {
             spaceColor
@@ -77,7 +88,7 @@ fun HtmlText(
         state.config.codeSpanBackgroundColor = Color.Transparent
         state.config.codeSpanStrokeColor = Color.Transparent
 
-        images = extractImageUrlsFromHtml(text)
+        images = extractImageUrlsFromHtml(normalizedText)
     }
 
 
@@ -101,13 +112,10 @@ fun HtmlText(
                 textDecoration = textDecoration,
                 textAlign = textAlign ?: TextAlign.Unspecified,
             )
-            images.forEach { imageUrl ->
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = "Describe image",
-                    modifier = modifier
-                )
-            }
+            HtmlTextImages(
+                images = images,
+                onClickImage = { selectedImageUrl = it },
+            )
         }
     }
 
@@ -118,6 +126,72 @@ fun HtmlText(
     } else {
         richText()
     }
+
+    selectedImageUrl?.let { imageUrl ->
+        FullImageScreen(
+            image = images,
+            selectedImageUrl = imageUrl,
+            onDismiss = { selectedImageUrl = null }
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.HtmlTextImages(
+    images: List<String>,
+    onClickImage: (String) -> Unit,
+) {
+    if (images.isEmpty()) return
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    images.forEachIndexed { index, imageUrl ->
+        SubcomposeAsyncImage(
+            model = imageUrl,
+            contentDescription = "Describe image",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(Shapes.medium)
+                .clickable { onClickImage(imageUrl) },
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .shimmer(
+                            tiltAngle = 30,
+                            gradientColors = listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
+                                Color.Transparent,
+                            )
+                        )
+                        .background(MaterialTheme.colorScheme.primary)
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            }
+        )
+
+        if (index != images.lastIndex) {
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+private fun normalizeHtml(html: String): String {
+    val trimmed = html.trim()
+    val unquoted = if (trimmed.startsWith("\"<") && trimmed.endsWith(">\"")) {
+        trimmed.substring(1, trimmed.length - 1)
+    } else {
+        trimmed
+    }
+    return unquoted
+        .replace("\\\"", "\"")
+        .replace("\\/", "/")
+        .replace("\uFEFF", "")
 }
 
 private fun removeColorStylesFromHtml(html: String): String {
@@ -144,10 +218,12 @@ private fun removeColorStylesFromHtml(html: String): String {
         .replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
 }
 
-
+private fun removeImgTagsFromHtml(html: String): String {
+    val imageRegex = """<img\b[^>]*>""".toRegex(RegexOption.IGNORE_CASE)
+    return html.replace(imageRegex, "")
+}
 
 private fun extractImageUrlsFromHtml(html: String): List<String> {
-    val regex = """<img\s+[^>]*src=["']([^"']+)["']""".toRegex(RegexOption.IGNORE_CASE)
-    return regex.findAll(html).map { it.groupValues[1] }.toList()
-
+    val regex = """<img\s+[^>]*src\s*=\s*(['"])(.*?)\1""".toRegex(RegexOption.IGNORE_CASE)
+    return regex.findAll(html).map { it.groupValues[2] }.distinct().toList()
 }

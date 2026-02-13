@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.club.info.presentation.components.features
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,18 +15,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.club.info.domain.models.ClubFeature
+import com.markettwits.sportsouce.club.info.presentation.components.common.ClubCardImageLoadingPlaceholder
 
 @Composable
 internal fun ClubFeaturesContent(
@@ -86,10 +90,21 @@ private fun FeatureItemContent(
                         .clickable(onClick = onClick),
                     contentScale = ContentScale.Crop,
                     loading = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .shimmer()
+                        ClubCardImageLoadingPlaceholder(
+                            modifier = Modifier.fillMaxSize(),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                    },
+                    success = {
+                        var showImage by remember(feature.imageUrl) { mutableStateOf(false) }
+                        LaunchedEffect(feature.imageUrl) { showImage = true }
+                        val imageAlpha by animateFloatAsState(
+                            targetValue = if (showImage) 1f else 0f,
+                            animationSpec = tween(durationMillis = 320),
+                            label = "feature-image-appearance"
+                        )
+                        SubcomposeAsyncImageContent(
+                            modifier = Modifier.alpha(imageAlpha)
                         )
                     }
                 )

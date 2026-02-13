@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Comment(
     @SerialName("comment")
-    val comment: String,
+    val comment: String? = null,
     @SerialName("countSub")
     val countSub: Int,
     @SerialName("createdAt")

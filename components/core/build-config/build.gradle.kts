@@ -5,21 +5,28 @@ import java.util.*
 private val apiPathPropertiesProd = "com.sportsauce.api.path.prod"
 private val apiPathPropertiesDev = "com.sportsauce.api.path.dev"
 private val apiPathPropertiesIsDev = "com.sportsauce.api.isdev"
+private val androidNamespace = "com.markettwits.buildkonfig"
 
 plugins {
     alias(libs.plugins.kotlin.kmp.convention)
     alias(libs.plugins.build.konfig)
 }
 
-android {
-    namespace = "com.markettwits.buildkonfig"
-    buildFeatures.buildConfig = true
+kotlin {
+    android {
+        namespace = androidNamespace
+    }
+    sourceSets {
+        androidMain.dependencies {
+            implementation(projects.components.core.activityholder)
+        }
+    }
 }
 
 buildConfig {
     className("BuildKonfig")
 
-    packageName("${android.namespace}")
+    packageName(androidNamespace)
 
     useKotlinOutput { internalVisibility = false }
 

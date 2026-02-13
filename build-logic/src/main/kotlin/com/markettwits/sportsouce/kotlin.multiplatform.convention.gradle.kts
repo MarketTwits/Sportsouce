@@ -1,18 +1,17 @@
-import com.android.build.gradle.BaseExtension
+@file:OptIn(org.jetbrains.kotlin.gradle.ExternalKotlinTargetApi::class)
 
 plugins {
-    id("com.android.library")
+    id("com.android.kotlin.multiplatform.library")
     id("org.jetbrains.kotlin.multiplatform")
 }
 
-configure<BaseExtension> {
-    commonAndroid(project)
-    commonJava(project)
-}
+commonKmpJava()
 
 kotlin {
+    android {
+        commonAndroid()
+    }
     jvm()
-    androidTarget()
     js {
         browser()
         nodejs()

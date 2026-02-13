@@ -30,7 +30,7 @@ class ReviewRepositoryBase(
         val (actual, archive, news, products) = coroutineScope {
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { startsService.fetchStartMain() }
-                val deferredPaste = async { startsService.fetchPasteStarts() }
+                val deferredPaste = async { startsService.fetchPasteStarts().reversed() }
                 val deferredNews = async { newsService.news().getOrThrow() }
                 val deferredProducts = async { productsService.salesProducts().getOrDefault(emptyList()) }
                 Fourth(

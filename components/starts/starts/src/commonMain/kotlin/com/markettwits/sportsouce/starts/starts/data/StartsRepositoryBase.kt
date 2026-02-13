@@ -49,7 +49,7 @@ internal class StartsRepositoryBase(
         val (actual, paste, preview, main) = coroutineScope {
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { service.fetchActualStarts() }
-                val deferredPaste = async { service.fetchPasteStarts().reversed() }
+                val deferredPaste = async { service.fetchPasteStarts() }
                 val deferredPreview = async { service.fetchPreviewStarts() }
                 val deferredMain = async { service.fetchStartMain() }
                 Fourth(

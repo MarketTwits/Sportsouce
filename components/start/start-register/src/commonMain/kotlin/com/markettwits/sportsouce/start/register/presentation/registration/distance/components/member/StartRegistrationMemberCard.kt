@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.member
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -10,11 +11,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +31,8 @@ import com.markettwits.sportsouce.start.register.presentation.registration.membe
 internal fun StartRegistrationMemberCard(
     modifier: Modifier = Modifier,
     startStatement: StartStatement,
+    isValidationError: Boolean = false,
+    validationAttemptTick: Int = 0,
     onClickStartStatement: (StartStatement) -> Unit,
 ) {
 
@@ -50,7 +56,10 @@ internal fun StartRegistrationMemberCard(
             UserCardUnAvailable(
                 modifier = modifier.noRippleClickable {
                     onClickStartStatement(startStatement)
-                }
+                },
+                isValidationError = isValidationError,
+                validationAttemptTick = validationAttemptTick,
+                onClick = { onClickStartStatement(startStatement) }
             )
         }
         )
@@ -59,130 +68,176 @@ internal fun StartRegistrationMemberCard(
 @Composable
 internal fun UserCardUnAvailable(
     modifier: Modifier = Modifier,
+    isValidationError: Boolean = false,
+    validationAttemptTick: Int = 0,
+    onClick: () -> Unit,
 ) {
-    Card(
+    val pulseTransition = rememberInfiniteTransition(label = "invalid_member_pulse")
+    val pulseScale = pulseTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.12f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "invalid_member_pulse_scale"
+    )
+    val shakeOffset = remember { Animatable(0f) }
+    LaunchedEffect(validationAttemptTick, isValidationError) {
+        if (isValidationError && validationAttemptTick > 0) {
+            shakeOffset.snapTo(0f)
+            shakeOffset.animateTo(
+                targetValue = 0f,
+                animationSpec = keyframes {
+                    durationMillis = 520
+                    -16f at 60
+                    16f at 120
+                    -14f at 180
+                    14f at 240
+                    -10f at 300
+                    10f at 360
+                    -6f at 420
+                    0f at 520
+                }
+            )
+        }
+    }
+
+    val borderColor =
+        if (isValidationError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline
+    val editContainerColor =
+        if (isValidationError) MaterialTheme.colorScheme.error.copy(alpha = 0.20f)
+        else MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+    val editContentColor =
+        if (isValidationError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
+
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.elevatedCardElevation(2.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .offset(x = shakeOffset.value.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.elevatedCardElevation(2.dp),
+            border = BorderStroke(1.dp, borderColor),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
             ) {
-                Column {
-                    Text(
-                        text = "Имя участника",
-                        color = MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.bold(),
-                        fontSize = 18.sp,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Имя участника",
+                            color = MaterialTheme.colorScheme.outline,
+                            fontFamily = FontNunito.bold(),
+                            fontSize = 18.sp,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                    // Gender, Birth Date, and Age
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Пол",
+                                color = MaterialTheme.colorScheme.outline,
+                                fontFamily = FontNunito.semiBoldBold(),
+                                fontSize = 14.sp,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Dot()
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Дата рождения",
+                                color = MaterialTheme.colorScheme.outline,
+                                fontFamily = FontNunito.semiBoldBold(),
+                                fontSize = 14.sp,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Dot()
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Возраст",
+                                color = MaterialTheme.colorScheme.outline,
+                                fontFamily = FontNunito.semiBoldBold(),
+                                fontSize = 14.sp,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                    IconButton(
+                        modifier = Modifier.graphicsLayer {
+                            scaleX = pulseScale.value
+                            scaleY = pulseScale.value
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = editContainerColor,
+                            contentColor = editContentColor
+                        ),
+                        onClick = onClick
                     ) {
-                        Text(
-                            text = "Пол",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            fontSize = 14.sp,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Dot()
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Дата рождения",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            fontSize = 14.sp,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Dot()
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Возраст",
-                            color = MaterialTheme.colorScheme.outline,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            fontSize = 14.sp,
-                            overflow = TextOverflow.Ellipsis
+                        Icon(
+                            modifier = Modifier.padding(10.dp),
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
                         )
                     }
                 }
-                IconButton(
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
-                        contentColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    onClick = { /* Handle edit click */ }) {
-                    Icon(
-                        modifier = Modifier.padding(10.dp),
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit",
-                    )
-                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                DashedLine(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.outline
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Город: ",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Команда: ",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Телефон: ",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Почта: ",
+                    color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.semiBoldBold(),
+                    fontSize = 14.sp,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            // Name
-
-            Spacer(modifier = Modifier.height(8.dp))
-            DashedLine(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.outline
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // City
-            Text(
-                text = "Город: ",
-                color = MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 14.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Team
-            Text(
-                text = "Команда: ",
-                color = MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 14.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Phone
-            Text(
-                text = "Телефон: ",
-                color = MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 14.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Email
-            Text(
-                text = "Почта: ",
-                color = MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 14.sp,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }

@@ -60,5 +60,13 @@ internal fun StartMemberResultsPagedList(
                 ResultCardShimmer()
             }
         }
+
+        item {
+            Spacer(
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .height(2.dp)
+            )
+        }
     }
 }

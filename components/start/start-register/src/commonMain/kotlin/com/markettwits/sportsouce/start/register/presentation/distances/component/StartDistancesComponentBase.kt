@@ -31,7 +31,7 @@ class StartDistancesComponentBase(
     ): StartRegistrationInput {
         input.let {
             val matchingDistance = it.mapDistance.find { it.id == distinctDistance.id }
-            val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance?.id
+            val comboId = if (matchingDistance?.combo.isNullOrEmpty()) null else matchingDistance.id
             val distances = if (matchingDistance?.combo != null) {
                 it.distance.filter { it.id in matchingDistance.combo!! }
             } else {

@@ -25,7 +25,10 @@ class StartDistanceFeature(
     fun onChangeStartStatement(startStatement: StartStatement) {
         coroutineScope.launch {
             val newState = updateStartStatement(state.value, startStatement)
-            state.emit(newState)
+            val updatedState = startStatement.stageId?.let { stageId ->
+                newState.copy(invalidStageIds = newState.invalidStageIds - stageId)
+            } ?: newState
+            state.emit(updatedState)
         }
     }
 
@@ -45,7 +48,12 @@ class StartDistanceFeature(
     fun onClickGoNext(
         onGoNext : (StartRegistrationStagePage.Registration) -> Unit,
     ) {
-        validateStartStatements(state.value){
+        validateStartStatements(
+            page = state.value,
+            onSuccess = {
+                coroutineScope.launch {
+                    state.emit(state.value.copy(invalidStageIds = emptySet()))
+                }
             validateAnswers(
                 page = state.value,
                 onSuccess = {
@@ -55,6 +63,42 @@ class StartDistanceFeature(
                     onMessage(it)
                 }
             )
+            },
+        )
+    }
+
+    private fun emitValidationErrorState(page: StartRegistrationStagePage.Registration, invalidStageIds: Set<Int>) {
+        coroutineScope.launch {
+            state.emit(
+                page.copy(
+                    invalidStageIds = invalidStageIds,
+                    validationAttemptTick = page.validationAttemptTick + 1
+                )
+            )
+        }
+    }
+
+    private fun validateStartStatements(
+        page: StartRegistrationStagePage.Registration,
+        onSuccess: () -> Unit,
+    ) {
+        val stageResults = page.distance.stages.map { stageWithStatement ->
+            stageWithStatement.stage.id to RegistrationMemberValidatorBase().validateFields(stageWithStatement.statement)
+        }
+        val invalidStageIds = stageResults
+            .filter { it.second.isFailure }
+            .map { it.first }
+            .toSet()
+
+        if (invalidStageIds.isEmpty()) {
+            onSuccess()
+        } else {
+            emitValidationErrorState(page = page, invalidStageIds = invalidStageIds)
+            stageResults.firstOrNull { it.second.isFailure }
+                ?.second
+                ?.exceptionOrNull()
+                ?.message
+                ?.let { onMessage(EventContent(false, it)) }
         }
     }
 
@@ -192,24 +236,6 @@ class StartDistanceFeature(
             onSuccess()
         } else {
             onMessage(EventContent(false, "Заполните обязательные дополнительные поля"))
-        }
-    }
-
-    private fun validateStartStatements(
-        page : StartRegistrationStagePage.Registration,
-        onSuccess : () -> Unit,
-    ){
-        val result = page.distance.stages.map {
-            RegistrationMemberValidatorBase().validateFields(it.statement)
-        }
-        if (result.all { it.isSuccess }) {
-            onSuccess()
-        } else {
-            result.map {
-                it.onFailure { failure ->
-                    onMessage(EventContent(false, failure.message.toString()))
-                }
-            }
         }
     }
 

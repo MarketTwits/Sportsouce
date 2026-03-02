@@ -20,6 +20,7 @@ fun OutlinePhoneTextFiled(
     maxLines: Int = 1,
     minLines: Int = 1,
     supportingText: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = MaskVisualTransformation(NumberDefaults.MASK),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(
@@ -41,6 +42,7 @@ fun OutlinePhoneTextFiled(
         maxLines = maxLines,
         minLines = minLines,
         supportingText = supportingText,
+        leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,

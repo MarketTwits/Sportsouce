@@ -1,20 +1,16 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.LazyPagingItems
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.paging.fold
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.sportsouce.start.presentation.common.components.StartEmptySearchResultCard
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
 @Composable
@@ -46,14 +42,10 @@ fun StartMemberResultsItemsContentPaging(
                 )
             },
             onEmpty = {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "По вашему запросу не были найдены результаты",
-                        fontFamily = FontNunito.semiBoldBold(),
-                        fontSize = 16.sp,
-                    )
-                }
+                StartEmptySearchResultCard(
+                    title = "Результаты не найдены",
+                    message = "По текущим фильтрам и поисковому запросу нет совпадений. Попробуйте изменить параметры поиска или очистить фильтры."
+                )
             }
         )
     }

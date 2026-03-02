@@ -1,8 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.membres.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +43,13 @@ internal fun StartMembersPagedList(
             items(20) {
                 StartMemberCardShimmer()
             }
+        }
+        item {
+            Spacer(
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .height(2.dp)
+            )
         }
     }
 }

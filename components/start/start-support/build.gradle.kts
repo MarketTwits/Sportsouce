@@ -16,7 +16,7 @@ kotlin {
         implementation(projects.components.start.startCloud)
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)
-        implementation(compose.components.resources)
+        implementation(libs.compose.components.resources)
         implementation(libs.bundles.mviKotlin)
         implementation(libs.compottie)
         implementation(libs.decompose)

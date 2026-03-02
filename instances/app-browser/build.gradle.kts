@@ -25,7 +25,7 @@ kotlin {
         implementation(projects.components.root)
         implementation(projects.components.deeplink.api)
         implementation(projects.components.core.cache)
-        implementation(compose.components.resources)
+        implementation(libs.compose.components.resources)
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)
         implementation(projects.components.core.koin)

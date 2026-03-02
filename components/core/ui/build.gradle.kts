@@ -24,25 +24,25 @@ kotlin {
         }
 
         commonMain.dependencies {
-            api(compose.runtime)
-            api(compose.foundation)
-            api(compose.material3)
-            api(compose.materialIconsExtended)
-            api(compose.components.uiToolingPreview)
-            api(compose.ui)
+            api(libs.compose.runtime)
+            api(libs.compose.foundation)
+            api(libs.compose.material3)
+            api(libs.compose.material.icons.extended)
+            api(libs.compose.components.ui.tooling.preview)
+            api(libs.compose.ui)
             api(libs.coil.compose)
             api(libs.coil.network)
             api(libs.coil.mp)
             api(libs.richeditor)
             api(libs.composeMaterial3WindowSize)
             api(libs.composeMaterial3Adaptive)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.resources)
             implementation(libs.kotlinx.serialization.json)
             implementation(projects.components.core.time)
         }
         
         jvmMain.dependencies {
-            api(compose.animation)
+            api(libs.compose.animation)
         }
 
         jsMain.dependencies {

@@ -29,7 +29,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.resources)
         }
     }
 }

@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.start.register.presentation.registration.memb
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMembersRepository
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
@@ -10,7 +11,8 @@ import com.markettwits.sportsouce.start.register.presentation.registration.membe
 
 class RegistrationMemberStoreFactory(
     private val storeFactory: StoreFactory,
-    private val startValidator: RegistrationMemberValidator
+    private val startValidator: RegistrationMemberValidator,
+    private val profileMembersRepository: ProfileMembersRepository,
 ) {
 
     fun create(
@@ -24,14 +26,13 @@ class RegistrationMemberStoreFactory(
         private val userNumber: Int,
         private val startStatement: StartStatement,
         private val startMembers: List<ProfileMember>,
-        private val validator: RegistrationMemberValidator
-    ) :
-        RegistrationMemberStore,
+        private val validator: RegistrationMemberValidator,
+    ) : RegistrationMemberStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "RegistrationMemberStore",
-            initialState = State(userNumber, startStatement, startMembers, false),
+            initialState = State(userNumber, startStatement, startMembers),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { RegistrationMemberExecutor(validator) },
+            executorFactory = { RegistrationMemberExecutor(validator, profileMembersRepository) },
             reducer = RegistrationMemberReducer
         )
 }

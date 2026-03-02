@@ -12,13 +12,13 @@ data class StartRegisterMember(
     @SerialName("city")
     val city: String,
     @SerialName("email")
-    val email: String,
+    val email: String? = null,
     @SerialName("gender")
     val gender: String,
     @SerialName("name")
     val name: String,
     @SerialName("phone")
-    val phone: String,
+    val phone: String? = null,
     @SerialName("stage_id")
     val stageId: Int?,
     @SerialName("surname")
@@ -26,5 +26,5 @@ data class StartRegisterMember(
     @SerialName("team")
     val team: String,
     @SerialName("user_id")
-    val userId: String
+    val userId: String,
 )

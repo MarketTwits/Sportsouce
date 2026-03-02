@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowScreen
 import com.markettwits.sportsouce.start.register.presentation.distances.screen.StartDistancesScreen
+import com.markettwits.sportsouce.start.register.presentation.registration.member.screen.RegistrationMemberScreen
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationPage
 import com.markettwits.sportsouce.start.register.presentation.success.RegisterSuccessScreen
 
@@ -22,6 +23,7 @@ fun RootStartRegisterScreen(component: RootStartRegister) {
         when (val child = it.instance) {
             is RootStartRegister.Child.StartRegistrationSuccess -> RegisterSuccessScreen(component = child.component)
             is RootStartRegister.Child.StartRegistrationPage -> StartRegistrationPage(component = child.component)
+            is RootStartRegister.Child.RegistrationMember -> RegistrationMemberScreen(component = child.component)
             is RootStartRegister.Child.AuthFlow -> RootAuthFlowScreen(component = child.component)
             is RootStartRegister.Child.StartRegistrationDistances -> StartDistancesScreen(component = child.component)
         }

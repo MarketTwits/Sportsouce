@@ -8,10 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,6 +54,7 @@ private fun CompactResultCard(
     modifier: Modifier = Modifier,
 ) {
     OnBackgroundCard(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         onClick = { onClickMemberResult(result) },
@@ -180,6 +178,7 @@ private fun ExpandedResultCard(
     modifier: Modifier = Modifier,
 ) {
     OnBackgroundCard(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),

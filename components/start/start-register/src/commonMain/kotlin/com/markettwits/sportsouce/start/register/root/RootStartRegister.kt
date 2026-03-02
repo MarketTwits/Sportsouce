@@ -2,9 +2,10 @@ package com.markettwits.sportsouce.start.register.root
 
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponent
+import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesComponent
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
-import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberInput
+import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberComponent
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationInput
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationPageComponent
 import com.markettwits.sportsouce.start.register.presentation.success.RegisterSuccessComponent
@@ -24,6 +25,13 @@ interface RootStartRegister {
         data class StartRegistrationPage(val input: StartRegistrationInput) : Config()
 
         @Serializable
+        data class RegistrationMember(
+            val stageId: Int,
+            val memberId: Int,
+            val startStatement: StartStatement,
+        ) : Config()
+
+        @Serializable
         data class StartRegistrationDistancesPage(val input: StartDistancesInput) : Config()
 
         @Serializable
@@ -35,6 +43,8 @@ interface RootStartRegister {
         data class StartRegistrationSuccess(val component: RegisterSuccessComponent) : Child
 
         data class StartRegistrationPage(val component: StartRegistrationPageComponent) : Child
+
+        data class RegistrationMember(val component: RegistrationMemberComponent) : Child
 
         data class StartRegistrationDistances(val component: StartDistancesComponent) : Child
 

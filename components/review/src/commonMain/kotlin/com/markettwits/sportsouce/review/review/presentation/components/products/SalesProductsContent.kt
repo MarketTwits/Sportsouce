@@ -50,8 +50,8 @@ fun SalesProductsContent(
     Spacer(modifier = Modifier.height(10.dp))
     val isPortrait = rememberScreenSizeInfo().isPortrait()
     val maxItems = if (isPortrait) 2 else 3
-    val cardWidth = if (isPortrait) 140.dp else 180.dp
-    val cardHeight = if (isPortrait) 230.dp else 280.dp
+    val cardWidth = if (isPortrait) 152.dp else 196.dp
+    val cardHeight = if (isPortrait) 248.dp else 304.dp
     FlowColumn(
         modifier = modifier.horizontalScroll(rememberScrollState()),
         maxItemsInEachColumn = maxItems

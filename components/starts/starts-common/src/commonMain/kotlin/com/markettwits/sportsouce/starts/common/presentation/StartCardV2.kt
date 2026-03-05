@@ -61,7 +61,7 @@ fun StartCardV2(
 private fun ImageCard(
     modifier: Modifier = Modifier,
     image: String,
-    status: StartsListItem.StatusCode
+    status: StartsListItem.StatusCode,
 ) {
     Box(
         modifier = modifier
@@ -127,7 +127,7 @@ private fun ImageCardInfo(
     modifier: Modifier = Modifier,
     title: String,
     date: String,
-    distance: String
+    distance: String,
 ) {
     Column(modifier = modifier.padding(start = 10.dp, end = 10.dp)) {
         Text(

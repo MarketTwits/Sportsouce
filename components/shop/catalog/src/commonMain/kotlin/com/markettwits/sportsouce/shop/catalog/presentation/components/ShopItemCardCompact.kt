@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.shop.catalog.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -39,29 +41,37 @@ fun ShopItemCardCompact(
 ) {
     Box(
         modifier = modifier
-            .padding(2.dp)
+            .padding(6.dp)
             .clip(Shapes.large)
             .width(cardWidth)
             .height(cardHeight)
             .background(MaterialTheme.colorScheme.primary)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.18f),
+                shape = Shapes.large
+            )
             .clickable {
                 onItemClick(shopItem)
             }
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             ImageCard(
                 modifier = Modifier
                     .clip(Shapes.large)
                     .align(Alignment.CenterHorizontally)
-                    .weight(0.65f),
+                    .weight(0.68f),
                 image = shopItem.visual.imageUrl,
             )
-            Spacer(modifier = Modifier.padding(2.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             ShowCardPrice(
                 modifier = Modifier
-                    .padding(4.dp)
+                    .padding(horizontal = 8.dp)
+                    .padding(bottom = 8.dp)
                     .align(Alignment.Start)
-                    .weight(0.3f),
+                    .weight(0.32f),
                 currentPrice = shopItem.price.currentPrice,
                 previousPrice = shopItem.price.previousPrice,
                 discount = shopItem.price.discount,
@@ -101,7 +111,8 @@ private fun ImageCard(
                 },
                 success = {
                     SubcomposeAsyncImageContent(
-                        modifier = Modifier.background(Color.White)
+                        modifier = Modifier
+                            .background(Color.White, RectangleShape)
                     )
                 }
             )
@@ -136,7 +147,7 @@ private fun ShowCardPrice(
         horizontalAlignment = Alignment.Start,
     ) {
         Row(
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -148,7 +159,6 @@ private fun ShowCardPrice(
                 fontSize = 16.sp,
                 fontFamily = FontNunito.bold(),
             )
-            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
             if (!previousPrice.isNullOrEmpty()) {
                 Text(
                     text = "$previousPrice₽",
@@ -161,8 +171,7 @@ private fun ShowCardPrice(
                     fontFamily = FontNunito.regular(),
                 )
             }
-            Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-            if (!previousPrice.isNullOrEmpty()) {
+            if (!previousPrice.isNullOrEmpty() && discount != null) {
                 Text(
                     text = "-$discount%",
                     color = MaterialTheme.colorScheme.secondary,
@@ -175,6 +184,7 @@ private fun ShowCardPrice(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = title,
             color = MaterialTheme.colorScheme.tertiary,

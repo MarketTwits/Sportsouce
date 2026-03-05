@@ -5,22 +5,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 
-private val ReviewMenuDarkContainer = Color(0xFF24262B)
-private val ReviewMenuDarkContent = Color(0xFFE9EBEF)
+private val ReviewMenuDarkSurface = Color(0xFF171A20)
 
 @Composable
 fun ReviewMenuButton(
@@ -31,12 +31,13 @@ fun ReviewMenuButton(
     backgroundColor: Color,
     onClick : () -> Unit,
 ) {
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val isDark = LocalDarkOrLightTheme.current
     val shape = RoundedCornerShape(28.dp)
-    val iconColor = if (isDark) ReviewMenuDarkContent else accentColor
-    val textColor = if (isDark) ReviewMenuDarkContent else accentColor
+    val darkAdaptedAccent = lerp(start = accentColor, stop = Color.White, fraction = 0.62f)
+    val iconColor = if (isDark) darkAdaptedAccent else accentColor
+    val textColor = if (isDark) darkAdaptedAccent else accentColor
     val containerColor = if (isDark) {
-        ReviewMenuDarkContainer
+        accentColor.copy(alpha = 0.26f).compositeOver(ReviewMenuDarkSurface)
     } else {
         backgroundColor
     }

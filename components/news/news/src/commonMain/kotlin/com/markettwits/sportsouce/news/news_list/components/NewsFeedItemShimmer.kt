@@ -18,14 +18,14 @@ import com.markettwits.core_ui.items.theme.Shapes
 fun NewsFeedItemShimmer(modifier: Modifier = Modifier) {
     val isDarkTheme = isSystemInDarkTheme()
     val baseColor = if (isDarkTheme) {
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
+        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)
     } else {
-        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)
+        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.65f)
     }
     val shimmerPeak = if (isDarkTheme) {
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.22f)
     } else {
-        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
+        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.12f)
     }
 
     OnBackgroundCard(

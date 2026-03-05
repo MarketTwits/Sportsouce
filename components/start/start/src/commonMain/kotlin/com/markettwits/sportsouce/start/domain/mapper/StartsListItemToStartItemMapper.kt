@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.domain.mapper
 
+import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
@@ -36,7 +37,25 @@ object StartsListItemToStartItemMapper {
             distanceInfoNew = emptyList(), // Not available in StartsListItem
             distanceMapNew = emptyList(), // Not available in StartsListItem
             paymentType = "", // Not available in StartsListItem
-            organizers = emptyList(), // Not available in StartsListItem
+            organizers = startsListItem.organizers.mapIndexed { index, organizer ->
+                Organizer(
+                    id = -(index + 1),
+                    messengers = "",
+                    isMain = organizer.isMain,
+                    photo = organizer.photo?.let { photo ->
+                        com.markettwits.sportsouce.start.cloud.model.start.fields.File(
+                            fullPath = photo.fullPath,
+                            id = photo.id,
+                            name = photo.name,
+                            path = photo.path,
+                        )
+                    },
+                    name = organizer.name,
+                    phone = organizer.phone.ifBlank { null },
+                    socialNetworks = emptyList(),
+                    startId = startsListItem.id
+                )
+            },
             membersResults = emptyList(), // Not available in StartsListItem
             conditionFile = StartItem.ConditionFile.Empty, // Not available in StartsListItem
             commentsRemote = StartItem.Comments(

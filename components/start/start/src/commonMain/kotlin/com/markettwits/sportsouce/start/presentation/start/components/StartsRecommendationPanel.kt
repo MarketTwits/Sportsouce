@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -72,6 +73,7 @@ private fun ImageCard(
     onClick: () -> Unit,
 ) {
     OnBackgroundCard(
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
         modifier = modifier
             .height(300.dp)
             .width(250.dp),
@@ -176,7 +178,7 @@ private fun ImageCard(
                                 Brush.verticalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        MaterialTheme.colorScheme.primaryContainer
+                                        MaterialTheme.colorScheme.primary
                                     )
                                 )
                             )

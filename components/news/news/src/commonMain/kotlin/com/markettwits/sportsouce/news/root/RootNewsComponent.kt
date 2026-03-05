@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 
 interface RootNewsComponent {
     val childStack: Value<ChildStack<*, Child>>
+    fun onBack()
     @Serializable
     sealed interface Config {
         @Serializable

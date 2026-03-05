@@ -20,7 +20,6 @@ import kotlin.math.max
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-
 class RegistrationMemberExecutor(
     private val validation: RegistrationMemberValidator,
     private val profileMembersRepository: ProfileMembersRepository,

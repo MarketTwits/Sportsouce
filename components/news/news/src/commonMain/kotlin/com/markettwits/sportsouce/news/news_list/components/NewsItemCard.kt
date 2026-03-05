@@ -27,7 +27,7 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (Ne
     Column(
         modifier = modifier
             .padding(10.dp)
-            .size(width = 270.dp, height = 250.dp)
+            .size(width = 270.dp, height = 240.dp)
             .clip(Shapes.medium)
             .clickable { onClick(newsInfo) }
     ) {
@@ -81,9 +81,9 @@ fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (Ne
                 color = MaterialTheme.colorScheme.tertiary,
             )
             HtmlText(
-                modifier = Modifier.heightIn(max = 30.dp),
+                modifier = Modifier.heightIn(max = 35.dp),
                 text = newsInfo.fullDescription,
-                lineHeight = 14.sp,
+                lineHeight = 16.sp,
                 fontSize = 12.sp,
                 fontFamily = FontNunito.regular(),
                 color = MaterialTheme.colorScheme.outline,

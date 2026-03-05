@@ -19,11 +19,24 @@ class SportSauceNewsNetworkApi(
 
     suspend fun news(newsId: String) = client.get("news/$newsId").body<NetworkNewsItem>()
 
-    suspend fun news(limit: Int = 10, offset: Int = 0): NetworkNews {
-        val response = client.get("news") {
-            parameter("sorting", "createdAt DESC")
+    suspend fun news(
+        categoryId: Int? = null,
+        hashTag: String? = null,
+        limit: Int = 10,
+        offset: Int = 0,
+        sorting: String = "createdAt DESC",
+    ): NetworkNews {
+        val response = client.get(
+            if (categoryId != null) {
+                "news/category/$categoryId"
+            } else {
+                "news"
+            }
+        ) {
+            parameter("sorting", sorting)
             parameter("maxResultCount", limit)
-            parameter("skipCount", offset)
+            parameter("skipCount", if (offset == 0) "" else offset)
+            parameter("hashTags", hashTag ?: "")
         }
         return json.decodeFromString(response.body())
     }

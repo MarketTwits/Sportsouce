@@ -11,6 +11,7 @@ import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRendere
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
 import com.markettwits.sportsouce.news.news_list.component.NewsComponent
+import com.markettwits.sportsouce.news.root.RootNewsComponent
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponent
 import com.markettwits.sportsouce.settings.root.RootSettingsComponent
 import com.markettwits.sportsouce.shop.root.RootShopCatalogComponent
@@ -48,6 +49,9 @@ interface RootReviewComponent {
         data object Search : Config
 
         @Serializable
+        data object News : Config
+
+        @Serializable
         data class NewsEvent(val news: NewsItem) : Config
 
         @Serializable
@@ -72,6 +76,7 @@ interface RootReviewComponent {
         data class Random(val component: RootStartRandomComponent) : Child
         data class Popular(val component: RootStartsPopularComponent) : Child
         data class NewsEvent(val component: NewsEventComponent) : Child
+        data class News(val component: RootNewsComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child

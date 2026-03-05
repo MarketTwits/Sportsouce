@@ -21,6 +21,7 @@ import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBa
 import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
+import com.markettwits.sportsouce.news.root.RootNewsComponentBase
 import com.markettwits.sportsouce.review.review.di.reviewModule
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponentBase
 import com.markettwits.sportsouce.review.root.di.reviewRootModule
@@ -183,6 +184,13 @@ class RootReviewComponentBase(
                 )
             )
 
+            is RootReviewComponent.Config.News -> RootReviewComponent.Child.News(
+                RootNewsComponentBase(
+                    context = componentContext,
+                    pop = navigation::pop
+                )
+            )
+
             is RootReviewComponent.Config.NewsEvent -> RootReviewComponent.Child.NewsEvent(
                 NewsEventComponentBase(
                     context = componentContext,
@@ -261,6 +269,7 @@ class RootReviewComponentBase(
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
+            1 -> RootReviewComponent.Config.News
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
             4 -> RootReviewComponent.Config.Shop

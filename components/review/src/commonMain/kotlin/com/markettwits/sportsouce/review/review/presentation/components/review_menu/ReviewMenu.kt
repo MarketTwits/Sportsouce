@@ -2,10 +2,7 @@ package com.markettwits.sportsouce.review.review.presentation.components.review_
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.TableChart
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
@@ -54,6 +51,13 @@ private fun menu() = listOf<ReviewMenuItem>(
         Icons.Filled.LocalFireDepartment,
         SportSouceColor.SportSouceStartEndedPink.copy(alpha = 0.1f),
         SportSouceColor.SportSouceStartEndedPink
+    ),
+    ReviewMenuItem(
+        1,
+        "Новости",
+        Icons.Filled.Article,
+        SportSouceColor.SportSouceBlue.copy(alpha = 0.1f),
+        SportSouceColor.SportSouceBlue
     ),
     ReviewMenuItem(
         2,

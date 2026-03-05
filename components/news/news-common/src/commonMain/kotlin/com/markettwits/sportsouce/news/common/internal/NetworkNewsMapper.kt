@@ -11,13 +11,34 @@ class NetworkNewsMapper(
     private val timeMapper: TimeMapper
 ) {
 
+    private companion object {
+        const val NewsApiBaseUrl = "https://api.sportsauce.ru"
+    }
+
+    private fun normalizeImageUrl(rawUrl: String?): String {
+        val url = rawUrl?.trim().orEmpty()
+        if (url.isBlank()) return ""
+
+        val normalized = when {
+            url.startsWith("http://") || url.startsWith("https://") -> url
+            url.startsWith("/") -> "$NewsApiBaseUrl$url"
+            else -> "$NewsApiBaseUrl/$url"
+        }
+        return normalized.replace(" ", "%20")
+    }
+
     fun map(news: NetworkNewsItem): NewsItem {
         return NewsItem(
             id = news.id,
             title = news.title ?: "",
             shortDescription = news.shortDescription ?: "",
             fullDescription = news.fullDescription ?: "",
-            imageUrl = news.mainImage?.fullPath ?: news.images?.firstOrNull()?.fullPath ?: "",
+            imageUrl = normalizeImageUrl(
+                news.mainImage?.fullPath
+                    ?: news.mainImage?.path
+                    ?: news.images?.firstOrNull()?.fullPath
+                    ?: news.images?.firstOrNull()?.path
+            ),
             createData = timeMapper.mapTime(TimePattern.FullWithEmptySpace, news.createdAt ?: ""),
             hashtags = news.hashtags?.map { hashTag ->
                 NewsHashtag(

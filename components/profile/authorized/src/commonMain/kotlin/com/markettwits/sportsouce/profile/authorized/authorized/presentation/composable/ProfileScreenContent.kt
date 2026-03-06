@@ -29,6 +29,7 @@ import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -39,6 +40,7 @@ internal fun ProfileScreenContent(
     userPhoneNumber: String,
     userRegistrationsCount: Int,
     userRegistrations: List<StartOrderInfo>,
+    recentStarts: List<StartsListItem>,
     userImageUrl: String,
     socialNetwork: UserProfile.SocialNetwork,
     onRefresh: () -> Unit,
@@ -50,6 +52,7 @@ internal fun ProfileScreenContent(
     onClickFavorites: () -> Unit,
     onClickEditProfile: () -> Unit,
     onClickRegistration: (StartOrderInfo) -> Unit,
+    onClickRecentStart: (StartsListItem) -> Unit,
     onSocialNetworkClick: (String) -> Unit,
     onAddSocialNetwork: () -> Unit,
 ) {
@@ -129,6 +132,11 @@ internal fun ProfileScreenContent(
                         onClickViewAll = onClickStarts
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+                    ProfileRecentStartsBlock(
+                        starts = recentStarts,
+                        onClickStart = onClickRecentStart
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                     ProfileActionCadrs(
                         onClickHelp = {
                             intentAction.openWebPage(SPORTSAUCE_TG_URL)
@@ -153,4 +161,3 @@ internal fun ProfileScreenContent(
 }
 
 private const val SPORTSAUCE_TG_URL = "https://t.me/sportsoyuznsk"
-

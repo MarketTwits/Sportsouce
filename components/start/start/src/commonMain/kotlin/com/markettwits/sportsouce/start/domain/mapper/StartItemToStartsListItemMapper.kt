@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.start.domain.mapper
 
+import com.markettwits.core.time.BaseTimeMapper
+import com.markettwits.core.time.TimePattern
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
@@ -8,12 +10,16 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
  */
 object StartItemToStartsListItemMapper {
 
+    private val timeMapper = BaseTimeMapper()
+
     fun map(startItem: StartItem): StartsListItem {
         return StartsListItem(
             id = startItem.id,
             name = startItem.title,
             image = startItem.image,
-            date = startItem.startData,
+            date = runCatching {
+                timeMapper.mapTime(TimePattern.FullWithEmptySpace, startItem.startData)
+            }.getOrDefault(startItem.startData),
             statusCode = StartsListItem.StatusCode(
                 id = startItem.startStatus.code,
                 message = startItem.startStatus.name

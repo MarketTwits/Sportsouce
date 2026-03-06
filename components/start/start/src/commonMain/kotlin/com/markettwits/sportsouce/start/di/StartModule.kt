@@ -27,6 +27,7 @@ import com.markettwits.sportsouce.start.presentation.result.store.StartMemberRes
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.sportsouce.starts.common.di.startsCommonModule
 import com.markettwits.sportsouce.starts.favorites.di.startsFavoritesModule
+import com.markettwits.sportsouce.starts.recent.di.startsRecentModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -35,6 +36,7 @@ val startModule = module {
     includes(
         sportSauceStartNetworkModule,
         startsFavoritesModule,
+        startsRecentModule,
         startsCommonModule,
         authDataSourceModule,
         crashlyticsModule,

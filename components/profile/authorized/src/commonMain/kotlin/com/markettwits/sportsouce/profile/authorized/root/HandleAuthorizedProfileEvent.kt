@@ -4,7 +4,6 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.pushNew
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponent.Config.Start
-import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 
 internal fun handleAuthorizedProfileEvent(
     outPut: AuthorizedProfileComponent.Output,
@@ -26,7 +25,7 @@ internal fun handleAuthorizedProfileEvent(
         )
 
         is AuthorizedProfileComponent.Output.Start -> navigation.pushNew(
-            Start(StartScreenInput.Id(outPut.startId))
+            Start(outPut.input)
         )
 
         is AuthorizedProfileComponent.Output.AllRegistries -> navigation.pushNew(

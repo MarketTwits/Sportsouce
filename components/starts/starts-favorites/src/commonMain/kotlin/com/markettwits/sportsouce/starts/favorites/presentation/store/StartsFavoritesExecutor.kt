@@ -8,7 +8,7 @@ import com.markettwits.sportsouce.starts.favorites.presentation.store.StartsPopu
 import com.markettwits.sportsouce.starts.favorites.presentation.store.StartsPopularStore.Label.OnClickStart
 import kotlinx.coroutines.launch
 
-internal class StartsPopularExecutor(
+internal class StartsFavoritesExecutor(
     private val repository: StartFavoritesRepository,
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 

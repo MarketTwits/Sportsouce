@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.shop.catalog.presentation.components.ShopItemCardCompact
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 
@@ -48,23 +47,33 @@ fun SalesProductsContent(
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    val isPortrait = rememberScreenSizeInfo().isPortrait()
-    val maxItems = if (isPortrait) 2 else 3
-    val cardWidth = if (isPortrait) 152.dp else 196.dp
-    val cardHeight = if (isPortrait) 248.dp else 304.dp
-    FlowColumn(
-        modifier = modifier.horizontalScroll(rememberScrollState()),
-        maxItemsInEachColumn = maxItems
-    ) {
-        items.forEach { item ->
-            ShopItemCardCompact(
-                shopItem = item,
-                cardWidth = cardWidth,
-                cardHeight = cardHeight,
-                onItemClick = {
-                    onClickItem(item)
-                }
-            )
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val maxItemsInColumn = when {
+            maxWidth >= 1080.dp -> 3
+            maxWidth >= 760.dp -> 2
+            else -> 1
+        }
+        val cardWidth = (maxWidth * 0.145f).coerceIn(132.dp, 168.dp)
+        val cardHeight = (cardWidth * 1.55f).coerceIn(208.dp, 262.dp)
+
+        FlowColumn(
+            modifier = modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 4.dp),
+            maxItemsInEachColumn = maxItemsInColumn,
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            items.forEach { item ->
+                ShopItemCardCompact(
+                    shopItem = item,
+                    cardWidth = cardWidth,
+                    cardHeight = cardHeight,
+                    showBorder = false,
+                    onItemClick = {
+                        onClickItem(item)
+                    }
+                )
+            }
         }
     }
 }

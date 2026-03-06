@@ -38,6 +38,7 @@ fun ShopItemCardCompact(
     onItemClick: (ShopItem) -> Unit,
     cardWidth: Dp = 140.dp,
     cardHeight: Dp = 230.dp,
+    showBorder: Boolean = true,
 ) {
     Box(
         modifier = modifier
@@ -46,10 +47,16 @@ fun ShopItemCardCompact(
             .width(cardWidth)
             .height(cardHeight)
             .background(MaterialTheme.colorScheme.primary)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.18f),
-                shape = Shapes.large
+            .then(
+                if (showBorder) {
+                    Modifier.border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.18f),
+                        shape = Shapes.large
+                    )
+                } else {
+                    Modifier
+                }
             )
             .clickable {
                 onItemClick(shopItem)

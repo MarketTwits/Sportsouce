@@ -1,40 +1,33 @@
 package com.markettwits.sportsouce.edit_profile.root
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.activate
-import com.arkivanov.decompose.router.slot.childSlot
-import com.arkivanov.decompose.router.slot.dismiss
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.slot.*
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
-import com.markettwits.sportsouce.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
-import com.markettwits.sportsouce.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_menu.presentation.component.EditProfileMenuOutputProvide
-import com.markettwits.sportsouce.edit_profile.edit_profile_Image.di.editProfileImageModule
-import com.markettwits.sportsouce.edit_profile.edit_profile_Image.presentation.component.EditProfileImageComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_profile_about.di.editProfileAboutModule
-import com.markettwits.sportsouce.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_profile_change_password.di.changePasswordModule
-import com.markettwits.sportsouce.edit_profile.edit_profile_change_password.presentation.screen.ChangePasswordComponent
-import com.markettwits.sportsouce.edit_profile.edit_profile_info.di.editProfileInfoModule
-import com.markettwits.sportsouce.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_profile_sign_out.di.editProfileSignOutModule
-import com.markettwits.sportsouce.edit_profile.edit_profile_sign_out.presentation.component.EditProfileSignOutComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
+import com.markettwits.sportsouce.edit_profile.about.di.editProfileAboutModule
+import com.markettwits.sportsouce.edit_profile.about.presentation.component.EditProfileAboutComponentBase
+import com.markettwits.sportsouce.edit_profile.change_password.di.changePasswordModule
+import com.markettwits.sportsouce.edit_profile.change_password.presentation.screen.ChangePasswordComponent
+import com.markettwits.sportsouce.edit_profile.image.di.editProfileImageModule
+import com.markettwits.sportsouce.edit_profile.image.presentation.component.EditProfileImageComponentBase
+import com.markettwits.sportsouce.edit_profile.info.di.editProfileInfoModule
+import com.markettwits.sportsouce.edit_profile.info.presentation.component.EditProfileInfoComponentBase
+import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditProfileMenuComponentComponent
+import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditProfileMenuComponentComponentBase
+import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditProfileMenuOutputProvide
+import com.markettwits.sportsouce.edit_profile.sign_out.di.editProfileSignOutModule
+import com.markettwits.sportsouce.edit_profile.sign_out.presentation.component.EditProfileSignOutComponentBase
+import com.markettwits.sportsouce.edit_profile.social_network.di.editProfileSocialNetworkModule
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
 
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
-    private val signOut: () -> Unit
+    private val signOut: () -> Unit,
+    openSocialNetworkOnStart: Boolean = false,
 ) : RootEditProfileComponent,
     EditProfileMenuOutputProvide, ComponentContext by componentContext {
     private val koinContext = instanceKeeper.getOrCreate {
@@ -68,6 +61,12 @@ class RootEditProfileComponentBase(
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    init {
+        if (openSocialNetworkOnStart) {
+            navigation.pushNew(RootEditProfileComponent.ConfigStack.SocialNetwork)
+        }
+    }
 
     private fun childSlot(
         configStack: RootEditProfileComponent.ConfigSlot,

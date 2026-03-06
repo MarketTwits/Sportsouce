@@ -59,7 +59,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                 intentAction.openWebPage(url)
             },
             onAddSocialNetwork = {
-                component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
+                component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
             }
         )
     }

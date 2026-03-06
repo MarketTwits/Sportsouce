@@ -5,8 +5,8 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.markettwits.getOrCreateKoinScope
 import com.markettwits.sportsouce.club.root.RootClubComponentBase
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileComponentBase
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponentBase
 import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponent.Child.*
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersComponentBase
@@ -62,7 +62,8 @@ abstract class RootAuthorizedProfileComponentAbstract(
             RootEditProfileComponentBase(
                 componentContext = componentContext,
                 pop = navigation::pop,
-                signOut = { signOut() }
+                signOut = { signOut() },
+                openSocialNetworkOnStart = config.openSocialNetworkOnStart
             )
         )
 

@@ -18,11 +18,12 @@ class ShopCatalogComponentBase(
     componentContext: ComponentContext,
     override val listener: BottomBarVisibilityListener,
     private val storeFactory: ShopCatalogStoreFactory,
+    initialFilter: com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult? = null,
     private val outputs: ShopCatalogComponent.Outputs,
 ) : ShopCatalogComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create()
+        storeFactory.create(initialFilter)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

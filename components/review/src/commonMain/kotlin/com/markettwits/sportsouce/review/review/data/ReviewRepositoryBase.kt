@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.review.review.data
 
 import com.markettwits.cahce.execute.base.ExecuteWithCache
-import com.markettwits.core_ui.items.extensions.Fourth
+import com.markettwits.core_ui.items.extensions.Fifth
 import com.markettwits.sportsouce.news.common.NewsRepository
 import com.markettwits.sportsouce.review.review.data.cache.ReviewCache
 import com.markettwits.sportsouce.review.review.domain.Review
@@ -27,20 +27,28 @@ class ReviewRepositoryBase(
         launch = this::launch,
     )
     private suspend fun launch(): Review {
-        val (actual, archive, news, products) = coroutineScope {
+        val (actual, archive, news, products, merchProducts) = coroutineScope {
             withContext(Dispatchers.Main.immediate) {
                 val deferredActual = async { startsService.fetchStartMain() }
                 val deferredPaste = async { startsService.fetchPasteStarts().reversed() }
                 val deferredNews = async { newsService.news().getOrThrow() }
                 val deferredProducts = async { productsService.salesProducts().getOrDefault(emptyList()) }
-                Fourth(
+                val deferredMerchProducts = async { productsService.merchProducts().getOrDefault(emptyList()) }
+                Fifth(
                     deferredActual.await(),
                     deferredPaste.await(),
                     deferredNews.await(),
-                    deferredProducts.await()
+                    deferredProducts.await(),
+                    deferredMerchProducts.await()
                 )
             }
         }
-        return Review(news, actual, archive.reversed(), products.reversed())
+        return Review(
+            news = news,
+            actualStarts = actual,
+            archiveStarts = archive.reversed(),
+            products = products.reversed(),
+            merchProducts = merchProducts.reversed()
+        )
     }
 }

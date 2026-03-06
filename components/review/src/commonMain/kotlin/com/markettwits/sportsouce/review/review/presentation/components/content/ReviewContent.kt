@@ -21,11 +21,13 @@ fun ReviewContent(
     actual: List<StartsListItem>,
     archive: List<StartsListItem>,
     products: List<ShopItem>,
+    merchProducts: List<ShopItem>,
     onClickStart: (StartsListItem) -> Unit,
     onClickNewsInfo: (NewsItem) -> Unit,
     onClickMenu: (Int) -> Unit,
     onClickProduct: (ShopItem) -> Unit,
     onClickShowMoreProducts: () -> Unit,
+    onClickShowMoreMerchProducts: () -> Unit,
     onClickTelegram: () -> Unit,
     onClickVk: () -> Unit,
     notification: @Composable ((Modifier) -> Unit),
@@ -47,6 +49,7 @@ fun ReviewContent(
         if (products.isNotEmpty()) {
             HorizontalDivider(modifier = Modifier.padding(10.dp))
             SalesProductsContent(
+                title = "Акции",
                 items = products,
                 onClickItem = onClickProduct,
                 onClickShowMoreProducts = onClickShowMoreProducts
@@ -55,6 +58,15 @@ fun ReviewContent(
         HorizontalDivider(modifier = Modifier.padding(10.dp))
         ArchiveStarts(starts = archive) {
             onClickStart(it)
+        }
+        if (merchProducts.isNotEmpty()) {
+            HorizontalDivider(modifier = Modifier.padding(10.dp))
+            SalesProductsContent(
+                title = "Мерч",
+                items = merchProducts,
+                onClickItem = onClickProduct,
+                onClickShowMoreProducts = onClickShowMoreMerchProducts
+            )
         }
         HorizontalDivider(modifier = Modifier.padding(10.dp))
         SocialNetwork(onClickVk = onClickVk, onClickTelegram = onClickTelegram)

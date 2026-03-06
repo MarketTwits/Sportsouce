@@ -11,4 +11,5 @@ data class Review(
     val actualStarts: List<StartsListItem> = emptyList(),
     val archiveStarts: List<StartsListItem> = emptyList(),
     val products: List<ShopItem>? = emptyList(),
+    val merchProducts: List<ShopItem>? = emptyList(),
 )

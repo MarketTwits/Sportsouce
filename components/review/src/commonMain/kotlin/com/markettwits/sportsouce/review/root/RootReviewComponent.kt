@@ -67,7 +67,10 @@ interface RootReviewComponent {
         data object Club : Config
 
         @Serializable
-        data object Shop : Config
+        data class Shop(
+            val categoryId: Int? = null,
+            val productId: String? = null,
+        ) : Config
     }
 
     sealed interface Child {

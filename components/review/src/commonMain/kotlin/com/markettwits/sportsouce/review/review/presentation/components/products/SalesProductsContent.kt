@@ -12,16 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.sportsouce.shop.catalog.presentation.components.ShopItemCardCompact
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 
 @Composable
 fun SalesProductsContent(
     modifier: Modifier = Modifier,
+    title: String,
     items: List<ShopItem>,
     onClickItem: (ShopItem) -> Unit,
     onClickShowMoreProducts: () -> Unit,
 ) {
+    val isDarkTheme = LocalDarkOrLightTheme.current
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -29,7 +33,7 @@ fun SalesProductsContent(
     ) {
         Text(
             modifier = modifier.padding(horizontal = 10.dp),
-            text = "Акции",
+            text = title,
             color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.bold(),
             fontSize = 18.sp
@@ -53,8 +57,8 @@ fun SalesProductsContent(
             maxWidth >= 760.dp -> 2
             else -> 1
         }
-        val cardWidth = (maxWidth * 0.145f).coerceIn(132.dp, 168.dp)
-        val cardHeight = (cardWidth * 1.55f).coerceIn(208.dp, 262.dp)
+        val cardWidth = (maxWidth * 0.16f).coerceIn(140.dp, 176.dp)
+        val cardHeight = (cardWidth * 1.68f).coerceIn(236.dp, 296.dp)
 
         FlowColumn(
             modifier = modifier
@@ -65,10 +69,14 @@ fun SalesProductsContent(
         ) {
             items.forEach { item ->
                 ShopItemCardCompact(
+                    modifier = Modifier,
                     shopItem = item,
                     cardWidth = cardWidth,
                     cardHeight = cardHeight,
                     showBorder = false,
+                    showImageBorder = !isDarkTheme,
+                    imageAspectRatio = 1f,
+                    imageBottomSpacing = 8.dp,
                     onItemClick = {
                         onClickItem(item)
                     }

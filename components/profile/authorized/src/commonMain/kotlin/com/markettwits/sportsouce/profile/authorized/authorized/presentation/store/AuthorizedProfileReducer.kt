@@ -10,6 +10,7 @@ object AuthorizedProfileReducer : Reducer<State, Message> {
             is Message.Loading -> copy(isLoading = true, error = null)
             is Message.LoadingFailed -> copy(isLoading = false, error = msg.error)
             is Message.LoadingSuccess -> copy(user = msg.user, isLoading = false, error = null)
+            is Message.RecentStartsLoaded -> copy(recentStarts = msg.starts)
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
@@ -23,11 +24,16 @@ import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
-fun NewsItemCard(modifier: Modifier = Modifier, newsInfo: NewsItem, onClick: (NewsItem) -> Unit) {
+fun NewsItemCard(
+    modifier: Modifier = Modifier,
+    newsInfo: NewsItem,
+    cardWidth: Dp = 270.dp,
+    cardHeight: Dp = 240.dp,
+    onClick: (NewsItem) -> Unit,
+) {
     Column(
         modifier = modifier
-            .padding(10.dp)
-            .size(width = 270.dp, height = 240.dp)
+            .size(width = cardWidth, height = cardHeight)
             .clip(Shapes.medium)
             .clickable { onClick(newsInfo) }
     ) {

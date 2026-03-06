@@ -325,8 +325,7 @@ private fun DistanceItem(
 }
 
 private fun DistinctDistance.availableSlots(): Int {
-    val open = openSlots ?: 0
-    if (open > 0) return open
+    openSlots?.let { return it.coerceAtLeast(0) }
 
     val total = slots
     val taken = takenSlots ?: 0

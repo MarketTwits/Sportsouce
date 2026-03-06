@@ -12,7 +12,7 @@ internal fun handleAuthorizedProfileEvent(
 ) {
     when (outPut) {
         is AuthorizedProfileComponent.Output.EditProfile -> navigation.pushNew(
-            RootAuthorizedProfileComponent.Config.EditProfileMenu
+            RootAuthorizedProfileComponent.Config.EditProfileMenu()
         )
 
         is AuthorizedProfileComponent.Output.MyRegistries -> navigation.pushNew(
@@ -20,7 +20,9 @@ internal fun handleAuthorizedProfileEvent(
         )
 
         is AuthorizedProfileComponent.Output.SocialNetwork -> navigation.pushNew(
-            RootAuthorizedProfileComponent.Config.SocialNetwork
+            RootAuthorizedProfileComponent.Config.EditProfileMenu(
+                openSocialNetworkOnStart = true
+            )
         )
 
         is AuthorizedProfileComponent.Output.Start -> navigation.pushNew(

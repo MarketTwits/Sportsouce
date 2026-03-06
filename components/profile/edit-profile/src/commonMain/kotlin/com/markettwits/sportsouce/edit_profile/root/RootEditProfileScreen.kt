@@ -5,13 +5,13 @@ import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.sportsouce.edit_profile.edit_menu.presentation.EditProfileScreen
-import com.markettwits.sportsouce.edit_profile.edit_profile_Image.presentation.screen.NewEditProfileImageScreen
-import com.markettwits.sportsouce.edit_profile.edit_profile_about.presentation.components.EditProfileAboutScreen
-import com.markettwits.sportsouce.edit_profile.edit_profile_change_password.presentation.screen.ChangePasswordScreen
-import com.markettwits.sportsouce.edit_profile.edit_profile_info.presentation.components.EditProfileInfoScreen
-import com.markettwits.sportsouce.edit_profile.edit_profile_sign_out.presentation.components.EditProfileSignOutScreenDialog
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
+import com.markettwits.sportsouce.edit_profile.about.presentation.components.EditProfileAboutScreen
+import com.markettwits.sportsouce.edit_profile.change_password.presentation.screen.ChangePasswordScreen
+import com.markettwits.sportsouce.edit_profile.image.presentation.screen.NewEditProfileImageScreen
+import com.markettwits.sportsouce.edit_profile.info.presentation.components.EditProfileInfoScreen
+import com.markettwits.sportsouce.edit_profile.menu.presentation.EditProfileScreen
+import com.markettwits.sportsouce.edit_profile.sign_out.presentation.components.EditProfileSignOutScreenDialog
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.screen.ProfileSocialNetworkScreen
 
 @Composable
 fun RootEditProfileScreen(component: RootEditProfileComponent) {

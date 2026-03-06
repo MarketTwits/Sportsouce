@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
 import com.markettwits.sportsouce.auth.service.api.authDataSourceModule
-import com.markettwits.sportsouce.edit_profile.edit_social_network.di.editProfileSocialNetworkModule
+import com.markettwits.sportsouce.edit_profile.social_network.di.editProfileSocialNetworkModule
 import com.markettwits.sportsouce.profile.authorized.authorized.di.authorizedProfileModule
 import com.markettwits.sportsouce.profile.members.member_add_edit.di.memberAddAndEditModule
 import com.markettwits.sportsouce.profile.registrations.presentation.root.di.userStartRegistrationModule

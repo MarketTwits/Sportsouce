@@ -18,6 +18,8 @@ interface ReviewStore : Store<Intent, State, Label> {
         data class OnClickItem(val item: StartsListItem) : Intent
         data class OnClickMenu(val item : Int) : Intent
         data class OnClickProduct(val product: ShopItem) : Intent
+        data object OnClickShowMoreSalesProducts : Intent
+        data object OnClickShowMoreMerchProducts : Intent
         data object OnClickTelegram : Intent
         data object OnClickVk : Intent
         data class Launch(val forced: Boolean = false) : Intent
@@ -36,6 +38,7 @@ interface ReviewStore : Store<Intent, State, Label> {
         data class OnClickItem(val item: StartsListItem) : Label
         data class OnClickMenu(val item : Int) : Label
         data class OnClickProduct(val product: ShopItem) : Label
+        data object OnClickShowMoreSalesProducts : Label
+        data object OnClickShowMoreMerchProducts : Label
     }
 }
-

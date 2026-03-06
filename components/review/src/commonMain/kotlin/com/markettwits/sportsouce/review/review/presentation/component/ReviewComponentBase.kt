@@ -44,11 +44,18 @@ class ReviewComponentBase(
             when (it) {
                 is ReviewStore.Label.OnClickItem -> onStartClick(it.item)
                 is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
+                is ReviewStore.Label.OnClickShowMoreSalesProducts -> onClickMenu(SALES_CATEGORY_ID)
+                is ReviewStore.Label.OnClickShowMoreMerchProducts -> onClickMenu(MERCH_CATEGORY_ID)
                 is ReviewStore.Label.OnClickSearch -> onClickSearch()
                 is ReviewStore.Label.OnClickNews -> onClickNews(it.news)
                 is ReviewStore.Label.OnClickProduct -> onClickProduct(it.product)
                 is ReviewStore.Label.OnClickSettings -> onClickSettings()
             }
         }.launchIn(scope)
+    }
+
+    private companion object {
+        const val SALES_CATEGORY_ID = 577
+        const val MERCH_CATEGORY_ID = 582
     }
 }

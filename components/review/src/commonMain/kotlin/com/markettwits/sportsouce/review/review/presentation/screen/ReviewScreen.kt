@@ -61,6 +61,7 @@ fun ReviewScreen(
                     actual = state.review.actualStarts,
                     archive = state.review.archiveStarts,
                     products = state.review.products ?: emptyList(),
+                    merchProducts = state.review.merchProducts ?: emptyList(),
                     notification = notification,
                     onClickStart = {
                         component.obtainEvent(ReviewStore.Intent.OnClickItem(it))
@@ -78,7 +79,10 @@ fun ReviewScreen(
                         component.obtainEvent(ReviewStore.Intent.OnClickTelegram)
                     },
                     onClickShowMoreProducts = {
-                        component.obtainEvent(ReviewStore.Intent.OnClickMenu(4))
+                        component.obtainEvent(ReviewStore.Intent.OnClickShowMoreSalesProducts)
+                    },
+                    onClickShowMoreMerchProducts = {
+                        component.obtainEvent(ReviewStore.Intent.OnClickShowMoreMerchProducts)
                     },
                     onClickVk = {
                         component.obtainEvent(ReviewStore.Intent.OnClickVk)

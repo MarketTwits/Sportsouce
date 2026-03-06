@@ -50,15 +50,24 @@ class ShopCatalogRepositoryBase(
     }
 
     override suspend fun salesProducts(): Result<List<ShopItem>> = runCatching {
+        categoryProducts(SALES_CATEGORY_ID_PROD)
+    }
+
+    override suspend fun merchProducts(): Result<List<ShopItem>> = runCatching {
+        categoryProducts(MERCH_CATEGORY_ID)
+    }
+
+    private suspend fun categoryProducts(categoryId: Int): List<ShopItem> {
         val items = cloudService.products(
             limit = 20,
             offset = 0,
-            categoryId = SALES_CATEGORY_ID_PROD
+            categoryId = categoryId
         )
-        productMapper.map(items)
+        return productMapper.map(items)
     }
 
     companion object {
         const val SALES_CATEGORY_ID_PROD = 577
+        const val MERCH_CATEGORY_ID = 582
     }
 }

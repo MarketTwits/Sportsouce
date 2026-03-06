@@ -20,11 +20,13 @@ import com.markettwits.sportsouce.shop.catalog.di.shopCatalogModule
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponentBase
 import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStoreFactory
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.filter.di.shopFilterModule
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult
 import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponentBase
+import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStoreFactory
 import com.markettwits.sportsouce.shop.item.di.shopItemPageModule
 import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageComponentBase
@@ -42,6 +44,7 @@ class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
     private val initialProductId: String? = null,
+    private val initialCategoryId: Int? = null,
 ) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarComponentHandler() {
 
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
@@ -90,7 +93,13 @@ class RootShopCatalogComponentBase(
                 componentPage = ShopCatalogComponentBase(
                     componentContext = componentContext,
                     listener = BottomBarStorageImpl,
-                    storeFactory = scope.get(),
+                    storeFactory = ShopCatalogStoreFactory(scope.get(), scope.get()),
+                    initialFilter = initialCategoryId?.let {
+                        ShopFilterResult(
+                            categoryId = it,
+                            options = emptyList()
+                        )
+                    },
                     outputs = CardsComponentOutputsImpl()
                 ),
                 componentCart = ShopCartCatalogComponentBase(
@@ -176,7 +185,7 @@ class RootShopCatalogComponentBase(
     private fun createShopFilterComponent(componentContext: ComponentContext): ShopFilterComponent =
         ShopFilterComponentBase(
             componentContext = componentContext,
-            store = scope.get(),
+            store = ShopFilterStoreFactory(scope.get(), scope.get()).create(initialCategoryId),
             output = ShopFilterComponentOutputsImpl(),
         )
 
@@ -305,4 +314,3 @@ class RootShopCatalogComponentBase(
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 }
-

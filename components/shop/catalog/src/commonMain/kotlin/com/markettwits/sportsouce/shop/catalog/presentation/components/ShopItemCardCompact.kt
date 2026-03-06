@@ -39,6 +39,9 @@ fun ShopItemCardCompact(
     cardWidth: Dp = 140.dp,
     cardHeight: Dp = 230.dp,
     showBorder: Boolean = true,
+    showImageBorder: Boolean = false,
+    imageAspectRatio: Float? = null,
+    imageBottomSpacing: Dp = 8.dp,
 ) {
     Box(
         modifier = modifier
@@ -46,7 +49,7 @@ fun ShopItemCardCompact(
             .clip(Shapes.large)
             .width(cardWidth)
             .height(cardHeight)
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.background)
             .then(
                 if (showBorder) {
                     Modifier.border(
@@ -69,21 +72,39 @@ fun ShopItemCardCompact(
                 modifier = Modifier
                     .clip(Shapes.large)
                     .align(Alignment.CenterHorizontally)
-                    .weight(0.68f),
+                    .then(
+                        if (imageAspectRatio != null) {
+                            Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(imageAspectRatio)
+                        } else {
+                            Modifier.weight(0.68f)
+                        }
+                    ),
                 image = shopItem.visual.imageUrl,
+                showBorder = showImageBorder,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(imageBottomSpacing))
             ShowCardPrice(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .padding(bottom = 8.dp)
                     .align(Alignment.Start)
-                    .weight(0.32f),
+                    .then(
+                        if (imageAspectRatio != null) {
+                            Modifier
+                        } else {
+                            Modifier.weight(0.32f)
+                        }
+                    ),
                 currentPrice = shopItem.price.currentPrice,
                 previousPrice = shopItem.price.previousPrice,
                 discount = shopItem.price.discount,
                 title = shopItem.visual.displayName
             )
+            if (imageAspectRatio != null) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -92,11 +113,24 @@ fun ShopItemCardCompact(
 private fun ImageCard(
     modifier: Modifier = Modifier,
     image: List<String>,
+    showBorder: Boolean,
 ) {
     Box(modifier = modifier) {
         if (image.isNotEmpty()) {
             SubcomposeAsyncImage(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (showBorder) {
+                            Modifier.border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f),
+                                shape = Shapes.large
+                            )
+                        } else {
+                            Modifier
+                        }
+                    ),
                 model = imageRequestCrossfade(image.first()),
                 filterQuality = FilterQuality.High,
                 contentDescription = "",
@@ -127,6 +161,17 @@ private fun ImageCard(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .then(
+                        if (showBorder) {
+                            Modifier.border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f),
+                                shape = Shapes.large
+                            )
+                        } else {
+                            Modifier
+                        }
+                    )
             ) {
                 Icon(
                     modifier = Modifier

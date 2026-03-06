@@ -6,8 +6,8 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.sportsouce.club.root.RootClubScreen
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.screen.ProfileSocialNetworkScreen
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileScreen
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.screen.ProfileSocialNetworkScreen
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.screen.AuthorizedProfileScreen
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersScreen
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsScreen

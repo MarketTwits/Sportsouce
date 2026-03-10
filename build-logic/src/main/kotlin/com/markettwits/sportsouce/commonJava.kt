@@ -1,4 +1,5 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
@@ -11,7 +12,23 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-fun BaseExtension.commonJava(project: Project) {
+fun ApplicationExtension.commonJava(project: Project) {
+    project.configureJavaCompile()
+
+    project.extensions.findByType<JavaPluginExtension>()?.run {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    project.configureKotlinJvmTargets()
+}
+
+fun LibraryExtension.commonJava(project: Project) {
 
     project.configureJavaCompile()
 
@@ -20,9 +37,9 @@ fun BaseExtension.commonJava(project: Project) {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    project.extensions.findByType<BaseExtension>()?.run {
-        compileOptions.sourceCompatibility = JavaVersion.VERSION_17
-        compileOptions.targetCompatibility = JavaVersion.VERSION_17
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     project.configureKotlinJvmTargets()

@@ -12,16 +12,19 @@ import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
 fun ShopFilterScreen(
     modifier: Modifier = Modifier,
     component: ShopFilterComponent,
-    onClickApplyFilter : () -> Unit
+    onClickApplyFilter: () -> Unit,
+    onClickGoBack: (() -> Unit)? = null,
 ) {
     val state by component.state.collectAsState()
+
+    val handleGoBack = onClickGoBack ?: {
+        component.obtainEvent(ShopFilterStore.Intent.OnClickGoBack)
+    }
 
     ShopFilterContent(
         modifier = modifier,
         state = state,
-        onClickGoBack = {
-            component.obtainEvent(ShopFilterStore.Intent.OnClickGoBack)
-        },
+        onClickGoBack = handleGoBack,
         onClickReset = {
             component.obtainEvent(ShopFilterStore.Intent.OnClickResetFilter)
         },

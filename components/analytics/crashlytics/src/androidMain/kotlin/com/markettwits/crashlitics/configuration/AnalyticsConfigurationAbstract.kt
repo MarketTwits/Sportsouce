@@ -5,7 +5,6 @@ import ru.ok.tracer.CoreTracerConfiguration
 import ru.ok.tracer.TracerConfiguration
 import ru.ok.tracer.crash.report.CrashFreeConfiguration
 import ru.ok.tracer.crash.report.CrashReportConfiguration
-import ru.ok.tracer.disk.usage.DiskUsageConfiguration
 import ru.ok.tracer.heap.dumps.HeapDumpConfiguration
 import ru.ok.tracer.profiler.sampling.SamplingProfilerConfiguration
 
@@ -28,11 +27,6 @@ abstract class AnalyticsConfigurationAbstract : AnalyticsConfiguration {
             },
             HeapDumpConfiguration.build {
                 setEnabled(enabled)
-            },
-            DiskUsageConfiguration.build {
-                setEnabled(enabled)
-                setInterestingSize(3L * 1024 * 1024 * 1024) // 3GB. Default 10GB
-                setProbability(100) // ( 1 / 100 ) * 100% = 1%
             },
         )
     }

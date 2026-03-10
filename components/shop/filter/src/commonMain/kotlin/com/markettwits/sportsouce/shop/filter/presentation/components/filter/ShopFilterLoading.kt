@@ -12,25 +12,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun ShopFilterLoading(
     isLoading: Boolean,
+    onDismissRequest: () -> Unit,
 ) {
     if (isLoading) {
-        Dialog(onDismissRequest = {}) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+        Dialog(
+            onDismissRequest = onDismissRequest,
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            )
+        ) {
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                AnimatedVisibility(
-                    modifier = Modifier.align(Alignment.Center),
-                    visible = true,
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
                         color = MaterialTheme.colorScheme.tertiary,
                         strokeCap = StrokeCap.Round
                     )

@@ -1,5 +1,4 @@
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.android.build.api.dsl.ApplicationExtension
 import com.markettwits.sportsouce.extensions.loadProperties
 import com.markettwits.sportsouce.extensions.propertyDecodedString
 import com.markettwits.sportsouce.extensions.propertyString
@@ -8,28 +7,24 @@ import ru.ok.tracer.mapping_plugin.TracerConfig
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     id("ru.ok.tracer")
 }
 
-configure<BaseExtension> {
+configure<ApplicationExtension> {
     commonAndroid(project)
-}
-
-android {
     namespace = ApkConfig.APPLICATION_ID
     configureSigning()
     configureBuildTypes()
-    configureOutputFileNames()
 }
 
 tracer {
     configureTracer()
 }
 
+configureApkOutputNames()
 configureBundleOutputNames()
 
-private fun BaseAppModuleExtension.configureSigning() {
+private fun ApplicationExtension.configureSigning() {
     val keystoreFile = rootProject.file("key-store.jks")
     val secretsFile = rootProject.file("secrets.properties")
 
@@ -54,19 +49,32 @@ private fun BaseAppModuleExtension.configureSigning() {
     }
 }
 
-private fun BaseAppModuleExtension.configureBuildTypes() {
+private fun NamedDomainObjectContainer<TracerConfig>.configureTracer() {
+    val secretsProps = rootProject.loadProperties("secrets.properties")
+
+    val applicationToken = secretsProps.propertyString("tracer.application.token")
+    val pluginToken = secretsProps.propertyString("tracer.plugin.token")
+
+    create("defaultConfig") {
+        this.pluginToken = pluginToken
+        this.appToken = applicationToken
+    }
+}
+
+private fun ApplicationExtension.configureBuildTypes() {
     val releaseSigning = signingConfigs.findByName("release")
 
+    androidResources {
+        localeFilters.addAll(listOf("en", "ru"))
+    }
+
     buildTypes {
-        defaultConfig {
-            androidResources.localeFilters += listOf("en", "ru")
-        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             if (releaseSigning != null) {
@@ -78,34 +86,21 @@ private fun BaseAppModuleExtension.configureBuildTypes() {
             isShrinkResources = false
             isDebuggable = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
 }
 
-private fun BaseAppModuleExtension.configureOutputFileNames() {
-    applicationVariants.all {
-        val variant = this
-        variant.outputs
-            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-            .forEach { output ->
-                val outputFileName = "Sportsauce-${variant.versionName}-${variant.versionCode}.apk"
-                output.outputFileName = outputFileName
-            }
-    }
-}
-
 private fun Project.configureBundleOutputNames() {
     val projectBuildDir = layout.buildDirectory
-    val projectAndroid = extensions.getByType<BaseAppModuleExtension>()
+    val projectAndroid = extensions.getByType<ApplicationExtension>()
+    val versionCode = projectAndroid.defaultConfig.versionCode
+    val versionName = projectAndroid.defaultConfig.versionName
 
     afterEvaluate {
         tasks.matching { it.name.contains("bundle") && it.name.contains("Release") }.configureEach {
-            val versionCode = projectAndroid.defaultConfig.versionCode
-            val versionName = projectAndroid.defaultConfig.versionName
-
             doLast {
                 val bundleDir = projectBuildDir.get().asFile.resolve("outputs/bundle/release")
                 if (bundleDir.exists()) {
@@ -124,16 +119,18 @@ private fun Project.configureBundleOutputNames() {
     }
 }
 
-private fun NamedDomainObjectContainer<TracerConfig>.configureTracer() {
-    val secretsProps = rootProject.loadProperties("secrets.properties")
+private fun Project.configureApkOutputNames() {
+    val projectAndroid = extensions.getByType<ApplicationExtension>()
+    val versionCode = projectAndroid.defaultConfig.versionCode ?: return
+    val versionName = projectAndroid.defaultConfig.versionName ?: return
 
-    val applicationToken = secretsProps.propertyString("tracer.application.token")
-    val pluginToken = secretsProps.propertyString("tracer.plugin.token")
+    @Suppress("UNCHECKED_CAST")
+    val buildOutputs =
+        extensions.getByName("buildOutputs") as NamedDomainObjectContainer<com.android.build.gradle.api.BaseVariantOutput>
 
-    create("defaultConfig") {
-        this.pluginToken = pluginToken
-        this.appToken = applicationToken
+    buildOutputs.configureEach {
+        if (this is com.android.build.gradle.api.ApkVariantOutput) {
+            outputFileName = "Sportsauce-$versionName-$versionCode.apk"
+        }
     }
 }
-
-

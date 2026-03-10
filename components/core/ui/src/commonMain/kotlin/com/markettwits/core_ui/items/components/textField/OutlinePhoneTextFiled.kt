@@ -30,7 +30,7 @@ fun OutlinePhoneTextFiled(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChange: (String) -> Unit,
 ) {
-    var texts = mapFullRuPhoneNumberToSimple(value)
+    val texts = mapFullRuPhoneNumberToSimple(value)
 
     OutlinedTextFieldBase(
         modifier = modifier,
@@ -48,13 +48,8 @@ fun OutlinePhoneTextFiled(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         onValueChange = {
-            val filteredValue = it.filterIndexed { index, char ->
-                char.isDigit() || (index == 0 && char == '+')
-            }
-            if (filteredValue.length <= NumberDefaults.INPUT_LENGTH) {
-                texts = filteredValue
-                onValueChange(visualTransformation.filter(AnnotatedString(filteredValue)).text.text)
-            }
+            val normalizedValue = normalizeRuPhoneInput(it)
+            onValueChange(visualTransformation.filter(AnnotatedString(normalizedValue)).text.text)
         }
     )
 }
@@ -95,16 +90,7 @@ class MaskVisualTransformation(private val mask: String) : VisualTransformation 
 }
 
 fun mapFullRuPhoneNumberToSimple(input: String): String {
-    var cleanedNumber = input
-        .replace("(", "")
-        .replace(")", "")
-        .replace("-", "")
-        .replace("+7", "")
-        .replace("\\s+".toRegex(), "")
-    if (cleanedNumber.startsWith("7")) {
-        cleanedNumber = cleanedNumber.substring(1)
-    }
-    return cleanedNumber
+    return normalizeRuPhoneInput(input)
 }
 
 fun mapSimpleRuPhoneNumberToFull(input: String) : String{
@@ -117,4 +103,28 @@ fun mapSimpleRuPhoneNumberToFull(input: String) : String{
 object NumberDefaults {
     const val MASK = "+7 (###) ###-##-##"
     const val INPUT_LENGTH = 10
+}
+
+private fun normalizeRuPhoneInput(input: String): String {
+    val trimmedInput = input.trim()
+    val digitsOnly = input.filter(Char::isDigit)
+
+    if (digitsOnly.isEmpty()) return ""
+
+    val normalizedDigits = when {
+        trimmedInput.startsWith("+7") -> digitsOnly.drop(1).take(NumberDefaults.INPUT_LENGTH)
+        digitsOnly.length == NumberDefaults.INPUT_LENGTH + 1 &&
+                (digitsOnly.first() == '7' || digitsOnly.first() == '8') -> {
+            digitsOnly.drop(1).take(NumberDefaults.INPUT_LENGTH)
+        }
+
+        digitsOnly.length <= NumberDefaults.INPUT_LENGTH -> digitsOnly
+        digitsOnly.first() == '7' || digitsOnly.first() == '8' -> {
+            digitsOnly.drop(1).take(NumberDefaults.INPUT_LENGTH)
+        }
+
+        else -> digitsOnly.take(NumberDefaults.INPUT_LENGTH)
+    }
+
+    return normalizedDigits.take(NumberDefaults.INPUT_LENGTH)
 }

@@ -1,14 +1,12 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.profile.members.member_add_edit.domain.add.MemberAddUseCase
 import com.markettwits.sportsouce.profile.members.member_add_edit.domain.edit.MemberEditUseCase
 import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.component.MemberEditComponent
-import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.Intent
-import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.Label
-import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.Message
-import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.State
+import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.*
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import kotlinx.coroutines.launch
 
@@ -39,7 +37,7 @@ class MemberEditExecutor(
                     dispatch(Message.Loaded(it))
                 },
                 onFailure = {
-                    dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.Error(it.mapToSauceError().mapToString()))
                 }
             )
         }
@@ -62,7 +60,7 @@ class MemberEditExecutor(
                     dispatch(Message.UpdateSuccess("Участник успешно обновлен"))
                 },
                 onFailure = {
-                    dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.Error(it.mapToSauceError().mapToString()))
                 }
             )
         }
@@ -75,7 +73,7 @@ class MemberEditExecutor(
                 publish(Label.UpdateSuccess(profileMember))
                 dispatch(Message.UpdateSuccess("Участник добавлен"))
             }, onFailure = {
-                dispatch(Message.Error(it.networkExceptionHandler().message.toString()))
+                dispatch(Message.Error(it.mapToSauceError().mapToString()))
             })
         }
     }

@@ -8,4 +8,6 @@ interface StartRecentRepository {
     val recentStarts: StateFlow<List<StartsListItem>>
 
     suspend fun add(start: StartsListItem)
+
+    suspend fun clear(): Result<Unit>
 }

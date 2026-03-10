@@ -4,7 +4,8 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
@@ -43,7 +44,7 @@ interface ChangePasswordStore : Store<Intent, State, Label> {
 class ChangePasswordStoreFactory(
     private val storeFactory: StoreFactory,
     private val changePasswordDataSource: ChangePasswordDataSource,
-    private val validation: ChangePasswordValidation
+    private val validation: ChangePasswordValidation,
 ) {
 
     fun create(): ChangePasswordStore =
@@ -110,7 +111,7 @@ class ChangePasswordStoreFactory(
                                     dispatch(Msg.UpdateSuccess("Данные успешно обновлены"))
                                 }
                                     .onFailure {
-                                        dispatch(Msg.UpdateFailed(it.networkExceptionHandler().message.toString()))
+                                        dispatch(Msg.UpdateFailed(it.mapToSauceError().mapToString()))
                                     }
                             }
                     }

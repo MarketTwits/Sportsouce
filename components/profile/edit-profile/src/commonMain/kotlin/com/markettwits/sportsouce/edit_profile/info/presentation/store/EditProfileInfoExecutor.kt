@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.edit_profile.info.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.edit_profile.info.domain.EditProfileInfoRepository
 import com.markettwits.sportsouce.edit_profile.info.domain.models.UserData
 import com.markettwits.sportsouce.edit_profile.info.presentation.store.EditProfileInfoStore.*
@@ -32,7 +32,7 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
                     dispatch(Message.UpdateSuccess("Данные профиля успешно обновлены"))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.UpdateFailed(it.mapToSauceError()))
                 }
             )
         }
@@ -43,7 +43,7 @@ class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository)
             dispatch(Message.IsLoading)
             repository.fetch()
                 .catch {
-                    dispatch(Message.IsFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.IsFailed(it.mapToSauceError()))
                 }
                 .collect {
                     dispatch(Message.IsLoaded(it))

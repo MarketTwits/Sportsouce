@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.starts.cloud
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartFavoritesRequest
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
+import com.markettwits.sportsouce.starts.cloud.model.StartStatusEntity
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -48,36 +49,34 @@ class SportSauceNetworkStartsApi(
     }
 
     suspend fun startWithFilter(request: Map<String, String>): NetworkStartsRemote {
-        val response = client.get("start") {
-            url {
-                parameters.apply {
-                    request.forEach { (param, value) ->
-                        append(param, value)
-                    }
-                }
-            }
-        }
-        return json.decodeFromString(response.body<String>())
+        return fetchStarts(additionalParameters = request)
     }
 
     suspend fun fetchActualStarts(): NetworkStartsRemote {
-        val serializer = NetworkStartsRemote.serializer()
-        val response = client.get("start?maxResultCount=20&group=true&status=3,2")
-        return json.decodeFromString(serializer, response.body<String>())
+        return fetchStarts(
+            limit = 20,
+            isGroup = true,
+            statuses = listOf(
+                StartStatusEntity.REGISTRATION_OPEN,
+                StartStatusEntity.ANNOUNCEMENT,
+            ),
+        )
     }
 
     suspend fun fetchPasteStarts(): NetworkStartsRemote {
-        val serializer = NetworkStartsRemote.serializer()
-        val response =
-            client.get("start?maxResultCount=1000&group=true&status=6")
-        return json.decodeFromString(serializer, response.body<String>())
+        return fetchStarts(
+            limit = 1000,
+            isGroup = true,
+            statuses = listOf(StartStatusEntity.ENDED),
+        )
     }
 
     suspend fun fetchPreview(): NetworkStartsRemote {
-        val serializer = NetworkStartsRemote.serializer()
-        val response =
-            client.get("start?maxResultCount=20&group=true&status=2")
-        return json.decodeFromString(serializer, response.body<String>())
+        return fetchStarts(
+            limit = 20,
+            isGroup = true,
+            statuses = listOf(StartStatusEntity.ANNOUNCEMENT),
+        )
     }
 
     suspend fun fetchSeries(seriesId: Int): NetworkStartsRemote {
@@ -87,7 +86,35 @@ class SportSauceNetworkStartsApi(
     }
 
     suspend fun fetchStartMain(): NetworkStartsRemote {
-        val response = client.get("start?mainPage=true&openFirst=true")
-        return json.decodeFromString(response.body<String>())
+        return fetchStarts(
+            isMain = true,
+            openFirst = true,
+        )
+    }
+
+    suspend fun fetchStarts(
+        limit: Int? = null,
+        offset: Int? = null,
+        isMain: Boolean? = null,
+        openFirst: Boolean? = null,
+        isGroup: Boolean? = null,
+        statuses: List<StartStatusEntity> = emptyList(),
+        additionalParameters: Map<String, String> = emptyMap(),
+    ): NetworkStartsRemote {
+        val serializer = NetworkStartsRemote.serializer()
+        val response = client.get("start") {
+            additionalParameters.forEach { (param, value) ->
+                parameter(param, value)
+            }
+            limit?.let { parameter("maxResultCount", it) }
+            offset?.let { parameter("skipCount", it) }
+            isMain?.let { parameter("mainPage", it) }
+            openFirst?.let { parameter("openFirst", it) }
+            isGroup?.let { parameter("group", it) }
+            if (statuses.isNotEmpty()) {
+                parameter("status", statuses.joinToString(",") { it.id.toString() })
+            }
+        }
+        return json.decodeFromString(serializer, response.body<String>())
     }
 }

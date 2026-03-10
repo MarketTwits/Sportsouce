@@ -15,22 +15,31 @@ class StartsInstanceKeeper(
 
     init {
         scope.launch {
-            dataSource.starts(false)
+            dataSource.starts(false, StartsRepository.DEFAULT_STARTS_PAGE)
         }
         dataSource.starts.subscribe {
             starts.value = it
         }
     }
 
-    fun retry() {
-        val scope = CoroutineScope(Dispatchers.Main)
+    fun retry(page: Int) {
         scope.launch {
-            if (starts.value is StartsUiState.Success) {
-                dataSource.starts(true)
-            } else {
+            if (starts.value !is StartsUiState.Success) {
                 starts.value = StartsUiState.Loading
-                dataSource.starts(true)
             }
+            dataSource.starts(true, page)
+        }
+    }
+
+    fun onPageSelected(page: Int) {
+        scope.launch {
+            dataSource.starts(false, page)
+        }
+    }
+
+    fun loadNext(page: Int) {
+        scope.launch {
+            dataSource.loadNext(page)
         }
     }
 }

@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
@@ -23,9 +22,7 @@ fun StartsScreen(
     component: StartsScreen
 ) {
     val state by component.starts.subscribeAsState()
-    var loading by rememberSaveable {
-        mutableStateOf(false)
-    }
+    var currentPage by remember { mutableIntStateOf(1) }
 
     CollapsingToolbarScaffold(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -41,27 +38,38 @@ fun StartsScreen(
         }
     ) {
         PullToRefreshScreen(
-            isRefreshing = loading,
+            isRefreshing = (state as? StartsUiState.Success)?.isRefreshing == true,
             onRefresh = {
-                component.retry()
-                loading = true
+                component.retry(currentPage)
             }) {
             Column {
                 TabBar(
+                    onPageChanged = {
+                        currentPage = it
+                        component.onPageSelected(it)
+                    },
                     content = { page ->
+                        val tabState = (state as? StartsUiState.Success)?.tabs?.getOrNull(page)
                         StartsScreenList(
-                            state = state,
                             page = page,
-                            onClickRetry = component::retry,
-                            onClickItem = component::onItemClick
+                            state = tabState ?: when (state) {
+                                is StartsUiState.Failed -> com.markettwits.sportsouce.starts.starts.presentation.component.StartsTabUiState(
+                                    error = (state as StartsUiState.Failed).error,
+                                    isInitialized = true,
+                                )
+
+                                is StartsUiState.Loading -> com.markettwits.sportsouce.starts.starts.presentation.component.StartsTabUiState(
+                                    isLoading = true
+                                )
+
+                                is StartsUiState.Success -> error("Unexpected tab state")
+                            },
+                            onClickRetry = { component.retry(page) },
+                            onClickItem = component::onItemClick,
+                            onLoadNext = { component.onLoadNext(page) }
                         )
                     })
             }
         }
     }
-    LaunchedEffect(state) {
-        if (state is StartsUiState.Failed || state is StartsUiState.Success)
-            loading = false
-    }
 }
-

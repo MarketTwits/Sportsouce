@@ -5,7 +5,8 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilterRepository
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
@@ -115,7 +116,7 @@ internal class StartFilerStoreFactory(
                         dispatch(Msg.Loading)
                     }
                     .catch {
-                        dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
+                        dispatch(Msg.InfoFailed(it.mapToSauceError().mapToString()))
                     }
                     .collect {
                         dispatch(Msg.InfoLoaded(it))

@@ -14,12 +14,14 @@ import com.markettwits.core_ui.items.theme.Shapes
 fun SaveChangesButton(
     modifier: Modifier = Modifier,
     loading: Boolean,
-    onClick: () -> Unit
+    enabled: Boolean = !loading,
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier
             .padding(10.dp)
             .fillMaxWidth(),
+        enabled = enabled,
         onClick = {
             onClick()
         },

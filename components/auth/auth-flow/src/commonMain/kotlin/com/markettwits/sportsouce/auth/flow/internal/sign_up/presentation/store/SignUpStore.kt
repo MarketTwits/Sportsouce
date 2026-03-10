@@ -28,9 +28,8 @@ interface SignUpStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data object OpenSignIn : Label
-        data object OpenProfile : Label
+        data class OpenProfile(val phone: String, val password: String) : Label
         data object OnClickBack : Label
     }
 }
-
 

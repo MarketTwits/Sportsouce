@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.edit_profile.info.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
@@ -12,20 +13,21 @@ object EditProfileInfoReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.IsFailed -> State(
                 isLoading = false,
-                isError = true,
-                message = msg.message
+                error = msg.sauceError,
             )
 
             is Message.IsLoaded -> State(
+                isLoading = false,
+                error = null,
                 userData = msg.userDataContent.user,
                 teams = msg.userDataContent.teams,
                 cities = msg.userDataContent.cities
             )
 
-            is Message.IsLoading -> copy(isLoading = true)
+            is Message.IsLoading -> copy(isLoading = true, error = null)
             is Message.UpdateFailed -> copy(
                 isLoading = false, event = triggered(
-                    EventContent(false, msg.message)
+                    EventContent(false, msg.sauceError.mapToString())
                 )
             )
 

@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.review.review.di
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.intentActionModule
 import com.markettwits.sportsouce.news.di.newsModule
 import com.markettwits.sportsouce.review.review.data.ReviewRepositoryBase
@@ -31,7 +30,6 @@ val reviewModule = module {
             startsService = get(),
             cache = ReviewCache(),
             productsService = get(),
-            executor = ExecuteWithCacheBase(),
             newsService = get()
         )
     }

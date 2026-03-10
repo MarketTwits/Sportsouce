@@ -4,7 +4,8 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import app.cash.paging.map
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core.log.infoLog
@@ -211,7 +212,7 @@ internal class StartRepositoryBase(
                 )
             CommentUiState.Success
         } catch (e: Exception) {
-            CommentUiState.Error(e.networkExceptionHandler().message.toString())
+            CommentUiState.Error(e.mapToSauceError().mapToString())
         }
     }
 

@@ -22,4 +22,10 @@ kotlin {
         implementation(libs.bundles.mviKotlin)
         implementation(projects.components.core.time)
     }
+
+    sourceSets.androidMain.dependencies {
+        implementation(projects.components.core.activityholder)
+        implementation(libs.androidx.credentials)
+        implementation(libs.androidx.credentials.play.services.auth)
+    }
 }

@@ -1,12 +1,10 @@
 package com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.auth.flow.internal.forgot_password.domain.use_case.ForgotPasswordUseCase
-import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore.Intent
-import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore.Label
-import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore.Message
-import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore.State
+import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore.*
 import kotlinx.coroutines.launch
 
 internal class ForgotPasswordExecutor(private val useCase: ForgotPasswordUseCase) :
@@ -27,7 +25,7 @@ internal class ForgotPasswordExecutor(private val useCase: ForgotPasswordUseCase
                 onSuccess = {
                     dispatch(Message.Success(it))
                 }, onFailure = {
-                    dispatch(Message.Failed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.Failed(it.mapToSauceError().mapToString()))
                 }
             )
         }

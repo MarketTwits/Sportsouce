@@ -42,23 +42,6 @@ fun ShopSearchScreen(modifier: Modifier = Modifier,component: ShopSearchComponen
                 bottom = it.calculateBottomPadding()
             ).background(MaterialTheme.colorScheme.background)
         ) {
-
-//            if (state.query.isEmpty() && state.filter.filterIsEmpty()) {
-//                SearchHistoryColumn(
-//                    items = state.searchHistory
-//                ) {
-//                    component.obtainEvent(StartsSearchStore.Intent.OnClickHistoryItem(it))
-//                }
-//            } else {
-//                SearchResultColumn(
-//                    starts = state.starts,
-//                    onClickStart = { startId, startTitle ->
-//                        component.obtainEvent(
-//                            StartsSearchStore.Intent.OnClickStart(startId, startTitle)
-//                        )
-//                    }
-//                )
-//            }
         }
     }
 

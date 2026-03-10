@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.tracer.android)
 }
 
+configurations.configureEach {
+    exclude(group = "ru.ok.tracer", module = "tracer-sample-upload")
+}
+
 kotlin {
 
     android {
@@ -18,7 +22,6 @@ kotlin {
             implementation(projects.components.core.buildConfig)
             implementation(libs.tracer.crash.report.native)
             implementation(libs.tracer.crash.report)
-            implementation(libs.tracer.disk.usage)
             implementation(libs.tracer.heap.dump)
             implementation(libs.tracer.profiler.sampling)
         }

@@ -1,20 +1,21 @@
 [versions]
 #plugins
-versionName = "1.5.5"
-versionCode = "10420"
+versionName = "1.6.0"
+versionCode = "10421"
 jvm = "11"
 kotlin = "2.3.10" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
-gradle = "8.12.3" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
-compose = "1.10.1" # https://github.com/JetBrains/compose-multiplatform
+agp = "9.0.0-alpha06" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
+gradle = "9.3.1" # https://gradle.org/releases/
+compose = "1.10.2" # https://github.com/JetBrains/compose-multiplatform
 kotlinx-serialization = "1.10.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
 kstore = "1.0.0" # https://github.com/xxfast/KStore
-kermit = "2.0.8" # https://kermit.touchlab.co/docs/
+kermit = "2.1.0" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.4.0" # https://github.com/ktorio/ktor
-jetbrainsKotlinWrappers = "2026.2.24" #https://github.com/JetBrains/kotlin-wrappers
-compottie = "2.0.3" # https://github.com/alexzhirkevich/compottie
+jetbrainsKotlinWrappers = "2026.3.8" #https://github.com/JetBrains/kotlin-wrappers
+compottie = "2.1.0" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
 coreSplashscreen = "1.2.0" # https://developer.android.com/reference/kotlin/androidx/core/splashscreen/SplashScreen
 pagingCommon = "3.3.0-alpha02-0.5.1" # https://github.com/cashapp/multiplatform-paging
@@ -26,7 +27,7 @@ composeMaterial3Adaptive = "1.2.0" # https://developer.android.com/jetpack/andro
 composeMaterial3WindowSizeClass = "1.9.0" # https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-window-size-class
 composeMaterial3AdaptiveNavigationSuite = "1.9.0" #https://mvnrepository.com/artifact/org.jetbrains.compose.material3/material3-adaptive-navigation-suite
 composeHotReload = "1.0.0" # https://github.com/JetBrains/compose-hot-reload
-buildConfigPlugin = "6.0.7" # https://github.com/gmazzo/gradle-buildconfig-plugin
+buildConfigPlugin = "6.0.9" # https://github.com/gmazzo/gradle-buildconfig-plugin
 compose-activity = "1.12.4" # https://developer.android.com/jetpack/androidx/releases/activity
 compose-preview = "1.10.4" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
@@ -112,7 +113,7 @@ tracer-profiler-sampling = { group = "ru.ok.tracer", name = "tracer-profiler-sam
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 
 #Gradle Plugins
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 org-jetbrains-kotlin-multiplatform-gradle-plugin = { module = "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-compose-gradle-plugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
@@ -122,8 +123,7 @@ tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", ver
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "gradle" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kmp-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 tracer-android = { id = "ru.ok.tracer", version.ref = "tracer" }

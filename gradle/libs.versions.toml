@@ -30,6 +30,7 @@ buildConfigPlugin = "6.0.7" # https://github.com/gmazzo/gradle-buildconfig-plugi
 compose-activity = "1.12.4" # https://developer.android.com/jetpack/androidx/releases/activity
 compose-preview = "1.10.4" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
+androidxCredentials = "1.5.0" # https://developer.android.com/jetpack/androidx/releases/credentials
 decompose = "3.4.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.4.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
@@ -39,6 +40,8 @@ tracer = "1.2.2" # https://apptracer.ru/
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidxCredentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-animation = { group = "org.jetbrains.compose.animation", name = "animation", version.ref = "compose" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }

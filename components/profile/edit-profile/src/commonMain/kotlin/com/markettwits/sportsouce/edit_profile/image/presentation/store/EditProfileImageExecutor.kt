@@ -1,7 +1,8 @@
 package com.markettwits.sportsouce.edit_profile.image.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.edit_profile.image.data.EditProfileImageRepository
 import com.markettwits.sportsouce.edit_profile.image.presentation.store.EditProfileImageStore.*
 import kotlinx.coroutines.launch
@@ -21,8 +22,7 @@ class EditProfileImageExecutor(private val repository: EditProfileImageRepositor
             repository.send(data, lastModified).fold(
                 onSuccess = { dispatch(Message.ShowSuccess) },
                 onFailure = {
-                    println(it)
-                    dispatch(Message.ShowError(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.ShowError(it.mapToSauceError().mapToString()))
                 }
             )
         }

@@ -29,8 +29,16 @@ class StartsScreenComponent(
         toSettings()
     }
 
-    override fun retry() {
-        someLogic.retry()
+    override fun retry(page: Int) {
+        someLogic.retry(page)
+    }
+
+    override fun onPageSelected(page: Int) {
+        someLogic.onPageSelected(page)
+    }
+
+    override fun onLoadNext(page: Int) {
+        someLogic.loadNext(page)
     }
 
     override val starts: Value<StartsUiState> = someLogic.starts

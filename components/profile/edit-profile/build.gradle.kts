@@ -19,6 +19,7 @@ kotlin {
             implementation(projects.components.core.errors)
             implementation(projects.components.core.koin)
             implementation(projects.components.teamsCity)
+            implementation(projects.components.starts.startsRecent)
             implementation(libs.koin.core)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)

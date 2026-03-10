@@ -34,4 +34,8 @@ internal class StartRecentRepositoryBase(
     override suspend fun add(start: StartsListItem) {
         cache.set(value = start)
     }
+
+    override suspend fun clear(): Result<Unit> = runCatching {
+        cache.clear()
+    }
 }

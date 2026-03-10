@@ -1,7 +1,8 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.auth.flow.internal.sign_in.domain.InputType
 import com.markettwits.sportsouce.auth.flow.internal.sign_in.domain.LoginMethod
@@ -75,7 +76,7 @@ class SignInExecutor(
                     exceptionTracker.setUserId(it.id.toString())
                     publish(Label.GoProfile)
                 }, onFailure = {
-                    val message = it.networkExceptionHandler().message.toString()
+                    val message = it.mapToSauceError().mapToString()
                     exceptionTracker.setLog("emailOrPhone: ${currentState.emailOrPhone}\npassword: ${currentState.password}")
                     exceptionTracker.reportException(it, key = "#SignInExecutor#loginWithPassword")
                     dispatch(SignInReducer.Message.Error(message))

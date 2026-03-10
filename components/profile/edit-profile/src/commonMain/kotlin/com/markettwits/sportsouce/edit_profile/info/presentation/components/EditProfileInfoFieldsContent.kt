@@ -21,13 +21,13 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.textField.*
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.edit_profile.change_password.presentation.component.SaveChangesButton
@@ -86,12 +86,13 @@ fun EditProfileInfoFieldsContent(
         },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            if (state.isLoading) return@Scaffold
+            if (state.userData == null || state.error != null) return@Scaffold
             SaveChangesButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 loading = state.isLoading,
+                enabled = !state.isLoading,
                 onClick = {
                     keyboardController?.hide()
                     focusManager.clearFocus()
@@ -271,16 +272,13 @@ fun EditProfileInfoFieldsContent(
                     Spacer(modifier = Modifier.height(150.dp))
                 }
             }
-            if (state.isLoading) {
+            if (state.isLoading && state.userData == null && state.error == null) {
                 LoadingFullScreen(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
             }
-            if (state.isError) {
-                FailedScreen(
-                    message = state.message,
-                    onClickBack = onClickGoBack,
-                    onClickRetry = onClickRetry
-                )
-            }
+            state.error?.SauceErrorScreen(
+                modifier = Modifier.fillMaxSize(),
+                onClickRetry = onClickRetry
+            )
             EventEffect(
                 event = state.event,
                 onConsumed = onConsume,

@@ -1,7 +1,8 @@
 package com.markettwits.sportsouce.edit_profile.about.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.edit_profile.about.data.EditProfileAboutRepository
 import com.markettwits.sportsouce.edit_profile.about.presentation.store.EditProfileAboutStore.*
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ class EditProfileAboutExecutor(
                     dispatch(Message.LoadedAbout(State.FiledState(it)))
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.UpdateFailed(it.mapToSauceError().mapToString()))
                 }
             )
         }
@@ -45,7 +46,7 @@ class EditProfileAboutExecutor(
                     dispatch(Message.UpdateSuccess)
                 },
                 onFailure = {
-                    dispatch(Message.UpdateFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.UpdateFailed(it.mapToSauceError().mapToString()))
                 }
             )
         }

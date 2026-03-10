@@ -31,7 +31,7 @@ internal fun SauceThrowableMediumContent(
             .padding(24.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

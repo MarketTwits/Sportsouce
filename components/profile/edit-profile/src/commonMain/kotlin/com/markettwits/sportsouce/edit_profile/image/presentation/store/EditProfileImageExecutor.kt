@@ -12,14 +12,29 @@ class EditProfileImageExecutor(private val repository: EditProfileImageRepositor
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.UpdateImage -> uploadImage(intent.data, intent.lastModified)
+            is Intent.UpdateImage -> uploadImage(
+                data = intent.data,
+                lastModified = intent.lastModified,
+                fileName = intent.fileName,
+                contentType = intent.contentType
+            )
         }
     }
 
-    private fun uploadImage(data: ByteArray, lastModified: Long) {
+    private fun uploadImage(
+        data: ByteArray,
+        lastModified: Long,
+        fileName: String,
+        contentType: String,
+    ) {
         scope.launch {
             dispatch(Message.ShowLoading)
-            repository.send(data, lastModified).fold(
+            repository.send(
+                data = data,
+                lastModified = lastModified,
+                fileName = fileName,
+                contentType = contentType
+            ).fold(
                 onSuccess = { dispatch(Message.ShowSuccess) },
                 onFailure = {
                     dispatch(Message.ShowError(it.mapToSauceError().mapToString()))

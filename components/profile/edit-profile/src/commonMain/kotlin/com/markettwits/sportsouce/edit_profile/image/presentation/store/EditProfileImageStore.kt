@@ -13,7 +13,12 @@ interface EditProfileImageStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Dismiss : Intent
-        data class UpdateImage(val data: ByteArray, val lastModified: Long) : Intent
+        data class UpdateImage(
+            val data: ByteArray,
+            val lastModified: Long,
+            val fileName: String,
+            val contentType: String,
+        ) : Intent
     }
 
     sealed interface Message {

@@ -87,12 +87,18 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
         }
         return json.decodeFromString(response.body())
     }
-    suspend fun uploadFile(data: ByteArray, lastModified: Long): UploadFileResponse {
+    suspend fun uploadFile(
+        data: ByteArray,
+        lastModified: Long,
+        fileName: String,
+        contentType: String,
+    ): UploadFileResponse {
         val response = client.submitFormWithBinaryData(
             url = "file/upload",
             formData = formData {
                 append("file", data, Headers.build {
-                    append(HttpHeaders.ContentDisposition, "filename=uploaded_file")
+                    append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                    append(HttpHeaders.ContentType, contentType)
                 })
                 append("lastModified", lastModified.toString())
             }

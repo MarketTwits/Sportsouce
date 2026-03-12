@@ -1,7 +1,6 @@
 package com.markettwits.buildkonfig
 
 import java.io.File
-import java.lang.management.ManagementFactory
 
 private object DebugRuntimeMarker
 
@@ -13,13 +12,7 @@ private fun resolveDebugMode(): Boolean {
     if (explicit != null) {
         return explicit.toBoolean()
     }
-    return isDebuggerAttached() || isComposeDevRun() || isRunningFromClasses()
-}
-
-private fun isDebuggerAttached(): Boolean {
-    return ManagementFactory.getRuntimeMXBean()
-        .inputArguments
-        .any { it.contains("jdwp") }
+    return isComposeDevRun() || isRunningFromClasses()
 }
 
 private fun isComposeDevRun(): Boolean {

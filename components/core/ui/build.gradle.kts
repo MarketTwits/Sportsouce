@@ -43,6 +43,7 @@ kotlin {
         
         jvmMain.dependencies {
             api(libs.compose.animation)
+            api(libs.ktor.client.okhttp)
         }
 
         jsMain.dependencies {

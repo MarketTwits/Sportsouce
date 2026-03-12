@@ -11,12 +11,21 @@ import org.koin.dsl.koinApplication
 
 class ComponentKoinContext(private val retain: Boolean = true) : InstanceKeeper.Instance {
     private var koinApp: KoinApplication? = null
+    private val loadedModules = linkedSetOf<Module>()
 
     @OptIn(KoinInternalApi::class)
     fun getOrCreateKoinScope(modules: List<Module>): Scope {
         if (koinApp == null) {
             koinApp = koinApplication { modules(modules) }
+            loadedModules += modules
+        } else {
+            val newModules = modules.filterNot(loadedModules::contains)
+            if (newModules.isNotEmpty()) {
+                requireNotNull(koinApp).modules(newModules)
+                loadedModules += newModules
+            }
         }
+        requireNotNull(koinApp).createEagerInstances()
         return requireNotNull(koinApp).koin.scopeRegistry.rootScope
     }
 

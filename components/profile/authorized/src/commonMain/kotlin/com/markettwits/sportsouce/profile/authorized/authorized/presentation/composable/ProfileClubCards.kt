@@ -1,8 +1,6 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,32 +9,27 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.core_ui.items.theme.SportSouceColor.VeryLighBlue
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun ProfileClubCards(
     modifier: Modifier = Modifier,
@@ -45,40 +38,48 @@ internal fun ProfileClubCards(
     val cards = remember {
         listOf(
             ClubCardInfo(
-                title = "Участвуем выгодно",
-                subtitle = "· сервис · тренировки · драйв",
-                tag = "Pass",
-                gradient = listOf(
-                    SportSouceColor.SportSouceRegistryOpenGreen.copy(alpha = 0.85f),
-                    SportSouceColor.SportSouceLighBlue.copy(alpha = 0.85f),
-                ),
-                tagColor = SportSouceColor.SportSouceLightRed,
-                accent = SportSouceColor.SportSouceBlue,
-                accentSecondary = VeryLighBlue
-            ),
-            ClubCardInfo(
-                title = "Твоя команда рядом",
-                subtitle = "· расписание · чат · бонусы",
-                tag = "Live",
-                gradient = listOf(
-                    SportSouceColor.SportSouceStartEndedPink.copy(alpha = 0.9f),
-                    SportSouceColor.SportSouceDarkRed.copy(alpha = 0.85f),
-                ),
-                tagColor = SportSouceColor.SportSouceRegistryCommingSoonYellow,
+                title = "Клубные тренировки",
+                subtitle = "Зал, новые направления и быстрый доступ к расписанию",
+                badge = "Тренировки",
+                icon = Icons.Default.FitnessCenter,
+                secondaryIcon = Icons.AutoMirrored.Filled.DirectionsRun,
+                primaryFeature = "Зал",
+                secondaryFeature = "Расписание",
                 accent = SportSouceColor.SportSouceRegistryOpenGreen,
-                accentSecondary = SportSouceColor.OnPrimaryDark
+                secondaryAccent = SportSouceColor.SportSouceLighBlue
             ),
             ClubCardInfo(
-                title = "Открой новый зал",
-                subtitle = "· тестовый визит · скидки · партнёры",
-                tag = "New",
-                gradient = listOf(
-                    SportSouceColor.SportSouceLighBlue.copy(alpha = 0.85f),
-                    VeryLighBlue.copy(alpha = 0.9f),
-                ),
-                tagColor = SportSouceColor.SportSouceBlue,
+                title = "Команда на старте",
+                subtitle = "Клубные чаты, совместные выезды и беговое комьюнити",
+                badge = "Команда",
+                icon = Icons.Default.Groups,
+                secondaryIcon = Icons.Default.EmojiEvents,
+                primaryFeature = "Комьюнити",
+                secondaryFeature = "Выезды",
+                accent = SportSouceColor.SportSouceLightRed,
+                secondaryAccent = SportSouceColor.SportSouceRegistryCommingSoonYellow
+            ),
+            ClubCardInfo(
+                title = "Бонусы и привилегии",
+                subtitle = "Скидки партнёров, ранний доступ и клубные предложения",
+                badge = "Бонусы",
+                icon = Icons.Default.EmojiEvents,
+                secondaryIcon = Icons.Default.FitnessCenter,
+                primaryFeature = "Скидки",
+                secondaryFeature = "Партнёры",
+                accent = SportSouceColor.SportSouceLighBlue,
+                secondaryAccent = SportSouceColor.SportSouceRegistryOpenGreen
+            ),
+            ClubCardInfo(
+                title = "Клубный сезон",
+                subtitle = "Челленджи, цели команды и новые спортивные привычки",
+                badge = "Сезон",
+                icon = Icons.AutoMirrored.Filled.DirectionsRun,
+                secondaryIcon = Icons.Default.EmojiEvents,
+                primaryFeature = "Челлендж",
+                secondaryFeature = "Рейтинг",
                 accent = SportSouceColor.SportSouceRegistryCommingSoonYellow,
-                accentSecondary = SportSouceColor.SportSouceLightRed
+                secondaryAccent = SportSouceColor.SportSouceStartEndedPink
             ),
         )
     }
@@ -97,25 +98,45 @@ internal fun ProfileClubCards(
 
     Card(
         modifier = modifier,
-        shape = Shapes.large,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp, pressedElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
         ) {
-            Text(
-                text = "Клуб",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontFamily = FontNunito.bold(),
-                fontSize = 18.sp
-            )
-            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Клуб",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontFamily = FontNunito.bold(),
+                    fontSize = 18.sp
+                )
+                Surface(
+                    shape = RoundedCornerShape(999.dp),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        text = "SportSouce Club",
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.74f),
+                        fontFamily = FontNunito.medium(),
+                        fontSize = 11.sp
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(10.dp))
+
             HorizontalPager(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                //  .height(170.dp),
+                modifier = Modifier.fillMaxWidth(),
                 state = pagerState,
-                pageSpacing = 14.dp,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                pageSpacing = 10.dp,
             ) { page ->
                 ProfileClubCard(
                     modifier = Modifier.fillMaxWidth(),
@@ -123,11 +144,11 @@ internal fun ProfileClubCards(
                     onClick = onClick,
                 )
             }
-            Spacer(Modifier.height(12.dp))
+
+            Spacer(Modifier.height(10.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -137,11 +158,11 @@ internal fun ProfileClubCards(
                         modifier = Modifier
                             .padding(horizontal = 3.dp)
                             .height(4.dp)
-                            .width(if (isSelected) 14.dp else 6.dp)
+                            .width(if (isSelected) 18.dp else 6.dp)
                             .clip(CircleShape)
                             .background(
                                 MaterialTheme.colorScheme.onPrimary.copy(
-                                    alpha = if (isSelected) 0.8f else 0.3f
+                                    alpha = if (isSelected) 0.78f else 0.24f
                                 )
                             )
                     )
@@ -157,227 +178,149 @@ private fun ProfileClubCard(
     info: ClubCardInfo,
     onClick: () -> Unit,
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "clubCardAnimation")
-
-    val circle1Offset by infiniteTransition.animateFloat(
-        initialValue = -20f,
-        targetValue = -10f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "circle1Offset"
-    )
-
-    val circle2Scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "circle2Scale"
-    )
-
-    val lockRotation by infiniteTransition.animateFloat(
-        initialValue = -15f,
-        targetValue = -5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "lockRotation"
-    )
-
-    val lockScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "lockScale"
-    )
-
-    val passScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "passScale"
-    )
-
-    val gradientBrush = Brush.horizontalGradient(colors = info.gradient)
+    val isDarkTheme = LocalDarkOrLightTheme.current
+    val containerAlpha = if (isDarkTheme) 0.18f else 0.12f
+    val borderAlpha = if (isDarkTheme) 0.34f else 0.22f
 
     Card(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
+            .padding(vertical = 1.dp)
+            .clip(RoundedCornerShape(18.dp))
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = info.accent.copy(alpha = containerAlpha)),
+        border = BorderStroke(1.dp, info.accent.copy(alpha = borderAlpha))
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(gradientBrush)
+                .heightIn(min = 188.dp)
+                .padding(14.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Canvas(
-                modifier = Modifier
-                    .matchParentSize()
-                    .alpha(0.55f)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                val width = size.width
-                val height = size.height
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = info.accent.copy(alpha = 0.18f)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(14.dp),
+                                imageVector = info.secondaryIcon,
+                                contentDescription = info.badge,
+                                tint = info.accent
+                            )
+                            Text(
+                                text = info.badge,
+                                color = info.accent,
+                                fontFamily = FontNunito.bold(),
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
 
-                // Bold diagonal stroke with softer edges
-                drawRoundRect(
-                    brush = Brush.linearGradient(
-                        colors = listOf(info.accent.copy(alpha = 0.16f), Color.Transparent),
-                        start = Offset.Zero,
-                        end = Offset(width * 0.8f, height * 0.6f)
-                    ),
-                    size = Size(width = width * 0.82f, height = height * 0.55f),
-                    topLeft = Offset(x = width * 0.06f, y = height * 0.12f),
-                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(width * 0.08f)
-                )
-
-                // Wave stripe kept low to avoid text overlap
-                val path = Path().apply {
-                    moveTo(width * 0.18f, height * 0.9f)
-                    cubicTo(
-                        width * 0.35f, height * 0.7f,
-                        width * 0.65f, height * 1.05f,
-                        width * 0.9f, height * 0.82f
-                    )
-                    lineTo(width * 0.9f, height)
-                    lineTo(width * 0.18f, height)
-                    close()
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = info.accent.copy(alpha = 0.18f),
+                        border = BorderStroke(1.dp, info.accent.copy(alpha = 0.28f))
+                    ) {
+                        Box(
+                            modifier = Modifier.size(44.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(22.dp),
+                                imageVector = info.icon,
+                                contentDescription = info.title,
+                                tint = info.accent
+                            )
+                        }
+                    }
                 }
-                drawPath(
-                    path = path,
-                    brush = Brush.horizontalGradient(
-                        listOf(
-                            info.accentSecondary.copy(alpha = 0.28f),
-                            Color.White.copy(alpha = 0.06f),
-                            info.accent.copy(alpha = 0.16f)
-                        )
-                    )
-                )
 
-                // Crisp circles for discipline
-                drawCircle(
-                    color = Color.White.copy(alpha = 0.1f),
-                    radius = width * 0.2f,
-                    center = Offset(x = width * 0.78f, y = height * 0.26f)
-                )
-                drawCircle(
-                    color = info.accent.copy(alpha = 0.15f),
-                    radius = width * 0.14f,
-                    center = Offset(x = width * 0.22f, y = height * 0.32f)
-                )
-
-                // Thin guiding lines to keep strict look
-                val lineColor = Color.White.copy(alpha = 0.12f)
-                drawLine(
-                    color = lineColor,
-                    start = Offset(x = width * 0.05f, y = height * 0.12f),
-                    end = Offset(x = width * 0.95f, y = height * 0.12f),
-                    strokeWidth = 1.4f
-                )
-                drawLine(
-                    color = lineColor,
-                    start = Offset(x = width * 0.08f, y = height * 0.55f),
-                    end = Offset(x = width * 0.92f, y = height * 0.45f),
-                    strokeWidth = 1.2f
-                )
-            }
-
-            // Content padding kept internal to avoid clipping background art
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
                 Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(3.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = info.title,
-                        fontSize = 22.sp,
+                        fontSize = 19.sp,
                         fontFamily = FontNunito.bold(),
                         color = MaterialTheme.colorScheme.onPrimary,
-                        letterSpacing = (-0.3).sp
+                        lineHeight = 21.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = info.subtitle,
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.regular(),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 13.sp,
+                        lineHeight = 16.sp,
+                        fontFamily = FontNunito.medium(),
+                        color = info.accent,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
-                }
-
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(70.dp)
-                            .background(
-                                color = Color.White.copy(alpha = 0.12f),
-                                shape = CircleShape
-                            )
-                    )
-
-                    Icon(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .scale(lockScale)
-                            .rotate(lockRotation),
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "Pass",
-                        tint = Color.White.copy(alpha = 0.9f)
-                    )
-
-                    Surface(
-                        modifier = Modifier
-                            .offset(x = 20.dp, y = (-12).dp)
-                            .align(Alignment.TopEnd)
-                            .scale(passScale),
-                        shape = RoundedCornerShape(10.dp),
-                        color = info.tagColor,
-                        shadowElevation = 3.dp
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                            text = info.tag,
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.bold(),
-                            color = Color.White
-                        )
-                    }
                 }
             }
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .align(Alignment.TopEnd)
-                    .offset(x = 18.dp, y = circle1Offset.dp - 6.dp)
-                    .alpha(0.08f)
-                    .background(Color.White, CircleShape)
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ClubFeaturePill(
+                    icon = info.icon,
+                    label = info.primaryFeature,
+                    accent = info.accent
+                )
+                ClubFeaturePill(
+                    icon = info.secondaryIcon,
+                    label = info.secondaryFeature,
+                    accent = info.secondaryAccent
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ClubFeaturePill(
+    icon: ImageVector,
+    label: String,
+    accent: Color,
+) {
+    Surface(
+        shape = RoundedCornerShape(999.dp),
+        color = accent.copy(alpha = 0.16f)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(14.dp),
+                imageVector = icon,
+                contentDescription = label,
+                tint = accent
             )
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .align(Alignment.CenterEnd)
-                    .offset(x = 12.dp, y = 26.dp)
-                    .scale(circle2Scale)
-                    .alpha(0.04f)
-                    .background(Color.White, CircleShape)
+            Text(
+                text = label,
+                color = accent,
+                fontFamily = FontNunito.medium(),
+                fontSize = 11.sp
             )
         }
     }
@@ -386,9 +329,11 @@ private fun ProfileClubCard(
 private data class ClubCardInfo(
     val title: String,
     val subtitle: String,
-    val tag: String,
-    val gradient: List<Color>,
-    val tagColor: Color,
+    val badge: String,
+    val icon: ImageVector,
+    val secondaryIcon: ImageVector,
+    val primaryFeature: String,
+    val secondaryFeature: String,
     val accent: Color,
-    val accentSecondary: Color,
+    val secondaryAccent: Color,
 )

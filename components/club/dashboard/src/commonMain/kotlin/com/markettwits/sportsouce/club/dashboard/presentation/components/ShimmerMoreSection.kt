@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -18,11 +17,10 @@ internal fun ShimmerMoreSection() {
     Column {
         Text(
             text = "Еще",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.ExtraBold,
-            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.padding(horizontal = 16.dp),
-            fontFamily = FontNunito.extraBold()
+            fontFamily = FontNunito.bold()
         )
         Spacer(modifier = Modifier.height(16.dp))
         ClubShimmerInfoCard()

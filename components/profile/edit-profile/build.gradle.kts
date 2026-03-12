@@ -21,12 +21,12 @@ kotlin {
             implementation(projects.components.teamsCity)
             implementation(projects.components.starts.startsRecent)
             implementation(libs.koin.core)
+            implementation(libs.krop.ui)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)
         }
         androidMain.dependencies {
             implementation(libs.compose.activity)
-            implementation("io.github.mr0xf00:easycrop:0.1.1")
         }
     }
 }

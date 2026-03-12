@@ -57,8 +57,15 @@ fun SalesProductsContent(
             maxWidth >= 760.dp -> 2
             else -> 1
         }
-        val cardWidth = (maxWidth * 0.16f).coerceIn(140.dp, 176.dp)
-        val cardHeight = (cardWidth * 1.68f).coerceIn(236.dp, 296.dp)
+        val compactCardWidth = maxWidth < 600.dp
+        val targetColumnWidth = if (compactCardWidth) 136.dp else 164.dp
+        val minCardWidth = if (compactCardWidth) 112.dp else 128.dp
+        val maxCardWidth = if (compactCardWidth) 140.dp else 176.dp
+        val minCardHeight = if (compactCardWidth) 196.dp else 236.dp
+        val maxCardHeight = if (compactCardWidth) 236.dp else 296.dp
+        val targetVisibleColumns = (maxWidth / targetColumnWidth).toInt().coerceAtLeast(1)
+        val cardWidth = ((maxWidth / targetVisibleColumns) - 12.dp).coerceIn(minCardWidth, maxCardWidth)
+        val cardHeight = (cardWidth * 1.68f).coerceIn(minCardHeight, maxCardHeight)
 
         FlowColumn(
             modifier = modifier

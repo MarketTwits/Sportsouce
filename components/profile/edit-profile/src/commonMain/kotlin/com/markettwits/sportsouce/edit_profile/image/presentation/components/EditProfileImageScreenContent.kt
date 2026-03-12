@@ -25,6 +25,7 @@ import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.edit_profile.image.presentation.store.EditProfileImageStore
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun EditProfileImageScreenContent(
@@ -92,7 +93,7 @@ fun EditProfileImageScreenContent(
     }
     LaunchedEffect(key1 = state) {
         if (state.isSuccess) {
-            delay(800)
+            delay(800.milliseconds)
             dismiss()
         }
     }

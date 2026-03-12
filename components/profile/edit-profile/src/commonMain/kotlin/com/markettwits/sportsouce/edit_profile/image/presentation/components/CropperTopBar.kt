@@ -7,8 +7,8 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
+import com.attafitamim.krop.core.crop.CropState
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.mr0xf00.easycrop.CropState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

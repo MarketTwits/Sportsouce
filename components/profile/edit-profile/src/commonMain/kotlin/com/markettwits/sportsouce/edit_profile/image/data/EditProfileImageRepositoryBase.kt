@@ -11,8 +11,18 @@ internal class EditProfileImageRepositoryBase(
     private val authDataSource: AuthDataSource,
     private val mapper: EditProfileImageCloudMapper
 ) : EditProfileImageRepository {
-    override suspend fun send(data: ByteArray, lastModified: Long): Result<Unit> =
-        uploadFile(data, lastModified).flatMapCallback { fileResponse ->
+    override suspend fun send(
+        data: ByteArray,
+        lastModified: Long,
+        fileName: String,
+        contentType: String,
+    ): Result<Unit> =
+        uploadFile(
+            data = data,
+            lastModified = lastModified,
+            fileName = fileName,
+            contentType = contentType
+        ).flatMapCallback { fileResponse ->
             authDataSource.user().flatMapCallback { user ->
                 authDataSource.updateUser(mapper.map(user, fileResponse))
             }
@@ -20,7 +30,9 @@ internal class EditProfileImageRepositoryBase(
 
     private suspend fun uploadFile(
         data: ByteArray,
-        lastModified: Long
+        lastModified: Long,
+        fileName: String,
+        contentType: String,
     ): Result<UploadFileResponse> =
-        runCatching { cloud.uploadFile(data, lastModified) }
+        runCatching { cloud.uploadFile(data, lastModified, fileName, contentType) }
 }

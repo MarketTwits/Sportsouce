@@ -14,6 +14,7 @@ kstore = "1.0.0" # https://github.com/xxfast/KStore
 kermit = "2.1.0" # https://kermit.touchlab.co/docs/
 koin = "4.1.1" # https://github.com/InsertKoinIO/koin
 ktor = "3.4.0" # https://github.com/ktorio/ktor
+krop = "0.3.0-alpha01" # https://github.com/tamimattafi/krop/releases
 jetbrainsKotlinWrappers = "2026.3.8" #https://github.com/JetBrains/kotlin-wrappers
 compottie = "2.1.0" # https://github.com/alexzhirkevich/compottie
 androidxCore = "1.17.0" #https://developer.android.com/jetpack/androidx/releases/core
@@ -98,6 +99,9 @@ decompose-compose-extension = { module = "com.arkivanov.decompose:extensions-com
 #DI
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+
+#Krop
+krop-ui = { group = "com.attafitamim.krop", name = "ui", version.ref = "krop" }
 
 #Tracer
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "pagingCommon" }

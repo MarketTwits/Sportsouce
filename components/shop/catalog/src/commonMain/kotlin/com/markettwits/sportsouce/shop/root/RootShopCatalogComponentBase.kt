@@ -189,17 +189,38 @@ class RootShopCatalogComponentBase(
             output = ShopFilterComponentOutputsImpl(),
         )
 
+    private fun openShopItem(
+        productId: String,
+        shopItem: ShopItem? = null,
+    ) {
+        val targetConfig = RootShopCatalogComponent.Config.ShopItem(
+            ShopItemPageComponentBase.Options(
+                productId = productId,
+                shopItem = shopItem
+            )
+        )
+
+        stackNavigation.navigate { stack ->
+            val currentTop = stack.lastOrNull()
+            if (currentTop is RootShopCatalogComponent.Config.ShopItem &&
+                currentTop.option.productId == productId
+            ) {
+                stack
+            } else {
+                stack.filterNot { config ->
+                    config is RootShopCatalogComponent.Config.ShopItem &&
+                            config.option.productId == productId
+                } + targetConfig
+            }
+        }
+    }
+
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
-        override fun onClickShopItem(item: ShopItem) =
-            stackNavigation.pushNew(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        item.id,
-                        item
-                    )
-                )
-            )
+        override fun onClickShopItem(item: ShopItem) = openShopItem(
+            productId = item.id,
+            shopItem = item
+        )
 
         override fun goBack() = pop()
 
@@ -222,13 +243,9 @@ class RootShopCatalogComponentBase(
         }
 
         override fun pushProduct(item: ShopItem) {
-            stackNavigation.pushNew(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        productId = item.id,
-                        shopItem = item
-                    )
-                )
+            openShopItem(
+                productId = item.id,
+                shopItem = item
             )
         }
     }
@@ -275,13 +292,9 @@ class RootShopCatalogComponentBase(
         override fun goBack() = stackNavigation.pop()
 
         override fun goShopItem(shopItemCart: ShopItemCart) {
-            stackNavigation.bringToFront(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        shopItem = shopItemCart.item,
-                        productId = shopItemCart.item.id
-                    )
-                )
+            openShopItem(
+                productId = shopItemCart.item.id,
+                shopItem = shopItemCart.item
             )
         }
 
@@ -303,11 +316,7 @@ class RootShopCatalogComponentBase(
     }
 
     override fun handleDeeplink(productId: String) {
-        val options = ShopItemPageComponentBase.Options(
-            productId = productId,
-            shopItem = null
-        )
-        stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopItem(options))
+        openShopItem(productId = productId)
     }
 
     init {

@@ -1,6 +1,7 @@
 package com.markettwits.core.log
 
 import co.touchlab.kermit.Logger
+import com.markettwits.buildkonfig.isDebugMode
 
 /**
  * Extension function for `LogTagProvider` to log error messages without exceptions.
@@ -8,7 +9,9 @@ import co.touchlab.kermit.Logger
  * @param logMessage A lambda providing the message to be logged.
  */
 inline fun LogTagProvider.errorLog(logMessage : () -> String){
-    Logger.e(tag = tag, messageString = logMessage())
+    if (isDebugMode) {
+        Logger.e(tag = tag, messageString = logMessage())
+    }
 }
 
 /**
@@ -18,7 +21,9 @@ inline fun LogTagProvider.errorLog(logMessage : () -> String){
  * @param logMessage A lambda providing the message to be logged.
  */
 inline fun LogTagProvider.errorLog(error : Throwable, logMessage : () -> String){
-    Logger.e(tag = tag, messageString = logMessage(), throwable = error)
+    if (isDebugMode) {
+        Logger.e(tag = tag, messageString = logMessage(), throwable = error)
+    }
 }
 /**
  * Extension function for `LogTagProvider` to log informational messages.
@@ -26,5 +31,7 @@ inline fun LogTagProvider.errorLog(error : Throwable, logMessage : () -> String)
  * @param logMessage A lambda providing the message to be logged.
  */
 inline fun LogTagProvider.infoLog(logMessage : () -> String){
-    Logger.i(tag = tag, messageString = logMessage())
+    if (isDebugMode) {
+        Logger.i(tag = tag, messageString = logMessage())
+    }
 }

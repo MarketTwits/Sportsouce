@@ -19,7 +19,7 @@ internal class StartsFavoritesStoreFactory(
             name = "StartsPopularStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { StartsPopularExecutor(repository) },
+            executorFactory = { StartsFavoritesExecutor(repository) },
             reducer = StartsPopularReducer
         )
 }

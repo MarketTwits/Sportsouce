@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.profile.authorized.authorized.presentation.co
 
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthorizedProfileComponent {
@@ -21,7 +22,7 @@ interface AuthorizedProfileComponent {
         data class StartOrder(val startOrderInfo: StartOrderInfo) : Output
         data object SocialNetwork : Output
         data object Members : Output
-        data class Start(val startId: Int) : Output
+        data class Start(val input: StartScreenInput) : Output
         data object Settings : Output
         data object UserOrders : Output
     }

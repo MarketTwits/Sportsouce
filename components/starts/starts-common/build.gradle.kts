@@ -15,6 +15,7 @@ kotlin {
             implementation(projects.components.core.cache)
             implementation(projects.components.core.ui)
             implementation(projects.components.core.time)
+            api(projects.components.core.paging)
             implementation(projects.components.starts.startsCloud)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)

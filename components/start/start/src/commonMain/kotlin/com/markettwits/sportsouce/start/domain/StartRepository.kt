@@ -18,6 +18,11 @@ interface StartRepository {
     val favoritesFlow: StateFlow<List<StartsListItem>>
 
     /**
+     * Observable state of recently viewed starts
+     */
+    val recentStartsFlow: StateFlow<List<StartsListItem>>
+
+    /**
      * Refreshes favorites from network
      */
     suspend fun refreshFavorites(): Result<List<StartsListItem>>
@@ -51,4 +56,3 @@ interface StartRepository {
     ): Flow<PagingData<Pair<MemberResult, Int>>>
 
 }
-

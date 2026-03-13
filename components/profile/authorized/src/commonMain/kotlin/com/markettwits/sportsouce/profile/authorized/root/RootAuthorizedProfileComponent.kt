@@ -3,8 +3,8 @@ package com.markettwits.sportsouce.profile.authorized.root
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.club.root.RootClubComponent
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
 import com.markettwits.sportsouce.edit_profile.root.RootEditProfileComponent
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.members.member_root.component.RootMembersComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.root.RootRegistrationsComponent
@@ -30,7 +30,7 @@ interface RootAuthorizedProfileComponent {
         data object SocialNetwork : Config()
 
         @Serializable
-        data object EditProfileMenu : Config()
+        data class EditProfileMenu(val openSocialNetworkOnStart: Boolean = false) : Config()
 
         @Serializable
         data object AuthProfile : Config()

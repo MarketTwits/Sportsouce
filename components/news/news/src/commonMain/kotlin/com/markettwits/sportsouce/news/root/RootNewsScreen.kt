@@ -13,7 +13,10 @@ fun RootNewsScreen(component: RootNewsComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootNewsComponent.Child.News -> NewsScreen(component = child.component)
+            is RootNewsComponent.Child.News -> NewsScreen(
+                component = child.component,
+                onBack = component::onBack
+            )
             is RootNewsComponent.Child.NewsEvent -> NewsEventScreen(child.component)
         }
     }

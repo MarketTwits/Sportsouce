@@ -8,6 +8,8 @@ interface StartsScreen {
     fun onItemClick(startItem: StartsListItem)
     fun onSearchClick()
     fun onSettingsClick()
-    fun retry()
+    fun retry(page: Int)
+    fun onPageSelected(page: Int)
+    fun onLoadNext(page: Int)
     val starts: Value<StartsUiState>
 }

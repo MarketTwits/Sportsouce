@@ -6,16 +6,18 @@ plugins {
 kotlin {
 
     android {
-        namespace = "com.markettwits.news"
+        namespace = "com.markettwits.sportsouce.news"
     }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.components.news.newsCommon)
             implementation(projects.components.core.ui)
+            implementation(projects.components.core.errors)
             implementation(projects.components.core.time)
             implementation(projects.components.core.koin)
             implementation(projects.components.core.decompose)
+            implementation(projects.components.core.paging)
             implementation(libs.koin.core)
             implementation(libs.bundles.mviKotlin)
         }

@@ -9,17 +9,17 @@ import com.markettwits.core.log.errorLog
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfileInteractor
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserSocialNetworkIntent
-import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.Intent
-import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.Message
-import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.State
+import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.*
+import com.markettwits.sportsouce.starts.recent.domain.StartRecentRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class AuthorizedProfileExecutor(
     private val interactor: UserProfileInteractor,
+    private val recentRepository: StartRecentRepository,
     private val exceptionTracker: ExceptionTracker,
-    private val action: IntentAction
+    private val action: IntentAction,
 ) : CoroutineExecutor<Intent, Unit, State, Message, Unit>(), LogTagProvider {
 
     override val tag: String = "AuthorizedProfileExecutor"
@@ -32,6 +32,7 @@ class AuthorizedProfileExecutor(
     }
 
     override fun executeAction(action: Unit) {
+        observeRecentStarts()
         launch(false)
     }
 
@@ -53,6 +54,14 @@ class AuthorizedProfileExecutor(
                     dispatch(Message.LoadingFailed(throwable.mapToSauceError()))
                 }
                 .collect { dispatch(Message.LoadingSuccess(it)) }
+        }
+    }
+
+    private fun observeRecentStarts() {
+        scope.launch {
+            recentRepository.recentStarts.collect { starts ->
+                dispatch(Message.RecentStartsLoaded(starts))
+            }
         }
     }
 }

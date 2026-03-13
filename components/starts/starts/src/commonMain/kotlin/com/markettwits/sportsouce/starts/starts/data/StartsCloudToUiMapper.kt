@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.starts.starts.data
 
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import com.markettwits.sportsouce.starts.starts.presentation.component.StartsTabUiState
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsUiState
 
 
@@ -19,11 +20,21 @@ interface StartsCloudToUiMapper {
             StartsUiState.Failed(exception.mapToSauceError())
 
         override fun mapSuccess(items: List<List<StartsListItem>>): StartsUiState =
-             StartsUiState.Success(items)
+            StartsUiState.Success(
+                tabs = items.map { list ->
+                    StartsTabUiState(
+                        items = list,
+                        isLoading = false,
+                        isAppending = false,
+                        error = null,
+                        endReached = list.isNotEmpty(),
+                        isInitialized = true,
+                    )
+                }
+            )
 
         override fun mapAll(vararg items: List<StartsListItem>): StartsUiState {
-            val resultLists = items.map { list -> list }
-            return StartsUiState.Success(resultLists)
+            return mapSuccess(items.toList())
         }
     }
 }

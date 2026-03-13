@@ -3,7 +3,6 @@ package com.markettwits.core_ui.items.components.textField
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -13,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffoldScopeInstance.align
 import com.markettwits.core_ui.items.components.toolbar.ExperimentalToolbarApi
@@ -25,6 +23,7 @@ fun ItemsTextFiledDialog(
     label: String,
     value: String,
     items: List<String>,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onValueChanged: (String) -> Unit,
 ) {
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -49,7 +48,8 @@ fun ItemsTextFiledDialog(
         },
         isEnabled = false,
         label = label,
-        value = value
+        value = value,
+        leadingIcon = leadingIcon
     ) {
         onValueChanged(it)
     }
@@ -62,6 +62,7 @@ fun ItemsTextFiledDialog(
     label: String,
     values: List<String>,
     items: List<String>,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onValueChanged: (String) -> Unit,
 ) {
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -81,10 +82,11 @@ fun ItemsTextFiledDialog(
     }
     OutlinedTextFieldBase(
         modifier = modifier
-            .noRippleClickable() { openAlertDialog.value = true },
+            .noRippleClickable { openAlertDialog.value = true },
         isEnabled = false,
         label = label,
         value = values.joinToString(", "),
+        leadingIcon = leadingIcon,
         trailingIcon = {
             androidx.compose.material3.Icon(
                 modifier = Modifier

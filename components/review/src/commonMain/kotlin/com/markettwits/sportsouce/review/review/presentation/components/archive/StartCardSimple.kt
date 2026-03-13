@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
@@ -28,11 +29,23 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 @Composable
 fun StartCardSimple(
     modifier: Modifier = Modifier,
+    cardWidth: Dp = 115.dp,
     start: StartsListItem,
     onItemClick: (StartsListItem) -> Unit,
 ) {
-    Column(modifier = modifier.padding(10.dp)) {
-        ImageCard(modifier = modifier, start.name, start.image, start.date) {
+    val cardHeight = cardWidth * 1.65f
+    val imageHeight = cardWidth * 1.3f
+
+    Column(modifier = modifier) {
+        ImageCard(
+            modifier = Modifier,
+            name = start.name,
+            image = start.image,
+            date = start.date,
+            cardWidth = cardWidth,
+            cardHeight = cardHeight,
+            imageHeight = imageHeight,
+        ) {
             onItemClick(start)
         }
     }
@@ -44,12 +57,15 @@ private fun ImageCard(
     name: String,
     image: String,
     date: String,
+    cardWidth: Dp,
+    cardHeight: Dp,
+    imageHeight: Dp,
     onCLick: () -> Unit,
 ) {
-    Column(modifier = modifier.size(width = 115.dp, height = 190.dp)) {
+    Column(modifier = modifier.size(width = cardWidth, height = cardHeight)) {
         Box(
             modifier = modifier
-                .size(width = 115.dp, height = 150.dp)
+                .size(width = cardWidth, height = imageHeight)
                 .clip(Shapes.medium)
                 .border(1.dp, Color.LightGray.copy(alpha = 0.5f), Shapes.medium)
                 .clickable { onCLick() }

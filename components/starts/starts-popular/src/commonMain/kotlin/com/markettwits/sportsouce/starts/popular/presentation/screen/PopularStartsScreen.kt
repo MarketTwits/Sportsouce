@@ -1,14 +1,15 @@
 package com.markettwits.sportsouce.starts.popular.presentation.screen
 
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
-import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.starts.popular.presentation.component.StartsPopularComponent
 import com.markettwits.sportsouce.starts.popular.presentation.components.StartsPopularContent
@@ -39,12 +40,10 @@ internal fun PopularStartsScreen(component: StartsPopularComponent) {
                 }
             )
         }
-        if (state.isError) {
-            FailedScreen(
-                message = state.message,
-                onClickRetry = {
-                    component.obtainEvent(StartsPopularStore.Intent.Retry)
-                }
+        state.error?.let {
+            it.SauceErrorScreen(
+                modifier = Modifier.fillMaxSize(),
+                onClickRetry = { component.obtainEvent(StartsPopularStore.Intent.Retry) },
             )
         }
         if (state.isLoading) {

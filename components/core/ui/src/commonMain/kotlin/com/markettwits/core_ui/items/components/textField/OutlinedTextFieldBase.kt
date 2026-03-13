@@ -28,6 +28,7 @@ fun OutlinedTextFieldBase(
     minLines: Int = 1,
     supportingText: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -42,10 +43,8 @@ fun OutlinedTextFieldBase(
         label = {
             Text(text = label, fontFamily = FontNunito.bold(), fontSize = 14.sp)
         },
-        trailingIcon = {
-            if (trailingIcon != null)
-                trailingIcon()
-        },
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         placeholder = placeholder,
         supportingText = supportingText,
         colors = defaultOutlineTextFiledColors(),

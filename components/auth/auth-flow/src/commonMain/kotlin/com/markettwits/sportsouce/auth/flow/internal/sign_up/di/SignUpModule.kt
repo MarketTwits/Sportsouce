@@ -7,6 +7,7 @@ import com.markettwits.core.time.TimeMapper
 import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.data.SignUpMapper
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.data.SignUpMapperBase
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.signUpCredentialSaverModule
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.use_case.SignUpUseCase
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.use_case.SignUpUseCaseBase
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.validation.SignUpValidation
@@ -18,7 +19,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val signUpModule = module {
-    includes(authDataSourceModule, crashlyticsModule)
+    includes(authDataSourceModule, crashlyticsModule, signUpCredentialSaverModule)
     singleOf(::SignUpUseCaseBase) bind SignUpUseCase::class
     singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::SignUpMapperBase) bind SignUpMapper::class

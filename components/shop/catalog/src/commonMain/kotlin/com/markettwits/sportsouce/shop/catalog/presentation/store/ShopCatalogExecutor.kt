@@ -3,13 +3,13 @@ package com.markettwits.sportsouce.shop.catalog.presentation.store
 import app.cash.paging.cachedIn
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
-import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Intent
-import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Label
-import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.Message
-import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.State
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore.*
+import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult
 
-internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository) :
-    CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+internal class ShopCatalogExecutor(
+    private val repository: ShopCatalogRepository,
+    private val initialFilter: ShopFilterResult?,
+) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
@@ -32,7 +32,16 @@ internal class ShopCatalogExecutor(private val repository: ShopCatalogRepository
     }
 
     override fun executeAction(action: Unit) {
-        launchWithFilter(null, emptyList(), null, null)
+        initialFilter?.let(::launchWithFilter) ?: launchWithFilter(null, emptyList(), null, null)
+    }
+
+    private fun launchWithFilter(filter: ShopFilterResult) {
+        launchWithFilter(
+            categoryId = filter.categoryId,
+            options = filter.options,
+            maxPrice = filter.maxPrice,
+            minPrice = filter.minPrice
+        )
     }
 
     private fun launchWithFilter(

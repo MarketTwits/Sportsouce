@@ -1,12 +1,12 @@
 package com.markettwits.sportsouce.edit_profile.root
 
 import com.arkivanov.decompose.value.Value
-import com.markettwits.sportsouce.edit_profile.edit_menu.presentation.component.EditProfileMenuComponentComponent
-import com.markettwits.sportsouce.edit_profile.edit_profile_Image.presentation.component.EditProfileImageComponent
-import com.markettwits.sportsouce.edit_profile.edit_profile_about.presentation.component.EditProfileAboutComponent
-import com.markettwits.sportsouce.edit_profile.edit_profile_info.presentation.component.EditProfileInfoComponent
-import com.markettwits.sportsouce.edit_profile.edit_profile_sign_out.presentation.component.EditProfileSignOutComponent
-import com.markettwits.sportsouce.edit_profile.edit_social_network.presentation.component.EditProfileSocialNetworkComponent
+import com.markettwits.sportsouce.edit_profile.about.presentation.component.EditProfileAboutComponent
+import com.markettwits.sportsouce.edit_profile.image.presentation.component.EditProfileImageComponent
+import com.markettwits.sportsouce.edit_profile.info.presentation.component.EditProfileInfoComponent
+import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditProfileMenuComponentComponent
+import com.markettwits.sportsouce.edit_profile.sign_out.presentation.component.EditProfileSignOutComponent
+import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponent
 import kotlinx.serialization.Serializable
 
 interface RootEditProfileComponent {
@@ -54,7 +54,7 @@ interface RootEditProfileComponent {
         data class SocialNetwork(val component: EditProfileSocialNetworkComponent) :
             ChildStack
 
-        data class ChangePassword(val component: com.markettwits.sportsouce.edit_profile.edit_profile_change_password.presentation.screen.ChangePassword) :
+        data class ChangePassword(val component: com.markettwits.sportsouce.edit_profile.change_password.presentation.screen.ChangePassword) :
             ChildStack
 
         data class EditProfileInfo(val component: EditProfileInfoComponent) :

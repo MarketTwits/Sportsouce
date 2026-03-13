@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
@@ -134,11 +135,13 @@ private fun DistanceItem(
         selectedDistance = item
     )
 
-    val enabled = if (item.infiniteSlots) true else if (item.openSlots!! > 0) true else false
+    val availableSlots = item.availableSlots()
+    val enabled = item.infiniteSlots || availableSlots > 0
 
-    val hasAdditionalInfo = item.detailedDescription != null ||
-            item.schemeImage != null ||
-            item.trackLink != null
+    val hasDescription = item.detailedDescription.hasMeaningfulDescription()
+    val hasScheme = item.schemeImage?.fullPath?.isNotBlank() == true
+    val hasTrack = item.trackLink?.fullPath?.isNotBlank() == true
+    val hasAdditionalInfo = hasDescription || hasScheme || hasTrack
 
     var isExpanded by rememberSaveable(item.id) { mutableStateOf(false) }
 
@@ -161,27 +164,22 @@ private fun DistanceItem(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Top
                     ) {
                         Text(
+                            modifier = Modifier.weight(1f),
                             text = title,
                             fontSize = 16.sp,
                             fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.onPrimary
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
-                        if (hasAdditionalInfo) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(androidx.compose.foundation.shape.CircleShape)
-                                    .background(MaterialTheme.colorScheme.secondary)
-                            )
-                        }
                     }
-                    if (!item.infiniteSlots && (item.openSlots ?: 0) > 0) {
+                    if (!item.infiniteSlots && availableSlots > 0) {
                         Text(
-                            text = "${item.openSlots} слота",
+                            text = "$availableSlots слота",
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -283,29 +281,27 @@ private fun DistanceItem(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         // Detailed description
-                        item.detailedDescription?.let { description ->
-                            if (description.isNotEmpty()) {
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                                ) {
-                                    Text(
-                                        text = "Описание",
-                                        fontFamily = FontNunito.bold(),
-                                        fontSize = 12.sp,
-                                        color = MaterialTheme.colorScheme.outline
-                                    )
-                                    HtmlText(
-                                        text = description,
-                                        fontFamily = FontNunito.regular(),
-                                        fontSize = 13.sp,
-                                        color = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                }
+                        if (hasDescription) {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = "Описание",
+                                    fontFamily = FontNunito.bold(),
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.outline
+                                )
+                                HtmlText(
+                                    text = item.detailedDescription.orEmpty(),
+                                    fontFamily = FontNunito.regular(),
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
                             }
                         }
 
                         // Scheme image file
-                        item.schemeImage?.let { file ->
+                        item.schemeImage?.takeIf { it.fullPath.isNotBlank() }?.let { file ->
                             DistanceFileCard(
                                 title = "Схема трассы",
                                 fileName = file.name,
@@ -314,7 +310,7 @@ private fun DistanceItem(
                         }
 
                         // Track link file
-                        item.trackLink?.let { file ->
+                        item.trackLink?.takeIf { it.fullPath.isNotBlank() }?.let { file ->
                             DistanceFileCard(
                                 title = "Файл трека",
                                 fileName = file.name,
@@ -326,6 +322,23 @@ private fun DistanceItem(
             }
         }
     }
+}
+
+private fun DistinctDistance.availableSlots(): Int {
+    openSlots?.let { return it.coerceAtLeast(0) }
+
+    val total = slots
+    val taken = takenSlots ?: 0
+    return if (total != null) (total - taken).coerceAtLeast(0) else 0
+}
+
+private fun String?.hasMeaningfulDescription(): Boolean {
+    if (this.isNullOrBlank()) return false
+    return this
+        .replace(Regex("<[^>]*>"), "")
+        .replace("&nbsp;", " ")
+        .trim()
+        .isNotEmpty()
 }
 
 @Composable

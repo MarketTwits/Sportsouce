@@ -9,6 +9,7 @@ import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable.ProfileScreenContent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore
+import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 
 
 @Composable
@@ -26,6 +27,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             userPhoneNumber = user.userInfo.phoneNumber,
             userRegistrationsCount = user.activity.userRegistry.size,
             userRegistrations = user.activity.userRegistry,
+            recentStarts = state.recentStarts,
             userImageUrl = user.userInfo.photo,
             socialNetwork = user.socialNetwork,
             onClickStarts = {
@@ -53,13 +55,24 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
                 component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
             },
             onClickRegistration = { registration ->
-                component.obtainOutput(AuthorizedProfileComponent.Output.Start(registration.startId))
+                component.obtainOutput(
+                    AuthorizedProfileComponent.Output.Start(
+                        StartScreenInput.Id(registration.startId)
+                    )
+                )
+            },
+            onClickRecentStart = { start ->
+                component.obtainOutput(
+                    AuthorizedProfileComponent.Output.Start(
+                        StartScreenInput.Item(start)
+                    )
+                )
             },
             onSocialNetworkClick = { url ->
                 intentAction.openWebPage(url)
             },
             onAddSocialNetwork = {
-                component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
+                component.obtainOutput(AuthorizedProfileComponent.Output.SocialNetwork)
             }
         )
     }

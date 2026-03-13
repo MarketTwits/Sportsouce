@@ -1,12 +1,17 @@
 package com.markettwits.sportsouce.start.presentation.membres.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.LocationCity
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import androidx.compose.material.icons.filled.LocationCity
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.screenWidthDp
@@ -53,6 +57,7 @@ private fun CompactMemberCard(
 
     OnBackgroundCard(
         modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(12.dp),
         onClick = { isExpanded = !isExpanded }
     ) { cardModifier ->
@@ -85,6 +90,7 @@ private fun ExpandedMemberCard(
 ) {
     OnBackgroundCard(
         modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(16.dp),
     ) { cardModifier ->
         Column(
@@ -160,22 +166,44 @@ private fun CompactTeamMemberContent(
     item: StartMembersUi.Team,
     isExpanded: Boolean,
 ) {
-    // Team name
-    Text(
-        text = item.team.ifEmpty { "Команда" },
-        style = MaterialTheme.typography.titleSmall.copy(
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onBackground
-        ),
-        fontSize = 14.sp,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = item.team.ifEmpty { "Команда" },
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontFamily = FontNunito.bold(),
+                    color = MaterialTheme.colorScheme.onBackground
+                ),
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-    // Always show distance in compact view
-    Spacer(modifier = Modifier.height(4.dp))
-    if (!isExpanded) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.height(4.dp))
+
+            item.members.forEach { m ->
+                Text(
+                    modifier = Modifier.padding(vertical = 2.dp),
+                    text = "${m.name} ${m.surname}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = FontNunito.medium(),
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
             Icon(
                 modifier = Modifier
                     .padding(end = 4.dp)
@@ -193,20 +221,14 @@ private fun CompactTeamMemberContent(
         }
     }
 
-    if (isExpanded) {
-        Spacer(modifier = Modifier.height(8.dp))
-        MemberMeta(distance = item.distance, team = item.team, group = item.group, city = item.city)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        item.members.forEach { m ->
-            Text(
-                modifier = Modifier.padding(vertical = 2.dp),
-                text = "${m.name} ${m.surname}",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = FontNunito.medium(),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.outline
+    AnimatedVisibility(visible = isExpanded) {
+        Column {
+            Spacer(modifier = Modifier.height(8.dp))
+            MemberMeta(
+                distance = item.distance,
+                team = item.team,
+                group = item.group,
+                city = item.city
             )
         }
     }

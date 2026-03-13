@@ -1,3 +1,4 @@
+@file:Suppress("UnstableApiUsage")
 @file:OptIn(org.jetbrains.kotlin.gradle.ExternalKotlinTargetApi::class)
 
 import com.markettwits.sportsouce.extensions.libs
@@ -19,11 +20,11 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.ui.tooling.preview)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)

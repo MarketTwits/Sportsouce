@@ -13,13 +13,29 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
         val userNumber: Int,
         val value: StartStatement,
         val members: List<ProfileMember>,
-        val isClosedAllerDialog: Boolean,
+        val isSuggestAddDialogVisible: Boolean = false,
+        val isAddMemberDialogVisible: Boolean = false,
+        val addMemberRelationType: String = "Партнер по команде",
+        val addMemberEmail: String = "",
+        val addMemberPhone: String = "",
+        val isAddMemberValidationVisible: Boolean = false,
+        val addMemberDialogErrorMessage: String? = null,
+        val isPendingContinueAfterAdd: Boolean = false,
+        val isAddMemberLoading: Boolean = false,
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Intent {
         data object OnClickContinue : Intent
-        data object OnClickCloseDialog : Intent
+        data object OnClickAddToProfile : Intent
+        data object OnDismissSuggestAddDialog : Intent
+        data object OnConfirmSuggestAddDialog : Intent
+        data object OnContinueWithoutAdd : Intent
+        data object OnDismissAddMemberDialog : Intent
+        data class OnChangeAddMemberRelationType(val value: String) : Intent
+        data class OnChangeAddMemberEmail(val value: String) : Intent
+        data class OnChangeAddMemberPhone(val value: String) : Intent
+        data object OnConfirmAddMemberToProfile : Intent
         data object OnConsumedEvent : Intent
         data object Pop : Intent
         data class ChangeFiled(val startStatement: StartStatement) : Intent
@@ -27,8 +43,17 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data class OnValueChanged(val startStatement: StartStatement) : Message
-        data class ShowEvent(val message: String) : Message
-        data class ChangeAllerDialogState(val show: Boolean) : Message
+        data class OnMembersChanged(val members: List<ProfileMember>) : Message
+        data class ChangeSuggestAddDialogState(val show: Boolean) : Message
+        data class ChangeAddMemberDialogState(val show: Boolean) : Message
+        data class ChangeAddMemberRelationType(val value: String) : Message
+        data class ChangeAddMemberEmail(val value: String) : Message
+        data class ChangeAddMemberPhone(val value: String) : Message
+        data class ChangeAddMemberValidationVisible(val value: Boolean) : Message
+        data class ChangeAddMemberDialogErrorMessage(val value: String?) : Message
+        data class ChangePendingContinueAfterAdd(val value: Boolean) : Message
+        data class ChangeAddMemberLoading(val value: Boolean) : Message
+        data class ShowEvent(val message: String, val success: Boolean = false) : Message
         data object OnConsumedEvent : Message
     }
 

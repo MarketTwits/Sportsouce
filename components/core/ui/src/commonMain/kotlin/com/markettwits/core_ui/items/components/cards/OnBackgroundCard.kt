@@ -29,13 +29,24 @@ fun OnBackgroundCard(
         disabledElevation = 0.dp
     )
 
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = shape,
-        colors = colors,
-        elevation = elevation,
-        onClick = onClick ?: {}
-    ) {
-        content(modifier)
+    if (onClick != null) {
+        Card(
+            modifier = modifier.fillMaxWidth(),
+            shape = shape,
+            colors = colors,
+            elevation = elevation,
+            onClick = onClick
+        ) {
+            content(modifier)
+        }
+    } else {
+        Card(
+            modifier = modifier.fillMaxWidth(),
+            shape = shape,
+            colors = colors,
+            elevation = elevation,
+        ) {
+            content(modifier)
+        }
     }
 }

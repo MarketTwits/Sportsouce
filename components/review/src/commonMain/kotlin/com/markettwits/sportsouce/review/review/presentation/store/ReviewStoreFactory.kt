@@ -12,6 +12,7 @@ import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class ReviewStoreFactory(
     ) : CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>(), LogTagProvider {
 
         override val tag: String = "ReviewStoreFactory"
+        private var launchJob: Job? = null
 
         override fun executeIntent(intent: ReviewStore.Intent) {
             when (intent) {
@@ -51,6 +53,8 @@ class ReviewStoreFactory(
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
                 is ReviewStore.Intent.OnClickNews -> publish(ReviewStore.Label.OnClickNews(intent.news))
                 is ReviewStore.Intent.OnClickProduct -> publish(ReviewStore.Label.OnClickProduct(intent.product))
+                is ReviewStore.Intent.OnClickShowMoreSalesProducts -> publish(ReviewStore.Label.OnClickShowMoreSalesProducts)
+                is ReviewStore.Intent.OnClickShowMoreMerchProducts -> publish(ReviewStore.Label.OnClickShowMoreMerchProducts)
                 is ReviewStore.Intent.OnClickSearch -> publish(ReviewStore.Label.OnClickSearch)
                 is ReviewStore.Intent.OnClickSettings -> publish(ReviewStore.Label.OnClickSettings)
                 is ReviewStore.Intent.OnClickTelegram -> intentAction.openWebPage(SPORT_SAUCE_TG_URL)
@@ -63,7 +67,8 @@ class ReviewStoreFactory(
         }
 
         private fun launch(forced: Boolean) {
-            scope.launch {
+            launchJob?.cancel()
+            launchJob = scope.launch {
                 repository.review(forced)
                     .onStart {
                         dispatch(Msg.Loading)

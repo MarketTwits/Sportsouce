@@ -1,7 +1,8 @@
 package com.markettwits.sportsouce.start.search.search.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.data.repository.StartsSearchRepository
@@ -134,7 +135,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
                     dispatch(Message.Loading)
                 }
                 .catch {
-                    dispatch(Message.InfoFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.InfoFailed(it.mapToSauceError().mapToString()))
                 }.collect {
                     dispatch(Message.InfoLoaded(it))
                 }

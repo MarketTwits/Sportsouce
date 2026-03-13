@@ -11,9 +11,18 @@ object RegistrationMemberReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
             is Message.OnValueChanged -> copy(value = msg.startStatement)
-            is Message.ShowEvent -> copy(event = triggered(EventContent(false, msg.message)))
+            is Message.OnMembersChanged -> copy(members = msg.members)
+            is Message.ChangeSuggestAddDialogState -> copy(isSuggestAddDialogVisible = msg.show)
+            is Message.ChangeAddMemberDialogState -> copy(isAddMemberDialogVisible = msg.show)
+            is Message.ChangeAddMemberRelationType -> copy(addMemberRelationType = msg.value)
+            is Message.ChangeAddMemberEmail -> copy(addMemberEmail = msg.value)
+            is Message.ChangeAddMemberPhone -> copy(addMemberPhone = msg.value)
+            is Message.ChangeAddMemberValidationVisible -> copy(isAddMemberValidationVisible = msg.value)
+            is Message.ChangeAddMemberDialogErrorMessage -> copy(addMemberDialogErrorMessage = msg.value)
+            is Message.ChangePendingContinueAfterAdd -> copy(isPendingContinueAfterAdd = msg.value)
+            is Message.ChangeAddMemberLoading -> copy(isAddMemberLoading = msg.value)
+            is Message.ShowEvent -> copy(event = triggered(EventContent(msg.success, msg.message)))
             is Message.OnConsumedEvent -> copy(event = consumed())
-            is Message.ChangeAllerDialogState -> copy(isClosedAllerDialog = msg.show)
         }
     }
 }

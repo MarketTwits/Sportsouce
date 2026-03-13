@@ -11,7 +11,10 @@ import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
 
-class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
+class RootNewsComponentBase(
+    context: ComponentContext,
+    private val pop: () -> Unit,
+) : RootNewsComponent,
     ComponentContext by context {
     private val koinContext = ComponentKoinContext()
 
@@ -27,6 +30,14 @@ class RootNewsComponentBase(context: ComponentContext) : RootNewsComponent,
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    override fun onBack() {
+        if (childStack.value.backStack.isNotEmpty()) {
+            navigation.pop()
+        } else {
+            pop()
+        }
+    }
 
     private fun child(
         config: RootNewsComponent.Config,

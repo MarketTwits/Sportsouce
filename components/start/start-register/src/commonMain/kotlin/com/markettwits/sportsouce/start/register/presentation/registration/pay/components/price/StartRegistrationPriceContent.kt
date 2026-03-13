@@ -1,32 +1,35 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.pay.components.price
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.components.progress.shimmer
+import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationPriceResult
+import kotlin.math.max
+
+private data class TotalPriceUiModel(
+    val currentPrice: Int,
+    val previousPrice: Int?,
+    val discountPercent: Int?,
+)
 
 @Composable
 internal fun StartRegistrationPriceContent(
@@ -88,15 +91,7 @@ internal fun OrderPriceInfoEmpty(modifier: Modifier = Modifier) {
             DiscountRowEmpty(title = "Изначальная стоимость :")
             DiscountRowEmpty(title = "Сумма скидки :")
             DiscountRowEmpty(title = "Дополнительные опции :")
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = "Итого",
-                color = MaterialTheme.colorScheme.tertiary,
-                fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            TotalPriceRowEmpty()
         }
     }
 }
@@ -109,6 +104,14 @@ internal fun OrderPriceInfo(
     optionsPrice: Int,
     finalPrice: Int,
 ) {
+    val totalPriceWithoutDiscount = defaultPrice + optionsPrice
+    val hasDiscount = discountCount > 0 && totalPriceWithoutDiscount > finalPrice
+    val discountPercent = if (hasDiscount && totalPriceWithoutDiscount > 0) {
+        max(1, discountCount * 100 / totalPriceWithoutDiscount)
+    } else {
+        0
+    }
+
     OnBackgroundCard(modifier = modifier) {
         Column(modifier = Modifier.padding(10.dp)) {
             Text(
@@ -121,23 +124,138 @@ internal fun OrderPriceInfo(
                 color = MaterialTheme.colorScheme.tertiary
             )
             DiscountRow(title = "Изначальная стоимость :", value = defaultPrice)
-            DiscountRow(title = "Сумма скидки :", value = discountCount)
+            DiscountRow(
+                title = "Сумма скидки :",
+                value = discountCount,
+                isVisible = hasDiscount,
+                valuePrefix = "- "
+            )
             DiscountRow(title = "Дополнительные опции :", value = optionsPrice)
+            Spacer(modifier = Modifier.height(8.dp))
+            TotalPriceRow(
+                title = "Итого:",
+                currentPrice = finalPrice,
+                previousPrice = if (hasDiscount) totalPriceWithoutDiscount else null,
+                discountPercent = if (hasDiscount) discountPercent else null
+            )
+        }
+    }
+}
+
+@Composable
+private fun TotalPriceRowEmpty(modifier: Modifier = Modifier) {
+    AnimatedVisibility(visible = true) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
-                modifier = Modifier.padding(4.dp),
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary)) {
-                        append("Итого: ")
-                    }
-                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onPrimary)) {
-                        append("${finalPrice.formatPrice()} ₽")
-                    }
-                },
+                modifier = Modifier.padding(vertical = 4.dp),
+                text = "Итого:",
+                color = MaterialTheme.colorScheme.tertiary,
                 fontSize = 18.sp,
                 fontFamily = FontNunito.bold(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 12.dp, top = 4.dp, bottom = 4.dp)
+                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                    .clip(Shapes.medium)
+            )
+        }
+    }
+}
+
+@Composable
+private fun TotalPriceRow(
+    modifier: Modifier = Modifier,
+    title: String,
+    currentPrice: Int,
+    previousPrice: Int?,
+    discountPercent: Int?,
+) {
+    val totalPriceUiModel = TotalPriceUiModel(
+        currentPrice = currentPrice,
+        previousPrice = previousPrice,
+        discountPercent = discountPercent,
+    )
+
+    AnimatedVisibility(visible = true) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                text = title,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 18.sp,
+                fontFamily = FontNunito.bold(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Column(
+                modifier = Modifier.wrapContentWidth(),
+                horizontalAlignment = Alignment.End
+            ) {
+                AnimatedContent(
+                    targetState = totalPriceUiModel,
+                    transitionSpec = {
+                        if (targetState.currentPrice > initialState.currentPrice) {
+                            slideInVertically { -it } togetherWith slideOutVertically { it }
+                        } else {
+                            slideInVertically { it } togetherWith slideOutVertically { -it }
+                        }
+                    },
+                    label = "start_registration_total_price"
+                ) { value ->
+                    Column(horizontalAlignment = Alignment.End) {
+                        if (value.previousPrice != null && value.discountPercent != null) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "${value.previousPrice.formatPrice()} ₽",
+                                    color = MaterialTheme.colorScheme.outline,
+                                    textAlign = TextAlign.End,
+                                    maxLines = 1,
+                                    textDecoration = TextDecoration.LineThrough,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 14.sp,
+                                    fontFamily = FontNunito.regular(),
+                                )
+                                Text(
+                                    text = "-${value.discountPercent}%",
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    textAlign = TextAlign.End,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 14.sp,
+                                    lineHeight = 12.sp,
+                                    fontFamily = FontNunito.medium(),
+                                )
+                            }
+                        }
+
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
+                                    append("${value.currentPrice.formatPrice()} ₽")
+                                }
+                            },
+                            fontSize = 20.sp,
+                            fontFamily = FontNunito.bold(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -145,7 +263,10 @@ internal fun OrderPriceInfo(
 @Composable
 private fun DiscountRowEmpty(modifier: Modifier = Modifier, title: String) {
     AnimatedVisibility(visible = true) {
-        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
                 text = title,
@@ -167,9 +288,19 @@ private fun DiscountRowEmpty(modifier: Modifier = Modifier, title: String) {
 }
 
 @Composable
-private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: Int) {
-    AnimatedVisibility(visible = true) {
-        Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
+private fun DiscountRow(
+    modifier: Modifier = Modifier,
+    title: String,
+    value: Int,
+    isVisible: Boolean = true,
+    valuePrefix: String = "",
+) {
+    AnimatedVisibility(visible = isVisible) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),
                 text = title,
@@ -179,15 +310,27 @@ private fun DiscountRow(modifier: Modifier = Modifier, title: String, value: Int
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.outline
             )
-            Text(
-                modifier = Modifier.padding(vertical = 4.dp),
-                text = " ${value.formatPrice()} ₽",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+            AnimatedContent(
+                targetState = value,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        slideInVertically { -it } togetherWith slideOutVertically { it }
+                    } else {
+                        slideInVertically { it } togetherWith slideOutVertically { -it }
+                    }
+                },
+                label = "start_registration_price_row"
+            ) { animatedValue ->
+                Text(
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    text = " $valuePrefix${animatedValue.formatPrice()} ₽",
+                    fontSize = 14.sp,
+                    fontFamily = FontNunito.bold(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
 }

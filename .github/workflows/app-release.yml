@@ -1,0 +1,426 @@
+name: Build and Release Android/Desktop Apps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.version.outputs.version_name }}
+      version_code: ${{ steps.version.outputs.version_code }}
+      tag_name: ${{ steps.version.outputs.tag_name }}
+      release_name: ${{ steps.version.outputs.release_name }}
+      release_notes: ${{ steps.release_notes.outputs.notes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Extract version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep '^versionName = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep '^versionCode = ' gradle/libs.versions.toml | sed 's/.*"\(.*\)".*/\1/')
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "tag_name=$VERSION_NAME.$VERSION_CODE" >> "$GITHUB_OUTPUT"
+          echo "release_name=Sportsauce App $VERSION_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release notes
+        id: release_notes
+        run: |
+          VERSION_NAME="${{ steps.version.outputs.version_name }}"
+          RELEASE_NOTES=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-en-US)
+          {
+            echo 'notes<<EOF'
+            echo "$RELEASE_NOTES"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+  build-android-release:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create secrets file
+        run: |
+          cat <<EOF > secrets.properties
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          com.sportsauce.api.path.prod=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          storePassword64=${{ secrets.SPORTSAUCE_ANDROID_STORE_PASSWORD }}
+          keyAlias64=${{ secrets.SPORTSAUCE_ANDROID_KEY_ALIAS }}
+          keyPassword64=${{ secrets.SPORTSAUCE_ANDROID_KEY_PASSWORD }}
+          EOF
+
+      - name: Create keystore file
+        run: |
+          echo "${{ secrets.SPORTSAUCE_ANDROID_STORE_FILE }}" | base64 --decode > key-store.jks
+
+      - name: Build Release APK and AAB
+        run: |
+          ./gradlew instances:app-android:assembleRelease instances:app-android:bundleRelease --no-configuration-cache
+
+      - name: Find APK file
+        id: apk
+        run: |
+          APK_PATH=$(find instances/app-android/build/outputs/apk/release -maxdepth 1 -name "*.apk" | head -1)
+          if [ -z "$APK_PATH" ]; then
+            echo "APK file was not found" >&2
+            exit 1
+          fi
+          echo "apk_path=$APK_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Find AAB file
+        id: aab
+        run: |
+          AAB_PATH=$(find instances/app-android/build/outputs/bundle/release -maxdepth 1 -name "*.aab" | head -1)
+          if [ -z "$AAB_PATH" ]; then
+            echo "AAB file was not found" >&2
+            exit 1
+          fi
+          echo "aab_path=$AAB_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: ${{ steps.apk.outputs.apk_path }}
+          retention-days: 7
+
+      - name: Upload AAB artifact for Google Play
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: ${{ steps.aab.outputs.aab_path }}
+          retention-days: 7
+
+      - name: Clean up keystore
+        if: always()
+        run: |
+          rm -f key-store.jks
+
+  build-desktop-macos-release:
+    needs: prepare-release
+    runs-on: macos-latest
+    env:
+      SPORTSAUCE_MAC_SIGN: ${{ secrets.SPORTSAUCE_MAC_SIGN }}
+      SPORTSAUCE_MAC_SIGN_IDENTITY: ${{ secrets.SPORTSAUCE_MAC_SIGN_IDENTITY }}
+      SPORTSAUCE_MAC_KEYCHAIN: ${{ secrets.SPORTSAUCE_MAC_KEYCHAIN }}
+      SPORTSAUCE_MAC_NOTARY_APPLE_ID: ${{ secrets.SPORTSAUCE_MAC_NOTARY_APPLE_ID }}
+      SPORTSAUCE_MAC_NOTARY_PASSWORD: ${{ secrets.SPORTSAUCE_MAC_NOTARY_PASSWORD }}
+      SPORTSAUCE_MAC_NOTARY_TEAM_ID: ${{ secrets.SPORTSAUCE_MAC_NOTARY_TEAM_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Create secrets file
+        run: |
+          cat <<EOF > secrets.properties
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          com.sportsauce.api.path.prod=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          EOF
+
+      - name: Build Release DMG
+        run: |
+          ./gradlew :instances:app-desktop:packageReleaseDmg --no-configuration-cache
+
+      - name: Prepare DMG artifact
+        id: dmg
+        run: |
+          DMG_SOURCE=$(find instances/app-desktop/build/compose/binaries/main-release/dmg -maxdepth 1 -name "*.dmg" | head -1)
+          if [ -z "$DMG_SOURCE" ]; then
+            echo "DMG file was not found" >&2
+            exit 1
+          fi
+          DMG_NAME="Sportsauce-${{ needs.prepare-release.outputs.version_name }}-${{ needs.prepare-release.outputs.version_code }}.dmg"
+          DMG_TARGET="$(dirname "$DMG_SOURCE")/$DMG_NAME"
+          if [ "$(basename "$DMG_SOURCE")" != "$DMG_NAME" ]; then
+            mv "$DMG_SOURCE" "$DMG_TARGET"
+          else
+            DMG_TARGET="$DMG_SOURCE"
+          fi
+          echo "asset_path=$DMG_TARGET" >> "$GITHUB_OUTPUT"
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-dmg
+          path: ${{ steps.dmg.outputs.asset_path }}
+          retention-days: 7
+
+  build-desktop-windows-release:
+    needs: prepare-release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~\.gradle\caches
+            ~\.gradle\wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install WiX Toolset
+        shell: pwsh
+        run: |
+          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
+            choco install wixtoolset --no-progress -y
+          }
+
+          $wixDir = Get-ChildItem 'C:\Program Files (x86)' -Directory | Where-Object { $_.Name -like 'WiX Toolset*' } | Sort-Object Name -Descending | Select-Object -First 1
+          if ($null -eq $wixDir) {
+            throw 'WiX Toolset directory was not found after installation.'
+          }
+
+          $wixBin = Join-Path $wixDir.FullName 'bin'
+          $wixBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Create secrets file
+        shell: pwsh
+        run: |
+          @"
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          com.sportsauce.api.path.prod=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          "@ | Set-Content -Path secrets.properties -Encoding utf8
+
+      - name: Build Release EXE
+        shell: pwsh
+        run: |
+          .\gradlew.bat :instances:app-desktop:packageReleaseExe --no-configuration-cache
+
+      - name: Prepare EXE artifact
+        id: exe
+        shell: pwsh
+        run: |
+          $exeSource = Get-ChildItem 'instances/app-desktop/build/compose/binaries/main-release/exe' -Filter *.exe -File | Select-Object -First 1
+          if ($null -eq $exeSource) {
+            throw 'EXE file was not found.'
+          }
+
+          $exeName = "Sportsauce-${{ needs.prepare-release.outputs.version_name }}-${{ needs.prepare-release.outputs.version_code }}.exe"
+          $exeTarget = Join-Path $exeSource.DirectoryName $exeName
+          if ($exeSource.Name -ne $exeName) {
+            Move-Item $exeSource.FullName $exeTarget -Force
+          } else {
+            $exeTarget = $exeSource.FullName
+          }
+
+          "asset_path=$exeTarget" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-exe
+          path: ${{ steps.exe.outputs.asset_path }}
+          retention-days: 7
+
+  publish-github-release:
+    needs:
+      - prepare-release
+      - build-android-release
+      - build-desktop-macos-release
+      - build-desktop-windows-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-apk
+          path: ./artifacts/android-apk
+
+      - name: Download DMG artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: desktop-dmg
+          path: ./artifacts/desktop-dmg
+
+      - name: Download EXE artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: desktop-exe
+          path: ./artifacts/desktop-exe
+
+      - name: Resolve release assets
+        id: assets
+        run: |
+          APK_PATH=$(find ./artifacts/android-apk -type f -name "*.apk" | head -1)
+          DMG_PATH=$(find ./artifacts/desktop-dmg -type f -name "*.dmg" | head -1)
+          EXE_PATH=$(find ./artifacts/desktop-exe -type f -name "*.exe" | head -1)
+
+          if [ -z "$APK_PATH" ] || [ -z "$DMG_PATH" ] || [ -z "$EXE_PATH" ]; then
+            echo "One or more release assets were not found" >&2
+            exit 1
+          fi
+
+          echo "apk_path=$APK_PATH" >> "$GITHUB_OUTPUT"
+          echo "apk_name=$(basename "$APK_PATH")" >> "$GITHUB_OUTPUT"
+          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
+          echo "dmg_name=$(basename "$DMG_PATH")" >> "$GITHUB_OUTPUT"
+          echo "exe_path=$EXE_PATH" >> "$GITHUB_OUTPUT"
+          echo "exe_name=$(basename "$EXE_PATH")" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.prepare-release.outputs.tag_name }}
+          release_name: ${{ needs.prepare-release.outputs.release_name }}
+          draft: false
+          prerelease: false
+          body: ${{ needs.prepare-release.outputs.release_notes }}
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.assets.outputs.apk_path }}
+          asset_name: ${{ steps.assets.outputs.apk_name }}
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload DMG to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.assets.outputs.dmg_path }}
+          asset_name: ${{ steps.assets.outputs.dmg_name }}
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Upload EXE to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.assets.outputs.exe_path }}
+          asset_name: ${{ steps.assets.outputs.exe_name }}
+          asset_content_type: application/vnd.microsoft.portable-executable
+
+  deploy-to-google-play:
+    needs:
+      - prepare-release
+      - publish-github-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (for whatsnew files)
+        uses: actions/checkout@v4.2.1
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-aab
+          path: ./
+
+      - name: Create service account file
+        run: |
+          echo "${{ secrets.SPORTSAUCE_SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+
+      - name: Prepare Google Play release notes
+        run: |
+          VERSION_NAME="${{ needs.prepare-release.outputs.version_name }}"
+
+          mkdir -p whatsnew
+
+          NOTES_EN=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-en-US)
+          echo "$NOTES_EN" > whatsnew/whatsnew-en-US
+
+          NOTES_RU=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-ru-RU)
+          echo "$NOTES_RU" > whatsnew/whatsnew-ru-RU
+
+      - name: Debug whatsnew files
+        run: |
+          echo "Checking whatsnew files length:"
+          echo "English version ($(wc -c < whatsnew/whatsnew-en-US) chars):"
+          cat whatsnew/whatsnew-en-US
+          echo ""
+          echo "Russian version ($(wc -c < whatsnew/whatsnew-ru-RU) chars):"
+          cat whatsnew/whatsnew-ru-RU
+
+      - name: Find AAB file
+        id: aab
+        run: |
+          AAB_PATH=$(find . -name "*.aab" | head -1)
+          if [ -z "$AAB_PATH" ]; then
+            echo "AAB file was not found" >&2
+            exit 1
+          fi
+          echo "aab_path=$AAB_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Google Play Internal Testing
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJson: service-account.json
+          packageName: ${{ secrets.SPORTSAUCE_PACKAGE_NAME }}
+          releaseFiles: ${{ steps.aab.outputs.aab_path }}
+          track: internal
+          status: completed
+          whatsNewDirectory: whatsnew/
+          inAppUpdatePriority: 2
+          releaseName: ${{ needs.prepare-release.outputs.version_name }}.${{ needs.prepare-release.outputs.version_code }}
+
+      - name: Notify success
+        run: |
+          echo "Successfully uploaded to Google Play Internal Testing!"
+          echo "Version: ${{ needs.prepare-release.outputs.version_name }}"
+          echo "Version Code: ${{ needs.prepare-release.outputs.version_code }}"
+          echo "Release Name: ${{ needs.prepare-release.outputs.version_name }}.${{ needs.prepare-release.outputs.version_code }}"
+          echo "Check your Google Play Console: https://play.google.com/console/"
+
+      - name: Clean up
+        if: always()
+        run: |
+          rm -f service-account.json
+          rm -rf whatsnew/

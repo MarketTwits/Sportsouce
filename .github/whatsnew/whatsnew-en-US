@@ -1,6 +1,6 @@
 🟠 What's New
-- Better media UX: smoother club image loading and full-screen image viewing in rich text.
-- Improved HTML normalization and image extraction.
-- Fixed issues in comments/replies, member edit navigation, additional field price display, and start stats order.
-
+- Added a news section.
+- Smoother club image loading and full-screen image viewing in posts.
+- Better HTML and image processing.
+- Fixed comments and replies, member edit navigation, extra field prices, and stats order.
 Thank you for using Sportsauce v$APP_VERSION!

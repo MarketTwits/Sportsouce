@@ -1,18 +1,14 @@
 package com.markettwits.sportsouce.news.news_list.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
@@ -21,25 +17,25 @@ fun NewsContent(
     items: List<NewsItem>,
     onClickItem: (NewsItem) -> Unit
 ) {
-    Text(
-        modifier = modifier.padding(horizontal = 10.dp),
-        text = "Последние новости",
-        color = MaterialTheme.colorScheme.tertiary,
-        fontFamily = FontNunito.bold(),
-        fontSize = 18.sp
-    )
-    Box(
-        modifier = Modifier
+    BoxWithConstraints(
+        modifier = modifier.fillMaxWidth()
     ) {
+        val cardWidth = (maxWidth * 0.46f).coerceIn(240.dp, 360.dp)
+        val cardHeight = (cardWidth * 0.88f).coerceIn(220.dp, 320.dp)
+
         LazyRow(
-            modifier = modifier
-                .fillMaxWidth()
-                .width(500.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            items(items.take(10)) {
-                NewsItemCard(newsInfo = it) {
-                    onClickItem(it)
-                }
+            items(items.take(10), key = { it.id }) { newsItem ->
+                NewsItemCard(
+                    modifier = Modifier,
+                    newsInfo = newsItem,
+                    cardWidth = cardWidth,
+                    cardHeight = cardHeight,
+                    onClick = { onClickItem(newsItem) }
+                )
             }
         }
     }

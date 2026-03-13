@@ -8,9 +8,17 @@ interface NewsRepository {
 
     suspend fun newsItem(id: Int): Result<NewsItem>
 
-    suspend fun news(): Result<List<NewsItem>>
+    suspend fun news(
+        categoryId: Int? = null,
+        hashtag: String? = null,
+        limit: Int = 20,
+        offset: Int = 0,
+    ): Result<List<NewsItem>>
 
     suspend fun categories(): Result<List<NewsCategory>>
 
-    suspend fun hashtags(): Result<List<NewsHashtag>>
+    suspend fun hashtags(
+        limit: Int = 20,
+        offset: Int = 0,
+    ): Result<List<NewsHashtag>>
 }

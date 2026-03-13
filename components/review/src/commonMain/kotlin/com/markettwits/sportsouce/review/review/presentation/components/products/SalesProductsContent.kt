@@ -12,17 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.sportsouce.shop.catalog.presentation.components.ShopItemCardCompact
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 
 @Composable
 fun SalesProductsContent(
     modifier: Modifier = Modifier,
+    title: String,
     items: List<ShopItem>,
     onClickItem: (ShopItem) -> Unit,
     onClickShowMoreProducts: () -> Unit,
 ) {
+    val isDarkTheme = LocalDarkOrLightTheme.current
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -30,7 +33,7 @@ fun SalesProductsContent(
     ) {
         Text(
             modifier = modifier.padding(horizontal = 10.dp),
-            text = "Акции",
+            text = title,
             color = MaterialTheme.colorScheme.tertiary,
             fontFamily = FontNunito.bold(),
             fontSize = 18.sp
@@ -48,23 +51,44 @@ fun SalesProductsContent(
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-    val isPortrait = rememberScreenSizeInfo().isPortrait()
-    val maxItems = if (isPortrait) 2 else 3
-    val cardWidth = if (isPortrait) 140.dp else 180.dp
-    val cardHeight = if (isPortrait) 230.dp else 280.dp
-    FlowColumn(
-        modifier = modifier.horizontalScroll(rememberScrollState()),
-        maxItemsInEachColumn = maxItems
-    ) {
-        items.forEach { item ->
-            ShopItemCardCompact(
-                shopItem = item,
-                cardWidth = cardWidth,
-                cardHeight = cardHeight,
-                onItemClick = {
-                    onClickItem(item)
-                }
-            )
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val maxItemsInColumn = when {
+            maxWidth >= 1080.dp -> 3
+            maxWidth >= 760.dp -> 2
+            else -> 1
+        }
+        val compactCardWidth = maxWidth < 600.dp
+        val targetColumnWidth = if (compactCardWidth) 136.dp else 164.dp
+        val minCardWidth = if (compactCardWidth) 112.dp else 128.dp
+        val maxCardWidth = if (compactCardWidth) 140.dp else 176.dp
+        val minCardHeight = if (compactCardWidth) 196.dp else 236.dp
+        val maxCardHeight = if (compactCardWidth) 236.dp else 296.dp
+        val targetVisibleColumns = (maxWidth / targetColumnWidth).toInt().coerceAtLeast(1)
+        val cardWidth = ((maxWidth / targetVisibleColumns) - 12.dp).coerceIn(minCardWidth, maxCardWidth)
+        val cardHeight = (cardWidth * 1.68f).coerceIn(minCardHeight, maxCardHeight)
+
+        FlowColumn(
+            modifier = modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 4.dp),
+            maxItemsInEachColumn = maxItemsInColumn,
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            items.forEach { item ->
+                ShopItemCardCompact(
+                    modifier = Modifier,
+                    shopItem = item,
+                    cardWidth = cardWidth,
+                    cardHeight = cardHeight,
+                    showBorder = false,
+                    showImageBorder = !isDarkTheme,
+                    imageAspectRatio = 1f,
+                    imageBottomSpacing = 8.dp,
+                    onItemClick = {
+                        onClickItem(item)
+                    }
+                )
+            }
         }
     }
 }

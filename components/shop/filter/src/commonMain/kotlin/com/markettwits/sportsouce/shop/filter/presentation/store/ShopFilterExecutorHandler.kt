@@ -4,15 +4,8 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.shop.filter.domain.ShopFilterRepository
-import com.markettwits.sportsouce.shop.filter.domain.models.ShopCategoryItem
-import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterPrice
-import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult
-import com.markettwits.sportsouce.shop.filter.domain.models.ShopOptionInfo
-import com.markettwits.sportsouce.shop.filter.domain.models.mapToStringOptions
-import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.Intent
-import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.Label
-import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.Message
-import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.State
+import com.markettwits.sportsouce.shop.filter.domain.models.*
+import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.*
 import kotlinx.coroutines.launch
 
 abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepository) :
@@ -91,11 +84,18 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
         dispatch(Message.UpdateCurrentPath(emptyList()))
     }
 
-    fun launch() {
+    fun launch(initialCategoryId: Int? = null) {
         scope.launch {
             dispatch(Message.Loading)
             repository.filter().onSuccess {
                 dispatch(Message.FilterLoaded(it, ShopFilterPrice.EMPTY))
+                initialCategoryId?.let { categoryId ->
+                    val path = ShopFilterStoreFactory.findCategoryPath(it, categoryId)
+                    if (path.isNotEmpty()) {
+                        dispatch(Message.UpdateCurrentPath(path))
+                        updateOptionsByCategory(path.last().id)
+                    }
+                }
             }.onFailure {
                 dispatch(Message.Failed(it.mapToSauceError().mapToString()))
             }

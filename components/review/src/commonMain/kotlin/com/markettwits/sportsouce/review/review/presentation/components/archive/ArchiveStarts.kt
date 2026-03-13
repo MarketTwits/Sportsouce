@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.review.review.presentation.components.archive
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -25,12 +25,23 @@ fun ArchiveStarts(
         fontFamily = FontNunito.bold(),
         fontSize = 18.sp
     )
-    LazyRow(modifier = modifier) {
-        items(starts, key = { it.id }) { item ->
-            StartCardSimple(
-                start = item, onItemClick = {
-                    onClick(item)
-                })
+    BoxWithConstraints(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        val cardWidth = (maxWidth * 0.18f).coerceIn(115.dp, 185.dp)
+
+        LazyRow(
+            modifier = modifier,
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(starts, key = { it.id }) { item ->
+                StartCardSimple(
+                    cardWidth = cardWidth,
+                    start = item,
+                    onItemClick = { onClick(item) }
+                )
+            }
         }
     }
 }

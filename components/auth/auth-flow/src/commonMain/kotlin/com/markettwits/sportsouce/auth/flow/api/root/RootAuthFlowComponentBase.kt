@@ -67,6 +67,7 @@ class RootAuthFlowComponentBase(
                 SignUpComponentBase(
                     context = componentContext,
                     storeFactory = scope.get(),
+                    registeredCredentialSaver = scope.get(),
                     pop = navigation::pop,
                     profile = { goProfile() },
                     signIn = { navigation.replaceAll(RootAuthFlowComponent.Config.SignIn) }

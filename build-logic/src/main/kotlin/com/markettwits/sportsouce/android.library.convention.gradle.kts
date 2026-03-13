@@ -1,10 +1,9 @@
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.LibraryExtension
 
 plugins {
     id("com.android.library")
-    id("kotlin-android")
 }
 
-configure<BaseExtension> {
-   commonAndroid(project)
+configure<LibraryExtension> {
+    commonAndroid(project)
 }

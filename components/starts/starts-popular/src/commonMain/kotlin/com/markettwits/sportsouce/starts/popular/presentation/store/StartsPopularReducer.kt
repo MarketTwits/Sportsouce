@@ -7,8 +7,8 @@ import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopula
 internal object StartsPopularReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Failed -> copy(isLoading = false, isError = true, message = msg.message)
-            is Message.Loaded -> copy(isLoading = false, isError = false, starts = msg.starts)
+            is Message.Failed -> copy(isLoading = false, error = msg.error)
+            is Message.Loaded -> copy(isLoading = false, error = null, starts = msg.starts)
             is Message.Loading -> copy(isLoading = true)
         }
     }

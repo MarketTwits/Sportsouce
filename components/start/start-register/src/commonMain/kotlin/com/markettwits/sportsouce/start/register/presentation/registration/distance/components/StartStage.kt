@@ -1,19 +1,11 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.sportsouce.start.register.presentation.registration.distance.component.StartDistanceComponent
-import com.markettwits.sportsouce.start.register.presentation.registration.member.screen.MemberScreen
-import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore
 import com.markettwits.sportsouce.start.register.presentation.registration.pay.components.price.ButtonContent
 
 
@@ -25,32 +17,13 @@ internal fun StartStage(
 
     val state by component.state.collectAsState()
 
-    val child by component.childSlot.subscribeAsState()
-
-    child.child?.instance?.also {
-        when (it) {
-            is StartDistanceComponent.Child.StartRegistrationMember ->
-                Dialog(
-                    onDismissRequest = {
-                        it.component.obtainEvent(RegistrationMemberStore.Intent.Pop)
-                    },
-                    properties = DialogProperties(usePlatformDefaultWidth = false)
-                ) {
-                    MemberScreen(
-                        modifier = Modifier
-                            .clip(Shapes.medium)
-                            .fillMaxSize(),
-                        component = it.component
-                    )
-                }
-        }
-    }
-
     Column(
         modifier = modifier
     ) {
         StartRegistrationDistanceContent(
             distance = state.distance,
+            invalidStageIds = state.invalidStageIds,
+            validationAttemptTick = state.validationAttemptTick,
             onClickStartStatement = {
                 component.onClickStartMember(it)
             },

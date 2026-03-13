@@ -30,7 +30,7 @@ fun ResultCardShimmer(modifier: Modifier = Modifier) {
                 ),
             ),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
         Box(
             modifier = Modifier

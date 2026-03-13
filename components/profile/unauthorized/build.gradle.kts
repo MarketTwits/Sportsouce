@@ -14,7 +14,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.components.auth.authService)
             implementation(projects.components.core.ui)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.resources)
             implementation(libs.koin.core)
             implementation(libs.compottie)
             implementation(libs.bundles.decompose.compose)

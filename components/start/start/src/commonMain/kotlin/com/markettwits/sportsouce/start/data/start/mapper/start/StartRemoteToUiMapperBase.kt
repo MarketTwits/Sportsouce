@@ -54,7 +54,10 @@ internal class StartRemoteToUiMapperBase(
                         startRemote.startDate
                     ),
                     slug = startRemote.slug ?: "",
-                    startData = startRemote.startDate,
+                    startData = timeMapper.mapTime(
+                        TimePattern.FullWithEmptySpace,
+                        startRemote.startDate
+                    ),
                     description = startRemote.description ?: "",
                     paymentDisabled = startRemote.paymentDisabled ?: false,
                     organizers = startRemote.organizers,
@@ -146,7 +149,10 @@ internal class StartRemoteToUiMapperBase(
                         TimePattern.FullWithEmptySpace,
                         startRemote.startData.startDate
                     ),
-                    startData = startRemote.startData.startDate,
+                    startData = timeMapper.mapTime(
+                        TimePattern.FullWithEmptySpace,
+                        startRemote.startData.startDate
+                    ),
                     description = startRemote.startData.description ?: "",
                     paymentDisabled = startRemote.startData.paymentDisabled ?: false,
                     organizers = startRemote.startData.organizers,

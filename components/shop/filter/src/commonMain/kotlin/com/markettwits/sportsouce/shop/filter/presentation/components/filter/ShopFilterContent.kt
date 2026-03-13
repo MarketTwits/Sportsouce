@@ -74,5 +74,8 @@ internal fun ShopFilterContent(
         message = state.message,
         onClickRetry = onClickRetry
     )
-    ShopFilterLoading(state.isLoading)
+    ShopFilterLoading(
+        isLoading = state.isLoading,
+        onDismissRequest = onClickGoBack
+    )
 }

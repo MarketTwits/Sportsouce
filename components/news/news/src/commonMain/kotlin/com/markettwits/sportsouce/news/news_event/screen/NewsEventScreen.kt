@@ -23,14 +23,12 @@ import com.markettwits.sportsouce.news.news_event.store.NewsEventStore
 fun NewsEventScreen(component: NewsEventComponent) {
     val state by component.state.collectAsState()
 
-    // Show content when news is available
     state.news?.let { news ->
         NewsEventContent(news = news, goBack = {
             component.obtainEvent(NewsEventStore.Intent.Pop)
         })
     }
 
-    // Show loading screen when loading and no data
     if (state.isLoading && state.news == null) {
         LoadingFullScreen(
             onClickBack = {
@@ -39,7 +37,6 @@ fun NewsEventScreen(component: NewsEventComponent) {
         )
     }
 
-    // Show error screen when there's an error
     state.error?.let { error ->
         Column(
             modifier = Modifier

@@ -20,11 +20,13 @@ import com.markettwits.sportsouce.shop.catalog.di.shopCatalogModule
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponentBase
 import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore
+import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStoreFactory
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.filter.di.shopFilterModule
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult
 import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponent
 import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponentBase
+import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStoreFactory
 import com.markettwits.sportsouce.shop.item.di.shopItemPageModule
 import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageComponent
 import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageComponentBase
@@ -42,6 +44,7 @@ class RootShopCatalogComponentBase(
     componentContext: ComponentContext,
     private val pop: () -> Unit,
     private val initialProductId: String? = null,
+    private val initialCategoryId: Int? = null,
 ) : RootShopCatalogComponent, ComponentContext by componentContext, BottomBarComponentHandler() {
 
     private val stackNavigation = StackNavigation<RootShopCatalogComponent.Config>()
@@ -90,7 +93,13 @@ class RootShopCatalogComponentBase(
                 componentPage = ShopCatalogComponentBase(
                     componentContext = componentContext,
                     listener = BottomBarStorageImpl,
-                    storeFactory = scope.get(),
+                    storeFactory = ShopCatalogStoreFactory(scope.get(), scope.get()),
+                    initialFilter = initialCategoryId?.let {
+                        ShopFilterResult(
+                            categoryId = it,
+                            options = emptyList()
+                        )
+                    },
                     outputs = CardsComponentOutputsImpl()
                 ),
                 componentCart = ShopCartCatalogComponentBase(
@@ -176,21 +185,42 @@ class RootShopCatalogComponentBase(
     private fun createShopFilterComponent(componentContext: ComponentContext): ShopFilterComponent =
         ShopFilterComponentBase(
             componentContext = componentContext,
-            store = scope.get(),
+            store = ShopFilterStoreFactory(scope.get(), scope.get()).create(initialCategoryId),
             output = ShopFilterComponentOutputsImpl(),
         )
 
+    private fun openShopItem(
+        productId: String,
+        shopItem: ShopItem? = null,
+    ) {
+        val targetConfig = RootShopCatalogComponent.Config.ShopItem(
+            ShopItemPageComponentBase.Options(
+                productId = productId,
+                shopItem = shopItem
+            )
+        )
+
+        stackNavigation.navigate { stack ->
+            val currentTop = stack.lastOrNull()
+            if (currentTop is RootShopCatalogComponent.Config.ShopItem &&
+                currentTop.option.productId == productId
+            ) {
+                stack
+            } else {
+                stack.filterNot { config ->
+                    config is RootShopCatalogComponent.Config.ShopItem &&
+                            config.option.productId == productId
+                } + targetConfig
+            }
+        }
+    }
+
     private inner class CardsComponentOutputsImpl : ShopCatalogComponent.Outputs {
 
-        override fun onClickShopItem(item: ShopItem) =
-            stackNavigation.pushNew(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        item.id,
-                        item
-                    )
-                )
-            )
+        override fun onClickShopItem(item: ShopItem) = openShopItem(
+            productId = item.id,
+            shopItem = item
+        )
 
         override fun goBack() = pop()
 
@@ -213,13 +243,9 @@ class RootShopCatalogComponentBase(
         }
 
         override fun pushProduct(item: ShopItem) {
-            stackNavigation.pushNew(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        productId = item.id,
-                        shopItem = item
-                    )
-                )
+            openShopItem(
+                productId = item.id,
+                shopItem = item
             )
         }
     }
@@ -266,13 +292,9 @@ class RootShopCatalogComponentBase(
         override fun goBack() = stackNavigation.pop()
 
         override fun goShopItem(shopItemCart: ShopItemCart) {
-            stackNavigation.bringToFront(
-                RootShopCatalogComponent.Config.ShopItem(
-                    ShopItemPageComponentBase.Options(
-                        shopItem = shopItemCart.item,
-                        productId = shopItemCart.item.id
-                    )
-                )
+            openShopItem(
+                productId = shopItemCart.item.id,
+                shopItem = shopItemCart.item
             )
         }
 
@@ -294,15 +316,10 @@ class RootShopCatalogComponentBase(
     }
 
     override fun handleDeeplink(productId: String) {
-        val options = ShopItemPageComponentBase.Options(
-            productId = productId,
-            shopItem = null
-        )
-        stackNavigation.pushNew(RootShopCatalogComponent.Config.ShopItem(options))
+        openShopItem(productId = productId)
     }
 
     init {
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
     }
 }
-

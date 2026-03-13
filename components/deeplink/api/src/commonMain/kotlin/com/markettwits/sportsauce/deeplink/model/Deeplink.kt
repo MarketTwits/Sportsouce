@@ -46,6 +46,7 @@ sealed interface Deeplink {
         @Serializable
         data class ShopProduct(
             val productId: String,
+            val categoryId: Int? = null,
         ) : Shop
     }
 }

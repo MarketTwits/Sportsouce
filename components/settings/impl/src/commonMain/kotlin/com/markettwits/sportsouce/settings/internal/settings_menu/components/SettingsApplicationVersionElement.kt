@@ -1,12 +1,8 @@
 package com.markettwits.sportsouce.settings.internal.settings_menu.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +26,10 @@ fun SettingsApplicationVersionElement(
     val image =
         if (LocalDarkOrLightTheme.current) DefaultImages.SportSauceDarkLogo() else DefaultImages.SportSauceLightLogo()
 
-    OnBackgroundCard(modifier = modifier) {
+    OnBackgroundCard(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+    ) {
         Row(
             modifier = modifier
                 .padding(4.dp)

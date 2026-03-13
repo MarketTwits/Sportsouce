@@ -2,74 +2,52 @@
     public static void main(java.lang.String[]);
 }
 
-# Core libs
--keep class kotlin.** { *; }
--keep class kotlinx.coroutines.** { *; }
--keep class kotlinx.serialization.** { *; }
--keep class org.slf4j.** { *; }
--keep class org.jetbrains.skia.** { *; }
--keep class org.jetbrains.skiko.** { *; }
--keep class com.arkivanov.** { *; }
+# Compose Desktop already includes the baseline Kotlin/Compose/coroutines rules.
+# Keep only app-specific reflection/service-loader entry points here.
 
-# Networking/IO
--keep class io.ktor.** { *; }
+# Preserve bytecode metadata used by Kotlin, ServiceLoader, and Koin DSL lambdas.
+-keepattributes Signature,InnerClasses,EnclosingMethod,*Annotation*
+
+# Koin runtime itself should remain intact.
+-keep class org.koin.** { *; }
+
+# Coil image loading is wired explicitly from the desktop image loader.
+
+# Decompose Compose Desktop resolves main-thread checker via ServiceLoader.
+-keep class com.arkivanov.decompose.extensions.compose.mainthread.SwingMainThreadChecker { *; }
+
+# Ktor discovers serialization extensions via ServiceLoader.
+-keep class * implements io.ktor.serialization.kotlinx.KotlinxSerializationExtensionProvider { *; }
+-keep class io.ktor.serialization.kotlinx.json.KotlinxSerializationJsonExtensionProvider { *; }
+
+# Coil desktop image loading still needs its Ktor fetcher/runtime in release.
+-keep class coil3.network.ktor3.** { *; }
+-keep class io.ktor.client.engine.okhttp.** { *; }
+
+# OkHttp/Okio are sensitive to bytecode rewriting in release builds.
 -keep class okhttp3.** { *; }
 -keep class okio.** { *; }
--keep class kotlinx.io.** { *; }
 
-# Coil ServiceLoader target
--keep class coil3.network.ktor3.internal.KtorNetworkFetcherServiceLoaderTarget { *; }
+# Keep generated serializers discoverable at runtime.
+-keep class **$$serializer { *; }
+-dontnote **$$serializer
 
-# Warning cleanup
--dontwarn kotlinx.coroutines.debug.*
--dontwarn kotlinx.datetime.**
+# Suppress known desktop/JVM-only noise from optional Android/debug integrations.
 -dontwarn android.util.**
+-dontwarn io.ktor.utils.io.jvm.javaio.PollersKt
+-dontwarn kotlin.Deprecated$Container
+-dontwarn org.graalvm.nativeimage.hosted.**
+-dontwarn com.oracle.svm.core.annotate.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.jsse.**
+-dontwarn org.openjsse.**
 -dontwarn org.slf4j.**
--dontwarn org.apache.**
--dontwarn okhttp3.internal.**
--dontwarn androidx.compose.**
--dontnote
 
--keepclassmembers class kotlinx.serialization.json.** {
-    *** Companion;
-}
--keepclasseswithmembers class kotlinx.serialization.json.** {
-    kotlinx.serialization.KSerializer serializer(...);
-}
-
--assumenosideeffects public class androidx.compose.runtime.ComposerKt {
-    void sourceInformation(androidx.compose.runtime.Composer,java.lang.String);
-    void sourceInformationMarkerStart(androidx.compose.runtime.Composer,int,java.lang.String);
-    void sourceInformationMarkerEnd(androidx.compose.runtime.Composer);
-}
-# When editing this file, update the following files as well:
-# - META-INF/com.android.tools/proguard/coroutines.pro
-# - META-INF/com.android.tools/r8/coroutines.pro
-
-# ServiceLoader support
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
-
-# Most of volatile fields are updated with AFU and should not be mangled
--keepclassmembers class kotlinx.coroutines.** {
-    volatile <fields>;
-}
-
-# Same story for the standard library's SafeContinuation that also uses AtomicReferenceFieldUpdater
--keepclassmembers class kotlin.coroutines.SafeContinuation {
-    volatile <fields>;
-}
-
-# These classes are only required by kotlinx.coroutines.debug.AgentPremain, which is only loaded when
-# kotlinx-coroutines-core is used as a Java agent, so these are not needed in contexts where ProGuard is used.
--dontwarn java.lang.instrument.ClassFileTransformer
--dontwarn sun.misc.SignalHandler
--dontwarn java.lang.instrument.Instrumentation
--dontwarn sun.misc.Signal
-
-# Only used in `kotlinx.coroutines.internal.ExceptionsConstructor`.
-# The case when it is not available is hidden in a `try`-`catch`, as well as a check for Android.
--dontwarn java.lang.ClassValue
-
-# An annotation used for build tooling, won't be directly accessed.
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontnote com.markettwits.cahce.InMemoryCache
+-dontnote io.ktor.client.plugins.logging.LoggerJvmKt
+-dontnote coil3.network.ktor3.**
+-dontnote io.ktor.client.engine.okhttp.**
+-dontnote io.ktor.http.content.BlockingBridgeKt
+-dontnote io.ktor.network.sockets.UnixSocketAddress
+-dontnote org.slf4j.LoggerFactory
+-dontnote org.slf4j.helpers.SubstituteLogger

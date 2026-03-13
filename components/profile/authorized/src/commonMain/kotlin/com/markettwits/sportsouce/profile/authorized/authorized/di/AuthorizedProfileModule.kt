@@ -14,6 +14,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfi
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStoreFactory
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapperBase
+import com.markettwits.sportsouce.starts.recent.di.startsRecentModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -22,6 +23,7 @@ val authorizedProfileModule = module {
     includes(
         authDataSourceModule,
         sportSauceNetworkProfileModule,
+        startsRecentModule,
         crashlyticsModule,
         intentActionModule
     )
@@ -40,6 +42,7 @@ val authorizedProfileModule = module {
                     executeWithCache = ExecuteWithCacheBase()
                 )
             ),
+            recentRepository = get(),
             intentAction = get(),
             exceptionTracker = get()
         )

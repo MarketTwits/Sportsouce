@@ -1,0 +1,53 @@
+package com.markettwits.sportsouce.edit_profile.info.presentation.store
+
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.sportsouce.edit_profile.info.domain.EditProfileInfoRepository
+import com.markettwits.sportsouce.edit_profile.info.domain.models.UserData
+import com.markettwits.sportsouce.edit_profile.info.presentation.store.EditProfileInfoStore.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+
+class EditProfileInfoExecutor(private val repository: EditProfileInfoRepository) :
+    CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    override fun executeIntent(intent: Intent) {
+        when (intent) {
+            is Intent.GoBack -> publish(Label.GoBack)
+            is Intent.OnClickUpdate -> state().userData?.let { update(it) }
+            is Intent.UpdateState -> dispatch(Message.UpdateFiled(intent.userData))
+            is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
+            is Intent.Retry -> launch()
+        }
+    }
+
+    override fun executeAction(action: Unit) {
+        launch()
+    }
+
+    private fun update(userData: UserData) {
+        scope.launch {
+            dispatch(Message.IsLoading)
+            repository.send(userData).fold(
+                onSuccess = {
+                    dispatch(Message.UpdateSuccess("Данные профиля успешно обновлены"))
+                },
+                onFailure = {
+                    dispatch(Message.UpdateFailed(it.mapToSauceError()))
+                }
+            )
+        }
+    }
+
+    private fun launch() {
+        scope.launch {
+            dispatch(Message.IsLoading)
+            repository.fetch()
+                .catch {
+                    dispatch(Message.IsFailed(it.mapToSauceError()))
+                }
+                .collect {
+                    dispatch(Message.IsLoaded(it))
+                }
+        }
+    }
+}

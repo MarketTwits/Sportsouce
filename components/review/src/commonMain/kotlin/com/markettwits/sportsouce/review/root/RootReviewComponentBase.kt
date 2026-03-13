@@ -21,6 +21,7 @@ import com.markettwits.sportsouce.news.news_event.component.NewsEventComponentBa
 import com.markettwits.sportsouce.news.news_event.component.NewsEventInput
 import com.markettwits.sportsouce.news.news_event.store.NewsEventStoreFactory
 import com.markettwits.sportsouce.news.news_list.component.NewsComponentBase
+import com.markettwits.sportsouce.news.root.RootNewsComponentBase
 import com.markettwits.sportsouce.review.review.di.reviewModule
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponentBase
 import com.markettwits.sportsouce.review.root.di.reviewRootModule
@@ -97,17 +98,16 @@ class RootReviewComponentBase(
         when (deeplink) {
             is Deeplink.Shop.ShopRoot -> {
                 // Navigate to shop while preserving navigation stack
-                navigation.pushNew(RootReviewComponent.Config.Shop)
+                navigation.pushNew(RootReviewComponent.Config.Shop())
             }
 
             is Deeplink.Shop.ShopProduct -> {
-                // Navigate to shop while preserving navigation stack
-                navigation.pushNew(RootReviewComponent.Config.Shop)
-                // Pass the product deeplink to the shop component
-                val currentChild = childStack.value.active.instance
-                if (currentChild is RootReviewComponent.Child.Shop) {
-                    currentChild.component.handleDeeplink(deeplink.productId)
-                }
+                navigation.pushNew(
+                    RootReviewComponent.Config.Shop(
+                        categoryId = deeplink.categoryId,
+                        productId = deeplink.productId
+                    )
+                )
             }
         }
     }
@@ -147,7 +147,12 @@ class RootReviewComponentBase(
                         navigation.pushNew(RootReviewComponent.Config.Settings)
                     },
                     onClickProduct = {
-                        handleDeeplink(Deeplink.Shop.ShopProduct(it.id))
+                        handleDeeplink(
+                            Deeplink.Shop.ShopProduct(
+                                productId = it.id,
+                                categoryId = it.categories.firstOrNull()?.id
+                            )
+                        )
                     }
 
                 ),
@@ -180,6 +185,13 @@ class RootReviewComponentBase(
                 RootStartsPopularComponentBase(
                     context = componentContext,
                     pop = navigation::pop,
+                )
+            )
+
+            is RootReviewComponent.Config.News -> RootReviewComponent.Child.News(
+                RootNewsComponentBase(
+                    context = componentContext,
+                    pop = navigation::pop
                 )
             )
 
@@ -235,7 +247,8 @@ class RootReviewComponentBase(
                 RootShopCatalogComponentBase(
                     componentContext = componentContext,
                     pop = navigation::pop,
-                    initialProductId = null
+                    initialProductId = config.productId,
+                    initialCategoryId = config.categoryId
                 )
             )
         }
@@ -261,9 +274,12 @@ class RootReviewComponentBase(
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
+            1 -> RootReviewComponent.Config.News
             2 -> RootReviewComponent.Config.Club
             3 -> RootReviewComponent.Config.Search
-            4 -> RootReviewComponent.Config.Shop
+            4 -> RootReviewComponent.Config.Shop()
+            577 -> RootReviewComponent.Config.Shop(categoryId = 577)
+            582 -> RootReviewComponent.Config.Shop(categoryId = 582)
             else -> RootReviewComponent.Config.Search
         }
     }

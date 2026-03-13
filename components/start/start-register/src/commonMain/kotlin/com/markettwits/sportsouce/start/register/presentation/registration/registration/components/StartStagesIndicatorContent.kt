@@ -119,7 +119,9 @@ sealed interface StartRegistrationStagePage {
         override val isGoBackAvailable: Boolean,
         override val isNextPayPage: Boolean,
         override val isGoNextAvailable: Boolean = true,
-        val distance: StartRegistrationDistance
+        val distance: StartRegistrationDistance,
+        val invalidStageIds: Set<Int> = emptySet(),
+        val validationAttemptTick: Int = 0,
     ) : StartRegistrationStagePage
 
     @Serializable

@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.starts.cloud.model
 
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class NetworkStartRemoteItem(
@@ -28,7 +29,9 @@ data class NetworkStartRemoteItem(
     val isRescheduled: Boolean?,
     val kindOfSports: List<NetworkKindOfSport>,
     val name: String,
+    val open_slots_sum: JsonElement? = null,
     val on_main_page: Boolean?,
+    val organizers: List<NetworkOrganizerRemoteItem>? = null,
     val payment_disabled: String?,
     val payment_type: String?,
     val photos_link: String?,
@@ -54,6 +57,7 @@ data class NetworkStartRemoteItem(
     val start_status: NetworkStartStatus,
     val start_time: String?,
     val status: String?,
+    val total_slots_sum: JsonElement? = null,
     val updatedAt: String,
-    val viewsCount: Int
+    val viewsCount: Int,
 )

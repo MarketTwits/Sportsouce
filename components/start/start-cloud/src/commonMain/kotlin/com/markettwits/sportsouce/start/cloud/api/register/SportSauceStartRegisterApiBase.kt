@@ -8,10 +8,14 @@ import com.markettwits.sportsouce.start.cloud.model.register.promocode.Promocode
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
 
 class SportSauceStartRegisterApiBase(httpClient: HttpClientProvider) : SportSauceStartRegisterApi {
 
     private val json = httpClient.json()
+    private val requestJson = Json(json) {
+        explicitNulls = false
+    }
 
     private val client = httpClient.provide()
 
@@ -23,7 +27,8 @@ class SportSauceStartRegisterApiBase(httpClient: HttpClientProvider) : SportSauc
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
-            setBody(request)
+            contentType(ContentType.Application.Json)
+            setBody(requestJson.encodeToString(request))
         }
         return json.decodeFromString(response.body<String>())
     }
@@ -36,7 +41,8 @@ class SportSauceStartRegisterApiBase(httpClient: HttpClientProvider) : SportSauc
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
-            setBody(request)
+            contentType(ContentType.Application.Json)
+            setBody(requestJson.encodeToString(request))
         }
         return json.decodeFromString(response.body<String>())
     }

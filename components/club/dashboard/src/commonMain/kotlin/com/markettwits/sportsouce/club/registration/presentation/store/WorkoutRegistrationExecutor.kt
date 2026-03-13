@@ -2,7 +2,8 @@ package com.markettwits.sportsouce.club.registration.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationUseCase
@@ -50,7 +51,7 @@ class WorkoutRegistrationExecutor(
                 .fold(onSuccess = {
                     dispatch(WorkoutRegistrationStore.Message.RegistrationSuccess)
                 }, onFailure = {
-                    dispatch(WorkoutRegistrationStore.Message.RegistrationFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(WorkoutRegistrationStore.Message.RegistrationFailed(it.mapToSauceError().mapToString()))
                 })
         }
     }

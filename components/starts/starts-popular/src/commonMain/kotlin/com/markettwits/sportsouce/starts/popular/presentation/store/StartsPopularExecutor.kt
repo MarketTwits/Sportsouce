@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.starts.popular.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.starts.popular.domain.StartsPopularRepository
 import com.markettwits.sportsouce.starts.popular.presentation.store.StartsPopularStore.*
 import kotlinx.coroutines.flow.catch
@@ -27,7 +27,7 @@ internal class StartsPopularExecutor(
             dispatch(Message.Loading)
             repository.popularStarts()
                 .catch {
-                    dispatch(Message.Failed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Message.Failed(it.mapToSauceError()))
                 }
                 .collect {
                     dispatch(Message.Loaded(it))

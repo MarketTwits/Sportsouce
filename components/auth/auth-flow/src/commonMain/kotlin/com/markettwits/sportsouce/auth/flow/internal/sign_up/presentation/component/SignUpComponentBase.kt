@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.RegisteredCredentialSaver
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.store.SignUpStore
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.store.SignUpStoreFactory
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 internal class SignUpComponentBase(
     context: ComponentContext,
     private val storeFactory: SignUpStoreFactory,
+    private val registeredCredentialSaver: RegisteredCredentialSaver,
     private val pop: () -> Unit,
     private val profile: () -> Unit,
     private val signIn: () -> Unit,
@@ -38,7 +40,15 @@ internal class SignUpComponentBase(
             store.labels.collect {
                 when (it) {
                     SignUpStore.Label.OnClickBack -> pop()
-                    SignUpStore.Label.OpenProfile -> profile()
+                    is SignUpStore.Label.OpenProfile -> {
+                        runCatching {
+                            registeredCredentialSaver.save(
+                                phone = it.phone,
+                                password = it.password
+                            )
+                        }
+                        profile()
+                    }
                     SignUpStore.Label.OpenSignIn -> signIn()
                 }
             }

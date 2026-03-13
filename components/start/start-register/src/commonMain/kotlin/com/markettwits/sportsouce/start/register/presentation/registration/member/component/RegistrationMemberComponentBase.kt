@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.member.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -39,10 +38,7 @@ class RegistrationMemberComponentBase(
         store.accept(event)
     }
 
-    private val backCallback = BackCallback { store.accept(RegistrationMemberStore.Intent.Pop) }
-
     init {
-        backHandler.register(backCallback)
         scope.launch {
             store.labels.collect {
                 when (it) {

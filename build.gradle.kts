@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.kmp.compose) apply false
     alias(libs.plugins.composeHotReload) apply false
     alias(libs.plugins.kotlin.kmp) apply false
-    alias(libs.plugins.kotlin.android) apply false
 }
 
 tasks.withType<Wrapper>().configureEach {

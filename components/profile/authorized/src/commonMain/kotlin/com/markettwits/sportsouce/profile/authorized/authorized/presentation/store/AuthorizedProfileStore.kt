@@ -5,6 +5,7 @@ import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserSocialNetworkIntent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.State
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 
 interface AuthorizedProfileStore : Store<AuthorizedProfileStore.Intent, State, Unit> {
@@ -12,7 +13,8 @@ interface AuthorizedProfileStore : Store<AuthorizedProfileStore.Intent, State, U
     data class State(
         val isLoading: Boolean = false,
         val error: SauceError? = null,
-        val user: UserProfile? = null
+        val user: UserProfile? = null,
+        val recentStarts: List<StartsListItem> = emptyList(),
     )
 
     sealed interface Intent {
@@ -24,6 +26,7 @@ interface AuthorizedProfileStore : Store<AuthorizedProfileStore.Intent, State, U
         data object Loading : Message
         data class LoadingFailed(val error: SauceError) : Message
         data class LoadingSuccess(val user: UserProfile) : Message
+        data class RecentStartsLoaded(val starts: List<StartsListItem>) : Message
     }
 
 }

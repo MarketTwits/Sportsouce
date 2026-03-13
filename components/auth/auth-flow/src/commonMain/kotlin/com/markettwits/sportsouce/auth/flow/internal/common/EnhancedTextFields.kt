@@ -20,7 +20,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -91,6 +94,9 @@ fun EnhancedEmailOrPhoneTextField(
     OutlinedTextFieldBase(
         modifier = modifier
             .fillMaxWidth()
+            .semantics {
+                contentType = ContentType.Username + ContentType.EmailAddress
+            }
             .onFocusChanged { focusState ->
                 onFocusChanged(focusState.isFocused)
             },
@@ -146,6 +152,9 @@ fun EnhancedPasswordTextField(
         OutlinedTextFieldBase(
             modifier = Modifier
                 .fillMaxWidth()
+                .semantics {
+                    contentType = ContentType.Password
+                }
                 .onFocusChanged { focusState ->
                     onFocusChanged(focusState.isFocused)
                 },

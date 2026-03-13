@@ -19,4 +19,6 @@ interface ShopCatalogRepository {
 
     suspend fun salesProducts(): Result<List<ShopItem>>
 
+    suspend fun merchProducts(): Result<List<ShopItem>>
+
 }

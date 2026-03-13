@@ -36,7 +36,7 @@ class NewsComponentBase(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    is NewsStore.Label.OnClickItem -> onItemClick(it.itemId)
+                    is NewsStore.Label.OnClickItem -> onItemClick(it.item)
                 }
             }
         }

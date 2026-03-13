@@ -21,8 +21,20 @@ internal class NewsRepositoryBase(
         news
     }
 
-    override suspend fun news(): Result<List<NewsItem>> = runCatching {
-        val news = newsMapper.map(newsNetworkApi.news())
+    override suspend fun news(
+        categoryId: Int?,
+        hashtag: String?,
+        limit: Int,
+        offset: Int,
+    ): Result<List<NewsItem>> = runCatching {
+        val news = newsMapper.map(
+            newsNetworkApi.news(
+                categoryId = categoryId,
+                hashTag = hashtag,
+                limit = limit,
+                offset = offset,
+            )
+        )
         infoLog { "Fetch news $news" }
         news
     }
@@ -38,8 +50,11 @@ internal class NewsRepositoryBase(
         categories
     }
 
-    override suspend fun hashtags(): Result<List<NewsHashtag>> = runCatching {
-        val hashtags = newsNetworkApi.hashtags().map {
+    override suspend fun hashtags(
+        limit: Int,
+        offset: Int,
+    ): Result<List<NewsHashtag>> = runCatching {
+        val hashtags = newsNetworkApi.hashtags(limit = limit, offset = offset).map {
             NewsHashtag(
                 id = it.id ?: 0,
                 name = it.name ?: ""

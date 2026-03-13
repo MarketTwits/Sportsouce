@@ -60,6 +60,7 @@ include(
     ":components:starts:starts-common",
     ":components:starts:starts-cloud",
     ":components:starts:starts-favorites",
+    ":components:starts:starts-recent",
     ":components:club:cloud",
     ":components:club:dashboard",
     ":components:teams-city",

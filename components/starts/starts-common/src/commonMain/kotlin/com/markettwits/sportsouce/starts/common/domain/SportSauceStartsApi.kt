@@ -4,6 +4,16 @@ interface SportSauceStartsApi {
 
     suspend fun startWithFilter(request : Map<String, String>) : List<StartsListItem>
 
+    suspend fun fetchStarts(
+        limit: Int? = null,
+        offset: Int? = null,
+        isMain: Boolean? = null,
+        openFirst: Boolean? = null,
+        isGroup: Boolean? = null,
+        statuses: List<StartStatus> = emptyList(),
+        additionalParameters: Map<String, String> = emptyMap(),
+    ): List<StartsListItem>
+
     suspend fun fetchActualStarts(): List<StartsListItem>
 
     suspend fun fetchPasteStarts(): List<StartsListItem>

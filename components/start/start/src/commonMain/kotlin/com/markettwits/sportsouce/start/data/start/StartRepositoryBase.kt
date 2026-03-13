@@ -4,7 +4,8 @@ import app.cash.paging.Pager
 import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import app.cash.paging.map
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.core.log.infoLog
@@ -31,6 +32,7 @@ import com.markettwits.sportsouce.start.presentation.start.component.CommentUiSt
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.favorites.domain.StartFavoritesRepository
+import com.markettwits.sportsouce.starts.recent.domain.StartRecentRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote as CloudFiltersRemote
@@ -42,12 +44,14 @@ internal class StartRepositoryBase(
     private val startsService: SportSauceStartsApi,
     private val cache: StartMemoryCache,
     private val favoritesRepository: StartFavoritesRepository,
+    private val recentRepository: StartRecentRepository,
 ) : StartRepository, LogTagProvider {
 
     override val tag: String = "StartRepository"
 
     // Delegate favorites flow to favorites repository
     override val favoritesFlow = favoritesRepository.favorites
+    override val recentStartsFlow = recentRepository.recentStarts
 
     // Helper extension to extract ID from StartRemote implementations
     private val StartRemote.id: Int
@@ -62,7 +66,7 @@ internal class StartRepositoryBase(
     ): Result<StartItem> {
         val numericId = startId.toIntOrNull()
 
-        return if (numericId != null) {
+        val result = if (numericId != null) {
             if (relaunch) {
                 launches(startId)
             } else {
@@ -73,6 +77,12 @@ internal class StartRepositoryBase(
         } else {
             launches(startId)
         }
+
+        result.onSuccess { startItem ->
+            recentRepository.add(StartItemToStartsListItemMapper.map(startItem))
+        }
+
+        return result
     }
 
     override suspend fun refreshFavorites(): Result<List<StartsListItem>> {
@@ -202,7 +212,7 @@ internal class StartRepositoryBase(
                 )
             CommentUiState.Success
         } catch (e: Exception) {
-            CommentUiState.Error(e.networkExceptionHandler().message.toString())
+            CommentUiState.Error(e.mapToSauceError().mapToString())
         }
     }
 

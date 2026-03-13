@@ -4,7 +4,8 @@ import com.markettwits.sportsouce.shop.filter.domain.ShopFilterRepository
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.Intent
 
 class ShopFilterExecutor(
-    shopFilterRepository: ShopFilterRepository
+    shopFilterRepository: ShopFilterRepository,
+    private val initialCategoryId: Int?,
 ) : ShopFilterExecutorHandler(shopFilterRepository) {
 
 
@@ -40,8 +41,9 @@ class ShopFilterExecutor(
     }
 
     override fun executeAction(action: Unit) {
-        if (state().categories.isEmpty())
-            launch()
+        if (state().categories.isEmpty()) {
+            launch(initialCategoryId)
+        }
     }
 
 }

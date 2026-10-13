@@ -92,6 +92,7 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
         lastModified: Long,
         fileName: String,
         contentType: String,
+        token: String,
     ): UploadFileResponse {
         val response = client.submitFormWithBinaryData(
             url = "file/upload",
@@ -102,7 +103,11 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
                 })
                 append("lastModified", lastModified.toString())
             }
-        )
+        ) {
+            headers {
+                append(HttpHeaders.Authorization, "Bearer $token")
+            }
+        }
         return json.decodeFromString(response.body())
     }
 

@@ -4,6 +4,7 @@ import android.app.Application
 import com.markettwits.activityholder.CurrentActivityHolder
 import com.markettwits.cahce.InStorageCacheDirectory
 import com.markettwits.cahce.InStorageFileDirectory
+import com.markettwits.core.log.configureLogging
 import com.markettwits.crashlitics.configuration.AnalyticsConfiguration
 import com.markettwits.crashlitics.configuration.AnalyticsConfigurationBase
 import com.markettwits.initKoin
@@ -16,6 +17,7 @@ class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigur
     override fun onCreate() {
         super.onCreate()
         CurrentActivityHolder.register(this)
+        configureLogging()
         InStorageCacheDirectory.path = cacheDir.path
         InStorageFileDirectory.path = filesDir.path
 

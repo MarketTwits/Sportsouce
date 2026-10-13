@@ -10,8 +10,11 @@ class BaseTimeMapper : TimeMapper {
 
     @OptIn(ExperimentalTime::class)
     override fun mapTime(timePattern: TimePattern, time: String): String {
-        val instant = kotlin.time.Instant.parse(time)
-        val localDateTime = instant.toLocalDateTime(TimeZone.UTC)
+        val localDateTime = if (time.length == 10) {
+            LocalDate.parse(time).atTime(0, 0)
+        } else {
+            kotlin.time.Instant.parse(time).toLocalDateTime(TimeZone.UTC)
+        }
 
         return when (timePattern) {
             is TimePattern.Full -> {

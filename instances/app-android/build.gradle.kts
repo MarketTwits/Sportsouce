@@ -10,6 +10,7 @@ dependencies {
     implementation(projects.components.core.cache)
     implementation(projects.components.analytics.crashlytics)
     implementation(projects.components.core.activityholder)
+    implementation(projects.components.core.log)
     implementation(projects.components.deeplink.api)
     implementation(projects.components.deeplink.impl)
     implementation(libs.androidx.core.splashscreen)

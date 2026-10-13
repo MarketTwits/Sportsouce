@@ -34,5 +34,14 @@ internal class EditProfileImageRepositoryBase(
         fileName: String,
         contentType: String,
     ): Result<UploadFileResponse> =
-        runCatching { cloud.uploadFile(data, lastModified, fileName, contentType) }
+        runCatching {
+            val token = authDataSource.updateToken().getOrThrow()
+            cloud.uploadFile(
+                data = data,
+                lastModified = lastModified,
+                fileName = fileName,
+                contentType = contentType,
+                token = token
+            )
+        }
 }

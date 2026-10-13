@@ -10,7 +10,7 @@ interface TimeMapper {
      * Maps and formats a given ISO 8601 time string into a specific time pattern.
      *
      * @param timePattern The desired {@link TimePattern} to format the time string into.
-     * @param time A string representing a time in ISO 8601 format (e.g., "2024-12-18T15:30:00Z").
+     * @param time An ISO 8601 timestamp (e.g., "2024-12-18T15:30:00Z") or date (e.g., "2024-12-18").
      * @return A formatted string representing the date and time in the specified pattern.
      *
      * @throws IllegalArgumentException If the time string cannot be parsed or the pattern is invalid.

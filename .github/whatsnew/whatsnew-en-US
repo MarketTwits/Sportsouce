@@ -1,6 +1,3 @@
-🟠 What's New
-- Added a news section.
-- Smoother club image loading and full-screen image viewing in posts.
-- Better HTML and image processing.
-- Fixed comments and replies, member edit navigation, extra field prices, and stats order.
+🟠 Fixed
+- Fixed data loading in the user profile.
 Thank you for using Sportsauce v$APP_VERSION!

@@ -52,12 +52,15 @@ object CirclesSerializer : JsonTransformingSerializer<Map<Int, String>>(
     MapSerializer(Int.serializer(), String.serializer())
 ) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
-        return if (element is JsonPrimitive && element.isString) {
-            val list = Json.decodeFromString<List<String>>(element.content)
-            val map = list.mapIndexed { index, value -> index + 1 to value }.toMap()
-            Json.encodeToJsonElement(map)
+        val circles = if (element is JsonPrimitive && element.isString) {
+            Json.parseToJsonElement(element.content)
         } else {
             element
+        }
+        return if (circles is JsonArray) {
+            JsonObject(circles.mapIndexed { index, value -> (index + 1).toString() to value }.toMap())
+        } else {
+            circles
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.markettwits.core.errors.api.throwable
 
+import com.markettwits.core.log.TaggedLogger
+import com.markettwits.core.log.errorLog
 import io.ktor.client.call.*
 import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*
@@ -8,28 +10,31 @@ import kotlinx.serialization.SerializationException
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun Throwable.mapToSauceError(): SauceError = when {
-    this.isNetworkConnectionError() -> SauceError.Connection(this)
-    this is HttpRequestTimeoutException -> SauceError.Connection(this)
-    this is ResponseException -> {
-        val deferred = CompletableDeferred<ResponseError>()
-        CoroutineScope(Dispatchers.Main.immediate).launch {
-            try {
-                val responseError = this@mapToSauceError.response.body<ResponseError>()
-                deferred.complete(responseError)
-            } catch (e: Exception) {
-                deferred.completeExceptionally(e)
+fun Throwable.mapToSauceError(): SauceError {
+    TaggedLogger("SauceError").errorLog(this) { "Failed to execute operation" }
+    return when {
+        this.isNetworkConnectionError() -> SauceError.Connection(this)
+        this is HttpRequestTimeoutException -> SauceError.Connection(this)
+        this is ResponseException -> {
+            val deferred = CompletableDeferred<ResponseError>()
+            CoroutineScope(Dispatchers.Main.immediate).launch {
+                try {
+                    val responseError = this@mapToSauceError.response.body<ResponseError>()
+                    deferred.complete(responseError)
+                } catch (e: Exception) {
+                    deferred.completeExceptionally(e)
+                }
+            }
+            val responseError = deferred.getCompleted()
+            if (responseError.statusCode == 404) {
+                SauceError.NotFound(Exception(responseError.message))
+            } else {
+                SauceError.WrongRequest(Exception(responseError.message))
             }
         }
-        val responseError = deferred.getCompleted()
-        if (responseError.statusCode == 404) {
-            SauceError.NotFound(Exception(responseError.message))
-        } else {
-            SauceError.WrongRequest(Exception(responseError.message))
-        }
+        this is SerializationException -> SauceError.JsonConverter(this)
+        else -> SauceError.General(this)
     }
-    this is SerializationException -> SauceError.JsonConverter(this)
-    else -> SauceError.General(this)
 }
 
 

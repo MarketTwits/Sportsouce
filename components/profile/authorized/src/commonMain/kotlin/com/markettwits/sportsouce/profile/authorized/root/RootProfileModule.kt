@@ -9,8 +9,11 @@ import com.markettwits.sportsouce.shop.orders.di.shopUserOrdersModule
 import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.starts.favorites.di.startsFavoritesModule
 import org.koin.dsl.module
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsRepository
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsRepositoryBase
 
 internal val rootProfileModule = module {
+    factory<ReceiptsRepository> { ReceiptsRepositoryBase(get(), get()) }
     includes(
         authDataSourceModule,
         authorizedProfileModule,

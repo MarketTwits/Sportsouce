@@ -57,6 +57,7 @@ class ProfileDesignTest {
                 scene.clickLabel("Изменить социальные сети")
                 scene.click("Избранное")
                 scene.click("Мои заказы")
+                scene.click("Оплаченные квитанции")
                 scene.click("Все 6")
                 scene.scrollTo("Осенний кросс 0")
                 scene.click("Осенний кросс 0")
@@ -66,7 +67,7 @@ class ProfileDesignTest {
                 scene.scrollTo("Настройки"); scene.click("Настройки")
                 assertEquals(listOf(AuthorizedProfileComponent.Output.EditProfile, AuthorizedProfileComponent.Output.SocialNetwork,
                     AuthorizedProfileComponent.Output.Favorites,
-                    AuthorizedProfileComponent.Output.UserOrders, AuthorizedProfileComponent.Output.AllRegistries,
+                    AuthorizedProfileComponent.Output.UserOrders, AuthorizedProfileComponent.Output.PaidReceipts, AuthorizedProfileComponent.Output.AllRegistries,
                     AuthorizedProfileComponent.Output.Start(StartScreenInput.Id(300)), AuthorizedProfileComponent.Output.Club,
                     AuthorizedProfileComponent.Output.Start(StartScreenInput.Item(recent)), AuthorizedProfileComponent.Output.Members,
                     AuthorizedProfileComponent.Output.Settings), fake.outputs)

@@ -11,6 +11,8 @@ import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core.errors.api.throwable.mapToString
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material3.HorizontalDivider
 import com.markettwits.core_ui.items.components.list.SauceActionRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,6 +46,7 @@ internal fun ProfileScreenContent(
     onClickClub: () -> Unit,
     onClickStarts: () -> Unit,
     onClickOrders: () -> Unit,
+    onClickReceipts: () -> Unit,
     onClickFavorites: () -> Unit,
     onClickEditProfile: () -> Unit,
     onClickRegistration: (StartOrderInfo) -> Unit,
@@ -80,8 +83,11 @@ internal fun ProfileScreenContent(
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         ProfileSectionHeader("Покупки и оплаты")
                         OnBackgroundCard {
-                            SauceActionRow("Мои заказы", onClickOrders, modifier = Modifier.padding(8.dp),
-                                icon = Icons.Default.Inventory2)
+                            Column(Modifier.padding(8.dp)) {
+                                SauceActionRow("Мои заказы", onClickOrders, icon = Icons.Default.Inventory2)
+                                HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
+                                SauceActionRow("Оплаченные квитанции", onClickReceipts, icon = Icons.Default.ReceiptLong)
+                            }
                         }
                     }
                     ProfileRecentStartsBlock(starts = recentStarts, onClickStart = onClickRecentStart)

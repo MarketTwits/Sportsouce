@@ -44,6 +44,10 @@ internal fun handleAuthorizedProfileEvent(
             RootAuthorizedProfileComponent.Config.ShopUserOrders
         )
 
+        is AuthorizedProfileComponent.Output.PaidReceipts -> navigation.pushNew(
+            RootAuthorizedProfileComponent.Config.PaidReceipts
+        )
+
         is AuthorizedProfileComponent.Output.Club -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.Club
         )

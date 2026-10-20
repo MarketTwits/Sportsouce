@@ -25,5 +25,6 @@ interface AuthorizedProfileComponent {
         data class Start(val input: StartScreenInput) : Output
         data object Settings : Output
         data object UserOrders : Output
+        data object PaidReceipts : Output
     }
 }

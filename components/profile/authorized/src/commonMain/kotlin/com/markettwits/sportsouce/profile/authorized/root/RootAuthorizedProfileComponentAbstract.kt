@@ -17,6 +17,8 @@ import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrd
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.di.createStartsFavoritesComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
 
 abstract class RootAuthorizedProfileComponentAbstract(
     componentContext: ComponentContext,
@@ -108,6 +110,15 @@ abstract class RootAuthorizedProfileComponentAbstract(
                     }
                 }
             )
+        )
+
+        is RootAuthorizedProfileComponent.Config.PaidReceipts -> PaidReceipts(
+            ReceiptsComponent(componentContext, scope.get(), back = { navigation.pop() },
+                open = { navigation.pushNew(RootAuthorizedProfileComponent.Config.Receipt(it.id)) })
+        )
+
+        is RootAuthorizedProfileComponent.Config.Receipt -> Receipt(
+            ReceiptDocumentComponent(componentContext, scope.get(), config.id, back = { navigation.pop() })
         )
 
         is RootAuthorizedProfileComponent.Config.Club -> ClubDashboard(

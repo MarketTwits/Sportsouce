@@ -1,10 +1,10 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.member.components
 
-import androidx.compose.foundation.clickable
+import com.markettwits.core_ui.items.components.selection.SauceCheckboxRow
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -12,12 +12,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.textField.*
 import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
@@ -33,24 +36,15 @@ fun MemberScreenContent(
     onValueChanged: (StartStatement) -> Unit,
     isAddToProfileEnabled: Boolean,
     onClickAddToProfile: () -> Unit,
+    onMemberSelected: (ProfileMember) -> Unit = { onValueChanged(memberSelectApply(it, statement)) },
+    membersLoading: Boolean = false,
+    membersError: String? = null,
+    onRetryMembers: () -> Unit = {},
 ) {
-    var selectedExistingMemberLabel by rememberSaveable(userNumber) {
-        mutableStateOf(
-            members.firstOrNull {
-                it.name == statement.name && it.surname == statement.surname
-            }?.let { "${it.surname} ${it.name}" } ?: ""
-        )
-    }
-    LaunchedEffect(members) {
-        val actualMember = members.firstOrNull {
-            it.name == statement.name &&
-                    it.surname == statement.surname &&
-                    it.birthday == statement.birthday
-        }
-        if (actualMember != null) {
-            selectedExistingMemberLabel = "${actualMember.surname} ${actualMember.name}"
-        }
-    }
+    val selectedExistingMemberLabel = members.firstOrNull {
+        if (statement.participantUserId != null) it.participantUserId == statement.participantUserId && it.source == statement.participantSource
+        else it.name == statement.name && it.surname == statement.surname && it.birthday == statement.birthday
+    }?.registrationLabel().orEmpty()
     val nameValidation = validateName(statement.name)
     val surnameValidation = validateSurname(statement.surname)
     val birthdayValidation = validateBirthday(statement.birthday)
@@ -76,33 +70,36 @@ fun MemberScreenContent(
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                val title: @Composable (Modifier) -> Unit = { titleModifier ->
                     Text(
-                        modifier = Modifier.weight(1f),
+                        modifier = titleModifier,
                         text = "Участник ${userNumber + 1}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onPrimary,
-                        fontFamily = FontNunito.bold()
+                        fontFamily = FontNunito.bold(),
                     )
-
-                    MemberContactFace(
-                        modifier = Modifier.padding(start = 12.dp),
-                        checked = statement.contactPerson,
-                        onValueChanged = {
+                }
+                if (LocalDensity.current.fontScale > 1.3f) {
+                    Column(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)) {
+                        title(Modifier.fillMaxWidth())
+                        MemberContactFace(Modifier.fillMaxWidth(), statement.contactPerson) {
                             onValueChanged(statement.copy(contactPerson = it))
                         }
-                    )
+                    }
+                } else {
+                    Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically) {
+                        title(Modifier.weight(1f))
+                        MemberContactFace(Modifier.padding(start = 12.dp), statement.contactPerson) {
+                            onValueChanged(statement.copy(contactPerson = it))
+                        }
+                    }
                 }
             }
 
             // Выбор существующего участника
-            if (members.isNotEmpty()) {
+            run {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -124,36 +121,32 @@ fun MemberScreenContent(
                         MemberSelectMember(
                             members = members,
                             selectedNameSurname = selectedExistingMemberLabel,
+                            enabled = !membersLoading,
                         ) { member ->
-                            selectedExistingMemberLabel = "${member.surname} ${member.name}"
-                            onValueChanged(memberSelectApply(member, statement))
+                            onMemberSelected(member)
                         }
 
+                        if (statement.participantSource == ProfileMember.Source.Team && statement.participantUserId != null) {
+                            Spacer(Modifier.height(8.dp))
+                            RegistrationTeamBadge()
+                        }
+                        if (membersLoading) {
+                            Spacer(Modifier.height(8.dp))
+                            com.markettwits.core_ui.items.components.progress.SauceSkeleton(Modifier.fillMaxWidth().height(16.dp))
+                        }
+                        membersError?.let { message ->
+                            Text(message, style = MaterialTheme.typography.bodySmall,
+                                color = com.markettwits.core_ui.items.theme.SauceTheme.colors.danger.content)
+                            SauceButton("Обновить участников", onRetryMembers, variant = SauceButtonVariant.Text)
+                        }
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        OutlinedButton(
+                        SauceButton(
+                            title = "Добавить в профиль",
                             enabled = isAddToProfileEnabled,
                             onClick = onClickAddToProfile,
-                            modifier = Modifier.fillMaxWidth(),
-                            border = ButtonDefaults.outlinedButtonBorder
-                        ) {
-                            val contentColor = if (isAddToProfileEnabled) {
-                                MaterialTheme.colorScheme.tertiary
-                            } else {
-                                MaterialTheme.colorScheme.outline
-                            }
-                            Icon(
-                                imageVector = Icons.Default.PersonAdd,
-                                contentDescription = null,
-                                tint = contentColor
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Добавить в профиль",
-                                color = contentColor,
-                                fontFamily = FontNunito.semiBoldBold()
-                            )
-                        }
+                            variant = SauceButtonVariant.Outlined,
+                        )
                     }
                 }
             }
@@ -388,7 +381,7 @@ fun MemberScreenContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(96.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -653,30 +646,5 @@ fun FilterPosition(
     checked: Boolean,
     onClick: (String) -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClick(item)
-            }
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Checkbox(
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.secondary,
-                checkmarkColor = MaterialTheme.colorScheme.onSecondary,
-                uncheckedColor = MaterialTheme.colorScheme.outline
-            ),
-            checked = checked,
-            onCheckedChange = { onClick(item) }
-        )
-        Text(
-            text = item,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontFamily = FontNunito.medium(),
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
+    SauceCheckboxRow(label = item, checked = checked, onCheckedChange = { onClick(item) })
 }

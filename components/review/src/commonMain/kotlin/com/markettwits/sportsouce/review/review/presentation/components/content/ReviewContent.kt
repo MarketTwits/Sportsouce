@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.news.news_list.components.NewsContent
 import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStarts
+import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStartsShimmer
 import com.markettwits.sportsouce.review.review.presentation.components.archive.ArchiveStarts
 import com.markettwits.sportsouce.review.review.presentation.components.products.SalesProductsContent
 import com.markettwits.sportsouce.review.review.presentation.components.review_menu.ReviewMenu
@@ -32,11 +33,12 @@ fun ReviewContent(
     onClickShowMoreMerchProducts: () -> Unit,
     onClickTelegram: () -> Unit,
     onClickVk: () -> Unit,
+    isLoading: Boolean = false,
     notification: @Composable ((Modifier) -> Unit),
 ) {
     ReviewSection(maxWidth = 1160.dp) {
-        if (news.isNotEmpty()) {
-            NewsContent(items = news) {
+        if (news.isNotEmpty() || isLoading) {
+            NewsContent(items = news, isLoading = isLoading && news.isEmpty()) {
                 onClickNewsInfo(it)
             }
         }
@@ -44,6 +46,13 @@ fun ReviewContent(
             onClickMenu(it)
         }
         notification(Modifier)
+    }
+
+    if (actual.isEmpty() && isLoading) {
+        ReviewSection(maxWidth = 1160.dp) {
+            HorizontalDivider(modifier = Modifier.padding(10.dp))
+            ActualStartsShimmer()
+        }
     }
 
     if (actual.isNotEmpty()) {

@@ -35,69 +35,15 @@ internal fun StartSeriesPanel(
     onItemClick: (StartsListItem) -> Unit,
 ) {
     if (items.isNotEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
-        ) {
-            // Header with title and "Show more" button
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Связанные старты",
-                    fontSize = 18.sp,
-                    fontFamily = FontNunito.bold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-
-                // Show "Show more" or "Show all" button
-                if (items.size > 3) {
-                    val remainingCount = items.size - 3
-                    Box(
-                        modifier = Modifier
-                            .clip(Shapes.small)
-                            .clickable { onClickRelatedStarts() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = "Показать ещё $remainingCount",
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .clip(Shapes.small)
-                            .clickable { onClickRelatedStarts() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = "Показать всё",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                }
-            }
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            com.markettwits.core_ui.items.components.list.SauceActionRow(
+                title = "Связанные старты", count = items.size.toString(), onClick = onClickRelatedStarts,
+            )
 
             // Vertical list, showing only first 3 items
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items.take(3).forEach { item ->

@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.profile.members.member_root.component
 
+import com.markettwits.sportsouce.profile.members.member_search.MemberSearchScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
@@ -27,6 +28,7 @@ fun RootMembersScreen(component: RootMembersComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
+            is RootMembersComponent.ChildStack.MemberSearch -> MemberSearchScreen(child.component)
             is RootMembersComponent.ChildStack.MembersList -> MembersScreen(component = child.component)
             is RootMembersComponent.ChildStack.MemberEdit -> MemberEditScreen(component = child.component)
         }

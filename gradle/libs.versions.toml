@@ -7,6 +7,7 @@ kotlin = "2.3.10" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/mult
 agp = "9.0.0-alpha06" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility
 gradle = "9.3.1" # https://gradle.org/releases/
 compose = "1.10.2" # https://github.com/JetBrains/compose-multiplatform
+haze = "1.7.2" # Compatible with Compose 1.10; newer Haze requires a Compose/toolchain migration.
 kotlinx-serialization = "1.10.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlinx-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-datetime = "0.7.1" # https://github.com/Kotlin/kotlinx-datetime
@@ -39,6 +40,7 @@ mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
 tracer = "1.2.2" # https://apptracer.ru/
 
 [libraries]
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }

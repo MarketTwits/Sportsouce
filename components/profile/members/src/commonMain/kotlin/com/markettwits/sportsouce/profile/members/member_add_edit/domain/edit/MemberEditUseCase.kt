@@ -5,5 +5,6 @@ import com.markettwits.sportsouce.teams_city.domain.Team
 
 interface MemberEditUseCase {
     suspend fun edit(profileMember: ProfileMember): Result<Unit>
+    suspend fun member(memberId: Int): Result<ProfileMember>
     suspend fun teams(): Result<List<Team>>
 }

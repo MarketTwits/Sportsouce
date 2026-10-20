@@ -153,7 +153,9 @@ class StartScreenStoreFactory(
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickRegistration -> {
-                    state().startItem?.let { startItem ->
+                    val currentState = state()
+                    if (currentState.isLoading || currentState.isPartialData || currentState.error != null) return
+                    currentState.startItem?.let { startItem ->
                         when {
                             startItem.isExternalLinkRegistration() -> {
                                 intentAction.openWebPage(startItem.regLink)
@@ -368,10 +370,10 @@ class StartScreenStoreFactory(
                 event = consumed()
             )
 
+            // A failed refresh must not turn previously complete details into a preview.
             is Msg.StartInfoFailed -> copy(
                 isLoading = false,
                 error = msg.exception,
-                isPartialData = true
             )
 
             is Msg.StartInfoSuccess -> copy(

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.*
-import kotlin.math.absoluteValue
 
 
 @Composable
@@ -55,37 +54,30 @@ fun OutlinePhoneTextFiled(
 }
 
 class MaskVisualTransformation(private val mask: String) : VisualTransformation {
-    private val specialSymbolsIndices = mask.indices.filter { mask[it] != '#' }
-
     override fun filter(text: AnnotatedString): TransformedText {
-        var out = ""
+        val originalOffsets = IntArray(text.length + 1)
+        val transformedOffsets = mutableListOf(0)
+        val formatted = StringBuilder()
         var maskIndex = 0
-        text.forEach { char ->
-            while (specialSymbolsIndices.contains(maskIndex)) {
-                out += mask[maskIndex]
-                maskIndex++
+        text.forEachIndexed { index, char ->
+            while (maskIndex < mask.length && mask[maskIndex] != '#') {
+                formatted.append(mask[maskIndex++])
+                transformedOffsets.add(index)
             }
-            out += char
+            formatted.append(char)
+            transformedOffsets.add(index + 1)
+            originalOffsets[index + 1] = formatted.length
             maskIndex++
         }
-        return TransformedText(AnnotatedString(out), offsetTranslator())
-    }
+        // Build both directions from the actual output, including partial and overflowing input.
+        val mapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int =
+                originalOffsets[offset.coerceIn(0, text.length)]
 
-    private fun offsetTranslator() = object : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int {
-            val offsetValue = offset.absoluteValue
-            if (offsetValue == 0) return 0
-            var numberOfHashtags = 0
-            val masked = mask.takeWhile {
-                if (it == '#') numberOfHashtags++
-                numberOfHashtags < offsetValue
-            }
-            return masked.length + 1
+            override fun transformedToOriginal(offset: Int): Int =
+                transformedOffsets[offset.coerceIn(0, formatted.length)]
         }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            return mask.take(offset.absoluteValue).count { it == '#' }
-        }
+        return TransformedText(AnnotatedString(formatted.toString()), mapping)
     }
 }
 

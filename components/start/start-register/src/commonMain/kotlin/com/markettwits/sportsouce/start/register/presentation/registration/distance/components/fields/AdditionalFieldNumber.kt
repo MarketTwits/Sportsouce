@@ -24,7 +24,7 @@ internal fun AdditionalFieldNumber(
         OutlinedTextFieldBase(
             value = text,
             onValueChange = { newValue ->
-                if (newValue.isEmpty() || newValue.all { char -> char.isDigit() }) {
+                if (newValue.isEmpty() || (newValue.all { char -> char.isDigit() } && newValue.toIntOrNull() != null)) {
                     onFieldChanged(
                         field.copy(
                             answer = field.answer.copy(

@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.c
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.profile.members.member_detail.presentation.component.MemberDetailComponent
 import com.markettwits.sportsouce.profile.members.members_list.presentation.component.MembersListComponent
+import com.markettwits.sportsouce.profile.members.member_search.MemberSearchComponent
 import kotlinx.serialization.Serializable
 
 interface RootMembersComponent {
@@ -16,12 +17,16 @@ interface RootMembersComponent {
     sealed interface ChildStack {
         data class MembersList(val component: MembersListComponent) : ChildStack
         data class MemberEdit(val component: MemberEditComponent) : ChildStack
+        data class MemberSearch(val component: MemberSearchComponent) : ChildStack
     }
 
     @Serializable
     sealed interface ConfigStack {
         @Serializable
         data object MembersList : ConfigStack
+
+        @Serializable
+        data object MemberSearch : ConfigStack
 
         @Serializable
         data class MemberEdit(val member: ProfileMember?) : ConfigStack

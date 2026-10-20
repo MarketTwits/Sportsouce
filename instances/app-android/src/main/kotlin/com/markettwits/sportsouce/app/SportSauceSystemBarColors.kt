@@ -12,8 +12,10 @@ fun ComponentActivity.sportSauceSystemBarColors(
     colorScheme: ColorScheme,
 ) {
     enableEdgeToEdge(
-        navigationBarStyle = SystemBarStyle.light(
-            android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT
+        navigationBarStyle = SystemBarStyle.auto(
+            lightScrim = android.graphics.Color.TRANSPARENT,
+            darkScrim = android.graphics.Color.TRANSPARENT,
+            detectDarkMode = { isDarkTheme }
         ),
         statusBarStyle = SystemBarStyle.auto(
             lightScrim = colorScheme.background.toArgb(),

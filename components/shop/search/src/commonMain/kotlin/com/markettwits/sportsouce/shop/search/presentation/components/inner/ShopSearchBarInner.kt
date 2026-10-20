@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.shop.search.presentation.components.inner
 
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -7,17 +8,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
+import com.markettwits.core_ui.items.theme.SauceTheme
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 
 @Composable
@@ -32,7 +32,7 @@ internal fun ShopSearchBarInner(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(sauceTopBarContainerColor())
             .windowInsetsPadding(WindowInsets.statusBars),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -43,21 +43,21 @@ internal fun ShopSearchBarInner(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "ArrowBack",
-                tint = MaterialTheme.colorScheme.outline
+                contentDescription = "Назад",
+                tint = SauceTheme.colors.textMuted
             )
         }
-        OutlinedTextField(
+        BoundlessTextFieldBase(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(1f)
-                .padding(top = 5.dp),
+                .padding(top = 5.dp).semantics { contentDescription = "Поиск товара" },
             value = query,
             onValueChange = onQueryChanged,
             maxLines = 1,
             minLines = 1,
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Search
             ),
             keyboardActions = KeyboardActions(onNext = {
                 onApplyQuery()
@@ -67,46 +67,17 @@ internal fun ShopSearchBarInner(
                 onApplyQuery()
             }
             ),
-            placeholder = {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = "Поиск товара",
-                    color = MaterialTheme.colorScheme.outline,
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Visible
-                )
-            },
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                focusedContainerColor = MaterialTheme.colorScheme.primary,
-                cursorColor = MaterialTheme.colorScheme.tertiary,
-                disabledIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            )
+            placeholder = { Text("Поиск товара", color = SauceTheme.colors.textMuted,
+                style = MaterialTheme.typography.bodyLarge, maxLines = 1) },
         )
-        if (query.isEmpty()) {
-            IconButton(
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Mic,
-                    contentDescription = "Mic",
-                    tint = MaterialTheme.colorScheme.outline
-                )
-            }
-        } else {
+        if (query.isNotEmpty()) {
             IconButton(
                 onClick = { onBrushClicked() }
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = Color.Gray
+                    contentDescription = "Очистить поиск",
+                    tint = SauceTheme.colors.textSecondary
                 )
             }
         }

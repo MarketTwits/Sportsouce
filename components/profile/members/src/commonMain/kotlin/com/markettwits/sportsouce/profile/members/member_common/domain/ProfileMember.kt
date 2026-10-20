@@ -14,8 +14,21 @@ data class ProfileMember(
     val team: String,
     val birthday: String,
     val type: String,
-    val child: Boolean
-)
+    val child: Boolean,
+    val identityKnown: Boolean = false,
+    val participantUserId: Int? = null,
+    val cityId: Int? = null,
+    val vk: String? = null,
+    val instagram: String? = null,
+    val whatsapp: String? = null,
+    val telegram: String? = null,
+    val city: String = "",
+    val patronymic: String? = null,
+    val source: Source = Source.Saved,
+) {
+    @Serializable
+    enum class Source { Saved, Self, Team }
+}
 
 val emptyProfileMember = ProfileMember(
     id = 0,

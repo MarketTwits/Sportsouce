@@ -8,9 +8,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.extensions.formatPrice
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationFieldPrice
 
@@ -23,10 +22,10 @@ internal fun AdditionalFiledTitle(
     Text(
         modifier = modifier,
         text = buildAnnotatedString {
-            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.outline)) {
+            withStyle(style = SpanStyle(color = SauceTheme.colors.textSecondary)) {
                 append(field.title)
             }
-            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.outline)) {
+            withStyle(style = SpanStyle(color = SauceTheme.colors.textSecondary)) {
                 when (val price = field.price) {
                     is StartRegistrationFieldPrice.Empty -> {}
                     is StartRegistrationFieldPrice.Cost -> {
@@ -35,14 +34,13 @@ internal fun AdditionalFiledTitle(
                 }
             }
             withStyle(
-                style = SpanStyle(color = MaterialTheme.colorScheme.error)
+                style = SpanStyle(color = SauceTheme.colors.danger.content)
             ) {
                 if (!field.isOptional)
                     append(" *")
             }
         },
-        fontSize = 14.sp,
-        fontFamily = FontNunito.semiBoldBold(),
+        style = MaterialTheme.typography.labelLarge,
         overflow = TextOverflow.Ellipsis
     )
 }

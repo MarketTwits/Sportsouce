@@ -1,6 +1,6 @@
 package com.markettwits.core_ui.items.components.textField
 
-import androidx.compose.foundation.clickable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,14 +15,16 @@ import com.markettwits.core_ui.items.components.timer.screens.rememberTimerPage
 fun TimeTextField(
     modifier: Modifier = Modifier,
     state : TimerState = rememberTimerPage(),
+    enabled: Boolean = true,
     textFiled: @Composable (Modifier) -> Unit,
     onValueChanged: (String) -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(enabled) { if (!enabled) openDialog = false }
 
     TimerDialog(
         timerState = state,
-        isShowDialog = openDialog,
+        isShowDialog = openDialog && enabled,
         onDismiss = {
             openDialog = false
         },
@@ -31,7 +33,8 @@ fun TimeTextField(
             onValueChanged(state.timeState.toString())
         }
     )
-    textFiled(modifier.clickable {
-        openDialog = true
-    })
+    SelectorFieldAnchor(modifier = modifier, enabled = enabled, expanded = openDialog && enabled,
+        onOpen = { openDialog = true }) {
+        textFiled(Modifier)
+    }
 }

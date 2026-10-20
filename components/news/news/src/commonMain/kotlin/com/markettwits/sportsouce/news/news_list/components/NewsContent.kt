@@ -8,6 +8,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.news.common.model.NewsItem
 
@@ -15,6 +19,7 @@ import com.markettwits.sportsouce.news.common.model.NewsItem
 fun NewsContent(
     modifier: Modifier = Modifier,
     items: List<NewsItem>,
+    isLoading: Boolean = false,
     onClickItem: (NewsItem) -> Unit
 ) {
     BoxWithConstraints(
@@ -22,12 +27,21 @@ fun NewsContent(
     ) {
         val cardWidth = (maxWidth * 0.46f).coerceIn(240.dp, 360.dp)
         val cardHeight = (cardWidth * 0.88f).coerceIn(220.dp, 320.dp)
+        val showPlaceholders = isLoading && items.isEmpty()
 
         LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth().then(if (showPlaceholders) Modifier.semantics {
+                contentDescription = "Загрузка новостей"
+                progressBarRangeInfo = ProgressBarRangeInfo.Indeterminate
+            } else Modifier),
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 12.dp, bottom = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            if (showPlaceholders) {
+                items(3, key = { "loading-news-$it" }) {
+                    NewsItemCardShimmer(cardWidth = cardWidth, cardHeight = cardHeight)
+                }
+            }
             items(items.take(10), key = { it.id }) { newsItem ->
                 NewsItemCard(
                     modifier = Modifier,

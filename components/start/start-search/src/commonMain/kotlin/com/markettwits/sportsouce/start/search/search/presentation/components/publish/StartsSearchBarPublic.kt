@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.search.search.presentation.components.publish
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -8,14 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
-
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 fun StartsSearchBarPublic(
@@ -23,58 +19,30 @@ fun StartsSearchBarPublic(
     onClickSearchPanel: () -> Unit,
     onClickSettings: () -> Unit,
 ) {
+    val colors = SauceTheme.colors
     Row(
-        modifier = modifier
-            .padding(WindowInsets.statusBars.asPaddingValues())
-            .padding(10.dp)
-            .fillMaxWidth(),
+        modifier = modifier.padding(WindowInsets.statusBars.asPaddingValues())
+            .fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Card(
-            modifier = Modifier
-                .weight(0.8f)
-                .shadow(elevation = 2.dp, shape = Shapes.large)
-                .clip(Shapes.large),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-            ),
+        Surface(
+            onClick = onClickSearchPanel,
+            modifier = Modifier.weight(1f).heightIn(min = 52.dp),
+            shape = SauceShapes.field,
+            color = colors.surface,
+            contentColor = colors.textMuted,
+            border = BorderStroke(1.dp, colors.border),
         ) {
-            SearchPanel(onClick = onClickSearchPanel)
+            Row(Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(22.dp))
+                Text("Поиск старта", style = MaterialTheme.typography.bodyLarge)
+            }
         }
-        IconButton(
-            modifier = Modifier.weight(0.2f),
-            onClick = onClickSettings
-        ) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                tint = MaterialTheme.colorScheme.outline,
-                contentDescription = "Settings"
-            )
+        IconButton(onClick = onClickSettings, modifier = Modifier.size(48.dp)) {
+            Icon(Icons.Default.Settings, contentDescription = "Настройки", tint = colors.textSecondary)
         }
-    }
-}
-
-@Composable
-private fun SearchPanel(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Row(
-        modifier = modifier
-            .padding(12.dp)
-            .fillMaxWidth()
-            .noRippleClickable(onClick),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Поиск старта",
-            tint = MaterialTheme.colorScheme.outline
-        )
-        Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-        Text(
-            text = "Поиск старта",
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.outline
-        )
     }
 }

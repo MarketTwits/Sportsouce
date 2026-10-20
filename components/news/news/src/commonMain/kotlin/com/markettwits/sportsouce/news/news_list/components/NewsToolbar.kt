@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.news.news_list.components
 
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -26,7 +27,7 @@ fun NewsToolbar(
     ) {
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary)
+                .background(sauceTopBarContainerColor())
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 8.dp)

@@ -1,115 +1,52 @@
 package com.markettwits.core_ui.items.components.textField
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.markettwits.core.time.BaseTimeMapper
-import com.markettwits.core.time.TimeMapper
-import com.markettwits.core.time.TimePattern
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+/**
+ * [value] can explicitly control a custom field slot. Existing OutlinedTextFieldBase slots provide
+ * their committed value automatically; opening/cancelling never sends a value change.
+ */
+@OptIn(ExperimentalTime::class)
 @Composable
 fun CalendarTextFiled(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    value: String? = null,
+    clearable: Boolean = false,
     textFiled: @Composable (Modifier) -> Unit,
-    onValueChanged: (String) -> Unit
+    onValueChanged: (String) -> Unit,
 ) {
-    var openDialog by remember { mutableStateOf(false) }
+    var openDialog by rememberSaveable { mutableStateOf(false) }
+    var confirmedDate by rememberSaveable { mutableStateOf<Long?>(null) }
+    var initialDate by rememberSaveable { mutableStateOf<Long?>(null) }
+    val fieldValue = remember { SelectorFieldValue() }
+    val yearRange = 1925..Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
+    LaunchedEffect(enabled) { if (!enabled) openDialog = false }
 
-    val timeMapper: TimeMapper = remember { BaseTimeMapper() }
-
-    if (openDialog) {
-        val datePickerState = rememberDatePickerState(
-            yearRange = IntRange(
-                start = 1925,
-                endInclusive = Clock.System.now()
-                    .toLocalDateTime(TimeZone.currentSystemDefault()).year
-            )
-        )
-        val confirmEnabled by remember {
-            derivedStateOf { datePickerState.selectedDateMillis != null }
-        }
-        DatePickerDialog(
-            onDismissRequest = {
-                openDialog = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openDialog = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.tertiary
-                    ),
-                    enabled = confirmEnabled
-                ) {
-                    Text("ОК")
-                    datePickerState.selectedDateMillis?.let {
-                        onValueChanged(
-                            timeMapper.mapTime(TimePattern.FullWithDots, it)
-                        )
-                    }
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        openDialog = false
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.tertiary
-                    )
-                ) {
-                    Text("Отменить")
-                }
-            },
-            colors = sportSouceCalendarColors()
-        ) {
-            DatePicker(
-                state = datePickerState,
-                colors = sportSouceCalendarColors()
-            )
-        }
+    if (openDialog && enabled) CalendarDateDialog(
+        initialSelectedDateMillis = initialDate,
+        yearRange = yearRange,
+        clearable = clearable,
+        onDismiss = { openDialog = false },
+        onConfirm = { selected ->
+            confirmedDate = selected
+            openDialog = false
+            onValueChanged(selected?.let(::calendarDateText).orEmpty())
+        },
+    )
+    SelectorFieldAnchor(modifier = modifier, enabled = enabled, expanded = openDialog && enabled,
+        fieldValue = fieldValue,
+        onOpen = {
+            val currentValue = value ?: fieldValue.value
+            initialDate = if (currentValue != null) calendarDateMillis(currentValue, yearRange) else confirmedDate
+            openDialog = true
+        }) {
+        textFiled(Modifier)
     }
-    textFiled(modifier.clickable {
-        openDialog = true
-    })
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun sportSouceCalendarColors(): DatePickerColors = DatePickerDefaults.colors(
-    containerColor = MaterialTheme.colorScheme.primary,
-    titleContentColor = MaterialTheme.colorScheme.onTertiary,
-    headlineContentColor = MaterialTheme.colorScheme.tertiary,
-    weekdayContentColor = MaterialTheme.colorScheme.tertiary,
-    subheadContentColor = MaterialTheme.colorScheme.tertiary,
-    navigationContentColor = MaterialTheme.colorScheme.tertiary,
-    yearContentColor = MaterialTheme.colorScheme.tertiary,
-    disabledYearContentColor = MaterialTheme.colorScheme.onBackground,
-    currentYearContentColor = MaterialTheme.colorScheme.tertiary,
-    selectedYearContentColor = MaterialTheme.colorScheme.onSecondary,
-    disabledSelectedYearContentColor = MaterialTheme.colorScheme.onBackground,
-    selectedYearContainerColor = MaterialTheme.colorScheme.secondary,
-    disabledSelectedYearContainerColor = MaterialTheme.colorScheme.primaryContainer,
-    dayContentColor = MaterialTheme.colorScheme.tertiary,
-    disabledDayContentColor = MaterialTheme.colorScheme.onBackground,
-    selectedDayContentColor = MaterialTheme.colorScheme.onSecondary,
-    disabledSelectedDayContentColor = MaterialTheme.colorScheme.onBackground,
-    selectedDayContainerColor = MaterialTheme.colorScheme.secondary,
-    disabledSelectedDayContainerColor = MaterialTheme.colorScheme.primaryContainer,
-    todayContentColor = MaterialTheme.colorScheme.tertiary,
-    todayDateBorderColor = MaterialTheme.colorScheme.outline,
-    dayInSelectionRangeContentColor = MaterialTheme.colorScheme.onBackground,
-    dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primaryContainer,
-    dividerColor = Color.Transparent,
-    dateTextFieldColors = defaultOutlineTextFiledColors()
-)

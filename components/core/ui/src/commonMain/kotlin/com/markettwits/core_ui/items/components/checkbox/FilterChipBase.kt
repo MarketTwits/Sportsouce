@@ -1,14 +1,22 @@
 package com.markettwits.core_ui.items.components.checkbox
 
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import androidx.compose.ui.text.rememberTextMeasurer
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceSizes
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.components.focus.sauceFocusOutline
 
 @Composable
 fun FilterChipBase(
@@ -18,41 +26,47 @@ fun FilterChipBase(
     onClick: () -> Unit,
     label: String,
 ) {
+    val colors = SauceTheme.colors
+    val interactions = remember { MutableInteractionSource() }
+    val labelStyle = MaterialTheme.typography.labelLarge
+    val density = LocalDensity.current
+    val measuredLabel = rememberTextMeasurer().measure(label, style = labelStyle)
+    val labelWidth = with(density) { measuredLabel.size.width.toDp() } + 1.dp
+    val labelHeight = with(density) { labelStyle.lineHeight.toDp() }
     FilterChip(
-        modifier = modifier,
+        modifier = modifier.heightIn(min = maxOf(SauceSizes.touchTarget, labelHeight + 16.dp))
+            .sauceFocusOutline(interactions, SauceShapes.badge, colors.action, enabled),
+        interactionSource = interactions,
         selected = selected,
         enabled = enabled,
         onClick = onClick,
-        label = {
-            Text(
-                text = label,
-                fontFamily = FontNunito.medium(),
-                fontSize = 12.sp,
-            )
-        },
-        leadingIcon = {
-            if (selected) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        },
+        shape = SauceShapes.badge,
+        label = { Text(text = label, modifier = Modifier.width(labelWidth), style = labelStyle) },
+        leadingIcon = if (selected) {
+            { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp)) }
+        } else null,
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = enabled,
+            selected = selected,
+            borderColor = colors.border,
+            selectedBorderColor = colors.action,
+            disabledBorderColor = colors.border,
+            disabledSelectedBorderColor = colors.border,
+            selectedBorderWidth = 1.dp,
+        ),
         colors = FilterChipDefaults.filterChipColors(
-            containerColor = MaterialTheme.colorScheme.outlineVariant,
-            labelColor = MaterialTheme.colorScheme.onBackground,
-            iconColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.outlineVariant,
-            disabledLabelColor = MaterialTheme.colorScheme.onBackground,
-            disabledLeadingIconColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f),
-            disabledTrailingIconColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.38f),
-            selectedContainerColor = MaterialTheme.colorScheme.secondary,
-            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
-            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondary,
-            selectedTrailingIconColor = MaterialTheme.colorScheme.onSecondary,
-            disabledSelectedContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.12f),
-        )
+            containerColor = colors.surface,
+            labelColor = colors.textSecondary,
+            iconColor = colors.action,
+            disabledContainerColor = colors.disabledContainer,
+            disabledLabelColor = colors.disabledContent,
+            disabledLeadingIconColor = colors.disabledContent,
+            disabledTrailingIconColor = colors.disabledContent,
+            selectedContainerColor = colors.actionSoft,
+            selectedLabelColor = colors.onActionSoft,
+            selectedLeadingIconColor = colors.onActionSoft,
+            selectedTrailingIconColor = colors.onActionSoft,
+            disabledSelectedContainerColor = colors.disabledContainer,
+        ),
     )
 }

@@ -14,8 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 fun TopBarBase(
@@ -26,14 +25,10 @@ fun TopBarBase(
 ) {
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(
-                top = if (isStatusBarHandle)
-                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-                else 0.dp
-            )
+            .background(sauceTopBarContainerColor())
+            .then(if (isStatusBarHandle) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)
             .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 2.dp)
+            .heightIn(min = 56.dp)
             .fillMaxWidth()
     ) {
         IconButton(
@@ -43,20 +38,20 @@ fun TopBarBase(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = "back",
-                tint = MaterialTheme.colorScheme.tertiary,
+                contentDescription = "Назад",
+                tint = SauceTheme.colors.textPrimary,
             )
         }
 
         Text(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(horizontal = 48.dp),
+                .padding(horizontal = 48.dp)
+                .fillMaxWidth(),
             text = title,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 18.sp,
-            textAlign = TextAlign.Start,
+            color = SauceTheme.colors.textPrimary,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )

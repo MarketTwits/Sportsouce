@@ -12,7 +12,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.*
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationInfo
@@ -23,76 +26,81 @@ import kotlinx.serialization.Serializable
 internal fun StartStagesIndicatorContent(
     modifier: Modifier = Modifier,
     currentIndex: Int,
-    startRegistrationStage: List<StartRegistrationStagePage>
+    startRegistrationStage: List<StartRegistrationStagePage>,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        startRegistrationStage.forEachIndexed { index, it ->
-            StartStageItem(
-                index = (index + 1).toString(),
-                title = it.title,
-                description = it.description,
-                isPasted = currentIndex > index - 1
-            )
+    if (startRegistrationStage.isEmpty()) return
+    // Page IDs are persisted navigation identities and need not equal their list position.
+    val active = startRegistrationStage.indexOfFirst { it.id == currentIndex }
+    if (active < 0) return
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(modifier.fillMaxWidth().semantics {
+        progressBarRangeInfo = ProgressBarRangeInfo((active + 1).toFloat(), 0f..startRegistrationStage.size.toFloat())
+        stateDescription = "Шаг ${active + 1} из ${startRegistrationStage.size}"
+    }) {
+        val vertical = maxWidth / startRegistrationStage.size < 144.dp * fontScale
+        if (vertical) {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
+                startRegistrationStage.forEachIndexed { position, stage ->
+                    StageIndicatorItem(Modifier.fillMaxWidth(), position, stage, active, vertical = true)
+                }
+            }
+        } else {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
+                verticalAlignment = Alignment.Top) {
+                startRegistrationStage.forEachIndexed { position, stage ->
+                    StageIndicatorItem(Modifier.weight(1f), position, stage, active, vertical = false)
+                }
+            }
         }
     }
 }
 
 @Composable
-internal fun StartStageItem(
-    modifier: Modifier = Modifier,
-    index: String,
-    title: String,
-    description: String,
-    isPasted: Boolean
+private fun StageIndicatorItem(
+    modifier: Modifier,
+    position: Int,
+    stage: StartRegistrationStagePage,
+    active: Int,
+    vertical: Boolean,
 ) {
-    Column(
-        modifier = modifier.sizeIn(
-            maxWidth = 200.dp
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(50.dp)
-                .background(
-                    if (isPasted)
-                        MaterialTheme.colorScheme.secondary
-                    else MaterialTheme.colorScheme.outline
-                )
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = index,
-                color = MaterialTheme.colorScheme.onSecondary,
-                textAlign = TextAlign.Center,
-                fontFamily = FontNunito.bold(),
-                fontSize = 18.sp,
-                overflow = TextOverflow.Ellipsis
-            )
+    val colors = SauceTheme.colors
+    val reached = position <= active
+    val marker: @Composable () -> Unit = {
+        Box(Modifier.width(40.dp).heightIn(min = 32.dp).clip(CircleShape)
+            .background(if (reached) colors.action else colors.surfaceSubtle).padding(6.dp),
+            contentAlignment = Alignment.Center) {
+            Text((position + 1).toString(), Modifier.fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.labelLarge,
+                color = if (reached) colors.onAction else colors.textSecondary)
         }
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.onPrimary,
-            textAlign = TextAlign.Center,
-            fontFamily = FontNunito.bold(),
-            softWrap = true,
-            fontSize = 16.sp,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = description,
-            color = MaterialTheme.colorScheme.onPrimary,
-            textAlign = TextAlign.Center,
-            fontFamily = FontNunito.semiBoldBold(),
-            softWrap = true,
-            fontSize = 14.sp,
-            overflow = TextOverflow.Ellipsis
-        )
+    }
+    val labels: @Composable (Modifier) -> Unit = { labelModifier ->
+        Column(labelModifier, verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
+            Text(stage.title, Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelLarge,
+                textAlign = if (vertical) TextAlign.Start else TextAlign.Center, color = colors.textPrimary)
+            if (stage.description.isNotBlank()) Text(stage.description, Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall, color = colors.textSecondary,
+                textAlign = if (vertical) TextAlign.Start else TextAlign.Center)
+        }
+    }
+    val semantics = modifier.semantics(mergeDescendants = true) {
+        stateDescription = when {
+            position < active -> "Завершён"
+            position == active -> "Текущий шаг"
+            else -> "Предстоящий шаг"
+        }
+    }
+    if (vertical) {
+        Row(semantics, verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
+            marker()
+            labels(Modifier.weight(1f))
+        }
+    } else {
+        Column(semantics, horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+            marker()
+            labels(Modifier.fillMaxWidth())
+        }
     }
 }
 

@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.ui.unit.sp
 import com.attafitamim.krop.core.crop.CropState
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -15,7 +16,8 @@ import com.markettwits.core_ui.items.theme.FontNunito
 internal fun CropperTopBar(state: CropState) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = sauceTopBarContainerColor(),
+            scrolledContainerColor = sauceTopBarContainerColor(),
             actionIconContentColor = MaterialTheme.colorScheme.tertiary,
             navigationIconContentColor = MaterialTheme.colorScheme.tertiary
         ),

@@ -13,6 +13,7 @@ class StartPayExecutor(
 ) : StartPayExecutorHandler(repository, intentAction, exceptionTracker) {
 
     override fun executeIntent(intent: Intent) {
+        if (state().isLoading) return
         when (intent) {
 
             is Intent.OnClickGoBack -> publish(Label.GoBack)

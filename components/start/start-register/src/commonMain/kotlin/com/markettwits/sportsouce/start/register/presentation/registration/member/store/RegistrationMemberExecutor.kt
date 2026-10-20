@@ -7,11 +7,16 @@ import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMemb
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationParticipantsRepository
+import com.markettwits.sportsouce.start.register.presentation.registration.member.components.memberSelectApply
+import com.markettwits.sportsouce.start.register.presentation.registration.member.components.withIdentityDetachedIfChanged
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.isPresentInProfileMembers
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.isValidEmail
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.isValidPhone
 import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
@@ -23,21 +28,32 @@ import kotlin.time.ExperimentalTime
 class RegistrationMemberExecutor(
     private val validation: RegistrationMemberValidator,
     private val profileMembersRepository: ProfileMembersRepository,
+    private val participantsRepository: RegistrationParticipantsRepository,
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    private var membersJob: Job? = null
     override fun executeAction(action: Unit) {
-        scope.launch {
-            runCatching {
-                profileMembersRepository.fetchMembers(withUser = true)
-            }.onSuccess {
-                dispatch(Message.OnMembersChanged(it))
-            }
+        loadMembers()
+    }
+
+    private fun loadMembers() {
+        membersJob?.cancel()
+        dispatch(Message.MembersLoading)
+        membersJob = scope.launch {
+            val result = participantsRepository.load()
+            ensureActive()
+            result.fold(onSuccess = { dispatch(Message.OnMembersChanged(it)) },
+                onFailure = { dispatch(Message.MembersFailed("Не удалось обновить участников и команду. Повторите загрузку.")) })
         }
     }
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
-            is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement.updateAge()))
+            is Intent.ChangeFiled -> dispatch(Message.OnValueChanged(intent.startStatement.withIdentityDetachedIfChanged(state().value).updateAge()))
+            is Intent.SelectMember -> if (!state().membersLoading && intent.member in state().members) {
+                dispatch(Message.OnValueChanged(memberSelectApply(intent.member, state().value).updateAge()))
+            }
+            is Intent.RetryMembers -> if (!state().membersLoading) loadMembers()
             is Intent.OnClickContinue -> onClickContinue(state())
             is Intent.OnClickAddToProfile -> onClickAddToProfile(state())
             is Intent.OnDismissSuggestAddDialog -> dispatch(Message.ChangeSuggestAddDialogState(false))
@@ -91,6 +107,10 @@ class RegistrationMemberExecutor(
     }
 
     private fun onClickContinue(state: State) {
+        if (!state.isSelectedTeamAvailable) {
+            dispatch(Message.ShowEvent("Не удалось подтвердить доступ к участнику команды. Обновите список или выберите другого участника."))
+            return
+        }
         val startStatement = state.value
         validation.validateFields(startStatement).fold(
             onSuccess = {
@@ -151,11 +171,7 @@ class RegistrationMemberExecutor(
 
             profileMembersRepository.addMember(member).fold(
                 onSuccess = {
-                    runCatching {
-                        profileMembersRepository.fetchMembers(withUser = true)
-                    }.onSuccess {
-                        dispatch(Message.OnMembersChanged(it))
-                    }
+                    loadMembers()
                     dispatch(Message.ChangeAddMemberDialogState(false))
                     dispatch(Message.ChangeAddMemberLoading(false))
                     dispatch(Message.ChangeAddMemberValidationVisible(false))

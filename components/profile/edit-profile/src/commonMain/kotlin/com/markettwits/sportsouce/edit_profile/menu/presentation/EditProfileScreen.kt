@@ -1,10 +1,10 @@
 package com.markettwits.sportsouce.edit_profile.menu.presentation
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Scaffold
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,12 +23,11 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
     }) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(10.dp)
-                .verticalScroll(rememberScrollState())
+                .fillMaxSize().padding(paddingValues).consumeWindowInsets(paddingValues)
+                .verticalScroll(rememberScrollState()).padding(16.dp)
         ) {
             EditProfileMenu(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(bottom = 16.dp),
                 menu = profileMenu(),
                 onClickItem = {
                     when (it) {
@@ -50,7 +49,7 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
                     }
                 })
             EditProfileMenu(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(bottom = 16.dp),
                 menu = securityMenu(),
                 onClickItem = {
                     when (it) {

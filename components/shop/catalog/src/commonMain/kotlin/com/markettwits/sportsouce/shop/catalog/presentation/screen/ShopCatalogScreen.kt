@@ -1,5 +1,9 @@
 package com.markettwits.sportsouce.shop.catalog.presentation.screen
 
+import com.markettwits.core_ui.items.components.topbar.SauceTopBarSection
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.sportsouce.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import com.markettwits.sportsouce.shop.cart.presentation.catalog.components.ShopCartCatalogWidget
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponent
@@ -37,12 +40,23 @@ fun ShopCatalogScreen(
 
     val shopItems = state.shopItems.collectAsLazyPagingItems()
 
-    val backgroundColor =
-        if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
+    val backgroundColor = SauceTheme.colors.background
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     val coroutineScope = rememberCoroutineScope()
+    var wasDrawerOpen by remember { mutableStateOf(false) }
+    // Drawer gestures and Back must update the same visibility flag as the toolbar action.
+    LaunchedEffect(drawerState.currentValue) {
+        if (drawerState.currentValue == DrawerValue.Open) {
+            wasDrawerOpen = true
+            if (!state.isShowFilter) catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
+        }
+        else if (wasDrawerOpen) {
+            wasDrawerOpen = false
+            if (state.isShowFilter) catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -88,7 +102,7 @@ fun ShopCatalogScreen(
                         .fillMaxHeight(),
                     component = filterComponent,
                     onClickGoBack = {
-                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickGoBack)
+                        catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)
                     },
                     onClickApplyFilter = {
                         coroutineScope.launch {
@@ -102,7 +116,10 @@ fun ShopCatalogScreen(
                     backgroundColor = backgroundColor
                 ) {
                     Column {
-                        SelectedFilterParams(component = filterComponent)
+                        SauceTopBarSection {
+                            SelectedFilterParams(component = filterComponent)
+                        }
+
                         ShopItemsContent(items = shopItems, onClickItem = {
                             catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickItem(it))
                         })

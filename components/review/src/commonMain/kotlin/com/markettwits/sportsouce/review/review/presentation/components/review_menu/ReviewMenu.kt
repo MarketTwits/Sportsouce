@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.review.review.presentation.components.review_menu
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceSpacing
 
 @Composable
 fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
@@ -22,7 +25,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
             .fillMaxWidth()
             .wrapContentSize()
             .padding(horizontal = 10.dp)
-            .padding(bottom = 8.dp),
+            .padding(vertical = SauceSpacing.medium),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         for (i in menuItems.indices step 2) {
@@ -35,6 +38,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
                     icon = menuItems[i].icon,
                     accentColor = menuItems[i].accentColor,
                     backgroundColor = menuItems[i].backgroundColor,
+                    shape = reviewMenuShape(i, menuItems.size),
                     onClick = { onClick(menuItems[i].id) },
                     modifier = Modifier.weight(1f)
                 )
@@ -44,6 +48,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
                         icon = menuItems[i + 1].icon,
                         accentColor = menuItems[i + 1].accentColor,
                         backgroundColor = menuItems[i + 1].backgroundColor,
+                        shape = reviewMenuShape(i + 1, menuItems.size),
                         onClick = { onClick(menuItems[i + 1].id) },
                         modifier = Modifier.weight(1f)
                     )
@@ -53,6 +58,20 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
             }
         }
     }
+}
+
+/** Only the exposed corners of the two-column menu carry the large card radius. */
+internal fun reviewMenuShape(index: Int, count: Int): RoundedCornerShape {
+    val outer = SauceShapes.card.topStart
+    val inner = androidx.compose.foundation.shape.CornerSize(SauceSpacing.extraSmall)
+    val isLastInLeftColumn = index % 2 == 0 && index + 2 >= count
+    val isLastInRightColumn = index % 2 == 1 && index + 2 >= count
+    return RoundedCornerShape(
+        topStart = if (index == 0) outer else inner,
+        topEnd = if (index == 1 || count == 1) outer else inner,
+        bottomStart = if (isLastInLeftColumn) outer else inner,
+        bottomEnd = if (isLastInRightColumn || index == count - 1) outer else inner,
+    )
 }
 private fun menu() = listOf<ReviewMenuItem>(
     ReviewMenuItem(

@@ -115,3 +115,14 @@ compose.desktop {
         }
     }
 }
+
+val catalogCompilation = kotlin.targets.getByName("jvm").compilations.getByName("main")
+tasks.register<JavaExec>("renderDesignSystemCatalog") {
+    group = "verification"
+    description = "Render shared Compose components in light and dark themes without network access"
+    dependsOn("jvmMainClasses")
+    mainClass.set("com.markettwits.sportsouce.app.desktop.DesignSystemCatalogKt")
+    classpath = catalogCompilation.output.allOutputs + catalogCompilation.runtimeDependencyFiles!!
+    args(layout.buildDirectory.dir("design-system").get().asFile.absolutePath)
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(21)) })
+}

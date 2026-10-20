@@ -1,14 +1,16 @@
 package com.markettwits.sportsouce.shop.filter.presentation.components.filter
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import com.markettwits.core_ui.items.components.navigation.SauceActionFooter
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,24 +33,21 @@ internal fun ShopFilterContent(
 ) {
     Scaffold(
         modifier = modifier,
-        floatingActionButtonPosition = FabPosition.Center,
-        containerColor = MaterialTheme.colorScheme.primary,
-        floatingActionButton = {
-            if (!state.isError)
+        containerColor = SauceTheme.colors.surface,
+        topBar = { ShopFilterTopBar(onClickBack = onClickGoBack) },
+        bottomBar = {
+            if (!state.isError) SauceActionFooter {
                 ShopFilterApplyButton(
                     onClickApply = onClickApplyFilter,
                     onClickReset = onClickReset
                 )
+            }
         },
     ) { paddingValues ->
         Column(
             modifier = modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = 40.dp
-                )
+                .padding(paddingValues).consumeWindowInsets(paddingValues)
+                .verticalScroll(rememberScrollState()).padding(16.dp)
         ) {
             ShopFilterCategories(
                 categories = state.categories,

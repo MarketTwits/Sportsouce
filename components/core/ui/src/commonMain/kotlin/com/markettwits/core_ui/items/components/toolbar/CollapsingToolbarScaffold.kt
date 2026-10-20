@@ -26,6 +26,8 @@ import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.runtime.CompositionLocalProvider
+import com.markettwits.core_ui.items.components.topbar.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
@@ -103,6 +105,7 @@ fun CollapsingToolbarScaffold(
 		scrollStrategy.create(state.offsetYState, state.toolbarState, flingBehavior)
 	}
 
+	val glass = rememberSauceTopBarState()
 	val toolbarState = state.toolbarState
 	val statusBarHeight = with(density) {
 		WindowInsets.statusBars.asPaddingValues().calculateTopPadding().roundToPx()
@@ -111,14 +114,16 @@ fun CollapsingToolbarScaffold(
 	Layout(
 		content = {
 			CollapsingToolbar(
-				modifier = toolbarModifier,
+				modifier = toolbarModifier.sauceTopBarGlass(glass),
 				clipToBounds = toolbarClipToBounds,
 				collapsingToolbarState = toolbarState,
 			) {
-				toolbar()
+				CompositionLocalProvider(LocalInsideGlassTopBar provides true) { toolbar() }
 			}
 
-			CollapsingToolbarScaffoldScopeInstance.body()
+			CompositionLocalProvider(LocalSauceTopBar provides glass) {
+				CollapsingToolbarScaffoldScopeInstance.body()
+			}
 		},
 		modifier = modifier
 			.then(

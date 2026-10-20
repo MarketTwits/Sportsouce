@@ -7,6 +7,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,10 +41,9 @@ internal fun RenderAdditionalFields(
                         overflow = TextOverflow.Ellipsis
                     )
                     fields.forEach { field ->
-                        RenderAdditionalField(
-                            field = field,
-                            onFieldChanged = onFieldChanged
-                        )
+                        key(field.field.id, field.field.type) {
+                            RenderAdditionalField(field = field, onFieldChanged = onFieldChanged)
+                        }
                     }
                 }
 

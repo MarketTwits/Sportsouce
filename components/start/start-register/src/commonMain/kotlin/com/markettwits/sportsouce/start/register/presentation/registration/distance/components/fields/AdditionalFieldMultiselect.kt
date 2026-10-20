@@ -1,18 +1,11 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
+import com.markettwits.core_ui.items.components.selection.SauceCheckboxRow
 import com.markettwits.core_ui.items.extensions.formatPrice
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Option
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 
@@ -33,33 +26,12 @@ internal fun AdditionalFieldMultiselect(
         )
         options.forEach { option ->
             val isSelected = selectedOptions.contains(option.id)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable {
-                        onChange(isSelected, option, field, selectedOptions, onFieldChanged)
-                    }
-                    .fillMaxWidth()
-            ) {
-                CheckBoxBase(
-                    checked = isSelected,
-                    onValueChanged = {
-                        onChange(isSelected, option, field, selectedOptions, onFieldChanged)
-                    }
-                )
-                val text = if (option.price != null )
-                    "${option.title} + (${option.price.formatPrice()} ₽)"
-                else
-                    option.title
-                Text(
-                    text = text,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    fontSize = 14.sp,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+            val text = if (option.price != null)
+                "${option.title} + (${option.price.formatPrice()} ₽)"
+            else option.title
+            SauceCheckboxRow(label = text, checked = isSelected, onCheckedChange = {
+                onChange(isSelected, option, field, selectedOptions, onFieldChanged)
+            })
         }
     }
 }

@@ -37,22 +37,10 @@ internal fun StartsRecommendationPanel(
     onItemClick: (StartsListItem) -> Unit,
 ) {
     if (items.isNotEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                text = "Также рекомендуем",
-                fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-            )
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            StartSectionHeading("Также рекомендуем")
             LazyRow(
-                contentPadding = PaddingValues(horizontal = 10.dp),
+                contentPadding = PaddingValues(0.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(items) { item ->

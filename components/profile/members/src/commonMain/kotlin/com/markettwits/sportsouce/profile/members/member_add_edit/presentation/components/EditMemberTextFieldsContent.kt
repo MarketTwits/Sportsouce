@@ -139,8 +139,8 @@ fun EditMemberTextFieldsContent(
                     .map { it.name },
             ) { newValue -> onMemberChange(member.copy(team = newValue)) }
 
-            val typeList = remember {
-                listOf("Родственник", "Друг", "Партнер по команде")
+            val typeList = remember(member.type) {
+                com.markettwits.sportsouce.profile.members.member_common.domain.MemberRelationship.optionsFor(member.type)
             }
             DropDownSpinner(
                 modifier = modifierInner,
@@ -171,7 +171,7 @@ fun EditMemberTextFieldsContent(
                     onMemberChange(member.copy(child = false))
                 })
                 Text(
-                    text = "Взрослный",
+                    text = "Взрослый",
                     fontFamily = FontNunito.medium(),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onBackground,

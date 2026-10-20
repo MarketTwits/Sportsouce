@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +17,6 @@ import com.markettwits.core.errors.api.composable.SauceErrorMediumContent
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
-import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponent
 import com.markettwits.sportsouce.review.review.presentation.components.content.ReviewContent
@@ -55,6 +54,7 @@ fun ReviewScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 ReviewContent(
+                    isLoading = state.isLoading,
                     news = state.review.news,
                     actual = state.review.actualStarts,
                     archive = state.review.archiveStarts,
@@ -86,9 +86,6 @@ fun ReviewScreen(
                         component.obtainEvent(ReviewStore.Intent.OnClickVk)
                     }
                 )
-                if (state.review.actualStarts.isEmpty() && state.isLoading) {
-                    LoadingFullScreen(modifier = Modifier.align(Alignment.CenterHorizontally))
-                }
                 state.error?.SauceErrorMediumContent(
                     modifier = Modifier
                         .padding(top = 24.dp)

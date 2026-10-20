@@ -5,6 +5,10 @@ plugins {
 }
 
 kotlin {
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+    }
+
 
     android {
         namespace = "com.markettwits.unauthorized"

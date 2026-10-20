@@ -4,10 +4,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid as LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
-import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
+import androidx.compose.ui.platform.LocalDensity
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 
@@ -33,12 +34,6 @@ internal fun StartsFavoritesContent(
     onAddToFavorites: (StartsListItem) -> Unit,
     onRefresh: () -> Unit,
 ) {
-    val screenSize = rememberScreenSizeInfo()
-    val preferredWidth = 180f
-    val columns = ((screenSize.wDP.value / preferredWidth).toInt())
-        .coerceAtLeast(1)
-        .coerceAtMost(4)
-
     AdaptivePane {
         PullToRefreshScreen(
             modifier = modifier,
@@ -60,18 +55,18 @@ internal fun StartsFavoritesContent(
             if (items.isNotEmpty()) {
                 LazyVerticalGrid(
                     modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Fixed(columns),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+                    columns = GridCells.Adaptive(minSize = 320.dp * LocalDensity.current.fontScale),
+                    contentPadding = PaddingValues(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     // Show total count
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
-                            modifier = Modifier.padding(bottom = 8.dp),
-                            text = "Всего ${items.size} избранных стартов",
+                            modifier = Modifier.padding(bottom = 4.dp),
+                            text = "В избранном: ${items.size}",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                            color = SauceTheme.colors.textSecondary
                         )
                     }
 

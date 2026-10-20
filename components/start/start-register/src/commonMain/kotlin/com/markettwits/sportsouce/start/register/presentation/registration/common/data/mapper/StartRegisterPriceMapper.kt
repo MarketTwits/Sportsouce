@@ -85,7 +85,7 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
 
         val member = StartRegisterMember(
             answers = mapAnswers(items),
-            birthday = timeMapper.mapTimeToCloud(time = birthday),
+            birthday = timeMapper.mapTimeToCloud(time = birthday).substringBefore('T'),
             city = city,
             email = email.trim().takeIf { it.isNotEmpty() },
             gender = sex,
@@ -94,7 +94,9 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
             stageId = stageId,
             surname = surname,
             team = team,
-            userId = userId.userId
+            userId = userId.userId.takeIf { participantSource == com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember.Source.Self && userId is StartStatement.UserId.WithId },
+            participantUserId = participantUserId?.takeIf { it > 0 },
+            patronymic = patronymic?.trim()?.takeIf { it.isNotEmpty() },
         )
 
         return member

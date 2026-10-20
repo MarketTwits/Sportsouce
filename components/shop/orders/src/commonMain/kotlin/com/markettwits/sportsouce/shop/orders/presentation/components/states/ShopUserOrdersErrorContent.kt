@@ -2,7 +2,7 @@ package com.markettwits.sportsouce.shop.orders.presentation.components.states
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.markettwits.core.errors.api.composable.SauceErrorScreen

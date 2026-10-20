@@ -6,6 +6,8 @@ plugins {
 
 
 kotlin {
+    sourceSets.commonTest.dependencies { implementation(libs.kotlin.test) }
+    sourceSets.jvmTest.dependencies { implementation(libs.kotlinx.coroutines.test) }
 
     android {
         namespace = "com.markettwits.shop.catalog"

@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons

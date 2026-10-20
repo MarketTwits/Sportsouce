@@ -1,37 +1,21 @@
 package com.markettwits.sportsouce.shop.catalog.presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.components.progress.shimmer
-import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.progress.SauceSkeleton
+import com.markettwits.core_ui.items.theme.SauceShapes
 
 @Composable
 fun ShopItemShimmer(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .shimmer(
-                tiltAngle = 30,
-                gradientColors = listOf(
-                    Color.Transparent,
-                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
-                    Color.Transparent,
-                )
-            )
-            .padding(4.dp)
-            .fillMaxWidth()
-            .height(200.dp)
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = Shapes.large
-            )
-
-    )
+    OnBackgroundCard(modifier, shape = SauceShapes.field) {
+        Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SauceSkeleton(Modifier.fillMaxWidth().aspectRatio(0.9f))
+            SauceSkeleton(Modifier.fillMaxWidth().height(18.dp))
+            SauceSkeleton(Modifier.fillMaxWidth(0.7f).height(18.dp))
+            SauceSkeleton(Modifier.width(80.dp).height(24.dp))
+        }
+    }
 }

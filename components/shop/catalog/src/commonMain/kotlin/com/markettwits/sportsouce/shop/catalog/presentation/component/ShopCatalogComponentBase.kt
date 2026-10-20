@@ -1,6 +1,12 @@
 package com.markettwits.sportsouce.shop.catalog.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.backhandler.BackCallback
+import com.arkivanov.essenty.backhandler.BackHandler
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -34,6 +40,9 @@ class ShopCatalogComponentBase(
     }
 
     init {
+        bindShopFilterBackHandler(backHandler, lifecycle, state) {
+            store.accept(ShopCatalogStore.Intent.OnClickFilter)
+        }
         store.labels.onEach {
             when (it) {
                 is ShopCatalogStore.Label.GoBack -> outputs.goBack()
@@ -43,5 +52,22 @@ class ShopCatalogComponentBase(
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
 
+    }
+}
+
+/** The filter is an overlay; Back closes it before the catalogue's parent navigation. */
+internal fun bindShopFilterBackHandler(
+    backHandler: BackHandler,
+    lifecycle: Lifecycle,
+    state: StateFlow<ShopCatalogStore.State>,
+    onClose: () -> Unit,
+) {
+    val callback = BackCallback(isEnabled = state.value.isShowFilter, priority = BackCallback.PRIORITY_MAX, onBack = onClose)
+    backHandler.register(callback)
+    val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    state.onEach { callback.isEnabled = it.isShowFilter }.launchIn(scope)
+    lifecycle.doOnDestroy {
+        scope.cancel()
+        if (backHandler.isRegistered(callback)) backHandler.unregister(callback)
     }
 }

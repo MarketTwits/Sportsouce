@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -65,7 +65,7 @@ fun StartEmptySearchResultCard(
                         modifier = Modifier
                             .size(68.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.tertiaryContainer,
+                                color = SauceTheme.colors.surfaceSubtle,
                                 shape = CircleShape
                             ),
                         contentAlignment = Alignment.Center
@@ -73,25 +73,24 @@ fun StartEmptySearchResultCard(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = "Ничего не найдено",
-                            tint = MaterialTheme.colorScheme.tertiary,
+                            tint = SauceTheme.colors.textMuted,
                             modifier = Modifier.size(34.dp)
                         )
                     }
 
                     Text(
                         text = title,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        fontSize = 18.sp,
+                        color = SauceTheme.colors.textPrimary,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
 
                     Text(
                         text = message,
-                        color = MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.medium(),
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
+                        color = SauceTheme.colors.textSecondary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
                 }

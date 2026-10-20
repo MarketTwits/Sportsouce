@@ -35,8 +35,8 @@ abstract class StartPayExecutorHandler(
         statePage: StartRegistrationStagePage.Pay,
         isPayOnline: Boolean,
     ) {
+        dispatch(Message.UpdatePriceLoadingStarted)
         scope.launch {
-            dispatch(Message.UpdatePriceLoadingStarted)
             repository.registerOnStart(
                 comboId = statePage.startInfo.comboId,
                 startId = statePage.startInfo.startId,
@@ -71,8 +71,8 @@ abstract class StartPayExecutorHandler(
     fun obtainStartPriceResult(
         startRegistrationStage: StartRegistrationStagePage.Pay,
     ) {
+        dispatch(Message.UpdatePriceLoadingStarted)
         scope.launch {
-            dispatch(Message.UpdatePriceLoadingStarted)
             repository.getStartPrice(
                 comboId = startRegistrationStage.startInfo.comboId,
                 startId = startRegistrationStage.startInfo.startId,

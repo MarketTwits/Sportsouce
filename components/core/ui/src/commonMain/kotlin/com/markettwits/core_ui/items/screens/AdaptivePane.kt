@@ -20,6 +20,7 @@ fun AdaptivePane(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass = calculateWindowSizeClass(),
     backgroundColor: Color = Color.Transparent,
+    fillHeight: Boolean = true,
     content: @Composable (BoxScope) -> Unit
 ) {
     val screenWidth = rememberScreenSizeInfo().wDP
@@ -31,14 +32,13 @@ fun AdaptivePane(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = (if (fillHeight) Modifier.fillMaxSize() else Modifier.fillMaxWidth())
             .background(backgroundColor),
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
             modifier = modifier
-                .fillMaxHeight()
+                .then(if (fillHeight) Modifier.fillMaxHeight() else Modifier)
                 .widthIn(max = maxWidth)
         ) {
             content(this)

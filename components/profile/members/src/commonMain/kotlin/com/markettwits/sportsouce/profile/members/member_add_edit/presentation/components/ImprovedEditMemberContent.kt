@@ -1,31 +1,23 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.checkbox.CheckBoxBase
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.selection.SauceRadioRow
 import com.markettwits.core_ui.items.components.textField.*
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SauceSpacing
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.profile.members.member_common.domain.MemberRelationship
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.teams_city.domain.Team
 
@@ -35,351 +27,77 @@ fun ImprovedEditMemberContent(
     onMemberChange: (ProfileMember) -> Unit,
     member: ProfileMember,
     teams: List<Team>,
+    enabled: Boolean = true,
+    teamsLoading: Boolean = false,
+    teamsError: Boolean = false,
+    onRetryTeams: () -> Unit = {},
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-        Spacer(modifier = Modifier.height(12.dp))
-
-        PersonalInfoSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            member = member,
-            onMemberChange = onMemberChange
-        )
-
-        ContactInfoSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            member = member,
-            onMemberChange = onMemberChange
-        )
-
-        AdditionalInfoSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            member = member,
-            teams = teams,
-            onMemberChange = onMemberChange
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-    }
-}
-
-@Composable
-private fun PersonalInfoSection(
-    modifier: Modifier = Modifier,
-    member: ProfileMember,
-    onMemberChange: (ProfileMember) -> Unit,
-) {
-    val focusManager = LocalFocusManager.current
-
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shadowElevation = 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Личная информация",
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+    val focus = LocalFocusManager.current
+    val next = KeyboardActions(onNext = { focus.moveFocus(FocusDirection.Down) })
+    val keyboard = KeyboardOptions(imeAction = ImeAction.Next)
+    Column(modifier.padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
+        MemberFormSection("Личные данные") {
+            OutlinedTextFieldBase(label = "Имя", value = member.name, isEnabled = enabled,
+                keyboardOptions = keyboard, keyboardActions = next, onValueChange = { onMemberChange(member.copy(name = it)) })
+            OutlinedTextFieldBase(label = "Фамилия", value = member.surname, isEnabled = enabled,
+                keyboardOptions = keyboard, keyboardActions = next, onValueChange = { onMemberChange(member.copy(surname = it)) })
+            CalendarTextFiled(enabled = enabled, value = member.birthday, textFiled = {
+                OutlinedTextFieldBase(modifier = it, label = "Дата рождения", value = member.birthday,
+                    readOnly = true, isEnabled = enabled, onValueChange = {})
+            }, onValueChanged = { onMemberChange(member.copy(birthday = it)) })
+            DropDownSpinner(selectedItem = member.gender, itemList = listOf("Мужской", "Женский"), enabled = enabled,
+                onItemSelected = { _, value -> onMemberChange(member.copy(gender = value)) }, textFiled = {
+                    OutlinedTextFieldBase(label = "Пол", value = member.gender, readOnly = true, onValueChange = {})
+                })
+        }
+        MemberFormSection("Регистрация") {
+            DropDownSpinner(selectedItem = member.type, itemList = MemberRelationship.optionsFor(member.type), enabled = enabled,
+                onItemSelected = { _, value -> onMemberChange(member.copy(type = value)) }, textFiled = {
+                    OutlinedTextFieldBase(label = "Кем вам приходится участник?", value = member.type, readOnly = true, onValueChange = {})
+                })
+            TeamField(value = member.team, teams = teams, enabled = enabled,
+                onValueChanged = { onMemberChange(member.copy(team = it)) })
+            if (teamsLoading) Text("Загружаем список команд…", style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
+            if (teamsError) {
+                Text("Список команд не загрузился. Можно выбрать участие лично или повторить загрузку.",
+                    style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
+                com.markettwits.core_ui.items.components.buttons.SauceButton("Загрузить команды", onRetryTeams,
+                    variant = com.markettwits.core_ui.items.components.buttons.SauceButtonVariant.Text, enabled = enabled)
             }
-
-            OutlinedTextFieldBase(
-                value = member.name,
-                onValueChange = { newValue -> onMemberChange(member.copy(name = newValue)) },
-                label = "Имя",
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
-            )
-
-            OutlinedTextFieldBase(
-                value = member.surname,
-                onValueChange = { newValue -> onMemberChange(member.copy(surname = newValue)) },
-                label = "Фамилия",
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
-            )
-
-            CalendarTextFiled(
-                textFiled = {
-                    OutlinedTextFieldBase(
-                        modifier = it,
-                        label = "День рождения",
-                        value = member.birthday,
-                        isEnabled = false,
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        )
-                    ) {}
-                },
-                onValueChanged = {
-                    onMemberChange(member.copy(birthday = it))
-                }
-            )
-
-            val sexList = listOf("Мужской", "Женский")
-            DropDownSpinner(
-                itemList = sexList,
-                selectedItem = member.gender,
-                onItemSelected = { id, item ->
-                    onMemberChange(member.copy(gender = item))
-                },
-                textFiled = {
-                    OutlinedTextFieldBase(
-                        label = "Пол",
-                        value = member.gender,
-                        isEnabled = false
-                    ) {}
-                }
-            )
+            Column(Modifier.fillMaxWidth().selectableGroup()) {
+                SauceRadioRow("Взрослый", selected = !member.child, enabled = enabled,
+                    onClick = { onMemberChange(member.copy(child = false)) })
+                SauceRadioRow("Ребёнок — без телефона и почты", selected = member.child, enabled = enabled,
+                    onClick = { onMemberChange(member.copy(child = true)) })
+            }
+        }
+        if (!member.child) MemberFormSection("Контакты") {
+            OutlinePhoneTextFiled(label = "Телефон (необязательно)", value = member.phone, isEnabled = enabled,
+                keyboardOptions = keyboard.copy(keyboardType = KeyboardType.Phone), keyboardActions = next,
+                onValueChange = { onMemberChange(member.copy(phone = it)) })
+            OutlinedTextFieldBase(label = "Email (необязательно)", value = member.email, isEnabled = enabled,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+                onValueChange = { onMemberChange(member.copy(email = it)) })
         }
     }
 }
 
 @Composable
-private fun ContactInfoSection(
-    modifier: Modifier = Modifier,
-    member: ProfileMember,
-    onMemberChange: (ProfileMember) -> Unit,
-) {
-    val focusManager = LocalFocusManager.current
-
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shadowElevation = 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Phone,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Контактная информация",
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            OutlinePhoneTextFiled(
-                value = member.phone,
-                onValueChange = { newValue -> onMemberChange(member.copy(phone = newValue)) },
-                label = "Номер телефона",
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Phone
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
-            )
-
-            OutlinedTextFieldBase(
-                value = member.email,
-                onValueChange = { newValue -> onMemberChange(member.copy(email = newValue)) },
-                label = "Почта",
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
-            )
+private fun MemberFormSection(title: String, content: @Composable ColumnScope.() -> Unit) {
+    OnBackgroundCard {
+        Column(Modifier.fillMaxWidth().padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
+            Text(title, style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+            content()
         }
     }
 }
 
 @Composable
-private fun AdditionalInfoSection(
-    modifier: Modifier = Modifier,
-    member: ProfileMember,
-    teams: List<Team>,
-    onMemberChange: (ProfileMember) -> Unit,
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shadowElevation = 2.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(bottom = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Дополнительная информация",
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            ItemsTextFiledDialog(
-                label = "Команда",
-                value = member.team,
-                items = teams
-                    .sortedBy { it.name }
-                    .map { it.name },
-            ) { newValue -> onMemberChange(member.copy(team = newValue)) }
-
-            val typeList = remember {
-                listOf("Родственник", "Друг", "Партнер по команде")
-            }
-            DropDownSpinner(
-                itemList = typeList,
-                selectedItem = member.type,
-                onItemSelected = { id, item ->
-                    onMemberChange(member.copy(type = item))
-                },
-                textFiled = {
-                    OutlinedTextFieldBase(
-                        label = "Кем вам приходится участник?",
-                        value = member.type,
-                        isEnabled = false
-                    ) {}
-                }
-            )
-
-            Text(
-                text = "Категория участника",
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                AgeOptionCard(
-                    modifier = Modifier.weight(1f),
-                    label = "Взрослый",
-                    isSelected = !member.child,
-                    onClick = { onMemberChange(member.copy(child = false)) },
-                    isChild = false
-                )
-
-                AgeOptionCard(
-                    modifier = Modifier.weight(1f),
-                    label = "Ребенок",
-                    isSelected = member.child,
-                    onClick = { onMemberChange(member.copy(child = true)) },
-                    isChild = true
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun AgeOptionCard(
-    modifier: Modifier = Modifier,
-    label: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    isChild: Boolean,
-) {
-    val selectedColor = if (isChild)
-        SportSouceColor.SportSouceRegistryOpenGreen
-    else
-        MaterialTheme.colorScheme.secondary
-
-    Surface(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .height(56.dp)
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        color = if (isSelected)
-            MaterialTheme.colorScheme.tertiaryContainer
-        else
-            MaterialTheme.colorScheme.primaryContainer,
-        border = if (isSelected)
-            BorderStroke(2.dp, selectedColor)
-        else
-            BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            CheckBoxBase(
-                checked = isSelected,
-                onValueChanged = { onClick() },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = selectedColor,
-                    checkmarkColor = MaterialTheme.colorScheme.onSecondary
-                )
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = label,
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 15.sp,
-                color = if (isSelected)
-                    selectedColor
-                else
-                    MaterialTheme.colorScheme.onBackground
-            )
-        }
-    }
+private fun TeamField(value: String, teams: List<Team>, enabled: Boolean, onValueChanged: (String) -> Unit) {
+    val personal = "Я участвую лично"
+    val options = listOf(personal) + teams.map { it.name }.filter { it != "Лично" }.distinct().sorted() +
+        listOf(value).filter { it.isNotBlank() && it != "Лично" && teams.none { team -> team.name == it } }
+    ItemsTextFiledDialog(label = "Команда", value = if (value == "Лично") personal else value,
+        items = options.distinct(), enabled = enabled,
+        onValueChanged = { onValueChanged(if (it == personal) "Лично" else it) })
 }

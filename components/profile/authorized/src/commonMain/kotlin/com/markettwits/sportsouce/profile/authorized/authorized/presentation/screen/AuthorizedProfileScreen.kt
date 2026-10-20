@@ -1,10 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.screen
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
-import com.markettwits.core_ui.items.screens.FullImageScreen
-import com.markettwits.core_ui.items.screens.LoadingFullScreen
+import com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable.ProfileLoadingContent
 import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.component.AuthorizedProfileComponent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable.ProfileScreenContent
@@ -17,12 +15,12 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
 
     val state by component.state.collectAsState()
 
-    var fullImageState by rememberSaveable { mutableStateOf(false) }
     val intentAction = rememberIntentActionByPlatform()
 
     state.user?.let { user ->
         ProfileScreenContent(
             isRefreshing = state.isLoading,
+            refreshError = state.error,
             userName = user.userInfo.name,
             userPhoneNumber = user.userInfo.phoneNumber,
             userRegistrationsCount = user.activity.userRegistry.size,
@@ -77,16 +75,11 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
         )
     }
     if (state.isLoading && state.user == null) {
-        LoadingFullScreen()
+        ProfileLoadingContent()
     }
-    if (state.error != null) {
+    if (state.error != null && state.user == null) {
         state.error!!.SauceErrorScreen(onClickRetry = {
             component.obtainEvent(AuthorizedProfileStore.Intent.Retry)
         })
-    }
-    if (fullImageState) {
-        FullImageScreen(image = state.user?.userInfo?.photo ?: "") {
-            fullImageState = false
-        }
     }
 }

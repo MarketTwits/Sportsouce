@@ -1,20 +1,23 @@
 package com.markettwits.sportsouce.edit_profile.info.presentation.components
 
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -29,7 +32,7 @@ import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
-import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.edit_profile.change_password.presentation.component.SaveChangesButton
 import com.markettwits.sportsouce.edit_profile.info.domain.models.UserData
 import com.markettwits.sportsouce.edit_profile.info.presentation.store.EditProfileInfoStore
@@ -55,13 +58,11 @@ fun EditProfileInfoFieldsContent(
     val phoneNumberFocusRequester = remember { FocusRequester() }
 
     val snackBarHostState = remember { SnackbarHostState() }
-    var snackBarColor = remember {
-        SportSouceColor.SportSouceLighBlue
-    }
+    var feedbackSuccess by remember { mutableStateOf(true) }
+    val feedbackColors = if (feedbackSuccess) SauceTheme.colors.success else SauceTheme.colors.danger
 
     // Constants for better maintainability
     val fieldPadding = 8.dp
-    val cardPadding = 12.dp
     val sexOptions = listOf("Мужской", "Женский")
 
     Scaffold(
@@ -77,20 +78,19 @@ fun EditProfileInfoFieldsContent(
                 hostState = snackBarHostState,
             ) {
                 Snackbar(
-                    contentColor = Color.White,
-                    containerColor = snackBarColor,
-                    dismissActionContentColor = Color.White,
+                    contentColor = feedbackColors.content,
+                    containerColor = feedbackColors.container,
+                    dismissActionContentColor = feedbackColors.content,
                     snackbarData = it
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
+        bottomBar = {
             if (state.userData == null || state.error != null) return@Scaffold
-            SaveChangesButton(
+            AdaptivePane(fillHeight = false) { SaveChangesButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
+                    .imePadding().padding(horizontal = 16.dp, vertical = 12.dp),
                 loading = state.isLoading,
                 enabled = !state.isLoading,
                 onClick = {
@@ -98,26 +98,24 @@ fun EditProfileInfoFieldsContent(
                     focusManager.clearFocus()
                     onClickSave()
                 }
-            )
+            ) }
         }
     ) { paddingValues ->
         AdaptivePane {
             state.userData?.let { user ->
                 Column(
                     modifier = Modifier
-                        .padding(cardPadding)
-                        .padding(top = paddingValues.calculateTopPadding())
-                        .padding(bottom = paddingValues.calculateBottomPadding())
-                        .verticalScroll(rememberScrollState())
+                        .padding(paddingValues).consumeWindowInsets(paddingValues)
+                        .verticalScroll(rememberScrollState()).padding(16.dp)
                 ) {
                     OnBackgroundCard(
                         modifier = Modifier.padding(top = 4.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
                     ) {
 
                         Column(
                             modifier = Modifier.padding(4.dp)
                         ) {
+                            Text("Личные данные", Modifier.padding(8.dp), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
                             // Name field with Next action
                             OutlinedTextFieldBase(
                                 modifier = Modifier
@@ -234,6 +232,7 @@ fun EditProfileInfoFieldsContent(
                                 }
                             )
 
+                            Text("Участие", Modifier.padding(8.dp), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
                             // City selection dialog
                             ItemsTextFiledDialog(
                                 modifier = Modifier
@@ -269,7 +268,7 @@ fun EditProfileInfoFieldsContent(
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.height(150.dp))
+
                 }
             }
             if (state.isLoading && state.userData == null && state.error == null) {
@@ -283,8 +282,7 @@ fun EditProfileInfoFieldsContent(
                 event = state.event,
                 onConsumed = onConsume,
             ) {
-                snackBarColor =
-                    if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+                feedbackSuccess = it.success
                 snackBarHostState.showLongMessageWithDismiss(message = it.message)
             }
         }
@@ -296,6 +294,6 @@ private fun FieldLeadingIcon(imageVector: ImageVector) {
     Icon(
         imageVector = imageVector,
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.secondary
+        tint = SauceTheme.colors.textSecondary
     )
 }

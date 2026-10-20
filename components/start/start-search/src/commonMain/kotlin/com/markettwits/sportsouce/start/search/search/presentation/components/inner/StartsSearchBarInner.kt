@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.search.search.presentation.components.inner
 
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,12 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.textField.BoundlessTextFieldBase
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 
 @Composable
@@ -35,7 +34,7 @@ fun StartsSearchBarInner(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(sauceTopBarContainerColor())
             .windowInsetsPadding(WindowInsets.statusBars),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -46,8 +45,8 @@ fun StartsSearchBarInner(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "ArrowBack",
-                tint = MaterialTheme.colorScheme.outline
+                contentDescription = "Назад",
+                tint = SauceTheme.colors.textSecondary
             )
         }
         BoundlessTextFieldBase(
@@ -61,9 +60,8 @@ fun StartsSearchBarInner(
                 Text(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     text = "Поиск старта",
-                    color = MaterialTheme.colorScheme.outline,
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 16.sp,
+                    color = SauceTheme.colors.textMuted,
+                    style = MaterialTheme.typography.bodyLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Visible
                 )
@@ -75,8 +73,8 @@ fun StartsSearchBarInner(
             ) {
                 Icon(
                     imageVector = Icons.Default.Mic,
-                    contentDescription = "Mic",
-                    tint = MaterialTheme.colorScheme.outline
+                    contentDescription = "Голосовой поиск",
+                    tint = SauceTheme.colors.textMuted
                 )
             }
         } else {
@@ -86,8 +84,8 @@ fun StartsSearchBarInner(
                 Icon(
 
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = Color.Gray
+                    contentDescription = "Очистить поиск",
+                    tint = SauceTheme.colors.textSecondary
                 )
             }
         }
@@ -96,11 +94,11 @@ fun StartsSearchBarInner(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Notes,
-                contentDescription = "Notes",
+                contentDescription = "Фильтры",
                 tint = if (isWithFilter)
-                    MaterialTheme.colorScheme.tertiary
+                    SauceTheme.colors.action
                 else
-                    MaterialTheme.colorScheme.outline
+                    SauceTheme.colors.textSecondary
             )
         }
     }

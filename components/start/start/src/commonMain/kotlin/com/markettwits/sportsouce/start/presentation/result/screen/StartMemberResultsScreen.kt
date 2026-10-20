@@ -55,7 +55,7 @@ fun StartMemberResultsScreen(component: StartMemberResultsComponent) {
                 onDismissRequest = {
                     currentMemberResult = null
                 },
-                dragHandle = {}
+                title = "Результат участника",
             ) {
                 MemberResultDetailed(
                     memberResult = currentMemberResult!!,

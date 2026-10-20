@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.profile.cloud
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMemberRequest
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMembers
+import com.markettwits.sportsouce.profile.cloud.model.members.MemberMutationResponse
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistrationsRemote
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceRequest
@@ -30,7 +31,7 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
             }
             setBody(request)
         }
-        return json.decodeFromString(response.body())
+        return readMemberMutation(response)
     }
 
     suspend fun updateMember(memberId: Int, request: ProfileMemberRequest, token: String) {
@@ -41,7 +42,7 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
             }
             setBody(request)
         }
-        return json.decodeFromString(response.body())
+        return readMemberMutation(response)
     }
 
     suspend fun deleteMember(memberId: Int, token: String) {
@@ -51,17 +52,33 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
         }
-        return json.decodeFromString(response.body())
+        return readMemberMutation(response)
     }
 
     suspend fun memberTemplate(userId: Int, token: String): ProfileMembers {
-        val response = client.get("member-template?user_id=$userId") {
+        val response = client.get("member-template") {
+            parameter("user_id", userId)
+            parameter("maxResultCount", 500)
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
         }
         return json.decodeFromString(response.body())
+    }
+
+    suspend fun memberTemplateDetail(memberId: Int, token: String): ProfileMembers.ProfileMember {
+        val response = client.get("member-template/$memberId") {
+            bearerAuth(token)
+        }
+        return json.decodeFromString(response.body())
+    }
+
+    private suspend fun readMemberMutation(response: io.ktor.client.statement.HttpResponse) {
+        val body = response.body<String>()
+        if (body.isBlank()) return // DELETE can also respond with 204 No Content.
+        val result = json.decodeFromString<MemberMutationResponse>(body)
+        check(result.success != false) { result.message ?: "Не удалось сохранить изменения участника" }
     }
 
     suspend fun userRegistries(userId: Int, token: String): List<UserRegistration> {

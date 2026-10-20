@@ -6,6 +6,11 @@
 .externalNativeBuild
 .cxx
 .kotlin
+/tmp
+/docs
+/prototypes
+/META-INF
+.gradle-local
 /kotlin-js-store
 local.properties
 
@@ -22,3 +27,7 @@ local.properties
 # Project secrets config
 /secrets.properties
 /key-store.jks
+
+#AI
+CLAUDE.md
+AGENTS.md

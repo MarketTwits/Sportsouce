@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.shop.search.presentation.components.inner
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.FontNunito
 
 
 @Composable
@@ -35,7 +35,7 @@ internal fun SearchFilterContent(
     Column(modifier = modifier.noRippleClickable(onClickPanel)) {
         Row(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary)
+                .background(SauceTheme.colors.surface)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -47,7 +47,7 @@ internal fun SearchFilterContent(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Notes,
                     contentDescription = "Notes",
-                    tint = MaterialTheme.colorScheme.tertiary
+                    tint = SauceTheme.colors.textPrimary
                 )
                 Spacer(modifier = Modifier.padding(horizontal = 10.dp))
                 Column {
@@ -55,9 +55,8 @@ internal fun SearchFilterContent(
                         modifier = Modifier
                             .align(Alignment.Start),
                         text = "Параметры",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        fontSize = 14.sp,
+                        color = SauceTheme.colors.textPrimary,
+                        style = MaterialTheme.typography.bodyMedium,
                         overflow = TextOverflow.Visible
                     )
                     Text(
@@ -65,9 +64,8 @@ internal fun SearchFilterContent(
                             .align(Alignment.Start),
                         text = filterParams,
                         maxLines = 1,
-                        color = MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.medium(),
-                        fontSize = 12.sp,
+                        color = SauceTheme.colors.textMuted,
+                        style = MaterialTheme.typography.bodySmall,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -78,14 +76,14 @@ internal fun SearchFilterContent(
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
-                    tint = MaterialTheme.colorScheme.outline
+                    tint = SauceTheme.colors.textMuted
                 )
             }
         }
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
             thickness = 0.2.dp,
-            color = MaterialTheme.colorScheme.outline
+            color = SauceTheme.colors.textMuted
         )
     }
 }

@@ -3,13 +3,13 @@ package com.markettwits.sportsouce.edit_profile.social_network.presentation.comp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
@@ -27,7 +26,9 @@ import com.markettwits.core_ui.items.image.social_networks.IconTelegram
 import com.markettwits.core_ui.items.image.social_networks.IconVk
 import com.markettwits.core_ui.items.image.social_networks.InstagramIcon
 import com.markettwits.core_ui.items.image.social_networks.WhatsappIcon
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
+import androidx.compose.ui.graphics.lerp
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.edit_profile.social_network.domain.UserSocialNetwork
 
@@ -48,7 +49,6 @@ fun ProfileSocialNetworkContent(
     val instagramFocusRequester = remember { FocusRequester() }
     OnBackgroundCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
         val localModifier = Modifier.padding(8.dp)
         Column(modifier = localModifier) {
@@ -149,14 +149,14 @@ private fun SocialNetworkRaw(
     icon: ImageVector,
     color: Color
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            modifier = Modifier.size(25.dp),
+            modifier = Modifier.size(24.dp),
             imageVector = icon,
-            contentDescription = "",
-            tint = color
+            contentDescription = null,
+            tint = if (LocalDarkOrLightTheme.current) lerp(color, Color.White, 0.25f) else color
         )
         Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-        Text(text = label, fontFamily = FontNunito.bold(), fontSize = 14.sp, color = color)
+        Text(text = label, style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
     }
 }

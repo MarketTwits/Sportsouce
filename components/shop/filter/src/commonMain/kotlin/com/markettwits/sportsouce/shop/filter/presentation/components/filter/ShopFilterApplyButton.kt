@@ -1,63 +1,22 @@
 package com.markettwits.sportsouce.shop.filter.presentation.components.filter
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 
 @Composable
-internal fun ShopFilterApplyButton(
-    modifier: Modifier = Modifier,
-    onClickReset: () -> Unit,
-    onClickApply: () -> Unit
-) {
-    Row(modifier = modifier.padding(10.dp)) {
-        Button(
-            modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp
-            ),
-            border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.secondary),
-            onClick = { onClickReset() }
-        ) {
-            Text(
-                text = "Сбросить",
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.secondary
-            )
-        }
-        Spacer(modifier = Modifier.weight(0.1f))
-        Button(
-            modifier = Modifier.weight(1f),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp
-            ),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-            border = BorderStroke(0.5.dp, MaterialTheme.colorScheme.secondary),
-            onClick = { onClickApply() }
-        ) {
-            Text(
-                text = "Применить",
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
+internal fun ShopFilterApplyButton(modifier: Modifier = Modifier, onClickReset: () -> Unit, onClickApply: () -> Unit) {
+    BoxWithConstraints(modifier.fillMaxWidth().padding(16.dp)) {
+        if (maxWidth < 300.dp * LocalDensity.current.fontScale) Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SauceButton("Применить", onClickApply)
+            SauceButton("Сбросить", onClickReset, variant = SauceButtonVariant.Outlined)
+        } else Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            SauceButton("Сбросить", onClickReset, Modifier.weight(1f), variant = SauceButtonVariant.Outlined)
+            SauceButton("Применить", onClickApply, Modifier.weight(1f))
         }
     }
 }

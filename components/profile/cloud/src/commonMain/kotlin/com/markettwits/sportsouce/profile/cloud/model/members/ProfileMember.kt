@@ -4,35 +4,26 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProfileMembers(
-    @SerialName("count")
-    val count: Int,
-    @SerialName("rows")
-    val rows: List<ProfileMember>
-) {
+data class ProfileMembers(val count: Int, val rows: List<ProfileMember>) {
+    /** List and detail share these fields; detail intentionally has no owner user_id. */
     @Serializable
     data class ProfileMember(
-        @SerialName("birthday")
-        val birthday: String? = null,
-        @SerialName("child")
-        val child: Boolean?,
-        @SerialName("email")
-        val email: String? = null,
-        @SerialName("gender")
-        val gender: String? = null,
-        @SerialName("id")
         val id: Int,
-        @SerialName("name")
+        val birthday: String? = null,
+        val child: Boolean? = null,
+        val email: String? = null,
+        val gender: String? = null,
         val name: String? = null,
-        @SerialName("phone")
         val phone: String? = null,
-        @SerialName("surname")
         val surname: String? = null,
-        @SerialName("team")
         val team: String? = null,
-        @SerialName("type")
         val type: String? = null,
-        @SerialName("user_id")
-        val userId: Int,
+        @SerialName("user_id") val userId: Int? = null,
+        @SerialName("participant_user_id") val participantUserId: Int? = null,
+        @SerialName("city_id") val cityId: Int? = null,
+        val vk: String? = null,
+        val instagram: String? = null,
+        val whatsapp: String? = null,
+        val telegram: String? = null,
     )
 }

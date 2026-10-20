@@ -1,6 +1,11 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.member.screen
 
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import com.markettwits.core_ui.items.screens.AdaptivePane
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -9,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.start.register.presentation.registration.member.component.RegistrationMemberComponent
@@ -42,18 +49,16 @@ fun RegistrationMemberScreen(
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            MemberContinueButton(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                enabled = isFormValid,
-                onClickContinue = {
-                    component.obtainEvent(RegistrationMemberStore.Intent.OnClickContinue)
-                },
-                onClickDisabled = {
-                    component.obtainEvent(RegistrationMemberStore.Intent.OnClickContinue)
-                }
-            )
+        bottomBar = {
+            AdaptivePane(fillHeight = false) {
+                MemberContinueButton(
+                    modifier = Modifier.navigationBarsPadding().imePadding()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    enabled = isFormValid && state.isSelectedTeamAvailable,
+                    onClickContinue = { component.obtainEvent(RegistrationMemberStore.Intent.OnClickContinue) },
+                    onClickDisabled = { component.obtainEvent(RegistrationMemberStore.Intent.OnClickContinue) },
+                )
+            }
         },
         topBar = {
             TopBarWithClip(title = "Регистрация") {
@@ -73,17 +78,22 @@ fun RegistrationMemberScreen(
         }
     ) {
         MemberScreenContent(
-            modifier = Modifier.padding(top = it.calculateTopPadding()),
+            modifier = Modifier.padding(it).consumeWindowInsets(it),
             userNumber = state.userNumber,
             statement = state.value,
             members = state.members,
+            membersLoading = state.membersLoading,
+            membersError = state.membersError ?: if (!state.membersLoading && !state.isSelectedTeamAvailable)
+                "Участник команды больше недоступен. Обновите список или выберите другого участника." else null,
+            onRetryMembers = { component.obtainEvent(RegistrationMemberStore.Intent.RetryMembers) },
+            onMemberSelected = { component.obtainEvent(RegistrationMemberStore.Intent.SelectMember(it)) },
             onValueChanged = {
                 component.obtainEvent(RegistrationMemberStore.Intent.ChangeFiled(it))
             },
             isAddToProfileEnabled = isAddToProfileEnabled,
             onClickAddToProfile = {
                 component.obtainEvent(RegistrationMemberStore.Intent.OnClickAddToProfile)
-            }
+            },
         )
         EventEffect(
             event = state.event,
@@ -116,31 +126,14 @@ fun RegistrationMemberScreen(
                     )
                 },
                 confirmButton = {
-                    TextButton(
-                        onClick = {
-                            component.obtainEvent(RegistrationMemberStore.Intent.OnConfirmSuggestAddDialog)
-                        }
-                    ) {
-                        Text(
-                            text = "Добавить",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontFamily = FontNunito.semiBoldBold()
-                        )
-                    }
+                    SauceButton("Добавить", fillWidth = false,
+                        onClick = { component.obtainEvent(RegistrationMemberStore.Intent.OnConfirmSuggestAddDialog) })
                 },
                 dismissButton = {
-                    TextButton(
-                        onClick = {
-                            component.obtainEvent(RegistrationMemberStore.Intent.OnContinueWithoutAdd)
-                        }
-                    ) {
-                        Text(
-                            text = "Продолжить без добавления",
-                            color = MaterialTheme.colorScheme.tertiary,
-                            fontFamily = FontNunito.semiBoldBold()
-                        )
-                    }
-                }
+                    SauceButton("Продолжить без добавления", fillWidth = false,
+                        variant = SauceButtonVariant.Text,
+                        onClick = { component.obtainEvent(RegistrationMemberStore.Intent.OnContinueWithoutAdd) })
+                },
             )
         }
         if (state.isAddMemberDialogVisible) {

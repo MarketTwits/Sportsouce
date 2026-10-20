@@ -9,19 +9,24 @@ import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.c
 import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store.MemberEditStore.*
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 
 class MemberEditExecutor(
     private val editUseCase: MemberEditUseCase,
     private val addUseCase: MemberAddUseCase,
 ) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    private var teamsJob: Job? = null
+
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnValueChanged -> dispatch(Message.OnValueChanged(intent.member))
-            is Intent.Save -> execute(state().member, state().mode)
+            is Intent.OnValueChanged -> if (!state().isLoading && !state().isSaving) dispatch(Message.OnValueChanged(intent.member))
+            is Intent.Save -> if (!state().isLoading && !state().isSaving && state().loadError == null) execute(state().member, state().mode)
             is Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
-            is Intent.Retry -> launch()
+            is Intent.RetryTeams -> if (!state().isSaving) loadTeams()
+            is Intent.Retry -> if (!state().isLoading && !state().isSaving) launch()
         }
     }
 
@@ -32,14 +37,24 @@ class MemberEditExecutor(
     private fun launch() {
         scope.launch {
             dispatch(Message.Loading)
-            editUseCase.teams().fold(
-                onSuccess = {
-                    dispatch(Message.Loaded(it))
-                },
-                onFailure = {
-                    dispatch(Message.Error(it.mapToSauceError().mapToString()))
+            val member = if (state().mode is MemberEditComponent.Mode.Edit) {
+                editUseCase.member(state().member.id).getOrElse {
+                    dispatch(Message.LoadError(it.mapToSauceError().mapToString()))
+                    return@launch
                 }
-            )
+            } else null
+            dispatch(Message.Loaded(state().teams, member))
+            loadTeams()
+        }
+    }
+
+    private fun loadTeams() {
+        teamsJob?.cancel()
+        dispatch(Message.TeamsLoading)
+        teamsJob = scope.launch {
+            val result = editUseCase.teams()
+            ensureActive()
+            result.fold(onSuccess = { dispatch(Message.TeamsLoaded(it)) }, onFailure = { dispatch(Message.TeamsFailed) })
         }
     }
 
@@ -53,10 +68,13 @@ class MemberEditExecutor(
 
     private fun editMember(profileMember: ProfileMember) {
         scope.launch {
-            dispatch(Message.Loading)
+            dispatch(Message.Saving)
             editUseCase.edit(profileMember).fold(
                 onSuccess = {
-                    publish(Label.UpdateSuccess(profileMember))
+                    val fresh = editUseCase.member(profileMember.id).getOrDefault(profileMember.copy(
+                        phone = if (profileMember.child) "" else profileMember.phone,
+                        email = if (profileMember.child) "" else profileMember.email.trim()))
+                    publish(Label.UpdateSuccess(fresh))
                     dispatch(Message.UpdateSuccess("Участник успешно обновлен"))
                 },
                 onFailure = {
@@ -68,7 +86,7 @@ class MemberEditExecutor(
 
     private fun addMember(profileMember: ProfileMember) {
         scope.launch {
-            dispatch(Message.Loading)
+            dispatch(Message.Saving)
             addUseCase.addMember(profileMember).fold(onSuccess = {
                 publish(Label.UpdateSuccess(profileMember))
                 dispatch(Message.UpdateSuccess("Участник добавлен"))

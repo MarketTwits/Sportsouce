@@ -1,8 +1,13 @@
 package com.markettwits.sportsouce.shop.cart.presentation.cart.screen
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,7 +34,8 @@ fun ShopCartScreen(
     ) { paddingValues ->
         AdaptivePane {
             LazyColumn(
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
+                modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
+                contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 ShopCartItems(
                     items = state.items,
@@ -38,7 +44,13 @@ fun ShopCartScreen(
                     onClickItem = component::onClickShopCartItem,
                     onClickDelete = component::onClickDelete
                 )
-                item{
+                if (state.items.isEmpty()) item {
+                    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Text("Корзина пуста", style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+                        Text("Добавьте товары из каталога", style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary)
+                        SauceButton("Продолжить покупки", component::onClickGoBack)
+                    }
+                } else item {
                     CreateOrderButton(
                         onClickCreateOrder = component::onClickCreateOrder,
                         onClickGoAuth = component::onClickGoAuth,

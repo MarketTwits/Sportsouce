@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,14 +16,14 @@ fun ShareFloatingActionButton(modifier: Modifier = Modifier, onClick: () -> Unit
         modifier = modifier
             .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
             .padding(10.dp),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.tertiary,
+        containerColor = SauceTheme.colors.surfaceRaised,
+        contentColor = SauceTheme.colors.textPrimary,
         onClick = onClick,
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
             imageVector = Icons.Default.Share,
-            contentDescription = "Share"
+            contentDescription = "Поделиться"
         )
     }
 }

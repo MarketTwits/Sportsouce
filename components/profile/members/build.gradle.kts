@@ -10,8 +10,14 @@ kotlin {
         namespace = "com.markettwits.members"
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.time)
+        implementation(libs.kotlinx.datetime)
         implementation(projects.components.core.cache)
         implementation(projects.components.profile.cloud)
         implementation(projects.components.core.ui)

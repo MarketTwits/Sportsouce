@@ -1,23 +1,16 @@
 package com.markettwits.sportsouce.profile.members.members_list.presentation.components.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
+import com.markettwits.sportsouce.profile.members.member_common.domain.MemberIdentityTeam
+import com.markettwits.sportsouce.profile.members.members_list.presentation.store.store.MembersListStore
 import com.markettwits.sportsouce.profile.members.member_common.presentation.MemberItemCard
-import kotlinx.coroutines.delay
-
 
 @Composable
 internal fun MembersList(
@@ -27,75 +20,35 @@ internal fun MembersList(
     onRefresh: () -> Unit,
     onClick: (ProfileMember) -> Unit,
     onClickAddMember: () -> Unit,
+    team: MemberIdentityTeam? = null,
+    teamError: String? = null,
+    refreshError: String? = null,
+    teamBusy: Boolean = false,
+    pendingTrustedUsers: Set<Int> = emptySet(),
+    onTeamIntent: (MembersListStore.Intent) -> Unit = {},
 ) {
-    var showContent by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(100)
-        showContent = true
-    }
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = {
-            AddMemberActionButton(onClick = onClickAddMember)
-        },
-        containerColor = androidx.compose.ui.graphics.Color.Transparent
-    ) { paddingValues ->
-        AnimatedVisibility(
-            visible = showContent,
-            enter = fadeIn(animationSpec = tween(400))
+    PullToRefreshScreen(modifier = modifier, isRefreshing = isRefreshing, onRefresh = onRefresh) {
+        SauceLazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(SauceSpacing.large),
+            verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
         ) {
-            PullToRefreshScreen(
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh
-            ) {
-                if (items.isEmpty()) {
-                    MembersEmptyCard(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .padding(16.dp)
-                            .padding(bottom = paddingValues.calculateBottomPadding())
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp)
-                            .padding(bottom = paddingValues.calculateBottomPadding()),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        itemsIndexed(
-                            items = items,
-                            key = { _, item -> item.id }
-                        ) { index, item ->
-                            var isItemVisible by remember { mutableStateOf(false) }
-
-                            LaunchedEffect(item.id) {
-                                delay(index * 50L) // Staggered animation
-                                isItemVisible = true
-                            }
-
-                            AnimatedVisibility(
-                                visible = isItemVisible,
-                                enter = slideInVertically(
-                                    animationSpec = tween(400),
-                                    initialOffsetY = { it / 2 }
-                                ) + fadeIn(animationSpec = tween(400))
-                            ) {
-                                MemberItemCard(
-                                    modifier = Modifier.animateItem(
-                                        fadeInSpec = tween(600),
-                                        fadeOutSpec = tween(400),
-                                        placementSpec = tween(600)
-                                    ),
-                                    item = item,
-                                    onClick = { member ->
-                                        onClick(member)
-                                    }
-                                )
-                            }
-                        }
-                    }
+            item(key = "add-member", contentType = "action") {
+                AddMemberActionButton(onClick = onClickAddMember)
+            }
+            refreshError?.let { message -> item(key = "refresh-error") { TeamError(message, onRefresh) } }
+            teamError?.let { message -> item(key = "team-error") { TeamError(message, onRefresh) } }
+            val linked = team?.myTeam.orEmpty().filter { person -> items.none { it.participantUserId == person.userId } }
+            linked.forEach { person -> item(key = "linked-${person.id}") { MemberAccessCard(person, trusted = false, busy = teamBusy,
+                canAddTrust = team?.trusted?.none { it.userId == person.userId } == true && person.userId !in pendingTrustedUsers,
+                onRelationChanged = { onTeamIntent(MembersListStore.Intent.UpdateRelation(person.userId, it)) },
+                onAddTrust = { onTeamIntent(MembersListStore.Intent.TrustPerson(person.userId)) }) } }
+            if (items.isEmpty() && linked.isEmpty()) {
+                item(key = "empty", contentType = "empty") { MembersEmptyCard() }
+            } else {
+                items(items, key = { it.id }, contentType = { "member" }) { member ->
+                    MemberItemCard(item = member, onClick = onClick,
+                        connectionConfirmed = team?.myTeam?.any { it.userId == member.participantUserId } == true)
                 }
             }
         }

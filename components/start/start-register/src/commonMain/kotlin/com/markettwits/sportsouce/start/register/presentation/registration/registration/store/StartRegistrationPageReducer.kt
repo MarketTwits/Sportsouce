@@ -9,17 +9,17 @@ object StartRegistrationPageReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.UpdateStages -> copy(
                 stages = msg.stagePage,
-                pagesState = copy().pagesState.copy(isLoading = false)
+                pagesState = pagesState.copy(isLoading = false, error = null)
             )
             is Message.UpdateEvent -> copy(eventWithContent = msg.eventContent)
 
             is Message.UpdateStageError -> copy(
-                pagesState = copy().pagesState.copy(
+                pagesState = pagesState.copy(
                     isLoading = false, error = msg.error
                 )
             )
 
-            is Message.UpdateStageLoading -> copy(pagesState = copy().pagesState.copy(isLoading = true))
+            is Message.UpdateStageLoading -> copy(pagesState = pagesState.copy(isLoading = true, error = null))
         }
     }
 }

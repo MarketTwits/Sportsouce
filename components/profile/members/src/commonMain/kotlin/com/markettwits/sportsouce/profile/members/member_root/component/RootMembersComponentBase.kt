@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.profile.members.member_root.component
 
+import com.markettwits.sportsouce.profile.members.member_search.MemberSearchComponent
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.*
 import com.arkivanov.decompose.router.stack.*
@@ -56,10 +57,16 @@ class RootMembersComponentBase(
                     goDetail = {
                         slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(it))
                     },
+                    searchMember = { stackNavigation.pushNew(RootMembersComponent.ConfigStack.MemberSearch) },
                     addMember = {
                         stackNavigation.pushNew(RootMembersComponent.ConfigStack.MemberEdit(null))
                     }
                 ))
+
+            is RootMembersComponent.ConfigStack.MemberSearch -> RootMembersComponent.ChildStack.MemberSearch(
+                MemberSearchComponent(componentContext, scope.get(), back = { stackNavigation.pop(); updateMembersList() },
+                    addManually = { stackNavigation.replaceCurrent(RootMembersComponent.ConfigStack.MemberEdit(null)) })
+            )
 
             is RootMembersComponent.ConfigStack.MemberEdit -> RootMembersComponent.ChildStack.MemberEdit(
                 MemberEditComponentBase(
@@ -71,8 +78,10 @@ class RootMembersComponentBase(
                     },
                     apply = { member ->
                         stackNavigation.pop()
+                        if (member.id > 0) (childStack.value.active.instance as? RootMembersComponent.ChildStack.MembersList)
+                            ?.component?.obtainEvent(MembersListStore.Intent.UpdateMember(member))
                         updateMembersList(withDismiss = false)
-                        slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(member))
+                        if (member.id > 0) slotNavigation.activate(RootMembersComponent.ConfigSlot.MemberDetail(member))
                     }
                 )
             )
@@ -94,6 +103,8 @@ class RootMembersComponentBase(
                         stackNavigation.pushNew(RootMembersComponent.ConfigStack.MemberEdit(it))
                     },
                     memberDeleted = {
+                        (childStack.value.active.instance as? RootMembersComponent.ChildStack.MembersList)
+                            ?.component?.obtainEvent(MembersListStore.Intent.RemoveMember(config.member.id))
                         updateMembersList()
                     }
 

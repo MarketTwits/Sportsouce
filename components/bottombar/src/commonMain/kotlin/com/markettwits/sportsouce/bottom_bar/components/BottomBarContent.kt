@@ -1,36 +1,35 @@
 package com.markettwits.sportsouce.bottom_bar.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
+import com.markettwits.core_ui.items.components.navigation.NavigationViewport
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
 import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.sportsouce.bottom_bar.model.BottomNavigationItem
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -44,243 +43,59 @@ internal fun BottomBarContent(
     content: @Composable () -> Unit,
 ) {
     val isLarge = calculateWindowSizeClass().isLarge
-
-    if (isLarge) {
-        // Use Scaffold with custom navigation rail for large screens
-        Scaffold(
-            modifier = modifier,
-            contentWindowInsets = WindowInsets(0),
-            containerColor = MaterialTheme.colorScheme.primary,
-        ) { paddingValues ->
-            Row {
-                AnimatedVisibility(
-                    visible = isShowTopBar,
-                    enter = slideInVertically(
-                        initialOffsetY = { -it }
-                    ),
-                    exit = slideOutVertically(
-                        targetOffsetY = { -it }
-                    )
-                ) {
-                    CustomNavigationRail(
-                        items = items,
-                        selectedTab = selectedTab,
-                        isShowLabel = isShowLabel,
-                        onClickTab = onClickTab
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
-                    content()
-                }
+    val colors = SauceTheme.colors
+    val haptics = LocalHapticFeedback.current
+    val hazeState = rememberHazeState()
+    val navigationViewport = remember(hazeState) {
+        NavigationViewport { key -> Modifier.hazeSource(hazeState, zIndex = 1f, key = key) }
+    }
+    val density = LocalDensity.current
+    val select: (BottomBarConfiguration) -> Unit = {
+        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+        onClickTab(it)
+    }
+    Scaffold(
+        modifier = modifier,
+        containerColor = colors.background,
+        contentWindowInsets = WindowInsets(0),
+        bottomBar = {
+            if (!isLarge) AnimatedVisibility(isShowTopBar, enter = fadeIn(), exit = fadeOut()) {
+                GlassBottomNavigation(hazeState, items, selectedTab, isShowLabel, select)
             }
-        }
-    } else {
-        // Use Scaffold with custom bottom navigation for mobile screens
-        Scaffold(
-            modifier = modifier,
-            containerColor = MaterialTheme.colorScheme.primary,
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = isShowTopBar,
-                    enter = fadeIn(
-                        animationSpec = tween(durationMillis = 300)
-                    ),
-                    exit = fadeOut(
-                        animationSpec = tween(durationMillis = 300)
-                    )
-                ) {
-                    CustomBottomNavigation(
-                        items = items,
-                        selectedTab = selectedTab,
-                        isShowLabel = isShowLabel,
-                        onClickTab = onClickTab
-                    )
-                }
-            },
-            contentWindowInsets = WindowInsets(0),
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
+        },
+    ) { padding ->
+        // Capture only the content, never the navigation icons or the glass itself.
+        val overlap = if (!isLarge && isShowTopBar) with(density) { padding.calculateBottomPadding().roundToPx() } else 0
+        Box(Modifier.fillMaxSize()
+            .onGloballyPositioned { navigationViewport.update(it, overlap) }
+            .then(if (!isLarge && isShowTopBar) Modifier.hazeSource(hazeState) else Modifier)) {
+            CompositionLocalProvider(
+                LocalNavigationViewport provides navigationViewport
             ) {
-                content()
-            }
-        }
-    }
-}
-
-@Composable
-private fun CustomBottomNavigation(
-    items: List<BottomNavigationItem>,
-    selectedTab: BottomBarConfiguration,
-    isShowLabel: Boolean,
-    onClickTab: (BottomBarConfiguration) -> Unit,
-) {
-    val hapticFeedback = LocalHapticFeedback.current
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        tonalElevation = 8.dp,
-        shadowElevation = 8.dp,
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(NavigationBarDefaults.windowInsets)
-                .defaultMinSize(minHeight = 76.dp)
-                .selectableGroup(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            items.forEach { item ->
-                val isSelected = selectedTab == item.bottomBarConfiguration
-                val selectedColor = MaterialTheme.colorScheme.tertiary
-                val unselectedColor = MaterialTheme.colorScheme.outline
-                val color = if (isSelected) selectedColor else unselectedColor
-                val interactionSource = remember { MutableInteractionSource() }
-
-                Column(
-                    modifier = Modifier
-                        .weight(1F)
-                        .selectable(
-                            selected = isSelected,
-                            onClick = {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onClickTab(item.bottomBarConfiguration)
-                            },
-                            role = Role.Tab,
-                            interactionSource = interactionSource,
-                            indication = null,
-                        )
-                        .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Box {
-                        Box(
-                            modifier = Modifier
-                                .size(64.dp, 32.dp)
-                                .scale(animatedBackgroundScale(isSelected))
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(MaterialTheme.colorScheme.tertiaryContainer)
-                        )
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.align(Alignment.Center)
-                        ) {
-                            Icon(
-                                modifier = Modifier.scale(iconScale(isSelected = isSelected)),
-                                imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                                contentDescription = item.title,
-                                tint = color
-                            )
-                        }
-                    }
-                    if (isShowLabel) {
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            modifier = Modifier.scale(textScale(isSelected = isSelected)),
-                            text = item.title,
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                lineHeight = 14.sp,
-                                fontSize = 11.sp,
-                                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-                                color = color
-                            ),
-                            fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CustomNavigationRail(
-    items: List<BottomNavigationItem>,
-    selectedTab: BottomBarConfiguration,
-    isShowLabel: Boolean,
-    onClickTab: (BottomBarConfiguration) -> Unit,
-) {
-    val hapticFeedback = LocalHapticFeedback.current
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        tonalElevation = 8.dp,
-        shadowElevation = 8.dp,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(100.dp)
-                .windowInsetsPadding(NavigationRailDefaults.windowInsets)
-                .selectableGroup()
-                .padding(vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items.forEach { item ->
-                val isSelected = selectedTab == item.bottomBarConfiguration
-                val selectedColor = MaterialTheme.colorScheme.tertiary
-                val unselectedColor = Color.Gray.copy(alpha = 0.8F)
-                val color = if (isSelected) selectedColor else unselectedColor
-                val interactionSource = remember { MutableInteractionSource() }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .selectable(
-                            selected = isSelected,
-                            onClick = {
-                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onClickTab(item.bottomBarConfiguration)
-                            },
-                            role = Role.Tab,
-                            interactionSource = interactionSource,
-                            indication = null,
-                        )
-                ) {
-                    // Animated background that expands from center
-                    Box(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .scale(animatedBackgroundScale(isSelected))
-                            .clip(animatedClip(isSelected))
-                            .background(MaterialTheme.colorScheme.tertiaryContainer)
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                Row(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
+                    if (isLarge && isShowTopBar) NavigationRail(
+                        containerColor = colors.surface,
+                        contentColor = colors.textPrimary,
                     ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .scale(iconScale(isSelected = isSelected)),
-                            imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                            contentDescription = item.title,
-                            tint = color
-                        )
-                        if (isShowLabel) {
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                modifier = Modifier.scale(textScale(isSelected = isSelected)),
-                                text = item.title,
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 12.sp,
-                                    lineHeight = 12.sp,
-                                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-                                    color = color
+                        items.forEach { item ->
+                            val selected = selectedTab == item.bottomBarConfiguration
+                            NavigationRailItem(
+                                modifier = Modifier.navigationNotifications(item),
+                                selected = selected,
+                                onClick = { select(item.bottomBarConfiguration) },
+                                icon = { NavigationIcon(item, selected, isShowLabel) },
+                                label = if (isShowLabel) { { NavigationLabel(item.title, selected) } } else null,
+                                colors = NavigationRailItemDefaults.colors(
+                                    selectedIconColor = colors.action,
+                                    selectedTextColor = colors.action,
+                                    indicatorColor = colors.actionSoft,
+                                    unselectedIconColor = colors.textMuted,
+                                    unselectedTextColor = colors.textMuted,
                                 ),
-                                fontFamily = if (isSelected) FontNunito.bold() else FontNunito.medium()
                             )
                         }
                     }
+                    Box(Modifier.weight(1f).fillMaxHeight()) { content() }
                 }
             }
         }
@@ -288,55 +103,74 @@ private fun CustomNavigationRail(
 }
 
 @Composable
-private fun iconScale(isSelected: Boolean): Float {
-    val value by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1.0f,
-        animationSpec = spring(
-            dampingRatio = 0.6f,
-            stiffness = 300f
-        ),
-        label = "iconScale"
-    )
-    return value
-}
-
-@Composable
-private fun textScale(isSelected: Boolean): Float {
-    val value by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1.0f,
-        animationSpec = spring(
-            dampingRatio = 0.7f,
-            stiffness = 400f
-        ),
-        label = "textScale"
-    )
-    return value
-}
-
-@Composable
-private fun animatedBackgroundScale(isSelected: Boolean): Float {
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.0f else 0.0f,
-        animationSpec = tween(
-            durationMillis = 300,
-            delayMillis = 0
-        ),
-        label = "backgroundScale"
-    )
-    return scale
-}
-
-@Composable
-private fun animatedClip(isSelected: Boolean): RoundedCornerShape {
-    val cornerRadius by animateFloatAsState(
-        targetValue = if (isSelected) 24f else 0f,
-        animationSpec = tween(
-            durationMillis = 300,
-            delayMillis = 0
-        ),
-        label = "cornerRadius"
-    )
-    return remember(cornerRadius) {
-        RoundedCornerShape(cornerRadius.dp)
+private fun NavigationIcon(item: BottomNavigationItem, selected: Boolean, hasLabel: Boolean) {
+    val count = item.badgeCount?.takeIf { it > 0 }
+    val colors = SauceTheme.colors
+    BadgedBox(
+        badge = {
+            if (count != null) Badge(
+                modifier = Modifier.clearAndSetSemantics {},
+                containerColor = colors.material.error,
+                contentColor = colors.material.onError,
+            ) {
+                Text(if (count > 99) "99+" else count.toString())
+            }
+            else if (item.hasNews) Badge(
+                modifier = Modifier.clearAndSetSemantics {},
+                containerColor = colors.material.error,
+            )
+        },
+    ) {
+        Icon(
+            imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+            contentDescription = if (hasLabel) null else item.title,
+            modifier = Modifier.size(24.dp),
+        )
     }
+}
+
+@Composable
+private fun NavigationLabel(title: String, selected: Boolean) {
+    Text(title, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelMedium,
+        textAlign = TextAlign.Center,
+        fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal)
+}
+
+/** Kept independent of screen content so navigation states can be checked in isolation. */
+@Composable
+internal fun BottomNavigation(
+    items: List<BottomNavigationItem>,
+    selectedTab: BottomBarConfiguration,
+    showLabels: Boolean,
+    onSelect: (BottomBarConfiguration) -> Unit,
+    modifier: Modifier = Modifier,
+    containerColor: Color = SauceTheme.colors.surface,
+    glass: Boolean = false,
+) {
+    val colors = SauceTheme.colors
+    NavigationBar(modifier = modifier, containerColor = containerColor, contentColor = colors.textPrimary, tonalElevation = 0.dp) {
+        items.forEach { item ->
+            val selected = selectedTab == item.bottomBarConfiguration
+            NavigationBarItem(
+                modifier = Modifier.navigationNotifications(item),
+                selected = selected,
+                onClick = { onSelect(item.bottomBarConfiguration) },
+                icon = { NavigationIcon(item, selected, showLabels) },
+                label = if (showLabels) { { NavigationLabel(item.title, selected) } } else null,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = colors.action,
+                    selectedTextColor = colors.action,
+                    indicatorColor = colors.actionSoft,
+                    unselectedIconColor = if (glass) colors.textSecondary else colors.textMuted,
+                    unselectedTextColor = if (glass) colors.textSecondary else colors.textMuted,
+                ),
+            )
+        }
+    }
+}
+
+private fun Modifier.navigationNotifications(item: BottomNavigationItem): Modifier = semantics {
+    val count = item.badgeCount?.takeIf { it > 0 }
+    if (count != null) stateDescription = "Уведомлений: $count"
+    else if (item.hasNews) stateDescription = "Есть обновления"
 }

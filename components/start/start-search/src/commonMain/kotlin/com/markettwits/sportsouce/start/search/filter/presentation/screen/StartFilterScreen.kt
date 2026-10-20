@@ -15,6 +15,7 @@ fun StartFilterScreen(component: StartFilterComponent) {
     val state by component.value.collectAsState()
 
     DefaultModalBottomSheet(
+        title = "Фильтры",
         onDismissRequest = {
             component.obtainEvent((StartFilterStore.Intent.GoBack))
         }

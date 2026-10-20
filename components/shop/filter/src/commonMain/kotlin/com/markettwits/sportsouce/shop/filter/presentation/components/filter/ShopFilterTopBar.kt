@@ -1,64 +1,22 @@
 package com.markettwits.sportsouce.shop.filter.presentation.components.filter
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
-fun ShopFilterTopBar(
-    modifier: Modifier = Modifier,
-    onClickBack: () -> Unit,
-    onClickReset: () -> Unit,
-) {
-    Box(
-        modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 2.dp)
-            .fillMaxWidth()
-    ) {
-        IconButton(
-            modifier = modifier.align(Alignment.CenterStart),
-            onClick = onClickBack
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = "back",
-                tint = MaterialTheme.colorScheme.tertiary,
-            )
-        }
-        Text(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(start = 30.dp),
-            text = "Фильтр",
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 18.sp
-        )
-        IconButton(
-            modifier = modifier.align(Alignment.CenterEnd),
-            onClick = onClickReset
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "back",
-                tint = MaterialTheme.colorScheme.tertiary,
-            )
+internal fun ShopFilterTopBar(modifier: Modifier = Modifier, onClickBack: () -> Unit) {
+    Row(modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        Text("Фильтры", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+        IconButton(onClickBack, Modifier.size(48.dp)) {
+            Icon(Icons.Default.Close, "Закрыть фильтры", tint = SauceTheme.colors.textSecondary)
         }
     }
 }

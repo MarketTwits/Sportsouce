@@ -1,19 +1,19 @@
 package com.markettwits.sportsouce.shop.catalog.presentation.components
 
+import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.LazyPagingItems
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.paging.fold
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 
 
@@ -45,8 +45,7 @@ fun ShopItemsContent(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = "По вашему запросу не были найдены данные",
-                fontFamily = FontNunito.semiBoldBold(),
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleSmall,
             )
         }
     }

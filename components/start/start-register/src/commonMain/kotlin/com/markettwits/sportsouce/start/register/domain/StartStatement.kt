@@ -26,6 +26,9 @@ data class StartStatement(
     val paymentDisabled: Boolean,
     val yearDiscountApplied: Boolean,
     val distanceTitle: String,
+    val participantUserId: Int? = null,
+    val patronymic: String? = null,
+    val participantSource: ProfileMember.Source = ProfileMember.Source.Saved,
 ) {
 
     fun getSaveAge(): Int = if (age.isEmpty()) 0 else age.toInt()

@@ -1,32 +1,24 @@
 package com.markettwits.sportsouce.shop.order.presentation.components.recipient
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
+import androidx.compose.foundation.rememberScrollState
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll
+import androidx.compose.foundation.layout.navigationBarsPadding
+import com.markettwits.core_ui.items.components.buttons.SauceButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.shop.order.domain.model.ShopRecipient
 import com.markettwits.sportsouce.shop.order.presentation.store.ShopCreateOrderStore
 
@@ -40,9 +32,8 @@ internal fun ShopOrderRecipientBottomSheet(
     onDismiss: () -> Unit,
 ){
 
-    ModalBottomSheet(
-        modifier = Modifier.imePadding(),
-        containerColor = MaterialTheme.colorScheme.primary,
+    DefaultModalBottomSheet(
+        title = "Заказчик",
         onDismissRequest = onDismiss
     ) {
         ShopOrderRecipientChangeContent(
@@ -69,40 +60,17 @@ private fun ShopOrderRecipientChangeContent(
 ){
     Column(
         modifier = modifier
-            .padding(10.dp)
-            .background(MaterialTheme.colorScheme.primary)
-            .imePadding()
+            .sauceVerticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 12.dp).navigationBarsPadding()
     ) {
-        Row(
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Заказчик",
-                fontFamily = FontNunito.bold(),
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "close",
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
-            }
-        }
         AnimatedVisibility(message.isNotEmpty()){
             Text(
                 modifier = Modifier
                     .padding(4.dp),
                 textAlign = TextAlign.Start,
                 text = message,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                color = SportSouceColor.SportSouceLightRed
+                style = MaterialTheme.typography.bodyMedium,
+                color = SauceTheme.colors.danger.content
             )
         }
         OutlinedTextFieldBase(
@@ -123,12 +91,10 @@ private fun ShopOrderRecipientChangeContent(
                 onChangeRecipient(recipient.copy(phone = it))
             }
         )
-        ButtonContentBase(
+        SauceButton(
             modifier = Modifier
                 .padding(10.dp),
             title = "Обновить",
-            containerColor = MaterialTheme.colorScheme.secondary,
-            textColor = MaterialTheme.colorScheme.onSecondary,
             onClick = onClickUpdate
         )
     }

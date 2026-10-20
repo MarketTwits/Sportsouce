@@ -1,33 +1,23 @@
 package com.markettwits.sportsouce.start.presentation.start.screen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.markettwits.core.errors.api.composable.SauceErrorScreen
-import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FullImageScreen
-import com.markettwits.core_ui.items.screens.LoadingFullScreen
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.start.presentation.comments.components.StartCommentsCompactPanel
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.components.StartSupport
+import com.markettwits.sportsouce.start.presentation.start.components.StartDetailsBody
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
 
@@ -37,40 +27,38 @@ fun StartScreen(
     startSupportComponent: StartSupportComponent,
 ) {
     val state by startComponent.start.collectAsState()
-    var fullImage by rememberSaveable {
+    var fullImage by rememberSaveable(state.startItem?.id) {
         mutableStateOf(false)
     }
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
     }
-    var snackBarColor by remember {
-        mutableStateOf(SportSouceColor.SportSouceLightRed)
-    }
+    var snackBarSuccess by remember { mutableStateOf(false) }
+    val snackBarColors = if (snackBarSuccess) SauceTheme.colors.success else SauceTheme.colors.danger
 
     val isShowRegButton = state.startItem?.startStatus?.code == 3
-    val backgroundColor =
-        if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
     Scaffold(
+        containerColor = SauceTheme.colors.background,
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState,
             ) {
                 Snackbar(
                     modifier = Modifier.padding(bottom = if (isShowRegButton) 60.dp else 10.dp),
-                    contentColor = Color.White,
-                    containerColor = snackBarColor,
+                    contentColor = snackBarColors.content,
+                    containerColor = snackBarColors.container,
                     snackbarData = it
                 )
             }
         },
     ) {
-        Column(
-            modifier = Modifier.background(backgroundColor)
-        ) {
-            AnimatedVisibility(
-                visible = state.startItem != null,
-                enter = fadeIn(animationSpec = tween(durationMillis = 400)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 300))
+        Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+            StartDetailsBody(
+                hasData = state.startItem != null,
+                isLoading = state.isLoading,
+                error = state.error,
+                onClickRetry = { startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry) },
+                onClickBack = { startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack) },
             ) {
                 state.startItem?.let { data ->
                     StartScreenContent(
@@ -168,28 +156,6 @@ fun StartScreen(
                     }
                 }
             }
-            AnimatedVisibility(
-                visible = state.isLoading && state.startItem == null,
-                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 400))
-            ) {
-                LoadingFullScreen(
-                    onClickBack = {
-                        startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
-                    }
-                )
-            }
-            state.error?.mapToSauceError()?.SauceErrorScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                onClickRetry = {
-                    startComponent.obtainEvent(StartScreenStore.Intent.OnClickRetry)
-                },
-                onClickGoBack = {
-                    startComponent.obtainEvent(StartScreenStore.Intent.OnClickBack)
-                }
-            )
         }
         EventEffect(
             event = state.event,
@@ -197,8 +163,7 @@ fun StartScreen(
                 startComponent.obtainEvent(StartScreenStore.Intent.OnConsumedEvent)
             },
         ) {
-            snackBarColor =
-                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarSuccess = it.success
             snackBarHostState.showLongMessageWithDismiss(message = it.message)
         }
     }

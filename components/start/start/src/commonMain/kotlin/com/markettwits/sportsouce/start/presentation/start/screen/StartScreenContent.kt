@@ -1,31 +1,34 @@
 package com.markettwits.sportsouce.start.presentation.start.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.screens.FullImageContent
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.isLarge
-import com.markettwits.core_ui.items.window.screenWidthDp
+import com.markettwits.core_ui.items.screens.FullImageContent
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
-import com.markettwits.sportsouce.start.presentation.start.components.StartFavoriteActionButton
-import com.markettwits.sportsouce.start.presentation.start.components.StartRegistrationButton
-import com.markettwits.sportsouce.start.presentation.start.components.StartShareActionButton
+import com.markettwits.sportsouce.start.presentation.start.components.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun StartScreenContent(
     data: StartItem,
@@ -51,41 +54,40 @@ internal fun StartScreenContent(
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
 ) {
-    val windowSize = calculateWindowSizeClass()
-
-    PullToRefreshScreen(isRefreshing = isLoading, onRefresh = {
-        onClickRetry()
-    }) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (windowSize.isLarge) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    val imageWith = windowSize.screenWidthDp.value / 2.5f
-                    Box(
-                        modifier = Modifier
-                            .width(imageWith.dp)
-                            .fillMaxHeight()
-                    ) {
-                        FullImageContent(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .fillMaxSize()
-                                .noRippleClickable { onClickImage() },
-                            backgroundColor = MaterialTheme.colorScheme.primary,
-                            imageUrl = data.image,
-                            isPortrait = false
-                        )
+    key(data.id) {
+        PullToRefreshScreen(isRefreshing = isLoading, onRefresh = onClickRetry) {
+            BoxWithConstraints(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+                val wide = maxWidth >= 840.dp && maxHeight >= 600.dp
+                val scrollState = rememberScrollState()
+                val density = LocalDensity.current
+                var registrationHeight by remember { mutableIntStateOf(0) }
+                Row(Modifier.fillMaxSize()) {
+                    if (wide) {
+                        Box(Modifier.weight(0.4f).fillMaxHeight()
+                            .semantics { contentDescription = "Открыть афишу старта" }
+                            .clickable(role = Role.Button, onClick = onClickImage)) {
+                            FullImageContent(
+                                modifier = Modifier.fillMaxSize(),
+                                backgroundColor = SauceTheme.colors.background,
+                                imageUrl = data.image,
+                                isPortrait = false,
+                            )
+                        }
                     }
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
+                    Box(Modifier.weight(if (wide) 0.6f else 1f).fillMaxHeight()) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .verticalScroll(rememberScrollState())
+                            Modifier.fillMaxSize().verticalScroll(scrollState)
+                                .then(if (data.startStatus.code != 3) Modifier.navigationBarsPadding() else Modifier)
                         ) {
+                            if (!wide) {
+                                Box(Modifier.semantics { contentDescription = "Открыть афишу старта" }
+                                    .clickable(role = Role.Button, onClick = onClickImage)) {
+                                    FullImageContent(
+                                        backgroundColor = SauceTheme.colors.background,
+                                        imageUrl = data.image,
+                                    )
+                                }
+                            }
                             StartScreenInnerContent(
                                 modifier = Modifier,
                                 data = data,
@@ -102,82 +104,37 @@ internal fun StartScreenContent(
                                 onClickRetry = onClickRetry,
                                 onClickRelatedStarts = onClickRelatedStarts,
                                 donations = donations,
-                                comments = comments
+                                comments = comments,
+                            )
+                            if (data.startStatus.code == 3) {
+                                Spacer(Modifier.height(with(density) { registrationHeight.toDp() }))
+                            }
+                        }
+                        if (data.startStatus.code == 3) {
+                            StartRegistrationButton(
+                                modifier = Modifier.align(Alignment.BottomCenter)
+                                    .onSizeChanged { registrationHeight = it.height }
+                                    .navigationBarsPadding()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                                startStatus = data.startStatus,
+                                isLoading = isLoading,
+                                isPartialData = isPartialData,
+                                hasError = error != null,
+                                onClickRegistration = onClickRegistration,
                             )
                         }
-                        StartRegistrationButton(
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(10.dp),
-                            startStatus = data.startStatus,
-                            isLoading = isLoading,
-                            hasError = error != null,
-                            onClickRegistration = onClickRegistration
-                        )
                     }
                 }
-            } else {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        FullImageContent(
-                            modifier = Modifier.clickable { onClickImage() },
-                            backgroundColor = MaterialTheme.colorScheme.primary,
-                            imageUrl = data.image
-                        )
-                        StartScreenInnerContent(
-                            modifier = Modifier,
-                            data = data,
-                            error = error,
-                            recommendedStarts = recommendedStarts,
-                            seriesStarts = seriesStarts,
-                            isPartialData = isPartialData,
-                            onClickMembers = onClickMembers,
-                            onClickMembersResults = onClickMembersResults,
-                            onClickRecommendedStart = onClickRecommendedStart,
-                            onClickUrl = onClickUrl,
-                            onClickPhone = onClickPhone,
-                            onClickRetry = onClickRetry,
-                            onClickFullAlbum = onClickFullAlbum,
-                            donations = donations,
-                            onClickRelatedStarts = onClickRelatedStarts,
-                            comments = comments
-                        )
-                    }
-                    StartRegistrationButton(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(10.dp),
-                        startStatus = data.startStatus,
-                        isLoading = isLoading,
-                        hasError = error != null,
-                        onClickRegistration = onClickRegistration
+                BackFloatingActionButton(Modifier.align(Alignment.TopStart), onClickBack)
+                Row(Modifier.align(Alignment.TopEnd)) {
+                    StartShareActionButton(onClick = onClickShare)
+                    StartFavoriteActionButton(
+                        isFavorite = favoriteState.isFavorite,
+                        isLoading = favoriteState.isLoading(),
+                        onClick = onClickAddToFavourites,
                     )
                 }
             }
-            BackFloatingActionButton(
-                modifier = Modifier.align(Alignment.TopStart),
-            ) {
-                onClickBack()
-            }
-            Row(
-                modifier = Modifier.align(Alignment.TopEnd),
-            ) {
-                StartShareActionButton {
-                    onClickShare()
-                }
-                StartFavoriteActionButton(
-                    isFavorite = favoriteState.isFavorite,
-                    isLoading = favoriteState.isLoading(),
-                    onClick = {
-                        onClickAddToFavourites()
-                    }
-                )
-            }
-
         }
     }
 }

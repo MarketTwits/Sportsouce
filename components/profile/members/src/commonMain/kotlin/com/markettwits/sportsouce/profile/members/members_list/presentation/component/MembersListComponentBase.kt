@@ -18,6 +18,7 @@ class MembersListComponentBase(
     private val storeFactory: MembersListStoreFactory,
     private val pop: () -> Unit,
     private val goDetail: (ProfileMember) -> Unit,
+    private val searchMember: () -> Unit,
     private val addMember: () -> Unit
 ) : MembersListComponent,
     ComponentContext by componentContext {
@@ -37,6 +38,7 @@ class MembersListComponentBase(
             store.labels.collect {
                 when (it) {
                     is MembersListStore.Label.GoBack -> pop()
+                    is MembersListStore.Label.OnClickSearchMember -> searchMember()
                     is MembersListStore.Label.OnClickAddMember -> addMember()
                     is MembersListStore.Label.OnClickMember -> goDetail(it.member)
                 }

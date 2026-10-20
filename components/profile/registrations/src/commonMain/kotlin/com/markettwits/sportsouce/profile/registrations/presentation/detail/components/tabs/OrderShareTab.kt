@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs
 
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

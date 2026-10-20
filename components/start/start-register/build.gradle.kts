@@ -9,6 +9,11 @@ kotlin {
         namespace = "com.markettwits.start_register"
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     sourceSets.commonMain.dependencies {
         implementation(projects.components.core.ui)
         implementation(projects.components.core.errors)

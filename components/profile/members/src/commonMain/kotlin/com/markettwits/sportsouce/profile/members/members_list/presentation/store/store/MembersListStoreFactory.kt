@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.profile.members.members_list.presentation.store.store
 
+import com.markettwits.sportsouce.profile.members.member_common.domain.MemberIdentityRepository
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -11,6 +12,7 @@ class MembersListStoreFactory(
     private val storeFactory: StoreFactory,
     private val useCase: MembersListUseCase,
     private val exceptionTracker: ExceptionTracker,
+    private val identity: MemberIdentityRepository,
 ) {
     fun create(): MembersListStore = MembersListStoreImpl(useCase)
 
@@ -20,7 +22,7 @@ class MembersListStoreFactory(
             name = "MembersListStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { MembersListExecutor(useCase, exceptionTracker) },
+            executorFactory = { MembersListExecutor(useCase, exceptionTracker, identity) },
             reducer = MembersListReducer
         )
 }

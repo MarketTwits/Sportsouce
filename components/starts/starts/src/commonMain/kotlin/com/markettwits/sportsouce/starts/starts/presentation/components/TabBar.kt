@@ -6,19 +6,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.topbar.SauceTopBarSection
+import com.markettwits.core_ui.items.components.selection.SauceScrollableTabs
 import kotlinx.coroutines.launch
 
 
@@ -31,47 +25,16 @@ internal fun TabBar(
     val scope = rememberCoroutineScope()
     val pages = listOf("Главная", "Ближайшие", "Прошедшие", "Анонсы")
     val pagerState = rememberPagerState(pageCount = pages::size, initialPage = 1)
-    val indicator = @Composable { tabPositions: List<TabPosition> ->
-        TabRowDefaults.PrimaryIndicator(
-            width = 120.dp,
-            shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colorScheme.tertiary,
-            modifier = Modifier
-                .tabIndicatorOffset(tabPositions[pagerState.currentPage])
-                .fillMaxWidth()
+    SauceTopBarSection {
+        SauceScrollableTabs(
+            labels = pages,
+            selectedIndex = pagerState.currentPage,
+            onSelected = { index ->
+                scope.launch {
+                    pagerState.animateScrollToPage(index, animationSpec = spring(stiffness = Spring.StiffnessMedium))
+                }
+            },
         )
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ScrollableTabRow(
-            modifier = Modifier.height(50.dp),
-            selectedTabIndex = pagerState.currentPage,
-            divider = {},
-            indicator = indicator,
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.primary
-        ) {
-            pages.forEachIndexed { index, item ->
-                val selected = pagerState.currentPage == index
-                PageItem(
-                    item = item,
-                    isSelected = selected,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(
-                                page = index,
-                                animationSpec = spring(stiffness = Spring.StiffnessMedium)
-                            )
-                        }
-                    }
-
-                )
-            }
-        }
     }
 
     HorizontalPager(
@@ -86,31 +49,4 @@ internal fun TabBar(
     LaunchedEffect(pagerState.currentPage) {
         onPageChanged(pagerState.currentPage)
     }
-}
-
-@Composable
-private fun PageItem(
-    modifier: Modifier = Modifier,
-    item: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Tab(
-        modifier = modifier
-            .wrapContentSize()
-            .clip(RoundedCornerShape(10.dp)),
-        selectedContentColor = MaterialTheme.colorScheme.tertiary,
-        unselectedContentColor = Color.Gray,
-        selected = isSelected,
-        text = {
-            Text(
-                text = item,
-                fontSize = 16.sp,
-                color = if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.outline,
-                fontFamily = FontNunito.bold()
-            )
-        },
-        onClick = {
-            onClick()
-        })
 }

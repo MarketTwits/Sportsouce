@@ -1,13 +1,13 @@
 package com.markettwits.sportsouce.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.unit.dp
 import app.cash.paging.PagingData
 import app.cash.paging.compose.collectAsLazyPagingItems
@@ -51,7 +51,7 @@ internal fun ShopItemProductScreen(
                     if (!windowSize.isLarge)
                         cartContent(Modifier.fillMaxWidth())
                 },
-                containerColor = Color.Transparent
+                containerColor = SauceTheme.colors.background
             ) { paddingValues ->
                 val similarItems = similarProducts.collectAsLazyPagingItems()
                 val screenWidth = rememberScreenSizeInfo().wDP

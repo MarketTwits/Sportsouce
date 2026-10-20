@@ -48,9 +48,16 @@ class ProfileMembersRepositoryBase(
     }
 
 
+    override suspend fun memberDetail(memberId: Int): Result<ProfileMember> = runCatching {
+        val user = auth.user().getOrThrow()
+        val token = auth.updateToken().getOrThrow()
+        mapper.mapMember(service.memberTemplateDetail(memberId, token), user.id)
+    }
+
     override suspend fun deleteMember(memberId: Int): Result<Unit> = runCatching {
         val token = auth.updateToken().getOrThrow()
         service.deleteMember(memberId, token)
+        runCatching { cache.get()?.let { cache.set(value = it.filterNot { member -> member.id == memberId }) } }
     }
 
     override suspend fun updateMember(profileMember: ProfileMember): Result<Unit> = runCatching {
@@ -58,6 +65,7 @@ class ProfileMembersRepositoryBase(
         val user = auth.user().getOrThrow()
         val request = mapper.addOrUpdate(profileMember, true, user.id)
         service.updateMember(profileMember.id, request, token)
+        runCatching { cache.clear() }
     }
 
     override suspend fun addMember(profileMember: ProfileMember): Result<Unit> = runCatching {
@@ -65,6 +73,7 @@ class ProfileMembersRepositoryBase(
         val user = auth.user().getOrThrow()
         val request = mapper.addOrUpdate(profileMember, false, user.id)
         service.addMember(request, token)
+        runCatching { cache.clear() }
     }
 
     override suspend fun userAsMember(): Result<ProfileMember> = runCatching {

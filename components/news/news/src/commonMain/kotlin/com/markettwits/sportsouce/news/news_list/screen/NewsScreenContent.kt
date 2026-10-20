@@ -5,9 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.components.topbar.SauceTopBarSection
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -79,39 +79,40 @@ fun NewsScreenContent(
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        NewsToolbar(
-            selectedHashtagsCount = if (state.selectedHashtag != null) 1 else 0,
-            onBack = onBack,
-            onOpenFilters = { onIntent(NewsStore.Intent.OnShowHashtagSheet) },
-        )
-
+    SauceScaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            NewsToolbar(
+                selectedHashtagsCount = if (state.selectedHashtag != null) 1 else 0,
+                onBack = onBack,
+                onOpenFilters = { onIntent(NewsStore.Intent.OnShowHashtagSheet) },
+            )
+        },
+    ) { padding ->
         AdaptivePane(
-            modifier = Modifier.weight(1f, fill = true),
+            modifier = Modifier.fillMaxSize().padding(padding),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (state.categories.isNotEmpty()) {
-                    NewsCategoriesRow(
-                        categories = state.categories,
-                        selectedCategoryId = state.selectedCategoryId,
-                        onSelectCategory = {
-                            onIntent(NewsStore.Intent.OnSelectCategory(it))
+                SauceTopBarSection {
+                    if (state.categories.isNotEmpty()) {
+                        NewsCategoriesRow(
+                            categories = state.categories,
+                            selectedCategoryId = state.selectedCategoryId,
+                            onSelectCategory = {
+                                onIntent(NewsStore.Intent.OnSelectCategory(it))
+                            }
+                        )
+                    }
+
+                    NewsSelectedHashtagsRow(
+                        selectedHashtags = selectedHashtags,
+                        onRemoveHashtag = {
+                            onIntent(NewsStore.Intent.OnToggleHashtag(it))
                         }
                     )
                 }
-
-                NewsSelectedHashtagsRow(
-                    selectedHashtags = selectedHashtags,
-                    onRemoveHashtag = {
-                        onIntent(NewsStore.Intent.OnToggleHashtag(it))
-                    }
-                )
 
                 Box(
                     modifier = Modifier

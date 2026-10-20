@@ -7,12 +7,14 @@ import com.markettwits.sportsouce.profile.members.member_common.data.ProfileMemb
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.start.register.domain.StartStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationParticipantsRepository
 import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStore.*
 
 class RegistrationMemberStoreFactory(
     private val storeFactory: StoreFactory,
     private val startValidator: RegistrationMemberValidator,
     private val profileMembersRepository: ProfileMembersRepository,
+    private val participantsRepository: RegistrationParticipantsRepository,
 ) {
 
     fun create(
@@ -32,7 +34,7 @@ class RegistrationMemberStoreFactory(
             name = "RegistrationMemberStore",
             initialState = State(userNumber, startStatement, startMembers),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { RegistrationMemberExecutor(validator, profileMembersRepository) },
+            executorFactory = { RegistrationMemberExecutor(validator, profileMembersRepository, participantsRepository) },
             reducer = RegistrationMemberReducer
         )
 }

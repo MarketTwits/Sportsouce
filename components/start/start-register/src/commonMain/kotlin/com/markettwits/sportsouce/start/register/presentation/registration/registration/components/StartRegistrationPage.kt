@@ -1,11 +1,13 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.registration.components
 
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Scaffold
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -69,48 +71,31 @@ fun StartRegistrationPage(
         }
     ) { paddingValues ->
 
-        AdaptivePane {
-            Column(
-                modifier = modifier
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (state.pagesState.isLoading) {
-                    LoadingFullScreen(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .fillMaxSize()
-                    )
-                }
-                state.pagesState.error?.SauceErrorScreen()
-                Children(
+        AdaptivePane(modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues).imePadding()) {
+            when {
+                state.pagesState.isLoading -> LoadingFullScreen(Modifier.fillMaxSize())
+                state.pagesState.error != null -> state.pagesState.error?.SauceErrorScreen()
+                else -> Children(
                     stack = pages,
-                    animation = stackAnimation(animator = slide())
+                    animation = stackAnimation(animator = slide()),
                 ) { child ->
-                    when (val page = child.instance) {
-                        is StartPayComponent -> {
-                            StartPay(
-                                modifier = Modifier,
-                                component = page
-                            )
+                    val page = child.instance
+                    RegistrationStageViewport {
+                        when (page) {
+                            is StartPayComponent -> StartPay(modifier = Modifier, component = page)
+                            is StartDistanceComponent -> StartStage(modifier = Modifier, component = page)
                         }
-
-                        is StartDistanceComponent -> {
-                            StartStage(
-                                modifier = Modifier,
-                                component = page
-                            )
-                        }
+                        StartStagesIndicatorContent(
+                            modifier = Modifier.padding(16.dp),
+                            currentIndex = page.value.id,
+                            startRegistrationStage = state.stages,
+                        )
                     }
                 }
-                StartStagesIndicatorContent(
-                    modifier = Modifier.padding(10.dp),
-                    currentIndex = pages.active.instance.value.id,
-                    startRegistrationStage = state.stages
-                )
             }
         }
     }
+
     EventEffect(
         event = state.eventWithContent,
         onConsumed = {

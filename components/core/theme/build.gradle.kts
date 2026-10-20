@@ -16,4 +16,8 @@ kotlin {
         implementation(projects.components.core.ui)
         implementation(projects.components.settings.api)
     }
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+    }
+
 }

@@ -3,7 +3,7 @@ package com.markettwits.sportsouce.start.presentation.album.presentation.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,10 +22,10 @@ fun StartAlbumScreen(component: StartAlbumComponent) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(SauceTheme.colors.background)
     ) {
         if (state.images.isEmpty()) {
-            AlbumEmptyCard()
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { AlbumEmptyCard() }
         } else {
             StartAlbumScreenContent(items = state.images)
         }

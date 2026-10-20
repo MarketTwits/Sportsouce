@@ -10,6 +10,10 @@ kotlin {
         namespace = "com.markettwits.registrations"
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+    }
+
     sourceSets.commonMain.dependencies {
         
         implementation(projects.components.auth.authService)

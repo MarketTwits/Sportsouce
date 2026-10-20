@@ -6,7 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -14,6 +14,13 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import com.markettwits.core_ui.items.components.selection.RadioButtonBase
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -117,7 +124,7 @@ fun FilterBody(
     items: List<ColorThemeUi>,
     selectedItem: (ColorThemeUi) -> Unit,
 ) = LazyColumn(
-    modifier = modifier,
+    modifier = modifier.selectableGroup(),
     verticalArrangement = Arrangement.spacedBy(8.dp)
 ) {
         itemsIndexed(items) { index, item ->
@@ -149,7 +156,7 @@ fun FilterPosition(
 
     OnBackgroundCard(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth().semantics { role = Role.RadioButton; this.selected = selected },
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         ),
@@ -202,14 +209,7 @@ fun FilterPosition(
             }
 
             // Radio button
-            RadioButton(
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = MaterialTheme.colorScheme.secondary,
-                    unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
-                selected = selected,
-                onClick = { onClick() }
-            )
+            RadioButtonBase(selected = selected, onClick = null, modifier = Modifier.clearAndSetSemantics {})
         }
     }
 }

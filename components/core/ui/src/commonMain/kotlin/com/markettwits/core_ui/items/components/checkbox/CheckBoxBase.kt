@@ -4,10 +4,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.items.components.focus.sauceFocusOutline
+import com.markettwits.core_ui.items.theme.SauceShapes
 
 @Composable
 fun CheckBoxBase(
@@ -16,20 +18,21 @@ fun CheckBoxBase(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     colors: CheckboxColors = CheckboxDefaults.colors(
-        checkedColor = MaterialTheme.colorScheme.tertiary,
-        checkmarkColor = MaterialTheme.colorScheme.onTertiary,
+        checkedColor = SauceTheme.colors.action,
+        checkmarkColor = SauceTheme.colors.onAction,
+        uncheckedColor = SauceTheme.colors.controlBorder,
+        disabledCheckedColor = SauceTheme.colors.disabledContent,
+        disabledUncheckedColor = SauceTheme.colors.disabledContent,
+        disabledIndeterminateColor = SauceTheme.colors.disabledContent,
     ),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     Checkbox(
         checked = checked,
-        modifier = modifier,
+        modifier = modifier.sauceFocusOutline(interactionSource, SauceShapes.badge, SauceTheme.colors.action,
+            enabled && onValueChanged != null),
         enabled = enabled,
         interactionSource = interactionSource,
         colors = colors,
-        onCheckedChange = {
-            if (onValueChanged != null) {
-                onValueChanged(it)
-            }
-        })
+        onCheckedChange = onValueChanged)
 }

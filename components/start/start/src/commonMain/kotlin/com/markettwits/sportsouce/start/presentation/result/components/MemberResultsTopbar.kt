@@ -1,7 +1,10 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Refresh
@@ -14,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.DropDownSpinnerStage
 import com.markettwits.core_ui.items.components.textField.ItemsTextFiledDialog
@@ -60,71 +64,23 @@ private fun MemberResultsTopBar(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary,
-        shadowElevation = 4.dp
+        color = sauceTopBarContainerColor(),
+        shadowElevation = 0.dp
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
                 .fillMaxWidth(),
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(WindowInsets.statusBars.asPaddingValues())
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                StartMemberResultsSearchBar(
-                    modifier = Modifier.weight(1f),
-                    query = state.filterState.searchQuery,
-                    onValueChange = { onIntent(StartMemberResultsStore.Intent.OnChangeQuery(it)) },
-                    onClickGoBack = { onIntent(StartMemberResultsStore.Intent.OnClickGoBack) },
-                    onClickBrush = {
-                        onIntent(StartMemberResultsStore.Intent.OnClickBrushQuery)
-                    },
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                AnimatedVisibility(
-                    visible = hasActiveFilters(state.filterState),
-                    enter = scaleIn() + fadeIn(),
-                    exit = scaleOut() + fadeOut()
-                ) {
-                    IconButton(
-                        onClick = { onIntent(StartMemberResultsStore.Intent.OnClickBrush) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Clear Filters",
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                }
-
-                if (!isWideScreen) {
-                    BadgedBox(badge = {
-                        Badge {
-                            if (getActiveFiltersCount(state.filterState) > 0) {
-                                Text(
-                                    text = getActiveFiltersCount(state.filterState).toString(),
-                                    fontSize = 10.sp
-                                )
-                            }
-                        }
-                    }) {
-                        IconButton(
-                            onClick = { onIntent(StartMemberResultsStore.Intent.OnToggleFilterDialog) }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.FilterList,
-                                contentDescription = "Filters",
-                                tint = MaterialTheme.colorScheme.tertiary,
-                            )
-                        }
-                    }
-                }
-            }
+            StartMemberResultsSearchBar(
+                modifier = Modifier.statusBarsPadding(),
+                query = state.filterState.searchQuery,
+                onValueChange = { onIntent(StartMemberResultsStore.Intent.OnChangeQuery(it)) },
+                onClickGoBack = { onIntent(StartMemberResultsStore.Intent.OnClickGoBack) },
+                onClickBrush = { onIntent(StartMemberResultsStore.Intent.OnClickBrushQuery) },
+                filterCount = getActiveFiltersCount(state.filterState),
+                onFilter = if (!isWideScreen) ({ onIntent(StartMemberResultsStore.Intent.OnToggleFilterDialog) }) else null,
+            )
 
             if (isWideScreen) {
                 WideScreenFilters(
@@ -165,8 +121,9 @@ private fun WideScreenFilters(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             DistanceDropDownFilter(
                 selectedDistanceFilter = state.filterState.distanceFilters.getSelectDistance(),
@@ -203,13 +160,13 @@ private fun DistanceDropDownFilter(
 ) {
     DropDownSpinner(
         itemList = distances.map { it.name },
-        selectedItem = selectedDistanceFilter,
+        selectedItem = selectedDistanceFilter?.name.orEmpty(),
         onItemSelected = { id, item ->
             onChoseDistance(distances[id])
         },
         textFiled = {
             OutlinedTextFieldBase(
-                modifier = modifier.sizeIn(maxHeight = 60.dp, maxWidth = 170.dp),
+                modifier = modifier.widthIn(max = 170.dp),
                 label = "Дистанция",
                 value = selectedDistanceFilter?.name ?: "",
                 isEnabled = false
@@ -232,7 +189,7 @@ private fun GroupsDropdownFilter(
         },
         textFiled = {
             OutlinedTextFieldBase(
-                modifier = modifier.sizeIn(maxHeight = 60.dp, maxWidth = 180.dp),
+                modifier = modifier.widthIn(max = 180.dp),
                 label = "Группы",
                 value = groups.getSelectedGroups().joinToString(", ") { it.name },
                 isEnabled = false
@@ -250,7 +207,7 @@ private fun GendersDropDownFilter(
     val selectedGender = genders.getSelectedGenders()
 
     ItemsTextFiledDialog(
-        modifier.sizeIn(maxHeight = 60.dp, maxWidth = 180.dp),
+        modifier.widthIn(max = 180.dp),
         label = "Пол",
         items = genders.map { it.name },
         values = selectedGender.map { it.name },
@@ -272,13 +229,13 @@ private fun SelectedFiltersPane(
     onClickDistance: (DistanceFilter) -> Unit,
     onClickGender: (GenderFilter) -> Unit,
 ) {
-    FlowRow(
-        modifier = modifier,
+    Row(
+        modifier = modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        maxLines = 3,
     ) {
         selectedDistance?.let { selectedDistance ->
             FilterChipBase(
+                modifier = Modifier.widthIn(max = 260.dp),
                 selected = true,
                 onClick = { onClickDistance(selectedDistance) },
                 label = selectedDistance.name
@@ -286,6 +243,7 @@ private fun SelectedFiltersPane(
         }
         selectedGroups.forEach { group ->
             FilterChipBase(
+                modifier = Modifier.widthIn(max = 260.dp),
                 selected = true,
                 onClick = { onClickGroup(group) },
                 label = group.name
@@ -293,6 +251,7 @@ private fun SelectedFiltersPane(
         }
         selectedGenders.forEach { gender ->
             FilterChipBase(
+                modifier = Modifier.widthIn(max = 260.dp),
                 selected = true,
                 onClick = { onClickGender(gender) },
                 label = gender.name
@@ -301,17 +260,8 @@ private fun SelectedFiltersPane(
     }
 }
 
-// Utility functions
-private fun hasActiveFilters(filterState: FilterState): Boolean {
-    return filterState.searchQuery.isNotBlank() ||
-            filterState.distanceFilters.any { it.isSelected } ||
-            filterState.groupFilters.any { it.isSelected } ||
-            filterState.genderFilters.any { it.isSelected }
-}
-
 fun getActiveFiltersCount(filterState: FilterState): Int {
     var count = 0
-    if (filterState.searchQuery.isNotBlank()) count++
     count += filterState.distanceFilters.count { it.isSelected }
     count += filterState.groupFilters.count { it.isSelected }
     count += filterState.genderFilters.count { it.isSelected }

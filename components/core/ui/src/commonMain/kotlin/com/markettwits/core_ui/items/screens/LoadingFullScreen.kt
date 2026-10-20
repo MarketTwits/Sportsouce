@@ -1,46 +1,19 @@
 package com.markettwits.core_ui.items.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.components.progress.CircularProgressIndicatorBase
 
 @Composable
-fun LoadingFullScreen(
-    modifier: Modifier = Modifier,
-    onClickBack: (() -> Unit)? = null,
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Transparent),
-    ) {
-        if (onClickBack != null) {
-            BackFloatingActionButton {
-                onClickBack()
-            }
-        }
-        AnimatedVisibility(
-            modifier = Modifier.align(Alignment.Center),
-            visible = true,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = MaterialTheme.colorScheme.tertiary,
-                strokeCap = StrokeCap.Round
-            )
-        }
+fun LoadingFullScreen(modifier: Modifier = Modifier, onClickBack: (() -> Unit)? = null) {
+    Box(modifier.fillMaxSize()) {
+        CircularProgressIndicatorBase(Modifier.align(Alignment.Center).semantics { contentDescription = "Загрузка" })
+        if (onClickBack != null) BackFloatingActionButton(back = onClickBack)
     }
 }

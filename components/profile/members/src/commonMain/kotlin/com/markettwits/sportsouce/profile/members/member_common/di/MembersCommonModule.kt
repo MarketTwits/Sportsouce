@@ -15,11 +15,15 @@ import com.markettwits.sportsouce.profile.members.member_common.data.cache.Profi
 import com.markettwits.sportsouce.profile.members.member_common.data.mapper.MembersMapper
 import com.markettwits.sportsouce.profile.members.member_common.data.mapper.MembersMapperBase
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
+import com.markettwits.sportsouce.profile.members.member_common.data.MemberIdentityRepositoryBase
+import com.markettwits.sportsouce.profile.members.member_common.domain.MemberIdentityRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val membersCommonModule = module {
+    singleOf(::MemberIdentityRepositoryBase) bind
+        MemberIdentityRepository::class
     includes(sportSauceNetworkProfileModule, authDataSourceModule)
     singleOf(::BaseTimeMapper) bind TimeMapper::class
     singleOf(::MembersMapperBase) bind MembersMapper::class

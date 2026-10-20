@@ -7,6 +7,7 @@ import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMe
 
 interface MembersMapper {
     fun mapAll(members: ProfileMembers): List<ProfileMember>
+    fun mapMember(member: ProfileMembers.ProfileMember, ownerId: Int = 0): ProfileMember
     fun addOrUpdate(member: ProfileMember, update: Boolean, userId: Int): ProfileMemberRequest
     fun userToMember(user: User): ProfileMember
 }

@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.shop.orders.presentation.components
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.markettwits.core.errors.api.throwable.SauceError
@@ -36,12 +36,14 @@ fun ShopUserOrdersContent(
             AdaptivePane {
                 ShopUserOrdersItemsContent(
                     paddingValues = paddingValues,
-                    isSuccess = isSuccess,
-                    items = items
+                    isSuccess = isSuccess || items.isNotEmpty(),
+                    items = items,
+                    refreshError = error,
+                    onClickRetry = onClickRetry,
                 )
                 ShopUserOrdersErrorContent(
                     modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
-                    error = error,
+                    error = error.takeIf { items.isEmpty() },
                     onClickRetry = onClickRetry
                 )
                 ShopUserOrdersLoadingContent(

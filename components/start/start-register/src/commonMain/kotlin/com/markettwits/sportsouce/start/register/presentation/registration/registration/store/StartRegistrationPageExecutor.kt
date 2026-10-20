@@ -59,7 +59,7 @@ class StartRegistrationPageExecutor : CoroutineExecutor<Intent, Action, State, M
         updatedPage: StartRegistrationStagePage
     ): List<StartRegistrationStagePage> {
         return list.map { page ->
-            if (page.title == updatedPage.title) updatedPage else page
+            if (page.id == updatedPage.id) updatedPage else page
         }
     }
 

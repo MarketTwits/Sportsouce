@@ -8,6 +8,7 @@ internal fun StartStatement.isPresentInProfileMembers(
     emailOverride: String? = null,
     phoneOverride: String? = null,
 ): Boolean {
+    if (participantUserId != null && members.any { it.participantUserId == participantUserId }) return true
     val targetName = name.trim().lowercase()
     val targetSurname = surname.trim().lowercase()
     val targetEmail = (emailOverride ?: email).trim().lowercase()

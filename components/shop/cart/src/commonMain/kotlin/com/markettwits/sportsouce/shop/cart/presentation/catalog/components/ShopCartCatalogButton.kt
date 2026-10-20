@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.shop.cart.presentation.catalog.components
 
+import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,10 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 internal fun ShopCartCatalogButton(
@@ -27,7 +26,9 @@ internal fun ShopCartCatalogButton(
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        shape = Shapes.large
+        shape = com.markettwits.core_ui.items.theme.SauceShapes.field,
+        containerColor = SauceTheme.colors.actionSoft,
+        contentColor = SauceTheme.colors.onActionSoft
     ) {
         Row(
             modifier = Modifier.padding(10.dp),
@@ -36,18 +37,17 @@ internal fun ShopCartCatalogButton(
             Icon(
                 modifier = Modifier.padding(4.dp),
                 imageVector = Icons.Default.ShoppingCart,
-                tint = SportSouceColor.SportSouceLighBlue,
-                contentDescription = "shopping cart"
+                tint = SauceTheme.colors.action,
+                contentDescription = "Корзина"
             )
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = "$price ₽",
-                color = SportSouceColor.SportSouceLighBlue,
+                color = SauceTheme.colors.action,
                 textAlign = TextAlign.Start,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
+                style = MaterialTheme.typography.titleSmall,
             )
         }
 

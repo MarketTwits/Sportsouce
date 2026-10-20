@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.start.register.presentation.distances.components
 
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
@@ -9,6 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.status.SauceStatusBadge
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.topbar.TopBarBase
 import com.markettwits.core_ui.items.extensions.formatPrice
@@ -43,7 +52,7 @@ internal fun StartDistancesContent(
 ) {
     Scaffold(
         modifier = modifier
-            .background(color = MaterialTheme.colorScheme.background),
+            .background(color = SauceTheme.colors.background),
         topBar = {
             TopBarBase(
                 title = state.startTitle,
@@ -51,26 +60,25 @@ internal fun StartDistancesContent(
             )
         },
     ) { paddingValues ->
-        AdaptivePane {
+        AdaptivePane(modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues)) {
             Column(
                 modifier = Modifier
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .verticalScroll(rememberScrollState())
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
                 Spacer(modifier = Modifier.height(14.dp))
                 InfoCard()
                 Spacer(modifier = Modifier.height(14.dp))
-                state.distance.forEach {
-                    Column(modifier.clip(Shapes.medium)) {
+                state.distance.forEach { distance ->
+                    androidx.compose.runtime.key(distance.id) {
                         DistanceItem(
-                            item = it,
+                            item = distance,
                             distinctDistances = state.distance,
                             distances = state.mapDistance,
                             paymentType = state.paymentType,
                             paymentDisabled = state.paymentDisabled,
-                            onClick = { onClickSelectedDistance(it) },
+                            onClick = { onClickSelectedDistance(distance) },
                             onClickUrl = onClickUrl
                         )
                     }
@@ -89,8 +97,8 @@ private fun InfoCard() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+            colors = CardDefaults.cardColors(containerColor = SauceTheme.colors.surfaceRaised),
+            border = BorderStroke(1.dp, SauceTheme.colors.border)
         ) {
             Row(
                 modifier = Modifier.padding(12.dp),
@@ -99,9 +107,8 @@ private fun InfoCard() {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Выберите желаемую дистанцию для регистрации на старт. Внимательно читайте положение и регламент проведения мероприятий!",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.light(),
-                        color = MaterialTheme.colorScheme.outline
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = SauceTheme.colors.textSecondary
                     )
                 }
                 IconButton(onClick = {
@@ -109,8 +116,8 @@ private fun InfoCard() {
                 }) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = "Close message",
-                        tint = MaterialTheme.colorScheme.outline
+                        contentDescription = "Скрыть подсказку",
+                        tint = SauceTheme.colors.textSecondary
                     )
                 }
             }
@@ -118,6 +125,7 @@ private fun InfoCard() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DistanceItem(
     item: DistinctDistance,
@@ -135,8 +143,8 @@ private fun DistanceItem(
         selectedDistance = item
     )
 
-    val availableSlots = item.availableSlots()
-    val enabled = item.infiniteSlots || availableSlots > 0
+    val availability = item.availability()
+    val enabled = availability.canSelect
 
     val hasDescription = item.detailedDescription.hasMeaningfulDescription()
     val hasScheme = item.schemeImage?.fullPath?.isNotBlank() == true
@@ -149,88 +157,44 @@ private fun DistanceItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        colors = CardDefaults.cardColors(containerColor = SauceTheme.colors.surfaceRaised),
         shape = RoundedCornerShape(8.dp),
-        onClick = {
-            if (enabled) {
-                onClick()
-            }
-        }
+        onClick = if (enabled) onClick else null,
     ) {
         Column {
-            Row(
-                modifier = Modifier.padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                Modifier.fillMaxWidth().padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text(
-                            modifier = Modifier.weight(1f),
-                            text = title,
-                            fontSize = 16.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    if (!item.infiniteSlots && availableSlots > 0) {
-                        Text(
-                            text = "$availableSlots слота",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.height(14.dp))
-                    }
+                SauceStatusBadge(label = availability.label, tone = availability.tone,
+                    modifier = Modifier.heightIn(min = 26.dp))
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(title, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleMedium,
+                        color = SauceTheme.colors.textPrimary)
+                    if (item.stages.size > 1) Text("Этапов: ${item.stages.size}", Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary)
                 }
-                if (item.stages.size > 1) {
-                    Box(
-                        modifier = Modifier
-                            .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                    ) {
-                        Text(
-                            text = "${item.stages.size} этапа",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-
-                Button(
-                    onClick = {
-                        if (enabled) {
-                            onClick()
-                        }
-                    },
-                    enabled = enabled,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                    ),
+                FlowRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    itemVerticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (enabled) {
-                        val price =
-                            if (paymentDisabled && paymentType.isNotEmpty()) paymentType
-                            else
-                                "Цена : " + item.staticPrice.formatPrice() + " ₽"
-                        Text(
-                            text = price,
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    } else {
-                        Text(
-                            text = "Слоты закончились",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
+                    Column(Modifier.width(IntrinsicSize.Max), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(if (paymentDisabled && paymentType.isNotEmpty()) "Оплата" else "Цена",
+                            Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall,
+                            color = SauceTheme.colors.textSecondary)
+                        Text(if (paymentDisabled && paymentType.isNotEmpty()) paymentType
+                            else "${item.staticPrice.formatPrice()} ₽",
+                            Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleMedium,
+                            color = if (enabled) SauceTheme.colors.textPrimary else SauceTheme.colors.textMuted)
                     }
+                    SauceButton(
+                        title = if (enabled) "Выбрать" else "Мест нет",
+                        enabled = enabled,
+                        fillWidth = false,
+                        onClick = onClick,
+                    )
                 }
             }
 
@@ -238,27 +202,30 @@ private fun DistanceItem(
             if (hasAdditionalInfo) {
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 12.dp),
-                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                    color = SauceTheme.colors.border
                 )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { isExpanded = !isExpanded }
+                        .heightIn(min = 48.dp)
+                        .semantics { stateDescription = if (isExpanded) "Развёрнуто" else "Свёрнуто" }
+                        .clickable(role = Role.Button, onClickLabel = if (isExpanded) "Скрыть детали" else "Показать детали") { isExpanded = !isExpanded }
                         .padding(12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = if (isExpanded) "Скрыть детали" else "Показать детали",
                         fontSize = 14.sp,
                         fontFamily = FontNunito.medium(),
-                        color = MaterialTheme.colorScheme.secondary
+                        color = SauceTheme.colors.action
                     )
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
+                        tint = SauceTheme.colors.action,
                         modifier = Modifier
                             .size(20.dp)
                             .rotate(if (isExpanded) 180f else 0f)
@@ -289,13 +256,13 @@ private fun DistanceItem(
                                     text = "Описание",
                                     fontFamily = FontNunito.bold(),
                                     fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.outline
+                                    color = SauceTheme.colors.textSecondary
                                 )
                                 HtmlText(
                                     text = item.detailedDescription.orEmpty(),
                                     fontFamily = FontNunito.regular(),
                                     fontSize = 13.sp,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = SauceTheme.colors.textPrimary
                                 )
                             }
                         }
@@ -324,14 +291,6 @@ private fun DistanceItem(
     }
 }
 
-private fun DistinctDistance.availableSlots(): Int {
-    openSlots?.let { return it.coerceAtLeast(0) }
-
-    val total = slots
-    val taken = takenSlots ?: 0
-    return if (total != null) (total - taken).coerceAtLeast(0) else 0
-}
-
 private fun String?.hasMeaningfulDescription(): Boolean {
     if (this.isNullOrBlank()) return false
     return this
@@ -352,7 +311,7 @@ private fun DistanceFileCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = SauceTheme.colors.surface
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 1.dp
@@ -374,19 +333,19 @@ private fun DistanceFileCard(
                     text = title,
                     fontFamily = FontNunito.semiBoldBold(),
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.outline
+                    color = SauceTheme.colors.textSecondary
                 )
                 Text(
                     text = fileName,
                     fontFamily = FontNunito.medium(),
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = SauceTheme.colors.textPrimary
                 )
             }
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
+                tint = SauceTheme.colors.action,
                 modifier = Modifier
                     .size(20.dp)
                     .rotate(-90f) // Point to the right

@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.list.components.toolbar
 
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -32,8 +33,8 @@ fun RegistrationsToolbar(
     Surface(
         modifier = modifier
             .fillMaxWidth(),
-        color = MaterialTheme.colorScheme.primary,
-        shadowElevation = 4.dp
+        color = sauceTopBarContainerColor(),
+        shadowElevation = 0.dp
     ) {
         Column(
             modifier = Modifier

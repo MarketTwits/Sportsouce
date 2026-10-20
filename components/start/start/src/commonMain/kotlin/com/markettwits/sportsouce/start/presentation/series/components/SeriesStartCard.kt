@@ -1,273 +1,124 @@
 package com.markettwits.sportsouce.start.presentation.series.components
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
+import coil3.compose.AsyncImage
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.text.HtmlText
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import com.markettwits.sportsouce.starts.common.presentation.StartStatusBadge
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsColor
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsIcon
-import com.markettwits.sportsouce.starts.common.presentation.startStatusBackground
-import com.markettwits.sportsouce.starts.common.presentation.startStatusCompactMessage
 
 @Composable
 internal fun SeriesStartCard(
     modifier: Modifier = Modifier,
     item: StartsListItem,
     isCurrentStart: Boolean = false,
-    isLast: Boolean = false,
     onClick: () -> Unit,
 ) {
-    val connectorColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.25f)
-    var cardHeightPx by remember { mutableStateOf(0) }
-    val density = androidx.compose.ui.platform.LocalDensity.current
-
-    Box(
-        modifier = modifier.fillMaxWidth()
+    val colors = SauceTheme.colors
+    Surface(
+        modifier = modifier.fillMaxWidth().semantics {
+            selected = isCurrentStart
+            if (isCurrentStart) stateDescription = "Основной старт"
+        },
+        shape = SauceShapes.card,
+        color = if (isCurrentStart) colors.actionSoft else colors.surface,
+        contentColor = colors.textPrimary,
+        border = BorderStroke(if (isCurrentStart) 2.dp else 1.dp,
+            if (isCurrentStart) colors.brand else colors.controlBorder),
+        onClick = onClick,
     ) {
-        // Connection line from center of card to next card (dynamic size)
-        if (!isLast && cardHeightPx > 0) {
-            val cardHeightDp = with(density) { cardHeightPx.toDp() }
-            Canvas(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .height(cardHeightDp + 60.dp)
-            ) {
-                val startY = cardHeightPx / 2f
-
-                drawLine(
-                    color = connectorColor,
-                    start = Offset(size.width / 2, startY),
-                    end = Offset(size.width / 2, size.height),
-                    strokeWidth = 6.dp.toPx()
+        BoxWithConstraints(Modifier.fillMaxWidth().padding(SauceSpacing.large)) {
+            val stacked = maxWidth < 240.dp * LocalDensity.current.fontScale
+            val posterWidth = (maxWidth * 0.35f).coerceAtMost(150.dp)
+            val placeholder = DefaultImages.EmptyImageStart()
+            val poster: @Composable (Modifier) -> Unit = { imageModifier ->
+                AsyncImage(
+                    model = imageRequestCrossfade(item.image), contentDescription = null,
+                    placeholder = placeholder, error = placeholder, contentScale = ContentScale.Crop,
+                    modifier = imageModifier.clip(SauceShapes.field),
                 )
             }
+            if (stacked) {
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
+                    poster(Modifier.fillMaxWidth().height(160.dp))
+                    SeriesStartInfo(item)
+                }
+            } else {
+                Row(Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
+                    poster(Modifier.width(posterWidth).height(200.dp))
+                    SeriesStartInfo(item, Modifier.weight(1f))
+                }
+            }
         }
+    }
+}
 
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
-        ) {
-            // Card content
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 240.dp)
-                        .onSizeChanged { size ->
-                            cardHeightPx = size.height
-                        }
-                        .background(MaterialTheme.colorScheme.background),
-                    color = if (isCurrentStart) startStatusBackground(item.statusCode.id).copy(alpha = 0.25f) else Color.Transparent,
-                    onClick = onClick
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            // Image with adaptive width
-                            Box(
-                                modifier = Modifier
-                                    .weight(0.35f)
-                                    .fillMaxHeight()
-                                    .widthIn(max = 150.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                            ) {
-                                SubcomposeAsyncImage(
-                                    model = imageRequestCrossfade(model = item.image),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize(),
-                                    error = {
-                                        SubcomposeAsyncImageContent(
-                                            modifier = Modifier,
-                                            painter = DefaultImages.EmptyImageStart()
-                                        )
-                                    },
-                                    success = {
-                                        SubcomposeAsyncImageContent(modifier = Modifier)
-                                    }
-                                )
-                            }
-
-                            // Content
-                            Column(
-                                modifier = Modifier.weight(0.65f),
-                                verticalArrangement = Arrangement.spacedBy(10.dp)
-                            ) {
-                                // Status badge and sport badges in one row
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // Status badge
-                                    Surface(
-                                        color = startStatusBackground(item.statusCode.id),
-                                        shape = RoundedCornerShape(6.dp)
-                                    ) {
-                                        Text(
-                                            text = startStatusCompactMessage(item.statusCode.id),
-                                            color = Color.White,
-                                            fontFamily = FontNunito.bold(),
-                                            fontSize = 10.sp,
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                        )
-                                    }
-
-                                    // Sport type badges
-                                    if (item.kindOfSports.isNotEmpty()) {
-                                        item.kindOfSports.take(2).forEach { sport ->
-                                            val sportColor = startKindOfSportsColor(sport)
-                                            val sportIcon = startKindOfSportsIcon(sport)
-
-                                            Surface(
-                                                color = sportColor.copy(alpha = 0.15f),
-                                                shape = RoundedCornerShape(6.dp)
-                                            ) {
-                                                Row(
-                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Icon(
-                                                        imageVector = sportIcon,
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(12.dp),
-                                                        tint = sportColor
-                                                    )
-                                                    Text(
-                                                        text = sport.name,
-                                                        color = sportColor,
-                                                        fontFamily = FontNunito.semiBoldBold(),
-                                                        fontSize = 10.sp,
-                                                        maxLines = 1
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Title
-                                Text(
-                                    text = item.name,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    fontFamily = FontNunito.bold(),
-                                    fontSize = 16.sp,
-                                    lineHeight = 20.sp,
-                                    overflow = TextOverflow.Ellipsis,
-                                    maxLines = 2
-                                )
-
-                                // Date
-                                Text(
-                                    text = item.date,
-                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                                    fontFamily = FontNunito.medium(),
-                                    fontSize = 13.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                // Distance under date
-                                if (item.distance.isNotEmpty()) {
-                                    HtmlText(
-                                        text = item.distance,
-                                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                                        fontFamily = FontNunito.regular(),
-                                        fontSize = 13.sp,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-
-                                // Place and views
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // Place
-                                    if (item.place.isNotEmpty()) {
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.LocationOn,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp),
-                                                tint = MaterialTheme.colorScheme.secondary
-                                            )
-                                            Text(
-                                                text = item.place,
-                                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                                                fontFamily = FontNunito.regular(),
-                                                fontSize = 12.sp,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.weight(1f, fill = false)
-                                            )
-                                        }
-                                    }
-
-                                    // Views
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Visibility,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(16.dp),
-                                            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
-                                        )
-                                        Text(
-                                            text = item.views.toString(),
-                                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                                            fontFamily = FontNunito.regular(),
-                                            fontSize = 12.sp,
-                                            maxLines = 1
-                                        )
-                                    }
-                                }
-                            }
-                        }
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SeriesStartInfo(item: StartsListItem, modifier: Modifier = Modifier) {
+    val colors = SauceTheme.colors
+    val density = LocalDensity.current
+    val measurer = rememberTextMeasurer()
+    val sportStyle = MaterialTheme.typography.labelSmall
+    val viewsStyle = MaterialTheme.typography.bodySmall
+    val views = item.views.toString()
+    val viewsWidth = with(density) { measurer.measure(views, viewsStyle).size.width.toDp() } + 1.dp
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+            verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+            StartStatusBadge(item.statusCode.id, Modifier.align(Alignment.CenterVertically), compact = true)
+            item.kindOfSports.take(2).forEach { sport ->
+                val color = startKindOfSportsColor(sport)
+                val textWidth = with(density) { measurer.measure(sport.name, sportStyle).size.width.toDp() } + 1.dp
+                Surface(color = color.copy(alpha = 0.15f), shape = SauceShapes.badge) {
+                    Row(Modifier.padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(startKindOfSportsIcon(sport), null, Modifier.size(16.dp), tint = color)
+                        Text(sport.name, Modifier.width(textWidth), style = sportStyle, color = color)
                     }
                 }
+            }
+        }
+        Text(item.name, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
+        Text(item.date, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+        if (item.distance.isNotBlank()) HtmlText(text = item.distance, modifier = Modifier.fillMaxWidth(),
+            color = colors.textSecondary, style = MaterialTheme.typography.bodySmall,
+            maxLines = 2, overflow = TextOverflow.Ellipsis, showImages = false)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+            if (item.place.isNotBlank()) {
+                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Icon(Icons.Outlined.LocationOn, null, Modifier.size(16.dp), tint = colors.textMuted)
+                    Text(item.place, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall,
+                        color = colors.textSecondary, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                }
+            } else Spacer(Modifier.weight(1f))
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Icon(Icons.Outlined.Visibility, "Просмотры", Modifier.size(16.dp), tint = colors.textMuted)
+                Text(views, Modifier.width(viewsWidth), style = viewsStyle, color = colors.textSecondary)
             }
         }
     }

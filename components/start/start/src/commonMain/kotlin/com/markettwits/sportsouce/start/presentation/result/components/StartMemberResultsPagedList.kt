@@ -3,10 +3,11 @@ package com.markettwits.sportsouce.start.presentation.result.components
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paging.LoadStateLoading
@@ -23,21 +24,22 @@ internal fun StartMemberResultsPagedList(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(SauceTheme.colors.background),
         contentPadding = PaddingValues(
             start = 16.dp,
             end = 16.dp,
+            top = 8.dp,
             bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         if (totalCount > 0) {
             item {
                 Text(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     text = "Всего $totalCount результатов",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                    color = SauceTheme.colors.textSecondary,
                 )
             }
         }
@@ -61,12 +63,6 @@ internal fun StartMemberResultsPagedList(
             }
         }
 
-        item {
-            Spacer(
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .height(2.dp)
-            )
-        }
+
     }
 }

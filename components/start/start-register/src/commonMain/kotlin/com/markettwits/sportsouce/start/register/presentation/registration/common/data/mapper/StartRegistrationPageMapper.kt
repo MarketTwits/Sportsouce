@@ -89,6 +89,9 @@ class StartRegistrationPageMapper(
             userId = StartStatement.UserId.WithId(userId = user.id.toString()),
             stageId = stageId,
             members = profileMembers,
+            participantUserId = user.id,
+            patronymic = user.patronymic,
+            participantSource = ProfileMember.Source.Self,
         )
     }
 
@@ -118,12 +121,12 @@ class StartRegistrationPageMapper(
             paymentDisabled = false,
             yearDiscountApplied = false,
             distanceTitle = "",
-            userId = if (profileMember.userId == 0)
-                StartStatement.UserId.WithoutId
-            else
-                StartStatement.UserId.WithId(userId = profileMember.userId.toString()),
+            userId = StartStatement.UserId.WithoutId,
             stageId = stageId,
             members = profileMembers,
+            participantUserId = profileMember.participantUserId,
+            patronymic = profileMember.patronymic,
+            participantSource = profileMember.source,
             // answers = emptyList()
         )
     }

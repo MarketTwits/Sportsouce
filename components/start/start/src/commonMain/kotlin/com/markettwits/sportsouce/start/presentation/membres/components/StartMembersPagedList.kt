@@ -1,10 +1,11 @@
 package com.markettwits.sportsouce.start.presentation.membres.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.cash.paging.LoadStateLoading
@@ -21,15 +22,16 @@ internal fun StartMembersPagedList(
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(12.dp)
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp,
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp)
     ) {
         if (totalCount > 0)
             item {
                 Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = "Всего $totalCount результатов",
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    text = "Участников: $totalCount",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                    color = SauceTheme.colors.textSecondary,
                 )
             }
         items(count = items.itemCount) { index ->
@@ -44,12 +46,6 @@ internal fun StartMembersPagedList(
                 StartMemberCardShimmer()
             }
         }
-        item {
-            Spacer(
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .height(2.dp)
-            )
-        }
+
     }
 }

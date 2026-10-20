@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.NearMe
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +32,8 @@ import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.Shapes
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -41,22 +45,16 @@ fun StartCardV3(
     onItemClick: (StartsListItem) -> Unit,
 ) {
     val screenInfo = rememberScreenSizeInfo()
-    val isCompactScreen = screenInfo.wDP < 390.dp
+    val largeText = LocalDensity.current.fontScale >= 1.5f
+    val isCompactScreen = screenInfo.wDP < 390.dp || largeText
     val isVeryCompactScreen = screenInfo.wDP < 340.dp
     val overlayPadding = if (isVeryCompactScreen) 6.dp else 10.dp
-    val overlayBadgeFontSize = if (isVeryCompactScreen) 11.sp else 12.sp
-    val statusText = if (isCompactScreen) {
-        startStatusCompactMessage(start.statusCode.id)
-    } else {
-        startStatusMessage(start.statusCode.id)
-    }
-
+    val overlayBadgeFontSize = MaterialTheme.typography.labelMedium.fontSize
     val organizer = start.organizers.firstOrNull { it.isMain } ?: start.organizers.firstOrNull()
     val organizerLogo = organizer?.photo?.fullPath?.takeIf { it.isNotBlank() }
     val slotsText = start.slots.toSlotsText()
 
     OnBackgroundCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp),
@@ -66,7 +64,7 @@ fun StartCardV3(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
+                    .aspectRatio(2f)
                     .clip(Shapes.medium)
                     .border(
                         width = 1.dp,
@@ -94,21 +92,18 @@ fun StartCardV3(
                         .align(Alignment.BottomStart),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    StartCardV3ImageOverlayBadge(
-                        text = statusText,
-                        backgroundColor = startStatusBackground(start.statusCode.id).copy(alpha = 0.94f),
-                        fontSize = overlayBadgeFontSize,
-                    )
+                    StartStatusBadge(statusCode = start.statusCode.id, modifier = Modifier.heightIn(min = 32.dp), compact = isCompactScreen)
 
                     StartCardV3ImageOverlayBadge(
                         text = start.date,
-                        backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.91f),
+                        backgroundColor = SauceTheme.colors.surfaceRaised,
+                        contentColor = SauceTheme.colors.textPrimary,
                         icon = {
                             Icon(
                                 modifier = Modifier.size(13.dp),
                                 imageVector = Icons.Default.Schedule,
                                 contentDescription = null,
-                                tint = Color.White
+                                tint = SauceTheme.colors.textSecondary
                             )
                         },
                         fontSize = overlayBadgeFontSize,
@@ -119,7 +114,7 @@ fun StartCardV3(
                     StartCardV3ImageOverlayBadge(
                         modifier = Modifier
                             .padding(overlayPadding)
-                            .align(Alignment.BottomEnd),
+                            .align(if (largeText) Alignment.TopStart else Alignment.BottomEnd),
                         text = slotsText,
                         backgroundColor = Color.Black.copy(alpha = 0.46f),
                         icon = if (isVeryCompactScreen) null else {
@@ -191,14 +186,14 @@ fun StartCardV3(
                                         modifier = Modifier
                                             .size(28.dp)
                                             .clip(Shapes.large)
-                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                            .background(SauceTheme.colors.brandContainer),
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
                                             modifier = Modifier.size(16.dp),
                                             imageVector = Icons.Default.Person,
                                             contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.outline
+                                            tint = SauceTheme.colors.onBrandContainer
                                         )
                                     }
                                 }
@@ -211,10 +206,11 @@ fun StartCardV3(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(if (isVeryCompactScreen) 8.dp else 10.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .padding(horizontal = SauceSpacing.medium, vertical = SauceSpacing.large),
+                verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)
             ) {
                 Row(
+                    modifier = Modifier.padding(bottom = SauceSpacing.extraSmall),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -240,27 +236,15 @@ fun StartCardV3(
                     Text(
                         modifier = Modifier.weight(1f),
                         text = start.name,
-                        fontSize = 18.sp,
-                        lineHeight = 22.sp,
-                        fontFamily = FontNunito.bold(),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            lineHeight = 22.sp,
+                            letterSpacing = 0.sp,
+                        ),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    start.kindOfSports.take(if (isCompactScreen) 2 else 3).forEach { sport ->
-                        val sportColor = startKindOfSportsColor(sport)
-                        StartCardV3Badge(
-                            text = sport.name,
-                            backgroundColor = sportColor.copy(alpha = 0.16f),
-                            contentColor = sportColor,
-                        )
-                    }
                 }
 
                 if (start.distance.isNotBlank()) {
@@ -277,11 +261,9 @@ fun StartCardV3(
                         HtmlText(
                             modifier = Modifier.fillMaxWidth(),
                             text = start.distance,
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp,
+                            style = MaterialTheme.typography.bodySmall,
                             maxLines = if (isCompactScreen) 2 else 3,
                             overflow = TextOverflow.Ellipsis,
-                            fontFamily = FontNunito.medium(),
                             color = MaterialTheme.colorScheme.outline
                         )
                     }
@@ -319,31 +301,7 @@ private fun StartCardV3MetaRow(
             modifier = Modifier.fillMaxWidth(),
             text = text,
             color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.medium(),
-            fontSize = 13.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
-@Composable
-private fun StartCardV3Badge(
-    text: String,
-    backgroundColor: Color,
-    contentColor: Color,
-) {
-    Box(
-        modifier = Modifier
-            .clip(Shapes.medium)
-            .background(backgroundColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = text,
-            color = contentColor,
-            fontFamily = FontNunito.medium(),
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.bodySmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -364,12 +322,16 @@ private fun StartCardV3ImageOverlayBadge(
     backgroundColor: Color,
     icon: @Composable (() -> Unit)? = null,
     fontSize: androidx.compose.ui.unit.TextUnit = 12.sp,
+    contentColor: Color = Color.White,
 ) {
     Box(
         modifier = modifier
+            .heightIn(min = 32.dp)
+            .semantics(mergeDescendants = true) {}
             .clip(Shapes.large)
             .background(backgroundColor)
-            .padding(horizontal = 8.dp, vertical = 5.dp)
+            .padding(horizontal = 8.dp, vertical = 5.dp),
+        contentAlignment = Alignment.CenterStart,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -378,8 +340,8 @@ private fun StartCardV3ImageOverlayBadge(
             icon?.invoke()
             Text(
                 text = text,
-                color = Color.White,
-                fontFamily = FontNunito.medium(),
+                color = contentColor,
+                style = MaterialTheme.typography.labelMedium,
                 fontSize = fontSize,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

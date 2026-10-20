@@ -1,403 +1,146 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AirplaneTicket
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.screenWidthDp
+import com.markettwits.core_ui.items.components.divider.BaseDivider
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.start.presentation.common.components.*
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun ResultCard(
-    modifier: Modifier = Modifier,
-    result: MemberResult,
-    onClickMemberResult: (MemberResult) -> Unit,
-) {
-    val windowSizeClass = calculateWindowSizeClass()
-    val windowWidth = windowSizeClass.screenWidthDp.value.dp
-    if (windowWidth < 700.dp)
-        CompactResultCard(
-            result = result,
-            onClickMemberResult = onClickMemberResult,
-            modifier = modifier.fillMaxWidth()
-        )
-    else
-        ExpandedResultCard(
-            result = result,
-            onClickMemberResult = onClickMemberResult,
-            modifier = modifier.fillMaxWidth()
-        )
-}
-
-@Composable
-private fun CompactResultCard(
-    result: MemberResult,
-    onClickMemberResult: (MemberResult) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OnBackgroundCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        onClick = { onClickMemberResult(result) },
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PlaceAvatar(
-                    place = result.place,
-                    name = result.name,
-                    isExpanded = false
-                )
-                Spacer(Modifier.width(8.dp))
-                Column {
-                    Text(
-                        text = result.name,
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            fontFamily = FontNunito.bold(),
-                            color = MaterialTheme.colorScheme.onBackground
-                        ),
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .size(16.dp),
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            imageVector = Icons.AutoMirrored.Filled.AirplaneTicket,
-                            contentDescription = result.bodyNumber,
-                        )
-                        Text(
-                            text = "№${result.bodyNumber}",
-                            color = MaterialTheme.colorScheme.outline,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 12.sp,
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Icon(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .size(16.dp),
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            imageVector = Icons.Default.Group,
-                            contentDescription = result.bodyNumber,
-                        )
-                        Text(
-                            text = result.group,
-                            color = MaterialTheme.colorScheme.outline,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 12.sp,
-                        )
-                        Spacer(Modifier.width(12.dp))
-                        Icon(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .size(14.dp),
-                            tint = MaterialTheme.colorScheme.tertiary,
-                            imageVector = Icons.Default.Groups,
-                            contentDescription = result.bodyNumber,
-                        )
-                        Text(
-                            text = result.team,
-                            color = MaterialTheme.colorScheme.outline,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 12.sp,
+internal fun ResultCard(modifier: Modifier = Modifier, result: MemberResult, onClickMemberResult: (MemberResult) -> Unit) {
+    StartListCard(modifier.fillMaxWidth(), onClick = { onClickMemberResult(result) }) {
+        BoxWithConstraints(Modifier.fillMaxWidth().padding(12.dp)) {
+            val density = LocalDensity.current
+            val numberStyle = MaterialTheme.typography.titleMedium.copy(fontFeatureSettings = "tnum")
+            val measuredPlace = rememberTextMeasurer().measure(result.place.toString(), style = numberStyle)
+            val placeWidth = maxOf(48.dp, with(density) { measuredPlace.size.width.toDp() } + 16.dp)
+            val inlinePlacement = maxWidth >= placeWidth + 180.dp * density.fontScale
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (inlinePlacement) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ResultPlacement(result.place, Modifier.width(placeWidth))
+                        ResultIdentity(result, Modifier.weight(1f))
+                    }
+                } else {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        ResultPlacement(result.place, Modifier.width(placeWidth))
+                        Spacer(Modifier.weight(1f))
+                        ResultDisclosure()
+                    }
+                    ResultIdentity(result, showDisclosure = false)
+                }
+                if (result.distance.isNotBlank() || result.bodyNumber.isNotBlank()) {
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        StartListTag(result.distance)
+                        StartListInlineMetadata(
+                            result.bodyNumber.takeIf { it.isNotBlank() }?.let { "№ $it" }.orEmpty(),
+                            modifier = Modifier.align(Alignment.CenterVertically),
                         )
                     }
                 }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CompactResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Место",
-                    value = result.place.toString(),
-                )
-
-                CompactResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Результат",
-                    value = result.result,
-                    isHighlighted = true
-                )
-
-                CompactResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Отставание",
-                    value = result.shift
-                )
+                if (result.result.isNotBlank() || result.shift.isNotBlank()) {
+                    BaseDivider()
+                    ResultTiming(result.result, result.shift)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ExpandedResultCard(
-    result: MemberResult,
-    onClickMemberResult: (MemberResult) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OnBackgroundCard(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        onClick = { onClickMemberResult(result) },
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            ExpandedResultItem(
-                label = "Место",
-                value = result.place.toString(),
-                isHighlighted = true
-            )
+private fun ResultIdentity(result: MemberResult, modifier: Modifier = Modifier, showDisclosure: Boolean = true) {
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(result.name.replace("\\", "\n"), Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
+            if (result.group.isNotBlank()) Text(result.group, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
+            StartListMetadata("Команда", result.team)
+        }
+        if (showDisclosure) ResultDisclosure()
+    }
+}
 
-            Spacer(modifier = Modifier.width(12.dp))
+@Composable
+private fun ResultDisclosure() {
+    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null,
+        tint = SauceTheme.colors.textMuted, modifier = Modifier.size(24.dp))
+}
 
-            PlaceAvatar(
-                place = result.place,
-                name = result.name,
-                isExpanded = true
-            )
+@Composable
+private fun ResultPlacement(place: Int, modifier: Modifier = Modifier) {
+    val palette = SauceTheme.colors
+    val container = when (place) {
+        1 -> palette.brandContainer
+        2, 3 -> palette.actionSoft
+        else -> palette.surfaceSubtle
+    }
+    val content = when (place) {
+        1 -> palette.onBrandContainer
+        2, 3 -> palette.onActionSoft
+        else -> palette.textPrimary
+    }
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Surface(Modifier.fillMaxWidth(), shape = SauceShapes.field, color = container, contentColor = content) {
+            Text(place.toString(), Modifier.padding(vertical = 8.dp).fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(fontFeatureSettings = "tnum"), textAlign = TextAlign.Center)
+        }
+        Text("Место", Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall,
+            color = palette.textMuted, textAlign = TextAlign.Center)
+    }
+}
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(
-                modifier = Modifier
-                    .weight(1F)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = result.name.formatNames(),
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.bold(),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-
-                CategoryChip(category = result.group)
-
+/** A protocol-style timing line: value baselines align, captions sit underneath. */
+@Composable
+private fun ResultTiming(time: String, shift: String) {
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val palette = SauceTheme.colors
+        val density = LocalDensity.current
+        val measurer = rememberTextMeasurer()
+        val shiftStyle = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum")
+        val captionStyle = MaterialTheme.typography.bodySmall
+        val shiftWidthPx = maxOf(measurer.measure(shift, style = shiftStyle).size.width,
+            measurer.measure("Отставание", style = captionStyle).size.width) + 1
+        val styles = listOf(MaterialTheme.typography.titleLarge, MaterialTheme.typography.titleMedium, MaterialTheme.typography.titleSmall)
+            .map { it.copy(fontFeatureSettings = "tnum") }
+        val gapPx = with(density) { 16.dp.roundToPx() }
+        val horizontal = time.isNotBlank() && shift.isNotBlank() &&
+            measurer.measure(time, style = styles.first()).size.width + shiftWidthPx + gapPx <= constraints.maxWidth
+        val timeWidthPx = if (horizontal) constraints.maxWidth - shiftWidthPx - gapPx else constraints.maxWidth
+        val timeStyle = styles.firstOrNull { measurer.measure(time, style = it).size.width <= timeWidthPx } ?: styles.last()
+        if (horizontal) {
+            val shiftWidth = with(density) { shiftWidthPx.toDp() }
+            Column(Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(time, Modifier.weight(1f).alignByBaseline(), style = timeStyle, color = palette.action)
+                    Text(shift, Modifier.width(shiftWidth).alignByBaseline(), style = shiftStyle, color = palette.textSecondary, textAlign = TextAlign.End)
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text("Результат", Modifier.weight(1f), style = captionStyle, color = palette.textMuted)
+                    Text("Отставание", Modifier.width(shiftWidth), style = captionStyle, color = palette.textMuted, textAlign = TextAlign.End)
+                }
             }
-
-            Row(
-                modifier = Modifier
-                    .weight(3F)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                ExpandedResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Номер",
-                    value = "№ ${result.bodyNumber}",
-                )
-
-                ExpandedResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Команда",
-                    value = result.team,
-                )
-
-                ExpandedResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Дистанция",
-                    value = result.distance
-                )
-
-                ExpandedResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Результат",
-                    value = result.result,
-                    isHighlighted = true
-                )
-
-                ExpandedResultItem(
-                    modifier = Modifier.weight(1f),
-                    label = "Отставание",
-                    value = result.shift,
-                )
+        } else {
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (time.isNotBlank()) Column(Modifier.fillMaxWidth()) {
+                    Text(time, Modifier.fillMaxWidth(), style = timeStyle, color = palette.action)
+                    Text("Результат", Modifier.fillMaxWidth(), style = captionStyle, color = palette.textMuted)
+                }
+                if (shift.isNotBlank()) Column(Modifier.fillMaxWidth()) {
+                    Text(shift, Modifier.fillMaxWidth(), style = shiftStyle, color = palette.textSecondary)
+                    Text("Отставание", Modifier.fillMaxWidth(), style = captionStyle, color = palette.textMuted)
+                }
             }
         }
     }
-}
-
-@Composable
-private fun PlaceAvatar(
-    modifier: Modifier = Modifier,
-    place: Int,
-    name: String,
-    isExpanded: Boolean,
-) {
-    Box(
-        modifier = modifier.size(44.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.outline.copy(0.4f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = if (isExpanded) name.toAbbreviation() else place.toString(),
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        }
-    }
-}
-
-@Composable
-private fun CategoryChip(category: String) {
-    Surface(
-        shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.tertiaryContainer,
-        modifier = Modifier.wrapContentSize()
-    ) {
-        Text(
-            text = category,
-            fontSize = 12.sp,
-            fontFamily = FontNunito.medium(),
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-        )
-    }
-}
-
-@Composable
-private fun CompactResultItem(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: String,
-    isHighlighted: Boolean = false,
-) {
-    if (value.isNotBlank()) {
-        Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = value,
-                fontFamily = if (isHighlighted)
-                    FontNunito.semiBoldBold()
-                else
-                    FontNunito.medium(),
-                color = if (isHighlighted) MaterialTheme.colorScheme.secondary
-                else
-                    MaterialTheme.colorScheme.onBackground,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = label,
-                fontFamily = FontNunito.medium(),
-                color = MaterialTheme.colorScheme.outline,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-private fun ExpandedResultItem(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: String,
-    isHighlighted: Boolean = false,
-) {
-    if (value.isNotBlank()) {
-        Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Text(
-                text = label,
-                fontFamily = FontNunito.regular(),
-                color = MaterialTheme.colorScheme.outline,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = value,
-                fontFamily = if (isHighlighted)
-                    FontNunito.semiBoldBold()
-                else
-                    FontNunito.regular(),
-                color = if (isHighlighted) MaterialTheme.colorScheme.secondary
-                else
-                    MaterialTheme.colorScheme.onBackground,
-                fontSize = if (isHighlighted) 16.sp else 14.sp,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-private fun String.formatNames(): String {
-    val names = split("\\").map { it.trim() }
-    return names.joinToString("\n")
-}
-
-private fun String.toAbbreviation(maxLetters: Int = 3): String {
-    val words = this
-        .split("\\", " ")
-        .filter { it.isNotBlank() }
-
-    return words
-        .take(maxLetters)
-        .map { it.first().uppercaseChar() }
-        .joinToString("")
 }

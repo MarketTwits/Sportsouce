@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
@@ -22,9 +19,7 @@ internal fun AdditionalFieldSingleSelect(
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
 
-    val options by remember {
-        mutableStateOf(field.field.options)
-    }
+    val options = field.field.options
 
     val selectedOption = field.field.options.find { it.id == field.answer.singleSelect }
 
@@ -33,15 +28,14 @@ internal fun AdditionalFieldSingleSelect(
 
         AdditionalFiledTitle(field = field.field)
 
-        val visibleList = options.map {
-            if (it.price != null)
-                "${it.title} Цена: (${it.price.formatPrice()} ₽)"
-            else it.title
+        val visibleList = options.map { option ->
+            AdditionalFieldOption(option.id, if (option.price != null)
+                "${option.title} Цена: (${option.price.formatPrice()} ₽)" else option.title)
         }
 
         DropDownSpinner(
             itemList = visibleList,
-            selectedItem = field.answer.singleSelect,
+            selectedItem = visibleList.find { it.id == field.answer.singleSelect },
             onItemSelected = { id, item ->
                 onFieldChanged(
                     field.copy(
@@ -68,4 +62,7 @@ internal fun AdditionalFieldSingleSelect(
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
+}
+private data class AdditionalFieldOption(val id: Int, val title: String) {
+    override fun toString(): String = title
 }

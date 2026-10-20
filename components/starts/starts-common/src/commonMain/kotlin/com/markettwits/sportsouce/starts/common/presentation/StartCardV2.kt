@@ -101,25 +101,11 @@ private fun ImageCard(
 
 @Composable
 private fun ImageCardInfoStatus(status: StartsListItem.StatusCode) {
-    Row(
-        modifier = Modifier
-            .padding(4.dp)
-            .clip(Shapes.large)
-            .background(startStatusBackground(status.id).copy(alpha = 0.8f))
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(2.dp)
-                .fillMaxWidth(),
-            text = startStatusCompactMessage(status.id),
-            color = Color.White,
-            fontFamily = FontNunito.bold(),
-            fontSize = 12.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center
-        )
-    }
+    StartStatusBadge(
+        statusCode = status.id,
+        modifier = Modifier.padding(4.dp).heightIn(min = 32.dp),
+        compact = true,
+    )
 }
 
 @Composable

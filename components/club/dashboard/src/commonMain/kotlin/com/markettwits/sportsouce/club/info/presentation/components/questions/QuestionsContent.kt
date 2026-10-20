@@ -1,149 +1,43 @@
 package com.markettwits.sportsouce.club.info.presentation.components.questions
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
+import androidx.compose.foundation.lazy.items
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.text.HtmlText
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.club.common.presentation.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 
 @Composable
-internal fun QuestionsContent(
-    modifier: Modifier = Modifier,
-    questions: List<QuestionUi>,
-) {
-
-    val questionsState = remember { questions.map { it.copy() }.toMutableStateList() }
-
-    Column(modifier = modifier) {
-        questionsState.forEachIndexed { index, item ->
-            QuestionItemContent(
-                modifier = Modifier.padding(vertical = 10.dp),
-                question = item,
-                isSelected = item.isSelected,
-                onClick = {
-                    questionsState[index] = item.onChecked()
+internal fun QuestionsContent(modifier: Modifier = Modifier, questions: List<QuestionUi>) {
+    var expanded by rememberSaveable { mutableStateOf(emptyList<Int>()) }
+    SauceLazyColumn(modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (questions.isEmpty()) item { ClubNotice("Вопросов пока нет", "Информацию можно уточнить при записи на тренировку.") }
+        items(questions, key = { it.id }) { question ->
+            val open = question.id in expanded
+            OnBackgroundCard(modifier = Modifier.semantics { stateDescription = if (open) "Развёрнуто" else "Свёрнуто" },
+                onClick = { expanded = if (open) expanded - question.id else expanded + question.id }) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(question.question, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
+                        Icon(if (open) Icons.Default.ExpandLess else Icons.Default.ExpandMore, null, tint = SauceTheme.colors.textMuted)
+                    }
+                    if (open) HtmlText(text = question.answer, style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary, showImages = false)
                 }
-            )
+            }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-    }
-}
-
-@Composable
-private fun QuestionItemContent(
-    modifier: Modifier = Modifier,
-    question: QuestionUi,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    Column(modifier = modifier) {
-        QuestionItemRow(isSelected = isSelected, question = question, onClick = onClick)
-        AnimatedVisibility(isSelected) {
-            AnswerItemRow(
-                modifier = Modifier.offset(y = (-10).dp),
-                answer = question.answer
-            )
-        }
-    }
-}
-
-@Composable
-private fun QuestionItemRow(
-    modifier: Modifier = Modifier,
-    question: QuestionUi,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    val background =
-        if (isSelected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary
-    val textColor =
-        if (isSelected) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onPrimary
-    OnBackgroundCard(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = background),
-        onClick = { onClick() }
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .weight(0.9f),
-                textAlign = TextAlign.Start,
-                overflow = TextOverflow.Ellipsis,
-                text = question.question,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = textColor
-            )
-            QuestionItemIcon(
-                modifier = Modifier.weight(0.1f),
-                isSelected = isSelected
-            )
-        }
-    }
-}
-
-@Composable
-private fun AnswerItemRow(modifier: Modifier = Modifier, answer: String) {
-    OnBackgroundCard(
-        modifier = modifier,
-        shape = RoundedCornerShape(
-            bottomStart = 10.dp,
-            bottomEnd = 10.dp
-        )
-    ) {
-        HtmlText(
-            modifier = Modifier
-                .padding(10.dp),
-            textAlign = TextAlign.Start,
-            overflow = TextOverflow.Ellipsis,
-            text = answer,
-            fontSize = 14.sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            color = MaterialTheme.colorScheme.outline
-        )
-    }
-}
-
-
-@Composable
-private fun QuestionItemIcon(
-    modifier: Modifier = Modifier,
-    isSelected: Boolean,
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp))
-            .background(MaterialTheme.colorScheme.secondary)
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(4.dp)
-                .align(Alignment.Center),
-            textAlign = TextAlign.Center,
-            text = if (isSelected) "-" else "+",
-            fontSize = 50.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onSecondary
-        )
     }
 }

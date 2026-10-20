@@ -2,7 +2,9 @@ package com.markettwits.sportsouce.club.registration.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 
 @Composable
@@ -17,11 +19,5 @@ fun WorkoutRegistrationType(
         is RegistrationType.Trainer -> registrationType.trainerName
         is RegistrationType.Workout -> registrationType.workoutName
     }
-    FilterChipBase(
-        modifier = modifier,
-        enabled = true,
-        selected = true,
-        label = text,
-        onClick = {}
-    )
+    if (text.isNotBlank()) Text(text, modifier, style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
 }

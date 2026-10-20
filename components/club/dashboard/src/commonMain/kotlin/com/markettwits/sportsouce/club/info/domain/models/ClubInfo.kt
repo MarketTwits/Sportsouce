@@ -38,6 +38,11 @@ sealed interface ClubInfo {
     data class MainImage(val url: ClubMainImage) : ClubInfo {
         override val id: Int = 6
     }
+
+    @Serializable
+    data class Process(val steps: List<ClubFeature>) : ClubInfo {
+        override val id: Int = 7
+    }
 }
 
 fun List<ClubInfo>.findFirstSchedule(): ClubInfo.Schedules? =

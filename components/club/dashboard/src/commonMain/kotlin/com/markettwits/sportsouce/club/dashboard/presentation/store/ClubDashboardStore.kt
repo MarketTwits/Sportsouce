@@ -13,6 +13,7 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
         val isLoading: Boolean = false,
         val error: SauceError? = null,
         val bottomSheetData: BottomSheetData = BottomSheetData(),
+        val hasLoaded: Boolean = false,
     )
 
     @Serializable
@@ -22,6 +23,8 @@ interface ClubDashboardStore : Store<Intent, State, Label> {
         val statistics: List<Statistic> = emptyList(),
         val questions: List<Question> = emptyList(),
         val features: List<ClubFeature> = emptyList(),
+        val mainImage: ClubMainImage? = null,
+        val steps: List<ClubFeature> = emptyList(),
     )
 
     sealed interface Intent {

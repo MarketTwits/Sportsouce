@@ -4,14 +4,10 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.SauceShapes
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
-import com.markettwits.core_ui.items.components.topbar.LocalSauceTopBar
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -23,9 +19,10 @@ fun DefaultModalBottomSheet(
     skipPartiallyExpanded : Boolean = true,
     title: String? = null,
     dragHandle: (@Composable () -> Unit)? = null,
+    edgeToEdgeContent: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    ModalBottomSheet(
+    SauceModalBottomSheet(
         modifier = modifier,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded),
         containerColor = SauceTheme.colors.surface,
@@ -35,10 +32,9 @@ fun DefaultModalBottomSheet(
         scrimColor = SauceTheme.colors.material.scrim.copy(alpha = 0.42f),
         dragHandle = dragHandle ?: { DefaultDragHandle() },
         onDismissRequest = onDismissRequest,
+        edgeToEdgeContent = edgeToEdgeContent,
     ) {
         if (dragHandle == null) SheetHeader(dismiss = onDismissRequest, title = title)
-        CompositionLocalProvider(LocalNavigationViewport provides null, LocalSauceTopBar provides null) {
-            ProvideTextStyle(MaterialTheme.typography.bodyLarge) { content() }
-        }
+        ProvideTextStyle(MaterialTheme.typography.bodyLarge) { content() }
     }
 }

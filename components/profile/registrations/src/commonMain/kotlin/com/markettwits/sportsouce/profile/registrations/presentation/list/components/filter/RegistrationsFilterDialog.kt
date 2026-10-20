@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material3.*
+import com.markettwits.core_ui.items.components.bottom_sheet.SauceModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,7 +32,7 @@ fun RegistrationsFilterDialog(
     if (showDialog) {
         val bottomSheetState = rememberModalBottomSheetState()
 
-        ModalBottomSheet(
+        SauceModalBottomSheet(
             onDismissRequest = { component.closeFilter() },
             sheetState = bottomSheetState,
             containerColor = MaterialTheme.colorScheme.background,

@@ -18,5 +18,6 @@ data class ClubSettingsRemoteRow(
     @SerialName("key")
     val key: String,
     @SerialName("name")
-    val name: String
+    val name: String? = null,
+    val order: Int = 0,
 )

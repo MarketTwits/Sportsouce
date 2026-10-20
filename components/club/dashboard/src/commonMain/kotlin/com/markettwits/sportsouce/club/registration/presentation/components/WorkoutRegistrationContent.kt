@@ -1,103 +1,30 @@
 package com.markettwits.sportsouce.club.registration.presentation.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import com.markettwits.core_ui.items.components.buttons.SauceButton
 import com.markettwits.core_ui.items.text.ClickableText
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
 
 @Composable
-fun WorkoutRegistrationContent(
-    modifier: Modifier = Modifier,
-    form: WorkoutRegistrationForm,
-    onValueChanged: (WorkoutRegistrationForm) -> Unit,
-    isLoading: Boolean,
-    errorMessage: String,
-    onClickRegister: () -> Unit,
-    onPhoneClick: (String) -> Unit,
-    onLinkClick: (String) -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(10.dp)
-    ) {
-        Text(
-            modifier = Modifier.padding(4.dp),
-            text = "Заполните форму и мы вам перезвоним",
-            color = MaterialTheme.colorScheme.tertiary,
-            textAlign = TextAlign.Start,
-            fontFamily = FontNunito.bold(),
-            fontSize = 20.sp
-        )
-        WorkoutRegistrationType(
-            modifier = Modifier.padding(4.dp),
-            registrationType = form.type,
-        )
-        ClickableText(
-            modifier = Modifier.padding(4.dp),
-            text = defaultText,
-            onPhoneClick = onPhoneClick,
-            onLinkClick = onLinkClick,
-            overflow = TextOverflow.Ellipsis,
-            style = androidx.compose.ui.text.TextStyle(
-                fontSize = 12.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.outline,
-            )
-        )
-        WorkoutRegistrationFieldsContent(
-            modifier = Modifier.padding(4.dp),
-            form = form,
-            onValueChanged = onValueChanged
-        )
-        if (errorMessage.isNotEmpty()) {
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = "Попробуйте ещё раз: $errorMessage",
-                color = MaterialTheme.colorScheme.onErrorContainer,
-                textAlign = TextAlign.Start,
-                fontFamily = FontNunito.bold(),
-                fontSize = 14.sp
-            )
-        }
-        ButtonContentBase(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
-            textColor = MaterialTheme.colorScheme.onSecondary,
-            title = "Записаться",
-            onClick = onClickRegister,
-            isEnabled = !isLoading,
-            showContent = isLoading,
-            content = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    strokeCap = StrokeCap.Round
-                )
-            }
-        )
+fun WorkoutRegistrationContent(modifier: Modifier = Modifier, form: WorkoutRegistrationForm,
+    onValueChanged: (WorkoutRegistrationForm) -> Unit, isLoading: Boolean, errorMessage: String,
+    onClickRegister: () -> Unit, onPhoneClick: (String) -> Unit, onLinkClick: (String) -> Unit) {
+    Column(modifier.fillMaxWidth().imePadding().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("Оставьте контакты — мы свяжемся с вами и поможем выбрать группу.",
+            style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary)
+        WorkoutRegistrationType(registrationType = form.type)
+        WorkoutRegistrationFieldsContent(form = form, onValueChanged = { if (!isLoading) onValueChanged(it) })
+        if (errorMessage.isNotBlank()) Text(errorMessage, style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.danger.content)
+        SauceButton("Записаться", onClickRegister, modifier = Modifier.fillMaxWidth(), enabled = !isLoading, loading = isLoading)
+        ClickableText(text = "Вы можете позвонить +7 968 22 111 22 или написать нам https://t.me/sportsoyuznsk",
+            onPhoneClick = onPhoneClick, onLinkClick = onLinkClick,
+            style = MaterialTheme.typography.bodySmall.copy(color = SauceTheme.colors.textSecondary))
     }
 }
-
-
-private val defaultText =
-    "Вы можете позвонить +7 968 22 111 22 или написать нам https://t.me/sportsoyuznsk"

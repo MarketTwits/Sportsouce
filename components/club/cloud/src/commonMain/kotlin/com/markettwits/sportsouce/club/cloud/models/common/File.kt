@@ -6,19 +6,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class File(
     @SerialName("createdAt")
-    val createdAt: String,
+    val createdAt: String = "",
     @SerialName("extension")
-    val extension: String,
+    val extension: String = "",
     @SerialName("fullPath")
-    val fullPath: String,
+    val fullPath: String = "",
     @SerialName("id")
     val id: Int,
     @SerialName("lastModified")
-    val lastModified: String,
+    val lastModified: String = "",
     @SerialName("name")
     val name: String,
     @SerialName("path")
     val path: String,
     @SerialName("updatedAt")
-    val updatedAt: String
-)
+    val updatedAt: String = "",
+) {
+    val url: String get() = fullPath.ifBlank { if (path.isBlank() || name.isBlank()) "" else "${path.trimEnd('/')}/$name" }
+}

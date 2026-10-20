@@ -1,151 +1,48 @@
 package com.markettwits.sportsouce.club.info.presentation.components.comands
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalStaggeredGrid as LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.text.HtmlText
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.club.common.presentation.*
 import com.markettwits.sportsouce.club.info.domain.models.Trainer
-import com.markettwits.sportsouce.club.info.presentation.components.common.ClubCardImageLoadingPlaceholder
-import com.markettwits.sportsouce.club.info.presentation.components.common.SubscribeGradientButton
+import com.markettwits.core_ui.items.screens.FullImageScreen
 
 @Composable
-internal fun CommandContent(
-    modifier: Modifier = Modifier,
-    trainers: List<Trainer>,
-    onRegisterClick: (Trainer) -> Unit = {},
-) {
-    var fullImageContent by remember {
-        mutableStateOf("")
+internal fun CommandContent(modifier: Modifier = Modifier, trainers: List<Trainer>, selectedTrainerId: Int? = null,
+    onRegisterClick: (Trainer) -> Unit = {}) {
+    var image by rememberSaveable { mutableStateOf("") }
+    val listState = key(selectedTrainerId) {
+        rememberLazyListState(initialFirstVisibleItemIndex = trainers.indexOfFirst { it.id == selectedTrainerId }.coerceAtLeast(0))
     }
-    LazyVerticalStaggeredGrid(
-        modifier = modifier.fillMaxSize(),
-        columns = StaggeredGridCells.Adaptive(160.dp),
-        verticalItemSpacing = 16.dp,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(trainers) { trainer ->
-            TrainerItemContent(
-                trainer = trainer,
-                onClickImage = {
-                    fullImageContent = trainer.imageUrl
-                },
-                onRegisterClick = { onRegisterClick(trainer) }
-            )
-        }
-        item(
-            span = StaggeredGridItemSpan.FullLine,
-        ) {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
-    }
-    if (fullImageContent.isNotEmpty()) {
-        FullImageScreen(
-            image = fullImageContent,
-            onDismiss = { fullImageContent = "" }
-        )
-    }
-}
-
-@Composable
-private fun TrainerItemContent(
-    modifier: Modifier = Modifier,
-    trainer: Trainer,
-    onClickImage: () -> Unit,
-    onRegisterClick: () -> Unit,
-) {
-    OnBackgroundCard(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .clickable(onClick = onClickImage),
-                contentScale = ContentScale.Crop,
-                model = imageRequestCrossfade(trainer.imageUrl),
-                contentDescription = trainer.name,
-                loading = {
-                    ClubCardImageLoadingPlaceholder(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                },
-                success = {
-                    var showImage by remember(trainer.imageUrl) { mutableStateOf(false) }
-                    LaunchedEffect(trainer.imageUrl) { showImage = true }
-                    val imageAlpha by animateFloatAsState(
-                        targetValue = if (showImage) 1f else 0f,
-                        animationSpec = tween(durationMillis = 320),
-                        label = "trainer-image-appearance"
-                    )
-                    SubcomposeAsyncImageContent(
-                        modifier = Modifier.alpha(imageAlpha)
-                    )
+    SauceLazyColumn(modifier.fillMaxSize(), state = listState, contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        if (trainers.isEmpty()) item { ClubNotice("Тренеры пока не добавлены", "Информация появится здесь позже.") }
+        items(trainers, key = { it.id }) { trainer ->
+            OnBackgroundCard {
+                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (trainer.imageUrl.isNotBlank()) ClubPhoto(trainer.imageUrl, trainer.fullName(),
+                        Modifier.fillMaxWidth().aspectRatio(1f), open = { image = trainer.imageUrl })
+                    Text(trainer.fullName(), style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+                    if (trainer.kindOfSports.isNotEmpty()) Text(trainer.kindOfSports.joinToString(" · "),
+                        style = MaterialTheme.typography.bodySmall, color = clubDirectionAccent(trainer.kindOfSports.first()).clubColors().content)
+                    if (trainer.description.isNotBlank()) HtmlText(text = trainer.description, style = MaterialTheme.typography.bodyMedium,
+                        color = SauceTheme.colors.textSecondary, showImages = false)
+                    if (trainer.isAcceptingRequests) SauceButton("Записаться", { onRegisterClick(trainer) }, variant = SauceButtonVariant.Outlined,
+                        modifier = Modifier.fillMaxWidth())
+                    else Text("Набор временно закрыт", style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
                 }
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = trainer.fullName(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-
-            if (trainer.description.isNotBlank()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                HtmlText(
-                    text = trainer.description,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.regular(),
-                    color = MaterialTheme.colorScheme.outline,
-                    lineHeight = 18.sp
-                )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = trainer.sports(),
-                fontSize = 14.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.secondary
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            SubscribeGradientButton(
-                onClick = onRegisterClick,
-            )
         }
     }
+    if (image.isNotBlank()) FullImageScreen(image) { image = "" }
 }

@@ -1,519 +1,188 @@
 package com.markettwits.sportsouce.club.schedule.screen
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
-import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
-import com.markettwits.core_ui.items.components.buttons.ScrollToTopBabButton
+import com.markettwits.core_ui.items.components.buttons.*
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.checkbox.FilterChipBase
-import com.markettwits.core_ui.items.components.progress.shimmer
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
+import com.markettwits.core_ui.items.components.topbar.*
+import com.markettwits.core_ui.items.components.status.*
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.isLarge
+import com.markettwits.core_ui.items.text.HtmlText
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.club.common.presentation.*
 import com.markettwits.sportsouce.club.info.domain.models.Schedule
-import com.markettwits.sportsouce.club.info.presentation.components.common.SportHeaderSection
 import com.markettwits.sportsouce.club.schedule.component.ScheduleComponent
 import com.markettwits.sportsouce.club.schedule.store.ScheduleStore
-import kotlinx.coroutines.launch
+import kotlinx.datetime.*
+import kotlin.time.Clock
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun ScheduleScreen(
-    component: ScheduleComponent,
-) {
+fun ScheduleScreen(component: ScheduleComponent) {
     val state by component.state.collectAsState()
-    val windowSizeClass = calculateWindowSizeClass()
-    val isLargeScreen = windowSizeClass.isLarge
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        ScheduleContent(
-            state = state,
-            isLargeScreen = isLargeScreen,
-            onClickWorkoutType = { workoutId ->
-                component.obtainEvent(
-                    ScheduleStore.Intent.OnClickWorkoutType(
-                        workoutId
-                    )
-                )
-            },
-            onClickScheduleItem = { scheduleId, scheduleName ->
-                component.obtainEvent(
-                    ScheduleStore.Intent.OnClickScheduleItem(
-                        scheduleId,
-                        scheduleName
-                    )
-                )
-            },
-            onRetry = {
-                component.obtainEvent(ScheduleStore.Intent.RetryRequest)
-            }
-        )
-
-        BackFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-        ) {
-            component.obtainEvent(ScheduleStore.Intent.OnClickBack)
-        }
+    SauceScaffold(topBar = { TopBarWithClip(title = "Расписание тренировок", goBack = { component.obtainEvent(ScheduleStore.Intent.OnClickBack) }) }) { padding ->
+        AdaptivePane(Modifier.fillMaxSize().padding(padding)) { ScheduleContent(state, component::obtainEvent) }
     }
 }
 
 @Composable
-private fun SchedulePromoHeader() {
-    SportHeaderSection(
-        title = "Расписание тренировок",
-        subtitle = null,
-        description = "Выберите удобное время для занятий и достигайте новых высот",
-        badge = "СПОРТ СОЮЗ",
-        height = 350,
-        primaryColor = SportSouceColor.SportSouceLighBlue
-    )
-}
-
-
-@Composable
-private fun ScheduleContent(
-    state: ScheduleStore.State,
-    isLargeScreen: Boolean,
-    onClickWorkoutType: (Int?) -> Unit,
-    onClickScheduleItem: (String, String) -> Unit,
-    onRetry: () -> Unit,
-) {
-    val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-        ) {
-            SchedulePromoHeader()
-
-            Column(
-                modifier = Modifier
-                    .offset(y = (-35).dp)
-                    .padding(horizontal = 16.dp)
-            ) {
-                state.error?.SauceErrorSimpleContent(onClickRetry = onRetry)
-
-                AdaptivePane {
-                    if (state.allWorkoutTypes.isNotEmpty()) {
-                        Card(
-                            modifier = Modifier
-                                .padding(vertical = 16.dp)
-                                .fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.primary
-                            ),
-                            shape = RoundedCornerShape(
-                                topStart = 16.dp,
-                                topEnd = 16.dp,
-                                bottomStart = 8.dp,
-                                bottomEnd = 8.dp
-                            ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                        ) {
-                            WorkoutTypeFilter(
-                                modifier = Modifier.padding(16.dp),
-                                workoutTypes = state.allWorkoutTypes,
-                                selectedWorkoutId = state.selectedWorkoutId,
-                                onWorkoutTypeClick = onClickWorkoutType,
-                            )
-                        }
-
-                        HorizontalDivider(
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-                        )
+internal fun ScheduleContent(state: ScheduleStore.State, event: (ScheduleStore.Intent) -> Unit,
+    today: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date) {
+    var dateString by rememberSaveable { mutableStateOf(today.toString()) }
+    var view by rememberSaveable { mutableStateOf(ClubCalendarView.Week) }
+    val date = LocalDate.parse(dateString)
+    val week = date.clubWeek()
+    val dates = if (view == ClubCalendarView.List) week else listOf(date)
+    SauceLazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        item(key = "intro") {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Планируйте неделю", style = MaterialTheme.typography.headlineSmall, color = SauceTheme.colors.textPrimary)
+                Text("Найдите своё направление и удобное время.", style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary)
+            }
+        }
+        item(key = "view") {
+            Row(Modifier.fillMaxWidth().background(SauceTheme.colors.surfaceSubtle, SauceShapes.field).padding(4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                ClubCalendarView.entries.forEach { mode ->
+                    Surface(onClick = { view = mode }, modifier = Modifier.weight(1f).semantics { selected = view == mode },
+                        shape = SauceShapes.field, color = if (view == mode) SauceTheme.colors.surface else SauceTheme.colors.surfaceSubtle) {
+                        Text(mode.title, Modifier.heightIn(min = 48.dp).wrapContentHeight().padding(horizontal = 4.dp, vertical = 8.dp),
+                            style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center,
+                            color = if (view == mode) SauceTheme.colors.action else SauceTheme.colors.textSecondary)
                     }
                 }
-
-                when {
-                    state.isLoading -> {
-                        AdaptivePane {
-                            Card(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                                    .fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primary
-                                ),
-                                shape = RoundedCornerShape(
-                                    topStart = 16.dp,
-                                    topEnd = 16.dp,
-                                    bottomStart = 8.dp,
-                                    bottomEnd = 8.dp
-                                ),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                                    ) {
-                                        repeat(4) {
-                                            ShimmerScheduleCard(isLargeScreen = isLargeScreen)
-                                        }
-                                    }
-                                }
+            }
+        }
+        if (state.allSchedules.isNotEmpty()) item(key = "filters") {
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChipBase(selected = state.selectedWorkoutId == null, onClick = { event(ScheduleStore.Intent.OnClickWorkoutType(null)) }, label = "Все направления")
+                state.allSchedules.distinctBy { it.workoutId }.filter { it.workoutId > 0 }.sortedBy { it.workoutTitle }.forEach { workout ->
+                    FilterChipBase(selected = state.selectedWorkoutId == workout.workoutId,
+                        onClick = { event(ScheduleStore.Intent.OnClickWorkoutType(workout.workoutId)) }, label = workout.workoutTitle.ifBlank { workout.kindOfSport },
+                        selectedColors = clubDirectionAccent(workout.workoutTitle.ifBlank { workout.kindOfSport }).clubColors().selectionColors)
+                }
+            }
+        }
+        item(key = "calendar") {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(if (view == ClubCalendarView.Month) date.clubMonthLabel() else "${week.first().clubDateLabel()} — ${week.last().clubDateLabel()}",
+                        Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
+                    IconButton(modifier = Modifier.size(48.dp), onClick = { dateString = date.clubMovePeriod(view, -1).toString() }) {
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "Предыдущий период", tint = SauceTheme.colors.textSecondary)
+                    }
+                    IconButton(modifier = Modifier.size(48.dp), onClick = { dateString = date.clubMovePeriod(view, 1).toString() }) {
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Следующий период", tint = SauceTheme.colors.textSecondary)
+                    }
+                }
+                if (view != ClubCalendarView.List) {
+                    val grid = if (view == ClubCalendarView.Month) date.clubMonthGrid() else week
+                    Row(Modifier.fillMaxWidth()) { clubShortDays.forEach { Text(it, Modifier.weight(1f), textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelSmall, color = SauceTheme.colors.textMuted) } }
+                    grid.chunked(7).forEach { row ->
+                        Row(Modifier.fillMaxWidth()) {
+                            row.forEach { day ->
+                                CalendarDay(day, selected = day == date, today = day == today, inMonth = day.month == date.month,
+                                    sessions = state.schedules.clubSessions(day), modifier = Modifier.weight(1f)) { dateString = day.toString() }
                             }
                         }
                     }
-
-                    state.schedules.isNotEmpty() -> {
-                        AdaptivePane {
-                            FlowRow(
-                                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                                verticalArrangement = Arrangement.spacedBy(24.dp),
-                                modifier = Modifier.fillMaxWidth(),
-                                maxItemsInEachRow = 2
-                            ) {
-                                state.schedules.forEach { schedule ->
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .widthIn(min = if (isLargeScreen) 320.dp else 280.dp)
-                                    ) {
-                                        ScheduleCard(
-                                            schedule = schedule,
-                                            onItemClick = {
-                                                onClickScheduleItem(
-                                                    schedule.id.toString(),
-                                                    schedule.workoutTitle
-                                                )
-                                            },
-                                            isLargeScreen = isLargeScreen
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    state.schedules.isEmpty() && !state.isLoading && state.error == null -> {
-                        AdaptivePane {
-                            EmptyScheduleMessage(isLargeScreen = isLargeScreen)
-                        }
-                    }
+                }
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                    SauceButton("Сегодня", { dateString = today.toString() }, variant = SauceButtonVariant.Text, fillWidth = false)
                 }
             }
-
-            Spacer(modifier = Modifier.height(100.dp))
         }
-        // Scroll to top FAB
-        val showScrollToTop by remember {
-            derivedStateOf { scrollState.value > 200 }
-        }
-
-        AnimatedVisibility(
-            visible = showScrollToTop,
-            enter = fadeIn() + scaleIn(),
-            exit = fadeOut() + scaleOut(),
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            ScrollToTopBabButton(
-                onClick = {
-                    scope.launch {
-                        scrollState.animateScrollTo(0)
+        if (state.error != null) item(key = "error") { ClubNotice("Не удалось загрузить расписание", "Попробуйте обновить данные.", { event(ScheduleStore.Intent.RetryRequest) }) }
+        if (state.isLoading && state.allSchedules.isEmpty()) item(key = "loading") { ClubLoading("Загрузка расписания") }
+        else if (state.error == null || state.schedules.isNotEmpty()) {
+            dates.forEach { day ->
+                val sessions = state.schedules.clubSessions(day)
+                item(key = "day-$day") {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text("${clubWeekdays[day.dayOfWeek.ordinal]}, ${day.clubDateLabel()}",
+                            style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+                        if (sessions.isEmpty()) Text("Занятий нет — время для восстановления", style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textMuted)
                     }
-                },
-            )
-        }
-    }
-}
-@Composable
-private fun ColumnScope.WorkoutTypeFilter(
-    modifier: Modifier = Modifier,
-    workoutTypes: List<String>,
-    selectedWorkoutId: Int?,
-    onWorkoutTypeClick: (Int?) -> Unit,
-) {
-    FlowRow(
-        modifier = modifier.align(Alignment.CenterHorizontally),
-        maxItemsInEachRow = 3,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        workoutTypes.forEachIndexed { index, workoutTitle ->
-            val workoutId = index + 1
-            val isSelected = workoutId == selectedWorkoutId
-
-            AnimatedVisibility(
-                visible = true,
-                enter = slideInHorizontally() + fadeIn(),
-                exit = slideOutHorizontally() + fadeOut()
-            ) {
-                FilterChipBase(
-                    selected = isSelected,
-                    onClick = { onWorkoutTypeClick(workoutId) },
-                    label = workoutTitle,
-                )
+                }
+                items(sessions, key = { "session-$day-${it.id}" }) { schedule ->
+                    ScheduleSessionCard(schedule) { event(ScheduleStore.Intent.OnClickScheduleItem(schedule.id.toString(), schedule.workoutTitle)) }
+                }
             }
         }
-
+        item(key = "hint") { Text("Занятия повторяются еженедельно. Точное место и тренера уточняйте при записи.", style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted) }
     }
 }
 
-
 @Composable
-private fun ScheduleCard(
-    schedule: Schedule,
-    onItemClick: () -> Unit,
-    isLargeScreen: Boolean,
-) {
-    OnBackgroundCard(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(if (isLargeScreen) 20.dp else 16.dp),
-        onClick = onItemClick
-    ) {
-        Column(
-            modifier = Modifier.padding(if (isLargeScreen) 20.dp else 16.dp)
-        ) {
-            Row(
-                modifier = Modifier,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                if (schedule.weekday.isNotEmpty()) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CalendarToday,
-                            contentDescription = null,
-                            modifier = Modifier.size(if (isLargeScreen) 18.dp else 16.dp),
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                        Spacer(modifier = Modifier.width(if (isLargeScreen) 6.dp else 4.dp))
-                        Text(
-                            text = schedule.weekday,
-                            fontSize = if (isLargeScreen) 16.sp else 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontFamily = FontNunito.medium()
-                        )
-                    }
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                        modifier = Modifier.size(if (isLargeScreen) 18.dp else 16.dp),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                    Spacer(modifier = Modifier.width(if (isLargeScreen) 6.dp else 4.dp))
-                    Text(
-                        text = schedule.startDate,
-                        fontSize = if (isLargeScreen) 16.sp else 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontFamily = FontNunito.medium()
-                    )
+private fun CalendarDay(date: LocalDate, selected: Boolean, today: Boolean, inMonth: Boolean, sessions: List<Schedule>,
+    modifier: Modifier, onClick: () -> Unit) {
+    val palette = SauceTheme.colors
+    val directions = sessions.map { clubDirectionAccent(it.workoutTitle.ifBlank { it.kindOfSport }) }
+        .distinct().sortedBy { it.ordinal }
+    Surface(onClick = onClick, modifier = modifier.heightIn(min = 52.dp).semantics {
+        contentDescription = "${date.clubDateLabel()} ${date.year}"; this.selected = selected
+        stateDescription = if (sessions.isEmpty()) "Нет тренировок" else sessions
+            .map { it.workoutTitle.ifBlank { it.kindOfSport } }.filter(String::isNotBlank)
+            .distinct().joinToString(", ").ifBlank { "Есть тренировки" }
+    }, shape = SauceShapes.field, color = if (selected) palette.actionSoft else palette.background) {
+        Column(Modifier.padding(vertical = 6.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(date.day.toString(), style = MaterialTheme.typography.bodyMedium.copy(fontWeight = if (selected || today) FontWeight.Bold else FontWeight.Normal),
+                color = when { selected || today -> palette.action; !inMonth -> palette.textMuted; else -> palette.textPrimary })
+            Row(Modifier.height(5.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                directions.forEach { direction ->
+                    Box(Modifier.size(5.dp).background(direction.clubColors().content, CircleShape))
                 }
             }
-
-            Spacer(modifier = Modifier.height(if (isLargeScreen) 16.dp else 12.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = null,
-                    modifier = Modifier.size(if (isLargeScreen) 22.dp else 18.dp),
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-                Spacer(modifier = Modifier.width(if (isLargeScreen) 12.dp else 8.dp))
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = schedule.workoutTitle,
-                        fontSize = if (isLargeScreen) 18.sp else 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    if (schedule.address.isNotEmpty()) {
-                        Text(
-                            text = schedule.address,
-                            fontSize = if (isLargeScreen) 14.sp else 12.sp,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontFamily = FontNunito.regular(),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-            }
-
-            if (schedule.trainerFullName.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(if (isLargeScreen) 12.dp else 8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(if (isLargeScreen) 18.dp else 16.dp),
-                        tint = MaterialTheme.colorScheme.secondary
-                    )
-                    Spacer(modifier = Modifier.width(if (isLargeScreen) 6.dp else 4.dp))
-                    Text(
-                        text = schedule.trainerFullName,
-                        fontSize = if (isLargeScreen) 16.sp else 14.sp,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontFamily = FontNunito.medium()
-                    )
-                }
-            }
-
-        }
-    }
-}
-
-
-@Composable
-private fun ShimmerScheduleCard(isLargeScreen: Boolean) {
-    Card(
-        modifier = Modifier
-            .shimmer(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(16.dp)
-                        .background(
-                            MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                            RoundedCornerShape(4.dp)
-                        )
-                )
-                Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(16.dp)
-                        .background(
-                            MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                            RoundedCornerShape(4.dp)
-                        )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-                    .background(
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                        RoundedCornerShape(4.dp)
-                    )
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Box(
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(16.dp)
-                    .background(
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                        RoundedCornerShape(4.dp)
-                    )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp)
-                    .background(
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                        RoundedCornerShape(12.dp)
-                    )
-            )
         }
     }
 }
 
 @Composable
-private fun EmptyScheduleMessage(isLargeScreen: Boolean) {
-    OnBackgroundCard { modifier ->
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(if (isLargeScreen) 300.dp else 240.dp)
-                .padding(if (isLargeScreen) 48.dp else 32.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Расписание пусто",
-                    fontSize = if (isLargeScreen) 24.sp else 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center,
-                    fontFamily = FontNunito.bold()
-                )
-                Spacer(modifier = Modifier.height(if (isLargeScreen) 16.dp else 12.dp))
-                Text(
-                    text = "Выберите тип тренировки выше или попробуйте позже",
-                    fontSize = if (isLargeScreen) 16.sp else 14.sp,
-                    color = MaterialTheme.colorScheme.outline,
-                    textAlign = TextAlign.Center,
-                    fontFamily = FontNunito.regular()
-                )
+private fun ScheduleSessionCard(schedule: Schedule, onRegister: () -> Unit) {
+    val direction = clubDirectionAccent(schedule.workoutTitle.ifBlank { schedule.kindOfSport })
+    val accent = direction.clubColors()
+    OnBackgroundCard {
+        ClubAccentStripe(direction)
+        Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.Top) {
+                Surface(color = accent.container, shape = SauceShapes.field) {
+                    Text(schedule.startDate, Modifier.padding(horizontal = 10.dp, vertical = 12.dp), style = MaterialTheme.typography.titleMedium,
+                        color = accent.content)
+                }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(schedule.workoutTitle.ifBlank { schedule.kindOfSport }, style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
+                    if (schedule.description.isNotBlank()) HtmlText(text = schedule.description, style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary, showImages = false)
+                }
             }
+            if (schedule.address.isNotBlank()) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Icon(Icons.Outlined.LocationOn, null, Modifier.size(18.dp), tint = SauceTheme.colors.textMuted)
+                Text(schedule.address, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary)
+            }
+            if (schedule.trainerFullName.isNotBlank()) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Icon(Icons.Outlined.PersonOutline, null, Modifier.size(18.dp), tint = SauceTheme.colors.textMuted)
+                Text(schedule.trainerFullName, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary)
+            }
+            if (schedule.note.isNotBlank()) HtmlText(text = schedule.note, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary, showImages = false)
+            if (schedule.isTempDisabled) SauceStatusBadge("Временно недоступно", tone = SauceStatusTone.Neutral, showIndicator = false)
+            else SauceButton("Записаться", onRegister, variant = SauceButtonVariant.Outlined, modifier = Modifier.fillMaxWidth())
         }
     }
 }

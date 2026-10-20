@@ -16,6 +16,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceSizes
 import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.theme.SauceStatusColors
 import com.markettwits.core_ui.items.components.focus.sauceFocusOutline
 
 @Composable
@@ -25,8 +26,11 @@ fun FilterChipBase(
     enabled: Boolean = true,
     onClick: () -> Unit,
     label: String,
+    selectedColors: SauceStatusColors? = null,
 ) {
     val colors = SauceTheme.colors
+    val selectedContent = selectedColors?.content ?: colors.onActionSoft
+    val selectedContainer = selectedColors?.container ?: colors.actionSoft
     val interactions = remember { MutableInteractionSource() }
     val labelStyle = MaterialTheme.typography.labelLarge
     val density = LocalDensity.current
@@ -35,7 +39,7 @@ fun FilterChipBase(
     val labelHeight = with(density) { labelStyle.lineHeight.toDp() }
     FilterChip(
         modifier = modifier.heightIn(min = maxOf(SauceSizes.touchTarget, labelHeight + 16.dp))
-            .sauceFocusOutline(interactions, SauceShapes.badge, colors.action, enabled),
+            .sauceFocusOutline(interactions, SauceShapes.badge, if (selected) selectedContent else colors.action, enabled),
         interactionSource = interactions,
         selected = selected,
         enabled = enabled,
@@ -49,7 +53,7 @@ fun FilterChipBase(
             enabled = enabled,
             selected = selected,
             borderColor = colors.border,
-            selectedBorderColor = colors.action,
+            selectedBorderColor = selectedContent,
             disabledBorderColor = colors.border,
             disabledSelectedBorderColor = colors.border,
             selectedBorderWidth = 1.dp,
@@ -62,10 +66,10 @@ fun FilterChipBase(
             disabledLabelColor = colors.disabledContent,
             disabledLeadingIconColor = colors.disabledContent,
             disabledTrailingIconColor = colors.disabledContent,
-            selectedContainerColor = colors.actionSoft,
-            selectedLabelColor = colors.onActionSoft,
-            selectedLeadingIconColor = colors.onActionSoft,
-            selectedTrailingIconColor = colors.onActionSoft,
+            selectedContainerColor = selectedContainer,
+            selectedLabelColor = selectedContent,
+            selectedLeadingIconColor = selectedContent,
+            selectedTrailingIconColor = selectedContent,
             disabledSelectedContainerColor = colors.disabledContainer,
         ),
     )

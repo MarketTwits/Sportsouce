@@ -10,14 +10,15 @@ import com.markettwits.sportsouce.club.info.domain.models.*
 internal class ClubInfoMapperBase : ClubInfoMapper {
 
     override fun mapTrainers(trainersRemoteRow: List<TrainersRemoteRow>): List<Trainer> =
-        trainersRemoteRow.map {
+        trainersRemoteRow.sortedBy { it.order }.map {
             Trainer(
                 id = it.id,
                 name = it.name,
                 surname = it.surname,
                 description = it.description,
-                imageUrl = it.photo.fullPath,
+                imageUrl = it.photo?.url.orEmpty(),
                 kindOfSports = it.kindOfSports.map { it.name },
+                isAcceptingRequests = it.isAcceptingRequests,
             )
         }
 
@@ -37,36 +38,38 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
             .map {
                 Statistic(
                     id = it.id,
-                    value = it.name,
+                    value = it.name.orEmpty(),
                     title = it.description ?: ""
                 )
             }
 
 
     override fun mapTraining(workoutRemoteRow: List<WorkoutRemoteRow>): List<Training> =
-        workoutRemoteRow.map {
+        workoutRemoteRow.filterNot { it.isHidden }.sortedBy { it.order }.map {
             Training(
                 id = it.id,
                 type = it.type,
                 htmlDescription = it.description,
-                imageUrl = it.icon?.fullPath ?: ""
+                imageUrl = it.icon?.url.orEmpty()
             )
         }
 
     override fun mapSchedule(scheduleRemote: List<ScheduleRemoteRow>): List<Schedule> =
-        scheduleRemote.map {
+        scheduleRemote.sortedBy { it.order }.map {
             Schedule(
                 id = it.id,
-                workoutId = it.workoutId ?: 0,
+                workoutId = it.workoutId ?: it.workout?.id ?: 0,
                 address = it.address,
                 description = it.description,
                 kindOfSport = it.kindOfSport.name,
-                startDate = it.startDate,
+                startDate = it.startDate.replace('.', ':'),
                 trainerFullName = if (it.trainers.isNotEmpty()) {
                     it.trainers.joinToString(separator = "\n") { trainer -> "${trainer.name} ${trainer.surname}" }
                 } else "",
                 weekday = it.weekday ?: "",
-                workoutTitle = it.workout?.type ?: ""
+                workoutTitle = it.workout?.type ?: "",
+                note = it.note.orEmpty(),
+                isTempDisabled = it.isTempDisabled,
             )
         }
 
@@ -78,8 +81,8 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
             ?.let {
                 ClubMainImage(
                     id = it.id,
-                    name = it.name,
-                    imageUrl = it.image!!.fullPath
+                    name = it.name.orEmpty(),
+                    imageUrl = it.image!!.url
                 )
             }
 
@@ -89,9 +92,9 @@ internal class ClubInfoMapperBase : ClubInfoMapper {
             .map {
                 ClubFeature(
                     id = it.id,
-                    name = it.name,
+                    name = it.name.orEmpty(),
                     description = it.description ?: "",
-                    imageUrl = it.image?.fullPath
+                    imageUrl = it.image?.url
                 )
             }
 }

@@ -10,7 +10,8 @@ class Trainer(
     val surname: String,
     val description: String,
     val imageUrl: String,
-    val kindOfSports: List<String>
+    val kindOfSports: List<String>,
+    val isAcceptingRequests: Boolean = true,
 ) {
     fun fullName(): String = "$name $surname"
 

@@ -12,7 +12,7 @@ data class TrainersRemoteRow(
     @SerialName("facebook")
     val facebook: String?,
     @SerialName("file_id")
-    val file_id: Int,
+    val file_id: Int? = null,
     @SerialName("id")
     val id: Int,
     @SerialName("inst")
@@ -22,7 +22,7 @@ data class TrainersRemoteRow(
     @SerialName("name")
     val name: String,
     @SerialName("photo")
-    val photo: com.markettwits.sportsouce.club.cloud.models.common.File,
+    val photo: com.markettwits.sportsouce.club.cloud.models.common.File? = null,
     @SerialName("surname")
     val surname: String,
     @SerialName("telegram")
@@ -32,5 +32,7 @@ data class TrainersRemoteRow(
     @SerialName("updatedAt")
     val updatedAt: String,
     @SerialName("vk")
-    val vk: String?
+    val vk: String?,
+    val order: Int = 0,
+    val isAcceptingRequests: Boolean = true,
 )

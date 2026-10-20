@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class KindOfSport(
     @SerialName("TrainerToKindOfSport")
-    val trainerToKindOfSport: TrainerToKindOfSport,
+    val trainerToKindOfSport: TrainerToKindOfSport? = null,
     @SerialName("id")
     val id: Int,
     @SerialName("name")

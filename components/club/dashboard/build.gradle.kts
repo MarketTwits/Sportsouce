@@ -11,6 +11,11 @@ kotlin {
     }
 
     sourceSets {
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotlinx.serialization.json)
+        }
         commonMain.dependencies {
             implementation(projects.components.analytics.crashlytics)
             implementation(projects.components.auth.authService)

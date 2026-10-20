@@ -66,6 +66,9 @@ class ClubRepositoryBase(
         if (features.isNotEmpty()) {
             result.add(ClubInfo.Features(features))
         }
+        result.add(ClubInfo.Process(clubSettings.filter { it.key == "process" }.sortedBy { it.order }.map {
+            ClubFeature(it.id, it.name.orEmpty(), it.description.orEmpty(), it.image?.url)
+        }))
 
         result.addAll(
             listOf(

@@ -10,6 +10,7 @@ import com.markettwits.sportsouce.club.common.domain.ClubRepository
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutPriceForm
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 
 class SubscriptionPricingStoreFactory(
     private val storeFactory: StoreFactory,
@@ -43,13 +44,15 @@ class SubscriptionPricingStoreFactory(
         override fun executeAction(action: Action) {
             when (action) {
                 is Action.LoadSubscriptions -> {
+                    if (state().isLoading) return
+                    dispatch(SubscriptionPricingStore.Message.Loading)
                     scope.launch {
-                        dispatch(SubscriptionPricingStore.Message.Loading)
                         try {
                             clubRepository.subscriptions().collect { subscriptionsList ->
                                 dispatch(SubscriptionPricingStore.Message.Loaded(subscriptionsList))
                             }
                         } catch (e: Exception) {
+                            if (e is CancellationException) throw e
                             dispatch(SubscriptionPricingStore.Message.Failed(SauceError.Empty(e)))
                         }
                     }
@@ -68,8 +71,11 @@ class SubscriptionPricingStoreFactory(
                 }
 
                 is SubscriptionPricingStore.Intent.UpdateMonthCount -> {
+                    val subscription = state().subscriptions.flatMap { it.subscription }.firstOrNull { it.id == intent.subscriptionId } ?: return
+                    if (state().isLoading || state().priceCalculations[intent.subscriptionId.toString()]?.isLoading == true ||
+                        intent.monthCount !in 1..subscription.maxAmount) return
+                    dispatch(SubscriptionPricingStore.Message.PriceCalculationStarted(intent.subscriptionId))
                     scope.launch {
-                        dispatch(SubscriptionPricingStore.Message.PriceCalculationStarted(intent.subscriptionId))
                         try {
                             val workoutPrice = clubRepository.workoutRegistrationPrice(
                                 WorkoutPriceForm(
@@ -87,6 +93,7 @@ class SubscriptionPricingStoreFactory(
                                 )
                             )
                         } catch (e: Exception) {
+                            if (e is CancellationException) throw e
                             dispatch(
                                 SubscriptionPricingStore.Message.PriceCalculationFailed(
                                     subscriptionId = intent.subscriptionId,
@@ -98,12 +105,15 @@ class SubscriptionPricingStoreFactory(
                 }
 
                 is SubscriptionPricingStore.Intent.OnClickSubscribe -> {
+                    val subscription = state().subscriptions.flatMap { it.subscription }.firstOrNull { it.id == intent.subscriptionId } ?: return
+                    val calculation = state().priceCalculations[intent.subscriptionId.toString()]
+                    if (state().isLoading || calculation?.isLoading == true || calculation?.error != null) return
                     publish(
                         SubscriptionPricingStore.Label.Registration(
                             RegistrationType.Subscription(
                                 state().priceCalculations[intent.subscriptionId.toString()]?.monthCount ?: 1,
                                 intent.subscriptionId,
-                                intent.subscriptionName
+                                subscription.name
                             )
                         )
                     )
@@ -129,7 +139,8 @@ class SubscriptionPricingStoreFactory(
                 is SubscriptionPricingStore.Message.Loaded -> copy(
                     isLoading = false,
                     error = null,
-                    subscriptions = msg.subscriptions
+                    subscriptions = msg.subscriptions,
+                    priceCalculations = emptyMap(),
                 )
 
                 is SubscriptionPricingStore.Message.PriceCalculationStarted -> {

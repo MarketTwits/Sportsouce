@@ -24,12 +24,16 @@ import kotlin.math.roundToInt
 
 private val LocalVerticalScrollOwner = modifierLocalOf { false }
 
+/** Insets kept inside the outer scroll content, so its viewport can draw behind system bars. */
+val LocalScrollContentBottomPadding = compositionLocalOf { 0.dp }
+
 /** Only the outer vertical viewport owns the overlap; embedded scroll areas keep their size. */
 @Composable
 internal fun rememberNavigationScrollViewport(): NavigationScrollViewport {
     val host = LocalNavigationViewport.current
     val topHost = LocalSauceTopBar.current
-    if (host == null && topHost == null) return NavigationScrollViewport(Modifier, 0.dp, 0.dp)
+    val safeBottom = LocalScrollContentBottomPadding.current
+    if (host == null && topHost == null && safeBottom == 0.dp) return NavigationScrollViewport(Modifier, 0.dp, 0.dp)
     val density = LocalDensity.current
     var hasScrollParent by remember { mutableStateOf(false) }
     var bounds by remember { mutableStateOf<NavigationViewportBounds?>(null) }
@@ -77,7 +81,7 @@ internal fun rememberNavigationScrollViewport(): NavigationScrollViewport {
         modifier
             .then(if (reachesNavigation) host.scrollSource(sourceKey) else Modifier)
             .then(if (reachesTop) Modifier.hazeSource(topHost.haze, key = sourceKey) else Modifier),
-        padding, topPadding,
+        padding + if (!hasScrollParent) safeBottom else 0.dp, topPadding,
     )
 }
 

@@ -7,6 +7,7 @@ import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationUseCase
+import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationValidationException
 import kotlinx.coroutines.launch
 
 class WorkoutRegistrationExecutor(
@@ -39,19 +40,21 @@ class WorkoutRegistrationExecutor(
     override fun executeAction(action: Unit) {
         scope.launch {
             val value = workoutRegistrationUseCase.init()
-            println("WorkoutRegistrationExecutor $value")
             dispatch(WorkoutRegistrationStore.Message.OnValueChanged(value.copy(type = registrationType)))
         }
     }
 
     private fun onClickRegistration(workoutRegistrationForm: WorkoutRegistrationForm) {
+        if (state().isLoading || state().isSuccess) return
+        dispatch(WorkoutRegistrationStore.Message.RegistrationLoading)
         scope.launch {
-            dispatch(WorkoutRegistrationStore.Message.RegistrationLoading)
             workoutRegistrationUseCase.register(workoutRegistrationForm)
                 .fold(onSuccess = {
                     dispatch(WorkoutRegistrationStore.Message.RegistrationSuccess)
                 }, onFailure = {
-                    dispatch(WorkoutRegistrationStore.Message.RegistrationFailed(it.mapToSauceError().mapToString()))
+                    val message = if (it is WorkoutRegistrationValidationException) it.message.orEmpty()
+                        else it.mapToSauceError().mapToString()
+                    dispatch(WorkoutRegistrationStore.Message.RegistrationFailed(message))
                 })
         }
     }

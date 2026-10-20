@@ -2,7 +2,7 @@ package com.markettwits.schedule.schedule.presentation.components.detail.screen
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import com.markettwits.core_ui.items.components.bottom_sheet.SauceModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,7 +14,7 @@ import com.markettwits.schedule.schedule.presentation.components.detail.store.St
 @Composable
 fun StartDetailScheduleScreen(component: StartDetailScheduleComponent) {
     val state = component.state.collectAsState()
-    ModalBottomSheet(
+    SauceModalBottomSheet(
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.primary,
         onDismissRequest = {

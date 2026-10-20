@@ -12,5 +12,7 @@ data class Schedule(
     val startDate: String,
     val trainerFullName: String,
     val weekday: String,
-    val workoutTitle: String
+    val workoutTitle: String,
+    val note: String = "",
+    val isTempDisabled: Boolean = false,
 )

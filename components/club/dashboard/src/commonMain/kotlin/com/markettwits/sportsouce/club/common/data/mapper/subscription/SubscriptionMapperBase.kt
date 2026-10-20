@@ -12,13 +12,14 @@ import com.markettwits.sportsouce.club.registration.domain.RegistrationType
 import com.markettwits.sportsouce.club.registration.domain.WorkoutPrice
 import com.markettwits.sportsouce.club.registration.domain.WorkoutPriceForm
 import com.markettwits.sportsouce.club.registration.domain.WorkoutRegistrationForm
+import com.markettwits.sportsouce.club.registration.domain.normalizeClubPhone
 
 class SubscriptionMapperBase : SubscriptionMapper {
     override fun map(subscriptionsRemote: List<SubscriptionItemsRemote>): List<SubscriptionItems> =
-        subscriptionsRemote.map {
+        subscriptionsRemote.filterNot { it.isHidden }.sortedBy { it.order }.map {
             SubscriptionItems(
-                it.name,
-                mapSubscriptions(it.subscription)
+                it.type ?: it.name,
+                mapSubscriptions(it.subscriptions ?: it.subscription)
             )
         }.filter { it.subscription.isNotEmpty() }
 
@@ -60,7 +61,7 @@ class SubscriptionMapperBase : SubscriptionMapper {
 
     private fun mapSubscriptions(
         subscriptionsRemote: List<SubscriptionRemote>
-    ): List<Subscription> = subscriptionsRemote.map {
+    ): List<Subscription> = subscriptionsRemote.sortedBy { it.order }.map {
         Subscription(
             description = it.description,
             discount = it.discount ?: 0,
@@ -86,5 +87,7 @@ class SubscriptionMapperBase : SubscriptionMapper {
     private fun mapSubscriptionCount(workoutRegistrationForm: WorkoutRegistrationForm): Int? =
         if (workoutRegistrationForm.type is RegistrationType.Subscription) workoutRegistrationForm.type.count else null
 
-    private fun mapPhone(phone: String): String = phone.replace(Regex("\\D"), "")
+    private fun mapPhone(phone: String): String = requireNotNull(normalizeClubPhone(phone)) {
+        "Введите корректный номер телефона : +7 (000) 000-00-00"
+    }
 }

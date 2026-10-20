@@ -17,6 +17,8 @@ import com.markettwits.sportsouce.club.registration.presentation.components.Work
 fun WorkoutRegistrationScreen(component: WorkoutRegistrationComponent) {
     val state by component.state.collectAsState()
     DefaultModalBottomSheet(
+        edgeToEdgeContent = true,
+        title = if (state.isSuccess) "Заявка отправлена" else "Запись на тренировку",
         onDismissRequest = {
             component.onClickDismiss()
         }
@@ -28,8 +30,8 @@ fun WorkoutRegistrationScreen(component: WorkoutRegistrationComponent) {
                         fadeOut(tween(durationMillis = 300))
             },
             label = "Content Animation"
-        ) {
-            if (!state.isSuccess) {
+        ) { success ->
+            if (!success) {
                 WorkoutRegistrationContent(
                     form = state.form,
                     isLoading = state.isLoading,

@@ -37,6 +37,9 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             onClickOrders = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.UserOrders)
             },
+            onClickReceipts = {
+                component.obtainOutput(AuthorizedProfileComponent.Output.PaidReceipts)
+            },
             onClickEditProfile = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
             },

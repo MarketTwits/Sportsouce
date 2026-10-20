@@ -14,6 +14,8 @@ import com.markettwits.sportsouce.start.presentation.start.component.StartScreen
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.presentation.component.StartsFavoritesComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
 
 interface RootAuthorizedProfileComponent {
     val childStack: Value<ChildStack<*, Child>>
@@ -45,6 +47,12 @@ interface RootAuthorizedProfileComponent {
         data object ShopUserOrders : Config()
 
         @Serializable
+        data object PaidReceipts : Config()
+
+        @Serializable
+        data class Receipt(val id: Int) : Config()
+
+        @Serializable
         data object Club : Config()
 
         @Serializable
@@ -69,6 +77,10 @@ interface RootAuthorizedProfileComponent {
         data class Settings(val component: RootSettingsComponent) : Child()
 
         data class ShopUserOrders(val component : ShopUserOrdersComponent) : Child()
+
+        data class PaidReceipts(val component: ReceiptsComponent) : Child()
+
+        data class Receipt(val component: ReceiptDocumentComponent) : Child()
 
         data class ClubDashboard(val component : RootClubComponent) : Child()
 

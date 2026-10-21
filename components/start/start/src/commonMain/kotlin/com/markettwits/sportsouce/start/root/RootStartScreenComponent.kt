@@ -41,7 +41,7 @@ interface RootStartScreenComponent {
         data class StartRegistration(val input: StartDistancesInput) : Config()
 
         @Serializable
-        data class StartAlbum(val images: List<String>) : Config()
+        data class StartAlbum(val images: List<String>, val albumId: Int? = null) : Config()
 
         @Serializable
         data class RelatedStarts(val starts: List<StartsListItem>, val currentStartId: Int) : Config()

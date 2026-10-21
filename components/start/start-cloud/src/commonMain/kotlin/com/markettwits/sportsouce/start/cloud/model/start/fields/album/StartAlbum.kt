@@ -30,16 +30,16 @@ import kotlinx.serialization.Serializable
             @SerialName("file") val file: File,
             @SerialName("file_id") val fileId: Int,
             @SerialName("id") val id: Int,
-            @SerialName("tags") val tags: List<Tag>,
+            @SerialName("tags") val tags: List<Tag> = emptyList(),
             @SerialName("updatedAt") val updatedAt: String
         ) {
             @Serializable
             data class Tag(
-                @SerialName("PhotosToTag") val photosToTag: PhotosToTag,
-                @SerialName("createdAt") val createdAt: String,
+                @SerialName("PhotosToTag") val photosToTag: PhotosToTag? = null,
+                @SerialName("createdAt") val createdAt: String = "",
                 @SerialName("id") val id: Int,
                 @SerialName("name") val name: String,
-                @SerialName("updatedAt") val updatedAt: String
+                @SerialName("updatedAt") val updatedAt: String = ""
             ) {
                 @Serializable
                 data class PhotosToTag(

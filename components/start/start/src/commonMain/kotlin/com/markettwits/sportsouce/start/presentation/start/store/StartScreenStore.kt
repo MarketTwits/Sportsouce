@@ -73,7 +73,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
         data class OnClickMembersResult(val startId: Int, val members: List<MemberResult>) : Label
         data class OnClickStartRecommended(val start: StartsListItem) : Label
-        data class OnClickFullAlbum(val images: List<String>) : Label
+        data class OnClickFullAlbum(val images: List<String>, val albumId: Int) : Label
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
@@ -144,7 +144,7 @@ class StartScreenStoreFactory(
                         album.imageUrl
                     }
                     if (images.isNotEmpty()) {
-                        publish(OnClickFullAlbum(images))
+                        publish(OnClickFullAlbum(images, intent.album.id))
                     }
                 }
 

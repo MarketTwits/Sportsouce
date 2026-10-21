@@ -161,6 +161,16 @@ internal class SportSauceStartApiBase(
         return json.decodeFromString(response.body())
     }
 
+    override suspend fun albumPhotos(albumId: Int, offset: Int, limit: Int, tags: List<String>): com.markettwits.sportsouce.start.cloud.model.start.fields.album.AlbumPhotosRemote {
+        val response = client.get("album/photo") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+            parameter("album_id", albumId)
+            if (tags.isNotEmpty()) parameter("tags", tags.joinToString(","))
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun album(albumId: Int): StartAlbum {
         val response = client.get("album/$albumId")
         return json.decodeFromString(response.body<String>())

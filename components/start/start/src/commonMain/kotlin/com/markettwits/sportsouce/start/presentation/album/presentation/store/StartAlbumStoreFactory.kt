@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.start.presentation.album.presentation.store
 
 import com.markettwits.sportsouce.start.presentation.album.domain.StartAlbumRepository
+import com.markettwits.OriginalImageSharer
+import com.markettwits.OriginalImageDownloader
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
@@ -11,6 +13,8 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.store.St
 class StartAlbumStoreFactory(
     private val storeFactory: StoreFactory,
     private val repository: StartAlbumRepository,
+    private val sharer: OriginalImageSharer = OriginalImageSharer.Unavailable,
+    private val downloader: OriginalImageDownloader = OriginalImageDownloader.Unavailable,
 ) {
 
     fun create(images: List<String>, albumId: Int? = null): StartAlbumStore =
@@ -25,7 +29,7 @@ class StartAlbumStoreFactory(
             name = "StartAlbumStore",
             initialState = State(images = images),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { StartAlbumExecutor(albumId, repository) },
+            executorFactory = { StartAlbumExecutor(albumId, repository, sharer, downloader) },
             reducer = StartAlbumReducer
         )
 }

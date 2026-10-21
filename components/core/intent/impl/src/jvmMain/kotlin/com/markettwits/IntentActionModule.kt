@@ -6,4 +6,6 @@ import org.koin.dsl.module
 
 actual val intentActionModule = module {
     singleOf(::IntentActionJVM) bind IntentAction::class
+    single<OriginalImageSharer> { OriginalImageSharerBase { DesktopOriginalShareBatch() } }
+    single<OriginalImageDownloader> { OriginalImageDownloaderBase { DesktopOriginalShareBatch() } }
 }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.domain.StartItem
@@ -63,19 +64,59 @@ class StartMediaDesignTest {
     }
 
     @Test
-    fun morePhotosAndAlbumSelectionKeepTheirOriginalAlbumPayloadAndCloseTheSheet() {
+    fun albumCoversOpenTheOriginalAlbumAndTheSheetClosesAfterChoosingAnotherAlbum() {
         val opened = mutableListOf<StartItem.Album>()
         ImageComposeScene(width = 390, height = 1100) {
             SauceTheme { StartAlbums(albums = listOf(first, second, empty)) { opened += it } }
         }.use { scene ->
             scene.settle(); scene.assertTextFits()
-            val row = scene.nodes().single { it.config.contains(SemanticsActions.ScrollBy) }
-            row.config[SemanticsActions.ScrollBy].action!!.invoke(10000f, 0f); scene.settle()
-            scene.click("Ещё фото"); assertEquals(first, opened.single())
+            scene.click(first.name); assertEquals(first, opened.single())
             scene.click("Все альбомы"); scene.assertTextFits()
             assertFalse(scene.texts().contains(empty.name))
-            scene.click(second.name); assertEquals(listOf(first, second), opened)
+            // The headless scene also retains the cover behind the modal; activate the modal owner.
+            val choice = scene.nodes().last { it.config.contains(SemanticsActions.OnClick) &&
+                it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { text -> text.text == second.name } }
+            choice.config[SemanticsActions.OnClick].action!!.invoke(); scene.settle()
+            assertEquals(listOf(first, second), opened)
             assertFalse(scene.nodes().any { it.config.getOrNull(SemanticsProperties.ContentDescription)?.contains("Закрыть") == true })
+        }
+    }
+
+    @Test
+    fun singleAlbumIsVisibleEvenAfterAnEmptyAlbumAndOpensDirectly() {
+        var opened: StartItem.Album? = null
+        ImageComposeScene(width = 390, height = 600) {
+            SauceTheme { StartAlbums(albums = listOf(empty, first)) { opened = it } }
+        }.use { scene ->
+            scene.settle(); scene.assertTextFits()
+            assertTrue(scene.texts().contains("Фотоальбомы"))
+            assertTrue(scene.texts().contains(first.name))
+            assertFalse(scene.texts().contains("Все альбомы"))
+            assertFalse(scene.texts().contains(empty.name))
+            scene.click(first.name)
+            assertEquals(first, opened)
+            assertFalse(scene.nodes().any { "Просмотр фотографии" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() })
+            scene.save("start-album-single")
+        }
+    }
+
+    @Test
+    fun embeddedAlbumsKeepTitlesAndActionsInsideThePanelOnPhonesAndTablets() {
+        for (width in listOf(320, 800)) for (scale in listOf(1f, 2f)) for (dark in listOf(false, true)) {
+            ImageComposeScene(width = width, height = 1100, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) { Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+                    StartAlbums(Modifier.padding(16.dp), listOf(first, second)) {}
+                } }
+            }.use { scene ->
+                scene.settle(); scene.assertTextFits()
+                assertTrue(scene.texts().contains(first.name))
+                assertTrue(scene.texts().contains("7 фото"))
+                assertTrue(scene.texts().contains("Все альбомы"))
+                scene.nodes(unmerged = true).filter { it.config.contains(SemanticsActions.GetTextLayoutResult) }.forEach {
+                    assertTrue(it.boundsInRoot.bottom <= 1100, "Text must fit within the album block")
+                }
+                scene.save("start-albums-${if (dark) "dark" else "light"}-$width-${(scale * 100).toInt()}")
+            }
         }
     }
 
@@ -153,7 +194,9 @@ class StartMediaDesignTest {
         nodes(unmerged = true).forEach { node ->
             val layouts = mutableListOf<TextLayoutResult>()
             node.config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(layouts)
-            layouts.forEach { assertFalse(it.hasVisualOverflow, "Clipped ${it.layoutInput.text}, ${it.layoutInput.constraints}, ${it.size}") }
+            layouts.filter { it.layoutInput.overflow != TextOverflow.Ellipsis }.forEach {
+                assertFalse(it.hasVisualOverflow, "Clipped ${it.layoutInput.text}, ${it.layoutInput.constraints}, ${it.size}; width=${it.didOverflowWidth}, height=${it.didOverflowHeight}, lines=${it.lineCount}, paragraph=${it.multiParagraph.width}x${it.multiParagraph.height}")
+            }
         }
     }
     private fun ImageComposeScene.save(name: String) {

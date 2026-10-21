@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.semantics.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.*
 import com.markettwits.core_ui.items.theme.SauceTheme
@@ -135,6 +138,31 @@ class StartDetailsDesignTest {
             scene.click(person.phone!!); assertEquals(listOf(person.phone), phones)
             for (label in listOf("ВКонтакте", "Telegram", "other")) scene.clickDescription(label)
             assertEquals(person.socialNetworks.map { it.url }, opened)
+        }
+    }
+
+    @Test
+    fun eachOrganizerHasOneFullWidthActionIncludingAvatarNameAndArrow() {
+        val other = person.copy(id = 2, isMain = false, name = "Второй организатор", phone = "+7 999 111-11-11")
+        ImageComposeScene(width = 390, height = 1000) {
+            SauceTheme { StartOrganizers(organizer = listOf(other, person), onClickUrl = {}, onClickPhone = {}) }
+        }.use { scene ->
+            scene.settle()
+            assertEquals(2, scene.targets().size, "The arrow and avatar must not have separate actions")
+            for (organizer in listOf(person, other)) for (region in listOf(0f, .5f, 1f)) {
+                val row = scene.targets().single { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { t -> t.text == organizer.name } }
+                val bounds = row.boundsInRoot
+                assertTrue(bounds.width >= 350 && bounds.height >= 48)
+                val point = Offset(bounds.left + 24 + (bounds.width - 48) * region, bounds.center.y)
+                time += 20_000_000L
+                scene.sendPointerEvent(PointerEventType.Press, point, type = PointerType.Touch, timeMillis = time / 1_000_000)
+                time += 20_000_000L
+                scene.sendPointerEvent(PointerEventType.Release, point, type = PointerType.Touch, timeMillis = time / 1_000_000)
+                scene.settle()
+                assertTrue(scene.texts().contains("Контакты организатора"))
+                assertTrue(scene.texts().contains(organizer.phone), "The contact sheet must belong to the tapped organizer")
+                scene.clickDescription("Закрыть")
+            }
         }
     }
 

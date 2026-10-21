@@ -10,4 +10,6 @@ actual val intentActionModule = module {
     val context: Context by KoinJavaComponent.inject(Context::class.java)
     single<Context> { context }
     singleOf(::IntentActionBase) bind IntentAction::class
+    single<OriginalImageSharer> { OriginalImageSharerBase { AndroidOriginalShareBatch(context) } }
+    single<OriginalImageDownloader> { OriginalImageDownloaderBase { AndroidOriginalShareBatch(context) } }
 }

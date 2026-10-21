@@ -10,7 +10,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val startAlbumModule = module {
-    includes(com.markettwits.sportsouce.start.cloud.di.sportSauceStartNetworkModule)
+    includes(com.markettwits.sportsouce.start.cloud.di.sportSauceStartNetworkModule, com.markettwits.intentActionModule)
     singleOf(::StartAlbumRepositoryBase) bind StartAlbumRepository::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::StartAlbumStoreFactory)

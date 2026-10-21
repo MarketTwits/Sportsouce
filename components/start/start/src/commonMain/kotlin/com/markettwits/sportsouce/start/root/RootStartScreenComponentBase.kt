@@ -81,8 +81,8 @@ class RootStartScreenComponentBase(
                         members = { id: Int, list: List<StartMembersUi> ->
                             navigation.pushNew(RootStartScreenComponent.Config.StartMembers(id, list))
                         },
-                        album = {
-                            navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
+                        album = { images, albumId ->
+                            navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(images, albumId))
                         },
                         registerNew = {
                             val config = RootStartScreenComponent.Config.StartRegistration(it)
@@ -145,7 +145,8 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     pop = navigation::pop,
-                    images = config.images
+                    images = config.images,
+                    albumId = config.albumId
                 )
             )
 

@@ -17,7 +17,7 @@ import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 
 
 @Composable
-internal fun AuthWelcomeContent(content: String = "Добро пожаловать в SportSouce !") {
+internal fun AuthWelcomeContent(content: String = "Добро пожаловать\nв Спорт Союз !") {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

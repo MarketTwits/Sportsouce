@@ -2,16 +2,18 @@ package com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentati
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.event.EventEffect
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.component.ForgotPasswordComponent
 import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.components.ForgotPasswordContent
 import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentation.store.ForgotPasswordStore
@@ -20,22 +22,14 @@ import com.markettwits.sportsouce.auth.flow.internal.forgot_password.presentatio
 internal fun ForgotPasswordScreen(component: ForgotPasswordComponent) {
     val state by component.state.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
-    var snackBarColor = remember {
-        SportSouceColor.SportSouceLighBlue
-    }
+    var snackBarTone by remember { mutableStateOf(SauceSnackbarTone.Neutral) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
-            SnackbarHost(
+            SauceSnackbarHost(
                 hostState = snackBarHostState,
-            ) {
-                Snackbar(
-                    contentColor = Color.White,
-                    containerColor = snackBarColor,
-                    dismissActionContentColor = Color.White,
-                    snackbarData = it
-                )
-            }
+                tone = snackBarTone,
+            )
         }
     ) {
         ForgotPasswordContent(
@@ -60,8 +54,7 @@ internal fun ForgotPasswordScreen(component: ForgotPasswordComponent) {
                 component.obtainEvent(ForgotPasswordStore.Intent.OnConsumedEvent)
             },
         ) {
-            snackBarColor =
-                if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+            snackBarTone = if (it.success) SauceSnackbarTone.Success else SauceSnackbarTone.Error
             snackBarHostState.showLongMessageWithDismiss(message = it.message)
         }
     }

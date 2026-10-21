@@ -27,6 +27,8 @@ fun OutlinePasswordTextField(
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    errorMessage: String? = null,
+    isEnabled: Boolean = true,
     onValueChanged: (String) -> Unit,
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -49,6 +51,8 @@ fun OutlinePasswordTextField(
             }
         },
         isError = isError,
+        errorMessage = errorMessage,
+        isEnabled = isEnabled,
         onValueChange = onValueChanged
     )
 }

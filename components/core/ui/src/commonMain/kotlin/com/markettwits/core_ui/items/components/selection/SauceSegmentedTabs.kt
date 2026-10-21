@@ -65,6 +65,7 @@ fun SauceSegmentedTabs(
         }
         Row(
             Modifier.fillMaxWidth().clip(SauceShapes.button).background(colors.surfaceSubtle)
+                .border(1.dp, colors.border, SauceShapes.button)
                 .padding(SauceSpacing.extraSmall)
                 .then(if (scroll) Modifier.horizontalScroll(rememberScrollState()) else Modifier)
                 .height(IntrinsicSize.Min).selectableGroup(),
@@ -74,14 +75,18 @@ fun SauceSegmentedTabs(
                 val selected = index == selectedIndex
                 val interactions = remember { MutableInteractionSource() }
                 val background by animateColorAsState(
-                    if (selected) colors.surfaceRaised else colors.surfaceSubtle,
+                    if (selected && enabled) colors.actionSoft else colors.surfaceSubtle,
                     tween(SauceMotion.feedbackMillis, easing = SauceMotion.feedbackEasing),
                 )
                 Box(
                     (if (scroll) Modifier.width(IntrinsicSize.Max).widthIn(min = SauceSizes.touchTarget) else Modifier.weight(1f))
                         .fillMaxHeight().heightIn(min = SauceSizes.touchTarget)
                         .clip(SauceShapes.button).background(background)
-                        .border(1.dp, if (selected) colors.border else Color.Transparent, SauceShapes.button)
+                        .border(1.dp, when {
+                            selected && enabled -> colors.action
+                            selected -> colors.border
+                            else -> Color.Transparent
+                        }, SauceShapes.button)
                         .sauceFocusOutline(interactions, SauceShapes.button, colors.action, enabled)
                         .bringIntoViewRequester(visibility[index])
                         .focusRequester(focus[index])
@@ -110,7 +115,7 @@ fun SauceSegmentedTabs(
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         color = when {
                             !enabled -> colors.disabledContent
-                            selected -> colors.textPrimary
+                            selected -> colors.onActionSoft
                             else -> colors.textSecondary
                         })
                 }

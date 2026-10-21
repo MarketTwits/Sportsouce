@@ -23,6 +23,11 @@ kotlin {
         implementation(projects.components.core.time)
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     sourceSets.androidMain.dependencies {
         implementation(projects.components.core.activityholder)
         implementation(libs.androidx.credentials)

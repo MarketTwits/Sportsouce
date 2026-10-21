@@ -1,17 +1,12 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthButton
 
 @Composable
@@ -22,28 +17,20 @@ fun SignInUnderFieldsContent(
     isButtonEnabled: Boolean,
     isButtonLoading: Boolean,
 ) {
-    Row(
-        modifier = modifier.padding(14.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .noRippleClickable(onClickRegistry)
-                .padding(horizontal = 20.dp, vertical = 4.dp),
-            text = "Забыли пароль ?",
-            fontFamily = FontNunito.medium(),
-            fontSize = 14.sp,
-            color = Color.Gray,
-
-            )
+    Column(modifier.fillMaxWidth().padding(top = SauceSpacing.small, bottom = SauceSpacing.medium),
+        verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+        SauceButton(
+            title = "Забыли пароль?",
+            onClick = onClickRegistry,
+            modifier = Modifier.align(Alignment.End),
+            variant = SauceButtonVariant.Text,
+            fillWidth = false,
+        )
         AuthButton(
-            modifier = modifier.weight(1f),
-            "Войти",
+            title = "Войти",
             enabled = isButtonEnabled,
             loading = isButtonLoading,
-            onClick = onClickAuth
+            onClick = onClickAuth,
         )
     }
 }

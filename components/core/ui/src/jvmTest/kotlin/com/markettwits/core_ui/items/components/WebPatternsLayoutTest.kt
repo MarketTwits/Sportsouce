@@ -8,6 +8,9 @@ import androidx.compose.ui.ImageComposeScene
 import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.Density
@@ -26,6 +29,44 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalComposeUiApi::class)
 class WebPatternsLayoutTest {
+    @Test
+    fun activeSegmentHasAVisibleBoundaryAndDistinctFillInBothThemes() {
+        for (dark in listOf(false, true)) {
+            var selected by mutableIntStateOf(0)
+            ImageComposeScene(width = 360, height = 100) {
+                SauceTheme(darkTheme = dark) {
+                    Box(Modifier.fillMaxSize().background(SauceTheme.colors.background).padding(16.dp)) {
+                        SauceSegmentedTabs(listOf("Пароль", "SMS (Beta)"), selected, { selected = it })
+                    }
+                }
+            }.use { scene ->
+                for (index in 0..1) {
+                    selected = index
+                    scene.settle()
+                    val tabs = scene.nodes().filter { it.config.getOrNull(SemanticsProperties.Role) == Role.Tab }
+                    val active = tabs.single { it.config[SemanticsProperties.Selected] }.boundsInRoot
+                    val inactive = tabs.single { !it.config[SemanticsProperties.Selected] }.boundsInRoot
+                    scene.render(System.nanoTime() + 2_000_000_000L).use { image ->
+                        val pixels = image.toComposeImageBitmap().toPixelMap()
+                        val border = pixels[active.center.x.toInt(), active.top.toInt()]
+                        val fill = pixels[active.center.x.toInt(), active.top.toInt() + 6]
+                        val otherFill = pixels[inactive.center.x.toInt(), inactive.top.toInt() + 6]
+                        fun luminance(color: Color): Double {
+                            fun linear(channel: Float): Double = if (channel <= .04045f) channel / 12.92 else Math.pow((channel + .055) / 1.055, 2.4)
+                            return .2126 * linear(color.red) + .7152 * linear(color.green) + .0722 * linear(color.blue)
+                        }
+                        val a = luminance(border); val b = luminance(otherFill)
+                        assertTrue((maxOf(a, b) + .05) / (minOf(a, b) + .05) >= 3,
+                            "The selected outline must remain visible in dark=$dark")
+                        assertTrue(kotlin.math.abs(fill.blue - otherFill.blue) > .02f,
+                            "Selection must also change the fill in dark=$dark")
+                    }
+                    scene.save("auth-method-${if (dark) "dark" else "light"}-$index")
+                }
+            }
+        }
+    }
+
     @Test
     fun narrowTabsAndLongSwitchLabelsGrowAtTwoHundredPercent() {
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {

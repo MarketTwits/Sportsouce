@@ -27,6 +27,7 @@ fun OutlinePhoneTextFiled(
         imeAction = ImeAction.Done
     ),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    errorMessage: String? = null,
     onValueChange: (String) -> Unit,
 ) {
     val texts = mapFullRuPhoneNumberToSimple(value)
@@ -36,6 +37,7 @@ fun OutlinePhoneTextFiled(
         label = label,
         value = texts,
         isError = isError,
+        errorMessage = errorMessage,
         isEnabled = isEnabled,
         singleLine = singleLine,
         maxLines = maxLines,

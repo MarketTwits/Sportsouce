@@ -1,6 +1,5 @@
 package com.markettwits.sportsouce.auth.flow.internal.sign_in.presentation.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthConsumeRowContent
 import com.markettwits.sportsouce.auth.flow.internal.common.TermsAndPrivacyContent
@@ -31,11 +31,11 @@ internal fun CreateProfileAndBackContent(
     ) {
         OrRowContent()
 
-        ButtonContentBase(
-            modifier = Modifier.padding(10.dp),
+        SauceButton(
+            modifier = Modifier.padding(vertical = 10.dp),
             title = "Создать профиль",
             onClick = onClickRegistry,
-            borderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary)
+            variant = SauceButtonVariant.Outlined,
         )
 
         AuthConsumeRowContent(

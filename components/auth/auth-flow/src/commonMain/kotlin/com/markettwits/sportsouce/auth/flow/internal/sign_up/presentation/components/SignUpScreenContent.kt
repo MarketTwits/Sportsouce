@@ -10,14 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.event.EventEffect
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthAlreadySomeActionBox
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthConsumeRowContent
 import com.markettwits.sportsouce.auth.flow.internal.common.AuthWelcomeContent
@@ -41,9 +41,7 @@ internal fun SignUpScreenContent(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-    var snackBarColor by remember {
-        mutableStateOf(SportSouceColor.SportSouceLightRed)
-    }
+    var snackBarTone by remember { mutableStateOf(SauceSnackbarTone.Error) }
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -60,15 +58,10 @@ internal fun SignUpScreenContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = {
-            SnackbarHost(
+            SauceSnackbarHost(
                 hostState = snackBarHostState,
-            ) {
-                Snackbar(
-                    contentColor = Color.White,
-                    containerColor = snackBarColor,
-                    snackbarData = it
-                )
-            }
+                tone = snackBarTone,
+            )
         },
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
@@ -102,7 +95,11 @@ internal fun SignUpScreenContent(
                         focusManager = focusManager,
                         onValueChanged = onValueChanged,
                         onNextStage = onNextClick,
-                        onRegister = onClickSignUp
+                        onRegister = onClickSignUp,
+                        errors = state.errors,
+                        validationAttempt = if (pagerState.settledPage == index && !pagerState.isScrollInProgress)
+                            state.validationAttempt else 0,
+                        enabled = !state.isLoading,
                     )
                 }
 
@@ -129,8 +126,7 @@ internal fun SignUpScreenContent(
                     event = state.event,
                     onConsumed = { onConsumedEvent() },
                 ) {
-                    snackBarColor =
-                        if (it.success) SportSouceColor.SportSouceLighBlue else SportSouceColor.SportSouceLightRed
+                    snackBarTone = if (it.success) SauceSnackbarTone.Success else SauceSnackbarTone.Error
                     snackBarHostState.showLongMessageWithDismiss(message = it.message)
                 }
             }

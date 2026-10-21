@@ -29,6 +29,7 @@ fun OutlinedTextFieldBase(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     readOnly: Boolean = false,
     onClick: (() -> Unit)? = null,
+    errorMessage: String? = null,
     onValueChange: (String) -> Unit,
 ) {
     SauceTextField(
@@ -40,6 +41,7 @@ fun OutlinedTextFieldBase(
         readOnly = readOnly,
         onClick = onClick,
         isError = isError,
+        errorMessage = errorMessage,
         singleLine = singleLine,
         minLines = minLines,
         maxLines = maxLines,

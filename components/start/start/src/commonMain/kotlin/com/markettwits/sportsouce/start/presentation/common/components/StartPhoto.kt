@@ -18,7 +18,7 @@ import com.markettwits.core_ui.items.theme.*
 
 /** The same photo, loading and unavailable surfaces in the preview, selector and gallery. */
 @Composable
-internal fun StartPhoto(imageUrl: String, modifier: Modifier = Modifier) {
+fun StartPhoto(imageUrl: String, modifier: Modifier = Modifier) {
     if (imageUrl.isBlank()) {
         StartPhotoPlaceholder(modifier)
         return

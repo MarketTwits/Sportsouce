@@ -35,7 +35,7 @@ fun StartsSearchBarInner(
         modifier = modifier
             .fillMaxWidth()
             .background(sauceTopBarContainerColor())
-            .windowInsetsPadding(WindowInsets.statusBars),
+            .windowInsetsPadding(WindowInsets.statusBars).padding(bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(

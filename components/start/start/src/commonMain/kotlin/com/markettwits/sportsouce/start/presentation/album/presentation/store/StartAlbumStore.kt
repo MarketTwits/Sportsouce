@@ -7,14 +7,21 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.store.St
 
 interface StartAlbumStore : Store<Intent, State, Label> {
     data class State(
-        val images: List<String>
+        val images: List<String> = emptyList(),
+        val isLoading: Boolean = false,
+        val error: String? = null
     )
 
     sealed interface Intent {
         data object GoBack : Intent
+        data object Retry : Intent
     }
 
-    sealed interface Message
+    sealed interface Message {
+        data object Loading : Message
+        data class Loaded(val images: List<String>) : Message
+        data class Failed(val error: String) : Message
+    }
 
     sealed interface Label {
         data object GoBack : Label

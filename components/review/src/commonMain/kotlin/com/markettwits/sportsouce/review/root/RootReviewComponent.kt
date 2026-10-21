@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponent
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
@@ -49,6 +50,9 @@ interface RootReviewComponent {
         data object Search : Config
 
         @Serializable
+        data object Albums : Config
+
+        @Serializable
         data object News : Config
 
         @Serializable
@@ -81,6 +85,7 @@ interface RootReviewComponent {
         data class NewsEvent(val component: NewsEventComponent) : Child
         data class News(val component: RootNewsComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
+        data class Albums(val component: RootStartsAlbumsComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
         data class Club(val component: RootClubComponent) : Child

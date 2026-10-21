@@ -24,6 +24,7 @@ kotlin {
         implementation(projects.components.start.start)
         implementation(projects.components.starts.startsRandom)
         implementation(projects.components.starts.startsPopular)
+        implementation(projects.components.starts.startsAlbums)
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)

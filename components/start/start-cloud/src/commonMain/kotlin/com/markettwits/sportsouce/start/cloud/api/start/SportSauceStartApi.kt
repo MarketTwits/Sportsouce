@@ -59,6 +59,8 @@ interface SportSauceStartApi {
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
 
+    suspend fun album(albumId: Int): StartAlbum
+
     suspend fun albums(startId: Int): List<StartAlbum>
 
     suspend fun comments(startId: Int): List<Comment>

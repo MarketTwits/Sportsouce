@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.starts.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.starts.cloud.model.NetworkPhotoArchive
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartFavoritesRequest
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
 import com.markettwits.sportsouce.starts.cloud.model.StartStatusEntity
@@ -15,6 +16,16 @@ class SportSauceNetworkStartsApi(
     private val json = httpClient.json()
 
     private val client = httpClient.provide()
+
+    suspend fun photoArchive(offset: Int, limit: Int, filterText: String, year: Int?): NetworkPhotoArchive {
+        val response = client.get("photo-archive/starts") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+            if (filterText.isNotBlank()) parameter("filterText", filterText.trim())
+            if (year != null) parameter("year", year)
+        }
+        return json.decodeFromString(response.body<String>())
+    }
 
     suspend fun fetchFavorites(userId: String, token: String): NetworkStartsRemote {
         val response = client.get("favorites/$userId") {

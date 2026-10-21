@@ -13,17 +13,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 
 class StartAlbumComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: StartAlbumStoreFactory,
-    private val images: List<String>,
+    private val images: List<String> = emptyList(),
+    private val albumId: Int? = null,
     private val pop: () -> Unit,
 ) : StartAlbumComponent, BottomBarComponentHandler(), ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
-    private val store = instanceKeeper.getStore { storeFactory.create(images) }
+    private val store = instanceKeeper.getStore { storeFactory.create(images, albumId) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<StartAlbumStore.State> = store.stateFlow
@@ -33,6 +36,7 @@ class StartAlbumComponentBase(
     }
 
     init {
+        lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

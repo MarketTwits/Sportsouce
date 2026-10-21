@@ -161,6 +161,11 @@ internal class SportSauceStartApiBase(
         return json.decodeFromString(response.body())
     }
 
+    override suspend fun album(albumId: Int): StartAlbum {
+        val response = client.get("album/$albumId")
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun albums(startId: Int): List<StartAlbum> {
         val response = client.get("album") {
             url {

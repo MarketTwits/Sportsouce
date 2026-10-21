@@ -55,6 +55,7 @@ include(
     ":components:start:start-support",
     ":components:start:start-cloud",
     ":components:starts:starts",
+    ":components:starts:starts-albums",
     ":components:starts:starts-random",
     ":components:starts:starts-popular",
     ":components:starts:starts-common",

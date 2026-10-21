@@ -39,7 +39,7 @@ class ReviewScreenDesignTest {
                 scene.settle()
                 assertEquals(setOf("Загрузка новостей", "Загрузка актуальных стартов"), scene.loadingLabels())
                 val menuTop = scene.clickableForText("Популярные").boundsInRoot.top
-                for (title in listOf("Популярные", "Новости", "Клуб", "Поиск", "Магазин")) {
+                for (title in listOf("Популярные", "Новости", "Клуб", "Фотоархив", "Магазин")) {
                     val button = scene.clickableForText(title)
                     assertTrue(button.size.height >= 48)
                     assertTrue(button.config[SemanticsActions.OnClick].action!!.invoke())

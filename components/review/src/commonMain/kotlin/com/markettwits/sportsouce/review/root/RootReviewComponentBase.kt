@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponentBase
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
@@ -213,6 +214,10 @@ class RootReviewComponentBase(
                 )
             )
 
+            is RootReviewComponent.Config.Albums -> RootReviewComponent.Child.Albums(
+                RootStartsAlbumsComponentBase(componentContext, navigation::pop)
+            )
+
             is RootReviewComponent.Config.Search -> RootReviewComponent.Child.Search(
                 RootStartsSearchComponentBase(
                     context = componentContext,
@@ -276,7 +281,7 @@ class RootReviewComponentBase(
             0 -> RootReviewComponent.Config.Popular
             1 -> RootReviewComponent.Config.News
             2 -> RootReviewComponent.Config.Club
-            3 -> RootReviewComponent.Config.Search
+            3 -> RootReviewComponent.Config.Albums
             4 -> RootReviewComponent.Config.Shop()
             577 -> RootReviewComponent.Config.Shop(categoryId = 577)
             582 -> RootReviewComponent.Config.Shop(categoryId = 582)

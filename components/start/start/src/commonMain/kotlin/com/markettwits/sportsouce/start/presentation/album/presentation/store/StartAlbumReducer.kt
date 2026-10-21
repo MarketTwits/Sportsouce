@@ -5,5 +5,9 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.store.St
 import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStore.State
 
 object StartAlbumReducer : Reducer<State, Message> {
-    override fun State.reduce(msg: Message): State = copy()
+    override fun State.reduce(msg: Message): State = when (msg) {
+        Message.Loading -> copy(isLoading = true, error = null)
+        is Message.Loaded -> copy(images = msg.images, isLoading = false, error = null)
+        is Message.Failed -> copy(isLoading = false, error = msg.error)
+    }
 }

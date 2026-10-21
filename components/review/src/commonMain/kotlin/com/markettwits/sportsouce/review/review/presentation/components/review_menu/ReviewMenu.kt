@@ -5,7 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.runtime.Composable
@@ -97,8 +97,8 @@ private fun menu() = listOf<ReviewMenuItem>(
     ),
     ReviewMenuItem(
         3,
-        "Поиск",
-        Icons.Filled.Settings,
+        "Фотоархив",
+        Icons.Filled.PhotoLibrary,
         accentColor = Color(0xFF0F9D95),
         backgroundColor = Color(0xFFD9ECEE),
     ),

@@ -64,19 +64,6 @@ object ValidationUtils {
     }
 
     /**
-     * Validates SMS code
-     */
-    fun validateSmsCode(smsCode: String): ValidationResult {
-        val cleanCode = smsCode.replace(Regex("[^0-9]"), "")
-        return when {
-            smsCode.isBlank() -> ValidationResult(false, "Введите код из СМС")
-            cleanCode.length < 4 -> ValidationResult(false, "Код должен содержать минимум 4 цифры")
-            cleanCode.length > 6 -> ValidationResult(false, "Код должен содержать максимум 6 цифр")
-            else -> ValidationResult(true)
-        }
-    }
-
-    /**
      * Formats phone number for display during input
      */
     fun formatPhoneForDisplay(phone: String): String {

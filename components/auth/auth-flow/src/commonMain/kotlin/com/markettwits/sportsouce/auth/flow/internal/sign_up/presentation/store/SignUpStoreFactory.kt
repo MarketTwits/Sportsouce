@@ -11,8 +11,10 @@ import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpFieldErrors
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStage
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStatement
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.validation.SignUpValidation
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.use_case.SignUpUseCase
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.store.SignUpStoreFactory.Msg.*
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ internal class SignUpStoreFactory(
     private val storeFactory: StoreFactory,
     private val exceptionTracker: ExceptionTracker,
     private val useCase: SignUpUseCase,
+    private val validation: SignUpValidation,
 ) {
     fun create(): SignUpStore =
         object : SignUpStore,
@@ -35,7 +38,13 @@ internal class SignUpStoreFactory(
     private sealed interface Msg {
         data class OnUpdateStage(val signUpStage: SignUpStage) : Msg
         data object OnConsumedEvent : Msg
-        data class OnValueChanged(val statement: SignUpStatement) : Msg
+        data class OnValueChanged(val statement: SignUpStatement, val errors: SignUpFieldErrors) : Msg
+        data class Validated(
+            val errors: SignUpFieldErrors,
+            val stages: Set<SignUpStage>,
+            val stage: SignUpStage,
+            val failed: Boolean,
+        ) : Msg
         data object Loading : Msg
         data class LoadFailed(val message: String) : Msg
     }
@@ -43,28 +52,29 @@ internal class SignUpStoreFactory(
     private inner class ExecutorImpl :
         CoroutineExecutor<SignUpStore.Intent, Unit, SignUpStore.State, Msg, SignUpStore.Label>() {
         override fun executeIntent(intent: SignUpStore.Intent) {
+            if (state().isLoading && intent != SignUpStore.Intent.OnConsumedEvent) return
             when (intent) {
                 is SignUpStore.Intent.OnClickRegister -> {
                     register(state().statement)
                 }
 
-                is SignUpStore.Intent.ChangeValue -> dispatch(OnValueChanged(intent.statement))
+                is SignUpStore.Intent.ChangeValue -> dispatch(OnValueChanged(
+                    intent.statement,
+                    validation.errors(intent.statement, state().validatedStages),
+                ))
                 is SignUpStore.Intent.OnConsumedEvent -> dispatch(OnConsumedEvent)
                 is SignUpStore.Intent.OnClickNext -> {
-                    val currentStage = state().currentStage
-                    val statement = state().statement
-
-                    // Validate current stage before proceeding
-                    if (validateStage(currentStage, statement)) {
-                        val nextStage = when (currentStage) {
-                            SignUpStage.FIRST -> SignUpStage.SECOND
-                            SignUpStage.SECOND -> SignUpStage.THIRD
-                            SignUpStage.THIRD -> return // Already at last stage
-                        }
-                        dispatch(OnUpdateStage(nextStage))
-                    } else {
-                        dispatch(LoadFailed(getValidationErrorMessage(currentStage, statement)))
-                    }
+                    val stage = state().currentStage
+                    if (stage == SignUpStage.THIRD) return
+                    val stages = state().validatedStages + stage
+                    val errors = validation.errors(state().statement, stages)
+                    val failed = validation.errors(state().statement, setOf(stage)).firstInvalidStage() != null
+                    dispatch(Validated(
+                        errors = errors,
+                        stages = stages,
+                        stage = if (failed) stage else SignUpStage.fromIndex(stage.index + 1),
+                        failed = failed,
+                    ))
                 }
 
                 is SignUpStore.Intent.OnClickBack -> {
@@ -85,71 +95,14 @@ internal class SignUpStoreFactory(
             }
         }
 
-        private fun validateStage(stage: SignUpStage, statement: SignUpStatement): Boolean {
-            return when (stage) {
-                SignUpStage.FIRST -> {
-                    statement.phone.isNotBlank() && statement.email.isNotBlank() &&
-                            isValidEmail(statement.email) && isValidPhone(statement.phone)
-                }
-
-                SignUpStage.SECOND -> {
-                    statement.name.isNotBlank() && statement.surname.isNotBlank() &&
-                            statement.sex.isNotBlank() && statement.birthday.isNotBlank()
-                }
-
-                SignUpStage.THIRD -> {
-                    statement.password.isNotBlank() && statement.repeatPassword.isNotBlank() &&
-                            statement.password == statement.repeatPassword && statement.password.length >= 6
-                }
-            }
-        }
-
-        private fun getValidationErrorMessage(stage: SignUpStage, statement: SignUpStatement): String {
-            return when (stage) {
-                SignUpStage.FIRST -> {
-                    when {
-                        statement.phone.isBlank() -> "Введите номер телефона"
-                        statement.email.isBlank() -> "Введите email"
-                        !isValidEmail(statement.email) -> "Введите корректный email"
-                        !isValidPhone(statement.phone) -> "Введите корректный номер телефона"
-                        else -> "Заполните все поля первого этапа"
-                    }
-                }
-
-                SignUpStage.SECOND -> {
-                    when {
-                        statement.name.isBlank() -> "Введите имя"
-                        statement.surname.isBlank() -> "Введите фамилию"
-                        statement.sex.isBlank() -> "Выберите пол"
-                        statement.birthday.isBlank() -> "Выберите дату рождения"
-                        else -> "Заполните все поля второго этапа"
-                    }
-                }
-
-                SignUpStage.THIRD -> {
-                    when {
-                        statement.password.isBlank() -> "Введите пароль"
-                        statement.repeatPassword.isBlank() -> "Подтвердите пароль"
-                        statement.password != statement.repeatPassword -> "Пароли не совпадают"
-                        statement.password.length < 6 -> "Пароль должен содержать минимум 6 символов"
-                        else -> "Заполните все поля третьего этапа"
-                    }
-                }
-            }
-        }
-
-        private fun isValidEmail(email: String): Boolean {
-            return email.contains("@") && email.contains(".") && email.length > 5
-        }
-
-        private fun isValidPhone(phone: String): Boolean {
-            val cleanPhone = phone.replace(Regex("[^0-9]"), "")
-            return cleanPhone.length >= 10
-        }
-
         private fun register(statement: SignUpStatement) {
+            val stages = SignUpStage.entries.toSet()
+            val errors = validation.errors(statement, stages)
+            val invalidStage = errors.firstInvalidStage()
+            dispatch(Validated(errors, stages, invalidStage ?: state().currentStage, invalidStage != null))
+            if (invalidStage != null) return
+            dispatch(Loading)
             scope.launch {
-                dispatch(Loading)
                 useCase.registry(statement).fold(
                     onSuccess = {
                         publish(
@@ -176,7 +129,14 @@ internal class SignUpStoreFactory(
                 )
 
                 is Loading -> copy(isLoading = true)
-                is OnValueChanged -> copy(statement = msg.statement)
+                is OnValueChanged -> copy(statement = msg.statement, errors = msg.errors)
+                is Validated -> copy(
+                    errors = msg.errors,
+                    validatedStages = msg.stages,
+                    currentStage = msg.stage,
+                    validationAttempt = validationAttempt + if (msg.failed) 1 else 0,
+                    event = consumed(),
+                )
                 is OnConsumedEvent -> copy(event = consumed())
                 is OnUpdateStage -> copy(currentStage = msg.signUpStage)
             }

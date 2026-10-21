@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.cancel
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.arkivanov.essenty.backhandler.BackCallback
 
 class StartAlbumComponentBase(
     componentContext: ComponentContext,
@@ -36,7 +37,12 @@ class StartAlbumComponentBase(
     }
 
     init {
-        lifecycle.doOnDestroy { scope.cancel() }
+        val selectionBack = BackCallback(isEnabled = false, priority = BackCallback.PRIORITY_MAX) {
+            store.accept(StartAlbumStore.Intent.GoBack)
+        }
+        backHandler.register(selectionBack)
+        scope.launch { state.collect { selectionBack.isEnabled = it.selectedPhotos.isNotEmpty() || it.exportProgress != null || it.exportError != null || it.downloadResult != null } }
+        lifecycle.doOnDestroy { backHandler.unregister(selectionBack); scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

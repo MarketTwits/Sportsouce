@@ -6,6 +6,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ImageNotSupported
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -18,25 +20,28 @@ import com.markettwits.core_ui.items.theme.*
 
 /** The same photo, loading and unavailable surfaces in the preview, selector and gallery. */
 @Composable
-fun StartPhoto(imageUrl: String, modifier: Modifier = Modifier) {
+fun StartPhoto(imageUrl: String, modifier: Modifier = Modifier, showUnavailableLabel: Boolean = true, onPainter: (Painter) -> Unit = {}) {
     if (imageUrl.isBlank()) {
-        StartPhotoPlaceholder(modifier)
+        StartPhotoPlaceholder(modifier, showUnavailableLabel)
         return
     }
     SubcomposeAsyncImage(model = imageRequestCrossfade(imageUrl), contentDescription = null,
         contentScale = ContentScale.Crop, modifier = modifier.background(SauceTheme.colors.surfaceSubtle),
         loading = { Box(Modifier.fillMaxSize().shimmer().background(SauceTheme.colors.surfaceSubtle)) },
-        error = { StartPhotoPlaceholder(Modifier.fillMaxSize()) },
-        success = { SubcomposeAsyncImageContent(Modifier.fillMaxSize()) })
+        error = { StartPhotoPlaceholder(Modifier.fillMaxSize(), showUnavailableLabel) },
+        success = {
+            SideEffect { onPainter(it.painter) }
+            SubcomposeAsyncImageContent(Modifier.fillMaxSize())
+        })
 }
 
 @Composable
-private fun StartPhotoPlaceholder(modifier: Modifier) {
+private fun StartPhotoPlaceholder(modifier: Modifier, showLabel: Boolean) {
     Box(modifier.background(SauceTheme.colors.surfaceSubtle), contentAlignment = Alignment.Center) {
         Column(Modifier.fillMaxWidth().padding(SauceSpacing.medium), horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-            Icon(Icons.Outlined.ImageNotSupported, null, Modifier.size(SauceSizes.icon), tint = SauceTheme.colors.textMuted)
-            Text("Фото недоступно", Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall,
+            Icon(Icons.Outlined.ImageNotSupported, if (showLabel) null else "Фото недоступно", Modifier.size(SauceSizes.icon), tint = SauceTheme.colors.textMuted)
+            if (showLabel) Text("Фото недоступно", Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall,
                 color = SauceTheme.colors.textMuted, textAlign = TextAlign.Center)
         }
     }

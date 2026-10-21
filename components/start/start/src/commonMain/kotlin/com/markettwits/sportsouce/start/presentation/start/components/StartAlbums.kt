@@ -1,100 +1,109 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
-import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.list.SauceActionRow
-import com.markettwits.core_ui.items.components.status.SauceStatusBadge
-import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid
+import com.markettwits.core_ui.items.image.AlbumImage
+import com.markettwits.core_ui.items.image.AlbumImageSize
 import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.start.domain.StartItem
-import com.markettwits.sportsouce.start.presentation.common.components.StartPhoto
 
 @Composable
 internal fun StartAlbums(modifier: Modifier = Modifier, albums: List<StartItem.Album>, onCLickFullAlbum: (StartItem.Album) -> Unit) {
-    val first = albums.firstOrNull() ?: return
-    var allAlbums by rememberSaveable(albums.map { it.id }) { mutableStateOf(false) }
-    var selectedIndex by rememberSaveable(first.id, first.photos) { mutableIntStateOf(-1) }
-    val preview = first.photos.take(6).reversed()
     val available = albums.filter { it.photos.isNotEmpty() }
-    StartContentBasePanel(modifier, label = first.name, icon = Icons.Outlined.PhotoLibrary) {
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
-            if (preview.isEmpty()) Text("В альбоме пока нет фотографий", Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textMuted)
-            else LazyRow(horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-                itemsIndexed(preview, key = { index, photo -> "${photo.id}:$index" }) { index, photo ->
-                    OnBackgroundCard(Modifier.width(180.dp).semantics { contentDescription = "Фото ${index + 1} из ${preview.size}" }, onClick = { selectedIndex = index }) {
-                        Box(Modifier.fillMaxWidth().height(220.dp)) {
-                            StartPhoto(photo.imageUrl, Modifier.fillMaxSize())
-                            photo.tags.values.firstOrNull()?.takeIf { it.isNotBlank() }?.let { tag ->
-                                SauceStatusBadge(if (tag == "preview") "Превью" else tag,
-                                    Modifier.align(Alignment.TopStart).padding(SauceSpacing.small), showIndicator = false)
-                            }
-                        }
-                    }
+    if (available.isEmpty()) return
+    var allAlbums by rememberSaveable(available.map { it.id }) { mutableStateOf(false) }
+    StartContentBasePanel(modifier, label = "Фотоальбомы", icon = Icons.Outlined.PhotoLibrary) {
+        if (available.size == 1) StartAlbumPreview(available.single(), onClick = { onCLickFullAlbum(available.single()) })
+        else {
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val largeText = LocalDensity.current.fontScale > 1.3f
+                val titleLines = if (largeText) 3 else 2
+                val cardWidth = if (maxWidth < 500.dp) maxWidth * .88f else ((maxWidth - 12.dp) / 2).coerceAtMost(360.dp)
+                val textHeight = with(LocalDensity.current) {
+                    (MaterialTheme.typography.titleSmall.lineHeight * titleLines).toDp()
                 }
-                if (first.photos.size > 6) item {
-                    OnBackgroundCard(Modifier.width(180.dp), onClick = { onCLickFullAlbum(first) }) {
-                        Box(Modifier.fillMaxWidth().height(220.dp).padding(SauceSpacing.large), contentAlignment = Alignment.Center) {
-                            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-                                Icon(Icons.Outlined.PhotoLibrary, null, Modifier.size(SauceSizes.icon), tint = SauceTheme.colors.action)
-                                Text("Ещё фото", Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall,
-                                    color = SauceTheme.colors.action, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                            }
-                        }
+                LazyHorizontalGrid(rows = GridCells.Fixed(1), modifier = Modifier.fillMaxWidth()
+                    .height(cardWidth / (16f / 10f) + textHeight + 28.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(available, key = { it.id }) { album ->
+                        StartAlbumPreview(album, Modifier.width(cardWidth), titleLines = titleLines, reserveTitleSpace = true,
+                            onClick = { onCLickFullAlbum(album) })
                     }
                 }
             }
-            if (available.size > 1 || (first.photos.isEmpty() && available.isNotEmpty())) {
-                SauceActionRow("Все альбомы", { allAlbums = true }, icon = Icons.Outlined.PhotoLibrary, count = available.size.toString())
-            }
+            SauceActionRow("Все альбомы", { allAlbums = true }, icon = Icons.Outlined.PhotoLibrary, count = available.size.toString())
         }
     }
-    if (selectedIndex in preview.indices) FullImageScreen(image = preview.map { it.imageUrl }, selectedImageIndex = selectedIndex) { selectedIndex = -1 }
-    if (allAlbums) DefaultModalBottomSheet(title = "Все альбомы", onDismissRequest = { allAlbums = false }) {
-        StartAlbumChoices(albums, onCLickFullAlbum = { onCLickFullAlbum(it); allAlbums = false })
+    if (allAlbums) DefaultModalBottomSheet(title = "Фотоальбомы", onDismissRequest = { allAlbums = false }) {
+        StartAlbumChoices(available, onCLickFullAlbum = { allAlbums = false; onCLickFullAlbum(it) })
+    }
+}
+
+/** One opening action per album; the collage shows its contents without a second photo viewer. */
+@Composable
+internal fun StartAlbumPreview(album: StartItem.Album, modifier: Modifier = Modifier, titleLines: Int = 2,
+    reserveTitleSpace: Boolean = false, onClick: () -> Unit) {
+    val colors = SauceTheme.colors
+    Column(modifier.fillMaxWidth().clip(SauceShapes.card).clickable(role = Role.Button, onClick = onClick)
+        .semantics { onClick(label = "Открыть альбом") { onClick(); true } }) {
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 10f).clip(SauceShapes.card).background(colors.surfaceSubtle)) {
+            val cover = album.photos.filter { it.imageUrl.isNotBlank() }.distinctBy { it.imageUrl }.take(3)
+            Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                AlbumImage(cover.firstOrNull()?.imageUrl.orEmpty(), AlbumImageSize.Cover,
+                    Modifier.weight(if (cover.size > 1) 2f else 1f).fillMaxHeight())
+                if (cover.size > 1) Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    cover.drop(1).forEach { photo ->
+                        AlbumImage(photo.imageUrl, AlbumImageSize.Grid, Modifier.fillMaxWidth().weight(1f))
+                    }
+                }
+            }
+            Surface(Modifier.align(Alignment.BottomStart).padding(10.dp), shape = SauceShapes.badge, color = colors.surface.copy(alpha = .94f)) {
+                Row(Modifier.padding(horizontal = 10.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Icon(Icons.Outlined.PhotoLibrary, null, Modifier.size(16.dp), tint = colors.textSecondary)
+                    Text("${album.photos.size} фото",
+                        Modifier.width(IntrinsicSize.Max),
+                        style = MaterialTheme.typography.bodySmall, color = colors.textPrimary)
+                }
+            }
+        }
+        Row(Modifier.fillMaxWidth().padding(start = 2.dp, end = 6.dp, top = 12.dp, bottom = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(album.name.ifBlank { "Фотоальбом" }, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall,
+                minLines = if (reserveTitleSpace) titleLines else 1, maxLines = titleLines, overflow = TextOverflow.Ellipsis, color = colors.textPrimary)
+            Icon(Icons.AutoMirrored.Outlined.ArrowForward, null, Modifier.size(20.dp), tint = colors.action)
+        }
     }
 }
 
 @Composable
 internal fun StartAlbumChoices(albums: List<StartItem.Album>, modifier: Modifier = Modifier, onCLickFullAlbum: (StartItem.Album) -> Unit) {
-    BoxWithConstraints(modifier.fillMaxWidth()) {
-        val columns = if (maxWidth < 340.dp * LocalDensity.current.fontScale) 1 else 2
-        val rows = albums.filter { it.photos.isNotEmpty() }.chunked(columns)
-        val photoHeight = ((maxWidth - SauceSpacing.large * 2 - SauceSpacing.medium * (columns - 1)) / columns) * 3 / 4
-        LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(SauceSpacing.large),
-            verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
-            items(rows, key = { it.first().id }) { row ->
-                Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
-                    row.forEach { album ->
-                        OnBackgroundCard(Modifier.weight(1f).fillMaxHeight(), onClick = { onCLickFullAlbum(album) }) {
-                            StartPhoto(album.photos.first().imageUrl, Modifier.fillMaxWidth().height(photoHeight))
-                            Column(Modifier.fillMaxWidth().weight(1f).padding(SauceSpacing.medium)) {
-                                Text(album.name, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary)
-                                Spacer(Modifier.weight(1f).heightIn(min = SauceSpacing.extraSmall))
-                                Text("${album.photos.size} фото", Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary)
-                            }
-                        }
-                    }
-                    repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
-                }
-            }
+    val fontScale = LocalDensity.current.fontScale
+    SauceLazyVerticalGrid(columns = GridCells.Adaptive(260.dp * fontScale.coerceAtMost(1.5f)), modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        items(albums.filter { it.photos.isNotEmpty() }, key = { it.id }) { album ->
+            StartAlbumPreview(album, titleLines = if (fontScale > 1.3f) 3 else 2, reserveTitleSpace = true,
+                onClick = { onCLickFullAlbum(album) })
         }
     }
 }

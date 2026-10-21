@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,10 +68,12 @@ fun FullImageScreen(
 fun FullImageScreen(
     image: List<String>,
     selectedImageIndex: Int,
+    totalImages: Int? = null,
+    onImageSelected: (Int) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     if (image.isNotEmpty()) {
-        FullImageScreenInternal(image = image, selectedIndex = selectedImageIndex, onDismiss = onDismiss)
+        FullImageScreenInternal(image = image, selectedIndex = selectedImageIndex, totalImages = totalImages, onImageSelected = onImageSelected, onDismiss = onDismiss)
     }
 }
 
@@ -78,6 +82,8 @@ fun FullImageScreenInternal(
     image: List<String>,
     selectedIndex: Int? = null,
     selectedImageUrl: String? = null,
+    totalImages: Int? = null,
+    onImageSelected: (Int) -> Unit = {},
     onDismiss: () -> Unit
 ) {
     SauceDialog(
@@ -101,7 +107,9 @@ fun FullImageScreenInternal(
             1f - progress
         }
 
+        val onSelected by rememberUpdatedState(onImageSelected)
         LaunchedEffect(pagerState.currentPage) {
+            onSelected(pagerState.currentPage)
             if (offsetY.value != 0f) offsetY.snapTo(0f)
         }
 
@@ -172,7 +180,7 @@ fun FullImageScreenInternal(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = buildAnnotatedString { append(" / ${pagerState.pageCount}") },
+                    text = buildAnnotatedString { append(" / ${totalImages ?: pagerState.pageCount}") },
                     fontFamily = FontNunito.medium(),
                     color = MaterialTheme.colorScheme.tertiary,
                     textAlign = TextAlign.Center,

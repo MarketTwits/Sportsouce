@@ -7,4 +7,6 @@ import org.koin.dsl.module
 
 actual val intentActionModule: Module = module {
     singleOf(::IntentActionWeb) bind IntentAction::class
+    single<OriginalImageSharer> { OriginalImageSharerBase { WebOriginalShareBatch() } }
+    single<OriginalImageDownloader> { OriginalImageDownloaderBase { WebOriginalShareBatch() } }
 }

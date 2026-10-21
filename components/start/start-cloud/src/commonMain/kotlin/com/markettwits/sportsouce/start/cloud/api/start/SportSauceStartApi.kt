@@ -59,6 +59,8 @@ interface SportSauceStartApi {
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
 
+    suspend fun albumPhotos(albumId: Int, offset: Int, limit: Int, tags: List<String>): com.markettwits.sportsouce.start.cloud.model.start.fields.album.AlbumPhotosRemote
+
     suspend fun album(albumId: Int): StartAlbum
 
     suspend fun albums(startId: Int): List<StartAlbum>

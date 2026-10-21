@@ -25,7 +25,7 @@ class StartScreenComponentBase(
     private val storeFactory: StartScreenStoreFactory,
     private val members: (Int, List<StartMembersUi>) -> Unit,
     private val membersResult: (Int, List<MemberResult>) -> Unit,
-    private val album: (List<String>) -> Unit,
+    private val album: (List<String>, Int) -> Unit,
     private val pushStart: (StartsListItem) -> Unit,
     private val onApplyStartId: (Int) -> Unit,
     private val onOpenStartCommentsScreen: (Int, CommentMode) -> Unit = { _, _ -> },
@@ -51,7 +51,7 @@ class StartScreenComponentBase(
                 when (it) {
                     is StartScreenStore.Label.OnClickBack -> back()
                     is StartScreenStore.Label.OnClickMembers -> members(it.startId, it.members)
-                    is StartScreenStore.Label.OnClickFullAlbum -> album(it.images)
+                    is StartScreenStore.Label.OnClickFullAlbum -> album(it.images, it.albumId)
                     is StartScreenStore.Label.OnClickMembersResult -> membersResult(it.startId, it.members)
                     is StartScreenStore.Label.OnClickDistanceNew -> {
                         registerNew(

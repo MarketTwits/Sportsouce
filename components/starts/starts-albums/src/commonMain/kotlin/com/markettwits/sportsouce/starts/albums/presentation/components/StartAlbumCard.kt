@@ -12,13 +12,14 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.theme.SauceTheme
-import com.markettwits.sportsouce.start.presentation.common.components.StartPhoto
+import com.markettwits.core_ui.items.image.AlbumImage
+import com.markettwits.core_ui.items.image.AlbumImageSize
 import com.markettwits.sportsouce.starts.albums.domain.StartAlbumsItem
 
 @Composable
 internal fun StartAlbumCard(album: StartAlbumsItem.Album, modifier: Modifier = Modifier, onClick: () -> Unit) {
     OnBackgroundCard(modifier = modifier, onClick = onClick) {
-        StartPhoto(album.previewUrl, Modifier.fillMaxWidth().aspectRatio(16f / 11f))
+        AlbumImage(album.previewUrl, AlbumImageSize.Cover, Modifier.fillMaxWidth().aspectRatio(16f / 11f))
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(album.name, style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textPrimary,
                 maxLines = 2, overflow = TextOverflow.Ellipsis)

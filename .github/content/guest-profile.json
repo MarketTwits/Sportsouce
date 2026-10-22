@@ -27,18 +27,6 @@
       "imageAlignmentY": 0
     },
     {
-      "id": "friends-v1",
-      "headingLines": [
-        "Больше, чем",
-        "просто старты"
-      ],
-      "panelTitle": "Свои люди. Общий ритм.",
-      "description": "Встречайтесь на стартах, собирайте команду и сохраняйте моменты, ради которых хочется вернуться.",
-      "imageUrl": "https://cdn.sportsauce.ru/live/2023/August/22/05/8a90d8c9-5c87-4fea-b967-84f07ff34553.jpg",
-      "imageAlignmentX": -0.05,
-      "imageAlignmentY": 0
-    },
-    {
       "id": "ski-season-v1",
       "headingLines": [
         "Новый сезон.",
@@ -72,6 +60,42 @@
       "description": "Находите зимние старты, приглашайте близких и открывайте сезон в компании тех, кто любит движение.",
       "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/22/17/177277f1-4ad4-4080-8d34-b635c496d791.jpg",
       "imageAlignmentX": 0.12,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "night-trail-v1",
+      "headingLines": [
+        "Навстречу огням",
+        "нового старта"
+      ],
+      "panelTitle": "Приключения после заката",
+      "description": "Налобный фонарь, лесная тропа и радость финиша. Находите необычные забеги и выходите за привычные маршруты.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/22/18/28e639e5-5cef-4168-bfa7-1dda49e40089.jpg",
+      "imageAlignmentX": -0.2,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "finish-moments-v1",
+      "headingLines": [
+        "Моменты, которые",
+        "хочется сохранить"
+      ],
+      "panelTitle": "Ваши старты остаются с вами",
+      "description": "Переживайте финиш заново: находите фотографии в альбомах стартов и делитесь своей спортивной историей с близкими.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/22/18/97cf012c-ca5d-4560-8f21-5b9761a7608d.jpg",
+      "imageAlignmentX": -0.05,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "forest-trail-v1",
+      "headingLines": [
+        "Свой темп.",
+        "Своя тропа."
+      ],
+      "panelTitle": "Ближе к природе и к себе",
+      "description": "Лесные тропы, свежий воздух и движение в своём ритме. Выбирайте трейлы, ради которых хочется выйти на старт.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/22/18/6cc1e273-3aa0-4bba-af57-05ca188e5cfc.jpg",
+      "imageAlignmentX": 0,
       "imageAlignmentY": 0
     }
   ]

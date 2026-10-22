@@ -5,6 +5,9 @@ import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.compose.ui.MotionDurationScale
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.markettwits.sportsouce.unauthorized.domain.GuestWelcomeContent
 
 internal const val GuestWelcomeDurationMillis = 2800
@@ -24,6 +27,13 @@ internal data class GuestWelcomeMotion(val fraction: Float, val lines: List<Stri
     fun characterAlpha(line: Int, character: Int): Float =
         reveal(lineStart(line) + (character * minOf(48f, 600f / lines[line].length.coerceAtLeast(1))).toInt(), 240)
 
+    // A faint first pixel is still obscured by blur; tick when the glyph becomes legible.
+    fun revealedCharacterCount(): Int = lines.indices.sumOf { line ->
+        lines[line].indices.count { character ->
+            !lines[line][character].isWhitespace() && characterAlpha(line, character) >= .35f
+        }
+    }
+
     fun lineBlur(line: Int): Float =
         10f * (1f - reveal(lineStart(line), 1000))
 
@@ -39,6 +49,21 @@ internal data class GuestWelcomeMotion(val fraction: Float, val lines: List<Stri
 @Composable
 internal fun rememberGuestWelcomeMotion(playIntro: Boolean, lines: List<String> = GuestWelcomeLines): GuestWelcomeMotion {
     val progress = remember(playIntro) { Animatable(if (playIntro) 0f else 1f) }
+    val haptic by rememberUpdatedState(LocalHapticFeedback.current)
+    LaunchedEffect(progress, playIntro, lines) {
+        if (!playIntro) return@LaunchedEffect
+        val durationScale = coroutineContext[MotionDurationScale]
+        var previous = GuestWelcomeMotion(progress.value, lines).revealedCharacterCount()
+        snapshotFlow { progress.value }.collect { fraction ->
+            val count = GuestWelcomeMotion(fraction, lines).revealedCharacterCount()
+            // Coalesce skipped frames into one tick, without replaying a backlog. A jump
+            // to the finished state (including disabled system animations) stays silent.
+            if (count > previous && fraction < 1f && (durationScale?.scaleFactor ?: 1f) > 0f) {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            }
+            previous = count
+        }
+    }
     LaunchedEffect(progress) {
         // Animatable respects Compose's MotionDurationScale, including the system's disabled animations.
         if (playIntro) progress.animateTo(1f, tween(GuestWelcomeDurationMillis, easing = LinearEasing))

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextAlign
 import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
@@ -17,22 +18,22 @@ fun BoxScope.InBoxImageContent() {
     Column(
         modifier = Modifier
             .align(Alignment.Center)
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             modifier = Modifier
-                .padding(10.dp)
-                .size(40.dp),
+                .size(32.dp),
             imageVector = Icons.Default.Image,
             contentDescription = null,
             tint = SauceTheme.colors.textMuted
         )
         Text(
-            modifier = Modifier.padding(10.dp),
-            text = "Изображение",
-            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.fillMaxWidth(),
+            text = "Выбрать фото",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
             color = SauceTheme.colors.textSecondary
         )
     }

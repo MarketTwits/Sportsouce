@@ -15,8 +15,9 @@ import com.markettwits.core_ui.items.theme.SauceTheme
 fun EditProfileMenuItemCard(item: MenuItem, onCLick: (String) -> Unit) {
     when (item) {
         is MenuItem.Base -> SauceActionRow(item.title, { onCLick(item.title) },
-            icon = if (item.isDangerZone) Icons.AutoMirrored.Filled.Logout else null)
+            icon = if (item.isDangerZone) Icons.AutoMirrored.Filled.Logout else null,
+            titleStyle = MaterialTheme.typography.bodyLarge, destructive = item.isDangerZone)
         is MenuItem.Header -> Text(item.title, Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
-            style = MaterialTheme.typography.titleSmall, color = SauceTheme.colors.textSecondary)
+            style = MaterialTheme.typography.labelLarge, color = SauceTheme.colors.textSecondary)
     }
 }

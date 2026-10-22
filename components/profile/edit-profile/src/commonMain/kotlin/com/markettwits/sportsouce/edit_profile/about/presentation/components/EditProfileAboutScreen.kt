@@ -3,13 +3,13 @@ package com.markettwits.sportsouce.edit_profile.about.presentation.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.window.Dialog
+import com.markettwits.core_ui.items.components.dialog.SauceDialog
 import com.markettwits.sportsouce.edit_profile.about.presentation.component.EditProfileAboutComponent
 import com.markettwits.sportsouce.edit_profile.about.presentation.store.EditProfileAboutStore
 
 @Composable
 fun EditProfileAboutScreen(component: EditProfileAboutComponent) {
-    Dialog(onDismissRequest = {
+    SauceDialog(onDismissRequest = {
         component.obtainEvent(EditProfileAboutStore.Intent.Dismiss)
     }) {
         val state by component.state.collectAsState()

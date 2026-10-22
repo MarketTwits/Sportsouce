@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.*
 
@@ -23,17 +24,21 @@ fun SauceActionRow(
     icon: ImageVector? = null,
     count: String? = null,
     contentPadding: PaddingValues = PaddingValues(SauceSpacing.small),
+    titleStyle: TextStyle = MaterialTheme.typography.titleSmall,
+    destructive: Boolean = false,
 ) {
     val colors = SauceTheme.colors
+    val titleColor = if (destructive) colors.danger.content else colors.textPrimary
     Surface(modifier = modifier.fillMaxWidth().heightIn(min = SauceSizes.touchTarget), onClick = onClick,
-        shape = SauceShapes.field, color = colors.surface, contentColor = colors.textPrimary) {
+        shape = SauceShapes.field, color = colors.surface, contentColor = titleColor) {
         BoxWithConstraints(Modifier.padding(contentPadding), contentAlignment = Alignment.Center) {
             val narrow = maxWidth < 280.dp * LocalDensity.current.fontScale
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
-                if (icon != null) Icon(icon, null, Modifier.size(SauceSizes.icon), tint = colors.textSecondary)
+                if (icon != null) Icon(icon, null, Modifier.size(SauceSizes.icon),
+                    tint = if (destructive) titleColor else colors.textSecondary)
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
-                    Text(title, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall)
+                    Text(title, Modifier.fillMaxWidth(), style = titleStyle, color = titleColor)
                     if (!subtitle.isNullOrBlank()) Text(subtitle, Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
                     if (narrow && !count.isNullOrBlank()) ActionRowCount(count)

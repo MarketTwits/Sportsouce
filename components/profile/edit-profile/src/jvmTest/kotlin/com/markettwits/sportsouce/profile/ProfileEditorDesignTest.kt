@@ -6,9 +6,14 @@ import androidx.compose.ui.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.sauceColors
+import com.markettwits.core_ui.items.components.dialog.SauceDialog
+import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
+import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
+import com.markettwits.core_ui.items.components.navigation.NavigationViewport
 import com.markettwits.sportsouce.edit_profile.about.presentation.components.EditProfileAboutContent
 import com.markettwits.sportsouce.edit_profile.about.presentation.store.EditProfileAboutStore
 import com.markettwits.sportsouce.edit_profile.info.domain.models.UserData
@@ -17,11 +22,73 @@ import com.markettwits.sportsouce.edit_profile.info.presentation.store.EditProfi
 import com.markettwits.sportsouce.edit_profile.menu.presentation.EditProfileScreen
 import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditProfileMenuComponentComponent
 import com.markettwits.sportsouce.edit_profile.menu.presentation.components.*
+import com.markettwits.sportsouce.edit_profile.sign_out.presentation.components.EditProfileSignOutContent
+import com.markettwits.sportsouce.edit_profile.image.presentation.components.EditProfileImageScreenContent
+import com.markettwits.sportsouce.edit_profile.image.presentation.store.EditProfileImageStore
 import java.io.File
 import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 class ProfileEditorDesignTest {
+    @Test fun editorRowsUseRegularTextAndSemanticDangerColor() {
+        for (dark in listOf(false, true)) {
+            ImageComposeScene(width = 390, height = 840) {
+                Palette(dark) { EditProfileMenu(menu = profileMenu() + securityMenu(), onClickItem = {}) }
+            }.use { scene ->
+                scene.settle()
+                (profileMenu() + securityMenu()).filterIsInstance<MenuItem.Base>().forEach { item ->
+                    val node = scene.nodes().single { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { t -> t.text == item.title } }
+                    val layouts = mutableListOf<TextLayoutResult>()
+                    node.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
+                    val style = layouts.single().layoutInput.style
+                    assertEquals(FontWeight.Normal, style.fontWeight)
+                    assertEquals(if (item.isDangerZone) sauceColors(dark).danger.content else sauceColors(dark).textPrimary, style.color)
+                }
+                scene.save("profile-editor-menu-${if (dark) "dark" else "light"}")
+            }
+        }
+    }
+
+    @Test fun profileDialogsKeepActionsVisibleInShortWindowsAndIsolateRootInsets() {
+        for (kind in listOf("about", "photo", "logout")) for (dark in listOf(false, true))
+            for ((width, height, scale) in listOf(Triple(390, 840, 1f), Triple(640, 320, 2f), Triple(320, 480, 2f))) {
+                var dismissed = 0
+                var applied = 0
+                ImageComposeScene(width = width, height = height, density = Density(1f, scale)) {
+                    Palette(dark) {
+                        CompositionLocalProvider(LocalNavigationViewport provides NavigationViewport(), LocalScrollContentBottomPadding provides 96.dp) {
+                            SauceDialog(onDismissRequest = { dismissed++ }) {
+                                assertNull(LocalNavigationViewport.current)
+                                assertEquals(0.dp, LocalScrollContentBottomPadding.current)
+                                when (kind) {
+                                    "about" -> EditProfileAboutContent(EditProfileAboutStore.State(), { dismissed++ }, { applied++ }, {})
+                                    "photo" -> EditProfileImageScreenContent(EditProfileImageStore.State(), { dismissed++ }, { applied++ })
+                                    else -> EditProfileSignOutContent(dismiss = { dismissed++ }, apply = { applied++ })
+                                }
+                            }
+                        }
+                    }
+                }.use { scene ->
+                    scene.settle()
+                    val cancel = scene.button("Отмена")
+                    assertTrue(cancel.boundsInRoot.top >= 0 && cancel.boundsInRoot.bottom <= height)
+                    assertTrue(cancel.boundsInRoot.height >= 48f)
+                    if (kind != "photo") {
+                        val primary = scene.button(if (kind == "about") "Сохранить" else "Выйти")
+                        assertTrue(primary.boundsInRoot.top >= 0 && primary.boundsInRoot.bottom <= height)
+                    }
+                    val scroll = scene.nodes().first { it.config.contains(SemanticsActions.ScrollBy) }
+                    scroll.config[SemanticsActions.ScrollBy].action!!.invoke(0f, 10000f)
+                    scene.settle()
+                    scene.button("Отмена").config[SemanticsActions.OnClick].action!!.invoke()
+                    assertEquals(1, dismissed)
+                    assertEquals(0, applied, "Dismiss must never save, pick a photo or sign out")
+                    scene.assertTextFits()
+                    scene.save("profile-dialog-$kind-${if (dark) "dark" else "light"}-$width-${(scale * 100).toInt()}")
+                }
+            }
+    }
+
     @Test
     fun fullWidthSaveStaysOutsideTheFormAndLoadingCannotSubmitAgain() {
         for (width in listOf(320, 390)) for (scale in listOf(1f, 2f)) for (dark in listOf(false, true)) {

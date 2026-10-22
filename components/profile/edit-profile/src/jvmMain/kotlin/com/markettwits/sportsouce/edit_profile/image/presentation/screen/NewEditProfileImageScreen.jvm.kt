@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.window.Dialog
+import com.markettwits.core_ui.items.components.dialog.SauceDialog
 import com.attafitamim.krop.core.crop.CropResult
 import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.rememberImageCropper
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 actual fun NewEditProfileImageScreen(component: EditProfileImageComponent) {
-    Dialog(onDismissRequest = {
+    SauceDialog(onDismissRequest = {
         component.obtainEvent(EditProfileImageStore.Intent.Dismiss)
     }) {
         val state by component.state.collectAsState()

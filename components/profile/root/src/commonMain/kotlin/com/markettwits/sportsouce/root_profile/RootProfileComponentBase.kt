@@ -56,6 +56,7 @@ class RootProfileComponentBase(
                 UnAuthorizedProfileComponentBase(
                     context = componentContext,
                     useCase = scope.get(),
+                    welcomeRepository = scope.get(),
                     goSignIn = {
                         navigation.push(RootProfileComponent.Config.AuthFlow)
                     },

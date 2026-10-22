@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "variants": [
+    {
+      "id": "night-run-v1",
+      "headingLines": [
+        "Яркие моменты",
+        "начинаются со старта"
+      ],
+      "panelTitle": "Больше, чем дистанция",
+      "description": "Ночные забеги, новые знакомства и поводы для радости. Найдите старт, который станет вашей следующей историей.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2023/August/22/05/2cd43872-2fa0-4df9-b701-b9be1acb687d.jpg",
+      "imageAlignmentX": 0,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "ski-first-step-v1",
+      "headingLines": [
+        "Первый шаг",
+        "легче сделать вместе"
+      ],
+      "panelTitle": "Поддержка на каждом этапе",
+      "description": "От первых шагов на лыжах до уверенного старта. Знакомьтесь с клубом и выбирайте тренировки в своём темпе.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2024/November/18/04/82ebb81d-e442-4c64-9522-90ea1460aa1b.jpg",
+      "imageAlignmentX": 0.1,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "friends-v1",
+      "headingLines": [
+        "Больше, чем",
+        "просто старты"
+      ],
+      "panelTitle": "Свои люди. Общий ритм.",
+      "description": "Встречайтесь на стартах, собирайте команду и сохраняйте моменты, ради которых хочется вернуться.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2023/August/22/05/8a90d8c9-5c87-4fea-b967-84f07ff34553.jpg",
+      "imageAlignmentX": -0.05,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "ski-season-v1",
+      "headingLines": [
+        "Новый сезон.",
+        "Новый старт."
+      ],
+      "panelTitle": "Ваш сезон начинается здесь",
+      "description": "Выбирайте лыжные старты, сохраняйте планы на зиму и регистрируйтесь на дистанции, которые хочется пройти.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2025/March/23/08/6c6a0dd6-8c7c-46bf-b3fd-32849d1c52d5.jpg",
+      "imageAlignmentX": -0.25,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "trail-medals-v1",
+      "headingLines": [
+        "У каждого финиша",
+        "своя история"
+      ],
+      "panelTitle": "Следующая медаль — впереди",
+      "description": "От первого забега до любимого трейла: выбирайте свой старт и выходите на дистанцию вместе со Спорт Союзом.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/20/01/b8d727c9-8d1d-4faf-984c-af495c6dfd2f.jpg",
+      "imageAlignmentX": -0.05,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "ski-together-v1",
+      "headingLines": [
+        "Зима теплее,",
+        "когда мы вместе"
+      ],
+      "panelTitle": "На лыжню — своей командой",
+      "description": "Находите зимние старты, приглашайте близких и открывайте сезон в компании тех, кто любит движение.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2026/October/22/17/177277f1-4ad4-4080-8d34-b635c496d791.jpg",
+      "imageAlignmentX": 0.12,
+      "imageAlignmentY": 0
+    }
+  ]
+}

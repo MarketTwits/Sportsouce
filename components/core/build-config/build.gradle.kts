@@ -50,4 +50,5 @@ buildConfig {
     buildConfigField("APP_VERSION_NUMBER", versionCode)
     buildConfigField("BUILD_TIME", System.currentTimeMillis())
     buildConfigField("SPORTSAUCE_API_PATH", apiPath)
+    buildConfigField("GUEST_PROFILE_CONFIG_URL", providers.gradleProperty("com.sportsauce.guest.config.url").orElse("").get())
 }

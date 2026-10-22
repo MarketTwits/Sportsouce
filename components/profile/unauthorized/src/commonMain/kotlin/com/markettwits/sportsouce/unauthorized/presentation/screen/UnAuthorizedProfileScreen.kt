@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import com.markettwits.core_ui.items.components.progress.CircularProgressIndicatorBase
 import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +26,9 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfileComponent) {
         when (state) {
             is UnAuthorizedProfileUiState.Base -> {}
             is UnAuthorizedProfileUiState.Error -> {
-                UnAuthorizedProfileContent(onClickAuth = {
-                    component.signIn()
-                })
+                val playIntro = remember(component) { component.consumeWelcomeIntro() }
+                UnAuthorizedProfileContent(playIntro = playIntro, content = (state as UnAuthorizedProfileUiState.Error).welcome,
+                    onClickAuth = component::signIn)
             }
             is UnAuthorizedProfileUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize()) {

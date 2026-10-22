@@ -29,7 +29,7 @@ import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.theme.SauceSizes
 import com.markettwits.core_ui.items.theme.SauceTheme
 
-/** Only album surfaces opt in. Failed refinements retain the preview, never fetch the original. */
+/** Opt-in CDN loading. Failed refinements retain the preview, never fetch the original CDN image. */
 @Composable
 fun AlbumImage(
     url: String,
@@ -46,6 +46,7 @@ fun AlbumImage(
             Modifier.align(Alignment.Center).size(SauceSizes.icon), tint = SauceTheme.colors.textMuted)
     },
     imageLoader: ImageLoader = SingletonImageLoader.get(LocalPlatformContext.current),
+    alignment: Alignment = Alignment.Center,
 ) {
     val context = LocalPlatformContext.current
     var retained by remember(url) { mutableStateOf(initialPainter?.let { AlbumPreview(it, false) }) }
@@ -107,9 +108,11 @@ fun AlbumImage(
     Box(modifier) {
         val fallback = retained ?: initialPainter?.let { AlbumPreview(it, false) }
         if (fallback != null) Image(fallback.painter, null,
-            Modifier.fillMaxSize().then(if (fallback.blurred) Modifier.blur(6.dp) else Modifier), contentScale = contentScale)
+            Modifier.fillMaxSize().then(if (fallback.blurred) Modifier.blur(6.dp) else Modifier), contentScale = contentScale,
+            alignment = alignment)
         else if (mainState !is AsyncImagePainter.State.Error) loading()
-        if (success != null) Image(success.painter, null, Modifier.fillMaxSize().graphicsLayer { alpha = reveal.value }, contentScale = contentScale)
+        if (success != null) Image(success.painter, null, Modifier.fillMaxSize().graphicsLayer { alpha = reveal.value },
+            contentScale = contentScale, alignment = alignment)
         if (mainState is AsyncImagePainter.State.Error) error(fallback != null) { main.restart() }
     }
 }

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "variants": [
+    {
+      "id": "trail-v1",
+      "headingLines": [
+        "Ваш следующий",
+        "старт — здесь"
+      ],
+      "panelTitle": "Ваш спортивный профиль",
+      "description": "Регистрации, участники и избранные старты — в одном месте.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2023/August/22/05/2cd43872-2fa0-4df9-b701-b9be1acb687d.jpg",
+      "imageAlignmentX": 0.25,
+      "imageAlignmentY": 0
+    },
+    {
+      "id": "winter-v1",
+      "headingLines": [
+        "Навстречу зиме",
+        "и новым стартам"
+      ],
+      "panelTitle": "Спорт объединяет",
+      "description": "Сохраняйте любимые старты и собирайте свою команду.",
+      "imageUrl": "https://cdn.sportsauce.ru/live/2024/November/18/04/82ebb81d-e442-4c64-9522-90ea1460aa1b.jpg",
+      "imageAlignmentX": 0,
+      "imageAlignmentY": 0
+    }
+  ]
+}

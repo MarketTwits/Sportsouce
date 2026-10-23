@@ -31,6 +31,7 @@ fun EditProfileScreen(component: EditProfileMenuComponentComponent) {
                 menu = profileMenu(),
                 onClickItem = {
                     when (it) {
+                        "Размеры одежды и обуви" -> component.obtainOutPut(EditProfileMenuComponentComponent.OutPut.GoSizes)
                         "Мои социальные сети" -> component.obtainOutPut(
                             EditProfileMenuComponentComponent.OutPut.GoSocialNetwork
                         )

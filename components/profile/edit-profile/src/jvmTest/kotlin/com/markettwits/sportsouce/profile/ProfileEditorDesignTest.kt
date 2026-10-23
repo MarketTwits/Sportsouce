@@ -144,7 +144,7 @@ class ProfileEditorDesignTest {
             }
             assertEquals(listOf(EditProfileMenuComponentComponent.OutPut.GoProfileImage,
                 EditProfileMenuComponentComponent.OutPut.GoProfileAbout, EditProfileMenuComponentComponent.OutPut.GoChangeProfileInfo,
-                EditProfileMenuComponentComponent.OutPut.GoSocialNetwork, EditProfileMenuComponentComponent.OutPut.GoChangePassword,
+                EditProfileMenuComponentComponent.OutPut.GoSizes, EditProfileMenuComponentComponent.OutPut.GoSocialNetwork, EditProfileMenuComponentComponent.OutPut.GoChangePassword,
                 EditProfileMenuComponentComponent.OutPut.GoSignOut), routes)
             scene.assertTextFits()
             scene.save("profile-editor-menu-dark-320-200")

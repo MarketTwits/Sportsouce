@@ -12,6 +12,7 @@ import com.markettwits.sportsouce.edit_profile.info.presentation.components.Edit
 import com.markettwits.sportsouce.edit_profile.menu.presentation.EditProfileScreen
 import com.markettwits.sportsouce.edit_profile.sign_out.presentation.components.EditProfileSignOutScreenDialog
 import com.markettwits.sportsouce.edit_profile.social_network.presentation.screen.ProfileSocialNetworkScreen
+import com.markettwits.sportsouce.edit_profile.sizes.presentation.screen.ProfileSizesScreen
 
 @Composable
 fun RootEditProfileScreen(component: RootEditProfileComponent) {
@@ -41,6 +42,7 @@ fun RootEditProfileScreen(component: RootEditProfileComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
+            is RootEditProfileComponent.ChildStack.Sizes -> ProfileSizesScreen(child.component)
             is RootEditProfileComponent.ChildStack.SocialNetwork -> ProfileSocialNetworkScreen(
                 component = child.component
             )

@@ -13,6 +13,7 @@ fun profileMenu() = listOf<MenuItem>(
     MenuItem.Base("Изменить фото профиля", false),
     MenuItem.Base("Изменить статус",false),
     MenuItem.Base("Изменить учетную запись",false),
+    MenuItem.Base("Размеры одежды и обуви", false),
     MenuItem.Base("Мои социальные сети",false),
 )
 

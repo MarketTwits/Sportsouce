@@ -8,6 +8,7 @@ import com.markettwits.sportsouce.edit_profile.menu.presentation.component.EditP
 import com.markettwits.sportsouce.edit_profile.sign_out.presentation.component.EditProfileSignOutComponent
 import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.edit_profile.sizes.presentation.component.ProfileSizesComponent
 
 interface RootEditProfileComponent {
     val childStack: Value<com.arkivanov.decompose.router.stack.ChildStack<*, ChildStack>>
@@ -26,6 +27,9 @@ interface RootEditProfileComponent {
 
         @Serializable
         data object EditProfileInfo : ConfigStack
+
+        @Serializable
+        data object Sizes : ConfigStack
     }
 
     @Serializable
@@ -48,6 +52,7 @@ interface RootEditProfileComponent {
 
 
     sealed interface ChildStack {
+        data class Sizes(val component: ProfileSizesComponent) : ChildStack
         data class EditProfileMenu(val component: EditProfileMenuComponentComponent) :
             ChildStack
 

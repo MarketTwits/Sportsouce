@@ -10,6 +10,7 @@ interface EditProfileMenuComponentComponent {
         data object GoProfileAbout : OutPut
         data object GoProfileImage : OutPut
         data object GoSignOut : OutPut
+        data object GoSizes : OutPut
     }
 }
 

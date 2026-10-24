@@ -34,11 +34,14 @@ internal fun ReviewPhotoAlbums(
     onRetry: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Фото со стартов", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium,
-                color = SauceTheme.colors.textPrimary)
-            TextButton(onClick = onClickAll) { Text("Все альбомы", color = SauceTheme.colors.action) }
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("Фото со стартов", Modifier.weight(1f).padding(horizontal = 10.dp),
+                color = MaterialTheme.colorScheme.tertiary, fontFamily = FontNunito.bold(), fontSize = 18.sp)
+            TextButton(onClick = onClickAll) {
+                Text("Все альбомы", color = MaterialTheme.colorScheme.outline,
+                    fontFamily = FontNunito.medium(), fontSize = 14.sp)
+            }
         }
         if (failed && items.isEmpty()) {
             SauceActionRow("Не удалось загрузить альбомы", onRetry, Modifier.padding(horizontal = 16.dp), subtitle = "Нажмите, чтобы повторить")

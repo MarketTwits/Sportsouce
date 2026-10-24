@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.start.component
 
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -41,11 +42,20 @@ class StartScreenComponentBase(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val start: StateFlow<StartScreenStore.State> = store.stateFlow
 
+    private var refreshCommentsOnResume = false
+
     override fun obtainEvent(intent: StartScreenStore.Intent) {
+        if (intent is StartScreenStore.Intent.OpenStartCommentsScreen) refreshCommentsOnResume = true
         store.accept(intent)
     }
 
     init {
+        lifecycle.doOnResume {
+            if (refreshCommentsOnResume) {
+                refreshCommentsOnResume = false
+                store.accept(StartScreenStore.Intent.RefreshComments)
+            }
+        }
         componentScope.launch {
             store.labels.collect {
                 when (it) {

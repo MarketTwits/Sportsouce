@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
+        data object RefreshComments : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
         data object OnClickRegistration : Intent
@@ -108,6 +109,7 @@ class StartScreenStoreFactory(
         ) {}
 
     private sealed interface Msg {
+        data class CommentsUpdated(val comments: StartItem.Comments) : Msg
         data object Loading : Msg
         data object OnConsumedEvent : Msg
         data class TriggerEvent(val message: String, val status: Boolean) : Msg
@@ -129,6 +131,11 @@ class StartScreenStoreFactory(
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
+                is Intent.RefreshComments -> state().startItem?.id?.let { id ->
+                    scope.launch {
+                        service.startComments(id).onSuccess { dispatch(Msg.CommentsUpdated(it)) }
+                    }
+                }
                 is Intent.OnClickBack -> publish(OnClickBack)
 
                 is Intent.OnClickMembers -> {
@@ -361,6 +368,7 @@ class StartScreenStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State = when (msg) {
+            is Msg.CommentsUpdated -> copy(startItem = startItem?.copy(commentsRemote = msg.comments))
             is Msg.Loading -> copy(
                 isLoading = true,
                 error = null

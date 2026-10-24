@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.comments.component
 
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -10,6 +11,7 @@ import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibil
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStore
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStoreFactory
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
+import com.markettwits.sportsouce.start.presentation.start.component.toCommentData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -36,6 +38,12 @@ class StartCommentsComponentBase(
     }
 
     init {
+        var resumed = false
+        lifecycle.doOnResume {
+            if (resumed) store.accept(StartCommentsStore.Intent.OnRefresh)
+            else startId?.let { store.accept(StartCommentsStore.Intent.ApplyStartId(it)) }
+            resumed = true
+        }
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
         store.labels.onEach { label ->
             when (label) {
@@ -44,28 +52,12 @@ class StartCommentsComponentBase(
                     val currentState = store.state
                     val comment = currentState.comments.rows.find { it.id == label.commentId }
                     comment?.let {
-                        val commentData = com.markettwits.sportsouce.start.presentation.start.component.CommentData(
-                            userName = "${it.user.surname} ${it.user.name}",
-                            userPhoto = it.user.photo ?: "",
-                            commentText = it.comment,
-                            createdAt = it.createdAt,
-                            replies = it.replies.map { reply ->
-                                com.markettwits.sportsouce.start.presentation.start.component.ReplyData(
-                                    userName = "${reply.user.surname} ${reply.user.name}",
-                                    userPhoto = reply.user.photo ?: "",
-                                    commentText = reply.comment,
-                                    createdAt = reply.createdAt
-                                )
-                            }
-                        )
+                        val commentData = it.toCommentData()
                         onNavigateToReplies(label.commentId, it.user.name, commentData)
                     }
                 }
             }
         }.launchIn(componentScope)
 
-        startId?.let {
-            store.accept(StartCommentsStore.Intent.ApplyStartId(it))
-        }
     }
 }

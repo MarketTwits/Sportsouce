@@ -108,7 +108,7 @@ class RootStartScreenComponentBase(
                             supportComponent.obtainEvent(StartSupportStore.Intent.ApplyStartId(it))
                         },
                         onOpenStartCommentsScreen = { startId, mode ->
-                            navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
+                            navigation.openStartComments(startId, mode)
                         },
                         relatedStarts = { startId, relatedStarts ->
                             navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(relatedStarts, startId))

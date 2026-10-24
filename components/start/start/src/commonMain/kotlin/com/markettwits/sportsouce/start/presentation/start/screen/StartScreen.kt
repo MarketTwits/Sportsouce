@@ -13,6 +13,7 @@ import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.sportsouce.start.presentation.comments.components.StartCommentsCompactPanel
+import com.markettwits.sportsouce.start.presentation.start.component.toCommentData
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.components.StartSupport
@@ -123,10 +124,14 @@ fun StartScreen(
                                         StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
                                     )
                                 },
-                                onClickReply = { _, _ ->
-                                    startComponent.obtainEvent(
-                                        StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
-                                    )
+                                onClickReply = { replier, commentId ->
+                                    data.commentsRemote.rows.find { it.id == commentId }?.let { comment ->
+                                        startComponent.obtainEvent(
+                                            StartScreenStore.Intent.OpenStartCommentsScreen(
+                                                CommentMode.Reply(replier, commentId, comment.toCommentData())
+                                            )
+                                        )
+                                    }
                                 },
                                 onClickTextField = {
                                     startComponent.obtainEvent(

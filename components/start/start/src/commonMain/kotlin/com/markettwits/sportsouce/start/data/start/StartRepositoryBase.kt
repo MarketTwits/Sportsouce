@@ -132,7 +132,11 @@ internal class StartRepositoryBase(
     override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
         retryRunCatchingAsync {
             val value = startService.comments(startId)
-            startMapper.map(value)
+            val comments = startMapper.map(value)
+            cache.get(startId)?.getOrNull()?.let { cached ->
+                cache.set(key = startId, value = Result.success(cached.copy(commentsRemote = comments)))
+            }
+            comments
         }
 
     override suspend fun startsRecommended(startId: String): Result<List<StartsListItem>> =
@@ -184,18 +188,17 @@ internal class StartRepositoryBase(
         startId: Int,
         comment: String,
         id: Int,
-        subComment: Boolean
+        subComment: Boolean,
+        isQuestion: Boolean,
     ): CommentUiState {
         return try {
             val token = authService.updateToken().getOrThrow()
-            val userId = authService.auth().getOrThrow().id
             if (subComment)
                 startService.writeSubComment(
                     subComment = StartSubCommentRequest(
                         comment = comment,
-                        parentCommentId = id,
-                        personId = userId.toString(),
-                        startId = startId
+                        parentCommentId = id.toString(),
+                        startId = startId.toString()
                     ),
                     token = token
                 )
@@ -203,14 +206,15 @@ internal class StartRepositoryBase(
                 startService.writeComment(
                     startCommentRequest = StartCommentRequest(
                         comment = comment,
-                        startId = id,
-                        personId = userId.toString(),
-                        isReview = false, //TODO replace after add review selector
-                        averageScore = 0.0 //TODO replace after add review selector
+                        startId = startId.toString(),
+                        isReview = false,
+                        isQuestion = isQuestion
                     ),
                     token = token
                 )
             CommentUiState.Success
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
         } catch (e: Exception) {
             CommentUiState.Error(e.mapToSauceError().mapToString())
         }

@@ -135,6 +135,7 @@ class StartCommentsStoreTest {
         override suspend fun isStartInFavorite(startId: String): Result<Boolean> = error("unused")
         override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> = error("unused")
         override suspend fun startsRecommended(startId: String): Result<List<StartsListItem>> = error("unused")
+        override suspend fun startsArchive(archiveId: Int): Result<List<StartsListItem>> = error("unused")
         override suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>> = error("unused")
         override suspend fun membersFilters(startId: Int): Result<FiltersRemote> = error("unused")
         override fun pagingMembers(startId: Int, params: StartMembersPagingParams): Flow<PagingData<Pair<StartMembersUi, Int>>> = error("unused")

@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponent
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
@@ -44,7 +45,11 @@ interface RootStartScreenComponent {
         data class StartAlbum(val images: List<String>, val albumId: Int? = null) : Config()
 
         @Serializable
-        data class RelatedStarts(val starts: List<StartsListItem>, val currentStartId: Int) : Config()
+        data class RelatedStarts(
+            val starts: List<StartsListItem>,
+            val currentStartId: Int,
+            val kind: StartRelatedKind = StartRelatedKind.Series,
+        ) : Config()
 
         @Serializable
         data class StartComments(val startId: Int, val mode: CommentMode) : Config()

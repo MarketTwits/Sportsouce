@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.core.decompose.componentScope
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.presentation.series.store.StartSeriesStore
 import com.markettwits.sportsouce.start.presentation.series.store.StartSeriesStoreFactory
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -19,6 +20,7 @@ class StartSeriesComponentBase(
     storeFactory: StoreFactory,
     items: List<StartsListItem>,
     currentStartId: Int,
+    kind: StartRelatedKind = StartRelatedKind.Series,
     private val onClickBack: () -> Unit,
     private val onClickStart: (StartsListItem) -> Unit,
 ) : StartSeriesComponent, ComponentContext by componentContext {
@@ -27,6 +29,7 @@ class StartSeriesComponentBase(
         StartSeriesStoreFactory(storeFactory).create(
             items = items,
             currentStartId = currentStartId,
+            kind = kind,
         )
     }
 

@@ -34,6 +34,8 @@ data class StartRemoteNew(
     val regulation: String? = "",
     @SerialName("series")
     val series: Series? = null,
+    @SerialName("archive")
+    val archive: Archive? = null,
     @SerialName("sponsors")
     val sponsors: List<Sponsor>?,
     @SerialName("kindOfSports")

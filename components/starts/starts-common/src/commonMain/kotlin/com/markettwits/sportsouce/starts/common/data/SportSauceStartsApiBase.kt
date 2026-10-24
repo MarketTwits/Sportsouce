@@ -47,6 +47,11 @@ internal class SportSauceStartsApiBase(
     override suspend fun fetchRelatedStarts(seriesId: Int): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchSeries(seriesId).rows)
 
+    override suspend fun fetchArchiveStarts(archiveId: Int): List<StartsListItem> =
+        mapper.mapSingle(startsCloudApi.fetchArchive(archiveId).rows)
+            .distinctBy { it.id }
+            .sortedBy { it.startDate }
+
     override suspend fun fetchStartMain(): List<StartsListItem> =
         mapper.mapSingle(startsCloudApi.fetchStartMain().rows)
 

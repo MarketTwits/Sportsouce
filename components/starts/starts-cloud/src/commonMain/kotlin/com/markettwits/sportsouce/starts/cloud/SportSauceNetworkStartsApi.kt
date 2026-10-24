@@ -96,6 +96,11 @@ class SportSauceNetworkStartsApi(
         return json.decodeFromString(serializer, response.body<String>())
     }
 
+    suspend fun fetchArchive(archiveId: Int): NetworkStartsRemote {
+        val response = client.get("start/$archiveId/related-start-archive")
+        return json.decodeFromString(NetworkStartsRemote.serializer(), response.body<String>())
+    }
+
     suspend fun fetchStartMain(): NetworkStartsRemote {
         return fetchStarts(
             isMain = true,

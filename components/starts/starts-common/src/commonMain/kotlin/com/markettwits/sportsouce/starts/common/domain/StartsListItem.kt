@@ -20,6 +20,7 @@ data class StartsListItem(
     val views: Int,
     // Keep date as the original single date for existing caches and date-based consumers.
     val dateRange: String? = null,
+    val startDate: String? = null,
 ) {
     val displayDate: String get() = dateRange?.takeIf { it.isNotBlank() } ?: date
 

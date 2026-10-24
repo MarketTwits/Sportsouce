@@ -36,6 +36,16 @@ class StartDateMappingTest {
         "status":null,"viewsCount":1
     }"""
 
+    @Test fun archiveMetadataIsOptionalAndIndependentFromSeries() {
+        val archive = buildJsonObject { put("id", 1); put("name", "Страшно добрый забег"); put("description", "") }
+        val series = buildJsonObject { put("id", 3); put("name", "Парковая серия 2026") }
+        val item = map(JsonObject(payload(false) + mapOf("archive" to archive, "series" to series)))
+        assertEquals(1, item.startArchive?.id)
+        assertEquals(3, (item.startSeries as com.markettwits.sportsouce.start.domain.StartItem.StartSeries.Value).id)
+        assertNull(map(payload(false)).startArchive)
+        assertNull(map(JsonObject(payload(false) + mapOf("archive" to JsonNull))).startArchive)
+    }
+
     @Test fun bothApiVersionsMapDateRangeAndFavoritesRetainIt() {
         for (old in listOf(false, true)) {
             val item = map(payload(old))

@@ -102,7 +102,7 @@ private fun SeriesStartInfo(item: StartsListItem, modifier: Modifier = Modifier)
             }
         }
         Text(item.name, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
-        Text(item.date, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+        Text(item.displayDate, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
         if (item.distance.isNotBlank()) HtmlText(text = item.distance, modifier = Modifier.fillMaxWidth(),
             color = colors.textSecondary, style = MaterialTheme.typography.bodySmall,
             maxLines = 2, overflow = TextOverflow.Ellipsis, showImages = false)

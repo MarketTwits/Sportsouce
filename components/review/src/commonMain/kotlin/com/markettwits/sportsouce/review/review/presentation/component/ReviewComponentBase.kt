@@ -25,6 +25,7 @@ class ReviewComponentBase(
     private val onClickProduct: (ShopItem) -> Unit,
     private val onClickSearch: () -> Unit,
     private val onClickSettings: () -> Unit,
+    private val onClickPhotoAlbum: (Int) -> Unit,
 ) : ReviewComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
@@ -42,6 +43,7 @@ class ReviewComponentBase(
     init {
         store.labels.onEach {
             when (it) {
+                is ReviewStore.Label.OnClickPhotoAlbum -> onClickPhotoAlbum(it.albumId)
                 is ReviewStore.Label.OnClickItem -> onStartClick(it.item)
                 is ReviewStore.Label.OnClickMenu -> onClickMenu(it.item)
                 is ReviewStore.Label.OnClickShowMoreSalesProducts -> onClickMenu(SALES_CATEGORY_ID)

@@ -12,10 +12,14 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-internal val startsAlbumsModule = module {
-    includes(sportSauceStartsCloudModule, startAlbumModule)
-    singleOf(::DefaultStoreFactory) bind StoreFactory::class
+val startsAlbumsDataModule = module {
+    includes(sportSauceStartsCloudModule)
     singleOf(::StartsAlbumsRepositoryBase) bind StartsAlbumsRepository::class
+}
+
+internal val startsAlbumsModule = module {
+    includes(startsAlbumsDataModule, startAlbumModule)
+    singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::StartsAlbumsStoreFactory)
     singleOf(::AlbumsFilterStoreFactory)
 }

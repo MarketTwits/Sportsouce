@@ -11,6 +11,7 @@ data class Reply(
     val createdAt: String,
     @SerialName("id")
     val id: Int,
+    val isAdminAnswer: Boolean? = false,
     @SerialName("user")
     val user: UserComment,
 )

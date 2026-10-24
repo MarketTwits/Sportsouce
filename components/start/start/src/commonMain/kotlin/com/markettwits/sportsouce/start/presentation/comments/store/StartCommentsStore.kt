@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.comments.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
@@ -13,24 +12,38 @@ import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.domain.StartRepository
-import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStore.*
-import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStoreFactory.Msg.*
 import com.markettwits.sportsouce.start.presentation.start.component.CommentMode
-import com.markettwits.sportsouce.start.presentation.start.component.CommentMode.Reply
 import com.markettwits.sportsouce.start.presentation.start.component.CommentUiState
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.currentCoroutineContext
 
-interface StartCommentsStore : Store<Intent, State, Label> {
+enum class StartCommentsFilter {
+    All, Unanswered, Reviews, Answered;
 
+    fun matches(comment: StartItem.Comments.Row): Boolean = when (this) {
+        All -> true
+        Unanswered -> comment.isQuestion && !comment.isAnswered
+        Reviews -> comment.isReview
+        Answered -> comment.isQuestion && comment.isAnswered
+    }
+}
+
+interface StartCommentsStore : Store<StartCommentsStore.Intent, StartCommentsStore.State, StartCommentsStore.Label> {
     sealed interface Intent {
         data class ApplyStartId(val startId: Int) : Intent
         data class OnClickReply(val replier: String, val commentId: Int) : Intent
         data object OnClickCloseReply : Intent
         data object OnConsumedEvent : Intent
+        data class OnCommentChanged(val value: String) : Intent
+        data class OnQuestionChanged(val value: Boolean) : Intent
         data class OnClickSendComment(val value: String) : Intent
         data object OnClickGoBack : Intent
         data class OnClickShowReplies(val commentId: Int) : Intent
         data object OnRefresh : Intent
+        data class OnFilterChanged(val filter: StartCommentsFilter) : Intent
     }
 
     data class State(
@@ -38,11 +51,17 @@ interface StartCommentsStore : Store<Intent, State, Label> {
         val comments: StartItem.Comments = StartItem.Comments(0, emptyList()),
         val mode: CommentMode = CommentMode.Base,
         val comment: String = "",
+        val isQuestion: Boolean = false,
+        val sentCommentVersion: Int = 0,
         val isLoadingComments: Boolean = false,
         val isLoadingSendComment: Boolean = false,
         val error: SauceError? = null,
         val event: StateEventWithContent<EventContent> = consumed(),
-    )
+        val filter: StartCommentsFilter = StartCommentsFilter.All,
+    ) {
+        internal val visibleComments get() = comments.rows.filter(filter::matches)
+        internal val unansweredCount get() = comments.rows.count(StartCommentsFilter.Unanswered::matches)
+    }
 
     sealed interface Label {
         data object OnGoBack : Label
@@ -52,170 +71,119 @@ interface StartCommentsStore : Store<Intent, State, Label> {
 
 class StartCommentsStoreFactory(
     private val storeFactory: StoreFactory,
-    private val service: StartRepository
+    private val service: StartRepository,
 ) {
-
     fun create(mode: CommentMode = CommentMode.Base): StartCommentsStore =
-        object : StartCommentsStore, Store<Intent, State, Label> by storeFactory.create(
+        object : StartCommentsStore, Store<StartCommentsStore.Intent, StartCommentsStore.State, StartCommentsStore.Label> by storeFactory.create(
             name = "CommentsStore",
-            initialState = State(mode = mode),
-            bootstrapper = SimpleBootstrapper(Unit),
+            initialState = StartCommentsStore.State(mode = mode),
             executorFactory = { ExecutorImpl() },
-            reducer = ReducerImpl
+            reducer = ReducerImpl,
         ) {}
 
     private sealed interface Msg {
-        data class UpdateStartId(val startId: Int) : Msg
-        data class OnClickReply(val replier: String, val commentId: Int) : Msg
-        data object OnClickCloseReply : Msg
-        data class OnClickSendComment(val value: String) : Msg
-        data class ShowEvent(val success: Boolean, val message: String) : Msg
-        data object OnConsumedEvent : Msg
-        data object LoadingComments : Msg
-        data object LoadingSendComment : Msg
-        data class Loaded(val state: StartItem.Comments) : Msg
+        data class StartId(val id: Int) : Msg
+        data class Draft(val value: String) : Msg
+        data class Question(val value: Boolean) : Msg
+        data class Filter(val value: StartCommentsFilter) : Msg
+        data class Event(val success: Boolean, val message: String) : Msg
+        data object Consumed : Msg
+        data object Loading : Msg
+        data object Sending : Msg
+        data class Loaded(val comments: StartItem.Comments) : Msg
         data class Error(val error: Throwable) : Msg
     }
 
-    private inner class ExecutorImpl() :
-        CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent) {
+    private inner class ExecutorImpl : CoroutineExecutor<StartCommentsStore.Intent, Unit, StartCommentsStore.State, Msg, StartCommentsStore.Label>() {
+        private var loadJob: Job? = null
+
+        override fun executeIntent(intent: StartCommentsStore.Intent) {
             when (intent) {
-                is Intent.OnClickCloseReply -> dispatch(OnClickCloseReply)
-                is Intent.OnClickReply -> dispatch(
-                    OnClickReply(
-                        intent.replier,
-                        intent.commentId
-                    )
-                )
-
-                is Intent.OnClickSendComment -> state().startId?.let { startId ->
-                    sendComment(state().mode, intent.value, startId)
+                is StartCommentsStore.Intent.ApplyStartId -> {
+                    dispatch(Msg.StartId(intent.startId))
+                    load(intent.startId)
                 }
-
-                is Intent.OnConsumedEvent -> dispatch(OnConsumedEvent)
-                is Intent.ApplyStartId -> {
-                    dispatch(UpdateStartId(intent.startId))
-                    launch(intent.startId)
+                is StartCommentsStore.Intent.OnCommentChanged -> if (!state().isLoadingSendComment) dispatch(Msg.Draft(intent.value))
+                is StartCommentsStore.Intent.OnQuestionChanged -> if (!state().isLoadingSendComment) dispatch(Msg.Question(intent.value))
+                is StartCommentsStore.Intent.OnFilterChanged -> dispatch(Msg.Filter(intent.filter))
+                is StartCommentsStore.Intent.OnClickCloseReply -> if (!state().isLoadingSendComment) publish(StartCommentsStore.Label.OnGoBack)
+                is StartCommentsStore.Intent.OnClickReply -> if (!state().isLoadingSendComment) {
+                    state().comments.rows.find { it.id == intent.commentId }?.let {
+                        publish(StartCommentsStore.Label.OnNavigateToReplies(it.id))
+                    }
                 }
-
-                is Intent.OnClickGoBack -> publish(Label.OnGoBack)
-                is Intent.OnClickShowReplies -> publish(Label.OnNavigateToReplies(intent.commentId))
-                is Intent.OnRefresh -> state().startId?.let { startId ->
-                    launch(startId)
+                is StartCommentsStore.Intent.OnClickSendComment -> state().startId?.let {
+                    if (!state().isLoadingSendComment && intent.value.isNotBlank()) send(it, intent.value.trim())
                 }
+                is StartCommentsStore.Intent.OnConsumedEvent -> dispatch(Msg.Consumed)
+                is StartCommentsStore.Intent.OnClickGoBack -> publish(StartCommentsStore.Label.OnGoBack)
+                is StartCommentsStore.Intent.OnClickShowReplies -> publish(StartCommentsStore.Label.OnNavigateToReplies(intent.commentId))
+                is StartCommentsStore.Intent.OnRefresh -> state().startId?.let(::load)
             }
         }
 
-        private fun launch(startId: Int) {
-            dispatch(LoadingComments)
+        private fun load(startId: Int) {
+            loadJob?.cancel()
+            dispatch(Msg.Loading)
+            loadJob = scope.launch {
+                val result = service.startComments(startId)
+                currentCoroutineContext().ensureActive()
+                result.onSuccess { dispatch(Msg.Loaded(it)) }
+                    .onFailure { if (it !is CancellationException) dispatch(Msg.Error(it)) }
+            }
+        }
+
+        private fun send(startId: Int, comment: String) {
+            val mode = state().mode
+            val question = state().isQuestion && mode is CommentMode.Base
+            dispatch(Msg.Sending)
             scope.launch {
-                service.startComments(startId)
-                    .onSuccess {
-                        dispatch(Loaded(it))
-                    }
-                    .onFailure {
-                        dispatch(Error(it))
-                    }
-            }
-        }
-
-        private fun sendComment(mode: CommentMode, comment: String, startId: Int) {
-            dispatch(LoadingSendComment)
-            scope.launch {
-                val value = if (mode is Reply) {
+                val result = try {
                     service.writeComment(
-                        comment = comment,
                         startId = startId,
-                        id = mode.messageId,
-                        subComment = true
-                    )
-
-                } else {
-                    service.writeComment(
                         comment = comment,
-                        id = startId,
-                        startId = startId,
-                        subComment = false
+                        id = (mode as? CommentMode.Reply)?.messageId ?: startId,
+                        subComment = mode is CommentMode.Reply,
+                        isQuestion = question,
                     )
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    CommentUiState.Error("Не удалось отправить комментарий. Попробуйте ещё раз.")
                 }
-                handleCommentUiState(value, startId)
-            }
-        }
-
-        private fun handleCommentUiState(value: CommentUiState, startId: Int) {
-            when (value) {
-                is CommentUiState.Error -> {
-                    dispatch(ShowEvent(false, value.message))
-                }
-
-                is CommentUiState.Loading -> dispatch(LoadingSendComment)
-                is CommentUiState.Success -> {
-                    dispatch(ShowEvent(true, "Комментарий успешно добавлен"))
-                    scope.launch {
-                        service.startComments(startId)
-                            .onSuccess {
-                                dispatch(Loaded(it))
-                            }
-                            .onFailure {
-                                dispatch(Error(it))
-                            }
+                currentCoroutineContext().ensureActive()
+                when (result) {
+                    is CommentUiState.Success -> {
+                        dispatch(Msg.Event(true, if (mode is CommentMode.Reply) "Ответ отправлен" else "Комментарий отправлен"))
+                        // The server decides whether a reply is an administrator's answer.
+                        load(startId)
                     }
+                    is CommentUiState.Error -> dispatch(Msg.Event(false, result.message))
+                    is CommentUiState.Loading -> dispatch(Msg.Event(false, "Не удалось отправить комментарий. Попробуйте ещё раз."))
                 }
             }
         }
     }
 
-    private object ReducerImpl : Reducer<State, Msg> {
-        override fun State.reduce(msg: Msg): State =
-            when (msg) {
-                is LoadingComments -> copy(isLoadingComments = true, error = null)
-                is LoadingSendComment -> copy(isLoadingSendComment = true)
-                is OnClickCloseReply -> copy(mode = CommentMode.Base)
-                is OnClickReply -> {
-                    val comment = comments.rows.find { it.id == msg.commentId }
-                    if (comment != null) {
-                        val commentData = com.markettwits.sportsouce.start.presentation.start.component.CommentData(
-                            userName = "${comment.user.surname} ${comment.user.name}",
-                            userPhoto = comment.user.photo ?: "",
-                            commentText = comment.comment,
-                            createdAt = comment.createdAt,
-                            replies = comment.replies.map { reply ->
-                                com.markettwits.sportsouce.start.presentation.start.component.ReplyData(
-                                    userName = "${reply.user.surname} ${reply.user.name}",
-                                    userPhoto = reply.user.photo ?: "",
-                                    commentText = reply.comment,
-                                    createdAt = reply.createdAt
-                                )
-                            }
-                        )
-                        copy(
-                            mode = Reply(
-                                replier = msg.replier,
-                                messageId = msg.commentId,
-                                parentComment = commentData
-                            )
-                        )
-                    } else {
-                        this
-                    }
-                }
-
-                is OnClickSendComment -> copy(isLoadingSendComment = true)
-                is ShowEvent -> copy(
-                    event = triggered(
-                        EventContent(
-                            success = msg.success,
-                            message = msg.message
-                        )
-                    ),
-                    isLoadingSendComment = false
-                )
-
-                is Loaded -> copy(comments = msg.state, isLoadingComments = false, error = null)
-                is Error -> copy(error = msg.error.mapToSauceError(), isLoadingComments = false)
-                is OnConsumedEvent -> copy(event = consumed())
-                is UpdateStartId -> copy(startId = msg.startId)
-            }
+    private object ReducerImpl : Reducer<StartCommentsStore.State, Msg> {
+        override fun StartCommentsStore.State.reduce(msg: Msg): StartCommentsStore.State = when (msg) {
+            is Msg.StartId -> copy(startId = msg.id)
+            is Msg.Draft -> copy(comment = msg.value)
+            is Msg.Question -> copy(isQuestion = msg.value)
+            is Msg.Filter -> copy(filter = msg.value)
+            is Msg.Loading -> copy(isLoadingComments = true, error = null)
+            is Msg.Sending -> copy(isLoadingSendComment = true)
+            is Msg.Loaded -> copy(comments = msg.comments, isLoadingComments = false, error = null)
+            is Msg.Error -> copy(error = msg.error.mapToSauceError(), isLoadingComments = false)
+            is Msg.Consumed -> copy(event = consumed())
+            is Msg.Event -> copy(
+                event = triggered(EventContent(success = msg.success, message = msg.message)),
+                isLoadingSendComment = false,
+                comment = if (msg.success) "" else comment,
+                isQuestion = if (msg.success) false else isQuestion,
+                filter = if (msg.success && mode is CommentMode.Base) StartCommentsFilter.All else filter,
+                sentCommentVersion = sentCommentVersion + if (msg.success) 1 else 0,
+            )
+        }
     }
 }

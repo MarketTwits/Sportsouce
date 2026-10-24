@@ -17,6 +17,8 @@ data class Comment(
     val personId: String,
     @SerialName("isReview")
     val isReview: Boolean? = null,
+    val isQuestion: Boolean? = false,
+    val isAnswered: Boolean? = false,
     @SerialName("averageScore")
     val averageScore: String? = null,
     @SerialName("replies")

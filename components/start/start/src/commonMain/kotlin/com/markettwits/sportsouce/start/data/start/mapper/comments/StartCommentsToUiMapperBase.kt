@@ -15,6 +15,10 @@ internal class StartCommentsToUiMapperBase(
                 id = it.id,
                 comment = it.comment.orEmpty(),
                 countSub = it.countSub,
+                isQuestion = it.isQuestion == true,
+                isAnswered = it.isAnswered == true,
+                isReview = it.isReview == true,
+                averageScore = it.averageScore?.toDoubleOrNull(),
                 createdAt = timeMapper.mapTime(
                     TimePattern.FullWithEmptySpace,
                     it.createdAt
@@ -23,6 +27,7 @@ internal class StartCommentsToUiMapperBase(
                 replies = it.replies?.map { reply ->
                     StartItem.Comments.Reply(
                         id = reply.id,
+                        isAdminAnswer = reply.isAdminAnswer == true,
                         comment = reply.comment.orEmpty(),
                         createdAt = timeMapper.mapTime(
                             TimePattern.FullWithEmptySpace,

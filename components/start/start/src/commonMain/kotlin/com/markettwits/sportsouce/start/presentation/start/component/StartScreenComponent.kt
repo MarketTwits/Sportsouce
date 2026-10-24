@@ -44,13 +44,40 @@ data class CommentData(
     val commentText: String,
     val createdAt: String,
     val replies: List<ReplyData>,
+    val isQuestion: Boolean = false,
+    val isAnswered: Boolean = false,
+    val isReview: Boolean = false,
+    val averageScore: Double? = null,
 )
 
 @Serializable
 data class ReplyData(
+    val id: Int = 0,
+    val isAdminAnswer: Boolean = false,
     val userName: String,
     val userPhoto: String,
     val commentText: String,
     val createdAt: String,
 )
 
+
+internal fun com.markettwits.sportsouce.start.domain.StartItem.Comments.Row.toCommentData() = CommentData(
+    userName = "${user.surname} ${user.name}".trim(),
+    userPhoto = user.photo.orEmpty(),
+    commentText = comment,
+    createdAt = createdAt,
+    isQuestion = isQuestion,
+    isAnswered = isAnswered,
+    isReview = isReview,
+    averageScore = averageScore,
+    replies = replies.map { reply ->
+        ReplyData(
+            id = reply.id,
+            isAdminAnswer = reply.isAdminAnswer,
+            userName = "${reply.user.surname} ${reply.user.name}".trim(),
+            userPhoto = reply.user.photo.orEmpty(),
+            commentText = reply.comment,
+            createdAt = reply.createdAt,
+        )
+    },
+)

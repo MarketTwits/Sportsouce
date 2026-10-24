@@ -126,6 +126,10 @@ data class StartItem(
             val replies: List<Reply>,
             val updatedAt: String,
             val user: User,
+            val isQuestion: Boolean = false,
+            val isAnswered: Boolean = false,
+            val isReview: Boolean = false,
+            val averageScore: Double? = null,
         )
 
         data class User(
@@ -140,6 +144,7 @@ data class StartItem(
             val createdAt: String,
             val id: Int,
             val user: User,
+            val isAdminAnswer: Boolean = false,
         )
     }
 }

@@ -13,10 +13,12 @@ import com.markettwits.sportsouce.starts.common.presentation.StartStatusBadge
 internal fun ProfileRecentStartsBlock(modifier: Modifier = Modifier, starts: List<StartsListItem>, onClickStart: (StartsListItem) -> Unit) {
     if (starts.isEmpty()) return
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        ProfileSectionHeader("Вы смотрели")
+        Box(Modifier.padding(horizontal = 16.dp)) {
+            ProfileSectionHeader("Вы смотрели")
+        }
         BoxWithConstraints(Modifier.fillMaxWidth()) {
-            val cardWidth = maxWidth.coerceAtMost(320.dp)
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            val cardWidth = (maxWidth - 32.dp).coerceAtLeast(0.dp).coerceAtMost(320.dp)
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 starts.forEach { start ->
                     ProfilePreviewCard(start.name, start.image, start.displayDate, Modifier.width(cardWidth), start.place,
                         onClick = { onClickStart(start) }) { StartStatusBadge(statusCode = start.statusCode.id, compact = true) }

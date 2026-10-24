@@ -25,8 +25,7 @@ fun NewsContent(
     BoxWithConstraints(
         modifier = modifier.fillMaxWidth()
     ) {
-        val cardWidth = (maxWidth * 0.46f).coerceIn(240.dp, 360.dp)
-        val cardHeight = (cardWidth * 0.88f).coerceIn(220.dp, 320.dp)
+        val cardWidth = (maxWidth * 0.78f).coerceAtMost(480.dp)
         val showPlaceholders = isLoading && items.isEmpty()
 
         LazyRow(
@@ -34,12 +33,12 @@ fun NewsContent(
                 contentDescription = "Загрузка новостей"
                 progressBarRangeInfo = ProgressBarRangeInfo.Indeterminate
             } else Modifier),
-            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, top = 12.dp, bottom = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             if (showPlaceholders) {
                 items(3, key = { "loading-news-$it" }) {
-                    NewsItemCardShimmer(cardWidth = cardWidth, cardHeight = cardHeight)
+                    NewsItemCardShimmer(cardWidth = cardWidth)
                 }
             }
             items(items.take(10), key = { it.id }) { newsItem ->
@@ -47,7 +46,6 @@ fun NewsContent(
                     modifier = Modifier,
                     newsInfo = newsItem,
                     cardWidth = cardWidth,
-                    cardHeight = cardHeight,
                     onClick = { onClickItem(newsItem) }
                 )
             }

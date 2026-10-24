@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.news.news_list.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,13 +29,11 @@ fun NewsItemCard(
     modifier: Modifier = Modifier,
     newsInfo: NewsItem,
     cardWidth: Dp = 270.dp,
-    cardHeight: Dp = 240.dp,
     onClick: (NewsItem) -> Unit,
 ) {
     NewsCardLayout(
-        modifier = modifier.clickable(role = Role.Button) { onClick(newsInfo) },
+        modifier = modifier.clip(Shapes.medium).clickable(role = Role.Button) { onClick(newsInfo) },
         cardWidth = cardWidth,
-        cardHeight = cardHeight,
         image = {
             SubcomposeAsyncImage(
                 model = newsInfo.imageUrl,
@@ -42,7 +41,8 @@ fun NewsItemCard(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(Shapes.medium),
+                    .clip(Shapes.medium)
+                    .border(1.dp, SauceTheme.colors.border, Shapes.medium),
                 error = {
                     SubcomposeAsyncImageContent(
                         painter = DefaultImages.EmptyImageStart(),
@@ -63,15 +63,15 @@ fun NewsItemCard(
             text = newsInfo.title,
             maxLines = 1,
             fontSize = 16.sp,
-            lineHeight = 20.sp,
+            lineHeight = NewsTitleLineHeight,
             fontFamily = FontNunito.bold(),
             color = SauceTheme.colors.textPrimary,
         )
         HtmlText(
-            modifier = Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+            modifier = Modifier.heightIn(min = with(LocalDensity.current) { (NewsDescriptionLineHeight * 2).toDp() }),
             text = newsInfo.fullDescription,
-            lineHeight = 16.sp,
-            fontSize = 12.sp,
+            lineHeight = NewsDescriptionLineHeight,
+            fontSize = 14.sp,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             fontFamily = FontNunito.regular(),
@@ -81,10 +81,10 @@ fun NewsItemCard(
 }
 
 @Composable
-internal fun NewsItemCardShimmer(cardWidth: Dp, cardHeight: Dp) {
-    val titleHeight = with(LocalDensity.current) { 20.sp.toDp() }
-    val lineHeight = with(LocalDensity.current) { 16.sp.toDp() }
-    NewsCardLayout(cardWidth = cardWidth, cardHeight = cardHeight,
+internal fun NewsItemCardShimmer(cardWidth: Dp) {
+    val titleHeight = with(LocalDensity.current) { NewsTitleLineHeight.toDp() }
+    val lineHeight = with(LocalDensity.current) { NewsDescriptionLineHeight.toDp() }
+    NewsCardLayout(cardWidth = cardWidth,
         image = { SauceSkeleton(Modifier.fillMaxSize(), Shapes.medium) }) {
         Box(Modifier.fillMaxWidth().height(titleHeight)) {
             SauceSkeleton(Modifier.fillMaxWidth(0.65f).height(titleHeight * 0.8f))
@@ -101,12 +101,15 @@ internal fun NewsItemCardShimmer(cardWidth: Dp, cardHeight: Dp) {
 private fun NewsCardLayout(
     modifier: Modifier = Modifier,
     cardWidth: Dp,
-    cardHeight: Dp,
     image: @Composable BoxScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier.width(cardWidth)) {
-        Box(Modifier.fillMaxWidth().height(cardHeight * (2f / 3f)), content = image)
-        Column(Modifier.fillMaxWidth().padding(top = 8.dp), content = content)
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f), content = image)
+        Column(Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp), content = content)
     }
 }
+
+private val NewsTitleLineHeight = 20.sp
+private val NewsDescriptionLineHeight = 20.sp

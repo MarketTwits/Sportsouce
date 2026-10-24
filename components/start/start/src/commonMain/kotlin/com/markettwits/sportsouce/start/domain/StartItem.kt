@@ -36,7 +36,9 @@ data class StartItem(
     val result: List<Result>,
     val usefulLinks: List<Result>,
     val startTimes: StartTimes,
+    val startArchive: StartArchive? = null,
 ) {
+    data class StartArchive(val id: Int, val name: String, val description: String)
     sealed class ConditionDetail(open val value: String) {
         data class Regulation(override val value: String) : ConditionDetail(value)
         data class Statement(override val value: String) : ConditionDetail(value)

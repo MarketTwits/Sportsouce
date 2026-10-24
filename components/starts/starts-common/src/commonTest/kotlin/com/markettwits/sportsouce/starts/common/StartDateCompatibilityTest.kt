@@ -1,6 +1,14 @@
 package com.markettwits.sportsouce.starts.common
 
 import com.markettwits.core.time.BaseTimeMapper
+import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.starts.cloud.SportSauceNetworkStartsApi
+import com.markettwits.sportsouce.starts.common.data.SportSauceStartsApiBase
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.*
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.*
+import kotlinx.coroutines.test.runTest
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartRemoteItem
 import com.markettwits.sportsouce.starts.common.data.mapper.StartsCloudToListMapperBase
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -45,6 +53,29 @@ class StartDateCompatibilityTest {
         val restored = json.decodeFromJsonElement<StartsListItem>(oldCache)
         assertEquals("17 октября 2026", restored.displayDate)
         assertEquals(309, restored.id)
+    }
+
+    @Test fun archiveSortsByOriginalDateAcrossYearsAndRemovesDuplicateIds() = runTest {
+        val base = json.parseToJsonElement(payload).jsonObject
+        fun row(id: Int, date: String) = JsonObject(base + mapOf("id" to JsonPrimitive(id), "start_date" to JsonPrimitive(date), "end_date" to JsonNull))
+        val response = buildJsonObject {
+            put("count", 4)
+            put("rows", JsonArray(listOf(row(3, "2026-01-02T00:00:00Z"), row(2, "2025-12-30T00:00:00Z"),
+                row(1, "2025-01-10T00:00:00Z"), row(2, "2025-12-30T00:00:00Z"))))
+        }
+        val client = HttpClient(MockEngine { request ->
+            assertEquals("/start/1/related-start-archive", request.url.encodedPath)
+            respond(response.toString(), headers = headersOf(HttpHeaders.ContentType, "application/json"))
+        }) { expectSuccess = true; defaultRequest { url("https://api.example.test/") } }
+        try {
+            val api = SportSauceStartsApiBase(SportSauceNetworkStartsApi(object : HttpClientProvider {
+                override fun provide(loggerEnabled: Boolean) = client
+                override fun json() = json
+            }), StartsCloudToListMapperBase(BaseTimeMapper()))
+            val starts = api.fetchArchiveStarts(1)
+            assertEquals(listOf(1, 2, 3), starts.map { it.id })
+            assertEquals(listOf("10 января 2025", "30 декабря 2025", "2 января 2026"), starts.map { it.displayDate })
+        } finally { client.close() }
     }
 
     private fun map(payload: JsonObject) = StartsCloudToListMapperBase(BaseTimeMapper())

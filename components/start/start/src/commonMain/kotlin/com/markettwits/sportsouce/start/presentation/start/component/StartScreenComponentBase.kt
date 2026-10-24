@@ -31,6 +31,7 @@ class StartScreenComponentBase(
     private val onApplyStartId: (Int) -> Unit,
     private val onOpenStartCommentsScreen: (Int, CommentMode) -> Unit = { _, _ -> },
     private val relatedStarts: (Int, List<StartsListItem>) -> Unit,
+    private val archiveStarts: (Int, List<StartsListItem>) -> Unit,
 ) : ComponentContext by componentContext, StartScreenComponent, LogTagProvider {
 
     override val tag: String = "StartScreenComponentBase"
@@ -84,6 +85,7 @@ class StartScreenComponentBase(
                         it.mode
                     )
 
+                    is StartScreenStore.Label.OnClickArchive -> archiveStarts(it.startId, it.starts)
                     is StartScreenStore.Label.OnClickRelatedStarts -> relatedStarts(it.startId, it.relatedStarts)
                 }
             }

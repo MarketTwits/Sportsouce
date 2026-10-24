@@ -19,6 +19,11 @@ internal fun StartScreenInnerContent(
     error: Throwable? = null,
     recommendedStarts: List<StartsListItem>,
     seriesStarts: List<StartsListItem>,
+    archiveStarts: List<StartsListItem> = emptyList(),
+    archiveLoading: Boolean = false,
+    archiveError: Boolean = false,
+    onClickArchive: () -> Unit = {},
+    onRetryArchive: () -> Unit = {},
     isPartialData: Boolean = false,
     onClickMembers: (List<StartMembersUi>) -> Unit,
     onClickMembersResults: () -> Unit,
@@ -74,6 +79,8 @@ internal fun StartScreenInnerContent(
             StartReviewPanel(innerModifier, data.reviewState)
             StartAlbums(innerModifier, data.startAlbum, onClickFullAlbum)
             StartSeriesPanel(innerModifier, seriesStarts, data.id, onClickRelatedStarts, onClickRecommendedStart)
+            if (data.startArchive != null) StartArchivePanel(innerModifier, archiveStarts, data.id,
+                archiveLoading, archiveError, onClickArchive, onRetryArchive, onClickRecommendedStart)
         }
         StartsRecommendationPanel(
             modifier = innerModifier,

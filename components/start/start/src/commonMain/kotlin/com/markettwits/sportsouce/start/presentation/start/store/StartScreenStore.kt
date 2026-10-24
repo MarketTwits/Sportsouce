@@ -30,6 +30,8 @@ import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStor
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label.*
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory.Msg.TriggerEvent
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 interface StartScreenStore : Store<Intent, State, Label> {
@@ -51,6 +53,8 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OpenStartCommentsScreen(val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode) :
             Intent
 
+        data object OnClickArchive : Intent
+        data object OnRetryArchive : Intent
         data object OnClickRelatedStarts : Intent
         data object OnClickFavorite : Intent
     }
@@ -63,11 +67,15 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
         val startsSeries: List<StartsListItem> = emptyList(),
+        val startsArchive: List<StartsListItem> = emptyList(),
+        val archiveLoading: Boolean = false,
+        val archiveError: Boolean = false,
         val favoriteState: StartFavoriteState = StartFavoriteState.Loading(),
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Label {
+        data class OnClickArchive(val startId: Int, val starts: List<StartsListItem>) : Label
         data object OnClickBack : Label
         data class OnClickRelatedStarts(val startId: Int, val relatedStarts: List<StartsListItem>) : Label
         data class OnApplyStartId(val startId: Int) : Label
@@ -117,6 +125,8 @@ class StartScreenStoreFactory(
         data class StartInfoFailed(val exception: Throwable) : Msg
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
         data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
+        data object ArchiveLoading : Msg
+        data class ArchiveLoaded(val archiveId: Int, val items: List<StartsListItem>, val failed: Boolean = false) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
         data class StartFavoriteUpdated(val state: StartFavoriteState) : Msg
     }
@@ -128,6 +138,7 @@ class StartScreenStoreFactory(
     ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>(), LogTagProvider {
 
         override val tag: String = "StartScreenExecutorImpl"
+        private var archiveJob: Job? = null
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
@@ -210,6 +221,15 @@ class StartScreenStoreFactory(
                     }
                 }
 
+                Intent.OnClickArchive -> {
+                    val current = state()
+                    val startId = current.startItem?.id
+                    if (startId != null && current.startsArchive.isNotEmpty()) {
+                        publish(OnClickArchive(startId, current.startsArchive))
+                    }
+                }
+                Intent.OnRetryArchive -> if (!state().archiveLoading) getArchiveStarts(state().startItem?.startArchive)
+
                 is Intent.OnClickRelatedStarts -> {
                     state().let { state ->
                         if (state.startsSeries.isNotEmpty() || state.startItem != null) {
@@ -261,6 +281,7 @@ class StartScreenStoreFactory(
                         dispatch(Msg.StartInfoSuccess(startItem))
                         handleReRegistrationIfNeeded(startInput, startItem)
                         getSeriesStarts(startItem.startSeries)
+                        getArchiveStarts(startItem.startArchive)
                     }
                 )
             }
@@ -308,6 +329,21 @@ class StartScreenStoreFactory(
                 service.startsRecommended(startIdString).onSuccess {
                     dispatch(Msg.StartsRecommendedSuccess(it))
                 }
+            }
+        }
+
+        private fun getArchiveStarts(archive: StartItem.StartArchive?) {
+            archiveJob?.cancel()
+            if (archive == null) return
+            dispatch(Msg.ArchiveLoading)
+            archiveJob = scope.launch {
+                service.startsArchive(archive.id).fold(
+                    onSuccess = { dispatch(Msg.ArchiveLoaded(archive.id, it)) },
+                    onFailure = {
+                        if (it is CancellationException) throw it
+                        dispatch(Msg.ArchiveLoaded(archive.id, emptyList(), failed = true))
+                    }
+                )
             }
         }
 
@@ -388,12 +424,20 @@ class StartScreenStoreFactory(
                 startItem = msg.data,
                 isLoading = false,
                 error = null,
-                isPartialData = false
+                isPartialData = false,
+                startsArchive = if (startItem?.startArchive?.id == msg.data.startArchive?.id) startsArchive else emptyList(),
+                archiveLoading = false,
+                archiveError = false
             )
 
             is Msg.StartsRecommendedSuccess -> copy(
                 startsRecommended = msg.data
             )
+
+            Msg.ArchiveLoading -> copy(archiveLoading = true, archiveError = false)
+            is Msg.ArchiveLoaded -> if (startItem?.startArchive?.id == msg.archiveId) copy(
+                startsArchive = msg.items, archiveLoading = false, archiveError = msg.failed
+            ) else this
 
             is Msg.StartsSeriesSuccess -> copy(
                 startsSeries = msg.data

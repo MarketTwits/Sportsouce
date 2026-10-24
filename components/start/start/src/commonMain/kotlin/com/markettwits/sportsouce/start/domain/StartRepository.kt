@@ -41,6 +41,8 @@ interface StartRepository {
 
     suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>>
 
+    suspend fun startsArchive(archiveId: Int): Result<List<StartsListItem>>
+
     suspend fun writeComment(startId: Int, comment: String, id: Int, subComment: Boolean, isQuestion: Boolean = false): CommentUiState
 
     suspend fun membersFilters(startId: Int): Result<FiltersRemote>

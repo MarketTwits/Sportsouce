@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.infoLog
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
@@ -110,6 +111,10 @@ class RootStartScreenComponentBase(
                         onOpenStartCommentsScreen = { startId, mode ->
                             navigation.openStartComments(startId, mode)
                         },
+                        archiveStarts = { startId, starts ->
+                            navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(starts, startId,
+                                StartRelatedKind.Archive))
+                        },
                         relatedStarts = { startId, relatedStarts ->
                             navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(relatedStarts, startId))
                         }
@@ -194,6 +199,7 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     storeFactory = DefaultStoreFactory(),
                     items = config.starts,
+                    kind = config.kind,
                     currentStartId = config.currentStartId,
                     onClickBack = {
                         navigation.pop()

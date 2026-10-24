@@ -97,6 +97,9 @@ internal class StartRemoteToUiMapperBase(
                             description = it.description,
                         )
                     } ?: StartItem.StartSeries.Empty,
+                    startArchive = startRemote.archive?.takeIf { it.id > 0 }?.let {
+                        StartItem.StartArchive(it.id, it.name, it.description)
+                    },
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
                     kindOfSports = startRemote.kindOfSports?.map {
                         StartItem.KindOfSport(

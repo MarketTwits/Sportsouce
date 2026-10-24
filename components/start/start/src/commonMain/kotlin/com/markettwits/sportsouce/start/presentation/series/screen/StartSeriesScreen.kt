@@ -13,6 +13,7 @@ fun StartSeriesScreen(component: StartSeriesComponent) {
 
     StartSeriesContent(
         items = state.items,
+        kind = state.kind,
         currentStartId = state.currentStartId,
         onBack = {
             component.obtainEvent(StartSeriesStore.Intent.OnClickBack)

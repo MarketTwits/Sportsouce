@@ -154,6 +154,10 @@ internal class StartRepositoryBase(
         startsService.fetchRelatedStarts(seriesId)
     }
 
+    override suspend fun startsArchive(archiveId: Int): Result<List<StartsListItem>> = runCatching {
+        startsService.fetchArchiveStarts(archiveId)
+    }
+
     private suspend fun launches(startId: String): Result<StartItem> {
         val result = runCatching {
             val startData = startService.start(startId)

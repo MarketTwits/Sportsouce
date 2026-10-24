@@ -22,6 +22,8 @@ interface SportSauceStartsApi {
 
     suspend fun fetchRelatedStarts(seriesId: Int): List<StartsListItem>
 
+    suspend fun fetchArchiveStarts(archiveId: Int): List<StartsListItem>
+
     suspend fun fetchStartMain(): List<StartsListItem>
 
     suspend fun fetchFavoriteStarts(userId: Int, token: String): List<StartsListItem>

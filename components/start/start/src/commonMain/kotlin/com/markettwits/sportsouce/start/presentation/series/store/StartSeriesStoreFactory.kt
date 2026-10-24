@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.start.presentation.series.store
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.presentation.series.store.StartSeriesStore.State
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
@@ -12,12 +13,14 @@ class StartSeriesStoreFactory(
     fun create(
         items: List<StartsListItem>,
         currentStartId: Int,
+        kind: StartRelatedKind = StartRelatedKind.Series,
     ): StartSeriesStore =
         object : StartSeriesStore, Store<StartSeriesStore.Intent, State, StartSeriesStore.Label> by storeFactory.create(
             name = "StartSeriesStore",
             initialState = State(
                 items = items,
                 currentStartId = currentStartId,
+                kind = kind,
             ),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { StartSeriesExecutor() },

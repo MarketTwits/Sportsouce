@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.series.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 interface StartSeriesStore : Store<StartSeriesStore.Intent, StartSeriesStore.State, StartSeriesStore.Label> {
@@ -13,6 +14,7 @@ interface StartSeriesStore : Store<StartSeriesStore.Intent, StartSeriesStore.Sta
     data class State(
         val items: List<StartsListItem> = emptyList(),
         val currentStartId: Int = 0,
+        val kind: StartRelatedKind = StartRelatedKind.Series,
     )
 
     sealed interface Message

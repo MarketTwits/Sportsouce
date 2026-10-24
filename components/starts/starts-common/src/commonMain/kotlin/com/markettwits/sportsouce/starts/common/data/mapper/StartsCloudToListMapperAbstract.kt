@@ -23,6 +23,7 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
                 name = it.name,
                 image = it.posterLinkFile?.fullPath ?: "",
                 date = date,
+                startDate = it.start_date,
                 dateRange = timeMapper.mapDateRange(it.start_date, it.end_date)
                     .takeIf { range -> range != date },
                 statusCode = StartsListItem.StatusCode(

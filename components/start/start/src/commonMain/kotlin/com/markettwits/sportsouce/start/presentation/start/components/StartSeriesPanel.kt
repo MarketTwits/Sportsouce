@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -14,14 +13,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
+import coil3.compose.AsyncImage
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.list.SauceActionRow
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsColor
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsIcon
@@ -33,20 +30,21 @@ internal fun StartSeriesPanel(
     currentStartId: Int,
     onClickRelatedStarts: () -> Unit,
     onItemClick: (StartsListItem) -> Unit,
+    title: String = "Серии",
+    previewItems: List<StartsListItem> = items.take(3),
 ) {
     if (items.isNotEmpty()) {
         Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            com.markettwits.core_ui.items.components.list.SauceActionRow(
-                title = "Связанные старты", count = items.size.toString(), onClick = onClickRelatedStarts,
+            SauceActionRow(
+                title = title, count = items.size.toString(), onClick = onClickRelatedStarts,
             )
 
-            // Vertical list, showing only first 3 items
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items.take(3).forEach { item ->
+                previewItems.forEach { item ->
                     SeriesCard(
                         item = item,
                         isCurrentStart = item.id == currentStartId,
@@ -58,6 +56,7 @@ internal fun StartSeriesPanel(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SeriesCard(
     modifier: Modifier = Modifier,
@@ -65,141 +64,42 @@ private fun SeriesCard(
     isCurrentStart: Boolean = false,
     onClick: () -> Unit,
 ) {
-    Box(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        OnBackgroundCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            onClick = if (!isCurrentStart) onClick else null,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Left accent bar for current start
-                if (isCurrentStart) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.secondary)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Image with fixed width
-                    Box(
-                        modifier = Modifier
-                            .width(70.dp)
-                            .fillMaxHeight()
-                            .clip(Shapes.medium)
-                    ) {
-                        SubcomposeAsyncImage(
-                            model = imageRequestCrossfade(model = item.image),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                            error = {
-                                SubcomposeAsyncImageContent(
-                                    modifier = Modifier,
-                                    painter = DefaultImages.EmptyImageStart()
-                                )
-                            },
-                            success = {
-                                SubcomposeAsyncImageContent(modifier = Modifier)
-                            }
-                        )
-                    }
-
-                    // Content
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        // Title
-                        Text(
-                            text = item.name,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontFamily = FontNunito.bold(),
-                            fontSize = 14.sp,
-                            lineHeight = 18.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2
-                        )
-
-                        // Date
-                        Text(
-                            text = item.displayDate,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        // Sport kind badges
-                        if (item.kindOfSports.isNotEmpty()) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                item.kindOfSports.take(2).forEach { sportKind ->
-                                    Surface(
-                                        color = startKindOfSportsColor(sportKind).copy(alpha = 0.15f),
-                                        shape = Shapes.small
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(
-                                                horizontal = 8.dp,
-                                                vertical = 4.dp
-                                            ),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = startKindOfSportsIcon(sportKind),
-                                                contentDescription = null,
-                                                tint = startKindOfSportsColor(sportKind),
-                                                modifier = Modifier.size(12.dp)
-                                            )
-                                            Text(
-                                                text = sportKind.name,
-                                                fontSize = 10.sp,
-                                                fontFamily = FontNunito.semiBoldBold(),
-                                                color = startKindOfSportsColor(sportKind),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
-                                    }
+    val colors = SauceTheme.colors
+    OnBackgroundCard(modifier.fillMaxWidth(), onClick = if (isCurrentStart) null else onClick) {
+        Box(Modifier.fillMaxWidth()) {
+            if (isCurrentStart) Box(Modifier.matchParentSize()) {
+                Box(Modifier.width(4.dp).fillMaxHeight().background(colors.action))
+            }
+            Row(Modifier.fillMaxWidth().heightIn(min = 120.dp).padding(SauceSpacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small), verticalAlignment = Alignment.CenterVertically) {
+                val placeholder = DefaultImages.EmptyImageStart()
+                AsyncImage(model = imageRequestCrossfade(item.image), contentDescription = null,
+                    placeholder = placeholder, error = placeholder, contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(70.dp, 96.dp).clip(SauceShapes.field))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(item.name, style = MaterialTheme.typography.titleSmall, color = colors.textPrimary,
+                        maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(item.displayDate, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        item.kindOfSports.take(2).forEach { sport ->
+                            val color = startKindOfSportsColor(sport)
+                            Surface(color = color.copy(alpha = 0.15f), shape = SauceShapes.badge) {
+                                Row(Modifier.padding(horizontal = 6.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Icon(startKindOfSportsIcon(sport), null, Modifier.size(14.dp), tint = color)
+                                    Text(sport.name, style = MaterialTheme.typography.labelSmall, color = color,
+                                        maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 }
                             }
                         }
                     }
-                    if (isCurrentStart) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f),
-                            shape = Shapes.small
-                        ) {
-                            Text(
-                                text = "Вы здесь",
-                                color = MaterialTheme.colorScheme.secondary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Clip,
-                                fontFamily = FontNunito.bold(),
-                                fontSize = 10.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                    }
+                }
+                if (isCurrentStart) Surface(
+                    modifier = Modifier.width(IntrinsicSize.Max),
+                    color = colors.actionSoft, shape = SauceShapes.badge,
+                ) {
+                    Text("Вы здесь", Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelSmall, color = colors.action, maxLines = 1)
                 }
             }
         }

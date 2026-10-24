@@ -19,15 +19,17 @@ internal fun ProfileRegistrationsBlock(
     onClickRegistration: (StartOrderInfo) -> Unit, onClickViewAll: () -> Unit,
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        ProfileSectionHeader("Мои регистрации", if (registrationsCount == 0) "Все" else "Все $registrationsCount", onClickViewAll)
+        Box(Modifier.padding(horizontal = 16.dp)) {
+            ProfileSectionHeader("Мои регистрации", if (registrationsCount == 0) "Все" else "Все $registrationsCount", onClickViewAll)
+        }
         if (registrations.isEmpty()) {
-            OnBackgroundCard {
+            OnBackgroundCard(Modifier.padding(horizontal = 16.dp)) {
                 Text("Регистраций пока нет", Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium,
                     color = SauceTheme.colors.textSecondary)
             }
         } else BoxWithConstraints(Modifier.fillMaxWidth()) {
-            val cardWidth = maxWidth.coerceAtMost(280.dp)
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            val cardWidth = (maxWidth - 32.dp).coerceAtLeast(0.dp).coerceAtMost(280.dp)
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 registrations.take(3).forEach { registration ->
                     ProfilePreviewCard(registration.startTitle, registration.image, registration.dateStartPreview,
                         modifier = Modifier.width(cardWidth), onClick = { onClickRegistration(registration) }) {

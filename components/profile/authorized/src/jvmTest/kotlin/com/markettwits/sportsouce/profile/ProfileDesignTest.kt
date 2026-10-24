@@ -132,6 +132,45 @@ class ProfileDesignTest {
         }
     }
 
+    @Test
+    fun profileCarouselsScrollToThePaneEdgesWithOnlyOuterContentPadding() {
+        for (width in listOf(320, 390)) {
+            val fake = FakeProfile().apply {
+                state.value = AuthorizedProfileStore.State(user = user,
+                    recentStarts = List(3) { recent.copy(id = 315 + it, name = "Просмотренный старт $it") })
+            }
+            ImageComposeScene(width = width, height = 1800, density = Density(1f)) {
+                Palette(false) { AuthorizedProfileScreen(fake) }
+            }.use { scene ->
+                scene.settle()
+                for ((header, first, last) in listOf(
+                    Triple("Мои регистрации", "Осенний кросс 0", "Осенний кросс 2"),
+                    Triple("Вы смотрели", "Просмотренный старт 0", "Просмотренный старт 2"),
+                )) {
+                    var viewport = checkNotNull(scene.text(first)).parent
+                    while (viewport != null && !viewport.config.contains(SemanticsProperties.HorizontalScrollAxisRange)) {
+                        viewport = viewport.parent
+                    }
+                    val scroll = checkNotNull(viewport)
+                    assertEquals(0f, scroll.positionInRoot.x, 0.5f)
+                    assertEquals(width, scroll.size.width)
+                    assertEquals(16f, checkNotNull(scene.text(header)).positionInRoot.x, 0.5f)
+                    assertEquals(16f, clickable(checkNotNull(scene.text(first))).positionInRoot.x, 0.5f)
+                    scroll.config[SemanticsActions.ScrollBy].action!!.invoke(10f, 0f)
+                    scene.settle()
+                    val card = clickable(checkNotNull(scene.text(first)))
+                    assertEquals(6f, card.positionInRoot.x, 0.5f)
+                    assertEquals(6f, card.boundsInRoot.left, 0.5f, "The card must remain visible inside the gutter")
+                    scroll.config[SemanticsActions.ScrollBy].action!!.invoke(10000f, 0f)
+                    scene.settle()
+                    val lastCard = clickable(checkNotNull(scene.text(last)))
+                    assertEquals(width - 16f, lastCard.positionInRoot.x + lastCard.size.width, 0.5f)
+                    assertEquals(16f, checkNotNull(scene.text(header)).positionInRoot.x, 0.5f)
+                }
+            }
+        }
+    }
+
     @Composable private fun Palette(dark: Boolean, content: @Composable () -> Unit) {
         val c = sauceColors(dark)
         SauceTheme(darkTheme = dark, materialColors = c.material.copy(primary = c.surface, secondary = c.action,

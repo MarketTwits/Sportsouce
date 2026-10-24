@@ -62,11 +62,11 @@ internal fun ProfileScreenContent(
         Column(modifier.fillMaxSize().background(SauceTheme.colors.background).verticalScroll(rememberScrollState())) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
             AdaptivePane(fillHeight = false) {
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
-                    ProfileInfoTopBar(imageUrl = userImageUrl, userName = userName, userPhoneNumber = userPhoneNumber,
+                Column(Modifier.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                    ProfileInfoTopBar(modifier = Modifier.padding(horizontal = 16.dp), imageUrl = userImageUrl, userName = userName, userPhoneNumber = userPhoneNumber,
                         socialNetwork = socialNetwork, onClickImage = { isFullImage = true }, onClickEditProfile = onClickEditProfile,
                         onSocialNetworkClick = onSocialNetworkClick, onAddSocialNetwork = onAddSocialNetwork)
-                    if (refreshError != null) OnBackgroundCard {
+                    if (refreshError != null) OnBackgroundCard(Modifier.padding(horizontal = 16.dp)) {
                         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("Не удалось обновить профиль", style = MaterialTheme.typography.titleSmall,
                                 color = SauceTheme.colors.textPrimary)
@@ -79,9 +79,9 @@ internal fun ProfileScreenContent(
                         ProfileRegistrationsBlock(registrations = userRegistrations,
                             registrationsCount = userRegistrationsCount,
                             onClickRegistration = onClickRegistration, onClickViewAll = onClickStarts)
-                        ProfileActionCards(onClickFavorites = onClickFavorites, onClickMembers = onClickMembers, onClickResults = onClickResults)
+                        ProfileActionCards(modifier = Modifier.padding(horizontal = 16.dp), onClickFavorites = onClickFavorites, onClickMembers = onClickMembers, onClickResults = onClickResults)
                     }
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         ProfileSectionHeader("Покупки и оплаты")
                         OnBackgroundCard {
                             Column(Modifier.padding(8.dp)) {
@@ -92,9 +92,9 @@ internal fun ProfileScreenContent(
                         }
                     }
                     ProfileRecentStartsBlock(starts = recentStarts, onClickStart = onClickRecentStart)
-                    ProfileActionCadrs(onClickClub = onClickClub, onClickSettings = oClickSettings,
+                    ProfileActionCadrs(modifier = Modifier.padding(horizontal = 16.dp), onClickClub = onClickClub, onClickSettings = oClickSettings,
                         onClickHelp = { intentAction.openWebPage(SPORTSAUCE_TG_URL) })
-                    ProfileExtraInfoContent()
+                    ProfileExtraInfoContent(Modifier.padding(horizontal = 16.dp))
                     Spacer(Modifier.height(8.dp))
                 }
             }

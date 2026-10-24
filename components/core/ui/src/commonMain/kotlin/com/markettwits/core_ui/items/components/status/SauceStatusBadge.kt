@@ -13,6 +13,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceTheme
@@ -27,6 +28,7 @@ fun SauceStatusBadge(
     tone: SauceStatusTone = SauceStatusTone.Neutral,
     showIndicator: Boolean = true,
     centered: Boolean = false,
+    singleLine: Boolean = false,
 ) {
     val style = MaterialTheme.typography.labelMedium
     val measured = rememberTextMeasurer().measure(label, style = style)
@@ -51,7 +53,10 @@ fun SauceStatusBadge(
         ) {
             if (showIndicator) Box(Modifier.size(5.dp).background(colors.content, CircleShape))
             Text(text = label, modifier = Modifier.width(textWidth),
-                style = style, textAlign = if (centered) TextAlign.Center else TextAlign.Start)
+                style = style,
+                maxLines = if (singleLine) 1 else Int.MAX_VALUE,
+                overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
+                textAlign = if (centered) TextAlign.Center else TextAlign.Start)
         }
     }
 }

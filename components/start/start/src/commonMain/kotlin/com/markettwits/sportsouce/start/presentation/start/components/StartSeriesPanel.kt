@@ -136,7 +136,7 @@ private fun SeriesCard(
 
                         // Date
                         Text(
-                            text = item.date,
+                            text = item.displayDate,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                             fontFamily = FontNunito.medium(),
                             fontSize = 12.sp,

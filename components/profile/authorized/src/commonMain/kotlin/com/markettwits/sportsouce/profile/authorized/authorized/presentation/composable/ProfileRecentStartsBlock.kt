@@ -18,7 +18,7 @@ internal fun ProfileRecentStartsBlock(modifier: Modifier = Modifier, starts: Lis
             val cardWidth = maxWidth.coerceAtMost(320.dp)
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 starts.forEach { start ->
-                    ProfilePreviewCard(start.name, start.image, start.date, Modifier.width(cardWidth), start.place,
+                    ProfilePreviewCard(start.name, start.image, start.displayDate, Modifier.width(cardWidth), start.place,
                         onClick = { onClickStart(start) }) { StartStatusBadge(statusCode = start.statusCode.id, compact = true) }
                 }
             }

@@ -95,7 +95,7 @@ fun StartCardV3(
                     StartStatusBadge(statusCode = start.statusCode.id, modifier = Modifier.heightIn(min = 32.dp), compact = isCompactScreen)
 
                     StartCardV3ImageOverlayBadge(
-                        text = start.date,
+                        text = start.displayDate,
                         backgroundColor = SauceTheme.colors.surfaceRaised,
                         contentColor = SauceTheme.colors.textPrimary,
                         icon = {

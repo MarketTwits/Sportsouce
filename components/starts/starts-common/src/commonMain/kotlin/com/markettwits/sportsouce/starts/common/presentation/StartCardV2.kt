@@ -50,7 +50,7 @@ fun StartCardV2(
             ImageCardInfo(
                 modifier = Modifier.fillMaxWidth(),
                 title = start.name,
-                date = start.date,
+                date = start.displayDate,
                 distance = start.distance
             )
         }

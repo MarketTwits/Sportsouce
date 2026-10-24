@@ -53,7 +53,7 @@ fun FavoriteStartCard(
                         FavoriteTitle(start.name)
                         Row(horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
                             FavoritePoster(start.image, Modifier.size(56.dp, 64.dp))
-                            Box(Modifier.weight(1f).align(Alignment.CenterVertically)) { FavoriteDate(start.date, maxLines = 3) }
+                            Box(Modifier.weight(1f).align(Alignment.CenterVertically)) { FavoriteDate(start.displayDate, maxLines = 3) }
                             favorite()
                         }
                     }
@@ -61,7 +61,7 @@ fun FavoriteStartCard(
                     FavoritePoster(start.image, Modifier.size(72.dp, 88.dp))
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
                         FavoriteTitle(start.name)
-                        FavoriteDate(start.date)
+                        FavoriteDate(start.displayDate)
                     }
                     favorite()
                 }

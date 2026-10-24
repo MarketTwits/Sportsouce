@@ -62,6 +62,8 @@ data class StartRemoteNew(
     val slug: String?,
     @SerialName("start_date")
     val startDate: String,
+    @SerialName("end_date")
+    val endDate: String? = null,
     @SerialName("start_status")
     val startStatus: StartStatus,
     @SerialName("start_time")

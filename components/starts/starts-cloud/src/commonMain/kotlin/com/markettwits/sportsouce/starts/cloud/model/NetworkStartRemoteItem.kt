@@ -21,7 +21,7 @@ data class NetworkStartRemoteItem(
     val createdAt: String,
     val description: String? = "",
     val driving_directions: String?,
-    val end_date: String,
+    val end_date: String? = null,
     val finish_reg: String?,
     val id: Int,
     val isClosed: Boolean?,

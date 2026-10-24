@@ -55,6 +55,11 @@ fun ReviewScreen(
             ) {
                 ReviewContent(
                     isLoading = state.isLoading,
+                    photoAlbums = state.photoAlbums,
+                    photoAlbumsLoading = state.photoAlbumsLoading,
+                    photoAlbumsFailed = state.photoAlbumsFailed,
+                    onClickPhotoAlbum = { component.obtainEvent(ReviewStore.Intent.OnClickPhotoAlbum(it)) },
+                    onRetryPhotoAlbums = { component.obtainEvent(ReviewStore.Intent.OnRetryPhotoAlbums) },
                     news = state.review.news,
                     actual = state.review.actualStarts,
                     archive = state.review.archiveStarts,

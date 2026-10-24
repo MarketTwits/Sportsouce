@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.review.root
 
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponentBase
+import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
+import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
@@ -56,7 +58,8 @@ class RootReviewComponentBase(
             notificationModule,
             shopCatalogModule,
             clubDashboardModule,
-            workoutRegistrationModule
+            workoutRegistrationModule,
+            startAlbumModule
         )
     )
 
@@ -144,6 +147,7 @@ class RootReviewComponentBase(
                     onClickNews = {
                         navigation.pushNew(RootReviewComponent.Config.NewsEvent(it))
                     },
+                    onClickPhotoAlbum = { id -> navigation.pushNew(RootReviewComponent.Config.PhotoAlbum(id)) },
                     onClickSettings = {
                         navigation.pushNew(RootReviewComponent.Config.Settings)
                     },
@@ -216,6 +220,11 @@ class RootReviewComponentBase(
 
             is RootReviewComponent.Config.Albums -> RootReviewComponent.Child.Albums(
                 RootStartsAlbumsComponentBase(componentContext, navigation::pop)
+            )
+
+            is RootReviewComponent.Config.PhotoAlbum -> RootReviewComponent.Child.PhotoAlbum(
+                StartAlbumComponentBase(componentContext = componentContext, storeFactory = scope.get(),
+                    albumId = config.albumId, pop = navigation::pop)
             )
 
             is RootReviewComponent.Config.Search -> RootReviewComponent.Child.Search(

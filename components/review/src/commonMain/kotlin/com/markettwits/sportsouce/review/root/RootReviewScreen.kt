@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.review.root
 
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsScreen
 import androidx.compose.runtime.Composable
+import com.markettwits.sportsouce.start.presentation.album.presentation.screen.StartAlbumScreen
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
@@ -42,6 +43,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             }
 
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
+            is RootReviewComponent.Child.PhotoAlbum -> StartAlbumScreen(child.component)
             is RootReviewComponent.Child.Albums -> RootStartsAlbumsScreen(child.component)
             is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)

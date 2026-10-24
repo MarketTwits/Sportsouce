@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.review.review.domain.Review
+import com.markettwits.sportsouce.review.review.domain.ReviewPhotoAlbum
 import com.markettwits.sportsouce.review.review.presentation.store.ReviewStore.*
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
@@ -12,6 +13,8 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 interface ReviewStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
+        data class OnClickPhotoAlbum(val albumId: Int) : Intent
+        data object OnRetryPhotoAlbums : Intent
         data object OnClickSearch : Intent
         data object OnClickSettings : Intent
         data class OnClickNews(val news: NewsItem) : Intent
@@ -29,9 +32,13 @@ interface ReviewStore : Store<Intent, State, Label> {
         val isLoading : Boolean = false,
         val error: SauceError? = null,
         val review: Review = Review(),
+        val photoAlbums: List<ReviewPhotoAlbum> = emptyList(),
+        val photoAlbumsLoading: Boolean = false,
+        val photoAlbumsFailed: Boolean = false,
     )
 
     sealed interface Label {
+        data class OnClickPhotoAlbum(val albumId: Int) : Label
         data object OnClickSearch : Label
         data object OnClickSettings : Label
         data class OnClickNews(val news: NewsItem) : Label

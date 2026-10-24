@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.news.common.model.NewsItem
+import com.markettwits.sportsouce.review.review.domain.ReviewPhotoAlbum
+import com.markettwits.sportsouce.review.review.presentation.components.albums.ReviewPhotoAlbums
 import com.markettwits.sportsouce.news.news_list.components.NewsContent
 import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStarts
 import com.markettwits.sportsouce.review.review.presentation.components.actual.ActualStartsShimmer
@@ -34,6 +36,11 @@ fun ReviewContent(
     onClickTelegram: () -> Unit,
     onClickVk: () -> Unit,
     isLoading: Boolean = false,
+    photoAlbums: List<ReviewPhotoAlbum> = emptyList(),
+    photoAlbumsLoading: Boolean = false,
+    photoAlbumsFailed: Boolean = false,
+    onClickPhotoAlbum: (Int) -> Unit = {},
+    onRetryPhotoAlbums: () -> Unit = {},
     notification: @Composable ((Modifier) -> Unit),
 ) {
     ReviewSection(maxWidth = 1160.dp) {
@@ -62,6 +69,15 @@ fun ReviewContent(
                 onClickStart(it)
             }
         }
+    }
+    if (photoAlbums.isNotEmpty() || photoAlbumsLoading || photoAlbumsFailed) {
+        ReviewSection(maxWidth = 1160.dp) {
+            HorizontalDivider(modifier = Modifier.padding(10.dp))
+            ReviewPhotoAlbums(photoAlbums, photoAlbumsLoading, photoAlbumsFailed,
+                onClickPhotoAlbum, { onClickMenu(3) }, onRetryPhotoAlbums)
+        }
+    }
+    if (actual.isNotEmpty()) {
         if (products.isNotEmpty()) {
             ReviewSection(maxWidth = 1920.dp) {
                 HorizontalDivider(modifier = Modifier.padding(10.dp))

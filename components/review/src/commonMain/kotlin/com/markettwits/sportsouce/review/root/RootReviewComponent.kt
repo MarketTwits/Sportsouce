@@ -22,6 +22,7 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponent
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
 
 interface RootReviewComponent {
     val childStack: Value<ChildStack<*, Child>>
@@ -51,6 +52,9 @@ interface RootReviewComponent {
 
         @Serializable
         data object Albums : Config
+
+        @Serializable
+        data class PhotoAlbum(val albumId: Int) : Config
 
         @Serializable
         data object News : Config
@@ -86,6 +90,7 @@ interface RootReviewComponent {
         data class News(val component: RootNewsComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
         data class Albums(val component: RootStartsAlbumsComponent) : Child
+        data class PhotoAlbum(val component: StartAlbumComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
         data class Club(val component: RootClubComponent) : Child

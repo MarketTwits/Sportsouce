@@ -12,6 +12,8 @@ import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository
+import com.markettwits.sportsouce.review.review.domain.ReviewPhotoAlbum
+import com.markettwits.sportsouce.review.review.domain.ReviewPhotoAlbumsRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 class ReviewStoreFactory(
     private val storeFactory: StoreFactory,
     private val repository: ReviewRepository,
-    private val intentAction: IntentAction
+    private val intentAction: IntentAction,
+    private val photoAlbumsRepository: ReviewPhotoAlbumsRepository,
 ) {
 
     fun create(): ReviewStore =
@@ -34,21 +37,29 @@ class ReviewStoreFactory(
             ) {}
 
     private sealed interface Msg {
+        data object PhotoAlbumsLoading : Msg
+        data class PhotoAlbumsLoaded(val items: List<ReviewPhotoAlbum>) : Msg
+        data object PhotoAlbumsFailed : Msg
         data object Loading : Msg
         data class InfoLoaded(val review: Review) : Msg
         data class InfoFailed(val error: SauceError) : Msg
     }
 
     private inner class ExecutorImpl(
-        private val intentAction: IntentAction
+        private val intentAction: IntentAction,
     ) : CoroutineExecutor<ReviewStore.Intent, Unit, ReviewStore.State, Msg, ReviewStore.Label>(), LogTagProvider {
 
         override val tag: String = "ReviewStoreFactory"
         private var launchJob: Job? = null
+        private var photoAlbumsJob: Job? = null
 
         override fun executeIntent(intent: ReviewStore.Intent) {
             when (intent) {
-                is ReviewStore.Intent.Launch -> launch(intent.forced)
+                is ReviewStore.Intent.Launch -> { launch(intent.forced); loadPhotoAlbums() }
+                is ReviewStore.Intent.OnClickPhotoAlbum -> if (state().photoAlbums.any { it.id == intent.albumId }) {
+                    publish(ReviewStore.Label.OnClickPhotoAlbum(intent.albumId))
+                }
+                ReviewStore.Intent.OnRetryPhotoAlbums -> if (photoAlbumsJob?.isActive != true) loadPhotoAlbums()
                 is ReviewStore.Intent.OnClickItem -> publish(ReviewStore.Label.OnClickItem(intent.item))
                 is ReviewStore.Intent.OnClickMenu -> publish(ReviewStore.Label.OnClickMenu(intent.item))
                 is ReviewStore.Intent.OnClickNews -> publish(ReviewStore.Label.OnClickNews(intent.news))
@@ -64,6 +75,17 @@ class ReviewStoreFactory(
 
         override fun executeAction(action: Unit) {
             launch(false)
+            loadPhotoAlbums()
+        }
+
+        private fun loadPhotoAlbums() {
+            photoAlbumsJob?.cancel()
+            photoAlbumsJob = scope.launch {
+                photoAlbumsRepository.albums()
+                    .onStart { dispatch(Msg.PhotoAlbumsLoading) }
+                    .catch { dispatch(Msg.PhotoAlbumsFailed) }
+                    .collect { dispatch(Msg.PhotoAlbumsLoaded(it)) }
+            }
         }
 
         private fun launch(forced: Boolean) {
@@ -92,6 +114,9 @@ class ReviewStoreFactory(
     private object ReducerImpl : Reducer<ReviewStore.State, Msg> {
         override fun ReviewStore.State.reduce(msg: Msg): ReviewStore.State =
             when (msg) {
+                Msg.PhotoAlbumsLoading -> copy(photoAlbumsLoading = true, photoAlbumsFailed = false)
+                is Msg.PhotoAlbumsLoaded -> copy(photoAlbums = msg.items, photoAlbumsLoading = false, photoAlbumsFailed = false)
+                Msg.PhotoAlbumsFailed -> copy(photoAlbumsLoading = false, photoAlbumsFailed = true)
                 is Msg.InfoFailed -> copy(
                     isLoading = false,
                     error = msg.error,

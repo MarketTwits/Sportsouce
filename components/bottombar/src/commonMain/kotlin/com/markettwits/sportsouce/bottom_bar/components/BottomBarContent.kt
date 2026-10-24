@@ -51,7 +51,7 @@ internal fun BottomBarContent(
     }
     val density = LocalDensity.current
     val select: (BottomBarConfiguration) -> Unit = {
-        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         onClickTab(it)
     }
     Scaffold(

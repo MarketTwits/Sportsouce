@@ -22,7 +22,7 @@ class GuestWelcomeHapticsTest {
         var motion: GuestWelcomeMotion? = null
         val haptic = object : HapticFeedback {
             override fun performHapticFeedback(hapticFeedbackType: HapticFeedbackType) {
-                assertEquals(HapticFeedbackType.TextHandleMove, hapticFeedbackType)
+                assertEquals(HapticFeedbackType.SegmentFrequentTick, hapticFeedbackType)
                 ticks += visible
             }
         }

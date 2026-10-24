@@ -59,7 +59,7 @@ internal fun rememberGuestWelcomeMotion(playIntro: Boolean, lines: List<String> 
             // Coalesce skipped frames into one tick, without replaying a backlog. A jump
             // to the finished state (including disabled system animations) stays silent.
             if (count > previous && fraction < 1f && (durationScale?.scaleFactor ?: 1f) > 0f) {
-                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
             }
             previous = count
         }

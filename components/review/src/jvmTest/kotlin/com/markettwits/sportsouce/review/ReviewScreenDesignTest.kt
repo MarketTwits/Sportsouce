@@ -72,7 +72,7 @@ class ReviewScreenDesignTest {
     fun newsDescriptionEndsWithEllipsisOnSecondLineAndGrowsWithFontScale() {
         for (scale in listOf(1f, 2f)) {
             ImageComposeScene(width = 300, height = 500, density = Density(1f, scale)) {
-                Palette(false) { NewsItemCard(newsInfo = news, cardWidth = 240.dp, cardHeight = 220.dp, onClick = {}) }
+                Palette(false) { NewsItemCard(newsInfo = news, cardWidth = 240.dp, onClick = {}) }
             }.use { scene ->
                 scene.settle()
                 val layouts = scene.nodes().flatMap { node ->

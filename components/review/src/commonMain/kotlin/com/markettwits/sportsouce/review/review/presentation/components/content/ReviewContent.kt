@@ -75,6 +75,10 @@ fun ReviewContent(
         }
         ReviewSection(maxWidth = 1160.dp) {
             HorizontalDivider(modifier = Modifier.padding(10.dp))
+            SocialNetwork(onClickVk = onClickVk, onClickTelegram = onClickTelegram)
+        }
+        ReviewSection(maxWidth = 1160.dp) {
+            HorizontalDivider(modifier = Modifier.padding(10.dp))
             ArchiveStarts(starts = archive) {
                 onClickStart(it)
             }
@@ -89,10 +93,6 @@ fun ReviewContent(
                     onClickShowMoreProducts = onClickShowMoreMerchProducts
                 )
             }
-        }
-        ReviewSection(maxWidth = 1160.dp) {
-            HorizontalDivider(modifier = Modifier.padding(10.dp))
-            SocialNetwork(onClickVk = onClickVk, onClickTelegram = onClickTelegram)
         }
     }
 }

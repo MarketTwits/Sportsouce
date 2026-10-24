@@ -43,6 +43,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             onClickEditProfile = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
             },
+            onClickResults = { component.obtainOutput(AuthorizedProfileComponent.Output.MyResults) },
             onClickFavorites = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.Favorites)
             },

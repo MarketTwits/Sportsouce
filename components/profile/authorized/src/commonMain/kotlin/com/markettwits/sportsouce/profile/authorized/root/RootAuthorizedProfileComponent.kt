@@ -14,6 +14,8 @@ import com.markettwits.sportsouce.start.presentation.start.component.StartScreen
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.presentation.component.StartsFavoritesComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.profile.results.presentation.component.MyResultsComponent
+import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
 import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
 import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
 
@@ -57,10 +59,20 @@ interface RootAuthorizedProfileComponent {
 
         @Serializable
         data object Favorites : Config()
+
+        @Serializable
+        data object MyResults : Config()
+
+        @Serializable
+        data class ResultProtocol(val startId: Int) : Config()
     }
 
 
     sealed class Child {
+
+        data class ResultProtocol(val component: StartMemberResultsComponent) : Child()
+
+        data class MyResults(val component: MyResultsComponent) : Child()
 
         data class Members(val component: RootMembersComponentBase) : Child()
 

@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
 import com.arkivanov.decompose.ComponentContext
+import com.markettwits.sportsouce.profile.results.presentation.component.MyResultsComponentBase
+import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.markettwits.getOrCreateKoinScope
@@ -51,6 +53,17 @@ abstract class RootAuthorizedProfileComponentAbstract(
                 storeFactory = scope.get(),
                 event = { handleAuthorizedProfileEvent(it, navigation) }
             )
+        )
+
+        RootAuthorizedProfileComponent.Config.MyResults -> MyResults(
+            MyResultsComponentBase(componentContext, back = { navigation.pop() }, openStart = { id ->
+                navigation.pushNew(RootAuthorizedProfileComponent.Config.Start(StartScreenInput.Id(id)))
+            }, openResult = { id -> navigation.pushNew(RootAuthorizedProfileComponent.Config.ResultProtocol(id)) })
+        )
+
+        is RootAuthorizedProfileComponent.Config.ResultProtocol -> ResultProtocol(
+            StartMemberResultsComponentBase(componentContext, scope.get(), scope.get(), emptyList(), config.startId,
+                goBack = { navigation.pop() })
         )
 
         is RootAuthorizedProfileComponent.Config.MyRegistries -> MyRegistries(

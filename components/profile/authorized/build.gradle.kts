@@ -35,6 +35,7 @@ kotlin {
         implementation(projects.components.profile.editProfile)
         implementation(projects.components.profile.members)
         implementation(projects.components.profile.registrations)
+        implementation(projects.components.profile.results)
         implementation(projects.components.profile.cloud)
         
         implementation(projects.components.club.dashboard)

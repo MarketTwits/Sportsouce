@@ -55,6 +55,7 @@ class ProfileDesignTest {
                 scene.save("profile-loaded-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
                 scene.clickLabel("Редактировать профиль")
                 scene.clickLabel("Изменить социальные сети")
+                scene.click("Мои результаты")
                 scene.click("Избранное")
                 scene.click("Мои заказы")
                 scene.click("Оплаченные квитанции")
@@ -66,7 +67,7 @@ class ProfileDesignTest {
                 scene.scrollTo("Участники"); scene.click("Участники")
                 scene.scrollTo("Настройки"); scene.click("Настройки")
                 assertEquals(listOf(AuthorizedProfileComponent.Output.EditProfile, AuthorizedProfileComponent.Output.SocialNetwork,
-                    AuthorizedProfileComponent.Output.Favorites,
+                    AuthorizedProfileComponent.Output.MyResults, AuthorizedProfileComponent.Output.Favorites,
                     AuthorizedProfileComponent.Output.UserOrders, AuthorizedProfileComponent.Output.PaidReceipts, AuthorizedProfileComponent.Output.AllRegistries,
                     AuthorizedProfileComponent.Output.Start(StartScreenInput.Id(300)), AuthorizedProfileComponent.Output.Club,
                     AuthorizedProfileComponent.Output.Start(StartScreenInput.Item(recent)), AuthorizedProfileComponent.Output.Members,

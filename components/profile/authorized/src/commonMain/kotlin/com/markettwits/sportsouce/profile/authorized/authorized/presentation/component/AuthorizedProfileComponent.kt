@@ -14,6 +14,7 @@ interface AuthorizedProfileComponent {
     fun obtainOutput(outPut: Output)
 
     sealed interface Output {
+        data object MyResults : Output
         data object Favorites : Output
         data object AllRegistries : Output
         data object EditProfile : Output

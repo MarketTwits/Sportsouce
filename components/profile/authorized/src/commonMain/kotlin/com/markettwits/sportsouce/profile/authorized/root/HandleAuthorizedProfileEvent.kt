@@ -10,6 +10,7 @@ internal fun handleAuthorizedProfileEvent(
     navigation: StackNavigation<RootAuthorizedProfileComponent.Config>,
 ) {
     when (outPut) {
+        AuthorizedProfileComponent.Output.MyResults -> navigation.pushNew(RootAuthorizedProfileComponent.Config.MyResults)
         is AuthorizedProfileComponent.Output.EditProfile -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.EditProfileMenu()
         )

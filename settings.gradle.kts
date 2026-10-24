@@ -37,6 +37,7 @@ include(
     ":components:profile:members",
     ":components:profile:edit-profile",
     ":components:profile:registrations",
+    ":components:profile:results",
     ":components:news:news",
     ":components:news:news-cloud",
     ":components:news:news-common",

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,9 +20,12 @@ internal fun ProfileActionCards(
     modifier: Modifier = Modifier,
     onClickFavorites: () -> Unit,
     onClickMembers: () -> Unit,
+    onClickResults: () -> Unit,
 ) {
     OnBackgroundCard(modifier) {
         Column(Modifier.padding(8.dp)) {
+            SauceActionRow("Мои результаты", onClickResults, icon = Icons.Outlined.EmojiEvents)
+            HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
             SauceActionRow("Избранное", onClickFavorites, icon = Icons.Default.FavoriteBorder)
             HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
             SauceActionRow("Участники", onClickMembers, icon = Icons.Default.Groups)

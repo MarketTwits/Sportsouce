@@ -1,6 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
 import androidx.compose.runtime.Composable
+import com.markettwits.sportsouce.profile.results.presentation.screen.MyResultsScreen
+import com.markettwits.sportsouce.start.presentation.result.screen.StartMemberResultsScreen
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -28,6 +30,8 @@ fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
         animation = stackAnimation(fade())
     ) {
         when (val child = it.instance) {
+            is RootAuthorizedProfileComponent.Child.ResultProtocol -> StartMemberResultsScreen(child.component)
+            is RootAuthorizedProfileComponent.Child.MyResults -> MyResultsScreen(child.component)
             
             is RootAuthorizedProfileComponent.Child.AuthProfile -> AuthorizedProfileScreen(
                 component = child.component

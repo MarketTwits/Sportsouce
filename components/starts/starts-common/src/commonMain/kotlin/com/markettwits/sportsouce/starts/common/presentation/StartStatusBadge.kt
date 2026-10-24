@@ -5,13 +5,14 @@ import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.components.status.SauceStatusBadge
 import com.markettwits.core_ui.items.components.status.SauceStatusTone
 
-/** Shared event-status presentation: text remains explicit and long statuses can wrap. */
+/** Event status; constrained horizontal layouts can opt into a single ellipsized line. */
 @Composable
 fun StartStatusBadge(
     statusCode: Int,
     modifier: Modifier = Modifier,
     compact: Boolean = false,
     centered: Boolean = false,
+    singleLine: Boolean = false,
 ) {
     val tone = when (statusCode) {
         1, 2, 4 -> SauceStatusTone.Warning
@@ -23,5 +24,6 @@ fun StartStatusBadge(
         label = if (compact) startStatusCompactMessage(statusCode) else startStatusMessage(statusCode),
         tone = tone,
         centered = centered,
+        singleLine = singleLine,
     )
 }

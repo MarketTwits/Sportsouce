@@ -41,7 +41,7 @@ fun StartCardSimple(
             modifier = Modifier,
             name = start.name,
             image = start.image,
-            date = start.date,
+            date = start.displayDate,
             cardWidth = cardWidth,
             cardHeight = cardHeight,
             imageHeight = imageHeight,

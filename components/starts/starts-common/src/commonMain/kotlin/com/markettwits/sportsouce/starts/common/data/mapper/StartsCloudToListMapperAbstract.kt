@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.starts.common.data.mapper
 
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.core.time.TimePattern
+import com.markettwits.core.time.mapDateRange
 import com.markettwits.sportsouce.starts.cloud.model.NetworkKindOfSport
 import com.markettwits.sportsouce.starts.cloud.model.NetworkOrganizerPhotoRemoteItem
 import com.markettwits.sportsouce.starts.cloud.model.NetworkOrganizerRemoteItem
@@ -16,11 +17,14 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
     StartsCloudToListMapper {
     override fun mapSingle(items: List<NetworkStartRemoteItem>): List<StartsListItem> {
         val resultLists = items.map {
+            val date = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.start_date)
             StartsListItem(
                 id = it.id,
                 name = it.name,
                 image = it.posterLinkFile?.fullPath ?: "",
-                date = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.start_date),
+                date = date,
+                dateRange = timeMapper.mapDateRange(it.start_date, it.end_date)
+                    .takeIf { range -> range != date },
                 statusCode = StartsListItem.StatusCode(
                     it.start_status.code,
                     it.start_status.name

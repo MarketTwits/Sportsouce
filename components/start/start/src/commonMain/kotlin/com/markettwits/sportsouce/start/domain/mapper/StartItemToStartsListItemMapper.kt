@@ -20,6 +20,7 @@ object StartItemToStartsListItemMapper {
             date = runCatching {
                 timeMapper.mapTime(TimePattern.FullWithEmptySpace, startItem.startData)
             }.getOrDefault(startItem.startData),
+            dateRange = startItem.startTime.takeIf { it.isNotBlank() && it != startItem.startData },
             statusCode = StartsListItem.StatusCode(
                 id = startItem.startStatus.code,
                 message = startItem.startStatus.name

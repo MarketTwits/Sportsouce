@@ -10,7 +10,7 @@ data class StartData(
     @SerialName("conditionFile") val conditionFile: ConditionFile?,
     @SerialName("coordinates") val coordinates: String?,
     @SerialName("description") val description: String? = "",
-    @SerialName("end_date") val endDate: String,
+    @SerialName("end_date") val endDate: String? = null,
     @SerialName("finish_reg") val finishReg: String?,
     @SerialName("hashtags") val hashtags: List<String>?,
     @SerialName("id") val id: Int,

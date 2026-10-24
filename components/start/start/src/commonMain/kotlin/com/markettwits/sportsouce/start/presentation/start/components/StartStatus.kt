@@ -23,12 +23,11 @@ import com.markettwits.sportsouce.starts.common.presentation.StartStatusBadge
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsIcon
 import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsColor
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StartStatus(modifier: Modifier = Modifier, organizers: List<Organizer>, kindOfSports: List<StartItem.KindOfSport>, startStatus: StartItem.StartStatus) {
-    FlowRow(modifier.fillMaxWidth().padding(horizontal = SauceSpacing.large, vertical = SauceSpacing.small),
-        horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small, Alignment.End), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-        StartStatusBadge(startStatus.code, Modifier.weight(1f).heightIn(min = 40.dp).align(Alignment.CenterVertically), centered = true)
+    Row(modifier.fillMaxWidth().padding(horizontal = SauceSpacing.large, vertical = SauceSpacing.small),
+        horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small), verticalAlignment = Alignment.CenterVertically) {
+        StartStatusBadge(startStatus.code, Modifier.weight(1f).heightIn(min = 40.dp), centered = true, singleLine = true)
         kindOfSports.take(2).forEach { sport ->
             val sportItem = StartsListItem.KindOfSport(sport.id, sport.name)
             val sportColor = startKindOfSportsColor(sportItem)

@@ -113,6 +113,7 @@ class StartCommentsStoreTest {
 
     private data class Post(val start: Int, val text: String, val parent: Int, val reply: Boolean, val question: Boolean)
     private class FakeComments : StartRepository {
+        override suspend fun refundRules(startId: Int): Result<StartRefundRules> = error("unused")
         var response = CompletableDeferred<CommentUiState>()
         val posts = mutableListOf<Post>()
         val rows = mutableListOf(row(1, question = true))

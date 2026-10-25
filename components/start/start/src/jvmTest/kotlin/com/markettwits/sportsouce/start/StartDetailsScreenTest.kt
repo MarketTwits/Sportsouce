@@ -30,6 +30,7 @@ import com.markettwits.sportsouce.start.presentation.start.components.StartDetai
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartItemToStartsListItemMapper
 import com.markettwits.IntentAction
@@ -409,6 +410,8 @@ class StartDetailsScreenTest {
             error("Unexpected repository call: ${method.name}")
         } as StartRepository
         val repository = object : StartRepository by unused {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
             override suspend fun start(startId: String, relaunch: Boolean) = response
             override suspend fun startsRecommended(startId: String) = Result.success(emptyList<com.markettwits.sportsouce.starts.common.domain.StartsListItem>())
             override suspend fun isStartInFavorite(startId: String) = Result.success(false)
@@ -461,6 +464,8 @@ class StartDetailsScreenTest {
             error("Unexpected repository call: ${method.name}")
         } as StartRepository
         val repository = object : StartRepository by unused {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
             override suspend fun start(startId: String, relaunch: Boolean) = response.await()
             override suspend fun startsRecommended(startId: String) = Result.success(emptyList<com.markettwits.sportsouce.starts.common.domain.StartsListItem>())
             override suspend fun isStartInFavorite(startId: String) = Result.success(false)

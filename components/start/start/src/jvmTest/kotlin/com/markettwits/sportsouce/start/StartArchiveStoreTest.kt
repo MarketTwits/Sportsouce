@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.markettwits.IntentAction
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
@@ -40,6 +41,8 @@ class StartArchiveStoreTest {
         var failArchive = true
         val pending = CompletableDeferred<Unit>()
         val repository = object : StartRepository by unused<StartRepository>() {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
             override suspend fun start(startId: String, relaunch: Boolean): Result<StartItem> { loads++; return Result.success(details) }
             override suspend fun startsRecommended(startId: String) = Result.success(emptyList<StartsListItem>())
             override suspend fun isStartInFavorite(startId: String) = Result.success(false)
@@ -79,6 +82,8 @@ class StartArchiveStoreTest {
     @Test fun startWithoutArchiveDoesNotRequestItOrExposeArchiveNavigation() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val repository = object : StartRepository by unused<StartRepository>() {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
             override suspend fun start(startId: String, relaunch: Boolean) = Result.success(details.copy(
                 startArchive = null, startSeries = StartItem.StartSeries.Empty))
             override suspend fun startsRecommended(startId: String) = Result.success(emptyList<StartsListItem>())

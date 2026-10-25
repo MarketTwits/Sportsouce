@@ -20,6 +20,7 @@ import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
@@ -54,6 +55,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
             Intent
 
         data object OnClickArchive : Intent
+        data object OnRetryRefundRules : Intent
         data object OnRetryArchive : Intent
         data object OnClickRelatedStarts : Intent
         data object OnClickFavorite : Intent
@@ -70,6 +72,9 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val startsArchive: List<StartsListItem> = emptyList(),
         val archiveLoading: Boolean = false,
         val archiveError: Boolean = false,
+        val refundRules: StartRefundRules? = null,
+        val refundRulesLoading: Boolean = false,
+        val refundRulesError: Boolean = false,
         val favoriteState: StartFavoriteState = StartFavoriteState.Loading(),
         val event: StateEventWithContent<EventContent> = consumed(),
     )
@@ -125,6 +130,9 @@ class StartScreenStoreFactory(
         data class StartInfoFailed(val exception: Throwable) : Msg
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
         data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
+        data object RefundRulesLoading : Msg
+        data class RefundRulesLoaded(val data: StartRefundRules) : Msg
+        data class RefundRulesFailed(val startId: Int) : Msg
         data object ArchiveLoading : Msg
         data class ArchiveLoaded(val archiveId: Int, val items: List<StartsListItem>, val failed: Boolean = false) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
@@ -139,6 +147,7 @@ class StartScreenStoreFactory(
 
         override val tag: String = "StartScreenExecutorImpl"
         private var archiveJob: Job? = null
+        private var refundRulesJob: Job? = null
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
@@ -228,6 +237,9 @@ class StartScreenStoreFactory(
                         publish(OnClickArchive(startId, current.startsArchive))
                     }
                 }
+                Intent.OnRetryRefundRules -> if (refundRulesJob?.isActive != true) {
+                    state().startItem?.takeUnless { state().isPartialData }?.id?.let(::getRefundRules)
+                }
                 Intent.OnRetryArchive -> if (!state().archiveLoading) getArchiveStarts(state().startItem?.startArchive)
 
                 is Intent.OnClickRelatedStarts -> {
@@ -282,6 +294,7 @@ class StartScreenStoreFactory(
                         handleReRegistrationIfNeeded(startInput, startItem)
                         getSeriesStarts(startItem.startSeries)
                         getArchiveStarts(startItem.startArchive)
+                        getRefundRules(startItem.id)
                     }
                 )
             }
@@ -329,6 +342,20 @@ class StartScreenStoreFactory(
                 service.startsRecommended(startIdString).onSuccess {
                     dispatch(Msg.StartsRecommendedSuccess(it))
                 }
+            }
+        }
+
+        private fun getRefundRules(startId: Int) {
+            refundRulesJob?.cancel()
+            dispatch(Msg.RefundRulesLoading)
+            refundRulesJob = scope.launch {
+                service.refundRules(startId).fold(
+                    onSuccess = { dispatch(Msg.RefundRulesLoaded(it)) },
+                    onFailure = {
+                        if (it is CancellationException) throw it
+                        dispatch(Msg.RefundRulesFailed(startId))
+                    },
+                )
             }
         }
 
@@ -427,12 +454,23 @@ class StartScreenStoreFactory(
                 isPartialData = false,
                 startsArchive = if (startItem?.startArchive?.id == msg.data.startArchive?.id) startsArchive else emptyList(),
                 archiveLoading = false,
-                archiveError = false
+                archiveError = false,
+                refundRules = refundRules?.takeIf { it.startId == msg.data.id },
+                refundRulesLoading = false,
+                refundRulesError = false,
             )
 
             is Msg.StartsRecommendedSuccess -> copy(
                 startsRecommended = msg.data
             )
+
+            Msg.RefundRulesLoading -> copy(refundRulesLoading = true, refundRulesError = false)
+            is Msg.RefundRulesLoaded -> if (startItem?.id == msg.data.startId) copy(
+                refundRules = msg.data, refundRulesLoading = false, refundRulesError = false,
+            ) else this
+            is Msg.RefundRulesFailed -> if (startItem?.id == msg.startId) copy(
+                refundRulesLoading = false, refundRulesError = true,
+            ) else this
 
             Msg.ArchiveLoading -> copy(archiveLoading = true, archiveError = false)
             is Msg.ArchiveLoaded -> if (startItem?.startArchive?.id == msg.archiveId) copy(

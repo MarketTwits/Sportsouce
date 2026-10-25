@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface StartRepository {
 
+    suspend fun refundRules(startId: Int): Result<StartRefundRules>
+
     suspend fun start(startId: String, relaunch: Boolean): Result<StartItem>
 
     /**

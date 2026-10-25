@@ -23,6 +23,7 @@ import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.screens.FullImageContent
 import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
@@ -38,6 +39,10 @@ internal fun StartScreenContent(
     archiveStarts: List<StartsListItem> = emptyList(),
     archiveLoading: Boolean = false,
     archiveError: Boolean = false,
+    refundRules: StartRefundRules? = null,
+    refundRulesLoading: Boolean = false,
+    refundRulesError: Boolean = false,
+    onRetryRefundRules: () -> Unit = {},
     onClickArchive: () -> Unit = {},
     onRetryArchive: () -> Unit = {},
     error: Throwable? = null,
@@ -102,6 +107,10 @@ internal fun StartScreenContent(
                                 archiveStarts = archiveStarts,
                                 archiveLoading = archiveLoading,
                                 archiveError = archiveError,
+                                refundRules = refundRules,
+                                refundRulesLoading = refundRulesLoading,
+                                refundRulesError = refundRulesError,
+                                onRetryRefundRules = onRetryRefundRules,
                                 onClickArchive = onClickArchive,
                                 onRetryArchive = onRetryArchive,
                                 isPartialData = isPartialData,

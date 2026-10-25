@@ -5,6 +5,7 @@ import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import com.markettwits.core_ui.items.theme.SauceTheme
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
@@ -99,7 +100,9 @@ fun ShopCatalogScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(bottomEnd = 20.dp, topEnd = 20.dp))
                         .width(400.dp)
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
+                        // The drawer requests initial focus; keep it off editable price fields.
+                        .focusable(),
                     component = filterComponent,
                     onClickGoBack = {
                         catalogComponent.obtainEvent(ShopCatalogStore.Intent.OnClickFilter)

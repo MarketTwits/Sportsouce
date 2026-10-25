@@ -311,6 +311,13 @@ class ShopDesignSystemTest {
                 scene.clickable(scene.label("Фильтры")!!).config[SemanticsActions.OnClick].action!!.invoke()
                 scene.settle()
                 assertTrue(catalogue.state.value.isShowFilter)
+                assertTrue(scene.nodes().filter { it.config.contains(SemanticsProperties.EditableText) }
+                    .none { it.config.getOrNull(SemanticsProperties.Focused) == true },
+                    "Opening or reopening filters must not focus a price field")
+                val min = scene.nodes().first { "От, ₽" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() && it.config.contains(SemanticsActions.SetText) }
+                scene.pointerClick(min)
+                assertTrue(scene.nodes().any { it.config.contains(SemanticsProperties.EditableText) && it.config.getOrNull(SemanticsProperties.Focused) == true },
+                    "The price field must still accept focus after a tap")
                 val close = scene.clickable(scene.label("Закрыть фильтры")!!)
                 assertTrue(close.boundsInRoot.left >= 0 && close.boundsInRoot.right <= 390)
                 close.config[SemanticsActions.OnClick].action!!.invoke()

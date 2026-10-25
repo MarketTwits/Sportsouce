@@ -28,12 +28,12 @@ fun ArchiveStarts(
     BoxWithConstraints(
         modifier = modifier.fillMaxWidth()
     ) {
-        val cardWidth = (maxWidth * 0.18f).coerceIn(115.dp, 185.dp)
+        val cardWidth = (maxWidth * 0.34f).coerceIn(136.dp, 176.dp)
 
         LazyRow(
-            modifier = modifier,
+            modifier = modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(starts, key = { it.id }) { item ->
                 StartCardSimple(

@@ -6,6 +6,13 @@ plugins {
 
 kotlin {
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+        implementation(projects.components.core.cloud)
+        implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
+    }
+
     android {
         namespace = "com.markettwits.start_support"
     }
@@ -15,6 +22,10 @@ kotlin {
         implementation(projects.components.core.intent.impl)
         implementation(projects.components.start.startCloud)
         implementation(projects.components.core.ui)
+        implementation(projects.components.auth.authService)
+        implementation(projects.components.profile.cloud)
+        implementation(projects.components.core.decompose)
+        implementation(libs.ktor.core)
         implementation(projects.components.core.koin)
         implementation(libs.compose.components.resources)
         implementation(libs.bundles.mviKotlin)

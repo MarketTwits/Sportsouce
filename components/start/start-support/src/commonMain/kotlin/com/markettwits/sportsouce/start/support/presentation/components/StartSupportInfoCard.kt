@@ -24,8 +24,8 @@ internal fun StartSupportInfoCard(modifier: Modifier = Modifier) {
             val showAnimation = maxWidth >= 300.dp && LocalDensity.current.fontScale <= 1.3f
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "Поддержите развитие спортивных стартов и мероприятий!\n\n" +
-                            "Ваше добровольное пожертвование поможет сделать их лучше и доступнее.",
+                    text = "Добровольная поддержка — не оплата участия.\n\n" +
+                            "Пожертвование помогает развивать спортивные старты и делать их доступнее.",
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyMedium,
                     color = SauceTheme.colors.textSecondary,

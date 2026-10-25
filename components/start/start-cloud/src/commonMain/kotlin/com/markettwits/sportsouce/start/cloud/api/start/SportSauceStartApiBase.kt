@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.start.cloud.model.comments.response.Reply
 import com.markettwits.sportsouce.start.cloud.model.comments.response.StartCommentsRemote
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationRequest
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
+import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
@@ -124,6 +125,14 @@ internal class SportSauceStartApiBase(
             if (searchQuery.isNotBlank()) parameter("filterText", searchQuery)
         }
         return json.decodeFromString<StartMembersResultRowsV2>(response.body<String>())
+    }
+
+    override suspend fun checkDonation(startId: Int, token: String?): StartDonationCheckRemote {
+        val response = client.get("donations/check") {
+            parameter("startId", startId)
+            if (!token.isNullOrBlank()) bearerAuth(token)
+        }
+        return json.decodeFromString(response.body<String>())
     }
 
     override suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse {

@@ -27,6 +27,7 @@ kotlin {
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)
         implementation(projects.components.auth.authService)
+        implementation(projects.components.auth.authFlow)
         implementation(projects.components.start.startRegister)
         implementation(projects.components.start.startSupport)
         implementation(projects.components.core.cache)

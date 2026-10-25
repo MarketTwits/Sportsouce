@@ -26,6 +26,7 @@ import com.markettwits.sportsouce.start.support.presentation.component.StartSupp
 fun StartScreen(
     startComponent: StartScreenComponent,
     startSupportComponent: StartSupportComponent,
+    isActive: Boolean = true,
 ) {
     val state by startComponent.start.collectAsState()
     var fullImage by rememberSaveable(state.startItem?.id) {
@@ -109,6 +110,7 @@ fun StartScreen(
                             StartSupport(
                                 modifier = modifier,
                                 component = startSupportComponent,
+                                isActive = isActive,
                                 sponsors = data.sponsors,
                                 onClickSponsorUrl = { url ->
                                     startComponent.obtainEvent(StartScreenStore.Intent.OnClickUrl(url))

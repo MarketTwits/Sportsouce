@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.common.presentation.StartCardV2
@@ -84,12 +83,8 @@ internal fun StartsScreenList(
             ) {
                 if (page == 1) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        GradientInfoCard(
-                            title = "Присоединяйтесь к нашему чату",
-                            description = "Вступайте в наш Telegram-чат, чтобы всегда быть в курсе актуальных новостей по стартам и первыми узнавать о новых мероприятиях",
-                            buttonText = "Перейти в чат",
-                            color = SportSouceColor.SportSouceRegistryOpenGreen,
-                            onButtonClick = {
+                        StartsChatCard(
+                            onClick = {
                                 uriHandler.openUri("https://t.me/sportsaucechat")
                             }
                         )

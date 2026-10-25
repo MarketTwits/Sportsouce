@@ -10,6 +10,9 @@ kotlin {
     }
 
     sourceSets {
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
         commonMain.dependencies {
             implementation(projects.components.core.time)
             implementation(projects.components.core.ui)

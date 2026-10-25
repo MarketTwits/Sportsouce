@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -42,8 +40,8 @@ internal fun LazyListScope.ShopCartItems(
 @Composable
 private fun <T> T.AnimationBox(
     key : Any = Unit,
-    enter: EnterTransition = expandVertically() + fadeIn(),
-    exit: ExitTransition = fadeOut() + shrinkVertically(),
+    enter: EnterTransition = fadeIn(),
+    exit: ExitTransition = fadeOut(),
     content: @Composable T.() -> Unit
 ) {
     val state = remember(key) {

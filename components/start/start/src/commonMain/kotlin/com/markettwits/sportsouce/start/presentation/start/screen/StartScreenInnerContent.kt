@@ -94,6 +94,7 @@ internal fun StartScreenInnerContent(
             onItemClick = onClickRecommendedStart
         )
         donations(innerModifier)
+        StartInsurancePanel(innerModifier, onClickUrl)
         Spacer(modifier = Modifier.height(16.dp))
         comments(Modifier)
         Spacer(modifier = Modifier.height(16.dp))

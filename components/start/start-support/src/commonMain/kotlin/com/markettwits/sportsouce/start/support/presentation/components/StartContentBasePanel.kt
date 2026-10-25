@@ -1,18 +1,16 @@
 package com.markettwits.sportsouce.start.support.presentation.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
-import com.markettwits.core_ui.items.theme.Shapes
 
 @Composable
 internal fun StartSupportPanel(
@@ -23,9 +21,9 @@ internal fun StartSupportPanel(
     onClickSupport: () -> Unit
 ) {
     val focus = LocalFocusManager.current
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth().sauceVerticalScroll(rememberScrollState())
+        .padding(horizontal = 16.dp).padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         StartSupportInfoCard()
-        Spacer(modifier = Modifier.padding(10.dp))
         OutlinedTextFieldBase(
             label = "Сумма",
             value = value,
@@ -36,13 +34,8 @@ internal fun StartSupportPanel(
                 onValueChanged(it)
             }
         }
-        Spacer(modifier = Modifier.padding(5.dp))
-        ButtonContentBase(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            disabledContainerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-            shape = Shapes.medium,
-            textColor = MaterialTheme.colorScheme.onSecondary,
-            isEnabled = isEnabled,
+        SauceButton(
+            enabled = isEnabled,
             title = "Поддержать",
             onClick = {
                 onClickSupport()

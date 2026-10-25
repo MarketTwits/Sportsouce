@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.SauceButton
 import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.components.navigation.SauceActionFooter
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
@@ -30,11 +31,23 @@ fun ShopCartScreen(
         modifier = modifier,
         topBar = {
             TopBarBase(title = "Корзина", goBack = component::onClickGoBack)
-        }
+        },
+        bottomBar = {
+            if (state.items.isNotEmpty()) SauceActionFooter {
+                AdaptivePane(fillHeight = false) {
+                    CreateOrderButton(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                        onClickCreateOrder = component::onClickCreateOrder,
+                        onClickGoAuth = component::onClickGoAuth,
+                        isAvailable = state.isAvailable,
+                    )
+                }
+            }
+        },
     ) { paddingValues ->
         AdaptivePane {
             LazyColumn(
-                modifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues),
+                modifier = Modifier.fillMaxSize().padding(paddingValues).consumeWindowInsets(paddingValues),
                 contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 ShopCartItems(
@@ -50,12 +63,6 @@ fun ShopCartScreen(
                         Text("Добавьте товары из каталога", style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary)
                         SauceButton("Продолжить покупки", component::onClickGoBack)
                     }
-                } else item {
-                    CreateOrderButton(
-                        onClickCreateOrder = component::onClickCreateOrder,
-                        onClickGoAuth = component::onClickGoAuth,
-                        isAvailable = state.isAvailable
-                    )
                 }
             }
         }

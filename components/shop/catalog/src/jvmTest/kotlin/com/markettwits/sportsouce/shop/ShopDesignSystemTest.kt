@@ -159,6 +159,47 @@ class ShopDesignSystemTest {
         }
     }
 
+    @Test fun cartCheckoutStaysPinnedWhileScrollingAndChangingTheCart() {
+        val items = List(8) { index -> ShopItemCart(product.copy(id = "cart-$index",
+            visual = product.visual.copy(displayName = "Товар $index")), 1) }
+        for (width in listOf(320, 390, 800)) for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
+            val cart = FakeCart().apply { state.value = ShopCartStore.State(items = items, isAvailable = true) }
+            ImageComposeScene(width, 900, density = Density(1f, scale)) {
+                Palette(dark) { ShopCartScreen(component = cart) }
+            }.use { scene ->
+                scene.settle()
+                val initial = scene.button("Оформить заказ").boundsInRoot
+                assertTrue(initial.top > 700f && initial.bottom <= 900f, "Checkout must be visible at the bottom before scrolling")
+                assertTrue(initial.height >= 48f)
+                fun scroll(y: Float) {
+                    scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+                        .config[SemanticsActions.ScrollBy].action!!.invoke(0f, y)
+                    scene.settle()
+                }
+                scroll(650f)
+                assertEquals(initial, scene.button("Оформить заказ").boundsInRoot, "Scrolling must not move checkout")
+                scroll(10000f)
+                scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+                    .config[SemanticsActions.ScrollToIndex].action!!.invoke(items.lastIndex)
+                scene.settle()
+                assertEquals(initial, scene.button("Оформить заказ").boundsInRoot)
+                val lastCard = scene.button(items.last().item.visual.displayName)
+                assertEquals(lastCard.size.height.toFloat(), lastCard.boundsInRoot.height, .5f, "The last item must be fully visible after scrolling to the end: width=$width scale=$scale bounds=${lastCard.boundsInRoot} position=${lastCard.positionInRoot}")
+                assertTrue(lastCard.boundsInRoot.bottom <= initial.top, "The last item must be reachable above the footer")
+                scene.click("Оформить заказ"); assertEquals(listOf("order"), cart.events)
+                cart.state.value = cart.state.value.copy(items = items.take(1)); scene.settle()
+                assertEquals(initial, scene.button("Оформить заказ").boundsInRoot, "Removing rows must not move checkout")
+                cart.state.value = cart.state.value.copy(isAvailable = false); scene.settle()
+                val auth = scene.button("Войти для оформления")
+                assertEquals(initial.bottom, auth.boundsInRoot.bottom, .5f)
+                scene.click("Войти для оформления"); assertEquals(listOf("order", "auth"), cart.events)
+                cart.state.value = cart.state.value.copy(items = emptyList()); scene.settle()
+                assertNull(scene.text("Оформить заказ")); assertNull(scene.text("Войти для оформления"))
+                assertNotNull(scene.text("Продолжить покупки"))
+            }
+        }
+    }
+
     @Test fun filtersKeepCallbacksAndRejectOversizedPriceWithoutCrashing() {
         val option = ShopOptionInfo.Value("Очень длинное название размера", "size", "size-xl")
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.start.components.*
@@ -22,6 +23,10 @@ internal fun StartScreenInnerContent(
     archiveStarts: List<StartsListItem> = emptyList(),
     archiveLoading: Boolean = false,
     archiveError: Boolean = false,
+    refundRules: StartRefundRules? = null,
+    refundRulesLoading: Boolean = false,
+    refundRulesError: Boolean = false,
+    onRetryRefundRules: () -> Unit = {},
     onClickArchive: () -> Unit = {},
     onRetryArchive: () -> Unit = {},
     isPartialData: Boolean = false,
@@ -74,6 +79,7 @@ internal fun StartScreenInnerContent(
             }
         }
         if (!isPartialData) {
+            StartRefundRulesPanel(innerModifier, refundRules, refundRulesLoading, refundRulesError, onRetryRefundRules)
             StartAllFiles(innerModifier, data.result, data.usefulLinks, data.conditionFile, onClickUrl)
             StartOrganizers(innerModifier, data.organizers, onClickUrl, onClickPhone)
             StartReviewPanel(innerModifier, data.reviewState)

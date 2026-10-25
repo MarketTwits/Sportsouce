@@ -1,5 +1,6 @@
 package com.markettwits.sportsouce.start.cloud.api.start
 
+import com.markettwits.sportsouce.start.cloud.model.refund.StartRefundRulesRemote
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
@@ -18,6 +19,8 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 
 
 interface SportSauceStartApi {
+
+    suspend fun refundRules(startId: Int): StartRefundRulesRemote
 
     suspend fun start(startId: String): StartRemote
 

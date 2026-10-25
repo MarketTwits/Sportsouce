@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.cloud.api.start
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.start.cloud.model.refund.StartRefundRulesRemote
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
@@ -30,6 +31,11 @@ internal class SportSauceStartApiBase(
     private val json = httpClient.json()
 
     private val client = httpClient.provide()
+
+    override suspend fun refundRules(startId: Int): StartRefundRulesRemote {
+        val response = client.get("start/$startId/refund-rules/effective")
+        return json.decodeFromString(response.body<String>())
+    }
 
     override suspend fun start(startId: String): StartRemote {
         val response = client.get("start/$startId")

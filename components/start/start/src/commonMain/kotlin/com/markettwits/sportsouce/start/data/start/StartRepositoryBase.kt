@@ -25,6 +25,8 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.domain.*
+import com.markettwits.sportsouce.start.data.start.mapper.toDomain
+import kotlinx.coroutines.CancellationException
 import com.markettwits.sportsouce.start.domain.mapper.StartItemToStartsListItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
@@ -153,6 +155,12 @@ internal class StartRepositoryBase(
     override suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>> = runCatching {
         startsService.fetchRelatedStarts(seriesId)
     }
+
+    override suspend fun refundRules(startId: Int): Result<StartRefundRules> = runCatching {
+        val response = startService.refundRules(startId)
+        require(response.startId == startId)
+        response.toDomain()
+    }.onFailure { if (it is CancellationException) throw it }
 
     override suspend fun startsArchive(archiveId: Int): Result<List<StartsListItem>> = runCatching {
         startsService.fetchArchiveStarts(archiveId)

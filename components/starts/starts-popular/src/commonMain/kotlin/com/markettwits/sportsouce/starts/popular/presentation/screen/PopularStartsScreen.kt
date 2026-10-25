@@ -1,6 +1,6 @@
 package com.markettwits.sportsouce.starts.popular.presentation.screen
 
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
@@ -27,27 +27,28 @@ internal fun PopularStartsScreen(component: StartsPopularComponent) {
             }
         }
     ) { paddingValues ->
-        Spacer(modifier = Modifier.padding(top = paddingValues.calculateTopPadding()))
-        if (state.starts.isNotEmpty()) {
-            StartsPopularContent(
-                isRefreshing = state.isLoading && state.starts.isNotEmpty(),
-                items = state.starts,
-                onRefresh = {
-                    component.obtainEvent(StartsPopularStore.Intent.Retry)
-                },
-                onClick = {
-                    component.obtainEvent(StartsPopularStore.Intent.OnClickStart(it))
-                }
-            )
-        }
-        state.error?.let {
-            it.SauceErrorScreen(
-                modifier = Modifier.fillMaxSize(),
-                onClickRetry = { component.obtainEvent(StartsPopularStore.Intent.Retry) },
-            )
-        }
-        if (state.isLoading) {
-            LoadingFullScreen()
+        Box(Modifier.fillMaxSize().padding(paddingValues)) {
+            if (state.starts.isNotEmpty()) {
+                StartsPopularContent(
+                    isRefreshing = state.isLoading && state.starts.isNotEmpty(),
+                    items = state.starts,
+                    onRefresh = {
+                        component.obtainEvent(StartsPopularStore.Intent.Retry)
+                    },
+                    onClick = {
+                        component.obtainEvent(StartsPopularStore.Intent.OnClickStart(it))
+                    }
+                )
+            }
+            state.error?.let {
+                it.SauceErrorScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    onClickRetry = { component.obtainEvent(StartsPopularStore.Intent.Retry) },
+                )
+            }
+            if (state.isLoading) {
+                LoadingFullScreen()
+            }
         }
     }
 }

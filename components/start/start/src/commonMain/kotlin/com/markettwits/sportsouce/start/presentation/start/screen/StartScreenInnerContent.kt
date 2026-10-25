@@ -89,7 +89,7 @@ internal fun StartScreenInnerContent(
                 archiveLoading, archiveError, onClickArchive, onRetryArchive, onClickRecommendedStart)
         }
         StartsRecommendationPanel(
-            modifier = innerModifier,
+            modifier = Modifier.padding(vertical = 8.dp),
             items = recommendedStarts,
             onItemClick = onClickRecommendedStart
         )

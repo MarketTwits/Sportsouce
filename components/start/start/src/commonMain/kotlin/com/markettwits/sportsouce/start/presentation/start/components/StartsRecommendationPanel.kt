@@ -38,9 +38,10 @@ internal fun StartsRecommendationPanel(
 ) {
     if (items.isNotEmpty()) {
         Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            StartSectionHeading("Также рекомендуем")
+            StartSectionHeading("Также рекомендуем", modifier = Modifier.padding(horizontal = 16.dp))
             LazyRow(
-                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(items) { item ->

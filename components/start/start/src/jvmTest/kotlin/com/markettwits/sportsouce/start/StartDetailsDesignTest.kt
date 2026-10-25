@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.*
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.cloud.model.start.fields.*
 import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.start.components.*
 import com.markettwits.sportsouce.start.presentation.start.screen.StartScreenInnerContent
@@ -197,6 +198,50 @@ class StartDetailsDesignTest {
             scene.settle(frames = 6, step = 50_000_000L)
             for (label in listOf("Файлы и ссылки", "Контактное лицо", "Дистанции", "Участники", "COMMENTS_SLOT", "DONATIONS_SLOT"))
                 assertTrue(scene.texts().contains(label), "Ready section still hidden: $label")
+        }
+    }
+
+    @Test
+    fun recommendationsScrollThroughTheScreenGuttersAndKeepOnlyOuterItemPadding() {
+        val items = List(5) { i -> StartsListItem(i + 1, "Рекомендуемый старт $i", "", "25 октября 2026",
+            StartsListItem.StatusCode(3, "Регистрация"), "", "", "Новосибирск", false, "4 км", views = 0) }
+        for (width in listOf(320, 390, 800)) {
+            var opened: StartsListItem? = null
+            ImageComposeScene(width, 1000, density = Density(1f)) {
+                SauceTheme {
+                    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+                        StartScreenInnerContent(Modifier, startItem(), recommendedStarts = items, seriesStarts = emptyList(),
+                            onClickMembers = {}, onClickMembersResults = {}, onClickFullAlbum = {}, onClickUrl = {}, onClickPhone = {},
+                            onClickRetry = {}, onClickRelatedStarts = {}, onClickRecommendedStart = { opened = it },
+                            comments = {}, donations = {})
+                    }
+                }
+            }.use { scene ->
+                scene.settle()
+                fun text(value: String) = scene.nodes(unmerged = true).first { it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == value } == true }
+                fun card(value: String): SemanticsNode {
+                    var node = text(value)
+                    while (!node.config.contains(SemanticsActions.OnClick)) node = node.parent!!
+                    return node
+                }
+                val vertical = scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+                vertical.config[SemanticsActions.ScrollBy].action!!.invoke(0f, text("Также рекомендуем").positionInRoot.y)
+                scene.settle()
+                fun viewport() = scene.nodes().single { it.config.contains(SemanticsProperties.HorizontalScrollAxisRange) }
+                assertEquals(0f, viewport().boundsInRoot.left, .5f)
+                assertEquals(width.toFloat(), viewport().boundsInRoot.right, .5f)
+                assertEquals(16f, text("Также рекомендуем").positionInRoot.x, .5f)
+                assertEquals(16f, card(items.first().name).positionInRoot.x, .5f)
+                viewport().config[SemanticsActions.ScrollBy].action!!.invoke(10f, 0f)
+                scene.settle()
+                assertEquals(6f, card(items.first().name).boundsInRoot.left, .5f, "The first card must remain visible inside the gutter")
+                viewport().config[SemanticsActions.ScrollBy].action!!.invoke(10000f, 0f)
+                scene.settle()
+                assertEquals(width - 16f, card(items.last().name).boundsInRoot.right, .5f)
+                assertEquals(16f, text("Также рекомендуем").positionInRoot.x, .5f, "The heading must not scroll with the cards")
+                card(items.last().name).config[SemanticsActions.OnClick].action!!.invoke()
+                assertEquals(items.last(), opened)
+            }
         }
     }
 

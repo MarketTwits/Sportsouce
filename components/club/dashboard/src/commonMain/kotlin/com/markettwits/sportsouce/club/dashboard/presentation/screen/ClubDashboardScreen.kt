@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.club.dashboard.presentation.screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -51,52 +52,62 @@ internal fun ClubDashboardContent(state: ClubDashboardStore.State, topContentPad
     val data = state.bottomSheetData
     val open: (MenuBottomSheetType) -> Unit = { event(ClubDashboardStore.Intent.OpenClubInfoDetail(it, data)) }
     PullToRefreshScreen(isRefreshing = state.isLoading && state.hasLoaded, onRefresh = { event(ClubDashboardStore.Intent.RetryRequest) }) {
-        SauceLazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = topContentPadding, bottom = 28.dp),
+        SauceLazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(top = topContentPadding, bottom = 28.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)) {
-            item(key = "intro") { ClubDashboardHeader(data.mainImage?.imageUrl.orEmpty()) }
-            item(key = "schedule") { SauceButton("Расписание тренировок", { event(ClubDashboardStore.Intent.OnClickSchedule) }, modifier = Modifier.fillMaxWidth()) }
+            item(key = "intro") { ClubInsetSection { ClubDashboardHeader(data.mainImage?.imageUrl.orEmpty()) } }
+            item(key = "schedule") { ClubInsetSection { SauceButton("Расписание тренировок", { event(ClubDashboardStore.Intent.OnClickSchedule) }, modifier = Modifier.fillMaxWidth()) } }
             if (data.statistics.isNotEmpty()) item(key = "numbers") {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                    data.statistics.take(2).forEach { stat ->
-                        Column(Modifier.weight(1f).clip(SauceShapes.field).clickable { open(MenuBottomSheetType.Statistics) }.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(stat.value, style = MaterialTheme.typography.headlineMedium, color = SauceTheme.colors.textPrimary)
-                            HtmlText(text = stat.title, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted, showImages = false)
+                ClubInsetSection {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+                        data.statistics.take(2).forEach { stat ->
+                            Column(Modifier.weight(1f).clip(SauceShapes.field).clickable { open(MenuBottomSheetType.Statistics) }.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(stat.value, style = MaterialTheme.typography.headlineMedium, color = SauceTheme.colors.textPrimary)
+                                HtmlText(text = stat.title, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted, showImages = false)
+                            }
                         }
                     }
                 }
             }
             if (state.error != null) item(key = "error") {
-                ClubNotice("Не удалось загрузить информацию о клубе", "Проверьте соединение и повторите попытку.", { event(ClubDashboardStore.Intent.RetryRequest) })
+                ClubInsetSection { ClubNotice("Не удалось загрузить информацию о клубе", "Проверьте соединение и повторите попытку.", { event(ClubDashboardStore.Intent.RetryRequest) }) }
             }
             when {
-                state.isLoading && !state.hasLoaded -> item(key = "loading") { ClubLoading() }
+                state.isLoading && !state.hasLoaded -> item(key = "loading") { ClubInsetSection { ClubLoading() } }
                 state.hasLoaded -> {
                     item(key = "directions") {
-                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            ClubSectionTitle("Каждому свой темп", "Направления тренировок") { open(MenuBottomSheetType.Trainings) }
-                            LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                                items(data.trainings, key = { it.id }) { training ->
-                                    ClubTrainingPreview(training) { open(MenuBottomSheetType.TrainingDetails(training.id)) }
-                                }
+                        ClubCarouselSection("Каждому свой темп", "Направления тренировок", { open(MenuBottomSheetType.Trainings) }) {
+                            items(data.trainings, key = { it.id }) { training ->
+                                ClubTrainingPreview(training) { open(MenuBottomSheetType.TrainingDetails(training.id)) }
                             }
                         }
                     }
-                    item(key = "subscriptions") { SubscriptionInfoCard(onClick = { event(ClubDashboardStore.Intent.OnClickSubscriptions) }, onTrialClick = { open(MenuBottomSheetType.Trainings) }) }
+                    item(key = "subscriptions") { ClubInsetSection { SubscriptionInfoCard(onClick = { event(ClubDashboardStore.Intent.OnClickSubscriptions) }, onTrialClick = { open(MenuBottomSheetType.Trainings) }) } }
                     item(key = "trainers") {
-                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            ClubSectionTitle("Люди, которые поддержат", "Наши тренеры") { open(MenuBottomSheetType.OurTeam) }
-                            LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                                items(data.trainers, key = { it.id }) { trainer ->
-                                    ClubTrainerPreview(trainer) { open(MenuBottomSheetType.TrainerDetails(trainer.id)) }
-                                }
+                        ClubCarouselSection("Люди, которые поддержат", "Наши тренеры", { open(MenuBottomSheetType.OurTeam) }) {
+                            items(data.trainers, key = { it.id }) { trainer ->
+                                ClubTrainerPreview(trainer) { open(MenuBottomSheetType.TrainerDetails(trainer.id)) }
                             }
                         }
                     }
-                    item(key = "menu") { ClubMenuGrid({ open(MenuBottomSheetType.Plan) }, { open(MenuBottomSheetType.ClubBonuses) }) }
-                    item(key = "more") { ClubMoreSection({ open(MenuBottomSheetType.Faq) }, { open(MenuBottomSheetType.Statistics) }) }
+                    item(key = "menu") { ClubInsetSection { ClubMenuGrid({ open(MenuBottomSheetType.Plan) }, { open(MenuBottomSheetType.ClubBonuses) }) } }
+                    item(key = "more") { ClubInsetSection { ClubMoreSection({ open(MenuBottomSheetType.Faq) }, { open(MenuBottomSheetType.Statistics) }) } }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ClubInsetSection(content: @Composable () -> Unit) {
+    Box(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) { content() }
+}
+
+@Composable
+private fun ClubCarouselSection(eyebrow: String, title: String, onClick: () -> Unit, content: LazyListScope.() -> Unit) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        ClubInsetSection { ClubSectionTitle(eyebrow, title, onClick) }
+        LazyRow(Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp), content = content)
     }
 }
 

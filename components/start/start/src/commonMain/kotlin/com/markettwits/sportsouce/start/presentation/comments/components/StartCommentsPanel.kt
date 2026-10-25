@@ -26,6 +26,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -132,76 +137,105 @@ internal fun StartCommentCard(
     val colors = SauceTheme.colors
     if (showAvatar && userImageUrl.isNotBlank()) FullImageScreen(image = userImageUrl) { showAvatar = false }
 
+    val hasReplies = !isReply && replies.isNotEmpty()
+    var headerHeight by remember { mutableIntStateOf(0) }
+    var actionsHeight by remember { mutableIntStateOf(0) }
+    var repliesButtonHeight by remember { mutableIntStateOf(0) }
+
     OnBackgroundCard(modifier) {
-        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                if (userImageUrl.isNotBlank()) {
-                    SubcomposeAsyncImage(
-                        model = userImageUrl,
-                        contentDescription = "Фото: $userName",
-                        modifier = Modifier.size(36.dp).clip(CircleShape).clickable { showAvatar = true },
-                        contentScale = ContentScale.Crop,
-                        loading = { SauceSkeleton(Modifier.fillMaxSize(), CircleShape) },
-                        error = { EmptyAvatar() },
-                    )
-                } else EmptyAvatar()
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(userName, style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
-                    Text(commentCreateDate, style = MaterialTheme.typography.bodySmall, color = colors.textMuted)
-                }
-            }
-            if (isQuestion || isReview || isAdminAnswer) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (isQuestion) {
-                        SauceStatusBadge("Вопрос", tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Warning, showIndicator = false)
-                        SauceStatusBadge(if (isAnswered) "Есть ответ" else "Ждёт ответа",
-                            tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Danger,
-                            showIndicator = isAnswered)
-                    }
-                    if (isAdminAnswer) SauceStatusBadge("Администратор", tone = SauceStatusTone.Success, showIndicator = false)
-                    if (isReview) {
-                        SauceStatusBadge("Отзыв", showIndicator = false)
-                        averageScore?.takeIf { it.isFinite() && it > 0 }?.let {
-                            SauceStatusBadge("★ ${((it.coerceAtMost(5.0) * 10).roundToInt() / 10.0)}", tone = SauceStatusTone.Warning, showIndicator = false)
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+            Column(
+                Modifier.fillMaxWidth().drawBehind {
+                    if (hasReplies && headerHeight > 0 && actionsHeight > 0 && repliesButtonHeight > 0) {
+                        val x = 18.dp.toPx()
+                        val startY = headerHeight / 2f + 18.dp.toPx() + 4.dp.toPx()
+                        // The replies action stays the anchor even when the other action wraps below it.
+                        val endY = size.height - actionsHeight + repliesButtonHeight / 2f
+                        val radius = 16.dp.toPx().coerceAtMost((endY - startY).coerceAtLeast(0f))
+                        if (endY > startY) {
+                            val path = Path().apply {
+                                moveTo(x, startY)
+                                lineTo(x, endY - radius)
+                                quadraticTo(x, endY, x + radius, endY)
+                                lineTo(46.dp.toPx(), endY)
+                            }
+                            drawPath(path, colors.border, style = Stroke(width = 1.dp.toPx(), cap = StrokeCap.Round))
                         }
                     }
-                }
-            }
-            CompositionLocalProvider(LocalTextSelectionColors provides TextSelectionColors(colors.action, colors.actionSoft)) {
-                SelectionContainer {
-                    ClickableText(text = message, fontSize = 14.sp, lineHeight = 21.sp,
-                        fontFamily = FontNunito.regular(), color = colors.textPrimary)
-                }
-            }
-            if (!isReply) {
-                Column {
-                    FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        if (replies.isNotEmpty()) {
-                            SauceButton(
-                                title = if (!showRepliesButton) "Ответы · ${replies.size}" else if (showReply) "Скрыть ответы" else "Ответы · ${replies.size}",
-                                variant = SauceButtonVariant.Text,
-                                fillWidth = false,
-                                enabled = actionsEnabled,
-                                onClick = {
-                                    if (onClickShowReplies != null) onClickShowReplies()
-                                    else if (showRepliesButton) showReply = !showReply
-                                    else onClickReply()
-                                },
-                            )
-                        }
-                        SauceButton("Ответить", onClickReply, variant = SauceButtonVariant.Text, enabled = actionsEnabled, fillWidth = false)
+                },
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Row(Modifier.onSizeChanged { headerHeight = it.height }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (userImageUrl.isNotBlank()) {
+                        SubcomposeAsyncImage(
+                            model = userImageUrl,
+                            contentDescription = "Фото: $userName",
+                            modifier = Modifier.size(36.dp).clip(CircleShape).clickable { showAvatar = true },
+                            contentScale = ContentScale.Crop,
+                            loading = { SauceSkeleton(Modifier.fillMaxSize(), CircleShape) },
+                            error = { EmptyAvatar() },
+                        )
+                    } else EmptyAvatar()
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(userName, style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
+                        Text(commentCreateDate, style = MaterialTheme.typography.bodySmall, color = colors.textMuted)
                     }
-                    AnimatedVisibility(showReply && showRepliesButton) {
-                        Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            replies.forEach { reply ->
-                                StartCommentCard(
-                                    userImageUrl = reply.user.photo.orEmpty(), userName = "${reply.user.surname} ${reply.user.name}".trim(),
-                                    commentCreateDate = reply.createdAt, message = reply.comment, isReply = true,
-                                    isAdminAnswer = reply.isAdminAnswer, onClickReply = {},
-                                )
+                }
+                Column(Modifier.fillMaxWidth().padding(start = if (hasReplies) 46.dp else 0.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (isQuestion || isReview || isAdminAnswer) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            if (isQuestion) {
+                                SauceStatusBadge("Вопрос", tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Warning, showIndicator = false)
+                                SauceStatusBadge(if (isAnswered) "Есть ответ" else "Ждёт ответа",
+                                    tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Danger,
+                                    showIndicator = isAnswered)
+                            }
+                            if (isAdminAnswer) SauceStatusBadge("Администратор", tone = SauceStatusTone.Success, showIndicator = false)
+                            if (isReview) {
+                                SauceStatusBadge("Отзыв", showIndicator = false)
+                                averageScore?.takeIf { it.isFinite() && it > 0 }?.let {
+                                    SauceStatusBadge("★ ${((it.coerceAtMost(5.0) * 10).roundToInt() / 10.0)}", tone = SauceStatusTone.Warning, showIndicator = false)
+                                }
                             }
                         }
+                    }
+                    CompositionLocalProvider(LocalTextSelectionColors provides TextSelectionColors(colors.action, colors.actionSoft)) {
+                        SelectionContainer {
+                            ClickableText(text = message, fontSize = 14.sp, lineHeight = 21.sp,
+                                fontFamily = FontNunito.regular(), color = colors.textPrimary)
+                        }
+                    }
+                    if (!isReply) {
+                        FlowRow(Modifier.fillMaxWidth().onSizeChanged { actionsHeight = it.height }, horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (replies.isNotEmpty()) {
+                                SauceButton(
+                                    modifier = Modifier.onSizeChanged { repliesButtonHeight = it.height },
+                                    title = if (!showRepliesButton) "Ответы · ${replies.size}" else if (showReply) "Скрыть ответы" else "Ответы · ${replies.size}",
+                                    variant = SauceButtonVariant.Text,
+                                    fillWidth = false,
+                                    enabled = actionsEnabled,
+                                    onClick = {
+                                        if (onClickShowReplies != null) onClickShowReplies()
+                                        else if (showRepliesButton) showReply = !showReply
+                                        else onClickReply()
+                                    },
+                                )
+                            }
+                            SauceButton("Ответить", onClickReply, variant = SauceButtonVariant.Text, enabled = actionsEnabled, fillWidth = false)
+                        }
+                    }
+                }
+            }
+            AnimatedVisibility(showReply && showRepliesButton && !isReply) {
+                Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    replies.forEach { reply ->
+                        StartCommentCard(
+                            userImageUrl = reply.user.photo.orEmpty(), userName = "${reply.user.surname} ${reply.user.name}".trim(),
+                            commentCreateDate = reply.createdAt, message = reply.comment, isReply = true,
+                            isAdminAnswer = reply.isAdminAnswer, onClickReply = {},
+                        )
                     }
                 }
             }

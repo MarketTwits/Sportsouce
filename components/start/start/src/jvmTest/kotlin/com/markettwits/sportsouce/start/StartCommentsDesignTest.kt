@@ -6,6 +6,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
+import com.markettwits.sportsouce.start.domain.StartItem
+import kotlin.math.abs
+import kotlin.math.roundToInt
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.*
@@ -71,6 +76,53 @@ class StartCommentsDesignTest {
             assertTrue(action.boundsInRoot.top - message.boundsInRoot.bottom <= 10f,
                 "The reply action must sit next to the comment without a separate spacious footer")
             assertTrue(action.boundsInRoot.bottom <= 240f, "A short comment should remain compact")
+        }
+    }
+
+    @Test fun replyConnectorReachesItsButtonAndStaysAttachedWhenExpanded() {
+        val reply = StartItem.Comments.Reply("Ответ организатора", "25 октября 2026", 1,
+            StartItem.Comments.User(2, "Иван", null, "Иванов"), isAdminAnswer = true)
+        val messages = listOf("Где старт?", "Подскажите, пожалуйста, где можно получить стартовый пакет? Можно ли забрать его утром перед стартом?")
+        for (dark in listOf(false, true)) for (width in listOf(320, 390)) for (scale in listOf(1f, 2f)) for (message in messages) {
+            ImageComposeScene(width, 1600, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) {
+                    Column(Modifier.fillMaxSize().background(SauceTheme.colors.background).padding(16.dp)) {
+                        StartCommentCard(userImageUrl = "", userName = "Александра Константинопольская",
+                            commentCreateDate = "25 октября 2026, 12:51",
+                            message = message,
+                            replies = listOf(reply), isQuestion = true, isAnswered = true, onClickReply = {})
+                    }
+                }
+            }.use { scene ->
+                scene.settle()
+                fun assertConnector(label: String) {
+                    var button = scene.nodes().single { it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == label } == true }
+                    while (!button.config.contains(SemanticsActions.OnClick)) button = button.parent!!
+                    val x = (button.positionInRoot.x - 28f).roundToInt()
+                    val y = (button.positionInRoot.y + button.size.height / 2f).roundToInt()
+                    val endX = button.positionInRoot.x.roundToInt() - 2
+                    scene.render(++now).use { image ->
+                        val pixels = image.toComposeImageBitmap().toPixelMap()
+                        fun inkAt(px: Int, py: Int): Boolean {
+                            val color = pixels[px, py]
+                            val surface = pixels[x + 5, y - 24]
+                            return maxOf(abs(color.red - surface.red), abs(color.green - surface.green), abs(color.blue - surface.blue)) > .02f
+                        }
+                        assertTrue(inkAt(x, y - 24), "Connector must run below the avatar: width=$width scale=$scale dark=$dark")
+                        assertTrue(inkAt(endX, y) || inkAt(endX, y - 1), "The curve must end at the replies button")
+                        assertFalse(inkAt(x, y + 12), "Connector must stop at its button, including when replies expand")
+                    }
+                    assertTrue(button.size.height >= 48, "Keep the replies action accessible")
+                }
+                assertConnector("Ответы · 1")
+                if (width == 390 && scale == 1f && message == messages.last()) scene.save("start-comment-thread-${if (dark) "dark" else "light"}")
+                var action = scene.nodes().single { it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == "Ответы · 1" } == true }
+                while (!action.config.contains(SemanticsActions.OnClick)) action = action.parent!!
+                action.config[SemanticsActions.OnClick].action!!.invoke()
+                scene.settle()
+                assertTrue("Ответ организатора" in scene.texts())
+                assertConnector("Скрыть ответы")
+            }
         }
     }
 

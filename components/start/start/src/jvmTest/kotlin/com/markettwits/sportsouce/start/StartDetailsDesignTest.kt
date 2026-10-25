@@ -21,6 +21,10 @@ import com.markettwits.sportsouce.start.presentation.membres.models.StartMembers
 import com.markettwits.sportsouce.start.presentation.start.components.*
 import com.markettwits.sportsouce.start.presentation.start.screen.StartScreenInnerContent
 import java.io.File
+import kotlinx.coroutines.flow.MutableStateFlow
+import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
+import androidx.compose.ui.text.AnnotatedString
 import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -241,6 +245,109 @@ class StartDetailsDesignTest {
                 assertEquals(16f, text("Также рекомендуем").positionInRoot.x, .5f, "The heading must not scroll with the cards")
                 card(items.last().name).config[SemanticsActions.OnClick].action!!.invoke()
                 assertEquals(items.last(), opened)
+            }
+        }
+    }
+
+    @Test
+    fun insuranceFollowsSupportAndOpensTheWebsiteFromItsWholeCard() {
+        for (width in listOf(320, 390, 800)) for (scale in listOf(1f, 2f)) for (dark in listOf(false, true)) {
+            val opened = mutableListOf<String>()
+            ImageComposeScene(width, 900, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) {
+                    Column(Modifier.fillMaxSize().background(SauceTheme.colors.background).verticalScroll(rememberScrollState())) {
+                        StartScreenInnerContent(Modifier, startItem(), recommendedStarts = emptyList(), seriesStarts = emptyList(),
+                            onClickMembers = {}, onClickMembersResults = {}, onClickFullAlbum = {}, onClickUrl = { opened += it },
+                            onClickPhone = {}, onClickRetry = {}, onClickRelatedStarts = {}, onClickRecommendedStart = {},
+                            donations = { Text("SUPPORT", it) }, comments = { Text("COMMENTS", it) })
+                    }
+                }
+            }.use { scene ->
+                scene.settle()
+                scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+                    .config[SemanticsActions.ScrollBy].action!!.invoke(0f, 100000f)
+                scene.settle()
+                fun text(value: String) = scene.nodes(unmerged = true).first {
+                    it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { t -> t.text == value }
+                }
+                val title = text("Спортивная страховка")
+                assertTrue(text("SUPPORT").positionInRoot.y < title.positionInRoot.y)
+                assertTrue(title.positionInRoot.y < text("COMMENTS").positionInRoot.y)
+                val labels = listOf("Спортивная страховка", "Полис для соревнований и сборов. От 1 дня до 1 года.", "Оформить страховку")
+                labels.forEach { label ->
+                    val node = text(label)
+                    assertEquals(node.size.height.toFloat(), node.boundsInRoot.height, .5f)
+                    val layouts = mutableListOf<TextLayoutResult>()
+                    node.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
+                    layouts.forEach { layout ->
+                        assertTrue(layout.multiParagraph.height <= layout.size.height + 1f)
+                        for (line in 0 until layout.lineCount) assertTrue(
+                            layout.getLineRight(line) - layout.getLineLeft(line) <= layout.size.width + 1f)
+                    }
+                }
+                if (width == 390 && scale == 1f) scene.save("start-insurance-${if (dark) "dark" else "light"}")
+                labels.forEach { label ->
+                    scene.sendPointerEvent(PointerEventType.Press, text(label).boundsInRoot.center)
+                    scene.sendPointerEvent(PointerEventType.Release, text(label).boundsInRoot.center)
+                    scene.settle()
+                }
+                assertEquals(List(3) { "https://sportsauce.ru/insurance" }, opened)
+            }
+        }
+    }
+
+    @Test
+    fun supportKeepsSponsorLinksAndTheDonationFormUsableInBothThemes() {
+        val sponsors = List(5) { StartItem.Sponsor(it, if (it == 0) "Спортивная команда с длинным названием" else "Партнёр $it", "", "https://example.com/sponsor/$it") }
+        for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
+            val urls = mutableListOf<String>()
+            val events = mutableListOf<StartSupportStore.Intent>()
+            var shownSponsors by mutableStateOf(emptyList<StartItem.Sponsor>())
+            val component = object : StartSupportComponent {
+                override val state = MutableStateFlow(StartSupportStore.State())
+                override fun obtainEvent(intent: StartSupportStore.Intent) {
+                    events += intent
+                    if (intent is StartSupportStore.Intent.OnChangeValue) state.value = state.value.copy(cost = intent.value)
+                }
+            }
+            ImageComposeScene(390, 1000, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) {
+                    Column(Modifier.fillMaxSize().background(SauceTheme.colors.background).padding(16.dp)) {
+                        StartSupport(Modifier, component, shownSponsors, { urls += it }, {})
+                        StartInsurancePanel(Modifier.padding(top = 16.dp)) {}
+                    }
+                }
+            }.use { scene ->
+                scene.settle()
+                assertTrue(scene.nodes().none { it.config.contains(SemanticsProperties.HorizontalScrollAxisRange) })
+                fun title(value: String) = scene.nodes(unmerged = true).first {
+                    it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { text -> text.text == value }
+                }
+                assertEquals(title("Поддержка проекта").positionInRoot.x, title("Спортивная страховка").positionInRoot.x, .5f)
+                assertEquals(title("Поддержать проект").positionInRoot.x, title("Оформить страховку").positionInRoot.x, .5f)
+                assertEquals(title("Поддержать проект").size.height, title("Оформить страховку").size.height)
+                scene.save("start-services-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                shownSponsors = sponsors; scene.settle()
+                val row = scene.nodes().single { it.config.contains(SemanticsProperties.HorizontalScrollAxisRange) }
+                assertEquals(16f, row.boundsInRoot.left, .5f)
+                assertEquals(374f, row.boundsInRoot.right, .5f)
+                scene.click(sponsors.first().name)
+                assertEquals(sponsors.first().link, urls.last())
+                row.config[SemanticsActions.ScrollBy].action!!.invoke(10f, 0f); scene.settle()
+                val first = scene.targets().first { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { t -> t.text == sponsors.first().name } }
+                assertEquals(22f, first.boundsInRoot.left, .5f)
+                row.config[SemanticsActions.ScrollBy].action!!.invoke(10000f, 0f); scene.settle()
+                scene.click(sponsors.last().name); assertEquals(sponsors.last().link, urls.last())
+                scene.save("start-support-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                scene.click("Поддержать проект")
+                assertTrue(events.isEmpty(), "Opening support must not submit a donation")
+                val field = scene.nodes(unmerged = true).single { it.config.contains(SemanticsActions.SetText) }
+                field.config[SemanticsActions.SetText].action!!.invoke(AnnotatedString("500")); scene.settle()
+                assertEquals(StartSupportStore.Intent.OnChangeValue("500"), events.single())
+                scene.save("start-support-sheet-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                scene.click("Поддержать")
+                assertEquals(StartSupportStore.Intent.OnClickSupport, events.last())
+                assertFalse(scene.nodes().any { it.config.contains(SemanticsActions.SetText) })
             }
         }
     }

@@ -1,45 +1,39 @@
 package com.markettwits.sportsouce.start.support.presentation.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 
 @Composable
 internal fun StartSupportInfoCard(modifier: Modifier = Modifier) {
-    Card(
+    Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        shape = SauceShapes.field,
+        color = SauceTheme.colors.surfaceSubtle,
     ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(0.8f)) {
+        BoxWithConstraints(Modifier.padding(16.dp)) {
+            val showAnimation = maxWidth >= 300.dp && LocalDensity.current.fontScale <= 1.3f
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "Поддержите развитие спортивных стартов и мероприятий! \n " +
-                            "Ваше добровольное пожертвование поможет сделать их еще лучше и доступнее. \uD83D\uDC99",
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.medium(),
-                    color = MaterialTheme.colorScheme.outline
+                    text = "Поддержите развитие спортивных стартов и мероприятий!\n\n" +
+                            "Ваше добровольное пожертвование поможет сделать их лучше и доступнее.",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SauceTheme.colors.textSecondary,
                 )
+                if (showAnimation) {
+                    StartSupportAnimation(Modifier.width(64.dp))
+                }
             }
-            StartSupportAnimation(modifier = Modifier.weight(0.2f))
         }
     }
 }

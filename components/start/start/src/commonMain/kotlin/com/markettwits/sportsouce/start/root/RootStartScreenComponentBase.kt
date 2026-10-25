@@ -27,6 +27,7 @@ import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
 import com.markettwits.sportsouce.start.support.di.startSupportModule
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponentBase
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
+import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponentBase
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
@@ -66,6 +67,7 @@ class RootStartScreenComponentBase(
                 val supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
+                    onSignIn = { navigation.pushNew(RootStartScreenComponent.Config.SupportAuth) },
                 )
                 RootStartScreenComponent.Child.Start(
                     component = StartScreenComponentBase(
@@ -121,6 +123,11 @@ class RootStartScreenComponentBase(
                     ),
                     supportComponent = supportComponent)
             }
+
+            RootStartScreenComponent.Config.SupportAuth -> RootStartScreenComponent.Child.SupportAuth(
+                RootAuthFlowComponentBase(context = componentContext,
+                    goProfile = { navigation.pop() }, goBack = { navigation.pop() })
+            )
 
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
@@ -215,4 +222,5 @@ class RootStartScreenComponentBase(
             )
         }
     }
+
 }

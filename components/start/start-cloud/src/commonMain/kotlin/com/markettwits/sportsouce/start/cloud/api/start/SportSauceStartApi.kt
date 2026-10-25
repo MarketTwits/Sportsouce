@@ -7,6 +7,7 @@ import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Reply
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationRequest
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
+import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
@@ -61,6 +62,8 @@ interface SportSauceStartApi {
     ): StartMembersResultRowsV2
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
+
+    suspend fun checkDonation(startId: Int, token: String?): StartDonationCheckRemote
 
     suspend fun albumPhotos(albumId: Int, offset: Int, limit: Int, tags: List<String>): com.markettwits.sportsouce.start.cloud.model.start.fields.album.AlbumPhotosRemote
 

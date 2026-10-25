@@ -24,6 +24,9 @@ import java.io.File
 import kotlinx.coroutines.flow.MutableStateFlow
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
+import com.markettwits.sportsouce.start.support.domain.StartDonationCheck
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.triggered
 import androidx.compose.ui.text.AnnotatedString
 import kotlin.test.*
 
@@ -308,6 +311,12 @@ class StartDetailsDesignTest {
                 override fun obtainEvent(intent: StartSupportStore.Intent) {
                     events += intent
                     if (intent is StartSupportStore.Intent.OnChangeValue) state.value = state.value.copy(cost = intent.value)
+                    if (intent == StartSupportStore.Intent.OnOpen) state.value = state.value.copy(
+                        isOpen = true, sheetSession = state.value.sheetSession + 1,
+                        checkState = StartSupportStore.CheckState.Ready(StartDonationCheck("none", null, null)))
+                    if (intent == StartSupportStore.Intent.OnClose) state.value = state.value.copy(isOpen = false)
+                    if (intent == StartSupportStore.Intent.OnClickSupport) state.value = state.value.copy(
+                        eventWithContent = triggered(EventContent(true, "https://example.com/donation")))
                 }
             }
             ImageComposeScene(390, 1000, density = Density(1f, scale)) {
@@ -340,14 +349,82 @@ class StartDetailsDesignTest {
                 scene.click(sponsors.last().name); assertEquals(sponsors.last().link, urls.last())
                 scene.save("start-support-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
                 scene.click("Поддержать проект")
-                assertTrue(events.isEmpty(), "Opening support must not submit a donation")
+                assertEquals(listOf<StartSupportStore.Intent>(StartSupportStore.Intent.OnOpen), events, "Opening support must only check registrations")
                 val field = scene.nodes(unmerged = true).single { it.config.contains(SemanticsActions.SetText) }
                 field.config[SemanticsActions.SetText].action!!.invoke(AnnotatedString("500")); scene.settle()
-                assertEquals(StartSupportStore.Intent.OnChangeValue("500"), events.single())
+                assertEquals(StartSupportStore.Intent.OnChangeValue("500"), events.last())
                 scene.save("start-support-sheet-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
                 scene.click("Поддержать")
-                assertEquals(StartSupportStore.Intent.OnClickSupport, events.last())
+                assertTrue(StartSupportStore.Intent.OnClickSupport in events)
                 assertFalse(scene.nodes().any { it.config.contains(SemanticsActions.SetText) })
+            }
+        }
+    }
+
+    @Test
+    fun donationCheckHidesTheFormUntilReadyAndKeepsRegistrationPaymentSeparate() {
+        for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
+            val events = mutableListOf<StartSupportStore.Intent>()
+            val unpaid = StartDonationCheck("registered_unpaid", StartDonationCheck.Registration(52803, 0, 50000, true), null)
+            val component = object : StartSupportComponent {
+                override val state = MutableStateFlow(StartSupportStore.State(startId = 326))
+                override fun obtainEvent(intent: StartSupportStore.Intent) {
+                    events += intent
+                    when (intent) {
+                        StartSupportStore.Intent.OnOpen -> state.value = state.value.copy(isOpen = true,
+                            sheetSession = state.value.sheetSession + 1,
+                            checkState = StartSupportStore.CheckState.Loading, donationConfirmed = false)
+                        StartSupportStore.Intent.OnRetryCheck -> state.value = state.value.copy(checkState = StartSupportStore.CheckState.Loading)
+                        StartSupportStore.Intent.OnClose -> state.value = state.value.copy(isOpen = false)
+                        StartSupportStore.Intent.OnConfirmDonation -> state.value = state.value.copy(donationConfirmed = true)
+                        is StartSupportStore.Intent.OnChangeValue -> state.value = state.value.copy(cost = intent.value)
+                        StartSupportStore.Intent.OnClickSupport -> state.value = state.value.copy(isLoading = true)
+                        else -> Unit
+                    }
+                }
+            }
+            ImageComposeScene(390, 1600, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) { StartSupport(Modifier.padding(16.dp), component, eventContent = {}) }
+            }.use { scene ->
+                scene.settle(); scene.click("Поддержать проект")
+                fun fields() = scene.nodes(unmerged = true).filter { it.config.contains(SemanticsActions.SetText) }
+                assertTrue(fields().isEmpty())
+                assertTrue(scene.texts().contains("Проверяем ваши регистрации…"))
+                component.state.value = component.state.value.copy(checkState = StartSupportStore.CheckState.AuthorizationRequired); scene.settle()
+                assertTrue(fields().isEmpty())
+                assertTrue(scene.texts().contains("Войдите в аккаунт"))
+                assertFalse(scene.texts().contains("Повторить проверку"))
+                scene.save("donation-login-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                scene.click("Войти")
+                assertEquals(StartSupportStore.Intent.OnSignIn, events.last())
+                component.state.value = component.state.value.copy(checkState = StartSupportStore.CheckState.Failed); scene.settle()
+                scene.click("Повторить проверку")
+                assertEquals(StartSupportStore.Intent.OnRetryCheck, events.last())
+                component.state.value = component.state.value.copy(checkState = StartSupportStore.CheckState.Ready(unpaid)); scene.settle()
+                assertTrue(fields().isEmpty())
+                assertTrue(scene.texts().any { it.contains("неоплаченная регистрация") && it.contains("500 ₽") })
+                scene.save("donation-warning-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                scene.click("Оплатить регистрацию")
+                assertEquals(StartSupportStore.Intent.OnPayRegistration, events.last())
+                assertFalse(StartSupportStore.Intent.OnClickSupport in events)
+                scene.click("Всё равно поддержать проект")
+                assertEquals(1, fields().size)
+                fields().single().config[SemanticsActions.SetText].action!!.invoke(AnnotatedString("500")); scene.settle()
+                scene.click("Поддержать")
+                assertTrue(StartSupportStore.Intent.OnClickSupport in events)
+                assertTrue(scene.nodes().any { "Закрыть" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() },
+                    "The sheet must stay open until the payment URL is received")
+                assertFalse(StartSupportStore.Intent.OnClose in events)
+                component.state.value = component.state.value.copy(isLoading = false, isError = true, message = "Не удалось перейти к оплате. Попробуйте ещё раз.")
+                scene.settle()
+                assertTrue(scene.texts().contains(component.state.value.message))
+                scene.clickDescription("Закрыть")
+                scene.click("Поддержать проект")
+                assertTrue(fields().isEmpty(), "Reopening must recheck and reset donation consent")
+                component.state.value = component.state.value.copy(checkState = StartSupportStore.CheckState.Ready(
+                    unpaid.copy(registration = unpaid.registration!!.copy(canPay = false))))
+                scene.settle()
+                assertFalse(scene.texts().contains("Оплатить регистрацию"))
             }
         }
     }

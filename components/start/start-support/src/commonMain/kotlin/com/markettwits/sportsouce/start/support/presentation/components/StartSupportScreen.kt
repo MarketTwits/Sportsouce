@@ -19,19 +19,22 @@ fun StartSupportScreen(
     val state by component.state.collectAsState()
     StartSupportPanel(
         modifier = modifier,
-        value = state.cost,
-        isEnabled = !state.isLoading && state.cost.isNotEmpty(),
+        state = state,
+        onRetryCheck = { component.obtainEvent(StartSupportStore.Intent.OnRetryCheck) },
+        onConfirmDonation = { component.obtainEvent(StartSupportStore.Intent.OnConfirmDonation) },
+        onPayRegistration = { component.obtainEvent(StartSupportStore.Intent.OnPayRegistration) },
+        onSignIn = { component.obtainEvent(StartSupportStore.Intent.OnSignIn) },
         onValueChanged = {
             component.obtainEvent(StartSupportStore.Intent.OnChangeValue(it))
         }, onClickSupport = {
             component.obtainEvent(StartSupportStore.Intent.OnClickSupport)
-            onClickDismiss()
         }
     )
     EventEffect(event = state.eventWithContent, onConsumed = {
         component.obtainEvent(StartSupportStore.Intent.OnConsumedEvent)
     }) {
-        if (!it.success)
+        if (it.success) onClickDismiss()
+        else
             event(EventContent(false, state.message))
     }
 }

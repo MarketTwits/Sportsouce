@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +27,7 @@ import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
 import com.markettwits.sportsouce.start.support.presentation.components.StartSupportScreen
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
 
 @Composable
 internal fun StartSupport(
@@ -36,15 +36,16 @@ internal fun StartSupport(
     sponsors: List<StartItem.Sponsor> = emptyList(),
     onClickSponsorUrl: (String) -> Unit = {},
     eventContent: (EventContent) -> Unit,
+    isActive: Boolean = true,
 ) {
-    var isShowSupportDialog by rememberSaveable { mutableStateOf(false) }
+    val state by component.state.collectAsState()
     StartServiceCard(
         modifier = modifier,
         title = "Поддержка проекта",
         description = "Помогите развивать спортивные старты и делать их доступнее.",
         action = "Поддержать проект",
         icon = Icons.Outlined.FavoriteBorder,
-        onClick = { isShowSupportDialog = true },
+        onClick = { component.obtainEvent(StartSupportStore.Intent.OnOpen) },
         content = if (sponsors.isEmpty()) null else {
             {
                 HorizontalDivider(Modifier.padding(horizontal = 16.dp), color = SauceTheme.colors.border)
@@ -62,12 +63,13 @@ internal fun StartSupport(
             }
         },
     )
-    if (isShowSupportDialog) {
-        DefaultModalBottomSheet(title = "Поддержка проекта", onDismissRequest = { isShowSupportDialog = false }) {
+    if (state.isOpen && isActive) key(state.sheetSession) {
+        DefaultModalBottomSheet(title = "Поддержка проекта",
+            onDismissRequest = { component.obtainEvent(StartSupportStore.Intent.OnClose) }) {
             StartSupportScreen(
                 component = component,
                 event = eventContent,
-                onClickDismiss = { isShowSupportDialog = false },
+                onClickDismiss = { component.obtainEvent(StartSupportStore.Intent.OnClose) },
             )
         }
     }

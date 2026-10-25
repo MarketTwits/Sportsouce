@@ -1,6 +1,9 @@
 package com.markettwits.sportsouce.profile.members.members_list.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -20,7 +23,8 @@ import com.markettwits.sportsouce.profile.members.members_list.presentation.stor
 fun MembersScreen(component: MembersListComponent) {
     val state by component.state.collectAsState()
     var adding by rememberSaveable { mutableStateOf(false) }
-    var tab by rememberSaveable { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState(pageCount = { 3 })
+    val coroutineScope = rememberCoroutineScope()
     val refresh = { component.obtainEvent(MembersListStore.Intent.Retry) }
     val pending = state.team?.incoming.orEmpty().count { it.status == "pending" }
     SauceScaffold(topBar = {
@@ -30,11 +34,12 @@ fun MembersScreen(component: MembersListComponent) {
             Column(Modifier.fillMaxSize()) {
                 SauceTopBarSection {
                     SauceScrollableTabs(labels = listOf("Участники", if (pending > 0) "Запросы ($pending)" else "Запросы", "Доступ"),
-                        selectedIndex = tab, onSelected = { tab = it })
+                        selectedIndex = pagerState.currentPage,
+                        onSelected = { index -> coroutineScope.launch { pagerState.animateScrollToPage(index) } })
                 }
-                Box(Modifier.weight(1f)) {
+                HorizontalPager(state = pagerState, modifier = Modifier.weight(1f).fillMaxWidth(), key = { it }) { page ->
                     when {
-                        tab != 0 -> MemberTeamContent(state, requests = tab == 1, onRefresh = refresh, onIntent = component::obtainEvent)
+                        page != 0 -> MemberTeamContent(state, requests = page == 1, onRefresh = refresh, onIntent = component::obtainEvent)
                         state.isSuccess -> MembersList(
                             modifier = Modifier.fillMaxSize(), items = state.members, isRefreshing = state.isLoading,
                             team = state.team, teamError = state.teamError, refreshError = state.error?.mapToString(), onRefresh = refresh,

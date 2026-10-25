@@ -68,6 +68,66 @@ class ClubLayoutTest {
         }
     }
 
+    @Test fun dashboardCarouselsReachThePaneEdgesWithPaddingOnlyAtTheContentEnds() {
+        val trainings = List(5) { Training(200 + it, "Направление $it", "Описание тренировки", "") }
+        val trainers = List(6) { Trainer(100 + it, "Тренер", "Номер $it", "", "", listOf("бег")) }
+        val data = ClubDashboardStore.BottomSheetData(trainings = trainings, trainers = trainers)
+        for (width in listOf(320, 390, 800)) for (scale in listOf(1f, 1.5f)) for (dark in listOf(false, true)) {
+            val events = mutableListOf<ClubDashboardStore.Intent>()
+            ImageComposeScene(width, 1100, density = Density(1f, scale)) {
+                SauceTheme(darkTheme = dark) {
+                    ClubDashboardContent(ClubDashboardStore.State(hasLoaded = true, bottomSheetData = data)) { events += it }
+                }
+            }.use { scene ->
+                scene.settle()
+                val vertical = scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+                fun scrollTo(title: String) {
+                    repeat(20) {
+                        val node = scene.text(title)
+                        if (node != null) {
+                            vertical.config[SemanticsActions.ScrollBy].action!!.invoke(0f, node.positionInRoot.y - 20f)
+                            scene.settle()
+                            return
+                        }
+                        vertical.config[SemanticsActions.ScrollBy].action!!.invoke(0f, 500f)
+                        scene.settle()
+                    }
+                    fail("Section not reachable: $title")
+                }
+                fun card(title: String): SemanticsNode {
+                    var node = checkNotNull(scene.text(title)) { "Missing $title" }
+                    while (!node.config.contains(SemanticsActions.OnClick)) node = node.parent!!
+                    return node
+                }
+                val sections = listOf(
+                    Triple("Направления тренировок", trainings.first().type, trainings.last().type),
+                    Triple("Наши тренеры", trainers.first().fullName(), trainers.last().fullName()),
+                )
+                sections.forEachIndexed { index, (heading, first, last) ->
+                    scrollTo(heading)
+                    var ancestor = card(first).parent
+                    while (ancestor != null && !ancestor.config.contains(SemanticsProperties.HorizontalScrollAxisRange)) ancestor = ancestor.parent
+                    val row = checkNotNull(ancestor)
+                    assertEquals(0f, row.boundsInRoot.left, .5f)
+                    assertEquals(width.toFloat(), row.boundsInRoot.right, .5f)
+                    assertEquals(20f, scene.text(heading)!!.positionInRoot.x, .5f)
+                    assertEquals(20f, card(first).boundsInRoot.left, .5f)
+                    row.config[SemanticsActions.ScrollBy].action!!.invoke(10f, 0f)
+                    scene.settle()
+                    assertEquals(10f, card(first).boundsInRoot.left, .5f, "Cards must remain visible inside the page gutter")
+                    row.config[SemanticsActions.ScrollBy].action!!.invoke(10000f, 0f)
+                    scene.settle()
+                    assertEquals(width - 20f, card(last).boundsInRoot.right, .5f)
+                    assertEquals(20f, scene.text(heading)!!.positionInRoot.x, .5f)
+                    card(last).config[SemanticsActions.OnClick].action!!.invoke()
+                    val intent = events.last() as ClubDashboardStore.Intent.OpenClubInfoDetail
+                    assertEquals(if (index == 0) MenuBottomSheetType.TrainingDetails(trainings.last().id)
+                        else MenuBottomSheetType.TrainerDetails(trainers.last().id), intent.selectedTab)
+                }
+            }
+        }
+    }
+
     @Test fun selectedTrainerAndWorkoutOpenAtTheirServerIdsAndKeepTheSelectedRegistrationAction() {
         val trainers = (0..19).map { Trainer(100 + it * 3, "Тренер", "Номер $it", "Описание", "", listOf("бег")) }
         val trainings = (0..19).map { Training(200 + it * 5, "Тренировка $it", "Описание", "") }

@@ -15,9 +15,19 @@ enum class AlbumImageSize(val pixels: Int, internal val quality: Int) {
 
 /** Presentation-only transformation; repositories and navigation retain the original photo URL. */
 fun albumImageUrl(original: String, size: AlbumImageSize): String {
+    val source = albumOriginalUrl(original)
+    val url = runCatching { Url(source) }.getOrNull() ?: return original
+    if (url.protocol.name !in listOf("https", "http") || !url.host.equals("cdn.sportsauce.ru", true)) return original
+    // Escape query strings, %, @, spaces and Unicode without hiding the readable scheme/path.
+    val escaped = source.encodeURLParameter().replace("%3A", ":").replace("%2F", "/")
+    return "https://img.sportsauce.ru/insecure/rs:fit:${size.pixels}:${size.pixels}/q:${size.quality}/plain/$escaped"
+}
+
+/** Resolve the independent CDN source for full quality and proxy failover. */
+internal fun albumOriginalUrl(original: String): String {
     val url = runCatching { Url(original) }.getOrNull() ?: return original
-    if (url.protocol.name != "https" && url.protocol.name != "http") return original
-    val source = when {
+    if (url.protocol.name !in listOf("https", "http")) return original
+    return when {
         url.host.equals("cdn.sportsauce.ru", ignoreCase = true) -> original.substringBefore('#')
         url.host.equals("img.sportsauce.ru", ignoreCase = true) && "/plain/" in url.encodedPath -> {
             val nested = url.encodedPath.substringAfter("/plain/").substringBefore('@').decodeURLPart()
@@ -27,7 +37,4 @@ fun albumImageUrl(original: String, size: AlbumImageSize): String {
         }
         else -> return original
     }
-    // Escape query strings, %, @, spaces and Unicode without hiding the readable scheme/path.
-    val escaped = source.encodeURLParameter().replace("%3A", ":").replace("%2F", "/")
-    return "https://img.sportsauce.ru/insecure/rs:fit:${size.pixels}:${size.pixels}/q:${size.quality}/plain/$escaped"
 }

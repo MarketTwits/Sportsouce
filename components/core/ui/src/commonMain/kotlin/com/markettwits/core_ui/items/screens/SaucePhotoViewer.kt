@@ -257,7 +257,7 @@ private fun ViewerImage(url: String, zoom: ZoomState, active: Boolean, initialPa
     val scope = rememberCoroutineScope()
     val colors = SauceTheme.colors
     AlbumImage(url, if (active || opened) AlbumImageSize.Full else AlbumImageSize.Grid,
-        contentScale = ContentScale.Fit, initialPainter = initialPainter,
+        contentScale = ContentScale.Fit, initialPainter = initialPainter, loadOriginal = active,
         modifier = Modifier.fillMaxSize().zoomable(zoom,
             scrollGesturePropagation = ScrollGesturePropagation.NotZoomed, onTap = { onToggleControls() })
             .semantics {

@@ -13,6 +13,7 @@ interface StartAlbumStore : Store<StartAlbumStore.Intent, StartAlbumStore.State,
     enum class ExportAction { Share, Download }
     data class State(
         val images: List<String> = emptyList(),
+        val albumId: Int? = null,
         val isLoading: Boolean = false,
         val error: String? = null,
         val album: StartAlbumDetails? = null,
@@ -35,6 +36,7 @@ interface StartAlbumStore : Store<StartAlbumStore.Intent, StartAlbumStore.State,
         data object ClearSelection : Intent
         data class SharePhotos(val photos: List<AlbumPhoto>) : Intent
         data object ShareSelection : Intent
+        data object ShareAlbum : Intent
         data class DownloadPhotos(val photos: List<AlbumPhoto>) : Intent
         data object DownloadSelection : Intent
         data object RetryExport : Intent

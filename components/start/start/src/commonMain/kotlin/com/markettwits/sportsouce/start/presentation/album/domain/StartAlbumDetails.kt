@@ -6,6 +6,7 @@ data class StartAlbumDetails(
     val date: String,
     val photosCount: Int,
     val tags: List<String>,
+    val coverImage: String = "",
 )
 
 data class AlbumPhoto(val id: Int, val url: String)

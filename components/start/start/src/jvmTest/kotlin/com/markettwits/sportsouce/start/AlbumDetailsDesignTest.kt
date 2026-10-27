@@ -41,8 +41,8 @@ class AlbumDetailsDesignTest {
             ImageComposeScene(width = width, height = 1200, density = Density(1f, scale)) {
                 SauceTheme(darkTheme = dark) {
                     Column(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
-                        AlbumTagFilters(album.tags, emptySet(), { tag = it }, { clears++ })
-                        PagedAlbumContent(StartAlbumStore.State(album = album, filteredCount = 791), flow.collectAsLazyPagingItems(), {}, {})
+                        PagedAlbumContent(StartAlbumStore.State(album = album, filteredCount = 791), flow.collectAsLazyPagingItems(), {}, { clears++ },
+                            onEvent = { if (it is StartAlbumStore.Intent.ToggleTag) tag = it.tag })
                     }
                 }
             }.use { scene ->

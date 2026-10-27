@@ -26,6 +26,16 @@ class AlbumImageUrlTest {
         assertTrue(url.endsWith("photo.jpg%3Fname%3Da%2520b%26user%3Done%40two"), url)
         assertFalse(url.contains('?'))
         assertFalse(url.contains('@'))
+        assertEquals("$source?name=a%20b&user=one@two", albumOriginalUrl(url))
+    }
+
+    @Test fun fallbackResolvesTheCdnWithoutNestingProxyOrLosingQueryParameters() {
+        val original = "$source?version=a%20b&name=one@two"
+        assertEquals(original, albumOriginalUrl(original))
+        assertEquals(original, albumOriginalUrl(albumImageUrl(original, AlbumImageSize.Grid)))
+        assertEquals(source, albumOriginalUrl("https://img.sportsauce.ru/insecure/rs:fit:1600:0/plain/$source"))
+        assertNotEquals(albumImageUrl(source, AlbumImageSize.Full), albumOriginalMemoryKey(source, AlbumImageSize.Full))
+        assertNotEquals(albumOriginalMemoryKey(source, AlbumImageSize.Full), albumOriginalMemoryKey(source, AlbumImageSize.Grid))
     }
 
     @Test fun unrelatedAndLocalImagesDoNotGoThroughTheSportsauceProxy() {

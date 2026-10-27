@@ -21,6 +21,8 @@ data class StartsListItem(
     // Keep date as the original single date for existing caches and date-based consumers.
     val dateRange: String? = null,
     val startDate: String? = null,
+    val hasAlbums: Boolean = false,
+    val hasResults: Boolean = false,
 ) {
     val displayDate: String get() = dateRange?.takeIf { it.isNotBlank() } ?: date
 

@@ -78,6 +78,35 @@ class StartDateCompatibilityTest {
         } finally { client.close() }
     }
 
+    @Test fun availabilityUsesPublishedAlbumsAndResultsIndependently() {
+        val fields = json.parseToJsonElement(payload).jsonObject
+        val protocol = buildJsonObject {
+            put("id", 1); put("start_id", 309); put("name", "Протокол")
+            put("createdAt", "2026-10-17T00:00:00Z"); put("updatedAt", "2026-10-17T00:00:00Z")
+        }
+        for (albums in listOf(null, JsonNull, JsonPrimitive(false), JsonPrimitive(true))) {
+            for (results in listOf(JsonArray(emptyList()), JsonArray(listOf(protocol)))) {
+                for (link in listOf(JsonNull, JsonPrimitive(""), JsonPrimitive("  "), JsonPrimitive("https://example.test/results"))) {
+                    val start = map(JsonObject(fields + mapOf("results" to results, "results_link" to link) +
+                        if (albums == null) emptyMap() else mapOf("is_has_albums" to albums)))
+                    assertEquals(albums == JsonPrimitive(true), start.hasAlbums)
+                    assertEquals(results.isNotEmpty() || link == JsonPrimitive("https://example.test/results"), start.hasResults)
+                    assertEquals(start, json.decodeFromString<StartsListItem>(json.encodeToString(start)))
+                }
+            }
+        }
+    }
+
+    @Test fun cachedCardsWithoutAvailabilityRemainReadable() {
+        val current = map(json.parseToJsonElement(payload).jsonObject).copy(hasAlbums = true, hasResults = true)
+        val cached = JsonObject(json.encodeToJsonElement(current).jsonObject - "hasAlbums" - "hasResults")
+        val restored = json.decodeFromJsonElement<StartsListItem>(cached)
+        assertFalse(restored.hasAlbums)
+        assertFalse(restored.hasResults)
+        assertEquals(current.id, restored.id)
+        assertEquals(current.slug, restored.slug)
+    }
+
     private fun map(payload: JsonObject) = StartsCloudToListMapperBase(BaseTimeMapper())
         .mapSingle(listOf(json.decodeFromJsonElement<NetworkStartRemoteItem>(payload))).single()
 }

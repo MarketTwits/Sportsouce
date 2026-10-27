@@ -68,6 +68,51 @@ class StartCardsDesignTest {
         SauceTheme(darkTheme = dark, materialColors = p.material.copy(primary = p.surface, secondary = p.action,
             tertiary = p.textPrimary, primaryContainer = p.surfaceRaised, outline = p.textMuted), content = content)
     }
+
+    @Test fun reviewAvailabilityBadgesFitBelowDateAndPreserveCardNavigation() {
+        for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) for (width in listOf(320, 390)) {
+            for ((albums, results) in listOf(false to false, true to false, false to true, true to true)) {
+                val event = start.copy(hasAlbums = albums, hasResults = results)
+                val opened = mutableListOf<StartsListItem>()
+                ImageComposeScene(width = width, height = 1000, density = Density(1f, scale)) {
+                    AppPalette(dark) { Column(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+                        StartCardV3(start = event, onItemClick = { opened += it })
+                    } }
+                }.use { scene ->
+                    scene.settle()
+                    fun text(value: String) = scene.nodes().filter {
+                        it.config.getOrNull(SemanticsProperties.Text)?.any { it.text == value } == true
+                    }
+                    val date = text(event.displayDate).single().parent!!
+                    val title = text(event.name).single()
+                    val card = scene.nodes().single { it.config.contains(SemanticsActions.OnClick) }
+                    for ((label, visible) in listOf("Фото" to albums, "Результаты" to results)) {
+                        assertEquals(if (visible) 1 else 0, text(label).size)
+                        if (visible) {
+                            val node = text(label).single()
+                            val badge = node.parent!!
+                            assertTrue(badge.boundsInRoot.top >= date.boundsInRoot.bottom)
+                            assertTrue(badge.boundsInRoot.bottom <= title.boundsInRoot.top)
+                            assertTrue(badge.boundsInRoot.left >= card.boundsInRoot.left)
+                            assertTrue(badge.boundsInRoot.right <= card.boundsInRoot.right)
+                            val layouts = mutableListOf<TextLayoutResult>()
+                            node.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
+                            val layout = layouts.single()
+                            assertFalse(layout.isLineEllipsized(0), "Badge ellipsized: $label width=$width scale=$scale")
+                            assertTrue(layout.getLineRight(0) <= layout.size.width + 1f, "Badge text clipped: $label")
+                            assertTrue(layout.multiParagraph.height <= layout.size.height + 1f, "Badge height clipped: $label")
+                        }
+                    }
+                    if (albums && results) {
+                        assertFalse(text("Фото").single().parent!!.boundsInRoot.overlaps(text("Результаты").single().parent!!.boundsInRoot))
+                        if (width == 390) scene.save("review-start-badges-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                    }
+                    card.config[SemanticsActions.OnClick].action!!.invoke()
+                    assertEquals(listOf(event), opened)
+                }
+            }
+        }
+    }
     private var time = System.nanoTime()
     private fun ImageComposeScene.settle() { repeat(12) { time += 100_000_000L; render(time).close() } }
     private fun ImageComposeScene.nodes(): List<SemanticsNode> {

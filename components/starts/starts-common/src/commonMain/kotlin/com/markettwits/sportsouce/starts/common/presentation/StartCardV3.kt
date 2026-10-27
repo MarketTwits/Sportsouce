@@ -9,6 +9,8 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.NearMe
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -209,6 +211,36 @@ fun StartCardV3(
                     .padding(horizontal = SauceSpacing.medium, vertical = SauceSpacing.large),
                 verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)
             ) {
+                if (start.hasAlbums || start.hasResults) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        if (start.hasAlbums) {
+                            StartCardV3ImageOverlayBadge(
+                                text = "Фото",
+                                backgroundColor = SauceTheme.colors.surfaceSubtle,
+                                contentColor = SauceTheme.colors.textSecondary,
+                                icon = {
+                                    Icon(Icons.Outlined.PhotoLibrary, contentDescription = null,
+                                        modifier = Modifier.size(14.dp), tint = SauceTheme.colors.textSecondary)
+                                },
+                            )
+                        }
+                        if (start.hasResults) {
+                            StartCardV3ImageOverlayBadge(
+                                text = "Результаты",
+                                backgroundColor = SauceTheme.colors.surfaceSubtle,
+                                contentColor = SauceTheme.colors.textSecondary,
+                                icon = {
+                                    Icon(Icons.Outlined.EmojiEvents, contentDescription = null,
+                                        modifier = Modifier.size(14.dp), tint = SauceTheme.colors.textSecondary)
+                                },
+                            )
+                        }
+                    }
+                }
                 Row(
                     modifier = Modifier.padding(bottom = SauceSpacing.extraSmall),
                     verticalAlignment = Alignment.CenterVertically,

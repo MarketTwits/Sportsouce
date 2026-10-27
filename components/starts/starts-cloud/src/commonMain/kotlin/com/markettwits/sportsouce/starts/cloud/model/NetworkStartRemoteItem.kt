@@ -60,4 +60,5 @@ data class NetworkStartRemoteItem(
     val total_slots_sum: JsonElement? = null,
     val updatedAt: String,
     val viewsCount: Int,
+    val is_has_albums: Boolean? = false,
 )

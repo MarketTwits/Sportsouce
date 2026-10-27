@@ -36,6 +36,8 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
                 organizers = mapOrganizers(it.organizers),
                 slots = mapSlots(it.open_slots_sum, it.total_slots_sum),
                 onMainPage = it.on_main_page ?: false,
+                hasAlbums = it.is_has_albums == true,
+                hasResults = it.results.isNotEmpty() || !it.results_link.isNullOrBlank(),
                 views = it.viewsCount,
                 description = it.description ?: "",
                 slug = it.slug ?: ""

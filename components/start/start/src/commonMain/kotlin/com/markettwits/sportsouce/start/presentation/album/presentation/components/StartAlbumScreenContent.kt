@@ -77,9 +77,10 @@ internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSe
 }
 
 /** Preserve the viewport when the photo is already fully visible, otherwise reveal its row. */
-internal suspend fun LazyGridState.revealAlbumPhoto(gridIndex: Int) {
+internal suspend fun LazyGridState.revealAlbumPhoto(gridIndex: Int, pinnedHeaderHeight: Int = 0) {
     val viewport = layoutInfo
+    val safeTop = viewport.viewportStartOffset + pinnedHeaderHeight
     val visible = viewport.visibleItemsInfo.any { it.index == gridIndex &&
-        it.offset.y >= viewport.viewportStartOffset && it.offset.y + it.size.height <= viewport.viewportEndOffset }
-    if (!visible) scrollToItem(gridIndex)
+        it.offset.y >= safeTop && it.offset.y + it.size.height <= viewport.viewportEndOffset }
+    if (!visible) scrollToItem(gridIndex, -safeTop)
 }

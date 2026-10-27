@@ -29,10 +29,12 @@ internal fun albumSelectionRange(photos: List<AlbumPhoto>, baseline: Map<Int, Al
 @Composable
 internal fun Modifier.albumSelectionGesture(
     state: LazyGridState, sources: AlbumPhotoSources, photos: List<AlbumPhoto>, selected: Map<Int, AlbumPhoto>, enabled: Boolean = true,
+    visibleTop: () -> Float = { 0f },
     onSelection: (List<AlbumPhoto>) -> Unit,
 ): Modifier {
     val currentPhotos by rememberUpdatedState(photos)
     val currentSelection by rememberUpdatedState(selected)
+    val currentVisibleTop by rememberUpdatedState(visibleTop)
     val update by rememberUpdatedState(onSelection)
     val haptic = LocalHapticFeedback.current
     val selectedIds = remember(selected) { selected.keys.toSet() }
@@ -52,7 +54,9 @@ internal fun Modifier.albumSelectionGesture(
             val gestureScope = this
             fun photoAt(position: Offset, clamp: Boolean = false): Int? {
                 val bottom = (viewport.height - state.layoutInfo.afterContentPadding - 1).coerceAtLeast(1f)
-                val point = Offset(position.x, if (clamp) position.y.coerceIn(1f, bottom) else position.y) + viewport.origin
+                val top = currentVisibleTop().coerceIn(0f, bottom - 1f)
+                if (!clamp && position.y < top) return null
+                val point = Offset(position.x, if (clamp) position.y.coerceIn(top + 1f, bottom) else position.y) + viewport.origin
                 return sources.indexAt(point)?.let { currentPhotos.getOrNull(it)?.id }
             }
             awaitEachGesture {
@@ -92,7 +96,7 @@ internal fun Modifier.albumSelectionGesture(
                         val edge = 56 * density
                         val bottom = viewport.height - state.layoutInfo.afterContentPadding
                         val speed = when {
-                            position.y < edge -> -((edge - position.y) / edge).coerceIn(0f, 1f)
+                            position.y < currentVisibleTop() + edge -> -((currentVisibleTop() + edge - position.y) / edge).coerceIn(0f, 1f)
                             position.y > bottom - edge -> ((position.y - bottom + edge) / edge).coerceIn(0f, 1f)
                             else -> 0f
                         }

@@ -13,5 +13,5 @@ val startAlbumModule = module {
     includes(com.markettwits.sportsouce.start.cloud.di.sportSauceStartNetworkModule, com.markettwits.intentActionModule)
     singleOf(::StartAlbumRepositoryBase) bind StartAlbumRepository::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
-    singleOf(::StartAlbumStoreFactory)
+    single { StartAlbumStoreFactory(storeFactory = get(), repository = get(), sharer = get(), downloader = get(), intentAction = get()) }
 }

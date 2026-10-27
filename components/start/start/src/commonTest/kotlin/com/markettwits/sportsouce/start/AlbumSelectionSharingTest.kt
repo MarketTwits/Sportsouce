@@ -17,6 +17,36 @@ class AlbumSelectionSharingTest {
         override suspend fun photos(albumId: Int, offset: Int, limit: Int, tags: List<String>) = AlbumPhotosPage(emptyList(), 0)
     }
 
+    @Test fun albumSharingUsesItsCanonicalPublicLinkAndKeepsPhotoSelection() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
+        val sent = mutableListOf<String>()
+        val action = object : IntentAction {
+            override fun openWebPage(url: String) = error("Must open the system share sheet")
+            override fun openPhone(phone: String) = error("unused")
+            override fun shareImage(byteArray: ByteArray, filename: String) = error("Link sharing must not download a photo")
+            override fun saveImage(byteArray: ByteArray, filename: String) = error("unused")
+            override fun copyToSystemBuffer(text: String) = error("Must share instead of copying")
+            override fun sharePlainText(text: String) { sent += text }
+        }
+        val repository = object : StartAlbumRepository {
+            override suspend fun album(albumId: Int) = StartAlbumDetails("Фото", "Трейл", "", 0, emptyList())
+            override suspend fun photos(albumId: Int, offset: Int, limit: Int, tags: List<String>) = AlbumPhotosPage(emptyList(), 0)
+        }
+        try {
+            for (id in listOf(27, 1034, 0, -1, null)) {
+                val store = StartAlbumStoreFactory(DefaultStoreFactory(), repository, intentAction = action).create(emptyList(), id)
+                try {
+                    store.accept(StartAlbumStore.Intent.TogglePhoto(photos[0]))
+                    store.accept(StartAlbumStore.Intent.ShareAlbum)
+                    assertEquals(id, store.state.albumId)
+                    assertEquals(setOf(photos[0].id), store.state.selectedPhotos.keys)
+                    assertNull(store.state.exportProgress)
+                } finally { store.dispose() }
+            }
+            assertEquals(listOf("https://sportsauce.ru/starts/photo/27", "https://sportsauce.ru/starts/photo/1034"), sent)
+        } finally { Dispatchers.resetMain() }
+    }
+
     @Test fun rangeSelectionCanReverseAndDeselectWithoutLosingUnrelatedPhotos() {
         val baseline = listOf(photos[0], photos[8]).associateBy { it.id }
         assertEquals(setOf(1, 3, 4, 5, 6, 9), albumSelectionRange(photos, baseline, 3, 6, true).keys)

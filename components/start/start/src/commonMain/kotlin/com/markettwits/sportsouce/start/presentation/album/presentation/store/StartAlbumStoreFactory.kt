@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.album.presentation.store
 
 import com.markettwits.sportsouce.start.presentation.album.domain.StartAlbumRepository
+import com.markettwits.IntentAction
 import com.markettwits.OriginalImageSharer
 import com.markettwits.OriginalImageDownloader
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
@@ -15,6 +16,7 @@ class StartAlbumStoreFactory(
     private val repository: StartAlbumRepository,
     private val sharer: OriginalImageSharer = OriginalImageSharer.Unavailable,
     private val downloader: OriginalImageDownloader = OriginalImageDownloader.Unavailable,
+    private val intentAction: IntentAction? = null,
 ) {
 
     fun create(images: List<String>, albumId: Int? = null): StartAlbumStore =
@@ -27,9 +29,9 @@ class StartAlbumStoreFactory(
         StartAlbumStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "StartAlbumStore",
-            initialState = State(images = images),
+            initialState = State(images = images, albumId = albumId),
             bootstrapper = SimpleBootstrapper(Unit),
-            executorFactory = { StartAlbumExecutor(albumId, repository, sharer, downloader) },
+            executorFactory = { StartAlbumExecutor(albumId, repository, sharer, downloader, intentAction) },
             reducer = StartAlbumReducer
         )
 }

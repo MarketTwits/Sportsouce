@@ -54,7 +54,17 @@ private class PhotoViewerDialog(
         overlayWindow.requestFeature(Window.FEATURE_NO_TITLE)
         overlayWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         overlayWindow.setWindowAnimations(0)
-        overlayWindow.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        overlayWindow.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        @Suppress("DEPRECATION")
+        overlayWindow.apply {
+            statusBarColor = Color.TRANSPARENT
+            navigationBarColor = Color.TRANSPARENT
+            if (Build.VERSION.SDK_INT >= 28) navigationBarDividerColor = Color.TRANSPARENT
+            if (Build.VERSION.SDK_INT >= 29) {
+                isNavigationBarContrastEnforced = false
+                isStatusBarContrastEnforced = false
+            }
+        }
         overlayWindow.setDimAmount(0f)
         WindowCompat.setDecorFitsSystemWindows(overlayWindow, false)
         overlayWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)

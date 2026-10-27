@@ -5,13 +5,15 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.sportsouce.start.presentation.album.domain.*
 import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStore.*
 import kotlinx.coroutines.*
+import com.markettwits.IntentAction
 import com.markettwits.OriginalImageSharer
 import com.markettwits.OriginalImageShareProgress
 import com.markettwits.OriginalImageDownloader
 
 class StartAlbumExecutor(private val albumId: Int?, private val repository: StartAlbumRepository,
     private val sharer: OriginalImageSharer = OriginalImageSharer.Unavailable,
-    private val downloader: OriginalImageDownloader = OriginalImageDownloader.Unavailable) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+    private val downloader: OriginalImageDownloader = OriginalImageDownloader.Unavailable,
+    private val intentAction: IntentAction? = null) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     private var generation = 0
     private var pagingJob: Job? = null
     private var exportJob: Job? = null
@@ -37,6 +39,9 @@ class StartAlbumExecutor(private val albumId: Int?, private val repository: Star
             }
             is Intent.SelectPhotos -> if (state().exportProgress == null) dispatch(Message.Selection(intent.photos.associateBy { it.id }))
             Intent.ClearSelection -> if (state().exportProgress == null) dispatch(Message.Selection(emptyMap()))
+            Intent.ShareAlbum -> albumId?.takeIf { it > 0 }?.let {
+                intentAction?.sharePlainText("https://sportsauce.ru/starts/photo/$it")
+            }
             Intent.ShareSelection -> export(state().selectedPhotos.values.toList(), ExportAction.Share)
             is Intent.SharePhotos -> export(intent.photos, ExportAction.Share)
             Intent.DownloadSelection -> export(state().selectedPhotos.values.toList(), ExportAction.Download)

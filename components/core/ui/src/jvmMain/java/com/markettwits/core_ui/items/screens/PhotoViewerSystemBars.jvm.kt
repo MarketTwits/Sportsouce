@@ -13,3 +13,6 @@ internal actual fun PhotoViewerOverlay(onDismissRequest: () -> Unit, content: @C
 
 @Composable
 internal actual fun PhotoViewerSystemBars(controlsVisible: Boolean) = Unit
+
+@Composable
+actual fun PhotoHeaderSystemBars(lightIcons: Boolean) = Unit

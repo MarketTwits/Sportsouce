@@ -10,7 +10,8 @@ internal class StartAlbumRepositoryBase(private val api: SportSauceStartApi) : S
         val album = api.album(albumId)
         return StartAlbumDetails(album.name, album.start.shortName,
             runCatching { BaseTimeMapper().mapTime(TimePattern.FullWithEmptySpace, album.start.startDate) }.getOrDefault(""),
-            album.photos.size, album.photos.flatMap { it.tags }.map { it.name.trim() }.filter { it.isNotEmpty() }.distinct())
+            album.photos.size, album.photos.flatMap { it.tags }.map { it.name.trim() }.filter { it.isNotEmpty() }.distinct(),
+            coverImage = album.photos.firstOrNull { it.file.fullPath.isNotBlank() }?.file?.fullPath.orEmpty())
     }
     override suspend fun photos(albumId: Int, offset: Int, limit: Int, tags: List<String>): AlbumPhotosPage {
         val page = api.albumPhotos(albumId, offset, limit, tags)

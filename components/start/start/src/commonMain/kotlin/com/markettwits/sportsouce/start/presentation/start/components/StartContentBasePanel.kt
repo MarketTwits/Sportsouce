@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.*
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.theme.*
 
 @Composable
@@ -37,9 +38,9 @@ internal fun StartSectionHeading(title: String, icon: ImageVector? = null, modif
         }
     }
     if (onClick == null) Box(modifier) { row() }
-    else Surface(modifier = modifier.fillMaxWidth().heightIn(min = SauceSizes.touchTarget).semantics {
+    else SauceClickTarget(modifier = modifier.fillMaxWidth().heightIn(min = SauceSizes.touchTarget).semantics {
         stateDescription = if (expanded) "Развёрнуто" else "Свёрнуто"
-    }, onClick = onClick, shape = SauceShapes.field, color = SauceTheme.colors.surface) {
+    }, onClick = onClick) {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { row() }
     }
 }

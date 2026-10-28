@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.components.divider.BaseDivider
 import com.markettwits.core_ui.items.components.list.SauceActionRow
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
@@ -37,8 +38,7 @@ internal fun StartOrganizers(modifier: Modifier = Modifier, organizer: List<Orga
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
             organizer.sortedByDescending { it.isMain }.forEachIndexed { index, person ->
                 if (index > 0) BaseDivider()
-                Surface(onClick = { selected = person }, modifier = Modifier.fillMaxWidth(),
-                    shape = SauceShapes.field, color = SauceTheme.colors.surface) {
+                SauceClickTarget(onClick = { selected = person }, modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
                         Row(Modifier.fillMaxWidth().heightIn(min = SauceSizes.touchTarget), verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {

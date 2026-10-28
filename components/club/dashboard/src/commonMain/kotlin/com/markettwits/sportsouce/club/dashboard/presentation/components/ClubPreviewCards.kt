@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.club.dashboard.presentation.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -9,11 +8,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.text.HtmlText
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.club.common.presentation.ClubPhoto
@@ -46,14 +45,15 @@ internal fun ClubTrainingPreview(training: Training, modifier: Modifier = Modifi
 
 @Composable
 internal fun ClubTrainerPreview(trainer: Trainer, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Column(modifier.width(184.dp).clip(SauceShapes.card)
-        .clickable(onClickLabel = "Подробнее о тренере", onClick = onClick),
-        verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        ClubPhoto(trainer.imageUrl, trainer.fullName(), Modifier.fillMaxWidth().height(220.dp))
-        Text(trainer.fullName(), style = MaterialTheme.typography.titleSmall, minLines = 2,
-            maxLines = 2, overflow = TextOverflow.Ellipsis, color = SauceTheme.colors.textPrimary)
-        Text(trainer.kindOfSports.joinToString(" · "), style = MaterialTheme.typography.bodySmall, minLines = 2,
-            maxLines = 2, overflow = TextOverflow.Ellipsis,
-            color = clubDirectionAccent(trainer.kindOfSports.firstOrNull().orEmpty()).clubColors().content)
+    SauceClickTarget(onClick = onClick, modifier = modifier.width(184.dp), shape = SauceShapes.card,
+        onClickLabel = "Подробнее о тренере") {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ClubPhoto(trainer.imageUrl, trainer.fullName(), Modifier.fillMaxWidth().height(220.dp))
+            Text(trainer.fullName(), style = MaterialTheme.typography.titleSmall, minLines = 2,
+                maxLines = 2, overflow = TextOverflow.Ellipsis, color = SauceTheme.colors.textPrimary)
+            Text(trainer.kindOfSports.joinToString(" · "), style = MaterialTheme.typography.bodySmall, minLines = 2,
+                maxLines = 2, overflow = TextOverflow.Ellipsis,
+                color = clubDirectionAccent(trainer.kindOfSports.firstOrNull().orEmpty()).clubColors().content)
+        }
     }
 }

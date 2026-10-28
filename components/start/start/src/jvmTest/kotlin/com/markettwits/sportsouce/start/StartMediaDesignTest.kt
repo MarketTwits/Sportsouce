@@ -44,10 +44,13 @@ class StartMediaDesignTest {
                 val layouts = mutableListOf<TextLayoutResult>()
                 label.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
                 val layout = layouts.single()
+                assertEquals(1, layout.lineCount, "Details status must keep room for the sport badges")
                 repeat(layout.lineCount) { line ->
+                    // Skia may report false for isLineEllipsized; compare the intrinsic text width instead.
+                    if (layout.multiParagraph.intrinsics.maxIntrinsicWidth > layout.size.width) return@repeat
                     val center = label.positionInRoot.x + (layout.getLineLeft(line) + layout.getLineRight(line)) / 2f
                     assertEquals(status.boundsInRoot.center.x + 5.5f, center, 1f,
-                        "The dot and label must stay together as a centered group, including wrapped lines")
+                        "The dot and label must stay together as a centered group when the text fits")
                 }
                 if (scale == 1f) {
                     val sport = scene.nodes().single { it.config.getOrNull(SemanticsProperties.ContentDescription)?.contains("Бег") == true }

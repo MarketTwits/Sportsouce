@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.extensions.formatRussianPhone
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
@@ -51,23 +52,25 @@ internal fun ProfileInfoTopBar(
     OnBackgroundCard(modifier) {
         Column(Modifier.padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
             BoxWithConstraints(Modifier.fillMaxWidth()) {
-                val identityModifier = Modifier.fillMaxWidth().clip(SauceShapes.field)
-                    .semantics { contentDescription = "Редактировать профиль" }
-                    .clickable(role = Role.Button, onClickLabel = "Редактировать профиль", onClick = onClickEditProfile)
-                if (maxWidth < 220.dp * LocalDensity.current.fontScale) {
-                    Column(identityModifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                            ProfileAvatar(imageUrl, onClickImage)
-                            Spacer(Modifier.weight(1f))
-                            Icon(Icons.Default.ChevronRight, null, Modifier.size(24.dp), tint = colors.textMuted)
+                val stacked = maxWidth < 220.dp * LocalDensity.current.fontScale
+                SauceClickTarget(modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Редактировать профиль" },
+                    onClickLabel = "Редактировать профиль", onClick = onClickEditProfile) {
+                    val identityModifier = Modifier.fillMaxWidth()
+                    if (stacked) {
+                        Column(identityModifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                ProfileAvatar(imageUrl, onClickImage)
+                                Spacer(Modifier.weight(1f))
+                                Icon(Icons.Default.ChevronRight, null, Modifier.size(24.dp), tint = colors.textMuted)
+                            }
+                            ProfileIdentity(userName, userPhoneNumber)
                         }
-                        ProfileIdentity(userName, userPhoneNumber)
+                    } else Row(identityModifier, verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ProfileAvatar(imageUrl, onClickImage)
+                        ProfileIdentity(userName, userPhoneNumber, Modifier.weight(1f))
+                        Icon(Icons.Default.ChevronRight, null, Modifier.size(24.dp), tint = colors.textMuted)
                     }
-                } else Row(identityModifier, verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    ProfileAvatar(imageUrl, onClickImage)
-                    ProfileIdentity(userName, userPhoneNumber, Modifier.weight(1f))
-                    Icon(Icons.Default.ChevronRight, null, Modifier.size(24.dp), tint = colors.textMuted)
                 }
             }
             if (hasSocialLinks) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

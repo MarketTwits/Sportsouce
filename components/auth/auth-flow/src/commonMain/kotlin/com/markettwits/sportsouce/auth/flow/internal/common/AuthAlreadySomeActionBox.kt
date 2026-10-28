@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,11 +25,13 @@ fun AuthAlreadySomeActionBox(
     onClick: () -> Unit,
     actionText: String,
     descriptionText: String,
+    windowInsets: WindowInsets = WindowInsets.navigationBars,
 ) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             .background(MaterialTheme.colorScheme.tertiaryContainer)
+            .windowInsetsPadding(windowInsets)
             .padding(vertical = 20.dp, horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

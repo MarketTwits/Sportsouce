@@ -1,6 +1,5 @@
 package com.markettwits.sportsouce.club.dashboard.presentation.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
@@ -12,10 +11,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
 import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
 import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
@@ -23,7 +22,6 @@ import com.markettwits.core_ui.items.components.topbar.LocalSauceTopBar
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.SauceTheme
-import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.sportsouce.club.common.presentation.*
 import com.markettwits.sportsouce.club.dashboard.presentation.component.ClubDashboardComponent
@@ -60,9 +58,11 @@ internal fun ClubDashboardContent(state: ClubDashboardStore.State, topContentPad
                 ClubInsetSection {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                         data.statistics.take(2).forEach { stat ->
-                            Column(Modifier.weight(1f).clip(SauceShapes.field).clickable { open(MenuBottomSheetType.Statistics) }.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(stat.value, style = MaterialTheme.typography.headlineMedium, color = SauceTheme.colors.textPrimary)
-                                HtmlText(text = stat.title, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted, showImages = false)
+                            SauceClickTarget(modifier = Modifier.weight(1f), onClick = { open(MenuBottomSheetType.Statistics) }) {
+                                Column(Modifier.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(stat.value, style = MaterialTheme.typography.headlineMedium, color = SauceTheme.colors.textPrimary)
+                                    HtmlText(text = stat.title, style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted, showImages = false)
+                                }
                             }
                         }
                     }
@@ -115,9 +115,11 @@ private fun ClubCarouselSection(eyebrow: String, title: String, onClick: () -> U
 private fun ClubSectionTitle(eyebrow: String, title: String, onClick: () -> Unit) {
     Column {
         Text(eyebrow, style = MaterialTheme.typography.labelMedium, color = SauceTheme.colors.textMuted)
-        Row(Modifier.fillMaxWidth().heightIn(min = 48.dp).clip(SauceShapes.field).clickable(onClick = onClick), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(title, Modifier.weight(1f), style = MaterialTheme.typography.headlineSmall, color = SauceTheme.colors.textPrimary)
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.size(20.dp), tint = SauceTheme.colors.action)
+        SauceClickTarget(modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp), onClick = onClick) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(title, Modifier.weight(1f), style = MaterialTheme.typography.headlineSmall, color = SauceTheme.colors.textPrimary)
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.size(20.dp), tint = SauceTheme.colors.action)
+            }
         }
     }
 }

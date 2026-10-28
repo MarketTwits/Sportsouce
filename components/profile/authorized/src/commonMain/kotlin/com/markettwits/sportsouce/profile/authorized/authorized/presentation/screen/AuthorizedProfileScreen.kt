@@ -19,7 +19,7 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
 
     state.user?.let { user ->
         ProfileScreenContent(
-            isRefreshing = state.isLoading,
+            isRefreshing = state.isRefreshing,
             refreshError = state.error,
             userName = user.userInfo.name,
             userPhoneNumber = user.userInfo.phoneNumber,

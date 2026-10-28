@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.lifecycle.doOnStart
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore
@@ -32,8 +32,8 @@ class AuthorizedProfileComponentBase(
     }
 
     init {
-        lifecycle.doOnStart {
-            store.accept(AuthorizedProfileStore.Intent.Retry)
+        lifecycle.doOnResume {
+            store.accept(AuthorizedProfileStore.Intent.Refresh)
         }
     }
 }

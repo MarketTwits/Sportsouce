@@ -182,7 +182,7 @@ class ClubBehaviorTest {
         val settings = listOf(ClubSettingsRemoteRow("", "<p>Шаг</p>", 14, null, null, "process", null))
         assertTrue(ClubInfoMapperBase().mapFeatures(settings).isEmpty())
         assertNull(ClubInfoMapperBase().mapMainImage(settings))
-        val remote = SubscriptionRemote("", "Тренировки", null, 11, 9, true, 2, SubscriptionColor.GREEN, "Беговой", 3000, "Группа", "")
+        val remote = SubscriptionRemote("", "Тренировки", null, 11, null, true, 2, SubscriptionColor.GREEN, "Беговой", 3000, "Группа", "")
         val mapper = SubscriptionMapperBase()
         for (group in listOf(SubscriptionItemsRemote(type = "Бег", subscriptions = listOf(remote)),
             SubscriptionItemsRemote(name = "Бег", subscription = listOf(remote)))) {

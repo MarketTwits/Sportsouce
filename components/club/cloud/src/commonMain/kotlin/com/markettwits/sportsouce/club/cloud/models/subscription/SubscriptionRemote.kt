@@ -14,7 +14,7 @@ data class SubscriptionRemote(
     @SerialName("id")
     val id: Int,
     @SerialName("kindOfSportId")
-    val kindOfSportId: Int,
+    val kindOfSportId: Int? = null,
     @SerialName("isPriseDependsOnCount")
     val isPriseDependsOnCount : Boolean,
     @SerialName("maxAmount")

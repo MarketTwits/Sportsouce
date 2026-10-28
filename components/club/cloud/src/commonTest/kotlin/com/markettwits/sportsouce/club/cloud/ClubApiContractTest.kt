@@ -17,6 +17,35 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
 class ClubApiContractTest {
+    @Test fun groupedSubscriptionsAllowAnUnassignedSportAndPreserveTheWholeCatalog() = runTest {
+        val json = JsonProviderBase().provide()
+        val subscriptions = listOf(
+            "11" to "null", "13" to "9", "14" to "null", "15" to "9", "16" to "9",
+            "19" to "2", "21" to "2", "22" to "2", "23" to "null", "24" to "2", "25" to "2",
+            "17" to "null", "18" to "14"
+        )
+        fun subscription(id: String, sport: String) = """{"id":$id,"name":"Абонемент $id","type":"Группа","description":"<p>Тренировки</p>","price":4000,"discount":null,"color":"green","maxAmount":null,"kindOfSportId":$sport,"workoutId":13,"isPriseDependsOnCount":false,"createdAt":"2024-11-04T02:20:37.000Z","updatedAt":"2026-10-24T01:53:49.000Z"}"""
+        val response = """[{"id":13,"type":"Беговые тренировки","subscriptions":[${subscriptions.joinToString { (id, sport) -> subscription(id, sport) }}]},{"id":9,"type":"Функциональный тренинг","subscriptions":[]}]"""
+        val client = HttpClient(MockEngine { request ->
+            assertEquals(HttpMethod.Get, request.method)
+            assertEquals("/subscription/grouped", request.url.encodedPath)
+            respond(response, headers = headersOf(HttpHeaders.ContentType, "application/json"))
+        }) { expectSuccess = true; defaultRequest { url("https://api.sportsauce.ru/") } }
+        try {
+            val api = SportSauceClubsNetworkApiBase(object : HttpClientProvider {
+                override fun provide(loggerEnabled: Boolean) = client
+                override fun json() = json
+            })
+            val groups = api.subscription()
+            val items = groups.first().subscriptions!!
+            assertEquals(subscriptions.map { it.first.toInt() }, items.map { it.id })
+            assertEquals(setOf(11, 14, 23, 17), items.filter { it.kindOfSportId == null }.map { it.id }.toSet())
+            assertEquals(9, items.single { it.id == 13 }.kindOfSportId)
+            assertTrue(items.all { it.price == 4000 && it.maxAmount == null })
+            assertTrue(groups.last().subscriptions!!.isEmpty())
+        } finally { client.close() }
+    }
+
     @Test fun rejectedWorkoutRequestRemainsAFailure() = runTest {
         val json = JsonProviderBase().provide()
         val client = HttpClient(MockEngine {

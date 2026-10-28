@@ -11,6 +11,6 @@ import org.koin.dsl.module
 
 internal val startsModule = module {
     includes(startsCommonModule, crashlyticsModule)
-    singleOf(::StartsRepositoryBase) bind StartsRepository::class
+    single<StartsRepository> { StartsRepositoryBase(get(), get<StartsTabsCache>(), get()) }
     singleOf(::StartsTabsCache)
 }

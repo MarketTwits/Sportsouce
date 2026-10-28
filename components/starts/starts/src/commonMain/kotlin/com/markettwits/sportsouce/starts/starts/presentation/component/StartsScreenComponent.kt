@@ -2,7 +2,8 @@ package com.markettwits.sportsouce.starts.starts.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.domain.StartsRepository
 
@@ -15,7 +16,11 @@ class StartsScreenComponent(
 ) : ComponentContext by componentContext, StartsScreen {
 
     private val someLogic =
-        instanceKeeper.getOrCreateSimple { StartsInstanceKeeper(dataSource) }
+        instanceKeeper.getOrCreate { StartsInstanceKeeper(dataSource) }
+
+    init {
+        lifecycle.doOnResume { someLogic.onResume() }
+    }
 
     override fun onItemClick(startItem: StartsListItem) {
         toDetail(startItem)

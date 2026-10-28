@@ -30,6 +30,8 @@ interface ReviewStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoading : Boolean = false,
+        val isRefreshing: Boolean = false,
+        val hasLoaded: Boolean = false,
         val error: SauceError? = null,
         val review: Review = Review(),
         val photoAlbums: List<ReviewPhotoAlbum> = emptyList(),

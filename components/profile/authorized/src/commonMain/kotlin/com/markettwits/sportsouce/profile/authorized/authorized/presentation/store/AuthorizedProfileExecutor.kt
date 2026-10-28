@@ -11,6 +11,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfi
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserSocialNetworkIntent
 import com.markettwits.sportsouce.profile.authorized.authorized.presentation.store.AuthorizedProfileStore.*
 import com.markettwits.sportsouce.starts.recent.domain.StartRecentRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -23,9 +24,11 @@ class AuthorizedProfileExecutor(
 ) : CoroutineExecutor<Intent, Unit, State, Message, Unit>(), LogTagProvider {
 
     override val tag: String = "AuthorizedProfileExecutor"
+    private var loadJob: Job? = null
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
+            is Intent.Refresh -> launch(false)
             is Intent.Retry -> launch(true)
             is Intent.OnClickUserSocialNetwork -> handleUserSocialNetwork(intent.intent)
         }
@@ -33,7 +36,6 @@ class AuthorizedProfileExecutor(
 
     override fun executeAction(action: Unit) {
         observeRecentStarts()
-        launch(false)
     }
 
     private fun handleUserSocialNetwork(intent: UserSocialNetworkIntent) {
@@ -44,9 +46,11 @@ class AuthorizedProfileExecutor(
     }
 
     private fun launch(forced: Boolean) {
-        scope.launch {
+        if (!forced && loadJob?.isActive == true) return
+        loadJob?.cancel()
+        loadJob = scope.launch {
             interactor.userProfile(forced)
-                .onStart { dispatch(Message.Loading) }
+                .onStart { dispatch(Message.Loading(forced)) }
                 .catch { throwable ->
                     if (!throwable.isNetworkConnectionError())
                         exceptionTracker.reportException(throwable, "#UserProfile#launch")

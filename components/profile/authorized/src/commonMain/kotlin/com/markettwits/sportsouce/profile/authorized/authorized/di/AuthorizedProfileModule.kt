@@ -2,7 +2,6 @@ package com.markettwits.sportsouce.profile.authorized.authorized.di
 
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
-import com.markettwits.cahce.execute.base.ExecuteWithCacheBase
 import com.markettwits.core.time.BaseTimeMapper
 import com.markettwits.crashlitics.api.di.crashlyticsModule
 import com.markettwits.intentActionModule
@@ -38,8 +37,7 @@ val authorizedProfileModule = module {
                         UserRegistrationsMapperBase(BaseTimeMapper()),
                         BaseTimeMapper()
                     ),
-                    cache = UserProfileCache(),
-                    executeWithCache = ExecuteWithCacheBase()
+                    cache = UserProfileCache()
                 )
             ),
             recentRepository = get(),

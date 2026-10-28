@@ -19,15 +19,35 @@ import kotlin.math.sign
 @Stable
 internal class AlbumOverscrollEffect : OverscrollEffect {
     private var pull by mutableFloatStateOf(0f)
+    private var revision = 0
     var viewportHeight: Float = 1f
+    private var canPull: (Float) -> Boolean = { true }
+
+    fun updateBounds(canPull: (Float) -> Boolean) {
+        this.canPull = canPull
+        discardInvalidPull()
+    }
+
+    private fun discardInvalidPull() {
+        if (abs(pull) <= .5f || !canPull(pull)) clearPull()
+    }
+
+    private fun clearPull() {
+        if (pull != 0f) { pull = 0f; revision++ }
+    }
+
     val offset: Float get() {
+        if (!canPull(pull)) return 0f
         val limit = (viewportHeight * .4f).coerceAtLeast(1f)
         return sign(pull) * limit * (1f - exp(-abs(pull) * .52f / limit))
     }
-    override val isInProgress: Boolean get() = abs(pull) > .5f
+    override val isInProgress: Boolean get() = abs(pull) > .5f && canPull(pull)
     override val node = object : Modifier.Node() {}
 
     override fun applyToScroll(delta: Offset, source: NestedScrollSource, performScroll: (Offset) -> Offset): Offset {
+        discardInvalidPull()
+        // Fling, programmatic scrolling and paging remeasurement must never start a rubber band.
+        if (source != NestedScrollSource.UserInput) return performScroll(delta)
         var released = 0f
         if (pull != 0f && pull * delta.y < 0f) {
             released = sign(delta.y) * minOf(abs(pull), abs(delta.y))
@@ -35,20 +55,32 @@ internal class AlbumOverscrollEffect : OverscrollEffect {
         }
         val consumed = performScroll(delta.copy(y = delta.y - released))
         val remaining = delta.y - released - consumed.y
-        if (remaining != 0f) pull = (pull + remaining).coerceIn(-viewportHeight * 2f, viewportHeight * 2f)
-        // Let a fling detect the edge and hand its remaining velocity to the return spring.
-        return if (source == NestedScrollSource.UserInput) Offset(consumed.x, delta.y)
-        else Offset(consumed.x, consumed.y + released)
+        val accepted = if (abs(remaining) > .5f && canPull(remaining)) remaining else 0f
+        if (accepted != 0f) pull = (pull + accepted).coerceIn(-viewportHeight * 2f, viewportHeight * 2f)
+        return Offset(consumed.x, consumed.y + released + accepted)
     }
 
     override suspend fun applyToFling(velocity: Velocity, performFling: suspend (Velocity) -> Velocity) {
-        val wasPulling = isInProgress
-        val consumed = performFling(if (wasPulling) velocity.copy(y = 0f) else velocity)
-        if (pull != 0f) {
-            val speed = if (wasPulling) velocity.y else velocity.y - consumed.y
-            animate(pull, 0f, initialVelocity = speed * .52f,
-                animationSpec = spring(dampingRatio = .86f, stiffness = 180f)) { value, _ -> pull = value }
-            pull = 0f
+        try {
+            discardInvalidPull()
+            val wasPulling = isInProgress
+            val consumed = performFling(if (wasPulling) velocity.copy(y = 0f) else velocity)
+            if (isInProgress) {
+                val speed = if (wasPulling) velocity.y else velocity.y - consumed.y
+                val direction = sign(pull)
+                val springRevision = revision
+                animate(pull, 0f, initialVelocity = speed * .52f,
+                    animationSpec = spring(dampingRatio = .86f, stiffness = 180f)) { value, _ ->
+                    // An appended page can turn the old edge into normal scrollable content mid-spring.
+                    if (springRevision == revision) {
+                        if (canPull(direction)) pull = direction * (value * direction).coerceAtLeast(0f)
+                        else clearPull()
+                    }
+                }
+            }
+        } finally {
+            // A new gesture, filter or scrollToItem may cancel a fling before its spring completes.
+            clearPull()
         }
     }
 }

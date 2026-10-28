@@ -67,7 +67,8 @@ internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSe
     val photos = remember(items) { items.mapIndexed { index, url -> AlbumPhoto(index, url) } }
     LazyVerticalGrid(columns = AlbumGridCells, state = state, modifier = modifier.fillMaxSize()
         .albumSelectionGesture(state, sources, photos, selection) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
-        contentPadding = PaddingValues(top = 12.dp, bottom = if (selection.isNotEmpty()) 100.dp else 0.dp),
+        contentPadding = PaddingValues(top = 12.dp, bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+            if (selection.isNotEmpty()) 100.dp else 0.dp),
         horizontalArrangement = Arrangement.spacedBy(1.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
         itemsIndexed(items, key = { index, _ -> "photo-$index" }) { index, url ->
             AlbumPhotoTile(index, url, "Фото ${index + 1} из ${items.size}", sources, selection.isNotEmpty(), index in selection,

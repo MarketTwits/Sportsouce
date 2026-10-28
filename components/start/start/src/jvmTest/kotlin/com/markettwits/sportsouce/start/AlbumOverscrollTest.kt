@@ -46,4 +46,83 @@ class AlbumOverscrollTest {
             assertEquals(0f, effect.offset, .1f)
         }
     }
+
+    @Test fun inertiaAndFractionalRemaindersCannotStartOverscroll() {
+        val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
+        var calls = 0
+        for (delta in listOf(-600f, 600f)) {
+            val consumed = effect.applyToScroll(Offset(0f, delta), NestedScrollSource.SideEffect) { calls++; Offset.Zero }
+            assertEquals(0f, consumed.y)
+            assertEquals(0f, effect.offset)
+            effect.applyToScroll(Offset(0f, delta), NestedScrollSource.UserInput) { calls++; it.copy(y = it.y - .2f) }
+            assertEquals(0f, effect.offset, "Subpixel layout rounding must not create a rubber band")
+        }
+        assertEquals(4, calls)
+    }
+
+    @Test fun loadingAndTemporaryPagingEdgesDoNotConsumeTheGesture() {
+        val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
+        // Neither edge is final while refreshing. An unfinished append disables only the bottom.
+        effect.updateBounds { false }
+        for (delta in listOf(-300f, 300f)) {
+            assertEquals(Offset.Zero, effect.applyToScroll(Offset(0f, delta), NestedScrollSource.UserInput) { Offset.Zero })
+            assertEquals(0f, effect.offset)
+        }
+        effect.updateBounds { it > 0f }
+        effect.applyToScroll(Offset(0f, -300f), NestedScrollSource.UserInput) { Offset.Zero }
+        assertEquals(0f, effect.offset)
+        var forwarded = Offset.Zero
+        effect.applyToScroll(Offset(0f, 100f), NestedScrollSource.UserInput) { forwarded = it; it }
+        assertEquals(100f, forwarded.y, "Scrolling back from a loading footer must not repay false tension")
+        effect.applyToScroll(Offset(0f, 200f), NestedScrollSource.UserInput) { Offset.Zero }
+        assertTrue(effect.offset > 0f, "The genuine loaded top edge still stretches")
+    }
+
+    @Test fun aChangedBoundaryDropsOldTensionBeforeForwardingTheNextScroll() {
+        val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
+        var atEnd = true
+        effect.updateBounds { it < 0f && atEnd }
+        effect.applyToScroll(Offset(0f, -200f), NestedScrollSource.UserInput) { Offset.Zero }
+        assertTrue(effect.offset < 0f)
+        atEnd = false // A new page has expanded the layout without another pointer event yet.
+        assertEquals(0f, effect.offset)
+        var forwarded = Offset.Zero
+        effect.applyToScroll(Offset(0f, 120f), NestedScrollSource.UserInput) { forwarded = it; it }
+        assertEquals(120f, forwarded.y)
+        assertFalse(effect.isInProgress)
+        effect.updateBounds { true }
+        assertEquals(0f, effect.offset, "Old tension cannot return when a different edge becomes available")
+    }
+
+    @Test fun cancellingAReleaseCannotLeaveTheGridDisplaced() {
+        val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
+        lateinit var scope: CoroutineScope
+        ImageComposeScene(width = 390, height = 900) { scope = rememberCoroutineScope() }.use { scene ->
+            var time = System.nanoTime()
+            fun frames(count: Int) { repeat(count) { time += 16_000_000L; scene.render(time).close() } }
+            frames(2)
+            effect.applyToScroll(Offset(0f, 200f), NestedScrollSource.UserInput) { Offset.Zero }
+            val releasing = scope.launch { effect.applyToFling(Velocity.Zero) { awaitCancellation() } }
+            frames(2)
+            releasing.cancel()
+            frames(2)
+            assertEquals(0f, effect.offset, "Cancelling performFling must clear the displacement too")
+            effect.applyToScroll(Offset(0f, 200f), NestedScrollSource.UserInput) { Offset.Zero }
+            val spring = scope.launch { effect.applyToFling(Velocity.Zero) { Velocity.Zero } }
+            frames(2)
+            assertTrue(effect.offset > 0f)
+            spring.cancel()
+            frames(2)
+            assertEquals(0f, effect.offset)
+            assertFalse(effect.isInProgress)
+            effect.applyToScroll(Offset(0f, 200f), NestedScrollSource.UserInput) { Offset.Zero }
+            scope.launch { effect.applyToFling(Velocity.Zero) { Velocity.Zero } }
+            frames(2)
+            effect.updateBounds { false }
+            effect.updateBounds { true }
+            frames(4)
+            assertEquals(0f, effect.offset, "A page/filter change cannot resurrect a superseded spring")
+            frames(120)
+        }
+    }
 }

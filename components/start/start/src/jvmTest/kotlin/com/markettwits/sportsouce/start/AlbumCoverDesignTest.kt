@@ -4,6 +4,8 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.semantics.*
@@ -24,6 +26,44 @@ import kotlin.test.*
 class AlbumCoverDesignTest {
     @BeforeTest fun setMain() { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     @AfterTest fun resetMain() { Dispatchers.resetMain() }
+
+    @Test fun genericAlbumUsesTheEventHeadlineAndItsEntranceDoesNotReplayAfterScrolling() {
+        val album = StartAlbumDetails("Фото", "Юрманка трейл", "17 октября 2026", 60, emptyList())
+        val pages = flowOf(PagingData.from(List(60) { AlbumPhoto(it, "") },
+            sourceLoadStates = LoadStates(LoadStateNotLoading(true), LoadStateNotLoading(true), LoadStateNotLoading(true))))
+        lateinit var grid: LazyGridState
+        lateinit var scope: CoroutineScope
+        ImageComposeScene(width = 390, height = 900) {
+            SauceTheme(darkTheme = true) {
+                grid = rememberLazyGridState(); scope = rememberCoroutineScope()
+                PagedAlbumContent(StartAlbumStore.State(album = album, photos = pages),
+                    pages.collectAsLazyPagingItems(), {}, {}, gridState = grid)
+            }
+        }.use { scene ->
+            fun frames(count: Int) { repeat(count) { frameTime += 16_000_000L; scene.render(frameTime).close() } }
+            frames(3)
+            val headline = scene.nodes().single { it.config.contains(SemanticsProperties.Heading) }
+            assertEquals(album.startName, headline.config[SemanticsProperties.Text].single().text)
+            fun brightTitlePixels(): Int {
+                val bounds = scene.nodes().single { it.config.contains(SemanticsProperties.Heading) }.boundsInRoot
+                val pixels = scene.render(frameTime).use { it.toComposeImageBitmap().toPixelMap() }
+                var count = 0
+                for (y in bounds.top.toInt() until bounds.bottom.toInt()) for (x in bounds.left.toInt() until bounds.right.toInt()) {
+                    val p = pixels[x, y]
+                    if (p.red > .9f && p.green > .9f && p.blue > .9f) count++
+                }
+                return count
+            }
+            assertEquals(0, brightTitlePixels(), "The headline begins with a soft reveal")
+            frames(80)
+            val revealed = brightTitlePixels()
+            assertTrue(revealed > 500)
+            scene.save("album-cover-headline-revealed")
+            scope.launch { grid.scrollToItem(30) }; frames(4)
+            scope.launch { grid.scrollToItem(0) }; frames(3)
+            assertTrue(brightTitlePixels() >= revealed * .95f, "Returning to the cover must not restart its entrance")
+        }
+    }
 
     @Test fun coverCollapsesContinuouslyPinsTagsAndRestoresOnScrollBack() {
         for (dark in listOf(false, true)) for ((width, scale) in listOf(390 to 1f, 320 to 2f, 800 to 1f)) {
@@ -95,7 +135,7 @@ class AlbumCoverDesignTest {
         }
     }
 
-    @Test fun albumsWithoutServerTagsStillKeepTheFilterStripWhenCollapsed() {
+    @Test fun albumsWithoutServerTagsHaveNoFilterStripOrReservedSpace() {
         for (dark in listOf(false, true)) {
             val album = StartAlbumDetails("Фото", "Юрманка трейл", "17 октября 2026", 448, emptyList())
             val pages = flowOf(PagingData.from(List(60) { AlbumPhoto(it, "") },
@@ -110,13 +150,17 @@ class AlbumCoverDesignTest {
                 }
             }.use { scene ->
                 scene.settle()
-                assertTrue(scene.nodes().any { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { it.text == "Все фото" } })
+                fun hasFilters() = scene.nodes().any {
+                    it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { text -> text.text == "Все фото" }
+                }
+                assertFalse(hasFilters())
+                assertFalse(grid.layoutInfo.visibleItemsInfo.any { it.key == "tags" })
                 scope.launch { grid.scrollToItem(20) }; scene.settle()
-                val chip = scene.nodes().first { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { it.text == "Все фото" } }
-                var filter = chip
-                while (!filter.config.contains(SemanticsActions.OnClick)) filter = filter.parent!!
-                assertEquals(64f, filter.boundsInRoot.top, .5f)
-                assertTrue(filter.boundsInRoot.height >= 48f)
+                assertFalse(hasFilters(), "A collapsed album without tags needs only its toolbar")
+                scope.launch { grid.revealAlbumPhoto(57, 56) }; scene.settle()
+                val photo = grid.layoutInfo.visibleItemsInfo.first { it.key == "photo-55" }
+                assertTrue(photo.offset.y >= grid.layoutInfo.viewportStartOffset + 56,
+                    "Returning from the viewer must account for the absent filter row")
                 scene.save("album-cover-${if (dark) "dark" else "light"}-no-tags-collapsed")
             }
         }

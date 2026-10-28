@@ -101,8 +101,9 @@ class StartAlbumExecutor(private val albumId: Int?, private val repository: Star
         val job = SupervisorJob(scope.coroutineContext[Job]).also { pagingJob = it }
         val pagingScope = CoroutineScope(scope.coroutineContext + job)
         val orderedTags = state().album?.tags.orEmpty().filter { it in tags }
+        // Buffer a page of photo metadata ahead of the viewport, including wide tablet grids.
         val pager = Pager<Int, AlbumPhoto>(PagingConfig(pageSize = 30, initialLoadSize = 30,
-            prefetchDistance = 6, enablePlaceholders = false)) {
+            prefetchDistance = 30, enablePlaceholders = false)) {
             AlbumPhotosPagingSource(repository, id, orderedTags) { count ->
                 // Responses from an earlier selection cannot overwrite the current counter.
                 scope.launch { if (currentGeneration == generation) dispatch(Message.Count(count)) }

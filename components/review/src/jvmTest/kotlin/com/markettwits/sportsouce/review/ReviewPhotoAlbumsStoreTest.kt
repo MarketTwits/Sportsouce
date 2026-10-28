@@ -35,6 +35,7 @@ class ReviewPhotoAlbumsStoreTest {
         } as IntentAction
         val store = ReviewStoreFactory(DefaultStoreFactory(), repo, action, photos).create()
         try {
+            store.accept(ReviewStore.Intent.Launch())
             val labels = mutableListOf<ReviewStore.Label>()
             store.labels.onEach { labels += it }.launchIn(backgroundScope)
             runCurrent()

@@ -1,7 +1,6 @@
 package com.markettwits.sportsouce.review.review.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
-import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
@@ -31,7 +30,6 @@ class ReviewStoreFactory(
             Store<ReviewStore.Intent, ReviewStore.State, ReviewStore.Label> by storeFactory.create(
                 name = "ReviewStore",
                 initialState = ReviewStore.State(),
-                bootstrapper = SimpleBootstrapper(Unit),
                 executorFactory = { ExecutorImpl(intentAction) },
                 reducer = ReducerImpl
             ) {}
@@ -40,7 +38,7 @@ class ReviewStoreFactory(
         data object PhotoAlbumsLoading : Msg
         data class PhotoAlbumsLoaded(val items: List<ReviewPhotoAlbum>) : Msg
         data object PhotoAlbumsFailed : Msg
-        data object Loading : Msg
+        data class Loading(val forced: Boolean) : Msg
         data class InfoLoaded(val review: Review) : Msg
         data class InfoFailed(val error: SauceError) : Msg
     }
@@ -73,13 +71,8 @@ class ReviewStoreFactory(
             }
         }
 
-        override fun executeAction(action: Unit) {
-            launch(false)
-            loadPhotoAlbums()
-        }
-
         private fun loadPhotoAlbums() {
-            photoAlbumsJob?.cancel()
+            if (photoAlbumsJob?.isActive == true) return
             photoAlbumsJob = scope.launch {
                 photoAlbumsRepository.albums()
                     .onStart { dispatch(Msg.PhotoAlbumsLoading) }
@@ -89,11 +82,12 @@ class ReviewStoreFactory(
         }
 
         private fun launch(forced: Boolean) {
+            if (!forced && launchJob?.isActive == true) return
             launchJob?.cancel()
             launchJob = scope.launch {
                 repository.review(forced)
                     .onStart {
-                        dispatch(Msg.Loading)
+                        dispatch(Msg.Loading(forced))
                     }
                     .catch {
                         errorLog(it) { "Failed when launch review content" }
@@ -119,13 +113,16 @@ class ReviewStoreFactory(
                 Msg.PhotoAlbumsFailed -> copy(photoAlbumsLoading = false, photoAlbumsFailed = true)
                 is Msg.InfoFailed -> copy(
                     isLoading = false,
-                    error = msg.error,
+                    isRefreshing = false,
+                    error = if (hasLoaded) null else msg.error,
                 )
 
-                is Msg.Loading -> copy(isLoading = true, error = null)
+                is Msg.Loading -> copy(isLoading = !hasLoaded, isRefreshing = msg.forced, error = null)
 
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,
+                    isRefreshing = false,
+                    hasLoaded = true,
                     error = null,
                     review = msg.review
                 )

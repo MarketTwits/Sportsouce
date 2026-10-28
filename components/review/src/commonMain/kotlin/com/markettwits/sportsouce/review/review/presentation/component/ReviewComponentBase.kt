@@ -1,5 +1,9 @@
 package com.markettwits.sportsouce.review.review.presentation.component
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -31,7 +35,7 @@ class ReviewComponentBase(
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<ReviewStore.State> = store.stateFlow
@@ -41,6 +45,8 @@ class ReviewComponentBase(
     }
 
     init {
+        lifecycle.doOnDestroy { scope.cancel() }
+        lifecycle.doOnResume { store.accept(ReviewStore.Intent.Launch()) }
         store.labels.onEach {
             when (it) {
                 is ReviewStore.Label.OnClickPhotoAlbum -> onClickPhotoAlbum(it.albumId)

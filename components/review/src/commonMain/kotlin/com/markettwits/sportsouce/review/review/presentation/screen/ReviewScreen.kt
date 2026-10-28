@@ -44,7 +44,7 @@ fun ReviewScreen(
         }
     ) {
         PullToRefreshScreen(
-            isRefreshing = state.review.actualStarts.isNotEmpty() && state.isLoading,
+            isRefreshing = state.isRefreshing,
             onRefresh = {
                 component.obtainEvent(ReviewStore.Intent.Launch(true))
             }) {

@@ -1,6 +1,10 @@
 package com.markettwits.sportsouce.starts.starts.data
 
 import com.arkivanov.decompose.value.MutableValue
+import com.markettwits.cahce.Cache
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.crashlitics.api.tracker.ExceptionTracker
@@ -11,7 +15,7 @@ import com.markettwits.sportsouce.starts.starts.presentation.component.StartsUiS
 
 internal class StartsRepositoryBase(
     private val service: SportSauceStartsApi,
-    private val cache: StartsTabsCache,
+    private val cache: Cache<StartsTabsCacheModel>,
     private val exceptionTracker: ExceptionTracker,
 ) : StartsRepository, LogTagProvider {
 
@@ -19,117 +23,127 @@ internal class StartsRepositoryBase(
 
     override val starts: MutableValue<StartsUiState> = MutableValue(StartsUiState.Loading)
 
+    // Requests for different tabs may finish in any order. Serialize cache merges and
+    // coalesce work for the same tab without blocking another tab's refresh.
+    private val tabLocks = List(4) { Mutex() }
+    private val cacheLock = Mutex()
+    private val refreshingTabs = mutableSetOf<Int>()
+
     override suspend fun starts(forced: Boolean, page: Int) {
         val tab = StartsTab.fromPage(page)
-        val cached = cache.get() ?: StartsTabsCacheModel()
-        val currentState = ensureSuccessState(cached)
-
-        if (!forced && currentState.tabs[tab.page].isInitialized) {
-            starts.value = currentState
-            return
+        val lock = tabLocks[tab.page]
+        if (!lock.tryLock()) {
+            if (!forced) return
+            val current = starts.value as? StartsUiState.Success
+            if (current?.tabs?.get(tab.page)?.isLoading == true) {
+                // A manual pull can join the existing fresh request and show its indicator.
+                refreshingTabs.add(tab.page)
+                starts.value = current.copy(isRefreshing = true)
+                return
+            }
+            // Let an append finish before a manual refresh replaces its loaded window.
+            lock.lock()
         }
-
-        starts.value = currentState.updateTab(
-            tab = tab,
-            isRefreshing = forced,
-        ) { state ->
-            state.copy(
-                isLoading = state.items.isEmpty() || forced,
-                isAppending = false,
-                error = null,
-                endReached = false,
-                isInitialized = true,
-            )
-        }
-
-        runCatching {
-            loadPage(tab = tab, offset = 0)
-        }.onSuccess { items ->
-            val updatedCache = cached.withTabItems(tab, items)
-            cache.set(value = updatedCache)
-            starts.value = ensureSuccessState(updatedCache).updateTab(tab) { state ->
+        try {
+            val cached = cache.get() ?: StartsTabsCacheModel()
+            val currentState = ensureSuccessState(cached)
+            if (forced) refreshingTabs.add(tab.page)
+            starts.value = currentState.updateTab(tab) { state ->
                 state.copy(
-                    items = items,
-                    isLoading = false,
-                    isAppending = false,
+                    isLoading = true,
                     error = null,
-                    endReached = items.size < STARTS_PAGE_SIZE,
                     isInitialized = true,
                 )
-            }.copy(isRefreshing = false)
-        }.onFailure { error ->
+            }.copy(isRefreshing = refreshingTabs.isNotEmpty())
+
+            // Revalidate the loaded window so returning to a scrolled list does not
+            // shrink it back to the first page and move the user's scroll position.
+            val limit = maxOf(STARTS_PAGE_SIZE, currentState.tabs[tab.page].items.size)
+            val items = loadPage(tab = tab, offset = 0, limit = limit)
+            val updatedCache = saveTab(tab, items)
+            starts.value = ensureSuccessState(updatedCache)
+            updateTab(tab) {
+                it.copy(
+                    items = items,
+                    error = null,
+                    endReached = items.size < limit,
+                    isInitialized = true,
+                )
+            }
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
             report(error)
-            val fallbackItems = cached.itemsFor(tab)
-            if (fallbackItems.isNotEmpty()) {
-                starts.value = currentState.updateTab(tab) { state ->
-                    state.copy(
-                        items = fallbackItems,
-                        isLoading = false,
-                        isAppending = false,
-                        error = null,
-                        endReached = fallbackItems.size < STARTS_PAGE_SIZE,
-                        isInitialized = true,
-                    )
-                }.copy(isRefreshing = false)
-            } else if (currentState.tabs.any { it.items.isNotEmpty() }) {
-                starts.value = currentState.updateTab(tab) { state ->
-                    state.copy(
-                        isLoading = false,
-                        isAppending = false,
-                        error = error.mapToSauceError(),
-                        isInitialized = true,
-                    )
-                }.copy(isRefreshing = false)
+            val current = starts.value as? StartsUiState.Success
+            if (current != null && current.tabs.any { it.items.isNotEmpty() }) {
+                updateTab(tab) {
+                    it.copy(error = if (it.items.isEmpty()) error.mapToSauceError() else null)
+                }
             } else {
                 starts.value = StartsUiState.Failed(error.mapToSauceError())
             }
+        } finally {
+            refreshingTabs.remove(tab.page)
+            updateTab(tab) { it.copy(isLoading = false, isAppending = false) }
+            lock.unlock()
         }
     }
 
     override suspend fun loadNext(page: Int) {
-        val currentState = starts.value as? StartsUiState.Success ?: return
         val tab = StartsTab.fromPage(page)
-        val tabState = currentState.tabs[tab.page]
-        if (!tabState.isInitialized || tabState.isLoading || tabState.isAppending || tabState.endReached) {
-            return
-        }
-
-        starts.value = currentState.updateTab(tab) { it.copy(isAppending = true, error = null) }
-
-        runCatching {
-            loadPage(tab = tab, offset = tabState.items.size)
-        }.onSuccess { pageItems ->
+        val lock = tabLocks[tab.page]
+        if (!lock.tryLock()) return
+        try {
+            val currentState = starts.value as? StartsUiState.Success ?: return
+            val tabState = currentState.tabs[tab.page]
+            if (!tabState.isInitialized || tabState.isLoading || tabState.endReached) return
+            updateTab(tab) { it.copy(isAppending = true, error = null) }
+            val pageItems = loadPage(tab = tab, offset = tabState.items.size)
             val merged = (tabState.items + pageItems).distinctBy(StartsListItem::id)
-            val updatedCache = (cache.get() ?: StartsTabsCacheModel()).withTabItems(tab, merged)
-            cache.set(value = updatedCache)
-            starts.value = ensureSuccessState(updatedCache).updateTab(tab) {
+            val updatedCache = saveTab(tab, merged)
+            starts.value = ensureSuccessState(updatedCache)
+            updateTab(tab) {
                 it.copy(
                     items = merged,
-                    isLoading = false,
-                    isAppending = false,
                     error = null,
                     endReached = pageItems.size < STARTS_PAGE_SIZE,
                     isInitialized = true,
                 )
             }
-        }.onFailure { error ->
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
             report(error)
-            starts.value = currentState.updateTab(tab) {
-                it.copy(
-                    isAppending = false,
-                    error = if (it.items.isEmpty()) error.mapToSauceError() else null,
-                )
+            updateTab(tab) {
+                it.copy(error = if (it.items.isEmpty()) error.mapToSauceError() else null)
             }
+        } finally {
+            updateTab(tab) { it.copy(isAppending = false) }
+            lock.unlock()
         }
+    }
+
+    private suspend fun saveTab(tab: StartsTab, items: List<StartsListItem>): StartsTabsCacheModel =
+        cacheLock.withLock {
+            val updated = (cache.get() ?: StartsTabsCacheModel()).withTabItems(tab, items)
+            cache.set(value = updated)
+            updated
+        }
+
+    private fun updateTab(tab: StartsTab, transform: (StartsTabUiState) -> StartsTabUiState) {
+        val current = starts.value as? StartsUiState.Success ?: return
+        starts.value = current.updateTab(tab, transform = transform)
+            .copy(isRefreshing = refreshingTabs.isNotEmpty())
     }
 
     private suspend fun loadPage(
         tab: StartsTab,
         offset: Int,
+        limit: Int = STARTS_PAGE_SIZE,
     ): List<StartsListItem> = StartsPagingSource(
         startsApi = service,
         params = tab.params,
-    ).load(offset = offset, limit = STARTS_PAGE_SIZE)
+    ).load(offset = offset, limit = limit)
 
     private fun ensureSuccessState(cacheModel: StartsTabsCacheModel): StartsUiState.Success {
         val currentState = starts.value as? StartsUiState.Success

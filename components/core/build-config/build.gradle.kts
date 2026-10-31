@@ -48,6 +48,7 @@ buildConfig {
     generateAtSync = false
     buildConfigField("APP_VERSION", versionName)
     buildConfigField("APP_VERSION_NUMBER", versionCode)
+    buildConfigField("WEB_DEPLOYMENT_SEQUENCE", providers.environmentVariable("SPORTSAUCE_WEB_DEPLOYMENT_SEQUENCE").orElse("0").get().toLong())
     buildConfigField("BUILD_TIME", System.currentTimeMillis())
     buildConfigField("SPORTSAUCE_API_PATH", apiPath)
     buildConfigField("GUEST_PROFILE_CONFIG_URL", providers.gradleProperty("com.sportsauce.guest.config.url").orElse("").get())

@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.bottom_bar.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,6 +42,30 @@ import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 class BottomBarGlassTest {
+    @Test
+    fun desktopRailLeavesRoomForTheScreenAndRestoresAfterFullscreenUpdate() {
+        var visible by mutableStateOf(true)
+        ImageComposeScene(width = 1280, height = 860) {
+            SauceTheme {
+                BottomBarContent(isShowTopBar = visible, isShowLabel = true, items = defaultMenuItems(),
+                    selectedTab = BottomBarConfiguration.Review, onClickTab = {}) {
+                    Box(Modifier.fillMaxSize()) { Text("DESKTOP_SCREEN", Modifier.fillMaxSize()) }
+                }
+            }
+        }.use { scene ->
+            scene.settle()
+            val before = scene.text("DESKTOP_SCREEN").boundsInRoot
+            assertTrue(before.width >= 1100f, "Rail must leave the desktop screen visible: $before")
+            assertTrue(before.left in 80f..180f)
+            assertTrue(scene.tabs().all { it.boundsInRoot.width < 180f })
+            visible = false; scene.settle()
+            assertEquals(1280f, scene.text("DESKTOP_SCREEN").boundsInRoot.width)
+            visible = true; scene.settle()
+            assertEquals(before, scene.text("DESKTOP_SCREEN").boundsInRoot)
+            scene.save("desktop-navigation-restored")
+        }
+    }
+
     @Test
     fun allVerticalViewportsFeedLivePixelsThroughClippingAncestors() {
         for (kind in 0..3) for (dark in listOf(false, true)) {
@@ -214,6 +244,68 @@ class BottomBarGlassTest {
             assertEquals(844f, scene.text("PINNED_ACTION").boundsInRoot.bottom)
             visible = true; scene.settle()
             assertEquals(3, scene.tabs().size)
+        }
+    }
+
+    @Test
+    fun notificationAnimationKeepsTheViewportStableAndItsBackdropVisible() {
+        for (dark in listOf(false, true)) {
+            var visible by mutableStateOf(false)
+            var contentHeight = 0
+            var notificationClicks = 0
+            val backdrop = Color(0xFF4386E2)
+            ImageComposeScene(width = 390, height = 844) {
+                SauceTheme(darkTheme = dark) {
+                    BottomBarContent(
+                        isShowTopBar = true, isShowLabel = true, items = defaultMenuItems(),
+                        selectedTab = BottomBarConfiguration.Review, onClickTab = {},
+                        aboveNavigation = {
+                            AnimatedVisibility(visible,
+                                enter = expandVertically(animationSpec = tween(280)),
+                                exit = shrinkVertically(animationSpec = tween(220))) {
+                                Box(Modifier.fillMaxWidth().height(48.dp).padding(horizontal = 16.dp)
+                                    .background(Color.Green).clickable { notificationClicks++ })
+                            }
+                        },
+                        content = {
+                            Box(Modifier.fillMaxSize().onSizeChanged { contentHeight = it.height }) {
+                                Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).background(backdrop)) {
+                                    Spacer(Modifier.height(1800.dp))
+                                    Text("NOTIFICATION_LAST_ITEM")
+                                }
+                            }
+                        },
+                    )
+                }
+            }.use { scene ->
+                scene.settle()
+                val heightBefore = contentHeight
+                val tabsBefore = scene.tabs().map { it.boundsInRoot }
+                val sampleY = tabsBefore.first().top.toInt() - 10
+                for (show in listOf(true, false, true)) {
+                    visible = show
+                    repeat(24) { frame ->
+                        time += 16_000_000L
+                        scene.render(time).use { image -> image.encodeToData()!!.use { data ->
+                            val bitmap = ImageIO.read(ByteArrayInputStream(data.bytes))
+                            assertEquals(heightBefore, contentHeight,
+                                "Notification must not resize the screen: dark=$dark show=$show frame=$frame")
+                            assertEquals(tabsBefore, scene.tabs().map { it.boundsInRoot })
+                            assertTrue(rgbDifference(bitmap.getRGB(6, sampleY), 0xFF4386E2.toInt()) < 8,
+                                "Transparent notice margins must retain content pixels throughout the animation")
+                        } }
+                    }
+                }
+                val noticeCenter = Offset(195f, tabsBefore.first().top - 24f)
+                scene.sendPointerEvent(PointerEventType.Press, noticeCenter)
+                scene.sendPointerEvent(PointerEventType.Release, noticeCenter)
+                assertEquals(1, notificationClicks, "The overlay must retain its touch target")
+                scene.nodes().single { it.config.contains(SemanticsActions.ScrollBy) }
+                    .config[SemanticsActions.ScrollBy].action!!.invoke(0f, 10000f)
+                scene.settle()
+                assertTrue(scene.text("NOTIFICATION_LAST_ITEM").boundsInRoot.bottom <= tabsBefore.first().top - 48f,
+                    "The last item must scroll clear of both notification and navigation")
+            }
         }
     }
 

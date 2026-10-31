@@ -14,9 +14,11 @@ import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponentBase
 import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponentBase
 import com.markettwits.sportsouce.unauthorized.di.unAuthorizedModule
 import com.markettwits.sportsouce.unauthorized.presentation.component.UnAuthorizedProfileComponentBase
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 
 class RootProfileComponentBase(
     componentContext: ComponentContext,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
 ) : ComponentContext by componentContext, RootProfileComponent {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -46,6 +48,7 @@ class RootProfileComponentBase(
             is RootProfileComponent.Config.AuthProfile -> RootProfileComponent.Child.AuthProfile(
                 RootAuthorizedProfileComponentBase(
                     componentContext = componentContext,
+                    updateStoreFactory = updateStoreFactory,
                     signOut = {
                         navigation.replaceAll(RootProfileComponent.Config.UnAuthProfile)
                     }

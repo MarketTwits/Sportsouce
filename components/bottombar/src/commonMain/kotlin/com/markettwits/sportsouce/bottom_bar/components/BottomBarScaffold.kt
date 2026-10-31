@@ -10,6 +10,8 @@ import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarCompon
 fun BottomBarScaffold(
     component: BottomBarComponent,
     modifier: Modifier = Modifier,
+    aboveNavigation: @Composable () -> Unit = {},
+    navigationVisible: Boolean = true,
     content: @Composable () -> Unit
 ) {
 
@@ -17,11 +19,12 @@ fun BottomBarScaffold(
 
     BottomBarContent(
         modifier = modifier,
-        isShowTopBar = state.showTopBar,
+        isShowTopBar = state.showTopBar && navigationVisible,
         isShowLabel = state.showLabel,
         items = state.items,
         selectedTab = state.selectedTab,
         content = content,
+        aboveNavigation = aboveNavigation,
         onClickTab = { item ->
             component.onClickTabBar(item)
         },

@@ -16,6 +16,7 @@ kotlin {
 
     sourceSets.commonMain.dependencies {
         implementation(projects.components.settings.impl)
+        implementation(projects.components.selfupdater.components)
         implementation(projects.components.core.time)
         implementation(projects.components.core.cache)
         implementation(projects.components.core.errors)

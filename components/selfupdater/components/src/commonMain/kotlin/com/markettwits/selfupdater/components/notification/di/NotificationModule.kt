@@ -15,5 +15,5 @@ val notificationModule = module {
     includes(selfUpdateComponentModule)
     singleOf(::InAppNotificationRendererImpl) bind InAppNotificationRenderer::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
-    singleOf(::InAppNotificationStoreFactory)
+    single { InAppNotificationStoreFactory(get(), get(), get()) }
 }

@@ -3,9 +3,15 @@ name: Deploy Compose Web App (JS)
 on:
   workflow_dispatch:
 
+concurrency:
+  group: sportsauce-web-deployment
+  cancel-in-progress: false
+
 jobs:
   test-and-build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      SPORTSAUCE_WEB_DEPLOYMENT_SEQUENCE: ${{ github.run_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.1
@@ -31,9 +37,34 @@ jobs:
           com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
           EOF
 
+      - name: Test browser updater
+        run: |
+          export CHROME_BIN="$(command -v google-chrome)"
+          ./gradlew :components:selfupdater:thirdparty:api:jsBrowserTest :components:selfupdater:components:jvmTest --no-configuration-cache
+
       - name: Build
         run: |
           ./gradlew instances:app-browser:jsBrowserDistribution --no-configuration-cache
+
+      - name: Check published deployment order
+        env:
+          CANDIDATE: instances/app-browser/build/dist/js/productionExecutable/version.json
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_web_deployment_order.py'
+          git ls-remote --exit-code --heads origin gh-pages > /tmp/sportsauce-web-branch || status=$?
+          if [ "${status:-0}" -eq 2 ]; then
+            python3 .github/scripts/check_web_deployment_order.py "$CANDIDATE"
+          elif [ "${status:-0}" -ne 0 ]; then
+            exit "$status"
+          else
+            git fetch --no-tags origin refs/heads/gh-pages:refs/remotes/origin/sportsauce-web-published
+            if git cat-file -e refs/remotes/origin/sportsauce-web-published:version.json 2>/dev/null; then
+              git show refs/remotes/origin/sportsauce-web-published:version.json > /tmp/sportsauce-published-version.json
+              python3 .github/scripts/check_web_deployment_order.py "$CANDIDATE" /tmp/sportsauce-published-version.json
+            else
+              python3 .github/scripts/check_web_deployment_order.py "$CANDIDATE"
+            fi
+          fi
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.6.8

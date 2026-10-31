@@ -19,6 +19,8 @@ local.properties
 /build-logic/build/classes/kotlin/main/
 
 **/build/
+__pycache__/
+*.pyc
 # IDEA/Android Studio Ignore exceptions
 # Project icon
 .DS_Store

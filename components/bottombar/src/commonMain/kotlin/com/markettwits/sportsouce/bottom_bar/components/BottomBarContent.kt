@@ -9,9 +9,14 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -23,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
+import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
 import com.markettwits.core_ui.items.components.navigation.NavigationViewport
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
 import com.markettwits.core_ui.items.window.isLarge
@@ -40,6 +46,7 @@ internal fun BottomBarContent(
     items: List<BottomNavigationItem>,
     selectedTab: BottomBarConfiguration,
     onClickTab: (BottomBarConfiguration) -> Unit,
+    aboveNavigation: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val isLarge = calculateWindowSizeClass().isLarge
@@ -50,54 +57,72 @@ internal fun BottomBarContent(
         NavigationViewport { key -> Modifier.hazeSource(hazeState, zIndex = 1f, key = key) }
     }
     val density = LocalDensity.current
+    val railWidth = 88.dp * density.fontScale.coerceIn(1f, 2f)
+    var navigationHeight by remember { mutableIntStateOf(0) }
+    var noticeHeight by remember { mutableIntStateOf(0) }
+    val inheritedScrollPadding = LocalScrollContentBottomPadding.current
     val select: (BottomBarConfiguration) -> Unit = {
         haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         onClickTab(it)
     }
-    Scaffold(
-        modifier = modifier,
-        containerColor = colors.background,
-        contentWindowInsets = WindowInsets(0),
-        bottomBar = {
-            if (!isLarge) AnimatedVisibility(isShowTopBar, enter = fadeIn(), exit = fadeOut()) {
-                GlassBottomNavigation(hazeState, items, selectedTab, isShowLabel, select)
-            }
-        },
-    ) { padding ->
-        // Capture only the content, never the navigation icons or the glass itself.
-        val overlap = if (!isLarge && isShowTopBar) with(density) { padding.calculateBottomPadding().roundToPx() } else 0
-        Box(Modifier.fillMaxSize()
-            .onGloballyPositioned { navigationViewport.update(it, overlap) }
-            .then(if (!isLarge && isShowTopBar) Modifier.hazeSource(hazeState) else Modifier)) {
-            CompositionLocalProvider(
-                LocalNavigationViewport provides navigationViewport
-            ) {
-                Row(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
-                    if (isLarge && isShowTopBar) NavigationRail(
-                        containerColor = colors.surface,
-                        contentColor = colors.textPrimary,
-                    ) {
-                        items.forEach { item ->
-                            val selected = selectedTab == item.bottomBarConfiguration
-                            NavigationRailItem(
-                                modifier = Modifier.navigationNotifications(item),
-                                selected = selected,
-                                onClick = { select(item.bottomBarConfiguration) },
-                                icon = { NavigationIcon(item, selected, isShowLabel) },
-                                label = if (isShowLabel) { { NavigationLabel(item.title, selected) } } else null,
-                                colors = NavigationRailItemDefaults.colors(
-                                    selectedIconColor = colors.action,
-                                    selectedTextColor = colors.action,
-                                    indicatorColor = colors.actionSoft,
-                                    unselectedIconColor = colors.textMuted,
-                                    unselectedTextColor = colors.textMuted,
-                                ),
-                            )
-                        }
+    Box(modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = colors.background,
+            contentWindowInsets = WindowInsets(0),
+            bottomBar = {
+                Box(Modifier.onSizeChanged { navigationHeight = it.height }) {
+                    if (!isLarge) AnimatedVisibility(isShowTopBar, enter = fadeIn(), exit = fadeOut()) {
+                        GlassBottomNavigation(hazeState, items, selectedTab, isShowLabel, select)
                     }
-                    Box(Modifier.weight(1f).fillMaxHeight()) { content() }
+                }
+            },
+        ) { padding ->
+            // Capture only the content, never the navigation icons or the glass itself.
+            val overlap = if (!isLarge && isShowTopBar) with(density) { padding.calculateBottomPadding().roundToPx() } else 0
+            Box(Modifier.fillMaxSize()
+                .onGloballyPositioned { navigationViewport.update(it, overlap) }
+                .then(if (!isLarge && isShowTopBar) Modifier.hazeSource(hazeState) else Modifier)) {
+                CompositionLocalProvider(
+                    LocalNavigationViewport provides navigationViewport,
+                    LocalScrollContentBottomPadding provides inheritedScrollPadding + with(density) { noticeHeight.toDp() },
+                ) {
+                    Row(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
+                        if (isLarge && isShowTopBar) NavigationRail(
+                            // A fill-width label must not claim the entire desktop Row.
+                            modifier = Modifier.width(railWidth).fillMaxHeight(),
+                            containerColor = colors.surface,
+                            contentColor = colors.textPrimary,
+                        ) {
+                            items.forEach { item ->
+                                val selected = selectedTab == item.bottomBarConfiguration
+                                NavigationRailItem(
+                                    modifier = Modifier.navigationNotifications(item),
+                                    selected = selected,
+                                    onClick = { select(item.bottomBarConfiguration) },
+                                    icon = { NavigationIcon(item, selected, isShowLabel) },
+                                    label = if (isShowLabel) { { NavigationLabel(item.title, selected) } } else null,
+                                    colors = NavigationRailItemDefaults.colors(
+                                        selectedIconColor = colors.action,
+                                        selectedTextColor = colors.action,
+                                        indicatorColor = colors.actionSoft,
+                                        unselectedIconColor = colors.textMuted,
+                                        unselectedTextColor = colors.textMuted,
+                                    ),
+                                )
+                            }
+                        }
+                        Box(Modifier.weight(1f).fillMaxHeight()) { content() }
+                    }
                 }
             }
+        }
+        // Animate above a stable viewport. Resizing Scaffold's bottomBar on every reveal
+        // frame exposes its background while descendant scroll/haze bounds catch up.
+        Box(Modifier.align(Alignment.BottomCenter)
+            .padding(start = if (isLarge) railWidth else 0.dp,
+                bottom = with(density) { navigationHeight.toDp() })) {
+            Box(Modifier.onSizeChanged { noticeHeight = it.height }) { aboveNavigation() }
         }
     }
 }

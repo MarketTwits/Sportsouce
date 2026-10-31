@@ -40,12 +40,17 @@ jobs:
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
-  build-android-release:
+  build-android-github-release:
     needs: prepare-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.1
+
+      - name: Check Android release workflow
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_verify_android_manifest.py'
+          ruby .github/scripts/test_android_release_workflow.rb
 
       - name: Setup Gradle Cache
         uses: actions/cache@v4
@@ -77,48 +82,118 @@ jobs:
         run: |
           echo "${{ secrets.SPORTSAUCE_ANDROID_STORE_FILE }}" | base64 --decode > key-store.jks
 
-      - name: Build Release APK and AAB
-        run: |
-          ./gradlew instances:app-android:assembleRelease instances:app-android:bundleRelease --no-configuration-cache
+      - name: Build GitHub Release APK
+        run: ./gradlew instances:app-android:assembleGithubRelease --no-configuration-cache
 
-      - name: Find APK file
-        id: apk
+      - name: Verify GitHub distribution manifest
+        run: python3 .github/scripts/verify_android_manifest.py githubRelease
+
+      - name: Verify GitHub APK package and version
+        env:
+          VERSION_NAME: ${{ needs.prepare-release.outputs.version_name }}
+          VERSION_CODE: ${{ needs.prepare-release.outputs.version_code }}
         run: |
-          APK_PATH=$(find instances/app-android/build/outputs/apk/release -maxdepth 1 -name "*.apk" | head -1)
-          if [ -z "$APK_PATH" ]; then
-            echo "APK file was not found" >&2
+          set -euo pipefail
+          python3 -m unittest discover -s .github/scripts -p 'test_verify_github_apk.py'
+          aapt="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/aapt"
+          python3 .github/scripts/verify_github_apk.py --aapt "$aapt" \
+            --apk "instances/app-android/build/outputs/apk/github/release/Sportsauce-$VERSION_NAME-$VERSION_CODE.apk" \
+            --version "$VERSION_NAME" --build "$VERSION_CODE"
+
+      - name: Verify GitHub APK signing continuity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/previous-github-apk"
+          gh release download --pattern '*.apk' --dir "$RUNNER_TEMP/previous-github-apk"
+          mapfile -d '' -t previous < <(find "$RUNNER_TEMP/previous-github-apk" -type f -name '*.apk' -print0)
+          mapfile -d '' -t current < <(find instances/app-android/build/outputs/apk/github/release -type f -name '*.apk' -print0)
+          if [ "${#previous[@]}" -ne 1 ] || [ "${#current[@]}" -ne 1 ]; then
+            echo 'Expected exactly one APK in the latest release and current build' >&2
             exit 1
           fi
-          echo "apk_path=$APK_PATH" >> "$GITHUB_OUTPUT"
-
-      - name: Find AAB file
-        id: aab
-        run: |
-          AAB_PATH=$(find instances/app-android/build/outputs/bundle/release -maxdepth 1 -name "*.aab" | head -1)
-          if [ -z "$AAB_PATH" ]; then
-            echo "AAB file was not found" >&2
-            exit 1
-          fi
-          echo "aab_path=$AAB_PATH" >> "$GITHUB_OUTPUT"
+          apksigner="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner"
+          aapt="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/aapt"
+          python3 -m unittest discover -s .github/scripts -p 'test_verify_apk_upgrade.py'
+          python3 .github/scripts/verify_apk_upgrade.py --aapt "$aapt" --apksigner "$apksigner" \
+            --previous "${previous[0]}" --current "${current[0]}"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: ${{ steps.apk.outputs.apk_path }}
+          path: instances/app-android/build/outputs/apk/github/release/*.apk
+          if-no-files-found: error
           retention-days: 7
+
+      - name: Clean up keystore
+        if: always()
+        run: rm -f key-store.jks
+
+  build-android-google-play-release:
+    needs: prepare-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+
+      - name: Check Android release workflow
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_verify_android_manifest.py'
+          ruby .github/scripts/test_android_release_workflow.rb
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Create secrets file
+        run: |
+          cat <<EOF > secrets.properties
+          tracer.application.token=${{ secrets.TRACER_APPLICATION_TOKEN }}
+          tracer.plugin.token=${{ secrets.TRACER_PLUGIN_TOKEN }}
+          com.sportsauce.api.path.prod=${{ secrets.SPORTSAUCE_API_PROD_PATH }}
+          com.sportsauce.api.path.dev=${{ secrets.SPORTSAUCE_API_DEV_PATH }}
+          storePassword64=${{ secrets.SPORTSAUCE_ANDROID_STORE_PASSWORD }}
+          keyAlias64=${{ secrets.SPORTSAUCE_ANDROID_KEY_ALIAS }}
+          keyPassword64=${{ secrets.SPORTSAUCE_ANDROID_KEY_PASSWORD }}
+          EOF
+
+      - name: Create keystore file
+        run: |
+          echo "${{ secrets.SPORTSAUCE_ANDROID_STORE_FILE }}" | base64 --decode > key-store.jks
+
+      - name: Build Google Play Release AAB
+        run: ./gradlew instances:app-android:bundleGooglePlayRelease --no-configuration-cache
+
+      - name: Verify Google Play distribution manifest
+        run: |
+          python3 .github/scripts/verify_android_manifest.py googlePlayRelease
+          python3 -m unittest discover -s .github/scripts -p 'test_play_updater_mapping.py'
+          python3 .github/scripts/verify_play_updater_mapping.py instances/app-android/build/outputs/mapping/googlePlayRelease/mapping.txt
 
       - name: Upload AAB artifact for Google Play
         uses: actions/upload-artifact@v4
         with:
           name: android-aab
-          path: ${{ steps.aab.outputs.aab_path }}
+          path: instances/app-android/build/outputs/bundle/googlePlayRelease/app-android-googlePlay-release.aab
+          if-no-files-found: error
           retention-days: 7
 
       - name: Clean up keystore
         if: always()
-        run: |
-          rm -f key-store.jks
+        run: rm -f key-store.jks
 
   build-desktop-macos-release:
     needs: prepare-release
@@ -178,11 +253,40 @@ jobs:
           fi
           echo "asset_path=$DMG_TARGET" >> "$GITHUB_OUTPUT"
 
+      - name: Inspect packaged macOS architecture
+        env:
+          DMG_PATH: ${{ steps.dmg.outputs.asset_path }}
+          VERSION_NAME: ${{ needs.prepare-release.outputs.version_name }}
+          VERSION_CODE: ${{ needs.prepare-release.outputs.version_code }}
+        run: |
+          MOUNT_DIR=$(mktemp -d)
+          hdiutil attach -readonly -nobrowse -mountpoint "$MOUNT_DIR" "$DMG_PATH" >/dev/null
+          trap 'hdiutil detach "$MOUNT_DIR" >/dev/null' EXIT
+          APP_PATH="$MOUNT_DIR/SportSauce.app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Contents/Info.plist")" = 'com.markettwits.sportsouce.desktop'
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")" = "$VERSION_NAME"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Contents/Info.plist")" = "$VERSION_CODE"
+          LAUNCHER_NAME=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APP_PATH/Contents/Info.plist")
+          "$APP_PATH/Contents/MacOS/$LAUNCHER_NAME" --verify-packaged-updater | grep -Fx 'SELF_UPDATER_SMOKE_OK'
+          APP_LAUNCHER="$APP_PATH/Contents/MacOS/$LAUNCHER_NAME" APP_JAVA="$APP_PATH/Contents/runtime/Contents/MacOS/libjli.dylib" python3 - <<'PY'
+          import os, pathlib, sys
+          sys.path.insert(0, '.github/scripts')
+          from update_manifest import executable_architecture
+          launcher = executable_architecture(pathlib.Path(os.environ['APP_LAUNCHER']), 'macos')
+          runtime = executable_architecture(pathlib.Path(os.environ['APP_JAVA']), 'macos')
+          if launcher != runtime:
+              raise SystemExit('macOS launcher and runtime architectures differ')
+          pathlib.Path(os.environ['DMG_PATH'] + '.architecture').write_text(launcher, encoding='utf-8')
+          PY
+
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
         with:
           name: desktop-dmg
-          path: ${{ steps.dmg.outputs.asset_path }}
+          path: |
+            ${{ steps.dmg.outputs.asset_path }}
+            ${{ steps.dmg.outputs.asset_path }}.architecture
+          if-no-files-found: error
           retention-days: 7
 
   build-desktop-windows-release:
@@ -234,7 +338,29 @@ jobs:
       - name: Build Release EXE
         shell: pwsh
         run: |
-          .\gradlew.bat :instances:app-desktop:packageReleaseExe --no-configuration-cache
+          .\gradlew.bat :instances:app-desktop:createReleaseDistributable :instances:app-desktop:packageReleaseExe :instances:app-desktop:packageReleaseMsi --no-configuration-cache
+
+      - name: Verify Windows package identity and version
+        shell: pwsh
+        env:
+          VERSION_NAME: ${{ needs.prepare-release.outputs.version_name }}
+          VERSION_CODE: ${{ needs.prepare-release.outputs.version_code }}
+        run: |
+          $packages = @(Get-ChildItem 'instances/app-desktop/build/compose/binaries/main-release/msi' -Filter *.msi -File)
+          if ($packages.Count -ne 1) { throw 'Expected exactly one MSI package for inspection' }
+          $installer = New-Object -ComObject WindowsInstaller.Installer
+          $database = $installer.OpenDatabase($packages[0].FullName, 0)
+          function Get-MsiProperty($name) {
+            $view = $database.OpenView("SELECT ``Value`` FROM ``Property`` WHERE ``Property``='$name'")
+            $view.Execute()
+            $record = $view.Fetch()
+            if ($null -eq $record) { throw "Missing MSI property $name" }
+            return $record.StringData(1)
+          }
+          $parts = $env:VERSION_NAME.Split('.')
+          $expectedVersion = "$($parts[0]).$($parts[1]).$env:VERSION_CODE"
+          if ((Get-MsiProperty 'ProductVersion') -ne $expectedVersion) { throw 'Incorrect MSI ProductVersion' }
+          if ((Get-MsiProperty 'UpgradeCode').Trim('{}') -ine '9ec0a591-801b-4bf9-92ad-97d887e046dd') { throw 'Incorrect MSI UpgradeCode' }
 
       - name: Prepare EXE artifact
         id: exe
@@ -255,21 +381,57 @@ jobs:
 
           "asset_path=$exeTarget" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
+      - name: Inspect packaged Windows architecture
+        shell: pwsh
+        env:
+          EXE_PATH: ${{ steps.exe.outputs.asset_path }}
+        run: |
+          $appRoot = 'instances/app-desktop/build/compose/binaries/main-release/app'
+          $launcher = @(Get-ChildItem $appRoot -Filter 'SportSauce.exe' -File -Recurse)
+          $java = @(Get-ChildItem $appRoot -Filter 'java.dll' -File -Recurse)
+          if ($launcher.Count -ne 1 -or $java.Count -ne 1) { throw 'Expected one packaged launcher and Java runtime' }
+          $smoke = Start-Process -FilePath $launcher[0].FullName -ArgumentList '--verify-packaged-updater' -Wait -PassThru
+          if ($smoke.ExitCode -ne 0) { throw 'Packaged updater smoke check failed' }
+          $env:APP_LAUNCHER = $launcher[0].FullName
+          $env:APP_JAVA = $java[0].FullName
+          @'
+          import os, pathlib, sys
+          sys.path.insert(0, '.github/scripts')
+          from update_manifest import executable_architecture
+          launcher = executable_architecture(pathlib.Path(os.environ['APP_LAUNCHER']), 'windows')
+          runtime = executable_architecture(pathlib.Path(os.environ['APP_JAVA']), 'windows')
+          if launcher != runtime:
+              raise SystemExit('Windows launcher and runtime architectures differ')
+          pathlib.Path(os.environ['EXE_PATH'] + '.architecture').write_text(launcher, encoding='utf-8')
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Could not determine packaged architecture' }
+
       - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: desktop-exe
-          path: ${{ steps.exe.outputs.asset_path }}
+          path: |
+            ${{ steps.exe.outputs.asset_path }}
+            ${{ steps.exe.outputs.asset_path }}.architecture
+          if-no-files-found: error
           retention-days: 7
 
   publish-github-release:
+    # Android publishing may proceed when a secondary desktop build fails.
+    if: ${{ !cancelled() && needs.prepare-release.result == 'success' && needs.build-android-github-release.result == 'success' }}
+    concurrency:
+      group: github-release-${{ github.repository }}-${{ needs.prepare-release.outputs.tag_name }}
+      cancel-in-progress: false
     needs:
       - prepare-release
-      - build-android-release
+      - build-android-github-release
       - build-desktop-macos-release
       - build-desktop-windows-release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout release sources
+        uses: actions/checkout@v4.2.1
+
       - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
@@ -277,12 +439,18 @@ jobs:
           path: ./artifacts/android-apk
 
       - name: Download DMG artifact
+        if: ${{ needs.build-desktop-macos-release.result == 'success' && needs.build-desktop-windows-release.result == 'success' }}
+        id: desktop_dmg_download
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: desktop-dmg
           path: ./artifacts/desktop-dmg
 
       - name: Download EXE artifact
+        if: ${{ needs.build-desktop-macos-release.result == 'success' && needs.build-desktop-windows-release.result == 'success' }}
+        id: desktop_exe_download
+        continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: desktop-exe
@@ -290,69 +458,85 @@ jobs:
 
       - name: Resolve release assets
         id: assets
+        env:
+          DESKTOP_READY: ${{ needs.build-desktop-macos-release.result == 'success' && needs.build-desktop-windows-release.result == 'success' && steps.desktop_dmg_download.outcome == 'success' && steps.desktop_exe_download.outcome == 'success' }}
         run: |
-          APK_PATH=$(find ./artifacts/android-apk -type f -name "*.apk" | head -1)
-          DMG_PATH=$(find ./artifacts/desktop-dmg -type f -name "*.dmg" | head -1)
-          EXE_PATH=$(find ./artifacts/desktop-exe -type f -name "*.exe" | head -1)
-
-          if [ -z "$APK_PATH" ] || [ -z "$DMG_PATH" ] || [ -z "$EXE_PATH" ]; then
-            echo "One or more release assets were not found" >&2
+          APK_FILES=()
+          while IFS= read -r -d '' file; do APK_FILES+=("$file"); done < <(find ./artifacts/android-apk -type f -name '*.apk' -print0)
+          if [ "${#APK_FILES[@]}" -ne 1 ]; then
+            echo "Expected exactly one APK" >&2
             exit 1
           fi
-
+          APK_PATH=${APK_FILES[0]}
           echo "apk_path=$APK_PATH" >> "$GITHUB_OUTPUT"
-          echo "apk_name=$(basename "$APK_PATH")" >> "$GITHUB_OUTPUT"
-          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
-          echo "dmg_name=$(basename "$DMG_PATH")" >> "$GITHUB_OUTPUT"
-          echo "exe_path=$EXE_PATH" >> "$GITHUB_OUTPUT"
-          echo "exe_name=$(basename "$EXE_PATH")" >> "$GITHUB_OUTPUT"
+          if [ "$DESKTOP_READY" = true ]; then
+            DMG_FILES=()
+            EXE_FILES=()
+            while IFS= read -r -d '' file; do DMG_FILES+=("$file"); done < <(find ./artifacts/desktop-dmg -type f -name '*.dmg' -print0 2>/dev/null)
+            while IFS= read -r -d '' file; do EXE_FILES+=("$file"); done < <(find ./artifacts/desktop-exe -type f -name '*.exe' -print0 2>/dev/null)
+            if [ "${#DMG_FILES[@]}" -ne 1 ] || [ "${#EXE_FILES[@]}" -ne 1 ]; then
+              echo 'Desktop artifacts are incomplete; publishing Android only.'
+              DESKTOP_READY=false
+            elif [ ! -s "${DMG_FILES[0]}.architecture" ] || [ ! -s "${EXE_FILES[0]}.architecture" ]; then
+              echo 'Desktop architecture metadata is missing; publishing Android only.'
+              DESKTOP_READY=false
+            else
+              echo "dmg_path=${DMG_FILES[0]}" >> "$GITHUB_OUTPUT"
+              echo "exe_path=${EXE_FILES[0]}" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'Desktop builds are incomplete; publishing Android only.'
+          fi
+          echo "desktop_ready=$DESKTOP_READY" >> "$GITHUB_OUTPUT"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Generate update manifest
+        id: release_inputs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ needs.prepare-release.outputs.tag_name }}
-          release_name: ${{ needs.prepare-release.outputs.release_name }}
-          draft: false
-          prerelease: false
-          body: ${{ needs.prepare-release.outputs.release_notes }}
+          VERSION_NAME: ${{ needs.prepare-release.outputs.version_name }}
+          VERSION_CODE: ${{ needs.prepare-release.outputs.version_code }}
+          DMG_PATH: ${{ steps.assets.outputs.dmg_path }}
+          EXE_PATH: ${{ steps.assets.outputs.exe_path }}
+          DESKTOP_READY: ${{ steps.assets.outputs.desktop_ready }}
+        run: |
+          if [ "$DESKTOP_READY" = true ]; then
+            if python3 -m unittest discover -s .github/scripts -p 'test_update_manifest.py' && python3 .github/scripts/update_manifest.py \
+              --version "$VERSION_NAME" --build "$VERSION_CODE" \
+              --mac "$DMG_PATH" --mac-architecture "$(cat "$DMG_PATH.architecture")" \
+              --windows "$EXE_PATH" --windows-architecture "$(cat "$EXE_PATH.architecture")" \
+              --output update-manifest.json; then
+              echo 'desktop_ready=true' >> "$GITHUB_OUTPUT"
+            else
+              echo 'Desktop manifest failed validation; publishing Android only.'
+              echo 'desktop_ready=false' >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo 'desktop_ready=false' >> "$GITHUB_OUTPUT"
+          fi
+          python3 -m unittest discover -s .github/scripts -p 'test_generate_update_notes.py'
+          python3 .github/scripts/generate_update_notes.py --version "$VERSION_NAME" --output release-notes
 
-      - name: Upload APK to Release
-        uses: actions/upload-release-asset@v1
+      - name: Verify and publish complete release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.assets.outputs.apk_path }}
-          asset_name: ${{ steps.assets.outputs.apk_name }}
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload DMG to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.assets.outputs.dmg_path }}
-          asset_name: ${{ steps.assets.outputs.dmg_name }}
-          asset_content_type: application/x-apple-diskimage
-
-      - name: Upload EXE to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.assets.outputs.exe_path }}
-          asset_name: ${{ steps.assets.outputs.exe_name }}
-          asset_content_type: application/vnd.microsoft.portable-executable
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.prepare-release.outputs.tag_name }}
+          RELEASE_NAME: ${{ needs.prepare-release.outputs.release_name }}
+          RELEASE_NOTES: ${{ needs.prepare-release.outputs.release_notes }}
+          APK_PATH: ${{ steps.assets.outputs.apk_path }}
+          DMG_PATH: ${{ steps.assets.outputs.dmg_path }}
+          EXE_PATH: ${{ steps.assets.outputs.exe_path }}
+          DESKTOP_READY: ${{ steps.release_inputs.outputs.desktop_ready }}
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_publish_update_release.py'
+          assets=("$APK_PATH")
+          if [ "$DESKTOP_READY" = true ]; then assets+=("$DMG_PATH" "$EXE_PATH" update-manifest.json); fi
+          assets+=(release-notes/whatsnew-ru-RU.txt release-notes/whatsnew-en-US.txt)
+          python3 .github/scripts/publish_update_release.py "${assets[@]}"
 
   deploy-to-google-play:
     needs:
       - prepare-release
-      - publish-github-release
+      - build-android-google-play-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (for whatsnew files)
@@ -392,7 +576,7 @@ jobs:
       - name: Find AAB file
         id: aab
         run: |
-          AAB_PATH=$(find . -name "*.aab" | head -1)
+          AAB_PATH=$(find . -name "app-android-googlePlay-release.aab" | head -1)
           if [ -z "$AAB_PATH" ]; then
             echo "AAB file was not found" >&2
             exit 1

@@ -21,10 +21,12 @@ import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.di.createStartsFavoritesComponent
 import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
 import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 
 abstract class RootAuthorizedProfileComponentAbstract(
     componentContext: ComponentContext,
     private val signOut: () -> Unit,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
 ) : ComponentContext by componentContext, RootAuthorizedProfileComponent {
 
     private val scope = getOrCreateKoinScope(
@@ -110,6 +112,7 @@ abstract class RootAuthorizedProfileComponentAbstract(
             RootSettingsComponentBase(
                 componentContext = componentContext,
                 pop = navigation::pop,
+                updateStoreFactory = updateStoreFactory,
             )
         )
 

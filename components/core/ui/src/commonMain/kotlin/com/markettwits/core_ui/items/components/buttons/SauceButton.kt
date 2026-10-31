@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.SauceTheme
 
 /** Variants express prominence; feature screens should not choose arbitrary button colors. */
-enum class SauceButtonVariant { Primary, Outlined, Soft, Text, Destructive }
+enum class SauceButtonVariant { Primary, Outlined, Soft, Text, Destructive, Success }
 
 @Composable
 fun SauceButton(
@@ -22,6 +22,7 @@ fun SauceButton(
 ) {
     val colors = SauceTheme.colors
     val container = when (variant) {
+        SauceButtonVariant.Success -> colors.success.container
         SauceButtonVariant.Primary -> colors.action
         SauceButtonVariant.Destructive -> colors.material.error
         SauceButtonVariant.Soft -> colors.actionSoft
@@ -29,6 +30,7 @@ fun SauceButton(
         SauceButtonVariant.Text -> Color.Transparent
     }
     val content = when (variant) {
+        SauceButtonVariant.Success -> colors.success.content
         SauceButtonVariant.Primary -> colors.onAction
         SauceButtonVariant.Destructive -> colors.material.onError
         SauceButtonVariant.Outlined -> colors.textPrimary
@@ -46,7 +48,7 @@ fun SauceButton(
         borderStroke = if (variant == SauceButtonVariant.Outlined) BorderStroke(1.dp, colors.border) else null,
         disabledContainerColor = if (variant == SauceButtonVariant.Text) Color.Transparent else colors.disabledContainer,
         focusColor = when (variant) {
-            SauceButtonVariant.Primary, SauceButtonVariant.Destructive -> content
+            SauceButtonVariant.Primary, SauceButtonVariant.Destructive, SauceButtonVariant.Success -> content
             else -> colors.action
         },
     )

@@ -40,7 +40,11 @@ import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.util.*
 
-fun main() {
+fun main(args: Array<String>) {
+    if (args.contentEquals(arrayOf("--verify-packaged-updater"))) {
+        verifyPackagedUpdater()
+        return
+    }
     Locale.setDefault(Locale("ru", "RUS"))
 
     overrideSchedulers(main = Dispatchers.Main::asScheduler)

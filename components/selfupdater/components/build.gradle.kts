@@ -22,6 +22,7 @@ kotlin {
             implementation(projects.components.selfupdater.thirdparty.github)
             implementation(libs.bundles.decompose.compose)
             implementation(projects.components.core.ui)
+            implementation(projects.components.bottombar)
             implementation(libs.multiplatform.markdown.renderer.m3)
             implementation(libs.koin.core)
             implementation(projects.components.core.koin)

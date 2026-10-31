@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <queries>
+        <package android:name="com.markettwits.updater.fixture" />
+    </queries>
+    <application>
+        <activity android:name="com.markettwits.selfupdater.thirdparty.api.InstallerFixtureActivity" android:exported="false" />
+    </application>
+</manifest>

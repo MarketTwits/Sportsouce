@@ -12,10 +12,12 @@ import com.markettwits.sportsouce.start.search.root.RootStartsSearchComponentBas
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.starts.di.startsModule
 import com.markettwits.sportsouce.starts.starts.presentation.component.StartsScreenComponent
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 
 class RootStartsComponentBase(
     private val componentContext: ComponentContext,
-    private val deeplink: Deeplink.Starts? = null
+    private val deeplink: Deeplink.Starts? = null,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
 ) : RootStartsComponent, ComponentContext by componentContext {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -155,7 +157,8 @@ class RootStartsComponentBase(
             is RootStartsComponent.Config.Settings -> RootStartsComponent.Child.Settings(
                 RootSettingsComponentBase(
                     componentContext = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    updateStoreFactory = updateStoreFactory,
                 )
             )
         }

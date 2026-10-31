@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NewAppVersion(
     val version: String,
-    val description: String
+    val description: String,
+    val informationalOnly: Boolean = false,
 )

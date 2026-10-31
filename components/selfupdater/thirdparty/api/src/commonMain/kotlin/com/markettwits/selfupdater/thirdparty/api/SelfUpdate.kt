@@ -7,5 +7,7 @@ data class SelfUpdate(
     val version: String,
     val downloadUrl: String,
     val name: String,
-    val description: String
+    val description: String,
+    val sizeBytes: Long? = null,
+    val sha256: String? = null,
 )

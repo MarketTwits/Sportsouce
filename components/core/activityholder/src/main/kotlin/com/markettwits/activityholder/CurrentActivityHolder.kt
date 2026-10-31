@@ -30,7 +30,9 @@ object CurrentActivityHolder : Application.ActivityLifecycleCallbacks {
     // Unused fun
     override fun onActivityStarted(activity: Activity) = Unit
 
-    override fun onActivityPaused(activity: Activity) = Unit
+    override fun onActivityPaused(activity: Activity) {
+        if (currentActivity.get() === activity) currentActivity.clear()
+    }
 
     override fun onActivityStopped(activity: Activity) = Unit
 
@@ -38,5 +40,7 @@ object CurrentActivityHolder : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
 
-    override fun onActivityDestroyed(activity: Activity) = Unit
+    override fun onActivityDestroyed(activity: Activity) {
+        if (currentActivity.get() === activity) currentActivity.clear()
+    }
 }

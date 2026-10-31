@@ -42,6 +42,7 @@ kotlin {
         
         implementation(projects.components.club.dashboard)
         implementation(projects.components.settings.impl)
+        implementation(projects.components.selfupdater.components)
         implementation(projects.components.shop.orders)
         implementation(projects.components.start.start)
         implementation(projects.components.starts.startsCommon)

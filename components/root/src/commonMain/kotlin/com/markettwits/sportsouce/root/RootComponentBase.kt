@@ -16,6 +16,10 @@ import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.sportsouce.review.root.RootReviewComponentBase
 import com.markettwits.sportsouce.root_profile.RootProfileComponentBase
 import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
+import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
+import com.markettwits.selfupdater.components.notification.di.notificationModule
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 
 class RootComponentBase(
     componentContext: ComponentContext,
@@ -23,7 +27,9 @@ class RootComponentBase(
 
     private val scope = instanceKeeper.getOrCreate {
         ComponentKoinContext()
-    }.getOrCreateKoinScope(listOf(bottomBarModule))
+    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule))
+
+    private val updateStoreFactory: SelfUpdateStoreFactory = scope.get()
 
     private val stackNavigation = StackNavigation<RootComponent.Configuration>()
 
@@ -40,6 +46,17 @@ class RootComponentBase(
         return listOf(RootComponent.Configuration.Review)
     }
 
+    override val updateNotification = InAppNotificationComponentBase(
+        componentContext = componentContext,
+        notificationStorage = scope.get(),
+        storeFactory = scope.get(),
+        openFullScreen = { version ->
+            stackNavigation.bringToFront(RootComponent.Configuration.Review)
+            (childStack.value.active.instance as? RootComponent.Child.Review)?.component?.openUpdate(version)
+        },
+    )
+    override val updateNotificationRenderer: InAppNotificationRenderer = scope.get()
+
     override val slotChild: Value<ChildSlot<*, RootComponent.Navigation>> = childSlot(
         source = slotNavigation,
         serializer = RootComponent.SlotConfiguration.serializer(),
@@ -55,19 +72,22 @@ class RootComponentBase(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
-                    deeplink = null
+                    deeplink = null,
+                    updateStoreFactory = updateStoreFactory,
                 )
             )
 
             is RootComponent.Configuration.Profile -> RootComponent.Child.Profile(
                 RootProfileComponentBase(
-                    componentContext = componentContext
+                    componentContext = componentContext,
+                    updateStoreFactory = updateStoreFactory,
                 )
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 RootReviewComponentBase(
-                    context = componentContext
+                    context = componentContext,
+                    updateStoreFactory = updateStoreFactory,
                 )
             )
         }

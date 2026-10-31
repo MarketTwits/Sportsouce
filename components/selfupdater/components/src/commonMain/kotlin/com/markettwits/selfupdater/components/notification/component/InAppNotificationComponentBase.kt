@@ -13,8 +13,12 @@ import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 class InAppNotificationComponentBase(
     componentContext: ComponentContext,
@@ -23,7 +27,9 @@ class InAppNotificationComponentBase(
     private val openFullScreen: (NewAppVersion) -> Unit,
 ) : ComponentContext by componentContext, InAppNotificationComponent {
 
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var foregroundJob: Job? = null
+    private var hasCheckedForUpdates = false
 
     private val store = instanceKeeper.getStore {
         storeFactory.create()
@@ -34,10 +40,24 @@ class InAppNotificationComponentBase(
             object : Lifecycle.Callbacks {
                 override fun onResume() {
                     notificationStorage.subscribe(this@InAppNotificationComponentBase)
+                    foregroundJob = scope.launch {
+                        // Android's application activity callback runs after the component resumes.
+                        yield()
+                        val intent = if (hasCheckedForUpdates) InAppNotificationStore.Intent.ResumeUpdate
+                        else InAppNotificationStore.Intent.CheckForUpdates
+                        hasCheckedForUpdates = true
+                        store.accept(intent)
+                    }
                 }
 
                 override fun onPause() {
+                    foregroundJob?.cancel()
+                    store.accept(InAppNotificationStore.Intent.PauseUpdate)
                     notificationStorage.unsubscribe()
+                }
+
+                override fun onDestroy() {
+                    scope.cancel()
                 }
             }
         )

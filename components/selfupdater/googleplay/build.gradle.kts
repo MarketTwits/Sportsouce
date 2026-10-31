@@ -5,6 +5,18 @@ plugins {
 kotlin {
     android {
         namespace = "com.markettwits.selfupdater.googleplay"
+        withHostTestBuilder {}.configure { isIncludeAndroidResources = true }
+    }
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+    sourceSets.getByName("androidHostTest").dependencies {
+        implementation("junit:junit:4.13.2")
+        implementation("org.robolectric:robolectric:4.17")
+        implementation("androidx.test:core:1.7.0")
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
     }
 }
 
@@ -20,7 +32,6 @@ dependencies {
                 implementation(projects.components.core.activityholder)
                 implementation("com.google.android.play:app-update:2.1.0")
                 implementation("com.google.android.play:app-update-ktx:2.1.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
             }
         }

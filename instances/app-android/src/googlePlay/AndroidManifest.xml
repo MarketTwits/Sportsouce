@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application>
+        <meta-data android:name="com.markettwits.selfupdater.CHANNEL" android:value="googlePlay" />
+        <provider android:name="com.markettwits.selfupdater.thirdparty.api.SelfUpdaterFileProvider" tools:node="remove" />
+    </application>
+</manifest>

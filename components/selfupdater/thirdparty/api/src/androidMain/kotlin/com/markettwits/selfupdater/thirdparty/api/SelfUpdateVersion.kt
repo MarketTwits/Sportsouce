@@ -12,3 +12,7 @@ fun Context.getPackageInfo(): PackageInfo {
         packageManager.getPackageInfo(packageName, 0)
     }
 }
+
+@Suppress("DEPRECATION")
+fun PackageInfo.buildNumber(): Long =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) longVersionCode else versionCode.toLong()

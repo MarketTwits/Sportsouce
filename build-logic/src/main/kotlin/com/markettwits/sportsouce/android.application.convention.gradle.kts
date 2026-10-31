@@ -22,7 +22,6 @@ tracer {
 }
 
 configureApkOutputNames()
-configureBundleOutputNames()
 
 private fun ApplicationExtension.configureSigning() {
     val keystoreFile = rootProject.file("key-store.jks")
@@ -89,32 +88,6 @@ private fun ApplicationExtension.configureBuildTypes() {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-}
-
-private fun Project.configureBundleOutputNames() {
-    val projectBuildDir = layout.buildDirectory
-    val projectAndroid = extensions.getByType<ApplicationExtension>()
-    val versionCode = projectAndroid.defaultConfig.versionCode
-    val versionName = projectAndroid.defaultConfig.versionName
-
-    afterEvaluate {
-        tasks.matching { it.name.contains("bundle") && it.name.contains("Release") }.configureEach {
-            doLast {
-                val bundleDir = projectBuildDir.get().asFile.resolve("outputs/bundle/release")
-                if (bundleDir.exists()) {
-                    bundleDir.listFiles()?.forEach { file ->
-                        if (file.extension == "aab") {
-                            val newName = "Sportsauce-${versionName}-${versionCode}.aab"
-                            val newFile = File(bundleDir, newName)
-                            if (file != newFile) {
-                                file.renameTo(newFile)
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }

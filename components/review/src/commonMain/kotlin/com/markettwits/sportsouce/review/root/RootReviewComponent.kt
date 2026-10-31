@@ -3,12 +3,10 @@ package com.markettwits.sportsouce.review.root
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponent
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
 import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.root.RootClubComponent
-import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
 import com.markettwits.sportsouce.news.news_list.component.NewsComponent
@@ -26,7 +24,7 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.componen
 
 interface RootReviewComponent {
     val childStack: Value<ChildStack<*, Child>>
-    val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<ConfigSlot, ChildSlot>>
+    fun openUpdate(version: NewAppVersion)
 
     fun handleDeeplink(deeplink: Deeplink.News)
     fun handleDeeplink(deeplink: Deeplink.Clubs)
@@ -97,16 +95,4 @@ interface RootReviewComponent {
         data class Shop(val component: RootShopCatalogComponent) : Child
     }
 
-    @Serializable
-    sealed class ConfigSlot {
-        @Serializable
-        data object Notification : ConfigSlot()
-    }
-
-    sealed class ChildSlot {
-        data class Notification(
-            val component: InAppNotificationComponent,
-            val render: InAppNotificationRenderer
-        ) : ChildSlot()
-    }
 }

@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 val selfUpdateComponentModule = module {
     includes(thirdPartyGitHubModule, selfUpdaterThirdPartyModule)
-    singleOf(::InAppNotificationStorageImpl) bind InAppNotificationStorage::class
+    single<InAppNotificationStorage> { InAppNotificationStorageImpl() }
     singleOf(::SelfUpdaterApiImpl) bind SelfUpdaterApi::class
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::SelfUpdateStoreFactory)

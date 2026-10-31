@@ -18,7 +18,7 @@ class SelfUpdateStoreFactory(
         SelfUpdateStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "SelfUpdateStore",
-            initialState = State(newAppInfo = newAppVersion),
+            initialState = State(isLoading = newAppVersion == null, newAppInfo = newAppVersion, updateTarget = selfUpdaterApi.updateTarget()),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { SelfUpdateExecutor(selfUpdaterApi) },
             reducer = SelfUpdateReducer

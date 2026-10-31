@@ -2,11 +2,10 @@ package com.markettwits.sportsouce.review.root
 
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.markettwits.sportsouce.start.presentation.album.presentation.screen.StartAlbumScreen
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.arkivanov.decompose.router.slot.child
-import com.markettwits.selfupdater.components.notification.screen.NotificationScreen
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
 import com.markettwits.sportsouce.club.root.RootClubScreen
 import com.markettwits.sportsouce.news.news_event.screen.NewsEventScreen
@@ -20,7 +19,7 @@ import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularScreen
 import com.markettwits.sportsouce.starts.random.root.presentation.RootRandomStartScreen
 
 @Composable
-fun RootReviewScreen(component: RootReviewComponent) {
+fun RootReviewScreen(component: RootReviewComponent, notification: @Composable (Modifier) -> Unit = {}) {
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = component.childStack,
         animation = stackAnimation(fade()),
@@ -29,17 +28,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Review -> {
                 ReviewScreen(
                     component = child.component,
-                    notification = {
-                        component.childSlot.child?.instance?.also { child ->
-                            when (child) {
-                                is RootReviewComponent.ChildSlot.Notification -> NotificationScreen(
-                                    modifier = it,
-                                    notificationComponent = child.component,
-                                    renderer = child.render
-                                )
-                            }
-                        }
-                    })
+                    notification = notification)
             }
 
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)

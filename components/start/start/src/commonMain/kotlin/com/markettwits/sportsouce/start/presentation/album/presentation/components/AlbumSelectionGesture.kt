@@ -30,9 +30,11 @@ internal fun albumSelectionRange(photos: List<AlbumPhoto>, baseline: Map<Int, Al
 internal fun Modifier.albumSelectionGesture(
     state: LazyGridState, sources: AlbumPhotoSources, photos: List<AlbumPhoto>, selected: Map<Int, AlbumPhoto>, enabled: Boolean = true,
     visibleTop: () -> Float = { 0f },
+    photoIndexOffset: Int = 0,
     onSelection: (List<AlbumPhoto>) -> Unit,
 ): Modifier {
     val currentPhotos by rememberUpdatedState(photos)
+    val currentPhotoIndexOffset by rememberUpdatedState(photoIndexOffset)
     val currentSelection by rememberUpdatedState(selected)
     val currentVisibleTop by rememberUpdatedState(visibleTop)
     val update by rememberUpdatedState(onSelection)
@@ -57,7 +59,7 @@ internal fun Modifier.albumSelectionGesture(
                 val top = currentVisibleTop().coerceIn(0f, bottom - 1f)
                 if (!clamp && position.y < top) return null
                 val point = Offset(position.x, if (clamp) position.y.coerceIn(top + 1f, bottom) else position.y) + viewport.origin
-                return sources.indexAt(point)?.let { currentPhotos.getOrNull(it)?.id }
+                return sources.indexAt(point)?.let { currentPhotos.getOrNull(it - currentPhotoIndexOffset)?.id }
             }
             awaitEachGesture {
                 val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)

@@ -63,6 +63,32 @@ class StartAlbumLoadingTest {
         assertEquals(listOf(229, 229), counts)
     }
 
+    @Test fun distantPagesReserveTheWholeAlbumAndCanPrependAfterAJump() = runTest {
+        val requested = mutableListOf<Int>()
+        var total = 1001
+        val repo = object : StartAlbumRepository {
+            override suspend fun album(albumId: Int) = album
+            override suspend fun photos(albumId: Int, offset: Int, limit: Int, tags: List<String>): AlbumPhotosPage {
+                requested += offset
+                assertEquals(album.tags, tags)
+                return AlbumPhotosPage(List((total - offset).coerceIn(0, limit)) { AlbumPhoto(offset + it, "original-${offset + it}") }, total)
+            }
+        }
+        val source = AlbumPhotosPagingSource(repo, 9, album.tags) {}
+        assertTrue(source.jumpingSupported)
+        val middle = assertIs<PagingSourceLoadResultPage<Int, AlbumPhoto>>(source.load(PagingSourceLoadParamsRefresh(20, 30, true)))
+        assertEquals(600, middle.itemsBefore); assertEquals(371, middle.itemsAfter)
+        assertEquals(19, middle.prevKey); assertEquals(21, middle.nextKey)
+        val previous = assertIs<PagingSourceLoadResultPage<Int, AlbumPhoto>>(source.load(PagingSourceLoadParamsPrepend(19, 30, true)))
+        assertEquals(570, previous.data.first().id)
+        val last = assertIs<PagingSourceLoadResultPage<Int, AlbumPhoto>>(source.load(PagingSourceLoadParamsRefresh(33, 30, true)))
+        assertEquals(11, last.data.size); assertEquals(990, last.itemsBefore); assertEquals(0, last.itemsAfter); assertNull(last.nextKey)
+        total = 61
+        val shrunk = assertIs<PagingSourceLoadResultPage<Int, AlbumPhoto>>(source.load(PagingSourceLoadParamsRefresh(33, 30, true)))
+        assertEquals(60, shrunk.itemsBefore); assertEquals(60, shrunk.data.single().id); assertEquals(0, shrunk.itemsAfter)
+        assertEquals(listOf(600, 570, 990, 990, 60), requested)
+    }
+
     @Test fun existingStartAlbumWithImagesDoesNotRequestRemoteData() = runTest {
         Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
         val repo = object : StartAlbumRepository {

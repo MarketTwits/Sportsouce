@@ -15,7 +15,7 @@ class AlbumOverscrollTest {
     @BeforeTest fun setMain() { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     @AfterTest fun resetMain() { Dispatchers.resetMain() }
 
-    @Test fun edgesResistPullingReverseWithoutMovingTheGridAndSpringBackAfterRelease() {
+    @Test fun edgesResistPullingReverseWithoutMovingTheGridAndSpringBackAfterRelease() = java.awt.EventQueue.invokeAndWait {
         val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
         lateinit var scope: CoroutineScope
         ImageComposeScene(width = 390, height = 900) { scope = rememberCoroutineScope() }.use { scene ->
@@ -47,7 +47,7 @@ class AlbumOverscrollTest {
         }
     }
 
-    @Test fun inertiaAndFractionalRemaindersCannotStartOverscroll() {
+    @Test fun inertiaAndFractionalRemaindersCannotStartOverscroll() = java.awt.EventQueue.invokeAndWait {
         val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
         var calls = 0
         for (delta in listOf(-600f, 600f)) {
@@ -60,7 +60,7 @@ class AlbumOverscrollTest {
         assertEquals(4, calls)
     }
 
-    @Test fun loadingAndTemporaryPagingEdgesDoNotConsumeTheGesture() {
+    @Test fun loadingAndTemporaryPagingEdgesDoNotConsumeTheGesture() = java.awt.EventQueue.invokeAndWait {
         val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
         // Neither edge is final while refreshing. An unfinished append disables only the bottom.
         effect.updateBounds { false }
@@ -78,7 +78,7 @@ class AlbumOverscrollTest {
         assertTrue(effect.offset > 0f, "The genuine loaded top edge still stretches")
     }
 
-    @Test fun aChangedBoundaryDropsOldTensionBeforeForwardingTheNextScroll() {
+    @Test fun aChangedBoundaryDropsOldTensionBeforeForwardingTheNextScroll() = java.awt.EventQueue.invokeAndWait {
         val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
         var atEnd = true
         effect.updateBounds { it < 0f && atEnd }
@@ -94,7 +94,7 @@ class AlbumOverscrollTest {
         assertEquals(0f, effect.offset, "Old tension cannot return when a different edge becomes available")
     }
 
-    @Test fun cancellingAReleaseCannotLeaveTheGridDisplaced() {
+    @Test fun cancellingAReleaseCannotLeaveTheGridDisplaced() = java.awt.EventQueue.invokeAndWait {
         val effect = AlbumOverscrollEffect().apply { viewportHeight = 1000f }
         lateinit var scope: CoroutineScope
         ImageComposeScene(width = 390, height = 900) { scope = rememberCoroutineScope() }.use { scene ->

@@ -32,7 +32,7 @@ class AlbumDetailsDesignTest {
     private val album = StartAlbumDetails("Фотоальбом", "Домашний ультра кросс-трейл", "19 августа 2023", 791,
         listOf("ирина ткаченко", "саша j s-iron", "настя маметьева"))
 
-    @Test fun tagsAndResponsivePhotoGridFitBothThemesAndLargeText() {
+    @Test fun tagsAndResponsivePhotoGridFitBothThemesAndLargeText() = java.awt.EventQueue.invokeAndWait {
         for ((width, scale) in listOf(320 to 2f, 390 to 1f, 800 to 1f)) for (dark in listOf(false, true)) {
             var tag: String? = null
             var clears = 0
@@ -74,7 +74,7 @@ class AlbumDetailsDesignTest {
             }
         }
     }
-    @Test fun returningFromViewerRevealsTheLastPhotoAndKeepsAlreadyVisibleRows() {
+    @Test fun returningFromViewerRevealsTheLastPhotoAndKeepsAlreadyVisibleRows() = java.awt.EventQueue.invokeAndWait {
         lateinit var grid: LazyGridState
         lateinit var scope: CoroutineScope
         ImageComposeScene(width = 390, height = 500) {
@@ -93,7 +93,7 @@ class AlbumDetailsDesignTest {
             assertEquals(position, grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset)
         }
     }
-    @Test fun selectionActionsFitBothThemesAndLargeTextWithoutOverlapping() {
+    @Test fun selectionActionsFitBothThemesAndLargeTextWithoutOverlapping() = java.awt.EventQueue.invokeAndWait {
         for ((width, scale) in listOf(320 to 2f, 390 to 1f)) for (dark in listOf(false, true)) {
             var downloads = 0; var shares = 0
             ImageComposeScene(width = width, height = 180, density = Density(1f, scale)) {

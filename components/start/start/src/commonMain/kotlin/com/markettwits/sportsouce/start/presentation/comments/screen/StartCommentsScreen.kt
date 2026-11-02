@@ -49,6 +49,9 @@ internal fun StartCommentsContent(state: StartCommentsStore.State, onIntent: (St
     val snackbar = remember { SnackbarHostState() }
     var tone by remember { mutableStateOf(SauceSnackbarTone.Neutral) }
     val keyboard = LocalSoftwareKeyboardController.current
+    LaunchedEffect(state.mode) {
+        if ((state.mode as? CommentMode.Reply)?.focusEditor == false) keyboard?.hide()
+    }
     LaunchedEffect(state.sentCommentVersion) {
         if (state.sentCommentVersion > 0) keyboard?.hide()
     }

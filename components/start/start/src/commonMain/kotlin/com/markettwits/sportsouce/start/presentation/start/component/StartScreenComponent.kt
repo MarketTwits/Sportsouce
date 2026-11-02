@@ -31,7 +31,7 @@ sealed class CommentUiState {
 sealed class CommentMode {
 
     @Serializable
-    data class Reply(val replier: String, val messageId: Int, val parentComment: CommentData) : CommentMode()
+    data class Reply(val replier: String, val messageId: Int, val parentComment: CommentData, val focusEditor: Boolean = true) : CommentMode()
 
     @Serializable
     data object Base : CommentMode()

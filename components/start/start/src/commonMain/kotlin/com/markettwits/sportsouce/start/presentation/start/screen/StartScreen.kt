@@ -135,6 +135,15 @@ fun StartScreen(
                                         StartScreenStore.Intent.OpenStartCommentsScreen(CommentMode.Base)
                                     )
                                 },
+                                onClickShowReplies = { commentId ->
+                                    data.commentsRemote.rows.find { it.id == commentId }?.let { comment ->
+                                        startComponent.obtainEvent(
+                                            StartScreenStore.Intent.OpenStartCommentsScreen(
+                                                CommentMode.Reply(comment.user.name, commentId, comment.toCommentData(), focusEditor = false)
+                                            )
+                                        )
+                                    }
+                                },
                                 onClickReply = { replier, commentId ->
                                     data.commentsRemote.rows.find { it.id == commentId }?.let { comment ->
                                         startComponent.obtainEvent(

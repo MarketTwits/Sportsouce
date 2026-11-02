@@ -1,5 +1,10 @@
 package com.markettwits.sportsouce.start
 
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.resume
+import com.arkivanov.essenty.lifecycle.destroy
+import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponentBase
 import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.sportsouce.start.domain.*
@@ -109,6 +114,22 @@ class StartCommentsStoreTest {
             assertFalse(store.state.isLoadingComments)
             assertFalse(store.state.isLoadingSendComment)
         } finally { store.dispose() }
+    }
+
+    @Test fun viewingRepliesAndWritingAReplyCarryDifferentFocusIntentsThroughTheComponent() = runTest {
+        val lifecycle = LifecycleRegistry()
+        val modes = mutableListOf<CommentMode.Reply>()
+        val component = StartCommentsComponentBase(DefaultComponentContext(lifecycle),
+            StartCommentsStoreFactory(DefaultStoreFactory(), FakeComments()), startId = 318,
+            onNavigateToReplies = modes::add)
+        try {
+            lifecycle.resume(); runCurrent()
+            component.obtainEvent(Intent.OnClickShowReplies(1)); runCurrent()
+            component.obtainEvent(Intent.OnClickReply("Имя", 1)); runCurrent()
+            assertEquals(listOf(false, true), modes.map { it.focusEditor })
+            assertEquals(listOf(1, 1), modes.map { it.messageId })
+            assertEquals(modes[0].parentComment, modes[1].parentComment)
+        } finally { lifecycle.destroy(); runCurrent() }
     }
 
     private data class Post(val start: Int, val text: String, val parent: Int, val reply: Boolean, val question: Boolean)

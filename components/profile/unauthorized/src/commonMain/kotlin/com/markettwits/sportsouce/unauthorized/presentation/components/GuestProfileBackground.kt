@@ -1,7 +1,5 @@
 package com.markettwits.sportsouce.unauthorized.presentation.components
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
@@ -11,11 +9,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import com.markettwits.core_ui.items.theme.DarkSauceColors
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.compose.LocalPlatformContext
 import com.markettwits.core_ui.items.image.AlbumImage
+import com.markettwits.core_ui.items.image.preloadCachedAlbumImage
 import com.markettwits.core_ui.items.image.AlbumImageSize
 import com.markettwits.sportsouce.unauthorized.domain.GuestWelcomeContent
 
@@ -36,18 +34,18 @@ internal fun GuestProfileBackground(
     }) {
         val url = content.imageUrl
         if (!url.isNullOrBlank()) {
-            var hasRemotePhoto by remember(url) { mutableStateOf(false) }
-            val reveal = remember(url) { Animatable(0f) }
-            LaunchedEffect(hasRemotePhoto) {
-                if (hasRemotePhoto) reveal.animateTo(1f, tween(550))
+            val context = LocalPlatformContext.current
+            val cached by produceState<Boolean?>(null, url, imageLoader, context) {
+                value = preloadCachedAlbumImage(url, AlbumImageSize.Cover, imageLoader, context)
             }
-            AlbumImage(
+            // Finish the cache-only read first: a saved original must not start another proxy request.
+            if (cached != null) AlbumImage(
                 url = url,
-                size = AlbumImageSize.Full,
-                modifier = Modifier.fillMaxSize().graphicsLayer { alpha = reveal.value },
+                size = AlbumImageSize.Cover,
+                modifier = Modifier.fillMaxSize(),
                 alignment = BiasAlignment(content.imageAlignmentX, content.imageAlignmentY),
-                onPainter = { hasRemotePhoto = true },
-                // Cached photos load from Coil disk storage before trying the network.
+                // Race the independent CDN only on a cold visit; decoding stays bounded to 960 px.
+                raceOriginal = cached == false,
                 loading = {},
                 error = { _, _ -> },
                 imageLoader = imageLoader,

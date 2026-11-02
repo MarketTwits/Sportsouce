@@ -45,6 +45,10 @@ abstract class RootAuthorizedProfileComponentAbstract(
         )
 
 
+    override fun popToRoot() {
+        navigation.popTo(0)
+    }
+
     private fun childStack(
         config: RootAuthorizedProfileComponent.Config,
         componentContext: ComponentContext,

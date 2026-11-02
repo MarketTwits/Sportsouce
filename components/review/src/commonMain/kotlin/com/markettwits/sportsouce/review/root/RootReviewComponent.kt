@@ -23,6 +23,9 @@ import kotlinx.serialization.Serializable
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
 
 interface RootReviewComponent {
+
+    fun popToRoot()
+
     val childStack: Value<ChildStack<*, Child>>
     fun openUpdate(version: NewAppVersion)
 

@@ -8,6 +8,9 @@ import com.markettwits.sportsouce.unauthorized.presentation.component.UnAuthoriz
 import kotlinx.serialization.Serializable
 
 interface RootProfileComponent {
+
+    fun popToRoot()
+
     val childStack: Value<ChildStack<*, Child>>
 
     @Serializable

@@ -67,6 +67,10 @@ class RootReviewComponentBase(
         childFactory = ::child,
     )
 
+    override fun popToRoot() {
+        navigation.popTo(0)
+    }
+
     private fun getInitialStack(): List<RootReviewComponent.Config> {
         return listOf(RootReviewComponent.Config.Review)
     }

@@ -12,6 +12,9 @@ import kotlinx.serialization.Serializable
 
 interface RootStartsComponent {
 
+    fun popToRoot()
+
+
     val configStack: Value<ChildStack<Config, Child>>
 
     fun handleDeeplink(deeplink: Deeplink.Starts)

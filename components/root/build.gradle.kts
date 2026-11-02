@@ -12,6 +12,8 @@ kotlin {
 
     sourceSets {
         commonTest.dependencies {
+            implementation(projects.components.profile.unauthorized)
+            implementation(projects.components.auth.authFlow)
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
         }

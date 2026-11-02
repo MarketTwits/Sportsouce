@@ -151,9 +151,17 @@ class RootComponentBase(
                     componentContext = componentContext,
                     navigationComponentHandle = object : BottomBarComponentHandle {
                         override fun navigateTo(bottomBarConfiguration: BottomBarConfiguration) {
-                            stackNavigation.bringToFront(
-                                BottomBarConfigurationMapper.map(bottomBarConfiguration)
-                            )
+                            val target = BottomBarConfigurationMapper.map(bottomBarConfiguration)
+                            val active = childStack.value.active
+                            if (active.configuration == target) {
+                                when (val child = active.instance) {
+                                    is RootComponent.Child.Starts -> child.component.popToRoot()
+                                    is RootComponent.Child.Review -> child.component.popToRoot()
+                                    is RootComponent.Child.Profile -> child.component.popToRoot()
+                                }
+                            } else {
+                                stackNavigation.bringToFront(target)
+                            }
                         }
 
                         override fun getActiveConfiguration(observer: (BottomBarConfiguration) -> Unit) {

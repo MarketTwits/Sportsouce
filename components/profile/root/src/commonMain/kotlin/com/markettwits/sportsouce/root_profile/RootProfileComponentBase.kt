@@ -5,6 +5,7 @@ import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
@@ -38,6 +39,12 @@ class RootProfileComponentBase(
             handleBackButton = true,
             childFactory = ::child,
         )
+
+    override fun popToRoot() {
+        navigation.popTo(0) {
+            (childStack.value.active.instance as? RootProfileComponent.Child.AuthProfile)?.component?.popToRoot()
+        }
+    }
 
     @OptIn(DelicateDecomposeApi::class)
     private fun child(

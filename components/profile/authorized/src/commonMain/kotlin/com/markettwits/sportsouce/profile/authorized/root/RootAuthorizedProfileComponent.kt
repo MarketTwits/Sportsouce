@@ -20,6 +20,9 @@ import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
 import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
 
 interface RootAuthorizedProfileComponent {
+
+    fun popToRoot()
+
     val childStack: Value<ChildStack<*, Child>>
 
     @Serializable

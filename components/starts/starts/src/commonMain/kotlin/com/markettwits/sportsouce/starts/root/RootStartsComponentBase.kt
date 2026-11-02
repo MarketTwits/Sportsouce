@@ -38,6 +38,10 @@ class RootStartsComponentBase(
         childFactory = ::child,
     )
 
+    override fun popToRoot() {
+        navigation.replaceAll(RootStartsComponent.Config.Starts)
+    }
+
     private fun getInitialStack(): List<RootStartsComponent.Config> {
         return when (deeplink) {
             is Deeplink.Starts.StartDetail -> {

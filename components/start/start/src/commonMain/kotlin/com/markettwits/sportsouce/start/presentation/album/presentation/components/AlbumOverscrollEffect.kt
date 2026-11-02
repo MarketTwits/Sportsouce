@@ -41,6 +41,12 @@ internal class AlbumOverscrollEffect : OverscrollEffect {
         val limit = (viewportHeight * .4f).coerceAtLeast(1f)
         return sign(pull) * limit * (1f - exp(-abs(pull) * .52f / limit))
     }
+    /** A thumb drag uses the same resistance and release spring as a direct grid pull. */
+    fun pullFromScrollbar(overflow: Float) {
+        revision++
+        pull = if (canPull(overflow)) overflow.coerceIn(-viewportHeight * 2f, viewportHeight * 2f) else 0f
+    }
+
     override val isInProgress: Boolean get() = abs(pull) > .5f && canPull(pull)
     override val node = object : Modifier.Node() {}
 

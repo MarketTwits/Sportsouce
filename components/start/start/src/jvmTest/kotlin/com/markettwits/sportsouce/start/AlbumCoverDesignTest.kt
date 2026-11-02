@@ -27,7 +27,7 @@ class AlbumCoverDesignTest {
     @BeforeTest fun setMain() { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     @AfterTest fun resetMain() { Dispatchers.resetMain() }
 
-    @Test fun genericAlbumUsesTheEventHeadlineAndItsEntranceDoesNotReplayAfterScrolling() {
+    @Test fun genericAlbumUsesTheEventHeadlineAndItsEntranceDoesNotReplayAfterScrolling() = java.awt.EventQueue.invokeAndWait {
         val album = StartAlbumDetails("Фото", "Юрманка трейл", "17 октября 2026", 60, emptyList())
         val pages = flowOf(PagingData.from(List(60) { AlbumPhoto(it, "") },
             sourceLoadStates = LoadStates(LoadStateNotLoading(true), LoadStateNotLoading(true), LoadStateNotLoading(true))))
@@ -65,7 +65,7 @@ class AlbumCoverDesignTest {
         }
     }
 
-    @Test fun coverCollapsesContinuouslyPinsTagsAndRestoresOnScrollBack() {
+    @Test fun coverCollapsesContinuouslyPinsTagsAndRestoresOnScrollBack() = java.awt.EventQueue.invokeAndWait {
         for (dark in listOf(false, true)) for ((width, scale) in listOf(390 to 1f, 320 to 2f, 800 to 1f)) {
             val album = StartAlbumDetails("Домашний ультра трейл", "Большой спортивный праздник", "19 августа 2023", 90,
                 listOf("ирина ткаченко", "саша j s-iron", "настя маметьева"))
@@ -135,7 +135,7 @@ class AlbumCoverDesignTest {
         }
     }
 
-    @Test fun albumsWithoutServerTagsHaveNoFilterStripOrReservedSpace() {
+    @Test fun albumsWithoutServerTagsHaveNoFilterStripOrReservedSpace() = java.awt.EventQueue.invokeAndWait {
         for (dark in listOf(false, true)) {
             val album = StartAlbumDetails("Фото", "Юрманка трейл", "17 октября 2026", 448, emptyList())
             val pages = flowOf(PagingData.from(List(60) { AlbumPhoto(it, "") },
@@ -166,7 +166,7 @@ class AlbumCoverDesignTest {
         }
     }
 
-    @Test fun draggingTheCoverStretchesItAndSpringsBackWithFixedToolbarAndWorkingShareAction() {
+    @Test fun draggingTheCoverStretchesItAndSpringsBackWithFixedToolbarAndWorkingShareAction() = java.awt.EventQueue.invokeAndWait {
         val album = StartAlbumDetails("Фото", "Юрманка трейл", "17 октября 2026", 60, listOf("Фотограф"))
         val pages = flowOf(PagingData.from(List(60) { AlbumPhoto(it, "") },
             sourceLoadStates = LoadStates(LoadStateNotLoading(true), LoadStateNotLoading(true), LoadStateNotLoading(true))))

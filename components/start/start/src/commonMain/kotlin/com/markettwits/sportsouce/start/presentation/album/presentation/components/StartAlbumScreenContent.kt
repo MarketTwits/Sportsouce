@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -66,16 +69,32 @@ fun StartAlbumScreenContent(modifier: Modifier = Modifier, items: List<String>, 
 internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSelectImage: (Int) -> Unit, modifier: Modifier = Modifier,
     sources: AlbumPhotoSources = remember { AlbumPhotoSources() }, selection: Map<Int, AlbumPhoto> = emptyMap(), onEvent: (StartAlbumStore.Intent) -> Unit = {}) {
     val photos = remember(items) { items.mapIndexed { index, url -> AlbumPhoto(index, url) } }
-    LazyVerticalGrid(columns = AlbumGridCells, state = state, modifier = modifier.fillMaxSize()
-        .albumSelectionGesture(state, sources, photos, selection) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
-        contentPadding = PaddingValues(top = 12.dp, bottom = photoViewerHostInsets().asPaddingValues().calculateBottomPadding() +
-            if (selection.isNotEmpty()) 100.dp else 0.dp),
-        horizontalArrangement = Arrangement.spacedBy(1.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
-        itemsIndexed(items, key = { index, _ -> "photo-$index" }) { index, url ->
-            AlbumPhotoTile(index, url, "Фото ${index + 1} из ${items.size}", sources, selection.isNotEmpty(), index in selection,
-                onLongClick = { onEvent(StartAlbumStore.Intent.TogglePhoto(photos[index])) }) { onSelectImage(index) }
+    val density = LocalDensity.current
+    val bounce = remember { AlbumOverscrollEffect() }
+    val bottom = photoViewerHostInsets().asPaddingValues().calculateBottomPadding() + if (selection.isNotEmpty()) 100.dp else 0.dp
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        val columns = with(AlbumGridCells) { with(density) { calculateCrossAxisCellSizes(maxWidth.roundToPx(), 1.dp.roundToPx()) } }
+        SideEffect {
+            bounce.viewportHeight = with(density) { maxHeight.toPx() }
+            bounce.updateBounds { if (it > 0f) !state.canScrollBackward else !state.canScrollForward }
         }
+        LazyVerticalGrid(columns = AlbumGridCells, state = state, modifier = Modifier.fillMaxSize()
+            .offset { IntOffset(0, bounce.offset.roundToInt()) }
+            .albumSelectionGesture(state, sources, photos, selection) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
+            overscrollEffect = bounce,
+            contentPadding = PaddingValues(top = 12.dp, bottom = bottom),
+            horizontalArrangement = Arrangement.spacedBy(1.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            itemsIndexed(items, key = { index, _ -> "photo-$index" }) { index, url ->
+                AlbumPhotoTile(index, url, "Фото ${index + 1} из ${items.size}", sources, selection.isNotEmpty(), index in selection,
+                    onLongClick = { onEvent(StartAlbumStore.Intent.TogglePhoto(photos[index])) }) { onSelectImage(index) }
+            }
+        }
+        AlbumScrollbar(state, AlbumScrollLayout(emptyList(), items.size, columns.size,
+            (columns.firstOrNull() ?: 0).toFloat(), with(density) { 1.dp.roundToPx().toFloat() },
+            with(density) { 12.dp.toPx() }, with(density) { bottom.toPx() }), bounce,
+            with(density) { maxHeight.toPx() }, 8.dp, bottom + 8.dp, Modifier.fillMaxSize(), enabled = selection.isEmpty())
     }
+
 }
 
 /** Preserve the viewport when the photo is already fully visible, otherwise reveal its row. */

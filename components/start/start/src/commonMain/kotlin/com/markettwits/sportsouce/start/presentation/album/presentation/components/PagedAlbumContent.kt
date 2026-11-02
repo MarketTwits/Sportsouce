@@ -70,6 +70,7 @@ internal fun PagedAlbumContent(
     overscroll: AlbumOverscrollEffect = remember { AlbumOverscrollEffect() },
     onEvent: (StartAlbumStore.Intent) -> Unit = {},
 ) {
+    val pageError = listOf(photos.loadState.refresh, photos.loadState.append, photos.loadState.prepend).any { it is LoadStateError }
     val refreshing = photos.loadState.refresh is LoadStateLoading
     val loading = albumState.isLoading || refreshing
     val endReached = (photos.loadState.append as? LoadStateNotLoading)?.endOfPaginationReached == true
@@ -141,7 +142,7 @@ internal fun PagedAlbumContent(
                     SauceLazyVerticalGrid(columns = AlbumGridCells, state = gridState, modifier = Modifier.fillMaxSize()
                         .offset { IntOffset(0, overscroll.offset.roundToInt()) }
                         .albumSelectionGesture(gridState, sources, photos.itemSnapshotList.items, selection, albumState.exportProgress == null,
-                        visibleTop = { pinnedHeaderHeight.toFloat() }) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
+                        visibleTop = { pinnedHeaderHeight.toFloat() }, photoIndexOffset = photos.itemSnapshotList.placeholdersBefore) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
                         overscrollEffect = overscroll,
                         contentPadding = PaddingValues(top = toolbarHeight, bottom = bottomPadding), horizontalArrangement = Arrangement.spacedBy(1.dp),
                         verticalArrangement = Arrangement.spacedBy(1.dp)) {
@@ -176,23 +177,18 @@ internal fun PagedAlbumContent(
                                 else AlbumPhotoNotice("Фото не найдены", "Попробуйте выбрать другие теги.", "Все фото", onClear, noticeModifier)
                             }
                         }
-                        items(photos.itemCount, key = { index -> "photo-${photos.peek(index)?.id ?: index}" }, contentType = { "photo" }) { index ->
+                        items(photos.itemCount, key = { index -> "photo-$index" }, contentType = { "photo" }) { index ->
                             photos[index]?.let { photo ->
                                 AlbumPhotoTile(index, photo.url, "Фото ${index + 1}", sources, selectionMode, photo.id in selection,
                                     onLongClick = { onEvent(StartAlbumStore.Intent.TogglePhoto(photo)) }) {
                                     if (selectionMode) onEvent(StartAlbumStore.Intent.TogglePhoto(photo)) else selectedIndex = index
                                 }
-                            }
+                            } ?: SauceSkeleton(Modifier.fillMaxWidth().aspectRatio(1f), shape = AlbumPhotoShape)
                         }
-                        if (photos.loadState.append is LoadStateLoading) items(4, contentType = { "shimmer" }) {
+                        if (photos.loadState.append is LoadStateLoading && photos.itemSnapshotList.placeholdersAfter == 0) items(4, contentType = { "shimmer" }) {
                             SauceSkeleton(Modifier.fillMaxWidth().aspectRatio(1f), shape = AlbumPhotoShape)
                         }
-                        if (photos.loadState.append is LoadStateError || (photos.loadState.refresh is LoadStateError && photos.itemCount > 0)) {
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                AlbumPhotoNotice("Не удалось загрузить фотографии", "Уже загруженные фото доступны.", "Повторить", photos::retry)
-                            }
-                        }
-                        if (album != null) item(key = "fill", span = { GridItemSpan(maxLineSpan) }, contentType = "fill") {
+                        if (album != null && fillHeight > 0.dp) item(key = "fill", span = { GridItemSpan(maxLineSpan) }, contentType = "fill") {
                             Spacer(Modifier.height(fillHeight))
                         }
                     }
@@ -211,12 +207,45 @@ internal fun PagedAlbumContent(
             AlbumCoverToolbar(album?.let(::albumCoverHeadline) ?: "Фотоальбом", progress, album != null,
                 goBack = { onEvent(StartAlbumStore.Intent.GoBack) },
                 onShare = if ((albumState.albumId ?: 0) > 0) { { onEvent(StartAlbumStore.Intent.ShareAlbum) } } else null)
+            val scrollbarLayout = AlbumScrollLayout(
+                headers = if (album == null) emptyList() else buildList {
+                    add(with(density) { captionHeight.toPx() })
+                    if (hasTags) add(filtersHeight.toFloat())
+                    add(countHeight.toFloat())
+                    if (albumState.error != null) add(noticeHeight.toFloat())
+                },
+                photoCount = photos.itemCount, columns = columns.size,
+                rowHeight = (columns.firstOrNull() ?: 0).toFloat(), spacing = with(density) { 1.dp.roundToPx().toFloat() },
+                beforePadding = with(density) { toolbarHeight.toPx() }, afterPadding = with(density) { bottomPadding.toPx() },
+                footers = buildList {
+                    if (album != null && fillHeight > 0.dp) add(with(density) { fillHeight.toPx() })
+                },
+            )
+            AlbumScrollbar(gridState, scrollbarLayout, overscroll, with(density) { maxHeight.toPx() },
+                topPadding = with(density) { pinnedHeaderHeight.toDp() } + 8.dp, bottomPadding = bottomPadding + 8.dp,
+                modifier = Modifier.fillMaxSize(), enabled = photos.itemCount > 0 && !selectionMode && albumState.exportProgress == null)
+            if (pageError && photos.itemCount > 0) OnBackgroundCard(
+                Modifier.align(Alignment.BottomCenter).padding(start = 16.dp, end = 16.dp, bottom = bottomPadding + 12.dp),
+            ) {
+                Row(Modifier.padding(start = 16.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Не удалось загрузить фото", Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textSecondary)
+                    SauceButton("Повторить", photos::retry, variant = SauceButtonVariant.Text, fillWidth = false)
+                }
+            }
             if (selectionMode) AlbumSelectionPanel(selection.size, { onEvent(StartAlbumStore.Intent.ClearSelection) },
                 { onEvent(StartAlbumStore.Intent.ShareSelection) }, { onEvent(StartAlbumStore.Intent.DownloadSelection) }, Modifier.align(Alignment.BottomCenter))
         }
     }
     if (selectedIndex in 0 until photos.itemCount) {
-        SaucePhotoViewer(images = photos.itemSnapshotList.items.map { it.url }, initialIndex = selectedIndex,
+        val snapshot = photos.itemSnapshotList
+        val viewerImages = remember(snapshot.items, snapshot.placeholdersBefore, snapshot.placeholdersAfter) {
+            object : AbstractList<String>() {
+                override val size: Int get() = snapshot.size
+                override fun get(index: Int): String = snapshot[index]?.url.orEmpty()
+            }
+        }
+        SaucePhotoViewer(images = viewerImages, initialIndex = selectedIndex,
             title = albumState.album?.name ?: "Фотоальбом",
             totalCount = albumState.filteredCount ?: photos.itemCount,
             onShare = { index -> photos.peek(index)?.let { onEvent(StartAlbumStore.Intent.SharePhotos(listOf(it))) } },
@@ -230,6 +259,7 @@ internal fun PagedAlbumContent(
             appendError = photos.loadState.append is LoadStateError, onRetry = photos::retry,
             onPageChanged = { index ->
                 // Prefetch before the viewer reaches the last loaded photo.
+                if (index in 0 until photos.itemCount) photos[index]
                 if (photos.itemCount > 0) photos[(index + 6).coerceAtMost(photos.itemCount - 1)]
             }, onDismiss = { index ->
                 scope.launch {

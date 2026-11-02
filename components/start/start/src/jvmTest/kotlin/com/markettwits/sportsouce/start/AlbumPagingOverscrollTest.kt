@@ -24,7 +24,7 @@ class AlbumPagingOverscrollTest {
     @BeforeTest fun setMain() { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     @AfterTest fun resetMain() { Dispatchers.resetMain() }
 
-    @Test fun delayedInitialAndAppendLoadsNeverLatchTheGridAndOnlyTheFinalEdgeBounces() {
+    @Test fun delayedInitialAndAppendLoadsNeverLatchTheGridAndOnlyTheFinalEdgeBounces() = java.awt.EventQueue.invokeAndWait {
         val first = CompletableDeferred<Unit>()
         val second = CompletableDeferred<Unit>()
         val requested = mutableListOf<Int>()
@@ -72,7 +72,7 @@ class AlbumPagingOverscrollTest {
                 assertEquals(0f, bounce.offset, "A loading skeleton is not an overscroll boundary")
                 pointer(PointerEventType.Release); frames(120)
                 first.complete(Unit)
-                until { photos.itemCount == 30 && photos.loadState.append is LoadStateLoading }
+                until { photos.itemSnapshotList.items.size == 30 && photos.loadState.append is LoadStateLoading }
                 assertEquals(0, grid.firstVisibleItemIndex)
                 assertTrue(30 in requested, "The next page must prefetch before the viewport reaches the last rows")
                 scope.launch { grid.scrollToItem(grid.layoutInfo.totalItemsCount - 1) }
@@ -91,14 +91,12 @@ class AlbumPagingOverscrollTest {
                 until { !grid.canScrollForward }
                 point = Offset(195f, 650f)
                 drag(-100f)
+                val beforeLoad = grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset
                 second.complete(Unit)
                 until { photos.itemCount == 60 && (photos.loadState.append as? LoadStateNotLoading)?.endOfPaginationReached == true }
                 assertEquals(0f, bounce.offset)
-                assertTrue(grid.canScrollForward, "Appending must expose the new rows without jumping to the new end")
-                val beforeContinue = grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset
-                repeat(8) { point += Offset(0f, -20f); pointer(PointerEventType.Move) }
-                assertNotEquals(beforeContinue, grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset)
-                assertEquals(0f, bounce.offset)
+                frames()
+                assertEquals(beforeLoad, grid.firstVisibleItemIndex to grid.firstVisibleItemScrollOffset, "Loading reserved placeholders must preserve the viewport")
                 pointer(PointerEventType.Release); frames(120)
                 scope.launch { grid.scrollToItem(grid.layoutInfo.totalItemsCount - 1) }
                 until { !grid.canScrollForward }

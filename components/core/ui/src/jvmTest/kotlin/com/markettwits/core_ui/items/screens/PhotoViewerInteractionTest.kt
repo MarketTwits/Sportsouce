@@ -16,8 +16,8 @@ import kotlin.test.*
 class PhotoViewerInteractionTest {
     private var time = System.nanoTime()
 
-    @Test fun filmstripSelectionSurvivesAppendAndControlsToggleWithoutLosingThePage() {
-        var images by mutableStateOf(List(6) { "" })
+    @Test fun filmstripSelectionSurvivesAppendAndControlsToggleWithoutLosingThePage() = java.awt.EventQueue.invokeAndWait {
+        var images by mutableStateOf(List(6) { "file:///photo-$it.jpg" })
         var changed = -1
         var closed = -1
         var downloaded = -1
@@ -34,7 +34,7 @@ class PhotoViewerInteractionTest {
             assertEquals(3, changed); assertTrue(scene.texts().contains("4 / 60"))
             scene.clickLabel("Скачать оригинал"); scene.clickLabel("Поделиться оригиналом")
             assertEquals(3, downloaded); assertEquals(3, shared)
-            images = List(36) { "" }; scene.settle()
+            images = List(36) { "file:///photo-$it.jpg" }; scene.settle()
             assertTrue(scene.texts().contains("4 / 60")); assertEquals(3, changed)
             scene.clickLabel("Просмотр фотографии"); scene.settle()
             assertFalse(scene.nodes().any { "Закрыть фото" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() })

@@ -103,7 +103,7 @@ internal fun PhotoViewerContent(
     var navigationJob by remember { mutableStateOf<Job?>(null) }
     val pager = rememberPagerState(initialPage = initialIndex.coerceIn(images.indices), pageCount = { images.size })
     val displayedIndex = (previewIndex ?: pager.currentPage).coerceIn(images.indices)
-    val actionsEnabled = previewIndex == null && !pager.isScrollInProgress
+    val actionsEnabled = previewIndex == null && !pager.isScrollInProgress && !images.getOrNull(pager.settledPage).isNullOrBlank()
     var controlsVisible by rememberSaveable { mutableStateOf(true) }
     var closing by remember { mutableStateOf(false) }
     var activeZoom by remember { mutableStateOf<ZoomState?>(null) }
@@ -257,18 +257,25 @@ private fun ViewerImage(url: String, zoom: ZoomState, active: Boolean, initialPa
     LaunchedEffect(active) { if (active) opened = true }
     val scope = rememberCoroutineScope()
     val colors = SauceTheme.colors
+    val imageModifier = Modifier.fillMaxSize().zoomable(zoom,
+        scrollGesturePropagation = ScrollGesturePropagation.NotZoomed, onTap = { onToggleControls() })
+        .semantics {
+            contentDescription = "Просмотр фотографии"
+            stateDescription = "Масштаб ${(zoom.scale * 100).toInt()}%"
+            onClick(label = "Показать или скрыть панели") { onToggleControls(); true }
+            customActions = listOf(CustomAccessibilityAction("Увеличить или уменьшить") {
+                scope.launch { zoom.toggleScale(2.5f, Offset.Zero) }; true
+            })
+        }
+    if (url.isBlank()) {
+        Box(imageModifier, contentAlignment = Alignment.Center) {
+            SauceSkeleton(Modifier.fillMaxWidth(.65f).aspectRatio(1f))
+        }
+        return
+    }
     AlbumImage(url, if (active || opened) AlbumImageSize.Full else AlbumImageSize.Grid,
         contentScale = ContentScale.Fit, initialPainter = initialPainter, loadOriginal = active,
-        modifier = Modifier.fillMaxSize().zoomable(zoom,
-            scrollGesturePropagation = ScrollGesturePropagation.NotZoomed, onTap = { onToggleControls() })
-            .semantics {
-                contentDescription = "Просмотр фотографии"
-                stateDescription = "Масштаб ${(zoom.scale * 100).toInt()}%"
-                onClick(label = "Показать или скрыть панели") { onToggleControls(); true }
-                customActions = listOf(CustomAccessibilityAction("Увеличить или уменьшить") {
-                    scope.launch { zoom.toggleScale(2.5f, Offset.Zero) }; true
-                })
-            },
+        modifier = imageModifier,
         loading = { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             SauceSkeleton(Modifier.fillMaxWidth(.65f).aspectRatio(1f))
         } },

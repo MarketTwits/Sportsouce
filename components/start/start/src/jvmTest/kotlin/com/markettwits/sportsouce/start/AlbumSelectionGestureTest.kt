@@ -25,7 +25,7 @@ class AlbumSelectionGestureTest {
     @BeforeTest fun setMain() { Dispatchers.setMain(UnconfinedTestDispatcher()) }
     @AfterTest fun resetMain() { Dispatchers.resetMain() }
 
-    @Test fun separateHandleDragsContinueSelectionWhileImageSwipesStillScroll() {
+    @Test fun separateHandleDragsContinueSelectionWhileImageSwipesStillScroll() = java.awt.EventQueue.invokeAndWait {
         val photos = List(60) { AlbumPhoto(it, "") }
         var selection by mutableStateOf(mapOf(1 to photos[1]))
         lateinit var grid: LazyGridState

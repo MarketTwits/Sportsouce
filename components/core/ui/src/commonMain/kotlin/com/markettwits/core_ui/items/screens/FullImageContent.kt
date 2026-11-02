@@ -26,36 +26,72 @@ fun FullImageContent(
     isPortrait: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
 ) {
-    val boxModifier = if (isPortrait) modifier
-        .fillMaxWidth()
-        .height(380.dp) else {
-        modifier
-    }
-    val imageModifier =
-        if (isPortrait) Modifier
-            .wrapContentSize()
-            .width(230.dp)
+    BoxWithConstraints(modifier.fillMaxWidth()) {
+        val posterWidth = (maxWidth * .56f).coerceIn(0.dp, 320.dp)
+        val imageModifier = if (isPortrait) Modifier
+            .width(posterWidth)
+            .aspectRatio(2f / 3f)
             .clip(Shapes.large)
-        else Modifier.fillMaxSize()
-            .clip(Shapes.large)
-
-    Box(
-        modifier = boxModifier
-            .fillMaxWidth()
-            .height(330.dp)
-    ) {
-        if (isPortrait) {
-            Box(modifier = Modifier.fillMaxSize()) {
+        else Modifier.fillMaxSize().clip(Shapes.large)
+        val frameModifier = if (isPortrait) Modifier.fillMaxWidth()
+            .height(posterWidth * 1.5f + WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 36.dp)
+        else Modifier.fillMaxSize().height(330.dp)
+        Box(frameModifier) {
+            if (isPortrait) {
+                Box(modifier = Modifier.fillMaxWidth().height(380.dp)) {
+                    SubcomposeAsyncImage(
+                        model = imageUrl,
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .blur(radius = 6.dp),
+                        error = {
+                            SubcomposeAsyncImageContent(
+                                modifier = modifier,
+                                painter = DefaultImages.EmptyImageStart()
+                            )
+                        },
+                        success = {
+                            SubcomposeAsyncImageContent(modifier = modifier)
+                        }
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        backgroundColor.copy(alpha = 0.05f),
+                                        backgroundColor.copy(alpha = 0.15f),
+                                        backgroundColor.copy(alpha = 0.25f),
+                                        backgroundColor.copy(alpha = 0.40f),
+                                        backgroundColor.copy(alpha = 0.50f),
+                                        backgroundColor.copy(alpha = 0.60f),
+                                        backgroundColor.copy(alpha = 0.80f),
+                                        backgroundColor.copy(alpha = 0.90f),
+                                        backgroundColor.copy(alpha = 1.0f)
+                                    )
+                                )
+                            )
+                    )
+                }
+            }
+            Card(
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.statusBars)
+                    .padding(18.dp)
+                    .align(Alignment.Center),
+                shape = Shapes.large,
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
                 SubcomposeAsyncImage(
                     model = imageUrl,
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .blur(radius = 6.dp),
+                    modifier = imageModifier,
                     error = {
                         SubcomposeAsyncImageContent(
-                            modifier = modifier,
                             painter = DefaultImages.EmptyImageStart()
                         )
                     },
@@ -63,49 +99,7 @@ fun FullImageContent(
                         SubcomposeAsyncImageContent(modifier = modifier)
                     }
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    backgroundColor.copy(alpha = 0.05f),
-                                    backgroundColor.copy(alpha = 0.15f),
-                                    backgroundColor.copy(alpha = 0.25f),
-                                    backgroundColor.copy(alpha = 0.40f),
-                                    backgroundColor.copy(alpha = 0.50f),
-                                    backgroundColor.copy(alpha = 0.60f),
-                                    backgroundColor.copy(alpha = 0.80f),
-                                    backgroundColor.copy(alpha = 0.90f),
-                                    backgroundColor.copy(alpha = 1.0f)
-                                )
-                            )
-                        )
-                )
             }
-        }
-        Card(
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(18.dp)
-                .align(Alignment.Center),
-            shape = Shapes.large,
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            SubcomposeAsyncImage(
-                model = imageUrl,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = imageModifier,
-                error = {
-                    SubcomposeAsyncImageContent(
-                        painter = DefaultImages.EmptyImageStart()
-                    )
-                },
-                success = {
-                    SubcomposeAsyncImageContent(modifier = modifier)
-                }
-            )
         }
     }
 }

@@ -48,6 +48,7 @@ fun AlbumImage(
     imageLoader: ImageLoader = SingletonImageLoader.get(LocalPlatformContext.current),
     alignment: Alignment = Alignment.Center,
     loadOriginal: Boolean = false,
+    raceOriginal: Boolean = false,
 ) {
     val context = LocalPlatformContext.current
     var retained by remember(url) { mutableStateOf(initialPainter?.let { AlbumPreview(it, false) }) }
@@ -67,7 +68,7 @@ fun AlbumImage(
             candidates.flatMap { listOf(albumOriginalMemoryKey(url, it), albumImageUrl(url, it)) })
             .firstOrNull { imageLoader.memoryCache?.get(MemoryCache.Key(it)) != null } ?: tiny
     }
-    val main = rememberAlbumImageLoad(url, size, placeholderKey, loadOriginal, imageLoader)
+    val main = rememberAlbumImageLoad(url, size, placeholderKey, loadOriginal, imageLoader, raceOriginal = raceOriginal)
     val mainState = main.state
     val success = mainState as? AsyncImagePainter.State.Success
     // The original can arrive before the proxy's fade finishes. Fade from that image, never back to the tiny preview.

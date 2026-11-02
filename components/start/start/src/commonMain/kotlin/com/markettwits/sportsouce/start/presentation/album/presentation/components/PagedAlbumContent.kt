@@ -31,6 +31,7 @@ import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.screens.PhotoHeaderSystemBars
 import com.markettwits.core_ui.items.screens.SaucePhotoViewer
 import com.markettwits.core_ui.items.components.topbar.*
+import com.markettwits.core_ui.items.screens.photoViewerHostInsets
 import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.start.presentation.album.domain.AlbumPhoto
 import com.markettwits.sportsouce.start.presentation.album.domain.StartAlbumDetails
@@ -79,7 +80,10 @@ internal fun PagedAlbumContent(
     val sources = remember { AlbumPhotoSources() }
     val selection = albumState.selectedPhotos
     val selectionMode = selection.isNotEmpty()
-    val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+    // The viewer can hide system bars in its own window. Their visibility must
+    // not resize the album underneath or move the shared-transition destination.
+    val systemBarInsets = photoViewerHostInsets()
+    val bottomPadding = systemBarInsets.asPaddingValues().calculateBottomPadding() +
         if (selectionMode) 100.dp else 0.dp
     val loadingMetadata = albumState.album == null && albumState.isLoading
     val album = albumState.album ?: if (loadingMetadata) StartAlbumDetails(
@@ -98,7 +102,7 @@ internal fun PagedAlbumContent(
     }
     val headerItems = (if (album == null) 0 else if (hasTags) 3 else 2) + if (albumState.error != null) 1 else 0
     val density = LocalDensity.current
-    val toolbarHeight = 56.dp + WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val toolbarHeight = 56.dp + systemBarInsets.asPaddingValues().calculateTopPadding()
     val pinnedHeaderHeight = with(density) { toolbarHeight.roundToPx() } + filtersHeight
     SauceTopBarOverlayHost {
         BoxWithConstraints(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {

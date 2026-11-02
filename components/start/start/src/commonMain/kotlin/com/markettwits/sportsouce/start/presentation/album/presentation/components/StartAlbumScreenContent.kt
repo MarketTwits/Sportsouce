@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.buttons.ScrollToTopBabButton
 import com.markettwits.core_ui.items.screens.SaucePhotoViewer
+import com.markettwits.core_ui.items.screens.photoViewerHostInsets
 import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.start.presentation.common.components.StartPhoto
 import kotlinx.coroutines.launch
@@ -67,7 +68,7 @@ internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSe
     val photos = remember(items) { items.mapIndexed { index, url -> AlbumPhoto(index, url) } }
     LazyVerticalGrid(columns = AlbumGridCells, state = state, modifier = modifier.fillMaxSize()
         .albumSelectionGesture(state, sources, photos, selection) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
-        contentPadding = PaddingValues(top = 12.dp, bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+        contentPadding = PaddingValues(top = 12.dp, bottom = photoViewerHostInsets().asPaddingValues().calculateBottomPadding() +
             if (selection.isNotEmpty()) 100.dp else 0.dp),
         horizontalArrangement = Arrangement.spacedBy(1.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
         itemsIndexed(items, key = { index, _ -> "photo-$index" }) { index, url ->

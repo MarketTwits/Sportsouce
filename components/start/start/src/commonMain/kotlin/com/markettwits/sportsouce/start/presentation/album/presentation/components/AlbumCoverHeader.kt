@@ -37,6 +37,7 @@ import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.components.topbar.SauceTopBarOverlay
 import com.markettwits.core_ui.items.image.AlbumImage
 import com.markettwits.core_ui.items.image.AlbumImageSize
+import com.markettwits.core_ui.items.screens.photoViewerHostInsets
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.presentation.album.domain.StartAlbumDetails
 
@@ -143,7 +144,7 @@ internal fun AlbumCoverToolbar(title: String, progress: () -> Float, hasCover: B
     val pinned = if (hasCover) albumCoverPinnedAlpha(progress()) else 1f
     val foreground = if (hasCover) lerp(Color.White, colors.textPrimary, ((pinned - .4f) / .2f).coerceIn(0f, 1f)) else colors.textPrimary
     SauceTopBarOverlay(glassAlpha = { pinned }) {
-        Row(Modifier.fillMaxWidth().statusBarsPadding()
+        Row(Modifier.fillMaxWidth().windowInsetsPadding(photoViewerHostInsets().only(WindowInsetsSides.Top))
             .heightIn(min = 56.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = goBack, modifier = Modifier.size(48.dp), shape = CircleShape) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "Назад", tint = foreground)

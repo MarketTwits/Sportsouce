@@ -5,6 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.platform.WindowInfo
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
+import com.markettwits.sportsouce.start.presentation.start.component.CommentData
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.*
@@ -96,6 +101,38 @@ class StartCommentEditorTest {
             assertEquals(1, opened)
             assertEquals(0, changed)
             assertTrue(preview.boundsInRoot.left >= 16f && preview.boundsInRoot.right <= 304f)
+        }
+    }
+
+    @Test fun viewingAThreadLeavesTheEditorUnfocusedWhileReplyRequestsTheKeyboard() = java.awt.EventQueue.invokeAndWait {
+        for (focusEditor in listOf(false, true)) {
+            var focused by mutableStateOf(false)
+            val window = object : WindowInfo { override val isWindowFocused get() = focused }
+            var keyboardShows = 0
+            val keyboard = object : SoftwareKeyboardController {
+                override fun show() { keyboardShows++ }
+                override fun hide() = Unit
+            }
+            ImageComposeScene(width = 390, height = 300) {
+                CompositionLocalProvider(LocalWindowInfo provides window, LocalSoftwareKeyboardController provides keyboard) {
+                    SauceTheme {
+                        StartCommentTextField(isLoading = false,
+                            mode = CommentMode.Reply("Автор", 1, CommentData("Автор", "", "Вопрос", "", emptyList()), focusEditor),
+                            onClickCloseReply = {}, sendComment = {})
+                    }
+                }
+            }.use { scene ->
+                scene.settle()
+                assertFalse(scene.editor().config[SemanticsProperties.Focused])
+                focused = true; scene.settle()
+                assertEquals(focusEditor, scene.editor().config[SemanticsProperties.Focused])
+                if (focusEditor) assertTrue(keyboardShows > 0)
+                else {
+                    assertEquals(0, keyboardShows)
+                    scene.editor().config[SemanticsActions.OnClick].action!!.invoke(); scene.settle()
+                    assertTrue(scene.editor().config[SemanticsProperties.Focused], "The viewing mode must still allow composing by hand")
+                }
+            }
         }
     }
 

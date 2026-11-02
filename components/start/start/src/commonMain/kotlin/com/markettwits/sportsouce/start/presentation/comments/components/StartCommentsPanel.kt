@@ -50,6 +50,7 @@ fun StartCommentsCompactPanel(
     maxComments: Int = 5,
     onClickViewAll: () -> Unit,
     onClickReply: (String, Int) -> Unit,
+    onClickShowReplies: (Int) -> Unit,
     onClickTextField: () -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -85,7 +86,7 @@ fun StartCommentsCompactPanel(
                         },
                         replies = it.replies,
                         showRepliesButton = false,
-                        onClickShowReplies = null
+                        onClickShowReplies = { onClickShowReplies(it.id) }
                     )
                 }
             } else {

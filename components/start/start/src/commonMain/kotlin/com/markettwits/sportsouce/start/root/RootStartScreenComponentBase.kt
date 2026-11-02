@@ -185,17 +185,8 @@ class RootStartScreenComponentBase(
                     startId = config.startId,
                     mode = config.mode,
                     onBack = navigation::pop,
-                    onNavigateToReplies = { commentId: Int, replier: String, commentData: com.markettwits.sportsouce.start.presentation.start.component.CommentData ->
-                        navigation.pushNew(
-                            RootStartScreenComponent.Config.StartComments(
-                                startId = config.startId,
-                                mode = CommentMode.Reply(
-                                    replier = replier,
-                                    messageId = commentId,
-                                    parentComment = commentData
-                                )
-                            )
-                        )
+                    onNavigateToReplies = { mode ->
+                        navigation.pushNew(RootStartScreenComponent.Config.StartComments(config.startId, mode))
                     }
                 )
                 RootStartScreenComponent.Child.StartComments(component)

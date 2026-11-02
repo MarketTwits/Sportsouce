@@ -54,13 +54,13 @@ internal fun StartCommentTextField(
     val submit = { if (canSend) sendComment(comment) }
 
     LaunchedEffect(mode, readOnly, windowFocused) {
-        if (mode is CommentMode.Reply && !readOnly && windowFocused) {
+        if (mode is CommentMode.Reply && mode.focusEditor && !readOnly && windowFocused) {
             withFrameNanos { }
             focusRequester.requestFocus()
         }
     }
     LaunchedEffect(mode, readOnly, windowFocused, editorFocused) {
-        if (mode is CommentMode.Reply && !readOnly && windowFocused && editorFocused) {
+        if (mode is CommentMode.Reply && mode.focusEditor && !readOnly && windowFocused && editorFocused) {
             withFrameNanos { }
             keyboard?.show()
         }

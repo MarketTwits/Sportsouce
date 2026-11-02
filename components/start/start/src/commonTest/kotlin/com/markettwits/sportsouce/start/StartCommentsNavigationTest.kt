@@ -34,6 +34,20 @@ class StartCommentsNavigationTest {
         assertEquals(start, stack.value.active.instance)
     }
 
+    @Test fun viewingAThreadPreservesItsFocusIntentAndBackStillReturnsToComments() {
+        val context = DefaultComponentContext(LifecycleRegistry().apply { resume() })
+        val navigation = StackNavigation<Config>()
+        val start = Config.Start(StartScreenInput.Id(318))
+        val stack = context.childStack(source = navigation, serializer = null, initialConfiguration = start,
+            childFactory = { config, _ -> config })
+        val view = CommentMode.Reply("Автор", 172,
+            CommentData("Автор", "", "Вопрос", "24 октября", emptyList()), focusEditor = false)
+        navigation.openStartComments(318, view)
+        assertFalse(assertIs<CommentMode.Reply>(assertIs<Config.StartComments>(stack.value.active.configuration).mode).focusEditor)
+        navigation.pop()
+        assertEquals(Config.StartComments(318, CommentMode.Base), stack.value.active.configuration)
+    }
+
     @Test fun openingAllCommentsAddsOneScreenOnly() {
         val context = DefaultComponentContext(LifecycleRegistry().apply { resume() })
         val navigation = StackNavigation<Config>()

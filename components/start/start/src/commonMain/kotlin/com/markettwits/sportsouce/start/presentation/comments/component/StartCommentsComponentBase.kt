@@ -23,7 +23,7 @@ class StartCommentsComponentBase(
     private val startId: Int? = null,
     mode: CommentMode = CommentMode.Base,
     private val onBack: () -> Unit = {},
-    private val onNavigateToReplies: (Int, String, com.markettwits.sportsouce.start.presentation.start.component.CommentData) -> Unit = { _, _, _ -> },
+    private val onNavigateToReplies: (CommentMode.Reply) -> Unit = {},
 ) : ComponentContext by context, StartCommentsComponent, BottomBarComponentHandler() {
 
     private val store = instanceKeeper.getStore {
@@ -53,7 +53,7 @@ class StartCommentsComponentBase(
                     val comment = currentState.comments.rows.find { it.id == label.commentId }
                     comment?.let {
                         val commentData = it.toCommentData()
-                        onNavigateToReplies(label.commentId, it.user.name, commentData)
+                        onNavigateToReplies(CommentMode.Reply(it.user.name, label.commentId, commentData, focusEditor = label.focusEditor))
                     }
                 }
             }

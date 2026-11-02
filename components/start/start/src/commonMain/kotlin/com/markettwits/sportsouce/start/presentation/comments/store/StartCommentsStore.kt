@@ -65,7 +65,7 @@ interface StartCommentsStore : Store<StartCommentsStore.Intent, StartCommentsSto
 
     sealed interface Label {
         data object OnGoBack : Label
-        data class OnNavigateToReplies(val commentId: Int) : Label
+        data class OnNavigateToReplies(val commentId: Int, val focusEditor: Boolean = false) : Label
     }
 }
 
@@ -109,7 +109,7 @@ class StartCommentsStoreFactory(
                 is StartCommentsStore.Intent.OnClickCloseReply -> if (!state().isLoadingSendComment) publish(StartCommentsStore.Label.OnGoBack)
                 is StartCommentsStore.Intent.OnClickReply -> if (!state().isLoadingSendComment) {
                     state().comments.rows.find { it.id == intent.commentId }?.let {
-                        publish(StartCommentsStore.Label.OnNavigateToReplies(it.id))
+                        publish(StartCommentsStore.Label.OnNavigateToReplies(it.id, focusEditor = true))
                     }
                 }
                 is StartCommentsStore.Intent.OnClickSendComment -> state().startId?.let {

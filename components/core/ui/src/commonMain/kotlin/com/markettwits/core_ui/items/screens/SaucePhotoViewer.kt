@@ -157,7 +157,8 @@ internal fun PhotoViewerContent(
             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
     }
-    PhotoViewerSystemBars(controlsVisible)
+    // Restore bars while the overlay still covers the album, before revealing its toolbar.
+    PhotoViewerSystemBars(controlsVisible || closing)
     Box(Modifier.fillMaxSize().onGloballyPositioned { windowOrigin = it.positionInWindow() }) {
         PhotoViewerBackdropLayer(backdrop, entry.value * (1f - dragProgress), Modifier.matchParentSize())
         HorizontalPager(state = pager, key = { it }, userScrollEnabled = !zoomed && previewIndex == null && !closing && entry.value == 1f,

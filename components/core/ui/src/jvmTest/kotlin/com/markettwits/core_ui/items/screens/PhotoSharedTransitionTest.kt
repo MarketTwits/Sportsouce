@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.*
 import com.markettwits.core_ui.items.theme.SauceTheme
+import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 import kotlin.test.*
 
@@ -92,6 +93,48 @@ class PhotoSharedTransitionTest {
             assertEquals(2, dismissed)
         }
     }
+    @Test fun systemBackWithHiddenControlsPreparesTheReturnOnceAndDismissesOnlyAfterTheTransition() {
+        var request by mutableIntStateOf(0)
+        var prepares = 0
+        var dismisses = 0
+        var returnedIndex = -1
+        val ready = CompletableDeferred<Unit>()
+        val anchor = PhotoTransitionSource(source, painter, 2f)
+        var time = System.nanoTime()
+        ImageComposeScene(width = 390, height = 900) {
+            SauceTheme(darkTheme = true) {
+                PhotoViewerContent(List(4) { "" }, 2, "Фото", 4, false, {}, {}, {
+                    dismisses++; returnedIndex = it
+                }, transitionSource = anchor, closeRequest = request, prepareReturn = { index ->
+                    assertEquals(2, index)
+                    prepares++
+                    ready.await()
+                    anchor
+                })
+            }
+        }.use { scene ->
+            fun frames(count: Int) { repeat(count) { time += 16_000_000L; scene.render(time).close() } }
+            fun walk(n: SemanticsNode): List<SemanticsNode> = listOf(n) + n.children.flatMap(::walk)
+            fun nodes() = scene.semanticsOwners.flatMap { walk(it.unmergedRootSemanticsNode) }
+            frames(40)
+            var image = nodes().first { "Просмотр фотографии" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() }
+            while (!image.config.contains(SemanticsActions.OnClick)) image = checkNotNull(image.parent)
+            image.config[SemanticsActions.OnClick].action!!.invoke()
+            frames(16)
+            assertFalse(nodes().any { "Закрыть фото" in it.config.getOrNull(SemanticsProperties.ContentDescription).orEmpty() })
+            request++; frames(4)
+            assertEquals(1, prepares)
+            assertEquals(0, dismisses, "Keep the viewer mounted while restoring the return destination")
+            request++; frames(4)
+            assertEquals(1, prepares, "Repeated system Back must join the active close")
+            ready.complete(Unit); frames(4)
+            assertEquals(0, dismisses, "The shared image must finish shrinking before removing the overlay")
+            frames(30)
+            assertEquals(1, dismisses)
+            assertEquals(2, returnedIndex)
+        }
+    }
+
     @Test fun transitionFramesRenderTheSamePhotoAcrossTheDialogBoundary() {
         for (progress in listOf(0f, .5f, 1f)) {
             ImageComposeScene(width = 390, height = 900) {

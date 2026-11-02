@@ -7,6 +7,9 @@ import android.view.View
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBarsIgnoringVisibility
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowInsetsCompat
@@ -69,3 +72,7 @@ actual fun PhotoHeaderSystemBars(lightIcons: Boolean) {
     }
     SideEffect { controller.isAppearanceLightStatusBars = !lightIcons }
 }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+actual fun photoViewerHostInsets(): WindowInsets = WindowInsets.systemBarsIgnoringVisibility

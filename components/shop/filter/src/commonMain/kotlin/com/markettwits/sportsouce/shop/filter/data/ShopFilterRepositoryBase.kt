@@ -6,6 +6,7 @@ import com.markettwits.sportsouce.shop.filter.domain.ShopFilterRepository
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopOptionInfo
+import kotlinx.coroutines.CancellationException
 
 class ShopFilterRepositoryBase(
     private val service: SportSauceShopApi,
@@ -14,10 +15,10 @@ class ShopFilterRepositoryBase(
 
     override suspend fun filter(): Result<List<ShopCategoryItem>> = runCatching {
         shopFilterMapper.mapCategories(service.categories())
-    }
+    }.onFailure { if (it is CancellationException) throw it }
 
     override suspend fun options(catalogId: Int): Result<Pair<List<ShopOptionInfo>, ShopFilterPrice>> =
         runCatching {
             shopFilterMapper.mapRenderFilter(service.renderFilter(catalogId))
-        }
+        }.onFailure { if (it is CancellationException) throw it }
 }

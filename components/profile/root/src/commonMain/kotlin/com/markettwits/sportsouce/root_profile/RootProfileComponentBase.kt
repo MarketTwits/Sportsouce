@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.root_profile
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -20,6 +22,7 @@ import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdat
 class RootProfileComponentBase(
     componentContext: ComponentContext,
     private val updateStoreFactory: SelfUpdateStoreFactory,
+    private val notifications: NotificationApi,
 ) : ComponentContext by componentContext, RootProfileComponent {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -56,7 +59,9 @@ class RootProfileComponentBase(
                 RootAuthorizedProfileComponentBase(
                     componentContext = componentContext,
                     updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                     signOut = {
+                        notifications.clear()
                         navigation.replaceAll(RootProfileComponent.Config.UnAuthProfile)
                     }
                 )

@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.api.NotificationComponent
+
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponent
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
@@ -24,6 +27,9 @@ import com.markettwits.sportsouce.start.presentation.album.presentation.componen
 
 interface RootReviewComponent {
 
+    val notifications: NotificationApi
+    fun openNotifications()
+
     fun popToRoot()
 
     val childStack: Value<ChildStack<*, Child>>
@@ -41,6 +47,9 @@ interface RootReviewComponent {
 
         @Serializable
         data class Start(val startItem: StartsListItem) : Config
+
+        @Serializable
+        data class StartById(val id: Int) : Config
 
         @Serializable
         data object Random : Config
@@ -70,6 +79,9 @@ interface RootReviewComponent {
         data class Notification(val newAppVersion: NewAppVersion) : Config
 
         @Serializable
+        data object Inbox : Config
+
+        @Serializable
         data object Settings : Config
 
         @Serializable
@@ -93,6 +105,7 @@ interface RootReviewComponent {
         data class Albums(val component: RootStartsAlbumsComponent) : Child
         data class PhotoAlbum(val component: StartAlbumComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
+        data class Inbox(val component: NotificationComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
         data class Club(val component: RootClubComponent) : Child
         data class Shop(val component: RootShopCatalogComponent) : Child

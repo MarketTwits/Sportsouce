@@ -11,7 +11,7 @@ import com.markettwits.sportsouce.start.presentation.start.component.StartScreen
 
 
 @Composable
-fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
+fun AuthorizedProfileScreen(component: AuthorizedProfileComponent, unreadNotifications: Int = 0) {
 
     val state by component.state.collectAsState()
 
@@ -43,6 +43,8 @@ fun AuthorizedProfileScreen(component: AuthorizedProfileComponent) {
             onClickEditProfile = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.EditProfile)
             },
+            unreadNotifications = unreadNotifications,
+            onClickNotifications = { component.obtainOutput(AuthorizedProfileComponent.Output.Notifications) },
             onClickResults = { component.obtainOutput(AuthorizedProfileComponent.Output.MyResults) },
             onClickFavorites = {
                 component.obtainOutput(AuthorizedProfileComponent.Output.Favorites)

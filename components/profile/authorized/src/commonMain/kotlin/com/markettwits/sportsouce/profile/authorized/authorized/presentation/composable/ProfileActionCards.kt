@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
+import androidx.compose.material.icons.outlined.Notifications
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -21,9 +23,14 @@ internal fun ProfileActionCards(
     onClickFavorites: () -> Unit,
     onClickMembers: () -> Unit,
     onClickResults: () -> Unit,
+    unreadNotifications: Int = 0,
+    onClickNotifications: () -> Unit = {},
 ) {
     OnBackgroundCard(modifier) {
         Column(Modifier.padding(8.dp)) {
+            SauceActionRow("Уведомления", onClickNotifications, icon = Icons.Outlined.Notifications,
+                count = unreadNotifications.takeIf { it > 0 }?.toString())
+            HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
             SauceActionRow("Мои результаты", onClickResults, icon = Icons.Outlined.EmojiEvents)
             HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
             SauceActionRow("Избранное", onClickFavorites, icon = Icons.Default.FavoriteBorder)

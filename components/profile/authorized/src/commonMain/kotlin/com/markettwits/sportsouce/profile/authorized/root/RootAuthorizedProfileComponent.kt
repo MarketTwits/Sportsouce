@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.api.NotificationComponent
+
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.club.root.RootClubComponent
@@ -21,12 +24,16 @@ import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentCom
 
 interface RootAuthorizedProfileComponent {
 
+    val notifications: NotificationApi
     fun popToRoot()
 
     val childStack: Value<ChildStack<*, Child>>
 
     @Serializable
     sealed class Config {
+        @Serializable
+        data object Inbox : Config()
+
         @Serializable
         data object Members : Config()
 
@@ -72,6 +79,7 @@ interface RootAuthorizedProfileComponent {
 
 
     sealed class Child {
+        data class Inbox(val component: NotificationComponent) : Child()
 
         data class ResultProtocol(val component: StartMemberResultsComponent) : Child()
 

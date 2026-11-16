@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.arkivanov.decompose.ComponentContext
 import com.markettwits.sportsouce.profile.results.presentation.component.MyResultsComponentBase
 import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
@@ -27,11 +33,18 @@ abstract class RootAuthorizedProfileComponentAbstract(
     componentContext: ComponentContext,
     private val signOut: () -> Unit,
     private val updateStoreFactory: SelfUpdateStoreFactory,
+    override val notifications: NotificationApi,
 ) : ComponentContext by componentContext, RootAuthorizedProfileComponent {
 
     private val scope = getOrCreateKoinScope(
         listOf(rootProfileModule)
     )
+
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
 
     private val navigation = StackNavigation<RootAuthorizedProfileComponent.Config>()
 
@@ -53,6 +66,12 @@ abstract class RootAuthorizedProfileComponentAbstract(
         config: RootAuthorizedProfileComponent.Config,
         componentContext: ComponentContext,
     ): RootAuthorizedProfileComponent.Child = when (config) {
+        RootAuthorizedProfileComponent.Config.Inbox -> Inbox(
+            notifications.createComponent(componentContext, onBack = { navigation.pop() }, onOpenStart = { id ->
+                navigation.pushNew(RootAuthorizedProfileComponent.Config.Start(StartScreenInput.Id(id)))
+            })
+        )
+
         is RootAuthorizedProfileComponent.Config.AuthProfile -> AuthProfile(
             AuthorizedProfileComponentBase(
                 componentContext = componentContext,

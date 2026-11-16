@@ -14,16 +14,18 @@ fun StartStatusBadge(
     centered: Boolean = false,
     singleLine: Boolean = false,
 ) {
-    val tone = when (statusCode) {
-        1, 2, 4 -> SauceStatusTone.Warning
-        3, 5 -> SauceStatusTone.Success
-        else -> SauceStatusTone.Neutral
-    }
     SauceStatusBadge(
         modifier = modifier,
         label = if (compact) startStatusCompactMessage(statusCode) else startStatusMessage(statusCode),
-        tone = tone,
+        tone = startStatusTone(statusCode),
         centered = centered,
         singleLine = singleLine,
     )
+}
+
+/** Shared semantic colors for event statuses in cards and related notifications. */
+fun startStatusTone(statusCode: Int): SauceStatusTone = when (statusCode) {
+    1, 2, 4 -> SauceStatusTone.Warning
+    3, 5 -> SauceStatusTone.Success
+    else -> SauceStatusTone.Neutral
 }

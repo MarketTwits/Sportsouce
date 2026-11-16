@@ -49,6 +49,8 @@ internal fun ProfileScreenContent(
     onClickReceipts: () -> Unit,
     onClickFavorites: () -> Unit,
     onClickResults: () -> Unit,
+    unreadNotifications: Int = 0,
+    onClickNotifications: () -> Unit = {},
     onClickEditProfile: () -> Unit,
     onClickRegistration: (StartOrderInfo) -> Unit,
     onClickRecentStart: (StartsListItem) -> Unit,
@@ -79,7 +81,7 @@ internal fun ProfileScreenContent(
                         ProfileRegistrationsBlock(registrations = userRegistrations,
                             registrationsCount = userRegistrationsCount,
                             onClickRegistration = onClickRegistration, onClickViewAll = onClickStarts)
-                        ProfileActionCards(modifier = Modifier.padding(horizontal = 16.dp), onClickFavorites = onClickFavorites, onClickMembers = onClickMembers, onClickResults = onClickResults)
+                        ProfileActionCards(modifier = Modifier.padding(horizontal = 16.dp), onClickFavorites = onClickFavorites, onClickMembers = onClickMembers, onClickResults = onClickResults, unreadNotifications = unreadNotifications, onClickNotifications = onClickNotifications)
                     }
                     Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         ProfileSectionHeader("Покупки и оплаты")

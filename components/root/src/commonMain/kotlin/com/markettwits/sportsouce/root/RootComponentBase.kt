@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.impl.di.userNotificationModule
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
@@ -27,7 +33,14 @@ class RootComponentBase(
 
     private val scope = instanceKeeper.getOrCreate {
         ComponentKoinContext()
-    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule))
+    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule, userNotificationModule))
+
+    private val notifications: NotificationApi = scope.get()
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
 
     private val updateStoreFactory: SelfUpdateStoreFactory = scope.get()
 
@@ -74,6 +87,7 @@ class RootComponentBase(
                     componentContext = componentContext,
                     deeplink = null,
                     updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                 )
             )
 
@@ -81,6 +95,7 @@ class RootComponentBase(
                 RootProfileComponentBase(
                     componentContext = componentContext,
                     updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                 )
             )
 
@@ -88,6 +103,7 @@ class RootComponentBase(
                 RootReviewComponentBase(
                     context = componentContext,
                     updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                 )
             )
         }

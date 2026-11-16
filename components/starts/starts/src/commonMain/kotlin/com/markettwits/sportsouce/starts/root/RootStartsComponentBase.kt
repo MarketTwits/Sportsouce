@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.starts.root
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.essenty.instancekeeper.getOrCreate
@@ -18,6 +24,7 @@ class RootStartsComponentBase(
     private val componentContext: ComponentContext,
     private val deeplink: Deeplink.Starts? = null,
     private val updateStoreFactory: SelfUpdateStoreFactory,
+    override val notifications: NotificationApi,
 ) : RootStartsComponent, ComponentContext by componentContext {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -28,6 +35,12 @@ class RootStartsComponentBase(
         listOf(startsModule)
     )
 
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
+
     private val navigation = StackNavigation<RootStartsComponent.Config>()
 
     override val configStack = childStack(
@@ -37,6 +50,8 @@ class RootStartsComponentBase(
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    override fun openNotifications() { navigation.pushNew(RootStartsComponent.Config.Inbox) }
 
     override fun popToRoot() {
         navigation.replaceAll(RootStartsComponent.Config.Starts)
@@ -156,6 +171,12 @@ class RootStartsComponentBase(
                     context = componentContext,
                     pop = navigation::pop,
                 )
+            )
+
+            is RootStartsComponent.Config.Inbox -> RootStartsComponent.Child.Inbox(
+                notifications.createComponent(componentContext, onBack = { navigation.pop() }, onOpenStart = { id ->
+                    navigation.pushNew(RootStartsComponent.Config.Start(null, id.toString()))
+                })
             )
 
             is RootStartsComponent.Config.Settings -> RootStartsComponent.Child.Settings(

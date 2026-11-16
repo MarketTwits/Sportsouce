@@ -24,11 +24,13 @@ import com.markettwits.sportsouce.shop.catalog.presentation.components.*
 import com.markettwits.sportsouce.shop.catalog.presentation.screen.ShopCatalogScreen
 import com.markettwits.sportsouce.shop.catalog.presentation.component.ShopCatalogComponent
 import com.markettwits.sportsouce.shop.catalog.presentation.component.bindShopFilterBackHandler
+import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.backhandler.BackDispatcher
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.essenty.lifecycle.destroy
 import com.arkivanov.essenty.lifecycle.create
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.sportsouce.shop.catalog.presentation.store.ShopCatalogStore
 import com.markettwits.sportsouce.shop.cart.presentation.catalog.component.ShopCartCatalogComponent
 import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibilityListener
@@ -42,10 +44,13 @@ import com.markettwits.sportsouce.shop.item.presentation.component.ShopItemPageC
 import com.markettwits.sportsouce.shop.item.presentation.screen.ShopItemPageScreen
 import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore
 import com.markettwits.sportsouce.shop.item.domain.models.ShopExtraOptions
+import com.markettwits.sportsouce.shop.filter.domain.ShopFilterRepository
 import com.markettwits.sportsouce.shop.filter.domain.models.*
 import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponent
+import com.markettwits.sportsouce.shop.filter.presentation.component.ShopFilterComponentBase
 import com.markettwits.sportsouce.shop.filter.presentation.screen.ShopFilterScreen
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
+import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStoreFactory
 import com.markettwits.sportsouce.shop.order.presentation.component.ShopCreateOrderComponent
 import com.markettwits.sportsouce.shop.order.presentation.screen.ShopCreateOrderScreen
 import com.markettwits.sportsouce.shop.order.presentation.store.ShopCreateOrderStore
@@ -53,6 +58,7 @@ import com.markettwits.sportsouce.shop.order.domain.model.*
 import com.markettwits.sportsouce.shop.search.presentation.components.publish.ShopSearchBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.test.resetMain
@@ -327,6 +333,55 @@ class ShopDesignSystemTest {
             assertEquals(6, catalogue.events.count { it == ShopCatalogStore.Intent.OnClickFilter })
             assertFalse(catalogue.events.contains(ShopCatalogStore.Intent.OnClickGoBack))
         }
+    }
+
+    @Test fun loadingFiltersDoNotBlockCatalogueBackOrDrawerClose() {
+        val catalogue = FakeCatalogue()
+        val cart = object : ShopCartCatalogComponent {
+            override val state = MutableStateFlow<ShopCartCatalogComponent.State>(ShopCartCatalogComponent.State.Empty)
+            override fun onClickCart() {}
+        }
+        val filter = FakeFilter(ShopFilterStore.State(isLoading = true))
+        ImageComposeScene(width = 390, height = 1000) {
+            Palette(false) { ShopCatalogScreen(catalogComponent = catalogue, cartComponent = cart, filterComponent = filter) }
+        }.use { scene ->
+            scene.settle()
+            scene.pointerClick(scene.clickable(assertNotNull(scene.label("Назад"))))
+            assertEquals(ShopCatalogStore.Intent.OnClickGoBack, catalogue.events.single())
+
+            scene.pointerClick(scene.clickable(assertNotNull(scene.label("Фильтры"))))
+            assertTrue(catalogue.state.value.isShowFilter)
+            assertNotNull(scene.label("Загрузка фильтров"))
+            scene.pointerClick(scene.clickable(assertNotNull(scene.label("Закрыть фильтры"))))
+            assertFalse(catalogue.state.value.isShowFilter)
+            assertTrue(filter.events.isEmpty())
+        }
+    }
+
+    @Test fun leavingTheCatalogueCancelsFilterPreload() {
+        val lifecycle = LifecycleRegistry().apply { create() }
+        var cancelled = false
+        val repository = object : ShopFilterRepository {
+            override suspend fun filter(): Result<List<ShopCategoryItem>> = try {
+                awaitCancellation()
+            } finally {
+                cancelled = true
+            }
+
+            override suspend fun options(catalogId: Int): Result<Pair<List<ShopOptionInfo>, ShopFilterPrice>> =
+                error("Options must wait for categories")
+        }
+        val component = ShopFilterComponentBase(
+            componentContext = DefaultComponentContext(lifecycle),
+            store = ShopFilterStoreFactory(DefaultStoreFactory(), repository).create(),
+            output = object : ShopFilterComponent.Output {
+                override fun goBack() = error("Filter must not navigate on cancellation")
+                override fun applyFilter(result: ShopFilterResult) = error("Filter must not apply on cancellation")
+            },
+        )
+        assertTrue(component.state.value.isLoading)
+        lifecycle.destroy()
+        assertTrue(cancelled)
     }
 
     @Test fun systemBackClosesFilterBeforeParentNavigationAndUnregistersOnDestroy() {

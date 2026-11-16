@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.notification.impl.presentation.screen.NotificationScreen
+
+import com.markettwits.sportsouce.notification.impl.presentation.components.NotificationButton
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +26,7 @@ import com.markettwits.sportsouce.starts.random.root.presentation.RootRandomStar
 
 @Composable
 fun RootReviewScreen(component: RootReviewComponent, notification: @Composable (Modifier) -> Unit = {}) {
+    val unread by component.notifications.unreadCount.collectAsState()
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = component.childStack,
         animation = stackAnimation(fade()),
@@ -28,7 +35,8 @@ fun RootReviewScreen(component: RootReviewComponent, notification: @Composable (
             is RootReviewComponent.Child.Review -> {
                 ReviewScreen(
                     component = child.component,
-                    notification = notification)
+                    notification = notification,
+                    toolbarActions = { NotificationButton(unread, component::openNotifications) })
             }
 
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
@@ -41,6 +49,7 @@ fun RootReviewScreen(component: RootReviewComponent, notification: @Composable (
             is RootReviewComponent.Child.News -> RootNewsScreen(component = child.component)
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
             is RootReviewComponent.Child.Notification -> SelfUpdateScreen(component = child.component)
+            is RootReviewComponent.Child.Inbox -> NotificationScreen(child.component)
             is RootReviewComponent.Child.Settings -> RootSettingsScreen(component = child.component)
             is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
             is RootReviewComponent.Child.Shop -> RootShopCatalogScreen(component = child.component)

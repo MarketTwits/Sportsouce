@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.review.root
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponentBase
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
@@ -38,8 +44,15 @@ import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRando
 class RootReviewComponentBase(
     context: ComponentContext,
     private val updateStoreFactory: SelfUpdateStoreFactory,
+    override val notifications: NotificationApi,
 ) : RootReviewComponent,
     ComponentContext by context {
+
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
 
     private val navigation = StackNavigation<RootReviewComponent.Config>()
 
@@ -66,6 +79,8 @@ class RootReviewComponentBase(
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    override fun openNotifications() { navigation.pushNew(RootReviewComponent.Config.Inbox) }
 
     override fun popToRoot() {
         navigation.popTo(0)
@@ -164,6 +179,10 @@ class RootReviewComponentBase(
                 )
             )
 
+            is RootReviewComponent.Config.StartById -> RootReviewComponent.Child.Start(
+                RootStartScreenComponentBase(componentContext, StartScreenInput.Id(config.id), pop = navigation::pop)
+            )
+
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
                 RootStartScreenComponentBase(
                     context = componentContext,
@@ -235,6 +254,12 @@ class RootReviewComponentBase(
                     storeFactory = updateStoreFactory,
                     goBack = navigation::pop
                 )
+            )
+
+            is RootReviewComponent.Config.Inbox -> RootReviewComponent.Child.Inbox(
+                notifications.createComponent(componentContext, onBack = { navigation.pop() }, onOpenStart = { id ->
+                    navigation.pushNew(RootReviewComponent.Config.StartById(id))
+                })
             )
 
             is RootReviewComponent.Config.Settings -> RootReviewComponent.Child.Settings(

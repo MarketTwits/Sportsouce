@@ -23,7 +23,12 @@ class ProfileNavigationResetTest {
         val dependencies = ComponentKoinContext()
         try {
             val factory = dependencies.getOrCreateKoinScope(listOf(notificationModule)).get<SelfUpdateStoreFactory>()
-            val root = RootAuthorizedProfileComponentBase(DefaultComponentContext(lifecycle), factory, {})
+            val root = RootAuthorizedProfileComponentBase(DefaultComponentContext(lifecycle), factory, {}, object : com.markettwits.sportsouce.notification.api.NotificationApi {
+                override val unreadCount = kotlinx.coroutines.flow.MutableStateFlow(0)
+                override suspend fun refreshUnreadCount() = Unit
+                override fun clear() = Unit
+                override fun createComponent(context: com.arkivanov.decompose.ComponentContext, onBack: () -> Unit, onOpenStart: (Int) -> Unit): com.markettwits.sportsouce.notification.api.NotificationComponent = error("Not opened by this test")
+            })
             val dashboard = assertIs<RootAuthorizedProfileComponent.Child.AuthProfile>(root.childStack.value.active.instance)
             dashboard.component.obtainOutput(AuthorizedProfileComponent.Output.MyResults)
             val results = assertIs<RootAuthorizedProfileComponent.Child.MyResults>(root.childStack.value.active.instance)

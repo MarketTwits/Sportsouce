@@ -18,6 +18,7 @@ kotlin {
             implementation(projects.components.core.koin)
             implementation(libs.koin.core)
             implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)
         }

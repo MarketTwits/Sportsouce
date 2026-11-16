@@ -28,6 +28,8 @@ kotlin {
         implementation(projects.components.starts.startsAlbums)
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
         implementation(projects.components.core.koin)
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.impl)

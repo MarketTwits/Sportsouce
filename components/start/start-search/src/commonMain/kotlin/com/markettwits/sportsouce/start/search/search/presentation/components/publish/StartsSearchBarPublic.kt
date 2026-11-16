@@ -18,6 +18,7 @@ fun StartsSearchBarPublic(
     modifier: Modifier = Modifier,
     onClickSearchPanel: () -> Unit,
     onClickSettings: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     val colors = SauceTheme.colors
     Row(
@@ -44,5 +45,6 @@ fun StartsSearchBarPublic(
         IconButton(onClick = onClickSettings, modifier = Modifier.size(48.dp)) {
             Icon(Icons.Default.Settings, contentDescription = "Настройки", tint = colors.textSecondary)
         }
+        actions()
     }
 }

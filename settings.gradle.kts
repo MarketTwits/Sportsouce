@@ -76,6 +76,8 @@ include(
     ":components:selfupdater:googleplay",
     ":components:settings:api",
     ":components:settings:impl",
+    ":components:notification:api",
+    ":components:notification:impl",
     ":components:inappnotification:api",
     ":components:inappnotification:impl",
     ":components:analytics:crashlytics",

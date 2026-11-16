@@ -27,6 +27,7 @@ import com.markettwits.sportsouce.start.search.search.presentation.components.pu
 fun ReviewScreen(
     component: ReviewComponent,
     notification: @Composable ((Modifier) -> Unit),
+    toolbarActions: @Composable () -> Unit = {},
 ) {
     val state by component.value.collectAsState()
     CollapsingToolbarScaffold(
@@ -40,7 +41,7 @@ fun ReviewScreen(
                     component.obtainEvent(ReviewStore.Intent.OnClickSearch)
                 }, onClickSettings = {
                     component.obtainEvent(ReviewStore.Intent.OnClickSettings)
-                })
+                }, actions = { toolbarActions() })
         }
     ) {
         PullToRefreshScreen(

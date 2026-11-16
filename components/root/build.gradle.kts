@@ -25,6 +25,8 @@ kotlin {
             implementation(projects.components.selfupdater.components)
             implementation(projects.components.inappnotification.api)
             implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
             implementation(projects.components.core.koin)
             implementation(projects.components.deeplink.api)
             implementation(libs.bundles.decompose.compose)

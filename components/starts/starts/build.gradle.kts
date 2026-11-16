@@ -24,6 +24,8 @@ kotlin {
         implementation(projects.components.start.start)
         implementation(projects.components.start.startSearch)
         implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
         implementation(projects.components.analytics.crashlytics)
         implementation(projects.components.starts.startsCommon)
         implementation(projects.components.deeplink.api)

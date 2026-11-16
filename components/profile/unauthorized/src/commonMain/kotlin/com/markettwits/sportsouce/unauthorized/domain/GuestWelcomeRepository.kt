@@ -3,7 +3,7 @@ package com.markettwits.sportsouce.unauthorized.domain
 interface GuestWelcomeRepository {
     /** Only local storage is read here; opening the profile never waits for the network. */
     suspend fun cachedContent(): GuestWelcomeContent
-    /** Validated updates are saved for the next welcome visit, never published into an active one. */
+    /** Saves validated updates. A screen showing local content can read them after this returns. */
     suspend fun refresh()
 }
 

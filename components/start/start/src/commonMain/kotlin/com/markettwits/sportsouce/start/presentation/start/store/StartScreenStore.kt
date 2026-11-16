@@ -23,6 +23,7 @@ import com.markettwits.sportsouce.start.domain.StartItem
 import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
+import com.markettwits.sportsouce.start.domain.requiresStartSignIn
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
@@ -320,7 +321,12 @@ class StartScreenStoreFactory(
                         dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
                     }.onFailure {
                         dispatch(Msg.StartFavoriteUpdated(favorite))
-                        dispatch(TriggerEvent(it.mapToSauceError().mapToString(), false))
+                        val message = when {
+                            !it.requiresStartSignIn() -> it.mapToSauceError().mapToString()
+                            favorite.isFavorite -> "Войдите в аккаунт, чтобы убрать старт из избранного."
+                            else -> "Войдите в аккаунт, чтобы добавить старт в избранное."
+                        }
+                        dispatch(TriggerEvent(message, false))
                     }
                 }
             }

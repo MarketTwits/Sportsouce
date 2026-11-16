@@ -225,10 +225,11 @@ internal class StartRepositoryBase(
                     token = token
                 )
             CommentUiState.Success
-        } catch (e: kotlinx.coroutines.CancellationException) {
+        } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            CommentUiState.Error(e.mapToSauceError().mapToString())
+            if (e.requiresStartSignIn()) CommentUiState.AuthorizationRequired
+            else CommentUiState.Error(e.mapToSauceError().mapToString())
         }
     }
 

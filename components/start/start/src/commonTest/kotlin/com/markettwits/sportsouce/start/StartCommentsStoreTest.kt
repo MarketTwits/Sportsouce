@@ -7,6 +7,8 @@ import com.arkivanov.essenty.lifecycle.destroy
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponentBase
 import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.StateEventWithContentTriggered
 import com.markettwits.sportsouce.start.domain.*
 import com.markettwits.sportsouce.start.presentation.comments.store.*
 import com.markettwits.sportsouce.start.presentation.comments.store.StartCommentsStore.Intent
@@ -72,6 +74,32 @@ class StartCommentsStoreTest {
             assertIs<CommentMode.Reply>(store.state.mode)
             assertEquals("", store.state.comment)
         } finally { store.dispose() }
+    }
+
+    @Test fun signedOutSendExplainsHowToContinueAndKeepsTheDraft() = runTest {
+        val repo = FakeComments()
+        val modes = listOf(
+            CommentMode.Base to "Войдите в аккаунт, чтобы оставить комментарий.",
+            CommentMode.Reply("Имя", 1, repo.rows.single().toCommentData()) to
+                "Войдите в аккаунт, чтобы ответить на комментарий.",
+        )
+        for ((mode, expectedMessage) in modes) {
+            repo.response = CompletableDeferred(CommentUiState.AuthorizationRequired)
+            val store = StartCommentsStoreFactory(DefaultStoreFactory(), repo).create(mode)
+            try {
+                store.accept(Intent.ApplyStartId(318))
+                store.accept(Intent.OnCommentChanged("Мой текст"))
+                store.accept(Intent.OnClickSendComment(store.state.comment))
+                runCurrent()
+
+                val event = assertIs<StateEventWithContentTriggered<*>>(store.state.event).content
+                assertEquals(EventContent(false, expectedMessage), event)
+                assertEquals("Мой текст", store.state.comment)
+                assertFalse(store.state.isLoadingSendComment)
+            } finally {
+                store.dispose()
+            }
+        }
     }
 
     @Test fun filtersUseServerFlagsAndRefreshUpdatesUnansweredCountWithoutChangingFilter() = runTest {

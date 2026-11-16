@@ -25,7 +25,10 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
 import com.markettwits.core_ui.items.components.navigation.NavigationViewport
+import com.markettwits.core_ui.items.event.EventContent
+import com.markettwits.core_ui.items.event.StateEventWithContentTriggered
 import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.auth.cloud.model.common.AuthException
 import com.markettwits.sportsouce.start.presentation.start.components.StartDetailsBody
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory
@@ -400,6 +403,38 @@ class StartDetailsScreenTest {
             }
         }
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun signedOutFavoriteExplainsHowToContinueAndRestoresTheButton() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val repository = object : StartRepository by unused<StartRepository>() {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
+            override suspend fun start(startId: String, relaunch: Boolean) = Result.success(start)
+            override suspend fun startsRecommended(startId: String) = Result.success(emptyList<com.markettwits.sportsouce.starts.common.domain.StartsListItem>())
+            override suspend fun isStartInFavorite(startId: String) = Result.success(false)
+            override suspend fun startAddToFavorite(startItem: StartItem) = Result.failure<Boolean>(AuthException("No credentials"))
+        }
+        val store = StartScreenStoreFactory(DefaultStoreFactory(), repository, unused<ExceptionTracker>(), unused<IntentAction>())
+            .create(StartScreenInput.Id(start.id))
+        try {
+            advanceUntilIdle()
+            store.accept(StartScreenStore.Intent.OnClickFavorite)
+            advanceUntilIdle()
+
+            val event = assertIs<StateEventWithContentTriggered<*>>(store.state.event).content
+            assertEquals(EventContent(false, "Войдите в аккаунт, чтобы добавить старт в избранное."), event)
+            assertFalse(assertIs<StartFavoriteState.Default>(store.state.favoriteState).isFavorite)
+        } finally {
+            store.dispose()
+            Dispatchers.resetMain()
+        }
+    }
+
+    private inline fun <reified T> unused(): T = Proxy.newProxyInstance(T::class.java.classLoader, arrayOf(T::class.java)) { _, method, _ ->
+        error("Unexpected ${method.name}")
+    } as T
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

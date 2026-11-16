@@ -24,6 +24,8 @@ sealed class CommentUiState {
 
     data object Loading : CommentUiState()
 
+    data object AuthorizationRequired : CommentUiState()
+
     class Error(val message: String) : CommentUiState()
 }
 

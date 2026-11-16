@@ -158,6 +158,11 @@ class StartCommentsStoreFactory(
                         // The server decides whether a reply is an administrator's answer.
                         load(startId)
                     }
+                    is CommentUiState.AuthorizationRequired -> {
+                        val message = if (mode is CommentMode.Reply) "Войдите в аккаунт, чтобы ответить на комментарий."
+                        else "Войдите в аккаунт, чтобы оставить комментарий."
+                        dispatch(Msg.Event(false, message))
+                    }
                     is CommentUiState.Error -> dispatch(Msg.Event(false, result.message))
                     is CommentUiState.Loading -> dispatch(Msg.Event(false, "Не удалось отправить комментарий. Попробуйте ещё раз."))
                 }

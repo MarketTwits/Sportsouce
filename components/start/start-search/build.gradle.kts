@@ -24,4 +24,9 @@ kotlin {
         implementation(libs.bundles.decompose.compose)
         implementation(libs.koin.core)
     }
+
+    sourceSets.jvmTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
 }

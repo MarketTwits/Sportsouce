@@ -20,18 +20,6 @@ fun StartFilterScreen(component: StartFilterComponent) {
             component.obtainEvent((StartFilterStore.Intent.GoBack))
         }
     ) {
-        StartFilterContent(
-            filterUi = state.filter,
-            isLoading = state.isLoading,
-            onClickApply = {
-                component.obtainEvent(StartFilterStore.Intent.Apply)
-            },
-            onItemSelected = { item, index, single ->
-                component.obtainEvent(StartFilterStore.Intent.OnItemSelected(item, index, single))
-            },
-            onClickReset = {
-                component.obtainEvent(StartFilterStore.Intent.Reset)
-            }
-        )
+        StartFilterContent(state, component::obtainEvent)
     }
 }

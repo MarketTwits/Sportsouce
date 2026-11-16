@@ -52,12 +52,14 @@ internal fun OutlinedSelectorField(
     val palette = SauceTheme.colors
     val focused by selector.interactionSource.collectIsFocusedAsState()
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-        Text(label, style = MaterialTheme.typography.labelLarge, color = when {
-            !selector.enabled -> palette.disabledContent
-            isError -> palette.danger.content
-            focused -> palette.action
-            else -> palette.textSecondary
-        })
+        if (label.isNotBlank()) {
+            Text(label, style = MaterialTheme.typography.labelLarge, color = when {
+                !selector.enabled -> palette.disabledContent
+                isError -> palette.danger.content
+                focused -> palette.action
+                else -> palette.textSecondary
+            })
+        }
         Box(Modifier.fillMaxWidth().heightIn(min = SauceSizes.fieldMinHeight)
             .semantics { if (isError) error(errorMessage ?: "Ошибка ввода") }, propagateMinConstraints = true) {
             OutlinedTextFieldDefaults.DecorationBox(

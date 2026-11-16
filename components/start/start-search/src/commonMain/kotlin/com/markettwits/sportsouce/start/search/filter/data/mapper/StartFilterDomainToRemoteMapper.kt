@@ -2,54 +2,45 @@ package com.markettwits.sportsouce.start.search.filter.data.mapper
 
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
-import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi.Key
 
 interface StartFilterDomainToRemoteMapper {
-    fun map(startItemUi: StartFilterUi, value: String): Map<String, String>
-    fun sort(sorted: StartFilter.Sorted, starts: List<StartsListItem>): List<StartsListItem>
+    fun map(
+        filter: StartFilterUi,
+        value: String,
+        sorted: StartFilter.Sorted = StartFilter.Sorted.Popular,
+    ): Map<String, String>
+
     class Base : StartFilterDomainToRemoteMapper {
-        override fun map(startItemUi: StartFilterUi, value: String): Map<String, String> {
-            val map = mutableMapOf<String, String>()
-            val item = startItemUi.items
-
-            if (value.isNotBlank()) {
-                map["filterText"] = value
-            }
-
-            map["group"] = "false"
-            map["maxResultCount"] = "100"
-
-            if (item.isNotEmpty() && item[0].selected.isNotEmpty()) {
-                map["kindOfSports"] = mapSelectedItems(item[0].selected)
-            }
-
-            if (item.size > 1 && item[1].selected.isNotEmpty()) {
-                map["name"] = mapSelectedItems(item[1].selected)
-            }
-
-            if (item.size > 2 && item[2].selected.isNotEmpty()) {
-                map["city"] = mapSelectedItems(item[2].selected)
-            }
-
-            if (item.size > 4 && item[4].selected.isNotEmpty()) {
-                map["status"] = mapStartStatus(item[4].selected)
-            }
-
-            return map
-        }
-
-        override fun sort(
+        override fun map(
+            filter: StartFilterUi,
+            value: String,
             sorted: StartFilter.Sorted,
-            starts: List<StartsListItem>
-        ): List<StartsListItem> {
-            return when (sorted) {
-                is StartFilter.Sorted.FirstBefore -> starts.sortedBy { it.date }
-                is StartFilter.Sorted.LastBefore -> starts.sortedByDescending { it.date }
-                is StartFilter.Sorted.Popular -> starts.sortedByDescending { it.views }
+        ): Map<String, String> = buildMap {
+            fun selected(key: Key) = filter.item(key)?.selected.orEmpty()
+            fun addSelection(key: Key, parameter: String) {
+                selected(key).takeIf { it.isNotEmpty() }?.let { put(parameter, it.joinToString(",")) }
+            }
+
+            if (value.isNotBlank()) put("filterText", value)
+            put("group", "false")
+            put("maxResultCount", "100")
+            put("sorting", when (sorted) {
+                StartFilter.Sorted.FirstBefore -> "start_date ASC"
+                StartFilter.Sorted.LastBefore -> "start_date DESC"
+                StartFilter.Sorted.Popular -> "viewsCount DESC"
+            })
+            addSelection(Key.Sport, "kindOfSports")
+            addSelection(Key.Season, "name")
+            addSelection(Key.City, "city")
+            selected(Key.Organizer).firstOrNull()?.let { put("organizerName", it) }
+            selected(Key.Status).takeIf { it.isNotEmpty() }?.let { put("status", mapStartStatus(it)) }
+            if (!filter.hasInvalidPeriod) {
+                filter.fromDate?.let { put("fromDate", it.toString()) }
+                filter.toDate?.let { put("toDate", it.toString()) }
             }
         }
 
-        private fun mapSelectedItems(items: List<String>) = items.joinToString(",")
         private fun mapStartStatus(items: List<String>): String {
             val itemSet = items.toSet()
             return when {
@@ -60,17 +51,3 @@ interface StartFilterDomainToRemoteMapper {
         }
     }
 }
-
-fun StartFilterUi.toMap(): Map<String, String> {
-    val resultMap = mutableMapOf<String, String>()
-
-    for (item in items) {
-        for (selectedItem in item.selected) {
-            if (selectedItem in item.list) {
-                resultMap[item.label] = selectedItem
-            }
-        }
-    }
-    return resultMap
-}
-

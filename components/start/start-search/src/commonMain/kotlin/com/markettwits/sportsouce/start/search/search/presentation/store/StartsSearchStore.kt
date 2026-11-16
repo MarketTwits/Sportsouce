@@ -34,6 +34,8 @@ interface StartsSearchStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
+        data object ClearResults : Message
+        data class HistoryLoaded(val items: List<String>) : Message
         data class ChangeTextFiled(val value: String) : Message
         data class InfoLoaded(val starts: StartsSearch) : Message
         data class InfoFailed(val message: String) : Message

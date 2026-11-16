@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.search.filter.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import kotlinx.datetime.LocalDate
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 
@@ -15,6 +16,8 @@ interface StartFilterStore :
             val singleChoice: Boolean = true
         ) : Intent
 
+        data class SetFromDate(val date: LocalDate?) : Intent
+        data class SetToDate(val date: LocalDate?) : Intent
         data object Launch : Intent
         data object GoBack : Intent
         data object Apply : Intent
@@ -23,7 +26,8 @@ interface StartFilterStore :
 
     data class State(
         val isLoading: Boolean = false,
-        val filter: StartFilterUi
+        val filter: StartFilterUi,
+        val loadFailed: Boolean = false,
     )
 
     sealed interface Label {

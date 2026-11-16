@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.*
 
@@ -26,6 +27,7 @@ fun SauceActionRow(
     contentPadding: PaddingValues = PaddingValues(SauceSpacing.small),
     titleStyle: TextStyle = MaterialTheme.typography.titleSmall,
     destructive: Boolean = false,
+    subtitleMaxLines: Int = Int.MAX_VALUE,
 ) {
     val colors = SauceTheme.colors
     val titleColor = if (destructive) colors.danger.content else colors.textPrimary
@@ -40,7 +42,8 @@ fun SauceActionRow(
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
                     Text(title, Modifier.fillMaxWidth(), style = titleStyle, color = titleColor)
                     if (!subtitle.isNullOrBlank()) Text(subtitle, Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                        style = MaterialTheme.typography.bodySmall, color = colors.textSecondary,
+                        maxLines = subtitleMaxLines, overflow = TextOverflow.Ellipsis)
                     if (narrow && !count.isNullOrBlank()) ActionRowCount(count)
                 }
                 if (!narrow && !count.isNullOrBlank()) ActionRowCount(count)

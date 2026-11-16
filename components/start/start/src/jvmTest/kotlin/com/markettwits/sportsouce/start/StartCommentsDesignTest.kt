@@ -25,6 +25,29 @@ import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 class StartCommentsDesignTest {
+    @Test fun commentAndReplyBodiesKeepNumbersSymbolsAndLineBreaksAsWritten() {
+        val message = "12345\n10 20 30\n3 < 5 > 2 & 100%\n<b>42</b> &amp; #123\nЦена 1 234,50 ₽; 01.02.2026; +7 913 000 00 00"
+        for (isReply in listOf(false, true)) {
+            ImageComposeScene(width = 390, height = 600) {
+                SauceTheme {
+                    StartCommentCard(userImageUrl = "", userName = "Иван", commentCreateDate = "Сегодня",
+                        message = message, isReply = isReply, onClickReply = {})
+                }
+            }.use { scene ->
+                scene.settle()
+                val body = scene.nodes().single { node ->
+                    node.config.getOrNull(SemanticsProperties.Text)?.any { it.text == message } == true
+                }
+                val layouts = mutableListOf<TextLayoutResult>()
+                assertTrue(body.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts))
+                val rendered = layouts.single().layoutInput.text
+                assertEquals(message, rendered.text)
+                assertTrue(rendered.spanStyles.isEmpty(), "Comment numbers must not be styled as phone numbers")
+                assertTrue(rendered.getLinkAnnotations(0, rendered.length).isEmpty())
+            }
+        }
+    }
+
     @Test fun questionsAnswersAndReviewsFitSmallScreensInBothThemesAndLargeFonts() {
         for (dark in listOf(false, true)) for (width in listOf(320, 390)) for (scale in listOf(1f, 2f)) {
             ImageComposeScene(width = width, height = 2400, density = Density(1f, scale)) {

@@ -60,6 +60,7 @@ fun ItemsTextFiledDialog(
     items: List<String>,
     leadingIcon: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
+    placeholder: String? = null,
     onValueChanged: (String) -> Unit,
 ) {
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -80,6 +81,7 @@ fun ItemsTextFiledDialog(
     }
     SelectorFieldAnchor(modifier = modifier, enabled = enabled, expanded = openAlertDialog.value && enabled,
         onOpen = { openAlertDialog.value = true },
+        placeholder = placeholder,
         trailingIcon = { SelectorArrow(expanded = openAlertDialog.value && enabled) }) {
         OutlinedTextFieldBase(
             readOnly = true,

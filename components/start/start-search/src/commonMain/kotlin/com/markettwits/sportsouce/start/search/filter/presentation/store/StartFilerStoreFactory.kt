@@ -5,11 +5,12 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.mapToSauceError
-import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilterRepository
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
+import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi.FilterGroupItemUi
+import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi.FilterStartType
+import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi.Key
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -20,7 +21,6 @@ internal class StartFilerStoreFactory(
 ) {
     fun create(
         filterUi: StartFilterUi?,
-        startFilter: StartFilter.Sorted?,
     ): StartFilterStore =
         object : StartFilterStore,
             Store<StartFilterStore.Intent, StartFilterStore.State, StartFilterStore.Label> by storeFactory.create(
@@ -37,13 +37,13 @@ internal class StartFilerStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(val startFilter: StartFilter) : Msg
-        data class InfoFailed(val message: String) : Msg
+        data object InfoFailed : Msg
         data class ChangeFilter(val filter: StartFilterUi) : Msg
     }
 
     private inner class ExecutorImpl :
         CoroutineExecutor<StartFilterStore.Intent, Unit, StartFilterStore.State, Msg, StartFilterStore.Label>() {
-        override fun executeIntent(intent: StartFilterStore.Intent, ) {
+        override fun executeIntent(intent: StartFilterStore.Intent) {
             when (intent) {
                 is StartFilterStore.Intent.Launch -> launch()
                 is StartFilterStore.Intent.GoBack -> publish(StartFilterStore.Label.GoBack)
@@ -58,23 +58,23 @@ internal class StartFilerStoreFactory(
                     )
                 )
 
+                is StartFilterStore.Intent.SetFromDate ->
+                    dispatch(Msg.ChangeFilter(state().filter.copy(fromDate = intent.date)))
+                is StartFilterStore.Intent.SetToDate ->
+                    dispatch(Msg.ChangeFilter(state().filter.copy(toDate = intent.date)))
                 StartFilterStore.Intent.Apply -> {
-                    publish(
-                        StartFilterStore.Label.Apply(
-                            state().filter,
-                            StartFilter.Sorted.Popular
-                        )
-                    )
+                    val current = state()
+                    if (!current.isLoading && !current.loadFailed && !current.filter.hasInvalidPeriod) {
+                        publish(StartFilterStore.Label.Apply(current.filter, current.filter.sortSelection()))
+                    }
                 }
 
-                StartFilterStore.Intent.Reset -> dispatch(
-                    Msg.ChangeFilter(reset(state().filter))
-                )
+                StartFilterStore.Intent.Reset -> dispatch(Msg.ChangeFilter(state().filter.cleared()))
             }
         }
 
         override fun executeAction(action: Unit) {
-            if (state().filter.items.isEmpty())
+            if (state().filter.item(Key.Organizer) == null)
                 launch()
         }
 
@@ -85,28 +85,17 @@ internal class StartFilerStoreFactory(
             currentState: StartFilterUi,
             singleChoice: Boolean
         ): StartFilterUi {
-            val updatedItems = currentState.items.toMutableList().apply {
-                val currentFilterItem = get(index)
-                val existingSelected = currentFilterItem.selected.toMutableList()
-                if (singleChoice) {
-                    existingSelected.clear()
-                }
-                if (existingSelected.contains(item)) {
-                    existingSelected.remove(item)
-                } else {
-                    existingSelected.add(item)
-                }
-                val updatedFilterItem = currentFilterItem.copy(selected = existingSelected)
-                set(index, updatedFilterItem)
+            val group = currentState.items.getOrNull(index) ?: return currentState
+            if (item.isNotEmpty() && item !in group.list) return currentState
+            val selection = when {
+                item.isEmpty() -> emptyList()
+                singleChoice -> listOf(item)
+                item in group.selected -> group.selected - item
+                else -> group.selected + item
             }
+            val updatedItems = currentState.items.toMutableList()
+            updatedItems[index] = group.copy(selected = selection)
             return currentState.copy(items = updatedItems)
-        }
-
-        private fun reset(currentState: StartFilterUi): StartFilterUi {
-            val modifiedItems = currentState.items.map { filterGroupItem ->
-                filterGroupItem.copy(selected = emptyList())
-            }
-            return currentState.copy(items = modifiedItems)
         }
 
         private fun launch() {
@@ -116,7 +105,7 @@ internal class StartFilerStoreFactory(
                         dispatch(Msg.Loading)
                     }
                     .catch {
-                        dispatch(Msg.InfoFailed(it.mapToSauceError().mapToString()))
+                        dispatch(Msg.InfoFailed)
                     }
                     .collect {
                         dispatch(Msg.InfoLoaded(it))
@@ -128,73 +117,57 @@ internal class StartFilerStoreFactory(
     private object ReducerImpl : Reducer<StartFilterStore.State, Msg> {
         override fun StartFilterStore.State.reduce(msg: Msg): StartFilterStore.State =
             when (msg) {
-                is Msg.InfoFailed -> copy(
+                Msg.InfoFailed -> copy(
                     isLoading = false,
-                    filter = StartFilterUi(emptyList())
+                    loadFailed = true,
                 )
 
                 is Msg.Loading -> copy(
                     isLoading = true,
-                    filter = StartFilterUi(emptyList())
+                    loadFailed = false,
                 )
 
                 is Msg.InfoLoaded -> copy(
                     isLoading = false,
-                    filter = msg.startFilter.uiFilter()
+                    filter = filter.copy(items = msg.startFilter.uiItems().map { group ->
+                        val previous = group.key?.let(filter::item)?.selected.orEmpty()
+                        val selected = if (group.key == Key.Sort && previous.isNotEmpty()) {
+                            listOf(sortOptions.first { it.first == filter.sortSelection() }.second)
+                        } else previous.filter { it in group.list }
+                        group.copy(selected = selected)
+                    }),
+                    loadFailed = false,
                 )
 
                 is Msg.ChangeFilter -> copy(
-                    isLoading = false,
                     filter = msg.filter
                 )
             }
     }
 }
 
-internal fun defaultStartSortedList(): List<StartFilter.Sorted> = listOf(
-    StartFilter.Sorted.FirstBefore,
-    StartFilter.Sorted.LastBefore,
-    StartFilter.Sorted.Popular,
+private val sortOptions = listOf<Pair<StartFilter.Sorted, String>>(
+    StartFilter.Sorted.Popular to "По популярности",
+    StartFilter.Sorted.FirstBefore to "Сначала ранние",
+    StartFilter.Sorted.LastBefore to "Сначала поздние",
 )
 
-internal fun StartFilter.Sorted.uiStartSortedList(): String =
-    when (this) {
-        StartFilter.Sorted.FirstBefore -> "Сначала актуальные"
-        StartFilter.Sorted.LastBefore -> "Сначала прошедшие"
-        StartFilter.Sorted.Popular -> "По популярности"
+private fun StartFilterUi.sortSelection(): StartFilter.Sorted {
+    return when (val value = item(Key.Sort)?.selected?.firstOrNull()) {
+        "Сначала актуальные" -> StartFilter.Sorted.FirstBefore
+        "Сначала прошедшие" -> StartFilter.Sorted.LastBefore
+        else -> sortOptions.firstOrNull { it.second == value }?.first ?: StartFilter.Sorted.Popular
     }
+}
 
-internal fun StartFilter.uiFilter(): StartFilterUi = StartFilterUi(
-    items = listOf(
-        StartFilterUi.FilterGroupItemUi(
-            label = "Вид спорта",
-            type = StartFilterUi.FilterStartType.Dialog,
-            list = this.kindOfSport
-        ),
-        StartFilterUi.FilterGroupItemUi(
-            label = "Сезон",
-            type = StartFilterUi.FilterStartType.Dialog,
-            list = this.startSeason
-        ),
-        StartFilterUi.FilterGroupItemUi(
-            label = "Место проведения",
-            type = StartFilterUi.FilterStartType.DropDown,
-            list = this.city
-        ),
-        StartFilterUi.FilterGroupItemUi(
-            label = "Дата проведения",
-            type = StartFilterUi.FilterStartType.Calendar,
-            list = emptyList()
-        ),
-        StartFilterUi.FilterGroupItemUi(
-            label = "Актуальность",
-            type = StartFilterUi.FilterStartType.DropDown,
-            list = this.startStatus.map { it.title }
-        ),
-        StartFilterUi.FilterGroupItemUi(
-            "Сортировка",
-            type = StartFilterUi.FilterStartType.DropDown,
-            list = defaultStartSortedList().map { it.uiStartSortedList() }
-        )
-    )
+private fun StartFilter.uiItems(): List<FilterGroupItemUi> = listOf(
+    Key.Sport.group(FilterStartType.Dialog, kindOfSport),
+    Key.Season.group(FilterStartType.Dialog, startSeason),
+    Key.City.group(FilterStartType.DropDown, city),
+    Key.Organizer.group(FilterStartType.DropDown, organizers),
+    Key.Status.group(FilterStartType.DropDown, startStatus.map { it.title }),
+    Key.Sort.group(FilterStartType.DropDown, sortOptions.map { it.second }),
 )
+
+private fun Key.group(type: FilterStartType, values: List<String>) =
+    FilterGroupItemUi(label = label, type = type, list = values, key = this)

@@ -1,97 +1,58 @@
 package com.markettwits.sportsouce.start.search.search.presentation.components.inner
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.list.SauceActionRow
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
+import com.markettwits.sportsouce.start.search.filter.presentation.components.filterDateLabel
 
 @Composable
-fun SearchFilterContent(
-    modifier: Modifier = Modifier,
-    filterParams: String,
+internal fun SearchFilterContent(
+    filter: StartFilterUi,
     onClickPanel: () -> Unit,
     onClickRemoveFilter: () -> Unit,
 ) {
-    Column(modifier = modifier.noRippleClickable(onClickPanel)) {
+    OnBackgroundCard(Modifier.padding(horizontal = 16.dp, vertical = 6.dp)) {
         Row(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Notes,
-                    contentDescription = "Notes",
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
-                Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                Column {
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.Start),
-                        text = "Параметры",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        fontSize = 14.sp,
-                        overflow = TextOverflow.Visible
-                    )
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.Start),
-                        text = filterParams,
-                        maxLines = 1,
-                        color = MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.medium(),
-                        fontSize = 12.sp,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-            IconButton(
-                onClick = onClickRemoveFilter
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = MaterialTheme.colorScheme.outline
-                )
+            SauceActionRow(
+                title = "Фильтры",
+                subtitle = filter.selectedSummary(),
+                subtitleMaxLines = 2,
+                count = filter.activeCount.toString(),
+                icon = Icons.Outlined.Tune,
+                modifier = Modifier.weight(1f),
+                onClick = onClickPanel,
+            )
+            IconButton(onClick = onClickRemoveFilter, modifier = Modifier.clip(SauceShapes.button)) {
+                Icon(Icons.Default.Close, contentDescription = "Сбросить фильтры", tint = SauceTheme.colors.textSecondary)
             }
         }
-        HorizontalDivider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 0.2.dp,
-            color = MaterialTheme.colorScheme.outline
-        )
     }
 }
 
-internal fun StartFilterUi.selectedValueToString(): String {
-    return items.flatMap { item ->
-        item.selected.filter { it in item.list }
-    }.joinToString(", ")
+private fun StartFilterUi.selectedSummary(): String {
+    val from = fromDate?.filterDateLabel()
+    val to = toDate?.filterDateLabel()
+    val period = when {
+        from != null && to != null -> if (from == to) from else "$from – $to"
+        from != null -> "С $from"
+        to != null -> "По $to"
+        else -> null
+    }
+    return (listOfNotNull(period) + items.flatMap { it.selected }).joinToString(" · ")
 }

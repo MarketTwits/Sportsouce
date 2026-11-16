@@ -5,6 +5,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
@@ -43,8 +44,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
         },
         bottomBar = {
             AnimatedVisibility(
-                visible = state.filter.items.find { it.selected.isNotEmpty() }?.selected?.isNotEmpty()
-                    ?: false,
+                visible = !state.filter.filterIsEmpty(),
                 enter = slideInVertically(
                     initialOffsetY = { it },
                     animationSpec = tween(300, easing = FastOutSlowInEasing)
@@ -55,7 +55,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 ) + fadeOut(animationSpec = tween(300))
             ) {
                 SearchFilterContent(
-                    filterParams = state.filter.selectedValueToString(),
+                    filter = state.filter,
                     onClickPanel = {
                         component.obtainEvent(StartsSearchStore.Intent.OnClickFilter)
                     },
@@ -68,7 +68,8 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
                 .background(MaterialTheme.colorScheme.background)
         ) {
             val screenState = when {

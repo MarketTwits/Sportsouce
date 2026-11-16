@@ -11,6 +11,7 @@ import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationReques
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
+import com.markettwits.sportsouce.start.cloud.model.filters.StartOrganizersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
@@ -50,6 +51,14 @@ internal class SportSauceStartApiBase(
 
     override suspend fun seasons(): StartSeasonsRemote {
         val response = client.get("season")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun organizers(offset: Int, limit: Int): StartOrganizersRemote {
+        val response = client.get("organizer") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+        }
         return json.decodeFromString(response.body<String>())
     }
 

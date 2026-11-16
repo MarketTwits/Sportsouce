@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationReques
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
+import com.markettwits.sportsouce.start.cloud.model.filters.StartOrganizersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
@@ -28,6 +29,8 @@ interface SportSauceStartApi {
     suspend fun kindOfSports() : KindOfSportRemote
 
     suspend fun seasons() : StartSeasonsRemote
+
+    suspend fun organizers(offset: Int, limit: Int): StartOrganizersRemote
 
     suspend fun filters(startId: Int): FiltersRemote
 

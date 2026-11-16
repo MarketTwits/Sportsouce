@@ -13,9 +13,11 @@ fun FilterButtonSelectionPanel(
     modifier: Modifier = Modifier,
     onClickReset: () -> Unit,
     onClickApply: () -> Unit,
+    resetEnabled: Boolean = true,
+    applyEnabled: Boolean = true,
 ) {
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        SauceButton("Сбросить", onClickReset, Modifier.weight(1f), variant = SauceButtonVariant.Outlined)
-        SauceButton("Применить", onClickApply, Modifier.weight(1f))
+        SauceButton("Сбросить", onClickReset, Modifier.weight(1f), variant = SauceButtonVariant.Outlined, enabled = resetEnabled)
+        SauceButton("Применить", onClickApply, Modifier.weight(1f), enabled = applyEnabled)
     }
 }

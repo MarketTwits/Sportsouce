@@ -20,13 +20,13 @@ fun CalendarTextFiled(
     value: String? = null,
     clearable: Boolean = false,
     textFiled: @Composable (Modifier) -> Unit,
+    yearRange: IntRange = 1925..Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year,
     onValueChanged: (String) -> Unit,
 ) {
     var openDialog by rememberSaveable { mutableStateOf(false) }
     var confirmedDate by rememberSaveable { mutableStateOf<Long?>(null) }
     var initialDate by rememberSaveable { mutableStateOf<Long?>(null) }
     val fieldValue = remember { SelectorFieldValue() }
-    val yearRange = 1925..Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
     LaunchedEffect(enabled) { if (!enabled) openDialog = false }
 
     if (openDialog && enabled) CalendarDateDialog(

@@ -1,12 +1,13 @@
 package com.markettwits.sportsouce.teams_city.data
 
+import com.markettwits.cahce.Cache
 import com.markettwits.cahce.execute.base.ExecuteWithCache
 import com.markettwits.sportsouce.teams_city.data.cache.TeamsAndCities
-import com.markettwits.sportsouce.teams_city.data.cache.TeamsAndCitiesCache
 import com.markettwits.sportsouce.teams_city.data.network.SportSauceNetworkTeamsCityApi
 import com.markettwits.sportsouce.teams_city.domain.City
 import com.markettwits.sportsouce.teams_city.domain.Team
 import com.markettwits.sportsouce.teams_city.domain.TeamsCityRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ import kotlin.coroutines.suspendCoroutine
 
 internal class TeamsCityRepositoryBase(
     private val cloud: SportSauceNetworkTeamsCityApi,
-    private val cache: TeamsAndCitiesCache,
+    private val cache: Cache<TeamsAndCities>,
     private val executeWithCache: ExecuteWithCache
 ) : TeamsCityRepository {
 
@@ -28,7 +29,7 @@ internal class TeamsCityRepositoryBase(
     override suspend fun cityFlow(): Flow<List<City>> = flow {
         executeWithCache.executeWithCache(
             cache = cache,
-            launch = { combine(false).getOrThrow() },
+            launch = { combine().getOrThrow() },
             callback = { result ->
                 emit(result.cities)
             }
@@ -38,7 +39,7 @@ internal class TeamsCityRepositoryBase(
     override suspend fun teamsFlow(): Flow<List<Team>> = flow {
         executeWithCache.executeWithCache(
             cache = cache,
-            launch = { combine(false).getOrThrow() },
+            launch = { combine().getOrThrow() },
             callback = { result ->
                 emit(result.teams)
             }
@@ -46,6 +47,8 @@ internal class TeamsCityRepositoryBase(
     }
 
     override suspend fun city(withStarts: Boolean): Result<List<City>> {
+        if (withStarts) return cityCloud(withStarts = true)
+
         return withContext(Dispatchers.Main.immediate) {
             suspendCoroutine { continuation ->
                 var resumed = false
@@ -53,7 +56,7 @@ internal class TeamsCityRepositoryBase(
                     runCatching {
                         executeWithCache.executeWithCache(
                             cache = cache,
-                            launch = { combine(withStarts).getOrThrow() },
+                            launch = { combine().getOrThrow() },
                             callback = { result ->
                                 if (!resumed) {
                                     continuation.resume(Result.success(result.cities))
@@ -74,7 +77,7 @@ internal class TeamsCityRepositoryBase(
                 scope.launch {
                     executeWithCache.executeWithCache(
                         cache = cache,
-                        launch = { combine(false).getOrThrow() },
+                        launch = { combine().getOrThrow() },
                         callback = { result ->
                             if (!resumed) {
                                 continuation.resume(Result.success(result.teams))
@@ -87,17 +90,19 @@ internal class TeamsCityRepositoryBase(
         }
     }
 
-    private suspend fun combine(withStarts: Boolean): Result<TeamsAndCities> =
+    private suspend fun combine(): Result<TeamsAndCities> =
         runCatching {
-            val city = cityCloud(withStarts).getOrThrow()
+            val city = cityCloud(withStarts = false).getOrThrow()
             val teams = teamsCloud().getOrThrow()
             TeamsAndCities(teams, city)
         }
 
-    private suspend fun cityCloud(withStarts : Boolean): Result<List<City>> = runCatching {
+    private suspend fun cityCloud(withStarts: Boolean): Result<List<City>> = runCatching {
         cloud.cities(withStarts).rows.map {
             City(id = it.id, name = it.name)
         }
+    }.onFailure {
+        if (it is CancellationException) throw it
     }
 
     private suspend fun teamsCloud(): Result<List<Team>> = runCatching {

@@ -1,8 +1,6 @@
 package com.markettwits.sportsouce.auth.service.internal
 
 import com.markettwits.cahce.ObservableCache
-import com.markettwits.core.log.LogTagProvider
-import com.markettwits.core.log.infoLog
 import com.markettwits.sportsouce.auth.cloud.SportSauceNetworkAuthApi
 import com.markettwits.sportsouce.auth.cloud.model.change.ChangeProfileInfoRequest
 import com.markettwits.sportsouce.auth.cloud.model.sign_in.request.SignInRequest
@@ -23,9 +21,7 @@ internal class BaseAuthDataSource(
     private val userInfoCache: ObservableCache<User>,
     private val tokenManager: TokenManager,
     private val authCache: AuthCacheDataSource,
-) : AuthDataSource, LogTagProvider {
-
-    override val tag: String = "BaseAuthDataSource"
+) : AuthDataSource {
 
     override suspend fun register(signUpRequest: SignUpRequest): Result<Unit> =
         runCatching {
@@ -42,9 +38,7 @@ internal class BaseAuthDataSource(
 
     override suspend fun logIn(emailOrPhone: String, password: String): Result<User> = runCatching {
         val request = SignInRequest(email = emailOrPhone, password = password)
-        infoLog { "$request" }
         val response = remoteService.signIn(request)
-        infoLog { "$response" }
         authCache.write(signInCacheMapper.map(response, password))
         auth().getOrThrow()
     }

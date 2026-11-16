@@ -18,7 +18,7 @@ class SportSauceNetworkAuthApi(
 ) {
     private val json = httpClient.json()
 
-    private val client = httpClient.provide()
+    private val client = httpClient.provide(loggerEnabled = false)
 
     suspend fun changeProfileInfo(
         profile: ChangeProfileInfoRequest,

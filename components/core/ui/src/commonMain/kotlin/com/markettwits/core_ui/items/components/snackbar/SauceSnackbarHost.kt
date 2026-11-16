@@ -62,7 +62,7 @@ fun SauceSnackbarHost(
             dismissAction = if (data.visuals.withDismissAction) {
                 {
                     IconButton(onClick = data::dismiss, modifier = Modifier.size(48.dp).clip(SauceShapes.button)) {
-                        Icon(Icons.Default.Close, contentDescription = "Закрыть сообщение")
+                        Icon(Icons.Default.Close, contentDescription = "Закрыть сообщение", tint = status.content)
                     }
                 }
             } else null,

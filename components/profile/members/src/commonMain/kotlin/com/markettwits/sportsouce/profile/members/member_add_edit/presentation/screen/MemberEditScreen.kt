@@ -39,8 +39,16 @@ fun MemberEditScreen(component: MemberEditComponent) {
                 onClick = { focus.clearFocus(); component.obtainEvent(MemberEditStore.Intent.Save) })
         },
         snackbarHost = {
-            SnackbarHost(snackbar) { Snackbar(snackbarData = it, containerColor = SauceTheme.colors.danger.container,
-                contentColor = SauceTheme.colors.danger.content, actionColor = SauceTheme.colors.danger.content) }
+            SnackbarHost(snackbar) {
+                val colors = SauceTheme.colors.danger
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = colors.container,
+                    contentColor = colors.content,
+                    actionColor = colors.content,
+                    dismissActionContentColor = colors.content,
+                )
+            }
         },
     ) { padding ->
         AdaptivePane(modifier = Modifier.fillMaxSize().padding(padding)) {

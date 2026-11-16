@@ -80,6 +80,7 @@ internal fun ShopCreateOrderContent(
                 Snackbar(
                     contentColor = feedbackColors.content,
                     containerColor = feedbackColors.container,
+                    dismissActionContentColor = feedbackColors.content,
                     snackbarData = it
                 )
             }

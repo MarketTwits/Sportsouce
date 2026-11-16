@@ -72,6 +72,7 @@ fun RegistrationMemberScreen(
                 Snackbar(
                     contentColor = Color.White,
                     containerColor = snackBarColor,
+                    dismissActionContentColor = Color.White,
                     snackbarData = it
                 )
             }

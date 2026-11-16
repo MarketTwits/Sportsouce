@@ -65,6 +65,7 @@ fun StartRegistrationPage(
                 Snackbar(
                     contentColor = Color.White,
                     containerColor = snackBarColor,
+                    dismissActionContentColor = Color.White,
                     snackbarData = it
                 )
             }

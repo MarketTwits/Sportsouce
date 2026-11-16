@@ -49,6 +49,7 @@ fun StartScreen(
                     modifier = Modifier.padding(bottom = if (isShowRegButton) 60.dp else 10.dp),
                     contentColor = snackBarColors.content,
                     containerColor = snackBarColors.container,
+                    dismissActionContentColor = snackBarColors.content,
                     snackbarData = it
                 )
             }

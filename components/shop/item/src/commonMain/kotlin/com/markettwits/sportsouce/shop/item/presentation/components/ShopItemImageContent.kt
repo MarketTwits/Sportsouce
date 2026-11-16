@@ -10,21 +10,38 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.commerce.SauceProductImage
 import com.markettwits.core_ui.items.screens.FullImageScreen
+import com.markettwits.core_ui.items.screens.PhotoHeaderSystemBars
 import com.markettwits.core_ui.items.theme.*
 
+internal val ShopItemPhotoHeight = 360.dp
+
 @Composable
-internal fun ShopItemImageContent(modifier: Modifier = Modifier, imageUrl: List<String>) {
+internal fun ShopItemImageContent(
+    imageUrl: List<String>,
+    topContentPadding: Dp,
+    galleryAtStatusBar: Boolean,
+) {
     var fullImage by rememberSaveable { mutableStateOf(false) }
     val pager = rememberPagerState { imageUrl.size }
-    Box(modifier.fillMaxWidth().height(360.dp)) {
-        if (imageUrl.isEmpty()) SauceProductImage(null, Modifier.fillMaxSize())
-        else {
+    Box(Modifier.fillMaxWidth().height(ShopItemPhotoHeight + topContentPadding)) {
+        if (imageUrl.isEmpty()) {
+            SauceProductImage(null, Modifier.fillMaxSize(), topContentPadding = topContentPadding)
+        } else {
             HorizontalPager(pager, Modifier.fillMaxSize()) { index ->
-                SauceProductImage(imageUrl[index], Modifier.fillMaxSize().clickable(role = Role.Button,
-                    onClickLabel = "Открыть фото товара") { fullImage = true })
+                SauceProductImage(
+                    imageUrl[index],
+                    Modifier.fillMaxSize().clickable(role = Role.Button, onClickLabel = "Открыть фото товара") { fullImage = true },
+                    topContentPadding = topContentPadding,
+                    loadedContent = {
+                        if (galleryAtStatusBar && pager.currentPage == index && !fullImage) {
+                            PhotoHeaderSystemBars(lightIcons = false)
+                        }
+                    },
+                )
             }
             if (imageUrl.size > 1) Surface(Modifier.align(Alignment.BottomStart).padding(16.dp),
                 shape = SauceShapes.badge, color = SauceTheme.colors.surfaceRaised, contentColor = SauceTheme.colors.textSecondary) {

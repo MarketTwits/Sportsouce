@@ -1,12 +1,17 @@
 package com.markettwits.sportsouce.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.unit.dp
 import app.cash.paging.PagingData
@@ -61,11 +66,22 @@ internal fun ShopItemProductScreen(
                 val columns = remember(screenWidth) {
                     min(maxColumns, ((screenWidth - horizontalPadding) / minColumnWidth).toInt()).coerceAtLeast(1)
                 }
+                val safeTopPadding = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
+                val galleryTopPadding = safeTopPadding + SauceSpacing.small
+                val listState = rememberLazyListState()
+                val galleryHeightPx = with(LocalDensity.current) { (ShopItemPhotoHeight + galleryTopPadding).roundToPx() }
+                val galleryAtStatusBar by remember(listState, galleryHeightPx) {
+                    derivedStateOf {
+                        listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < galleryHeightPx
+                    }
+                }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = paddingValues.calculateBottomPadding())
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                    state = listState,
+                    contentPadding = PaddingValues(top = if (windowSize.isLarge) safeTopPadding else 0.dp),
                 ) {
                     item {
                         if (windowSize.isLarge) {
@@ -79,6 +95,8 @@ internal fun ShopItemProductScreen(
                             ShopItemCompactPane(
                                 item = item,
                                 options = options,
+                                galleryTopPadding = galleryTopPadding,
+                                galleryAtStatusBar = galleryAtStatusBar,
                                 onClickOption = onClickOption
                             )
                         }

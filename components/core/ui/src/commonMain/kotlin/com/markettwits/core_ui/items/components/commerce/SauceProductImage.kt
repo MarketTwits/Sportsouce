@@ -9,28 +9,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceTheme
 
 /** Product photography keeps its original light studio background in either theme. */
 @Composable
-fun SauceProductImage(url: String?, modifier: Modifier = Modifier) {
+fun SauceProductImage(
+    url: String?,
+    modifier: Modifier = Modifier,
+    topContentPadding: Dp = 0.dp,
+    loadedContent: @Composable () -> Unit = {},
+) {
     Box(modifier.background(SauceTheme.colors.surfaceSubtle), contentAlignment = Alignment.Center) {
-        if (url.isNullOrBlank()) ProductImageFallback()
+        if (url.isNullOrBlank()) ProductImageFallback(Modifier.padding(top = topContentPadding))
         else SubcomposeAsyncImage(model = imageRequestCrossfade(url), contentDescription = null,
             modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Fit,
-            loading = { SauceSkeleton(Modifier.fillMaxSize()) },
-            success = { SubcomposeAsyncImageContent(Modifier.fillMaxSize().background(Color.White)) },
-            error = { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { ProductImageFallback() } })
+            loading = {
+                SauceSkeleton(
+                    Modifier.fillMaxSize(),
+                    shape = if (topContentPadding > 0.dp) RectangleShape else SauceShapes.badge,
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent(Modifier.fillMaxSize().background(Color.White).padding(top = topContentPadding))
+                loadedContent()
+            },
+            error = { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                ProductImageFallback(Modifier.padding(top = topContentPadding))
+            } })
     }
 }
 
 @Composable
-private fun ProductImageFallback() {
-    Icon(Icons.Default.Photo, null, Modifier.size(32.dp), tint = SauceTheme.colors.textMuted)
+private fun ProductImageFallback(modifier: Modifier = Modifier) {
+    Icon(Icons.Default.Photo, null, modifier.size(32.dp), tint = SauceTheme.colors.textMuted)
 }

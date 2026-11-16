@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.domain.models.ShopExtraOptions
@@ -18,9 +19,15 @@ internal fun ShopItemCompactPane(
     modifier: Modifier = Modifier,
     item: ShopItem,
     options: List<ShopExtraOptions>,
+    galleryTopPadding: Dp,
+    galleryAtStatusBar: Boolean,
     onClickOption: (String) -> Unit,
 ) {
-    ShopItemImageContent(imageUrl = item.visual.imageUrl)
+    ShopItemImageContent(
+        imageUrl = item.visual.imageUrl,
+        topContentPadding = galleryTopPadding,
+        galleryAtStatusBar = galleryAtStatusBar,
+    )
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         ShopItemTitle(title = item.visual.displayName)
         ShopItemPriceRow(price = item.price)

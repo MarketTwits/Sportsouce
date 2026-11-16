@@ -19,10 +19,8 @@ internal class SportSauceNetworkTeamsCityApi(
     }
 
     suspend fun cities(withStarts: Boolean): NetworkCities {
-        val response = if (withStarts) {
-            client.get("city?withStarts=true")
-        } else {
-            client.get("city")
+        val response = client.get("city") {
+            if (withStarts) parameter("withStarts", true)
         }
         return json.decodeFromString(response.body<String>())
     }

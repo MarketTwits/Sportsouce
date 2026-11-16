@@ -16,7 +16,9 @@ import org.koin.dsl.module
 val teamsCityModule = module {
     singleOf(::TeamsAndCitiesCache)
     singleOf(::ExecuteWithCacheBase) bind ExecuteWithCache::class
-    singleOf(::TeamsCityRepositoryBase) bind TeamsCityRepository::class
+    single<TeamsCityRepository> {
+        TeamsCityRepositoryBase(get(), get<TeamsAndCitiesCache>(), get())
+    }
     single<SportSauceNetworkTeamsCityApi> {
         SportSauceNetworkTeamsCityApi(
             HttpClientProviderBase(

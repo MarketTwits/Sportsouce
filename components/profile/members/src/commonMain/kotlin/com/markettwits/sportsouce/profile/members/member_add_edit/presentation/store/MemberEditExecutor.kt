@@ -39,7 +39,7 @@ class MemberEditExecutor(
             dispatch(Message.Loading)
             val member = if (state().mode is MemberEditComponent.Mode.Edit) {
                 editUseCase.member(state().member.id).getOrElse {
-                    dispatch(Message.LoadError(it.mapToSauceError().mapToString()))
+                    dispatch(Message.LoadError(it.mapToSauceError()))
                     return@launch
                 }
             } else null

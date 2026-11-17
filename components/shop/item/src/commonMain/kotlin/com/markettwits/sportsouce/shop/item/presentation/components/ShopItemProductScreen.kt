@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -16,6 +19,10 @@ import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.unit.dp
 import app.cash.paging.PagingData
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToString
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
@@ -34,6 +41,7 @@ internal fun ShopItemProductScreen(
     item: ShopItem,
     options: List<ShopExtraOptions>,
     isLoading: Boolean,
+    error: SauceError?,
     similarProducts: Flow<PagingData<ShopItem>>,
     onClickOption: (String) -> Unit,
     onClickGoBack: () -> Unit,
@@ -45,6 +53,13 @@ internal fun ShopItemProductScreen(
 ) {
 
     val windowSize = calculateWindowSizeClass()
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(error) {
+        if (error != null) {
+            val result = snackbar.showSnackbar(error.mapToString(), actionLabel = "Повторить", withDismissAction = true)
+            if (result == SnackbarResult.ActionPerformed) onRefresh()
+        }
+    }
 
     AdaptivePane {
         PullToRefreshScreen(
@@ -52,6 +67,7 @@ internal fun ShopItemProductScreen(
             onRefresh = onRefresh,
         ) {
             Scaffold(
+                snackbarHost = { SauceSnackbarHost(snackbar, tone = SauceSnackbarTone.Error) },
                 bottomBar = {
                     if (!windowSize.isLarge)
                         cartContent(Modifier.fillMaxWidth())

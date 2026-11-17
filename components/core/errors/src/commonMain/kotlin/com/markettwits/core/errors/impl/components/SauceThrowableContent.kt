@@ -1,5 +1,6 @@
 package com.markettwits.core.errors.impl.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,13 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core.errors.api.throwable.mapToString
-import com.markettwits.core.errors.impl.supcomponents.SauceThrowableRetryButtonLarge
 import com.markettwits.core.errors.impl.supcomponents.mapSauceErrorImage
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 internal fun SauceThrowableContent(
@@ -28,58 +28,49 @@ internal fun SauceThrowableContent(
     onClickRetry: (() -> Unit)? = null,
 ) {
 
-    val localUriHandler = LocalUriHandler.current
+    val uriHandler = LocalUriHandler.current
+    val colors = SauceTheme.colors
 
     Column(
-        modifier = modifier
-            .padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Icon(
-            modifier = Modifier
-                .padding(6.dp)
-                .size(100.dp),
+            modifier = Modifier.size(64.dp),
             imageVector = sauceError.mapSauceErrorImage(),
-            contentDescription = "",
-            tint = MaterialTheme.colorScheme.secondary
+            contentDescription = null,
+            tint = colors.textMuted,
         )
         Text(
-            modifier = Modifier.padding(6.dp),
-            text = "Что то пошло не так :(",
-            color = MaterialTheme.colorScheme.tertiary,
+            text = when (sauceError) {
+                is SauceError.Empty, is SauceError.NotFound -> "Данные не найдены"
+                is SauceError.WrongRequest -> "Не удалось выполнить запрос"
+                else -> "Не удалось загрузить данные"
+            },
+            color = colors.textPrimary,
             textAlign = TextAlign.Center,
-            fontFamily = FontNunito.bold(),
-            fontSize = 20.sp
+            style = MaterialTheme.typography.titleLarge,
         )
         Text(
-            modifier = Modifier.padding(6.dp),
             text = sauceError.mapToString(),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.regular(),
-            fontSize = 14.sp
+            color = colors.textSecondary,
+            style = MaterialTheme.typography.bodyMedium,
         )
-        if(onClickRetry != null){
-            SauceThrowableRetryButtonLarge(
-                modifier = Modifier
-                    .widthIn(max = 280.dp)
-                    .padding(8.dp)
-                    .padding(horizontal = 16.dp)
-                    .align(Alignment.CenterHorizontally),
-                onClickRetry = onClickRetry
+        if (onClickRetry != null) {
+            SauceButton(
+                title = "Повторить",
+                onClick = onClickRetry,
+                modifier = Modifier.widthIn(max = 280.dp),
+                fillWidth = false,
             )
         }
-        Text(
-            modifier = Modifier
-                .padding(8.dp)
-                .noRippleClickable {
-                    localUriHandler.openUri("https://t.me/sportsoyuznsk")
-            },
-            text = "Сообщить об ошибке",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.regular(),
-            fontSize = 14.sp
+        SauceButton(
+            title = "Сообщить об ошибке",
+            onClick = { uriHandler.openUri("https://t.me/sportsoyuznsk") },
+            variant = SauceButtonVariant.Text,
+            fillWidth = false,
         )
     }
 }

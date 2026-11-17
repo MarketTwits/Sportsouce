@@ -86,7 +86,7 @@ class ProfileDesignTest {
                 fake.state.value = AuthorizedProfileStore.State(error = SauceError.Connection(Exception("offline")))
                 scene.settle()
                 assertNull(scene.text("Александра"), "First-load failure must not show a fake profile")
-                assertNotNull(scene.text("Что то пошло не так :("))
+                assertNotNull(scene.text("Не удалось загрузить данные"))
                 fake.state.value = AuthorizedProfileStore.State(user = user.copy(
                     activity = UserProfile.Activity(emptyList(), 0), userInfo = user.userInfo.copy(name = ""),
                     socialNetwork = UserProfile.SocialNetwork("", "", "", "")))

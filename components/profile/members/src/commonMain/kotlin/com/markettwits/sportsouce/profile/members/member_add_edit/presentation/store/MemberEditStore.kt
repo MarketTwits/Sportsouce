@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -16,7 +17,7 @@ interface MemberEditStore : Store<Intent, State, Label> {
     data class State(
         val isLoading: Boolean = true,
         val isSaving: Boolean = false,
-        val loadError: String? = null,
+        val loadError: SauceError? = null,
         val teamsLoading: Boolean = true,
         val teamsError: Boolean = false,
         val isError: Boolean = false,
@@ -39,7 +40,7 @@ interface MemberEditStore : Store<Intent, State, Label> {
     sealed interface Message {
         data object Loading : Message
         data class Error(val message: String) : Message
-        data class LoadError(val message: String) : Message
+        data class LoadError(val error: SauceError) : Message
         data class Loaded(val teams: List<Team>, val member: ProfileMember? = null) : Message
         data object Saving : Message
         data object TeamsLoading : Message

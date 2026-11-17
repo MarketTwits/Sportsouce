@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.shop.filter.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterPrice
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopFilterResult
@@ -9,6 +10,7 @@ import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.Label
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.State
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 interface ShopFilterStore : Store<Intent, State, Label> {
 
@@ -20,8 +22,7 @@ interface ShopFilterStore : Store<Intent, State, Label> {
         val selectedOptionUID: List<ShopOptionInfo.Value> = emptyList(),
         val selectedCategoryPath: List<ShopCategoryItem> = emptyList(),
         val isLoading: Boolean = false,
-        val isError : Boolean = false,
-        val message : String = "",
+        @Transient val error: SauceError? = null,
         val isApplied: Boolean = false,
     )
 
@@ -48,7 +49,7 @@ interface ShopFilterStore : Store<Intent, State, Label> {
             Message
         data class UpdatePrice(val price: ShopFilterPrice) : Message
         data object Loading : Message
-        data class Failed(val message: String) : Message
+        data class Failed(val error: SauceError) : Message
         data object ResetFilter : Message
         data object ApplyFilter : Message
     }

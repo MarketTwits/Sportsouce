@@ -13,7 +13,7 @@ import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.AdaptivePane
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.profile.members.member_add_edit.presentation.component.MemberEditComponent
@@ -33,10 +33,12 @@ fun MemberEditScreen(component: MemberEditComponent) {
             }
         },
         bottomBar = {
-            SauceButton(title = "Сохранить участника", loading = state.isSaving,
-                enabled = !state.isLoading && state.loadError == null,
-                modifier = Modifier.imePadding().navigationBarsPadding().padding(SauceSpacing.large),
-                onClick = { focus.clearFocus(); component.obtainEvent(MemberEditStore.Intent.Save) })
+            if (state.loadError == null) {
+                SauceButton(title = "Сохранить участника", loading = state.isSaving,
+                    enabled = !state.isLoading,
+                    modifier = Modifier.imePadding().navigationBarsPadding().padding(SauceSpacing.large),
+                    onClick = { focus.clearFocus(); component.obtainEvent(MemberEditStore.Intent.Save) })
+            }
         },
         snackbarHost = {
             SnackbarHost(snackbar) {
@@ -52,11 +54,12 @@ fun MemberEditScreen(component: MemberEditComponent) {
         },
     ) { padding ->
         AdaptivePane(modifier = Modifier.fillMaxSize().padding(padding)) {
+            val error = state.loadError
             when {
                 state.isLoading -> MembersLoadingContent()
-                state.loadError != null -> FailedScreen(message = state.loadError.orEmpty(),
-                    onClickBack = { component.obtainEvent(MemberEditStore.Intent.Dismiss) },
-                    onClickRetry = { component.obtainEvent(MemberEditStore.Intent.Retry) })
+                error != null -> error.SauceErrorScreen(
+                    onClickRetry = { component.obtainEvent(MemberEditStore.Intent.Retry) },
+                )
                 else -> ImprovedEditMemberContent(
                     modifier = Modifier.fillMaxSize().sauceVerticalScroll(rememberScrollState()),
                     member = state.member, teams = state.teams, enabled = !state.isSaving,

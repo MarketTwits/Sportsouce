@@ -14,6 +14,7 @@ kotlin {
             implementation(projects.components.core.cache)
             
             implementation(projects.components.core.ui)
+            implementation(projects.components.core.errors)
             implementation(projects.components.core.koin)
             implementation(projects.components.start.start)
             implementation(projects.components.starts.startsCommon)

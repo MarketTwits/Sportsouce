@@ -20,6 +20,7 @@ class HttpClientProviderBase(
         install(ContentNegotiation) {
             json(json)
         }
+        captureResponseErrorMessages(json)
         if (loggerEnabled) {
             install(Logging) {
                 logger = Logger.SIMPLE

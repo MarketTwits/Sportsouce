@@ -2,7 +2,6 @@ package com.markettwits.sportsouce.shop.filter.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.core.errors.api.throwable.mapToSauceError
-import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.shop.filter.domain.ShopFilterRepository
 import com.markettwits.sportsouce.shop.filter.domain.models.*
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore.*
@@ -44,7 +43,7 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
         dispatch(Message.UpdatePrice(newPrice))
     }
 
-    private fun updateOptionsByCategory(
+    protected fun updateOptionsByCategory(
         categoryId: Int,
     ) {
         scope.launch {
@@ -53,7 +52,7 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
                 onSuccess = {
                     dispatch(Message.UpdateOptionsAndRestrictionPrice(it.first, it.second))
                 }, onFailure = {
-                    publish(Label.GoBack)
+                    dispatch(Message.Failed(it.mapToSauceError()))
                 })
         }
     }
@@ -97,7 +96,7 @@ abstract class ShopFilterExecutorHandler(private val repository: ShopFilterRepos
                     }
                 }
             }.onFailure {
-                dispatch(Message.Failed(it.mapToSauceError().mapToString()))
+                dispatch(Message.Failed(it.mapToSauceError()))
             }
         }
     }

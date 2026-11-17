@@ -9,7 +9,7 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore
@@ -25,11 +25,11 @@ internal fun ShopItemPageContent(
     onClickItem: (com.markettwits.sportsouce.shop.domain.model.ShopItem) -> Unit,
     cartContent: @Composable (Modifier) -> Unit,
 ) {
-    if (state.isError && state.shopItem == null) {
-        FailedScreen(
-            message = state.message,
+    val error = state.error
+    if (error != null && state.shopItem == null) {
+        error.SauceErrorScreen(
             onClickRetry = onClickRetry,
-            onClickBack = onClickGoBack
+            onClickGoBack = onClickGoBack,
         )
     }
     if (state.isLoading && state.shopItem == null) {
@@ -53,6 +53,7 @@ internal fun ShopItemPageContent(
             item = state.shopItem,
             options = state.shopItemOptions,
             isLoading = state.isLoading,
+            error = error,
             similarProducts = state.similarProducts,
             onClickOption = onClickOption,
             onClickGoBack = onClickGoBack,

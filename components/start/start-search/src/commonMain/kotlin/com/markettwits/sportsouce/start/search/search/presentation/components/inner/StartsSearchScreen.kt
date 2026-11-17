@@ -8,22 +8,39 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.screens.FailedScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.start.search.search.presentation.component.StartsSearchComponent
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore
+import kotlinx.coroutines.launch
 
 @Composable
 fun StartsSearchScreen(component: StartsSearchComponent) {
     val state by component.model.collectAsState()
+    val focusManager = LocalFocusManager.current
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val launchVoiceInput = rememberStartVoiceInput(
+        onRecognized = { component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it)) },
+        onError = { message ->
+            scope.launch { snackbar.showSnackbar(message, withDismissAction = true) }
+        },
+    )
 
     Scaffold(
         modifier = Modifier,
+        snackbarHost = { SauceSnackbarHost(snackbar, tone = SauceSnackbarTone.Error) },
         topBar = {
             StartsSearchBarInner(
                 query = state.query,
@@ -39,6 +56,12 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 },
                 onClickBack = {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickBack)
+                },
+                onClickVoiceSearch = launchVoiceInput?.let { launch ->
+                    {
+                        focusManager.clearFocus()
+                        launch()
+                    }
                 },
             )
         },

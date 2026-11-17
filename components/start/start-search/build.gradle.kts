@@ -25,6 +25,10 @@ kotlin {
         implementation(libs.koin.core)
     }
 
+    sourceSets.androidMain.dependencies {
+        implementation(libs.compose.activity)
+    }
+
     sourceSets.jvmTest.dependencies {
         implementation(libs.kotlin.test)
         implementation(libs.kotlinx.coroutines.test)

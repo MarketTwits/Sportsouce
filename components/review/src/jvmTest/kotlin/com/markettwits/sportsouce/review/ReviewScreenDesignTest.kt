@@ -3,7 +3,11 @@ package com.markettwits.sportsouce.review
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.*
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,8 +40,16 @@ class ReviewScreenDesignTest {
     fun loadingKeepsMenuUsableAndRefreshPreservesContentWithoutSkeletons() {
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) for (width in listOf(320, 390)) {
             val component = FakeReviewComponent()
+            val feedback = mutableListOf<HapticFeedbackType>()
+            val haptics = object : HapticFeedback {
+                override fun performHapticFeedback(hapticFeedbackType: HapticFeedbackType) {
+                    feedback += hapticFeedbackType
+                }
+            }
             ImageComposeScene(width = width, height = 1400, density = Density(1f, scale)) {
-                Palette(dark) { ReviewScreen(component, notification = {}) }
+                CompositionLocalProvider(LocalHapticFeedback provides haptics) {
+                    Palette(dark) { ReviewScreen(component, notification = {}) }
+                }
             }.use { scene ->
                 scene.settle()
                 assertEquals(setOf("Загрузка новостей", "Загрузка актуальных стартов"), scene.loadingLabels())
@@ -48,6 +60,7 @@ class ReviewScreenDesignTest {
                     assertTrue(button.config[SemanticsActions.OnClick].action!!.invoke())
                 }
                 assertEquals((0..4).toList(), component.events.filterIsInstance<ReviewStore.Intent.OnClickMenu>().map { it.item })
+                assertEquals(List(5) { HapticFeedbackType.TextHandleMove }, feedback)
                 scene.save("review-loading-${if (dark) "dark" else "light"}-$width-${(scale * 100).toInt()}")
 
                 component.value.value = ReviewStore.State(review = Review(news = listOf(news), actualStarts = listOf(start)))

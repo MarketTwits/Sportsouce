@@ -5,7 +5,8 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.cloud.exception.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.schedule.schedule.domain.ScheduleRepository
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Intent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore.Label
@@ -32,7 +33,7 @@ internal class StartsScheduleStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoadedFull(val data: List<StartsListItem>) : Msg
-        data class InfoFailed(val message: String) : Msg
+        data class InfoFailed(val error: SauceError) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
@@ -53,7 +54,7 @@ internal class StartsScheduleStoreFactory(
                 dispatch(Msg.Loading)
                 repository.schedule()
                     .catch {
-                        dispatch(Msg.InfoFailed(networkExceptionHandler(it).message.toString()))
+                        dispatch(Msg.InfoFailed(it.mapToSauceError()))
                     }
                     .collect {
                         dispatch(Msg.InfoLoadedFull(data = it))
@@ -65,7 +66,7 @@ internal class StartsScheduleStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State =
             when (msg) {
-                is Msg.InfoFailed -> State(isError = true, message = msg.message)
+                is Msg.InfoFailed -> State(error = msg.error)
                 is Msg.Loading -> State(isLoading = true)
                 is Msg.InfoLoadedFull -> State(actualStarts = msg.data)
             }

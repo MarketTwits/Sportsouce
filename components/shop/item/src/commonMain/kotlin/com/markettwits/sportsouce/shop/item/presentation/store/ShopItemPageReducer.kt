@@ -7,15 +7,15 @@ import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore
 object ShopItemPageReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Failed -> copy(isLoading = false, isError = true, message = msg.message)
+            is Message.Failed -> copy(isLoading = false, error = msg.error)
             is Message.Loaded -> copy(
                 isLoading = false,
-                isError = false,
+                error = null,
                 shopItem = msg.item,
                 shopItemOptions = msg.shopItemOptions
             )
 
-            is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.Loading -> copy(isLoading = true, error = null)
             is Message.SimilarProductsLoaded -> copy(similarProducts = msg.similarProducts)
         }
     }

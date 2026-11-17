@@ -25,7 +25,7 @@ object MemberEditReducer : Reducer<State, Message> {
             is Message.TeamsFailed -> copy(teamsLoading = false, teamsError = true)
             is Message.Saving -> copy(isSaving = true, isError = false)
             is Message.Loading -> copy(isLoading = true, isError = false, loadError = null)
-            is Message.LoadError -> copy(isLoading = false, loadError = msg.message)
+            is Message.LoadError -> copy(isLoading = false, loadError = msg.error)
             is Message.UpdateSuccess -> copy(isLoading = false, isSaving = false, message = msg.message)
             is Message.OnConsumedEvent -> copy(event = consumed())
         }

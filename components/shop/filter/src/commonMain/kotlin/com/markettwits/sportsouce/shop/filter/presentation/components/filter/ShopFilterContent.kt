@@ -16,7 +16,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.navigation.SauceActionFooter
 import com.markettwits.core_ui.items.components.progress.CircularProgressIndicatorBase
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopCategoryItem
 import com.markettwits.sportsouce.shop.filter.domain.models.ShopOptionInfo
@@ -42,7 +42,7 @@ internal fun ShopFilterContent(
         containerColor = SauceTheme.colors.surface,
         topBar = { ShopFilterTopBar(onClickBack = onClickGoBack) },
         bottomBar = {
-            if (!state.isLoading && !state.isError) SauceActionFooter {
+            if (!state.isLoading && state.error == null) SauceActionFooter {
                 ShopFilterApplyButton(
                     onClickApply = onClickApplyFilter,
                     onClickReset = onClickReset
@@ -51,13 +51,13 @@ internal fun ShopFilterContent(
         },
     ) { paddingValues ->
         val contentModifier = Modifier.padding(paddingValues).consumeWindowInsets(paddingValues)
+        val error = state.error
         when {
             state.isLoading -> Box(contentModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicatorBase(Modifier.semantics { contentDescription = "Загрузка фильтров" })
             }
-            state.isError -> FailedScreen(
+            error != null -> error.SauceErrorScreen(
                 modifier = contentModifier,
-                message = state.message,
                 onClickRetry = onClickRetry,
             )
             else -> Column(contentModifier.verticalScroll(rememberScrollState()).padding(16.dp)) {

@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.shop.item.presentation.store
 
 import app.cash.paging.PagingData
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.domain.models.ShopExtraOptions
 import com.markettwits.sportsouce.shop.item.presentation.store.ShopItemPageStore.*
@@ -11,8 +12,7 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoading: Boolean,
-        val isError: Boolean,
-        val message: String,
+        val error: SauceError? = null,
         val shopItem: ShopItem?,
         val shopItemOptions : List<ShopExtraOptions>,
         val similarProducts: Flow<PagingData<ShopItem>>,
@@ -30,7 +30,7 @@ interface ShopItemPageStore : Store<Intent, State, Label> {
     sealed interface Message {
         data object Loading : Message
         data class Loaded(val item: ShopItem, val shopItemOptions: List<ShopExtraOptions>) : Message
-        data class Failed(val message: String) : Message
+        data class Failed(val error: SauceError) : Message
         data class SimilarProductsLoaded(val similarProducts: Flow<PagingData<ShopItem>>) : Message
     }
 

@@ -416,7 +416,7 @@ class ShopDesignSystemTest {
     }
 
     private class FakeItem : ShopItemPageComponent {
-        override val state = MutableStateFlow(ShopItemPageStore.State(true, false, "", null, emptyList(), flowOf(PagingData.empty())))
+        override val state = MutableStateFlow(ShopItemPageStore.State(isLoading = true, shopItem = null, shopItemOptions = emptyList(), similarProducts = flowOf(PagingData.empty())))
         val events = mutableListOf<ShopItemPageStore.Intent>()
         override fun obtainEvent(intent: ShopItemPageStore.Intent) { events += intent }
     }

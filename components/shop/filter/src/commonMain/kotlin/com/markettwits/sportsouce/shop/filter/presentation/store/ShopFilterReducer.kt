@@ -12,7 +12,7 @@ object ShopFilterReducer : Reducer<State, Message> {
                 categories = msg.categories,
                 selectedPrice = msg.price,
                 isLoading = false,
-                isError = false
+                error = null
             )
 
             is Message.UpdatePrice -> copy(selectedPrice = msg.price)
@@ -23,7 +23,7 @@ object ShopFilterReducer : Reducer<State, Message> {
                 isLoading = false
             )
 
-            is Message.Loading -> copy(isLoading = true, isError = false)
+            is Message.Loading -> copy(isLoading = true, error = null)
             is Message.UpdateCategories -> copy(categories = msg.categories)
             is Message.UpdateCurrentPath -> copy(selectedCategoryPath = msg.path)
             is Message.ResetFilter -> copy(
@@ -36,8 +36,7 @@ object ShopFilterReducer : Reducer<State, Message> {
             is Message.ApplyFilter -> copy(isApplied = true)
             is Message.Failed -> copy(
                 isLoading = false,
-                isError = true,
-                message = msg.message
+                error = msg.error
             )
         }
     }

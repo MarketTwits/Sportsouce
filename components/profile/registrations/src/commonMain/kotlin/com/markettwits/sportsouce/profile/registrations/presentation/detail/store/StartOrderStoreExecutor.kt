@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.store
 
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.log.LogTagProvider
@@ -45,7 +47,7 @@ class StartOrderStoreExecutor(
                 ).fold(onSuccess = {
                     dispatch(Message.GetPriceSuccess(it.totalPrice))
                 }, onFailure = {
-                    dispatch(Message.GetPriceFailed(it.message.toString()))
+                    dispatch(Message.GetPriceFailed(it.mapToSauceError().mapToString()))
                     errorLog(it) { "Failed when try get price for order ${orderInfo.id}" }
                 })
             }
@@ -61,7 +63,7 @@ class StartOrderStoreExecutor(
                     intentAction.openWebPage(it)
                 },
                 onFailure = {
-                    dispatch(Message.GetPriceFailed(it.message.toString()))
+                    dispatch(Message.GetPriceFailed(it.mapToSauceError().mapToString()))
                 }
             )
         }

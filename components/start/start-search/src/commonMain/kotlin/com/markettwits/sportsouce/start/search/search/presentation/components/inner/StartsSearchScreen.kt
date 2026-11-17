@@ -19,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
 import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.start.search.search.presentation.component.StartsSearchComponent
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore
@@ -95,14 +96,16 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 .consumeWindowInsets(paddingValues)
                 .background(MaterialTheme.colorScheme.background)
         ) {
+            val error = state.error
             val screenState = when {
                 state.isLoading -> ScreenState.LOADING
-                state.isError -> ScreenState.ERROR
+                error != null -> ScreenState.Error(error)
                 state.query.isEmpty() && state.filter.filterIsEmpty() -> ScreenState.HISTORY
                 else -> ScreenState.RESULTS
             }
             AnimatedContent(
                 targetState = screenState,
+                contentKey = { it::class },
                 transitionSpec = {
                     fadeIn(
                         animationSpec = tween(400, easing = FastOutSlowInEasing)
@@ -123,11 +126,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                         LoadingFullScreen()
                     }
 
-                    ScreenState.ERROR -> {
-                        FailedScreen(message = state.message) {
-                            component.obtainEvent(StartsSearchStore.Intent.OnClickRetry)
-                        }
-                    }
+                    is ScreenState.Error -> currentState.error.SauceErrorScreen(
+                        onClickRetry = { component.obtainEvent(StartsSearchStore.Intent.OnClickRetry) },
+                    )
 
                     ScreenState.HISTORY -> {
                         if (state.searchHistory.isNotEmpty()) {
@@ -161,9 +162,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     }
 }
 
-private enum class ScreenState {
-    LOADING,
-    ERROR,
-    HISTORY,
-    RESULTS
+private sealed interface ScreenState {
+    data object LOADING : ScreenState
+    data class Error(val error: SauceError) : ScreenState
+    data object HISTORY : ScreenState
+    data object RESULTS : ScreenState
 }

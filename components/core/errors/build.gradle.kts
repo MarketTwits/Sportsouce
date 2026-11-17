@@ -12,9 +12,15 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.core.ui)
+            implementation(projects.components.core.cloud)
             implementation(projects.components.core.log)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.compose.components.resources)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
         }
     }
 }

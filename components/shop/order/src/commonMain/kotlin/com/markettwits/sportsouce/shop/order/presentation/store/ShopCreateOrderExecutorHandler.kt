@@ -68,7 +68,7 @@ abstract class ShopCreateOrderExecutorHandler(
                     Message.UpdateShopRecipientState(
                         state.copy(
                             isAvailable = false,
-                            message = it.message.toString()
+                            message = it.mapToSauceError().mapToString()
                         )
                     )
                 )
@@ -214,7 +214,7 @@ abstract class ShopCreateOrderExecutorHandler(
                             triggered(
                                 EventContent(
                                     success = false,
-                                    message = it.message.toString()
+                                    message = it.mapToSauceError().mapToString()
                                 )
                             )
                         )

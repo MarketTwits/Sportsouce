@@ -7,22 +7,22 @@ import com.markettwits.sportsouce.start.search.search.presentation.store.StartsS
 object StartsSearchReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            Message.ClearResults -> copy(isLoading = false, isError = false, starts = emptyList(), message = "")
+            Message.ClearResults -> copy(isLoading = false, error = null, starts = emptyList())
             is Message.HistoryLoaded -> copy(searchHistory = msg.items)
             is Message.Brush -> {
                 if (msg.brushWithItems) copy(query = "", starts = emptyList()) else copy(query = "")
             }
 
-            is Message.InfoFailed -> copy(isError = true, message = msg.message, isLoading = false)
+            is Message.InfoFailed -> copy(error = msg.error, isLoading = false)
             is Message.InfoLoaded -> copy(
-                isError = false,
+                error = null,
                 isLoading = false,
                 starts = msg.starts.items,
                 searchHistory = msg.starts.searches
             )
 
-            is Message.ChangeTextFiled -> copy(query = msg.value)
-            is Message.Loading -> copy(isLoading = true)
+            is Message.ChangeTextFiled -> copy(query = msg.value, error = null)
+            is Message.Loading -> copy(isLoading = true, error = null)
             is Message.FilterApply -> copy(filter = msg.filter, sorted = msg.sorted)
             is Message.DeleteHistoryItem -> copy(searchHistory = searchHistory.filter { it != msg.value })
         }

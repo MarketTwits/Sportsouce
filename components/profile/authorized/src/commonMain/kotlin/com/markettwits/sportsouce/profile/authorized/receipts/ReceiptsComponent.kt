@@ -3,7 +3,8 @@ package com.markettwits.sportsouce.profile.authorized.receipts
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.mapToSauceError
+import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.profile.cloud.model.receipts.PaidReceipt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -52,7 +53,7 @@ internal class ReceiptLoadController<T>(
             } catch (error: CancellationException) {
                 throw error
             } catch (error: Exception) {
-                val message = error.networkExceptionHandler().message ?: "Не удалось загрузить данные"
+                val message = error.mapToSauceError().mapToString()
                 ensureActive()
                 mutableState.update { it.copy(loading = false, error = message) }
             }

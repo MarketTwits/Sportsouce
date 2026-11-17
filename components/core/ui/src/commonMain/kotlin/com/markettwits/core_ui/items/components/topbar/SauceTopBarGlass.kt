@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -63,20 +64,26 @@ fun sauceTopBarContainerColor(): Color =
 
 @OptIn(ExperimentalHazeApi::class)
 @Composable
-internal fun Modifier.sauceTopBarGlass(state: SauceTopBarState, primary: Boolean = true): Modifier {
+internal fun Modifier.sauceTopBarGlass(
+    state: SauceTopBarState,
+    primary: Boolean = true,
+    containerColor: Color = Color.Unspecified,
+    effectAlpha: Float = 1f,
+): Modifier {
     val key = remember(state) { Any() }
     DisposableEffect(state, key) { onDispose { state.remove(key) } }
-    val colors = SauceTheme.colors
+    val surface = containerColor.takeOrElse { SauceTheme.colors.surface }
     val dark = LocalDarkOrLightTheme.current
     val style = HazeStyle(
-        backgroundColor = colors.surface,
-        tint = HazeTint(colors.surface.copy(alpha = if (dark) 0.72f else 0.70f)),
+        backgroundColor = surface,
+        tint = HazeTint(surface.copy(alpha = if (dark) 0.72f else 0.70f)),
         blurRadius = 20.dp,
         noiseFactor = 0.01f,
-        fallbackTint = HazeTint(colors.surface.copy(alpha = 0.96f)),
+        fallbackTint = HazeTint(surface.copy(alpha = 0.96f)),
     )
     return onGloballyPositioned { state.update(key, it, primary) }.clipToBounds().hazeEffect(state.haze, style) {
         inputScale = HazeInputScale.Auto
+        alpha = effectAlpha
     }
 }
 

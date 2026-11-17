@@ -8,6 +8,9 @@ import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.pause
+import com.arkivanov.essenty.lifecycle.resume
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.sauceColors
 import com.markettwits.sportsouce.news.common.model.NewsItem
@@ -88,6 +91,32 @@ class ReviewScreenDesignTest {
         }
     }
 
+    @Test
+    fun carouselAdvancesAfterSixAndAHalfSecondsOnlyWhileReviewIsActive() {
+        val second = news.copy(id = 2, title = "Следующий старт")
+        val component = FakeReviewComponent()
+        component.value.value = ReviewStore.State(review = Review(news = listOf(news, second)))
+        ImageComposeScene(width = 390, height = 800, density = Density(1f)) {
+            Palette(false) { ReviewScreen(component, notification = {}) }
+        }.use { scene ->
+            scene.advanceFrames(80)
+            val startX = scene.text(news.title).boundsInRoot.left
+
+            component.lifecycle.resume()
+            scene.advanceFrames(63)
+            assertEquals(startX, scene.text(news.title).boundsInRoot.left, 1f)
+            scene.advanceFrames(10)
+            assertEquals(startX, scene.text(second.title).boundsInRoot.left, 1f)
+
+            component.lifecycle.pause()
+            scene.advanceFrames(80)
+            assertEquals(startX, scene.text(second.title).boundsInRoot.left, 1f)
+            component.lifecycle.resume()
+            scene.advanceFrames(73)
+            assertEquals(startX, scene.text(news.title).boundsInRoot.left, 1f)
+        }
+    }
+
     @Composable
     private fun Palette(dark: Boolean, content: @Composable () -> Unit) {
         val colors = sauceColors(dark)
@@ -98,12 +127,16 @@ class ReviewScreenDesignTest {
     }
 
     private class FakeReviewComponent : ReviewComponent {
+        override val lifecycle = LifecycleRegistry()
         override val value = MutableStateFlow(ReviewStore.State(isLoading = true))
         val events = mutableListOf<ReviewStore.Intent>()
         override fun obtainEvent(event: ReviewStore.Intent) { events += event }
     }
     private var time = System.nanoTime()
-    private fun ImageComposeScene.settle() { repeat(12) { time += 100_000_000L; render(time).close() } }
+    private fun ImageComposeScene.settle() = advanceFrames(12)
+    private fun ImageComposeScene.advanceFrames(count: Int) {
+        repeat(count) { time += 100_000_000L; render(time).close() }
+    }
     private fun ImageComposeScene.nodes(): List<SemanticsNode> {
         fun walk(node: SemanticsNode): List<SemanticsNode> = listOf(node) + node.children.flatMap(::walk)
         return semanticsOwners.flatMap { walk(it.unmergedRootSemanticsNode) }

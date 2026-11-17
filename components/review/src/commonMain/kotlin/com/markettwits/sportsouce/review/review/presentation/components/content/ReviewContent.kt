@@ -5,6 +5,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.markettwits.sportsouce.news.common.model.NewsItem
@@ -41,13 +42,21 @@ fun ReviewContent(
     photoAlbumsFailed: Boolean = false,
     onClickPhotoAlbum: (Int) -> Unit = {},
     onRetryPhotoAlbums: () -> Unit = {},
+    newsModifier: Modifier = Modifier,
+    newsAutoAdvance: Boolean = true,
+    onNewsCoverColorChange: (Color) -> Unit = {},
     notification: @Composable ((Modifier) -> Unit),
 ) {
     ReviewSection(maxWidth = 1160.dp) {
         if (news.isNotEmpty() || isLoading) {
-            NewsContent(items = news, isLoading = isLoading && news.isEmpty()) {
-                onClickNewsInfo(it)
-            }
+            NewsContent(
+                modifier = newsModifier,
+                items = news,
+                isLoading = isLoading,
+                autoAdvance = newsAutoAdvance,
+                onActiveCoverColorChange = onNewsCoverColorChange,
+                onClickItem = onClickNewsInfo,
+            )
         }
         ReviewMenu {
             onClickMenu(it)

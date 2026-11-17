@@ -5,10 +5,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -16,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.text.HtmlText
@@ -29,19 +35,29 @@ fun NewsItemCard(
     modifier: Modifier = Modifier,
     newsInfo: NewsItem,
     cardWidth: Dp = 270.dp,
+    onCoverColor: ((Color) -> Unit)? = null,
+    coverOverlay: @Composable BoxScope.() -> Unit = {},
     onClick: (NewsItem) -> Unit,
 ) {
     NewsCardLayout(
         modifier = modifier.clip(Shapes.medium).clickable(role = Role.Button) { onClick(newsInfo) },
         cardWidth = cardWidth,
         image = {
+            val context = LocalPlatformContext.current
+            val sampleCover = onCoverColor != null
+            val model = remember(context, newsInfo.imageUrl, sampleCover) {
+                if (sampleCover) ImageRequest.Builder(context)
+                    .data(newsInfo.imageUrl)
+                    .enableNewsCoverSampling()
+                    .build()
+                else newsInfo.imageUrl
+            }
             SubcomposeAsyncImage(
-                model = newsInfo.imageUrl,
+                model = model,
                 contentDescription = newsInfo.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(Shapes.medium)
                     .border(1.dp, SauceTheme.colors.border, Shapes.medium),
                 error = {
                     SubcomposeAsyncImageContent(
@@ -49,13 +65,21 @@ fun NewsItemCard(
                         contentScale = ContentScale.Crop
                     )
                 },
-                success = {
+                success = { state ->
+                    if (onCoverColor != null) {
+                        val density = LocalDensity.current
+                        val direction = LocalLayoutDirection.current
+                        LaunchedEffect(state, newsInfo.imageUrl) {
+                            onCoverColor(state.painter.newsCoverColor(density, direction))
+                        }
+                    }
                     SubcomposeAsyncImageContent()
                 },
                 loading = {
                     SauceSkeleton(Modifier.fillMaxSize(), Shapes.medium)
                 }
             )
+            coverOverlay()
         },
     ) {
         Text(
@@ -105,7 +129,7 @@ private fun NewsCardLayout(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier.width(cardWidth)) {
-        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f), content = image)
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(Shapes.medium), content = image)
         Column(Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp), content = content)
     }

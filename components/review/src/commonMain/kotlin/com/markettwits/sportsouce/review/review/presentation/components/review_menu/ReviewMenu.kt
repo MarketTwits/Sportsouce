@@ -13,6 +13,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceSpacing
@@ -20,6 +22,11 @@ import com.markettwits.core_ui.items.theme.SauceSpacing
 @Composable
 fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     val menuItems = menu()
+    val haptics = LocalHapticFeedback.current
+    val select: (Int) -> Unit = {
+        haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        onClick(it)
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -39,7 +46,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
                     accentColor = menuItems[i].accentColor,
                     backgroundColor = menuItems[i].backgroundColor,
                     shape = reviewMenuShape(i, menuItems.size),
-                    onClick = { onClick(menuItems[i].id) },
+                    onClick = { select(menuItems[i].id) },
                     modifier = Modifier.weight(1f)
                 )
                 if (i + 1 < menuItems.size) {
@@ -49,7 +56,7 @@ fun ReviewMenu(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
                         accentColor = menuItems[i + 1].accentColor,
                         backgroundColor = menuItems[i + 1].backgroundColor,
                         shape = reviewMenuShape(i + 1, menuItems.size),
-                        onClick = { onClick(menuItems[i + 1].id) },
+                        onClick = { select(menuItems[i + 1].id) },
                         modifier = Modifier.weight(1f)
                     )
                 } else {

@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
@@ -94,6 +95,8 @@ fun CollapsingToolbarScaffold(
     enabled: Boolean = true,
     toolbarModifier: Modifier = Modifier,
     toolbarClipToBounds: Boolean = true,
+    toolbarGlassColor: Color = Color.Unspecified,
+    toolbarGlassAlpha: Float = 1f,
     toolbar: @Composable CollapsingToolbarScope.() -> Unit,
     body: @Composable CollapsingToolbarScaffoldScope.() -> Unit
 ) {
@@ -114,7 +117,11 @@ fun CollapsingToolbarScaffold(
 	Layout(
 		content = {
 			CollapsingToolbar(
-				modifier = toolbarModifier.sauceTopBarGlass(glass),
+				modifier = toolbarModifier.sauceTopBarGlass(
+					state = glass,
+					containerColor = toolbarGlassColor,
+					effectAlpha = toolbarGlassAlpha,
+				),
 				clipToBounds = toolbarClipToBounds,
 				collapsingToolbarState = toolbarState,
 			) {

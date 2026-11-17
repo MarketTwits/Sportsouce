@@ -34,7 +34,7 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
                 distance = it.condition_short ?: "",
                 kindOfSports = mapKindOfSports(it.kindOfSports),
                 organizers = mapOrganizers(it.organizers),
-                slots = mapSlots(it.open_slots_sum, it.total_slots_sum),
+                slots = mapSlots(it.open_slots_sum, it.total_slots_sum, isUnlimited = it.has_infinite_slots == true),
                 onMainPage = it.on_main_page ?: false,
                 hasAlbums = it.is_has_albums == true,
                 hasResults = it.results.isNotEmpty() || !it.results_link.isNullOrBlank(),
@@ -72,11 +72,12 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
     private fun mapSlots(
         openSlots: JsonElement?,
         totalSlots: JsonElement?,
+        isUnlimited: Boolean,
     ): StartsListItem.Slots? {
         val open = openSlots.toNormalizedString()
         val total = totalSlots.toNormalizedString()
 
-        if (open == null && total == null) return null
+        if (!isUnlimited && open == null && total == null) return null
 
         val openNormalized = open ?: "0"
         val totalNormalized = total ?: ""
@@ -84,7 +85,8 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
         return StartsListItem.Slots(
             openSlots = openNormalized,
             totalSlots = totalNormalized,
-            isAvailable = openNormalized.toIntOrNull()?.let { it > 0 } ?: false
+            isAvailable = isUnlimited || (openNormalized.toIntOrNull() ?: 0) > 0,
+            isUnlimited = isUnlimited,
         )
     }
 

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -116,7 +117,12 @@ fun StartCardV3(
                     StartCardV3ImageOverlayBadge(
                         modifier = Modifier
                             .padding(overlayPadding)
-                            .align(if (largeText) Alignment.TopStart else Alignment.BottomEnd),
+                            .align(if (largeText) Alignment.TopStart else Alignment.BottomEnd)
+                            .semantics {
+                                if (start.slots?.isUnlimited == true) {
+                                    contentDescription = "Количество мест не ограничено"
+                                }
+                            },
                         text = slotsText,
                         backgroundColor = Color.Black.copy(alpha = 0.46f),
                         icon = if (isVeryCompactScreen) null else {
@@ -342,6 +348,7 @@ private fun StartCardV3MetaRow(
 
 private fun StartsListItem.Slots?.toSlotsText(): String? {
     if (this == null) return null
+    if (isUnlimited) return "∞"
     val open = openSlots.trim().ifEmpty { "0" }
     val total = totalSlots.trim().ifEmpty { "-" }
     return "$open/$total"

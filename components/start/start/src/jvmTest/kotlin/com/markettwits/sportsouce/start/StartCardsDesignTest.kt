@@ -69,6 +69,21 @@ class StartCardsDesignTest {
             tertiary = p.textPrimary, primaryContainer = p.surfaceRaised, outline = p.textMuted), content = content)
     }
 
+    @Test fun reviewCardShowsInfinityOnlyForUnlimitedSlots() {
+        for ((isUnlimited, expected) in listOf(true to "∞", false to "0/0")) {
+            val event = start.copy(slots = StartsListItem.Slots("0", "0", isUnlimited, isUnlimited))
+            ImageComposeScene(width = 390, height = 600) {
+                AppPalette(dark = false) { StartCardV3(start = event, onItemClick = {}) }
+            }.use { scene ->
+                scene.settle()
+                val texts = scene.nodes().flatMap { node ->
+                    node.config.getOrNull(SemanticsProperties.Text).orEmpty().map { it.text }
+                }
+                assertEquals(listOf(expected), texts.filter { it == "∞" || it == "0/0" })
+            }
+        }
+    }
+
     @Test fun reviewAvailabilityBadgesFitBelowDateAndPreserveCardNavigation() {
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) for (width in listOf(320, 390)) {
             for ((albums, results) in listOf(false to false, true to false, false to true, true to true)) {

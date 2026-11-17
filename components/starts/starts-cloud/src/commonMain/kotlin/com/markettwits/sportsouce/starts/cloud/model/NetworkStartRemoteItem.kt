@@ -61,4 +61,5 @@ data class NetworkStartRemoteItem(
     val updatedAt: String,
     val viewsCount: Int,
     val is_has_albums: Boolean? = false,
+    val has_infinite_slots: Boolean? = null,
 )

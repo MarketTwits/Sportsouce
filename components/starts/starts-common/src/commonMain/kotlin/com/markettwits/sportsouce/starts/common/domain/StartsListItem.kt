@@ -31,6 +31,7 @@ data class StartsListItem(
         val openSlots: String,
         val totalSlots: String,
         val isAvailable: Boolean,
+        val isUnlimited: Boolean = false,
     )
 
     @Serializable

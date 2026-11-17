@@ -107,6 +107,27 @@ class StartDateCompatibilityTest {
         assertEquals(current.slug, restored.slug)
     }
 
+    @Test fun unlimitedSlotsComeFromTheApiFlagEvenWithoutNumericCounts() {
+        val fields = json.parseToJsonElement(payload).jsonObject
+        val zeroCounts = fields + mapOf("open_slots_sum" to JsonPrimitive("0"), "total_slots_sum" to JsonPrimitive("0"))
+        val unlimited = map(JsonObject(zeroCounts + ("has_infinite_slots" to JsonPrimitive(true))))
+        val unlimitedSlots = assertNotNull(unlimited.slots)
+        assertTrue(unlimitedSlots.isUnlimited)
+        assertTrue(unlimitedSlots.isAvailable)
+        assertEquals(unlimited, json.decodeFromString<StartsListItem>(json.encodeToString(unlimited)))
+
+        val withoutCounts = map(JsonObject(fields + ("has_infinite_slots" to JsonPrimitive(true))))
+        assertTrue(assertNotNull(withoutCounts.slots).isUnlimited)
+
+        val limited = assertNotNull(map(JsonObject(zeroCounts)).slots)
+        assertFalse(limited.isUnlimited)
+        assertFalse(limited.isAvailable)
+        val oldSlots = json.decodeFromString<StartsListItem.Slots>(
+            """{"openSlots":"0","totalSlots":"0","isAvailable":false}""",
+        )
+        assertEquals(limited, oldSlots)
+    }
+
     private fun map(payload: JsonObject) = StartsCloudToListMapperBase(BaseTimeMapper())
         .mapSingle(listOf(json.decodeFromJsonElement<NetworkStartRemoteItem>(payload))).single()
 }

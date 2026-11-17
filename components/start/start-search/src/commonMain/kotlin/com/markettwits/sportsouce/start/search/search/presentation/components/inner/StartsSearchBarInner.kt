@@ -30,6 +30,7 @@ fun StartsSearchBarInner(
     onBrushClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     onClickBack: () -> Unit,
+    onClickVoiceSearch: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier
@@ -67,9 +68,9 @@ fun StartsSearchBarInner(
                 )
             },
         )
-        if (query.isEmpty()) {
+        if (query.isEmpty() && onClickVoiceSearch != null) {
             IconButton(
-                onClick = { }
+                onClick = onClickVoiceSearch,
             ) {
                 Icon(
                     imageVector = Icons.Default.Mic,
@@ -77,7 +78,7 @@ fun StartsSearchBarInner(
                     tint = SauceTheme.colors.textMuted
                 )
             }
-        } else {
+        } else if (query.isNotEmpty()) {
             IconButton(
                 onClick = { onBrushClicked() }
             ) {

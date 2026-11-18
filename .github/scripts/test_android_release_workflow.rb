@@ -16,18 +16,22 @@ class AndroidReleaseWorkflowTest < Minitest::Test
   def test_public_github_body_stays_english_while_app_snapshots_are_separate
     script = @jobs.fetch('prepare-release').fetch('steps')
                   .find { |step| step['name'] == 'Prepare release notes' }.fetch('run')
-                  .gsub('${{ steps.version.outputs.version_name }}', '1.2.3')
     Dir.mktmpdir do |dir|
       notes = File.join(dir, '.github/whatsnew')
       FileUtils.mkdir_p(notes)
       File.write(File.join(notes, 'whatsnew-en-US'), 'English notes $APP_VERSION')
       File.write(File.join(notes, 'whatsnew-ru-RU'), 'Русский текст $APP_VERSION')
+      scripts = File.join(dir, '.github/scripts')
+      FileUtils.mkdir_p(scripts)
+      FileUtils.cp(File.join(__dir__, 'generate_update_notes.py'), scripts)
       output = File.join(dir, 'output')
-      _, stderr, status = Open3.capture3({ 'GITHUB_OUTPUT' => output },
+      env = { 'GITHUB_OUTPUT' => output, 'RUNNER_TEMP' => dir, 'VERSION_NAME' => '1.2.3' }
+      _, stderr, status = Open3.capture3(env,
         'bash', '-e', '-o', 'pipefail', '-c', script, chdir: dir)
       assert status.success?, stderr
       assert_includes File.read(output), 'English notes 1.2.3'
       refute_includes File.read(output), 'Русский текст'
+      assert_equal 'Русский текст 1.2.3', File.read(File.join(dir, 'play-notes/whatsnew-ru-RU'))
     end
     publish = @jobs.fetch('publish-github-release').fetch('steps')
                    .find { |step| step['name'] == 'Verify and publish complete release' }

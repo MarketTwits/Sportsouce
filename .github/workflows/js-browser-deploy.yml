@@ -3,6 +3,10 @@ name: Deploy Compose Web App (JS)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+
 concurrency:
   group: sportsauce-web-deployment
   cancel-in-progress: false
@@ -71,3 +75,39 @@ jobs:
         with:
           branch: gh-pages
           folder: instances/app-browser/build/dist/js/productionExecutable
+
+      - name: Confirm GitHub Pages publication
+        timeout-minutes: 10
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          expected_commit=$(git ls-remote --exit-code origin refs/heads/gh-pages | cut -f1)
+          builds_endpoint="repos/$GITHUB_REPOSITORY/pages/builds"
+          latest_build() {
+            gh api "$builds_endpoint/latest" --jq '[.commit, .status] | @tsv'
+          }
+
+          build=$(latest_build)
+          read -r commit status <<< "$build"
+          if [[ "$commit" != "$expected_commit" ]]; then
+            # A push using GITHUB_TOKEN can leave the branch ahead of the live site.
+            gh api --method POST "$builds_endpoint" --silent
+          fi
+
+          for _ in {1..36}; do
+            build=$(latest_build)
+            read -r commit status <<< "$build"
+            if [[ "$commit" == "$expected_commit" ]]; then
+              case "$status" in
+                built) exit 0 ;;
+                errored)
+                  gh api "$builds_endpoint/latest" --jq '.error.message' >&2
+                  exit 1
+                  ;;
+              esac
+            fi
+            sleep 15
+          done
+          echo "GitHub Pages did not confirm publication of $expected_commit" >&2
+          exit 1

@@ -41,7 +41,7 @@ class BottomNavigationTest {
                     assertEquals(if (layout.layoutInput.text.text == "Обзор") colors.action else colors.textMuted,
                         layout.layoutInput.style.color)
                 }
-                assertEquals(3, labels.size)
+                assertEquals(4, labels.size)
             }
         }
     }
@@ -53,9 +53,9 @@ class BottomNavigationTest {
             settle(scene)
             scene.saveFrame("icons-only")
             val tabs = scene.nodes().filter { it.config.contains(SemanticsProperties.Selected) }
-            assertEquals(3, tabs.size)
+            assertEquals(4, tabs.size)
             assertTrue(tabs.all { it.boundsInRoot.height >= 48f })
-            assertEquals(listOf("Старты", "Обзор", "Профиль"), tabs.map {
+            assertEquals(listOf("Старты", "Обзор", "Мои старты", "Профиль"), tabs.map {
                 it.config.getOrNull(SemanticsProperties.ContentDescription)?.single()
             })
             tabs.forEach {
@@ -79,7 +79,7 @@ class BottomNavigationTest {
             assertTrue("Есть обновления" in states)
             // Badge text is intentionally hidden from semantics; its full count is announced above.
             val textLayouts = scene.nodes().filter { it.config.contains(SemanticsActions.GetTextLayoutResult) }
-            assertEquals(3, textLayouts.size)
+            assertEquals(4, textLayouts.size)
         }
     }
 

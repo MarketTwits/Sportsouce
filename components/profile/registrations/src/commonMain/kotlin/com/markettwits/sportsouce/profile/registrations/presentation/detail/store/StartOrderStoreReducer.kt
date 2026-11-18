@@ -7,6 +7,17 @@ import com.markettwits.sportsouce.profile.registrations.presentation.detail.stor
 object StartOrderStoreReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
+            is Message.RefreshStatus -> copy(isRefreshing = msg.isRefreshing, refreshError = msg.error)
+
+            is Message.OrderUpdated -> copy(
+                startOrderInfo = msg.order,
+                startPriceResult = if (msg.order.payment.isPaid) {
+                    StartOrderStore.StartPriceResult.Free
+                } else {
+                    StartOrderStore.StartPriceResult.Loading
+                },
+            )
+
             is Message.GetPriceDontRequired -> copy(
                 startPriceResult = StartOrderStore.StartPriceResult.Free
             )

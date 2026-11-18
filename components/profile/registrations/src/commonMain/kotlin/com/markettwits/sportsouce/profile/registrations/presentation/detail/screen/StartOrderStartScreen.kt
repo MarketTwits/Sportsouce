@@ -7,11 +7,17 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.components.topbar.TopBarWithClip
+import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponent
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.StartOrderTabRow
@@ -34,6 +40,15 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
     val state by component.state.collectAsState()
     val pagerState = rememberStartOrderPagerState(state.startOrderInfo)
     val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val inheritedBottomPadding = LocalScrollContentBottomPadding.current
+
+    LaunchedEffect(state.refreshError) {
+        state.refreshError?.let { message ->
+            snackbarHostState.showLongMessageWithDismiss(message)
+            component.obtainEvent(StartOrderStore.Intent.DismissRefreshError)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -41,7 +56,8 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                 component.obtainEvent(StartOrderStore.Intent.Dismiss)
             }
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SauceSnackbarHost(snackbarHostState, tone = SauceSnackbarTone.Error) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -54,40 +70,50 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                 priceResult = state.startPriceResult,
                 coroutineScope = coroutineScope
             )
-            AdaptivePane {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxSize()
-                ) { page ->
-                    when (page) {
-                        0 -> OrderOverviewTab(
-                            orderInfo = state.startOrderInfo,
-                            priceState = state.startPriceResult,
-                            onClickStart = { component.obtainEvent(StartOrderStore.Intent.OnClickStart(it)) },
-                            onClickPay = { component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id)) },
-                            onUpdatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) },
-                            onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) },
-                            onReRegistration = {
-                                component.obtainEvent(
-                                    StartOrderStore.Intent.OnClickReRegistration(
-                                        state.startOrderInfo.startId,
-                                        state.startOrderInfo.id
-                                    )
+            CompositionLocalProvider(
+                LocalScrollContentBottomPadding provides inheritedBottomPadding + paddingValues.calculateBottomPadding(),
+            ) {
+                AdaptivePane {
+                    PullToRefreshScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        isRefreshing = state.isRefreshing,
+                        onRefresh = { component.obtainEvent(StartOrderStore.Intent.RefreshOrder(userInitiated = true)) },
+                    ) {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize(),
+                        ) { page ->
+                            when (page) {
+                                0 -> OrderOverviewTab(
+                                    orderInfo = state.startOrderInfo,
+                                    priceState = state.startPriceResult,
+                                    onClickStart = { component.obtainEvent(StartOrderStore.Intent.OnClickStart(it)) },
+                                    onClickPay = { component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id)) },
+                                    onUpdatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) },
+                                    onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) },
+                                    onReRegistration = {
+                                        component.obtainEvent(
+                                            StartOrderStore.Intent.OnClickReRegistration(
+                                                state.startOrderInfo.startId,
+                                                state.startOrderInfo.id
+                                            )
+                                        )
+                                    }
                                 )
+
+                                1 -> OrderMembersTab(
+                                    members = state.startOrderInfo.members
+                                )
+
+                                2 -> OrderPaymentTab(
+                                    orderInfo = state.startOrderInfo,
+                                    priceState = state.startPriceResult
+                                )
+
+                                3 -> if (state.startOrderInfo.payment.isPaid) {
+                                    OrderShareTab(state.startOrderInfo)
+                                }
                             }
-                        )
-
-                        1 -> OrderMembersTab(
-                            members = state.startOrderInfo.members
-                        )
-
-                        2 -> OrderPaymentTab(
-                            orderInfo = state.startOrderInfo,
-                            priceState = state.startPriceResult
-                        )
-
-                        3 -> if (state.startOrderInfo.payment.isPaid) {
-                            OrderShareTab(state.startOrderInfo)
                         }
                     }
                 }
@@ -95,5 +121,3 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
         }
     }
 }
-
-

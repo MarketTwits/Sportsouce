@@ -8,7 +8,9 @@ interface StartOrderStore : Store<Intent, State, Label> {
 
     data class State(
         val startPriceResult: StartPriceResult = StartPriceResult.Loading,
-        val startOrderInfo: StartOrderInfo
+        val startOrderInfo: StartOrderInfo,
+        val isRefreshing: Boolean = false,
+        val refreshError: String? = null,
     )
 
     sealed interface StartPriceResult {
@@ -20,6 +22,9 @@ interface StartOrderStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Dismiss : Intent
+        data class RefreshOrder(val userInitiated: Boolean = false) : Intent
+        data object CancelOrderRefresh : Intent
+        data object DismissRefreshError : Intent
         data class OnClickPay(val orderId: Int) : Intent
         data class OnClickStart(val startId: Int) : Intent
         data object OnClickUpdatePrice : Intent
@@ -28,6 +33,8 @@ interface StartOrderStore : Store<Intent, State, Label> {
     }
 
     sealed interface Message {
+        data class OrderUpdated(val order: StartOrderInfo) : Message
+        data class RefreshStatus(val isRefreshing: Boolean, val error: String? = null) : Message
         data object GetPriceLoading : Message
         data class GetPriceSuccess(val newPrice: String) : Message
         data class GetPriceFailed(val message: String) : Message

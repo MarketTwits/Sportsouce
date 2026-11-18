@@ -24,6 +24,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.router.slot.child
 import com.markettwits.sportsouce.bottom_bar.components.BottomBarScaffold
+import com.markettwits.sportsouce.profile.upcoming.UpcomingStartsScreen
 import com.markettwits.sportsouce.review.root.RootReviewScreen
 import com.markettwits.sportsouce.root_profile.RootProfileScreen
 import com.markettwits.sportsouce.starts.root.RootStartsScreen
@@ -83,6 +84,7 @@ private fun NestedContent(component: RootComponent, modifier: Modifier = Modifie
             is RootComponent.Child.Starts -> RootStartsScreen(child.component)
             is RootComponent.Child.Profile -> RootProfileScreen(child.component)
             is RootComponent.Child.Review -> RootReviewScreen(child.component)
+            is RootComponent.Child.MyStarts -> UpcomingStartsScreen(child.component)
 
         }
     }

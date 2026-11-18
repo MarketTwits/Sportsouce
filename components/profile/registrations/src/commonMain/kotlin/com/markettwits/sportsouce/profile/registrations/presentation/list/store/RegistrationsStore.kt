@@ -12,15 +12,19 @@ import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPaymentStatus
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 
 interface RegistrationsStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object Pop : Intent
+        data object Resume : Intent
+        data object Pause : Intent
         data object LoadData : Intent
         data class OnClickFilter(val item: FilterItem) : Intent
         data class OnClickItem(val orderInfo: StartOrderInfo) : Intent
@@ -34,6 +38,7 @@ interface RegistrationsStore : Store<Intent, State, Label> {
         val exception: SauceError? = null,
         val isLoading: Boolean = false,
         val isSuccess: Boolean = false,
+        val isRefreshing: Boolean = false,
     )
 
     sealed interface Label {
@@ -58,17 +63,25 @@ class RegistrationsDataStoreFactory(
         ) {}
 
     private sealed interface Msg {
-        data object Loading : Msg
+        data class Loading(val userInitiated: Boolean) : Msg
+        data object LoadFinished : Msg
         data class InfoFailed(val sauceError: SauceError) : Msg
-        data class InfoLoaded(val starts: List<StartOrderInfo>, val filter: List<FilterItem>) : Msg
+        data class InfoLoaded(val starts: List<StartOrderInfo>, val filtered: List<StartOrderInfo>, val filter: List<FilterItem>) : Msg
         data class UpdateList(val starts: List<StartOrderInfo>, val filter: List<FilterItem>) : Msg
         data class UpdateUserInfo(val sharedUser: SharedUser) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
+        private var loadJob: Job? = null
+
         override fun executeIntent(intent: Intent) {
             when (intent) {
-                is Intent.LoadData -> launch(true)
+                Intent.Resume -> load(userInitiated = false)
+                Intent.Pause -> {
+                    loadJob?.cancel()
+                    dispatch(Msg.LoadFinished)
+                }
+                Intent.LoadData -> load(userInitiated = true)
                 is Intent.OnClickItem -> publish(Label.OnItemClick(intent.orderInfo))
                 is Intent.Pop -> publish(Label.GoBack)
                 is Intent.OnClickFilter -> updateFilter(intent.item, state())
@@ -81,17 +94,23 @@ class RegistrationsDataStoreFactory(
                     dispatch(Msg.UpdateUserInfo(user))
                 }
             }
-            launch(false)
         }
 
-        private fun launch(forced: Boolean) {
-            scope.launch {
-                dispatch(Msg.Loading)
+        private fun load(userInitiated: Boolean) {
+            loadJob?.cancel()
+            loadJob = scope.launch {
+                dispatch(Msg.Loading(userInitiated))
                 try {
-                    dataSource.registrations(forced).collect { starts ->
-                        dispatch(Msg.InfoLoaded(starts = starts, filter = createFilter(starts)))
+                    dataSource.registrations(forced = userInitiated).collect { starts ->
+                        ensureActive()
+                        val filter = createFilter(starts, state().filter)
+                        dispatch(Msg.InfoLoaded(starts, sortList(starts, filter), filter))
                     }
+                    dispatch(Msg.LoadFinished)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (e: Exception) {
+                    ensureActive()
                     dispatch(Msg.InfoFailed(e.mapToSauceError()))
                     if (!e.isNetworkConnectionError()) {
                         state().sharedUser?.let { user ->
@@ -103,20 +122,18 @@ class RegistrationsDataStoreFactory(
             }
         }
 
-        private fun createFilter(starts: List<StartOrderInfo>): List<FilterItem> {
-            val paymentStatusSet = HashSet<StartOrderPaymentStatus>()
-            for (start in starts) {
-                paymentStatusSet.add(start.payment)
+        private fun createFilter(starts: List<StartOrderInfo>, previous: List<FilterItem>): List<FilterItem> {
+            val selected = previous.filter { it.checked }.map { it.value }.toSet()
+            return starts.map { it.payment.title }.distinct().sorted().map { title ->
+                FilterItem(title, title in selected)
             }
-            return paymentStatusSet.map { paymentStatus ->
-                FilterItem(paymentStatus.title, false)
-            }.distinctBy { it.value }
         }
 
         private fun updateFilter(item: FilterItem, state: State) {
-            val index = state.filter.indexOf(item)
+            val index = state.filter.indexOfFirst { it.value == item.value }
+            if (index == -1) return
             val filter = state.filter.toMutableList()
-            filter[index] = item.copy(checked = !item.checked)
+            filter[index] = filter[index].copy(checked = !filter[index].checked)
             dispatch(
                 Msg.UpdateList(
                     starts = sortList(state.base, filter),
@@ -143,18 +160,25 @@ class RegistrationsDataStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State {
             return when (msg) {
-                is Msg.InfoFailed -> State(
+                is Msg.InfoFailed -> copy(
                     base = emptyList(),
+                    filtered = emptyList(),
                     exception = msg.sauceError,
                     isLoading = false,
                     isSuccess = false,
+                    isRefreshing = false,
                 )
 
-                is Msg.Loading -> copy(isLoading = true, exception = null)
+                is Msg.Loading -> copy(
+                    isLoading = !isSuccess,
+                    isRefreshing = msg.userInitiated && base.isNotEmpty(),
+                    exception = null,
+                )
+                Msg.LoadFinished -> copy(isLoading = false, isRefreshing = false)
                 is Msg.UpdateList -> copy(filtered = msg.starts, filter = msg.filter)
                 is Msg.InfoLoaded -> copy(
                     base = msg.starts,
-                    filtered = msg.starts,
+                    filtered = msg.filtered,
                     filter = msg.filter,
                     isSuccess = true,
                     isLoading = false,

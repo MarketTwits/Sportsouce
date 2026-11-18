@@ -1,6 +1,9 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.arkivanov.essenty.lifecycle.doOnPause
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -12,6 +15,7 @@ import com.markettwits.sportsouce.profile.registrations.presentation.detail.stor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -37,6 +41,9 @@ class StartOrderComponentBase(
 
     init {
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
+        lifecycle.doOnResume { store.accept(StartOrderStore.Intent.RefreshOrder()) }
+        lifecycle.doOnPause { store.accept(StartOrderStore.Intent.CancelOrderRefresh) }
+        lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

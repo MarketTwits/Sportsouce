@@ -6,6 +6,8 @@ sealed interface BottomBarConfiguration {
 
     data object Review : BottomBarConfiguration
 
+    data object MyStarts : BottomBarConfiguration
+
     data object Profile : BottomBarConfiguration
 
     interface Mapper<T> {

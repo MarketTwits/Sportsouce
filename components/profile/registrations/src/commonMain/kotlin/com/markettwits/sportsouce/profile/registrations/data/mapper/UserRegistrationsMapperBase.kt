@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.data.mapper
 
 import com.markettwits.core.time.TimeMapper
-import com.markettwits.core.time.TimePattern
+import com.markettwits.core.time.mapDateRange
 import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.sportsouce.profile.cloud.model.registrations.Group
 import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
@@ -24,10 +24,7 @@ class UserRegistrationsMapperBase(
             startId = start.startId ?: Random.nextInt(),
             name = start.start?.name ?: "Без названия",
             image = start.start?.posterLinkFile?.fullPath ?: "",
-            dateStartPreview = timeMapper.mapTime(
-                TimePattern.FullWithEmptySpace,
-                dateStartCloud
-            ),
+            dateStartPreview = timeMapper.mapDateRange(dateStartCloud, start.start?.endDate),
             dateStartCloud = dateStartCloud,
             members = start.members?.map { member ->
                 val ageGroup = member.ageGroup?.name ?: mapStartGroup(member.group)
@@ -55,6 +52,9 @@ class UserRegistrationsMapperBase(
                 successPaymentReason = start.successPaymentReason
             ),
             isReRegistrationAvailable = isReRegistrationAvailable(dateStartCloud, orderType),
+            isRefunded = start.isRefunded == true,
+            startStatusCode = start.start?.start_status?.code,
+            dateEndCloud = start.start?.endDate,
         )
     }
 

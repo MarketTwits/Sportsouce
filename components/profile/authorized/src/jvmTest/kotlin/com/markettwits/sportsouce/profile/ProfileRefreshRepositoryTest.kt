@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.profile
 import com.markettwits.cahce.Cache
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.core_cloud.provider.JsonProviderBase
+import com.markettwits.core.time.BaseTimeMapper
 import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.User
 import com.markettwits.sportsouce.profile.authorized.authorized.data.AuthorizedProfileRepositoryBase
 import com.markettwits.sportsouce.profile.authorized.authorized.data.mapper.AuthorizedProfileMapper
@@ -10,6 +11,11 @@ import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfi
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMembers
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
+import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepositoryBase
+import com.markettwits.sportsouce.profile.registrations.data.UserRegistrationsDataSource
+import com.markettwits.sportsouce.profile.registrations.data.cache.CachedUserRegistrations
+import com.markettwits.sportsouce.profile.registrations.data.cache.UserStartsRegistrationsCache
+import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapperBase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.defaultRequest
@@ -90,24 +96,65 @@ class ProfileRefreshRepositoryTest {
         }
     }
 
-    private class MemoryCache(var value: UserProfile? = profileSnapshot()) : Cache<UserProfile> {
-        var writes = 0
+    @Test fun profileAndOrdersUseTheSameAccountSnapshotAndKeepItOnFailedRefresh() = runTest {
+        Fixture().use { f ->
+            f.repo.profile().toList()
+            val newlyRegistered = """{"count":1,"rows":[{"id":12,"combo_id":null}]}"""
+            f.registrationsResponse = newlyRegistered
+            assertEquals(listOf(listOf(11), listOf(12)), f.orders.registrations(forced = false).toList()
+                .map { snapshot -> snapshot.map { it.id } })
+
+            f.registrationsStatus = HttpStatusCode.ServiceUnavailable
+            val cachedProfiles = mutableListOf<UserProfile>()
+            assertFails { f.repo.profile().toList(cachedProfiles) }
+            assertEquals(listOf(12), cachedProfiles.single().activity.userRegistry.map { it.id })
+            assertEquals(listOf(12), f.orders.registrations(forced = false).toList().single().map { it.id })
+            assertFails { f.orders.registrations(forced = true, allowCachedOnError = false).toList() }
+
+            f.auth.current = f.auth.current.copy(id = 2)
+            assertFails { f.orders.registrations(forced = false).toList() }
+        }
+    }
+
+    @Test fun profileUsesTheNewerRegistrationsWhenItsMembersRequestFinishesLater() = runTest {
+        Fixture().use { f ->
+            val finishMembers = CompletableDeferred<Unit>()
+            f.onMembers = { finishMembers.await() }
+            val profile = async { f.repo.profile(forced = true).single() }
+            try {
+                withContext(Dispatchers.Default) {
+                    withTimeout(5_000) { f.orderCache.writesFlow.first { it == 1 } }
+                }
+                f.registrationsResponse = """{"count":1,"rows":[{"id":12,"combo_id":null}]}"""
+                assertEquals(12, f.orders.registrations(forced = true).single().single().id)
+            } finally {
+                finishMembers.complete(Unit)
+            }
+            assertEquals(12, profile.await().activity.userRegistry.single().id)
+        }
+    }
+
+    private class MemoryCache<T>(var value: T? = null) : Cache<T> {
+        val writesFlow = MutableStateFlow(0)
+        val writes get() = writesFlow.value
         override suspend fun get(key: Any) = value
-        override suspend fun set(key: Any, value: UserProfile) { writes++; this.value = value }
+        override suspend fun set(key: Any, value: T) { this.value = value; writesFlow.value++ }
         override suspend fun clear() { value = null }
-        override suspend fun getList(key: Any) = emptyList<UserProfile>()
+        override suspend fun getList(key: Any) = emptyList<T>()
     }
 
     private class Fixture : AutoCloseable {
         val auth = ProfileAuth()
-        val cache = MemoryCache()
+        val cache = MemoryCache(profileSnapshot())
         var registrationsStatus = HttpStatusCode.OK
         var membersStatus = HttpStatusCode.OK
         var registrationsResponse = """{"count":1,"rows":[{"id":11,"combo_id":null}]}"""
         var registrationCalls = 0
         var onRegistrations: suspend () -> Unit = {}
+        var onMembers: suspend () -> Unit = {}
         val client = HttpClient(MockEngine { request ->
             if (request.url.encodedPath == "/member-template") {
+                onMembers()
                 respond("""{"count":0,"rows":[]}""", membersStatus, headersOf(HttpHeaders.ContentType, "application/json"))
             } else {
                 assertTrue(request.url.encodedPath.startsWith("/user/startsByUserId/"))
@@ -119,10 +166,16 @@ class ProfileRefreshRepositoryTest {
             override fun provide(loggerEnabled: Boolean) = client
             override fun json() = JsonProviderBase().provide()
         })
+        val orderCache = MemoryCache<CachedUserRegistrations>()
+        private val registrations = UserRegistrationsDataSource(remote, UserStartsRegistrationsCache(orderCache) { null })
+        val orders = StartOrderRegistrationRepositoryBase(remote, auth, UserRegistrationsMapperBase(BaseTimeMapper()), registrations)
         val repo = AuthorizedProfileRepositoryBase(auth, remote, cache, object : AuthorizedProfileMapper {
+            override fun mapRegistrations(registrations: List<UserRegistration>) =
+                profileSnapshot(registrationIds = registrations.map { it.id!! }).activity.userRegistry
+
             override fun map(user: User, userRegistries: List<UserRegistration>, userMembers: List<ProfileMembers.ProfileMember>) =
                 profileSnapshot(user.id, userRegistries.map { it.id!! })
-        })
+        }, registrations)
         override fun close() { client.close() }
     }
 }

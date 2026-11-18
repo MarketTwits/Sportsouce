@@ -35,7 +35,7 @@ fun MyRegistrationsScreen(component: RegistrationsComponent) {
         }
     ) {
         PullToRefreshScreen(
-            isRefreshing = state.isLoading && state.base.isNotEmpty(),
+            isRefreshing = state.isRefreshing,
             onRefresh = {
                 component.obtainEvent(RegistrationsStore.Intent.LoadData)
             }

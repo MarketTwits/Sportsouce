@@ -19,4 +19,7 @@ data class StartOrderInfo(
     val costWithoutDiscount: String = cost,
     val additionalFieldsCost: String = "",
     val isReRegistrationAvailable: Boolean = false,
+    val isRefunded: Boolean = false,
+    val startStatusCode: Int? = null,
+    val dateEndCloud: String? = null,
 )

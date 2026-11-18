@@ -6,6 +6,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.data.mapper.Auth
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.AuthorizedProfileRepository
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
+import com.markettwits.sportsouce.profile.registrations.data.UserRegistrationsDataSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -17,12 +18,18 @@ class AuthorizedProfileRepositoryBase(
     private val remote: SportSauceNetworkProfileApi,
     private val cache: Cache<UserProfile>,
     private val mapper: AuthorizedProfileMapper,
+    private val registrations: UserRegistrationsDataSource,
 ) : AuthorizedProfileRepository {
 
     override suspend fun profile(forced: Boolean): Flow<UserProfile> = flow {
         val userId = auth.userID().getOrThrow()
         val cached = readCache()?.takeIf { it.id == userId }
-        if (!forced && cached != null) emit(cached)
+        if (!forced && cached != null) {
+            val orders = registrations.cached(userId)
+            emit(if (orders == null) cached else cached.copy(
+                activity = cached.activity.copy(userRegistry = mapper.mapRegistrations(orders)),
+            ))
+        }
 
         // Commit a complete successful snapshot. A failed registrations request is
         // not an empty list and must never replace the user's registrations in cache.
@@ -42,7 +49,9 @@ class AuthorizedProfileRepositoryBase(
         val user = auth.auth().getOrThrow()
         val token = auth.updateToken().getOrThrow()
         val members = async { remote.memberTemplate(user.id, token).rows }
-        val registrations = async { remote.userRegistries(user.id, token) }
-        mapper.map(user, registrations.await(), members.await())
+        val orders = async { registrations.refresh(user.id, token) }
+        val activeMembers = members.await()
+        val fetchedOrders = orders.await()
+        mapper.map(user, registrations.cached(user.id) ?: fetchedOrders, activeMembers)
     }
 }

@@ -3,9 +3,11 @@ package com.markettwits.sportsouce.bottom_bar.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.ConfirmationNumber
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.ConfirmationNumber
 import androidx.compose.material.icons.outlined.Timeline
 import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
 import com.markettwits.sportsouce.bottom_bar.model.BottomNavigationItem
@@ -25,6 +27,13 @@ internal fun defaultMenuItems(): List<BottomNavigationItem> {
             unselectedIcon = Icons.Outlined.Timeline,
             hasNews = false,
             bottomBarConfiguration = BottomBarConfiguration.Review,
+        ),
+        BottomNavigationItem(
+            title = "Мои старты",
+            selectedIcon = Icons.Filled.ConfirmationNumber,
+            unselectedIcon = Icons.Outlined.ConfirmationNumber,
+            bottomBarConfiguration = BottomBarConfiguration.MyStarts,
+            hasNews = false,
         ),
         BottomNavigationItem(
             title = "Профиль",

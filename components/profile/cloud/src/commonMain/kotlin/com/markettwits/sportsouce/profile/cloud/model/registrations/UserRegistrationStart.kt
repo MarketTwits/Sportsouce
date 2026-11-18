@@ -17,4 +17,6 @@ data class UserRegistrationStart(
     val start_status: CloudStartStatus? = null,
     @DeprecatedField
     val coordinates: String? = null,
+    @SerialName("end_date")
+    val endDate: String? = null,
 )

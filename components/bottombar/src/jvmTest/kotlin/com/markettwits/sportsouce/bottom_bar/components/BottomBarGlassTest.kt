@@ -243,7 +243,7 @@ class BottomBarGlassTest {
             assertTrue(scene.tabs().isEmpty())
             assertEquals(844f, scene.text("PINNED_ACTION").boundsInRoot.bottom)
             visible = true; scene.settle()
-            assertEquals(3, scene.tabs().size)
+            assertEquals(4, scene.tabs().size)
         }
     }
 

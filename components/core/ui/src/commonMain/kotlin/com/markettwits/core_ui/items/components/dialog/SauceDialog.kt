@@ -2,7 +2,6 @@ package com.markettwits.core_ui.items.components.dialog
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,6 +15,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
 import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll
 import com.markettwits.core_ui.items.components.topbar.LocalSauceTopBar
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceSpacing
@@ -44,7 +44,7 @@ fun SauceDialogContent(
     Surface(modifier.widthIn(max = 480.dp).fillMaxWidth(), shape = SauceShapes.card,
         color = colors.surfaceRaised, contentColor = colors.textPrimary) {
         Column(Modifier.padding(SauceSpacing.extraLarge), verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
-            Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()),
+            Column(Modifier.weight(1f, fill = false).sauceVerticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
                 Text(title, Modifier.fillMaxWidth().semantics { heading() }, style = MaterialTheme.typography.titleLarge)
                 content()

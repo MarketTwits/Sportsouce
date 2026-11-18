@@ -1,10 +1,14 @@
 package com.markettwits.core_ui.items.components.topbar
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.isSpecified
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -16,11 +20,25 @@ import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.core_ui.items.theme.SauceTheme
 import dev.chrisbanes.haze.*
+import kotlinx.coroutines.flow.collectLatest
 
 /** Each screen owns its backdrop. Modal windows and neighbouring navigation stacks cannot leak in. */
 @Stable
 class SauceTopBarState internal constructor(val haze: HazeState) {
     private val areas = mutableStateMapOf<Any, TopBarArea>()
+    internal val backdropReveal = Animatable(0f)
+
+    internal val hasRecordedBackdrop by derivedStateOf {
+        haze.areas.any { area ->
+            // Haze publishes the layer just before recording it. Its measured area is
+            // observable, while the graphics layer's own size does not trigger a snapshot.
+            area.positionOnScreen.isSpecified && area.size.isSpecified && area.size.minDimension > 0f &&
+                area.contentLayer?.isReleased == false
+        }
+    }
+
+    internal fun liveGlassAlpha(requestedAlpha: Float): Float =
+        if (hasRecordedBackdrop) requestedAlpha * backdropReveal.value else 0f
 
     /** Toolbar and its pinned sections form one capture region, even while the toolbar collapses. */
     internal val bounds: TopBarBounds?
@@ -54,7 +72,14 @@ internal val LocalInsideGlassTopBar = staticCompositionLocalOf { false }
 @Composable
 fun rememberSauceTopBarState(): SauceTopBarState {
     val haze = rememberHazeState()
-    return remember(haze) { SauceTopBarState(haze) }
+    val state = remember(haze) { SauceTopBarState(haze) }
+    LaunchedEffect(state) {
+        snapshotFlow { state.hasRecordedBackdrop }.collectLatest { ready ->
+            state.backdropReveal.snapTo(0f)
+            if (ready) state.backdropReveal.animateTo(1f, tween(160))
+        }
+    }
+    return state
 }
 
 /** Only the container becomes transparent; fields, chips, text and icons retain their own styling. */
@@ -81,10 +106,22 @@ internal fun Modifier.sauceTopBarGlass(
         noiseFactor = 0.01f,
         fallbackTint = HazeTint(surface.copy(alpha = 0.96f)),
     )
-    return onGloballyPositioned { state.update(key, it, primary) }.clipToBounds().hazeEffect(state.haze, style) {
-        inputScale = HazeInputScale.Auto
-        alpha = effectAlpha
-    }
+    val materialAlpha = effectAlpha.coerceIn(0f, 1f)
+    return onGloballyPositioned { state.update(key, it, primary) }
+        .clipToBounds()
+        .drawBehind {
+            val liveAlpha = state.liveGlassAlpha(materialAlpha)
+            // Compensate for source-over so partially revealed glass cannot expose a
+            // frame of raw content while the new scroll viewport registers its layer.
+            if (liveAlpha < materialAlpha) {
+                val backingAlpha = (materialAlpha - liveAlpha) / (1f - liveAlpha)
+                drawRect(surface.copy(alpha = surface.alpha * backingAlpha))
+            }
+        }
+        .hazeEffect(state.haze, style) {
+            inputScale = HazeInputScale.Auto
+            alpha = state.liveGlassAlpha(materialAlpha)
+        }
 }
 
 /** Non-scrolling full-bleed content, e.g. the photo editor, can be a backdrop without moving controls. */

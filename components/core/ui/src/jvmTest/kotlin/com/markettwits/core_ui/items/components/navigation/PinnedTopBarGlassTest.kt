@@ -86,10 +86,10 @@ class PinnedTopBarGlassTest {
             }.use { scene ->
                 scene.settle(); scene.scroll(300f); scene.settle()
                 // Semantics scrolling also drives nested scroll and hides the toolbar.
-                collapsing.offsetYState.value = 0; scene.settle()
+                collapsing.dispatchOffsetDelta(56f); scene.settle()
                 val before = scene.bitmap().getRGB(370, 84)
                 val scrollPosition = scene.scrollNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
-                collapsing.offsetYState.value = -56; scene.settle()
+                collapsing.dispatchOffsetDelta(-56f); scene.settle()
                 assertEquals(0f, scene.text("TABS").boundsInRoot.top)
                 assertTrue(rgbDifference(before, scene.bitmap().getRGB(370, 28)) < 8,
                     "Pinned material must remain identical after toolbar collapse: dark=$dark")
@@ -127,7 +127,7 @@ class PinnedTopBarGlassTest {
             assertTrue(rgbDifference(scene.bitmap().getRGB(370, 12), scene.bitmap().getRGB(370, 44)) < 8,
                 "The safe area must share the section's glass")
             val offset = scene.scrollNode().config[SemanticsProperties.VerticalScrollAxisRange].value()
-            collapsing.offsetYState.value = 0; scene.settle()
+            collapsing.dispatchOffsetDelta(56f); scene.settle()
             assertEquals(56f, scene.text("TABS").boundsInRoot.top)
             assertEquals(offset, scene.scrollNode().config[SemanticsProperties.VerticalScrollAxisRange].value())
         }

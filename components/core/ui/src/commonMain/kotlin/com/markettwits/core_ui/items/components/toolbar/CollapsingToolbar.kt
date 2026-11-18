@@ -31,8 +31,10 @@ import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,9 +49,6 @@ import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
-import kotlin.math.absoluteValue
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 @Stable
@@ -57,7 +56,8 @@ class CollapsingToolbarState(
 	initial: Int = Int.MAX_VALUE
 ) : ScrollableState {
 	/** [height] indicates current height of the toolbar. */
-	var height: Int by mutableStateOf(initial)
+	val height: Int by derivedStateOf { heightPx.roundToInt() }
+	internal var heightPx by mutableFloatStateOf(initial.toFloat())
 		private set
 
 	/**
@@ -65,61 +65,44 @@ class CollapsingToolbarState(
 	 * toolbar may collapse its height to [minHeight] but not smaller. This
 	 * size is determined by the smallest child.
 	 */
-	var minHeight: Int
-		get() = minHeightState
-		internal set(value) {
-			minHeightState = value
-
-			if (height < value) {
-				height = value
-			}
-		}
+	var minHeight: Int by mutableIntStateOf(0)
+		private set
 
 	/**
 	 * [maxHeight] indicates the maximum height of the collapsing toolbar. The
 	 * toolbar may expand its height to [maxHeight] but not larger. This size
 	 * is determined by the largest child.
 	 */
-	var maxHeight: Int
-		get() = maxHeightState
-		internal set(value) {
-			maxHeightState = value
+	var maxHeight: Int by mutableIntStateOf(Int.MAX_VALUE)
+		private set
 
-			if (value < height) {
-				height = value
-			}
+	internal fun updateBounds(minimum: Int, maximum: Int) {
+		if (minimum == minHeight && maximum == maxHeight) return
+		val previousHeight = heightPx
+		heightPx = when {
+			previousHeight >= maxHeight -> maximum.toFloat()
+			maxHeight == Int.MAX_VALUE -> previousHeight.coerceIn(minimum.toFloat(), maximum.toFloat())
+			previousHeight <= minHeight -> minimum.toFloat()
+			else -> minimum + progress * (maximum - minimum)
 		}
-
-	private var maxHeightState by mutableStateOf(Int.MAX_VALUE)
-	private var minHeightState by mutableStateOf(0)
+		minHeight = minimum
+		maxHeight = maximum
+	}
 
 	val progress: Float
 		get() =
 			if (minHeight == maxHeight) {
 				0f
 			} else {
-				((height - minHeight).toFloat() / (maxHeight - minHeight)).coerceIn(0f, 1f)
+				((heightPx - minHeight) / (maxHeight - minHeight)).coerceIn(0f, 1f)
 			}
 
 	private val scrollableState = ScrollableState { value ->
-		val consume = if (value < 0) {
-			max(minHeight.toFloat() - height, value)
-		} else {
-			min(maxHeight.toFloat() - height, value)
-		}
-
-		val current = consume + deferredConsumption
-		val currentInt = current.toInt()
-
-		if (current.absoluteValue > 0) {
-			height += currentInt
-			deferredConsumption = current - currentInt
-		}
-
-		consume
+		val previous = heightPx
+		val consumed = value.coerceIn(minHeight - previous, maxHeight - previous)
+		heightPx = previous + consumed
+		consumed
 	}
-
-	private var deferredConsumption: Float = 0f
 
 	/** @return consumed scroll value is returned */
 	@Deprecated(
@@ -130,7 +113,7 @@ class CollapsingToolbarState(
 
 	@ExperimentalToolbarApi
 	suspend fun expand(duration: Int = 200) {
-		val anim = AnimationState(height.toFloat())
+		val anim = AnimationState(heightPx)
 
 		scroll {
 			var prev = anim.value
@@ -143,7 +126,7 @@ class CollapsingToolbarState(
 
 	@ExperimentalToolbarApi
 	suspend fun collapse(duration: Int = 200) {
-		val anim = AnimationState(height.toFloat())
+		val anim = AnimationState(heightPx)
 
 		scroll {
 			var prev = anim.value
@@ -240,10 +223,7 @@ private class CollapsingToolbarMeasurePolicy(
 		val maxWidth = placeables.maxOfOrNull { it.width }
 			?.coerceIn(constraints.minWidth, constraints.maxWidth) ?: 0
 
-		collapsingToolbarState.also {
-			it.minHeight = minHeight
-			it.maxHeight = maxHeight
-		}
+		collapsingToolbarState.updateBounds(minHeight, maxHeight)
 
 		val height = collapsingToolbarState.height
 		return layout(maxWidth, height) {

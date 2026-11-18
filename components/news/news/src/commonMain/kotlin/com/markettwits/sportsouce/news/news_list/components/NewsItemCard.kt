@@ -24,6 +24,8 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.image.dominantImageColor
+import com.markettwits.core_ui.items.image.enableImageColorSampling
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
@@ -48,7 +50,7 @@ fun NewsItemCard(
             val model = remember(context, newsInfo.imageUrl, sampleCover) {
                 if (sampleCover) ImageRequest.Builder(context)
                     .data(newsInfo.imageUrl)
-                    .enableNewsCoverSampling()
+                    .enableImageColorSampling()
                     .build()
                 else newsInfo.imageUrl
             }
@@ -70,7 +72,7 @@ fun NewsItemCard(
                         val density = LocalDensity.current
                         val direction = LocalLayoutDirection.current
                         LaunchedEffect(state, newsInfo.imageUrl) {
-                            onCoverColor(state.painter.newsCoverColor(density, direction))
+                            onCoverColor(state.painter.dominantImageColor(density, direction))
                         }
                     }
                     SubcomposeAsyncImageContent()

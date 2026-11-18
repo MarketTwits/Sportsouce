@@ -1,7 +1,5 @@
 package com.markettwits.sportsouce.review.review.presentation.screen
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,17 +20,16 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.markettwits.core.errors.api.composable.SauceErrorMediumContent
+import com.markettwits.core_ui.items.image.rememberImageBackdropTint
 import com.markettwits.core_ui.items.components.toolbar.CollapsingToolbarScaffold
 import com.markettwits.core_ui.items.components.toolbar.ScrollStrategy
 import com.markettwits.core_ui.items.components.toolbar.rememberCollapsingToolbarScaffoldState
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.review.review.presentation.component.ReviewComponent
 import com.markettwits.sportsouce.review.review.presentation.components.content.ReviewContent
@@ -58,16 +55,11 @@ fun ReviewScreen(
     }
 
     val colors = SauceTheme.colors
-    val dark = LocalDarkOrLightTheme.current
     val scroll = rememberScrollState()
     val toolbarState = rememberCollapsingToolbarScaffoldState()
     var newsHeight by remember { mutableIntStateOf(0) }
     var coverColor by remember(state.review.news.isEmpty()) { mutableStateOf(Color.Unspecified) }
-    val tint by animateColorAsState(
-        targetValue = lerp(colors.background, coverColor.takeOrElse { colors.background }, if (dark) 0.28f else 0.19f),
-        animationSpec = tween(460),
-        label = "Review cover tint",
-    )
+    val tint by rememberImageBackdropTint(coverColor)
     val carouselVisibility by remember(scroll) {
         derivedStateOf {
             if (newsHeight == 0) 0f else (1f - scroll.value.toFloat() / newsHeight).coerceIn(0f, 1f)

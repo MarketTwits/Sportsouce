@@ -1,11 +1,17 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core.errors.api.throwable.mapToString
@@ -20,6 +26,7 @@ import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.buttons.SauceButton
 import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import com.markettwits.core_ui.items.image.rememberImageBackdropTint
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
@@ -60,14 +67,37 @@ internal fun ProfileScreenContent(
 ) {
     var isFullImage by rememberSaveable { mutableStateOf(false) }
     val intentAction = rememberIntentActionByPlatform()
+    val scroll = rememberScrollState()
+    val colors = SauceTheme.colors
+    val statusBarHeight = WindowInsets.statusBars.getTop(LocalDensity.current)
+    var headerHeight by remember { mutableIntStateOf(0) }
+    var avatarColor by remember(userImageUrl) { mutableStateOf(Color.Unspecified) }
+    val profileTint by rememberImageBackdropTint(avatarColor.takeOrElse { colors.brand })
     PullToRefreshScreen(isRefreshing = isRefreshing, onRefresh = onRefresh) {
-        Column(modifier.fillMaxSize().background(SauceTheme.colors.background).verticalScroll(rememberScrollState())) {
+        Column(modifier.fillMaxSize().drawWithCache {
+            val gradientHeight = statusBarHeight + headerHeight + 44.dp.toPx()
+            val gradient = Brush.verticalGradient(
+                0f to profileTint,
+                .50f to profileTint,
+                1f to colors.background,
+                endY = gradientHeight,
+            )
+            onDrawBehind {
+                drawRect(colors.background)
+                val offset = scroll.value.toFloat()
+                if (offset < gradientHeight) translate(top = -offset) {
+                    drawRect(gradient, size = size.copy(height = gradientHeight))
+                }
+            }
+        }.verticalScroll(scroll)) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
             AdaptivePane(fillHeight = false) {
                 Column(Modifier.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
-                    ProfileInfoTopBar(modifier = Modifier.padding(horizontal = 16.dp), imageUrl = userImageUrl, userName = userName, userPhoneNumber = userPhoneNumber,
+                    ProfileInfoTopBar(modifier = Modifier.padding(horizontal = 16.dp).onSizeChanged { headerHeight = it.height },
+                        imageUrl = userImageUrl, userName = userName, userPhoneNumber = userPhoneNumber,
                         socialNetwork = socialNetwork, onClickImage = { isFullImage = true }, onClickEditProfile = onClickEditProfile,
-                        onSocialNetworkClick = onSocialNetworkClick, onAddSocialNetwork = onAddSocialNetwork)
+                        onSocialNetworkClick = onSocialNetworkClick, onAddSocialNetwork = onAddSocialNetwork,
+                        onAvatarColor = { avatarColor = it }, headerTint = { profileTint })
                     if (refreshError != null) OnBackgroundCard(Modifier.padding(horizontal = 16.dp)) {
                         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("Не удалось обновить профиль", style = MaterialTheme.typography.titleSmall,

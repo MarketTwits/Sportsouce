@@ -3,6 +3,9 @@ package com.markettwits.sportsouce.profile
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,7 +23,10 @@ import com.markettwits.sportsouce.profile.registrations.domain.*
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
 import java.io.File
+import javax.imageio.ImageIO
 import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -35,6 +41,56 @@ class ProfileDesignTest {
         UserProfile.Activity(registrations, 2), UserProfile.UserInfo("Александра", "Иванова", "", "", "", ""))
     private val recent = StartsListItem(315, "Просмотренный старт", "", "20 сентября 2026", StartsListItem.StatusCode(3, ""),
         "", "albatros", "Новосибирск", false, "6 км", views = 0)
+
+    @Test
+    fun profileTintFollowsTheLoadedAvatarAndFadesIntoThePage() {
+        fun avatar(argb: Int) = File.createTempFile("sportsauce-avatar-", ".png").apply {
+            val image = BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB)
+            image.setRGB(0, 0, 32, 32, IntArray(32 * 32) { argb }, 0, 32)
+            ImageIO.write(image, "png", this)
+        }
+        val red = avatar(0xFFEF240E.toInt())
+        val blue = avatar(0xFF0749EB.toInt())
+        try {
+            for (dark in listOf(false, true)) {
+                val fake = FakeProfile().apply { state.value = AuthorizedProfileStore.State(user = user) }
+                ImageComposeScene(width = 390, height = 700) {
+                    Palette(dark) { AuthorizedProfileScreen(fake) }
+                }.use { scene ->
+                    scene.settle()
+                    fun colorAt(y: Int): Int = scene.render(time).use { image ->
+                        image.encodeToData()!!.use { ImageIO.read(ByteArrayInputStream(it.bytes)).getRGB(5, y) }
+                    }
+                    val background = sauceColors(dark).background.toArgb()
+                    val fallback = colorAt(5)
+                    assertNotEquals(background, fallback)
+                    assertEquals(background, colorAt(350))
+                    fun awaitTint(file: File, avatarColor: Color): Int {
+                        val expected = lerp(Color(background), avatarColor, if (dark) .28f else .19f).toArgb()
+                        fake.state.value = fake.state.value.copy(user = user.copy(userInfo = user.userInfo.copy(photo = file.toURI().toString())))
+                        repeat(100) {
+                            time += 100_000_000L
+                            val tint = colorAt(5)
+                            if (listOf(0, 8, 16).all { shift ->
+                                    kotlin.math.abs((tint shr shift and 255) - (expected shr shift and 255)) <= 3
+                                }) return tint
+                            Thread.sleep(10)
+                        }
+                        fail("The profile did not pick up the avatar color for ${file.name}")
+                    }
+                    val warm = awaitTint(red, Color(0xFFEF240E))
+                    val cool = awaitTint(blue, Color(0xFF0749EB))
+                    assertNotEquals(warm, cool)
+                    assertNotEquals(fallback, cool)
+                    scene.scrollTo("Покупки и оплаты")
+                    assertEquals(background, colorAt(5))
+                }
+            }
+        } finally {
+            red.delete()
+            blue.delete()
+        }
+    }
 
     @Test
     fun initialLoadingRefreshAndErrorsKeepTheCorrectProfileStateAndActions() {

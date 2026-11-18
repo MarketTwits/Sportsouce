@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.news.news_list.components
+package com.markettwits.core_ui.items.image
 
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import coil3.request.ImageRequest
 
-internal expect fun ImageRequest.Builder.enableNewsCoverSampling(): ImageRequest.Builder
+expect fun ImageRequest.Builder.enableImageColorSampling(): ImageRequest.Builder
 
-internal fun Painter.newsCoverColor(density: Density, direction: LayoutDirection): Color {
-    val sample = ImageBitmap(32, 18)
+fun Painter.dominantImageColor(density: Density, direction: LayoutDirection, sampleHeight: Int = 18): Color {
+    val sample = ImageBitmap(32, sampleHeight)
     val size = Size(sample.width.toFloat(), sample.height.toFloat())
     CanvasDrawScope().draw(density, direction, Canvas(sample), size) {
         draw(size)

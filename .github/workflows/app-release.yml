@@ -31,9 +31,11 @@ jobs:
 
       - name: Prepare release notes
         id: release_notes
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.version_name }}
         run: |
-          VERSION_NAME="${{ steps.version.outputs.version_name }}"
-          RELEASE_NOTES=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-en-US)
+          python3 .github/scripts/generate_update_notes.py --google-play --version "$VERSION_NAME" --output "$RUNNER_TEMP/play-notes"
+          RELEASE_NOTES=$(cat "$RUNNER_TEMP/play-notes/whatsnew-en-US")
           {
             echo 'notes<<EOF'
             echo "$RELEASE_NOTES"
@@ -553,25 +555,10 @@ jobs:
           echo "${{ secrets.SPORTSAUCE_SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
 
       - name: Prepare Google Play release notes
+        env:
+          VERSION_NAME: ${{ needs.prepare-release.outputs.version_name }}
         run: |
-          VERSION_NAME="${{ needs.prepare-release.outputs.version_name }}"
-
-          mkdir -p whatsnew
-
-          NOTES_EN=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-en-US)
-          echo "$NOTES_EN" > whatsnew/whatsnew-en-US
-
-          NOTES_RU=$(sed "s/\$APP_VERSION/$VERSION_NAME/g" .github/whatsnew/whatsnew-ru-RU)
-          echo "$NOTES_RU" > whatsnew/whatsnew-ru-RU
-
-      - name: Debug whatsnew files
-        run: |
-          echo "Checking whatsnew files length:"
-          echo "English version ($(wc -c < whatsnew/whatsnew-en-US) chars):"
-          cat whatsnew/whatsnew-en-US
-          echo ""
-          echo "Russian version ($(wc -c < whatsnew/whatsnew-ru-RU) chars):"
-          cat whatsnew/whatsnew-ru-RU
+          python3 .github/scripts/generate_update_notes.py --google-play --version "$VERSION_NAME" --output whatsnew
 
       - name: Find AAB file
         id: aab

@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
+import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
@@ -18,6 +19,7 @@ import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 class RootRegistrationsComponentBase(
     context: ComponentContext,
     private val pop: () -> Unit,
+    initialOrder: StartOrderInfo? = null,
 ) : RootRegistrationsComponent, ComponentContext by context {
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
@@ -34,7 +36,8 @@ class RootRegistrationsComponentBase(
             source = stackNavigation,
             serializer = RootRegistrationsComponent.ConfigStack.serializer(),
             handleBackButton = true,
-            initialStack = { listOf(RootRegistrationsComponent.ConfigStack.Registrations) },
+            initialConfiguration = initialOrder?.let { RootRegistrationsComponent.ConfigStack.Registration(it) }
+                ?: RootRegistrationsComponent.ConfigStack.Registrations,
             childFactory = ::child,
         )
 
@@ -74,7 +77,7 @@ class RootRegistrationsComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     start = configStack.order,
-                    dismiss = stackNavigation::pop,
+                    dismiss = { stackNavigation.pop { popped -> if (!popped) pop() } },
                     openStart = {
                         stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Start(it))
                     },

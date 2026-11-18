@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponent
+import com.markettwits.sportsouce.profile.upcoming.UpcomingStartsComponent
 import com.markettwits.sportsouce.review.root.RootReviewComponent
 import com.markettwits.sportsouce.root_profile.RootProfileComponent
 import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
@@ -27,6 +28,8 @@ interface RootComponent {
         @Serializable
         data object Review : Configuration()
         @Serializable
+        data object MyStarts : Configuration()
+        @Serializable
         data object Profile : Configuration()
     }
 
@@ -34,6 +37,7 @@ interface RootComponent {
         data class Starts(val component: RootStartsComponentBase) : Child()
         data class Profile(val component: RootProfileComponent) : Child()
         data class Review(val component : RootReviewComponent) : Child()
+        data class MyStarts(val component: UpcomingStartsComponent) : Child()
     }
 
     @Serializable

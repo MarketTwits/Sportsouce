@@ -12,11 +12,14 @@ kotlin {
 
     sourceSets.commonTest.dependencies {
         implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
     }
 
     sourceSets.commonMain.dependencies {
         
         implementation(projects.components.auth.authService)
+        implementation(projects.components.auth.authCloud)
+        implementation(libs.ktor.core)
         implementation(projects.components.profile.cloud)
         implementation(projects.components.core.ui)
         implementation(projects.components.start.start)

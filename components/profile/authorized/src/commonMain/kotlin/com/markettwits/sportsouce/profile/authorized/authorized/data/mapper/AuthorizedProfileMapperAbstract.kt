@@ -13,6 +13,8 @@ abstract class AuthorizedProfileMapperAbstract(
     private val timeMapper: TimeMapper
 ) : AuthorizedProfileMapper {
 
+    override fun mapRegistrations(registrations: List<UserRegistration>) = userRegistrationsMapper.map(registrations)
+
     protected fun mapUserInfo(user: User): UserProfile.UserInfo =
         UserProfile.UserInfo(
             name = user.name,
@@ -40,7 +42,7 @@ abstract class AuthorizedProfileMapperAbstract(
         userMembers: List<ProfileMembers.ProfileMember>
     ): UserProfile.Activity =
         UserProfile.Activity(
-            userRegistry = userRegistrationsMapper.map(userRegistries),
+            userRegistry = mapRegistrations(userRegistries),
             userMemberCount = userMembers.size
         )
 }

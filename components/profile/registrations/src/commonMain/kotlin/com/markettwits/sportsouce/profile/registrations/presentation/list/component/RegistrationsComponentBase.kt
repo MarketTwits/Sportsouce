@@ -3,6 +3,9 @@ package com.markettwits.sportsouce.profile.registrations.presentation.list.compo
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.arkivanov.essenty.lifecycle.doOnPause
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -13,6 +16,7 @@ import com.markettwits.sportsouce.profile.registrations.presentation.list.store.
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -53,6 +57,9 @@ class RegistrationsComponentBase(
     }
 
     init {
+        lifecycle.doOnResume { store.accept(RegistrationsStore.Intent.Resume) }
+        lifecycle.doOnPause { store.accept(RegistrationsStore.Intent.Pause) }
+        lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

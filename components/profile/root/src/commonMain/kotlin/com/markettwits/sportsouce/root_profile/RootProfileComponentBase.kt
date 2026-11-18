@@ -23,6 +23,7 @@ class RootProfileComponentBase(
     componentContext: ComponentContext,
     private val updateStoreFactory: SelfUpdateStoreFactory,
     private val notifications: NotificationApi,
+    private val onSignedOut: () -> Unit = {},
 ) : ComponentContext by componentContext, RootProfileComponent {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -62,6 +63,7 @@ class RootProfileComponentBase(
                     notifications = notifications,
                     signOut = {
                         notifications.clear()
+                        onSignedOut()
                         navigation.replaceAll(RootProfileComponent.Config.UnAuthProfile)
                     }
                 )

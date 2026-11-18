@@ -19,6 +19,7 @@ import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarCompon
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentHandle
 import com.markettwits.sportsouce.bottom_bar.di.bottomBarModule
 import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
+import com.markettwits.sportsouce.profile.upcoming.UpcomingStartsComponent
 import com.markettwits.sportsouce.review.root.RootReviewComponentBase
 import com.markettwits.sportsouce.root_profile.RootProfileComponentBase
 import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
@@ -96,6 +97,11 @@ class RootComponentBase(
                     componentContext = componentContext,
                     updateStoreFactory = updateStoreFactory,
                     notifications = notifications,
+                    onSignedOut = {
+                        childStack.value.items.forEach { child ->
+                            (child.instance as? RootComponent.Child.MyStarts)?.component?.clearSession()
+                        }
+                    },
                 )
             )
 
@@ -104,6 +110,19 @@ class RootComponentBase(
                     context = componentContext,
                     updateStoreFactory = updateStoreFactory,
                     notifications = notifications,
+                )
+            )
+
+            is RootComponent.Configuration.MyStarts -> RootComponent.Child.MyStarts(
+                UpcomingStartsComponent(
+                    context = componentContext,
+                    notifications = notifications,
+                    updateStoreFactory = updateStoreFactory,
+                    openStarts = {
+                        stackNavigation.bringToFront(RootComponent.Configuration.Starts) {
+                            (childStack.value.active.instance as? RootComponent.Child.Starts)?.component?.popToRoot()
+                        }
+                    },
                 )
             )
         }
@@ -174,6 +193,7 @@ class RootComponentBase(
                                     is RootComponent.Child.Starts -> child.component.popToRoot()
                                     is RootComponent.Child.Review -> child.component.popToRoot()
                                     is RootComponent.Child.Profile -> child.component.popToRoot()
+                                    is RootComponent.Child.MyStarts -> child.component.popToRoot()
                                 }
                             } else {
                                 stackNavigation.bringToFront(target)

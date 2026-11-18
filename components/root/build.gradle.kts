@@ -21,6 +21,7 @@ kotlin {
             implementation(projects.components.bottombar)
             implementation(projects.components.starts.starts)
             implementation(projects.components.profile.root)
+            implementation(projects.components.profile.upcomingStarts)
             implementation(projects.components.review)
             implementation(projects.components.selfupdater.components)
             implementation(projects.components.inappnotification.api)

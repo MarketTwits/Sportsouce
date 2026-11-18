@@ -15,6 +15,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.sportsauce.deeplink.model.Deeplink
+import com.markettwits.sportsouce.auth.service.api.CachedProfilePhoto
+import com.markettwits.sportsouce.auth.service.api.authDataSourceModule
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentBase
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentHandle
 import com.markettwits.sportsouce.bottom_bar.di.bottomBarModule
@@ -34,7 +36,9 @@ class RootComponentBase(
 
     private val scope = instanceKeeper.getOrCreate {
         ComponentKoinContext()
-    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule, userNotificationModule))
+    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule, userNotificationModule, authDataSourceModule))
+
+    override val profilePhotoUrl = scope.get<CachedProfilePhoto>().url
 
     private val notifications: NotificationApi = scope.get()
     private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)

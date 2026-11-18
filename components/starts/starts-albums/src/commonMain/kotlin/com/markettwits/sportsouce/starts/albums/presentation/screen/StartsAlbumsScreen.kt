@@ -16,7 +16,6 @@ import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
 import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid
 import com.markettwits.core_ui.items.components.topbar.*
-import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.starts.albums.domain.StartAlbumsItem
@@ -35,8 +34,8 @@ fun StartsAlbumsScreen(component: StartsAlbumsComponent) {
             onFilters = { component.obtainEvent(StartsAlbumsStore.Intent.OpenFilters) },
             onBack = { component.obtainEvent(StartsAlbumsStore.Intent.Back) })
     }) { padding ->
-        AdaptivePane(Modifier.fillMaxSize().padding(padding)) {
-            Column(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding), contentAlignment = Alignment.TopCenter) {
+            Column(Modifier.widthIn(max = 1350.dp).fillMaxSize()) {
                 if (state.year != null) SauceTopBarSection {
                     Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                         com.markettwits.core_ui.items.components.checkbox.FilterChipBase(
@@ -60,49 +59,66 @@ fun StartsAlbumsScreen(component: StartsAlbumsComponent) {
 internal fun StartsAlbumsContent(items: LazyPagingItems<StartAlbumsItem>, onAlbum: (StartAlbumsItem.Album) -> Unit) {
     val refreshing = items.loadState.refresh is LoadStateLoading
     PullToRefreshScreen(Modifier.fillMaxSize(), isRefreshing = refreshing && items.itemCount > 0, onRefresh = items::refresh) {
-        SauceLazyVerticalGrid(
-            columns = GridCells.Adaptive(280.dp),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            when {
-                refreshing && items.itemCount == 0 -> items(3, contentType = { "shimmer" }) { StartAlbumShimmer() }
-                items.loadState.refresh is LoadStateError && items.itemCount == 0 -> item(span = { GridItemSpan(maxLineSpan) }) {
-                    ArchiveNotice("Не удалось загрузить фотоархив", "Проверьте соединение и повторите попытку.", "Повторить", items::retry)
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            val gutter = 16.dp
+            val gap = 12.dp
+            val columns = ((maxWidth - gutter * 2 + gap) / (280.dp + gap)).toInt().coerceAtLeast(1)
+            val showStartInCard = columns > 1
+            SauceLazyVerticalGrid(
+                columns = GridCells.Fixed(columns),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(gutter),
+                verticalArrangement = Arrangement.spacedBy(gap),
+                horizontalArrangement = Arrangement.spacedBy(gap),
+            ) {
+                when {
+                    refreshing && items.itemCount == 0 -> items(maxOf(3, columns * 2), contentType = { "shimmer" }) {
+                        StartAlbumShimmer(showStartInCard)
+                    }
+                    items.loadState.refresh is LoadStateError && items.itemCount == 0 -> item(span = { GridItemSpan(maxLineSpan) }) {
+                        ArchiveNotice("Не удалось загрузить фотоархив", "Проверьте соединение и повторите попытку.", "Повторить", items::retry)
+                    }
+                    !refreshing && items.itemCount == 0 -> item(span = { GridItemSpan(maxLineSpan) }) {
+                        ArchiveNotice("Альбомов не найдено", "Попробуйте другое название старта или выберите другой год.")
+                    }
                 }
-                !refreshing && items.itemCount == 0 -> item(span = { GridItemSpan(maxLineSpan) }) {
-                    ArchiveNotice("Альбомов не найдено", "Попробуйте другое название старта или выберите другой год.")
-                }
-            }
-            for (index in 0 until items.itemCount) {
-                val start = items.peek(index) ?: continue
-                item(key = "start-${start.id}", contentType = "header", span = { GridItemSpan(maxLineSpan) }) {
-                    // Access through Paging when visible, so headers also advance prefetch.
-                    items[index]?.let { current ->
-                        Column(Modifier.fillMaxWidth().padding(top = if (index == 0) 0.dp else 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Text(current.name, style = MaterialTheme.typography.titleLarge, color = SauceTheme.colors.textPrimary)
-                            Text(listOf(current.date, "${current.albums.sumOf { it.photosCount }} фото").filter { it.isNotBlank() }.joinToString(" · "),
-                                style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
+                for (index in 0 until items.itemCount) {
+                    val start = items.peek(index) ?: continue
+                    if (!showStartInCard) {
+                        item(key = "start-${start.id}", contentType = "header", span = { GridItemSpan(maxLineSpan) }) {
+                            items[index]?.let { StartAlbumGroupHeading(it, first = index == 0) }
+                        }
+                    }
+                    items(start.albums.size, key = { "album-${start.id}-${start.albums[it].id}" }, contentType = { "album" }) { albumIndex ->
+                        val current = items[index]
+                        current?.albums?.getOrNull(albumIndex)?.let { album ->
+                            StartAlbumCard(album, start = current.takeIf { showStartInCard }) { onAlbum(album) }
                         }
                     }
                 }
-                items(start.albums.size, key = { "album-${start.id}-${start.albums[it].id}" }, contentType = { "album" }) { albumIndex ->
-                    items[index]?.albums?.getOrNull(albumIndex)?.let { album ->
-                        StartAlbumCard(album) { onAlbum(album) }
-                    }
+                if (items.loadState.refresh is LoadStateError && items.itemCount > 0) item(span = { GridItemSpan(maxLineSpan) }) {
+                    ArchiveNotice("Не удалось обновить фотоархив", "Загруженные альбомы сохранены.", "Повторить", items::retry)
+                }
+                if (items.loadState.append is LoadStateLoading) items(maxOf(2, columns), contentType = { "shimmer" }) {
+                    StartAlbumShimmer(showStartInCard)
+                }
+                if (items.loadState.append is LoadStateError) item(span = { GridItemSpan(maxLineSpan) }) {
+                    ArchiveNotice("Не удалось загрузить следующие альбомы", "Попробуйте ещё раз.", "Повторить", items::retry)
                 }
             }
-            if (items.loadState.refresh is LoadStateError && items.itemCount > 0) item(span = { GridItemSpan(maxLineSpan) }) {
-                ArchiveNotice("Не удалось обновить фотоархив", "Загруженные альбомы сохранены.", "Повторить", items::retry)
-            }
-            if (items.loadState.append is LoadStateLoading) items(2, contentType = { "shimmer" }) { StartAlbumShimmer() }
-            if (items.loadState.append is LoadStateError) item(span = { GridItemSpan(maxLineSpan) }) {
-                ArchiveNotice("Не удалось загрузить следующие альбомы", "Попробуйте ещё раз.", "Повторить", items::retry)
-            }
         }
+    }
+}
+
+@Composable
+private fun StartAlbumGroupHeading(start: StartAlbumsItem, first: Boolean) {
+    Column(
+        Modifier.fillMaxWidth().padding(top = if (first) 0.dp else 16.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        Text(start.name, style = MaterialTheme.typography.titleLarge, color = SauceTheme.colors.textPrimary)
+        Text(listOf(start.date, "${start.albums.sumOf { it.photosCount }} фото").filter { it.isNotBlank() }.joinToString(" · "),
+            style = MaterialTheme.typography.bodySmall, color = SauceTheme.colors.textMuted)
     }
 }
 

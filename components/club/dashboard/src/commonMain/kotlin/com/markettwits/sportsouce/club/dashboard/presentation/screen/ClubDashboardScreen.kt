@@ -23,11 +23,13 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.components.buttons.rememberSauceFloatingActionGlass
 import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
+import com.markettwits.core_ui.items.components.navigation.bottomNavigationOverlap
 import com.markettwits.core_ui.items.components.topbar.LocalSauceTopBar
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
@@ -48,10 +50,12 @@ private const val IntroKey = "intro"
 @Composable
 fun ClubDashboardScreen(component: ClubDashboardComponent) {
     val state by component.state.collectAsState()
+    val systemBottom = WindowInsets.safeDrawing.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding()
+    val scrollBottom = LocalScrollContentBottomPadding.current + (systemBottom - bottomNavigationOverlap()).coerceAtLeast(0.dp)
     Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
         CompositionLocalProvider(
             LocalSauceTopBar provides null,
-            LocalScrollContentBottomPadding provides WindowInsets.safeDrawing.asPaddingValues().calculateBottomPadding(),
+            LocalScrollContentBottomPadding provides scrollBottom,
         ) {
             val topInset = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
             AdaptivePane(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))) {

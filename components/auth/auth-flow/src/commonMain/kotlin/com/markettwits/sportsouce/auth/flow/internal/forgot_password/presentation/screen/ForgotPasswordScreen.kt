@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
 import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone

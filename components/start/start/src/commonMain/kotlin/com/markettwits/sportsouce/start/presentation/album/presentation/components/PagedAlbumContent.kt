@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import app.cash.paging.*
 import app.cash.paging.compose.LazyPagingItems
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
 import com.markettwits.core_ui.items.components.buttons.SauceButton
 import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
@@ -84,7 +85,7 @@ internal fun PagedAlbumContent(
     // The viewer can hide system bars in its own window. Their visibility must
     // not resize the album underneath or move the shared-transition destination.
     val systemBarInsets = photoViewerHostInsets()
-    val bottomPadding = systemBarInsets.asPaddingValues().calculateBottomPadding() +
+    val bottomPadding = systemBarInsets.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() +
         if (selectionMode) 100.dp else 0.dp
     val loadingMetadata = albumState.album == null && albumState.isLoading
     val album = albumState.album ?: if (loadingMetadata) StartAlbumDetails(

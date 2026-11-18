@@ -29,7 +29,7 @@ internal fun defaultMenuItems(): List<BottomNavigationItem> {
             bottomBarConfiguration = BottomBarConfiguration.Review,
         ),
         BottomNavigationItem(
-            title = "Мои старты",
+            title = "Слоты",
             selectedIcon = Icons.Filled.ConfirmationNumber,
             unselectedIcon = Icons.Outlined.ConfirmationNumber,
             bottomBarConfiguration = BottomBarConfiguration.MyStarts,

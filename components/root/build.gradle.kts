@@ -19,6 +19,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(projects.components.bottombar)
+            implementation(projects.components.auth.authService)
             implementation(projects.components.starts.starts)
             implementation(projects.components.profile.root)
             implementation(projects.components.profile.upcomingStarts)

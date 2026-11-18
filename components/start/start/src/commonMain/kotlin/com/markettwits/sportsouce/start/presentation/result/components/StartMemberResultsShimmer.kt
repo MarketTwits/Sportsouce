@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.result.components
 
 import androidx.compose.foundation.layout.*
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,7 +14,7 @@ fun StartMemberResultsShimmer(modifier: Modifier = Modifier) {
         contentPadding = PaddingValues(
             start = 16.dp,
             end = 16.dp,
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp
+            bottom = WindowInsets.navigationBars.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() + 16.dp
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

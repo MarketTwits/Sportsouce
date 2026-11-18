@@ -16,6 +16,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.haze)
+            implementation(libs.coil.compose)
             implementation(projects.components.core.ui)
             implementation(libs.koin.core)
             implementation(projects.components.core.koin)

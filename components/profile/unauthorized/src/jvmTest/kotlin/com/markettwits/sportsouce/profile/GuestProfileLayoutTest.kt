@@ -50,10 +50,10 @@ class GuestProfileLayoutTest {
             var backdrop = Color.Transparent
             ImageComposeScene(width = 390, height = 840) {
                 SauceTheme(darkTheme = dark) {
-                    backdrop = SauceTheme.colors.background
+                    backdrop = SauceTheme.colors.surface
                     Box(Modifier.fillMaxSize().background(backdrop).onGloballyPositioned { viewport.update(it, 96) }) {
                         CompositionLocalProvider(LocalNavigationViewport provides viewport) {
-                            Box(Modifier.fillMaxSize().padding(bottom = 96.dp)) { UnAuthorizedProfileContent {} }
+                            UnAuthorizedProfileContent {}
                         }
                         Box(Modifier.fillMaxWidth().height(96.dp).align(Alignment.BottomCenter)
                             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))

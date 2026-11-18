@@ -3,29 +3,43 @@ package com.markettwits.sportsouce.bottom_bar.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.markettwits.core_ui.items.theme.SauceMotion
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
 import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
@@ -47,17 +61,19 @@ internal fun BottomBarContent(
     selectedTab: BottomBarConfiguration,
     onClickTab: (BottomBarConfiguration) -> Unit,
     aboveNavigation: @Composable () -> Unit = {},
+    profilePhotoUrl: String? = null,
+    systemBottomInsets: WindowInsets = WindowInsets.navigationBars.union(WindowInsets.displayCutout),
     content: @Composable () -> Unit,
 ) {
     val isLarge = calculateWindowSizeClass().isLarge
     val colors = SauceTheme.colors
     val haptics = LocalHapticFeedback.current
     val hazeState = rememberHazeState()
-    val navigationViewport = remember(hazeState) {
-        NavigationViewport { key -> Modifier.hazeSource(hazeState, zIndex = 1f, key = key) }
-    }
+    val reservedBottomInsets = if (isLarge) systemBottomInsets.only(WindowInsetsSides.Bottom) else WindowInsets(0)
+    val navigationViewport = remember(reservedBottomInsets) { NavigationViewport(reservedBottomInsets) }
     val density = LocalDensity.current
-    val railWidth = 88.dp * density.fontScale.coerceIn(1f, 2f)
+    val railWidth = 112.dp + 40.dp * (density.fontScale.coerceIn(1f, 2f) - 1f)
+    val showRail = isLarge && isShowTopBar && items.isNotEmpty()
     var navigationHeight by remember { mutableIntStateOf(0) }
     var noticeHeight by remember { mutableIntStateOf(0) }
     val inheritedScrollPadding = LocalScrollContentBottomPadding.current
@@ -65,7 +81,9 @@ internal fun BottomBarContent(
         haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         onClickTab(it)
     }
-    Box(modifier.fillMaxSize()) {
+    // The wide layout has no bottom dock to account for the Android taskbar.
+    val safeBounds = if (isLarge) Modifier.background(colors.background).windowInsetsPadding(reservedBottomInsets) else Modifier
+    Box(modifier.fillMaxSize().then(safeBounds)) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = colors.background,
@@ -73,45 +91,30 @@ internal fun BottomBarContent(
             bottomBar = {
                 Box(Modifier.onSizeChanged { navigationHeight = it.height }) {
                     if (!isLarge) AnimatedVisibility(isShowTopBar, enter = fadeIn(), exit = fadeOut()) {
-                        GlassBottomNavigation(hazeState, items, selectedTab, isShowLabel, select)
+                        GlassBottomNavigation(hazeState, items, selectedTab, isShowLabel, select, profilePhotoUrl)
                     }
                 }
             },
         ) { padding ->
-            // Capture only the content, never the navigation icons or the glass itself.
-            val overlap = if (!isLarge && isShowTopBar) with(density) { padding.calculateBottomPadding().roundToPx() } else 0
+            val overlap = with(density) { padding.calculateBottomPadding().roundToPx() }
             Box(Modifier.fillMaxSize()
                 .onGloballyPositioned { navigationViewport.update(it, overlap) }
-                .then(if (!isLarge && isShowTopBar) Modifier.hazeSource(hazeState) else Modifier)) {
+                // Capture the composed screens and their transitions exactly once.
+                .then(if (overlap > 0) Modifier.hazeSource(hazeState) else Modifier)
+                .background(colors.background)) {
                 CompositionLocalProvider(
                     LocalNavigationViewport provides navigationViewport,
                     LocalScrollContentBottomPadding provides inheritedScrollPadding + with(density) { noticeHeight.toDp() },
                 ) {
-                    Row(Modifier.fillMaxSize().padding(padding).consumeWindowInsets(padding)) {
-                        if (isLarge && isShowTopBar) NavigationRail(
-                            // A fill-width label must not claim the entire desktop Row.
+                    Row(Modifier.fillMaxSize().consumeWindowInsets(padding)) {
+                        if (showRail) WideScreenNavigation(
+                            items = items,
+                            selectedTab = selectedTab,
+                            showLabels = isShowLabel,
+                            profilePhotoUrl = profilePhotoUrl,
+                            onSelect = select,
                             modifier = Modifier.width(railWidth).fillMaxHeight(),
-                            containerColor = colors.surface,
-                            contentColor = colors.textPrimary,
-                        ) {
-                            items.forEach { item ->
-                                val selected = selectedTab == item.bottomBarConfiguration
-                                NavigationRailItem(
-                                    modifier = Modifier.navigationNotifications(item),
-                                    selected = selected,
-                                    onClick = { select(item.bottomBarConfiguration) },
-                                    icon = { NavigationIcon(item, selected, isShowLabel) },
-                                    label = if (isShowLabel) { { NavigationLabel(item.title, selected) } } else null,
-                                    colors = NavigationRailItemDefaults.colors(
-                                        selectedIconColor = colors.action,
-                                        selectedTextColor = colors.action,
-                                        indicatorColor = colors.actionSoft,
-                                        unselectedIconColor = colors.textMuted,
-                                        unselectedTextColor = colors.textMuted,
-                                    ),
-                                )
-                            }
-                        }
+                        )
                         Box(Modifier.weight(1f).fillMaxHeight()) { content() }
                     }
                 }
@@ -120,7 +123,7 @@ internal fun BottomBarContent(
         // Animate above a stable viewport. Resizing Scaffold's bottomBar on every reveal
         // frame exposes its background while descendant scroll/haze bounds catch up.
         Box(Modifier.align(Alignment.BottomCenter)
-            .padding(start = if (isLarge) railWidth else 0.dp,
+            .padding(start = if (showRail) railWidth else 0.dp,
                 bottom = with(density) { navigationHeight.toDp() })) {
             Box(Modifier.onSizeChanged { noticeHeight = it.height }) { aboveNavigation() }
         }
@@ -128,7 +131,13 @@ internal fun BottomBarContent(
 }
 
 @Composable
-private fun NavigationIcon(item: BottomNavigationItem, selected: Boolean, hasLabel: Boolean) {
+internal fun NavigationIcon(
+    item: BottomNavigationItem,
+    selected: Boolean,
+    hasLabel: Boolean,
+    profilePhotoUrl: String?,
+    size: Dp = 24.dp,
+) {
     val count = item.badgeCount?.takeIf { it > 0 }
     val colors = SauceTheme.colors
     BadgedBox(
@@ -146,19 +155,42 @@ private fun NavigationIcon(item: BottomNavigationItem, selected: Boolean, hasLab
             )
         },
     ) {
-        Icon(
-            imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
-            contentDescription = if (hasLabel) null else item.title,
-            modifier = Modifier.size(24.dp),
-        )
+        val photo = profilePhotoUrl?.takeIf { item.bottomBarConfiguration == BottomBarConfiguration.Profile && it.isNotBlank() }
+        val description = if (hasLabel) null else item.title
+        if (photo == null) {
+            Icon(
+                imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                contentDescription = description,
+                modifier = Modifier.size(size),
+            )
+        } else {
+            key(photo) {
+                var loaded by remember { mutableStateOf(false) }
+                val reveal by animateFloatAsState(
+                    if (loaded) 1f else 0f,
+                    tween(SauceMotion.feedbackMillis),
+                    label = "Profile photo",
+                )
+                val foreground = LocalContentColor.current
+                Box(Modifier.size(size).clip(CircleShape)) {
+                    Icon(
+                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = description,
+                        modifier = Modifier.matchParentSize().graphicsLayer { alpha = 1f - reveal },
+                    )
+                    AsyncImage(
+                        model = photo,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.matchParentSize().graphicsLayer { alpha = reveal }
+                            .border(1.dp, if (selected) foreground else colors.border, CircleShape),
+                        onSuccess = { loaded = true },
+                        onError = { loaded = false },
+                    )
+                }
+            }
+        }
     }
-}
-
-@Composable
-private fun NavigationLabel(title: String, selected: Boolean) {
-    Text(title, modifier = Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelMedium,
-        textAlign = TextAlign.Center,
-        fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal)
 }
 
 /** Kept independent of screen content so navigation states can be checked in isolation. */
@@ -169,33 +201,41 @@ internal fun BottomNavigation(
     showLabels: Boolean,
     onSelect: (BottomBarConfiguration) -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = SauceTheme.colors.surface,
-    glass: Boolean = false,
+    profilePhotoUrl: String? = null,
 ) {
+    if (items.isEmpty()) return
+
     val colors = SauceTheme.colors
-    NavigationBar(modifier = modifier, containerColor = containerColor, contentColor = colors.textPrimary, tonalElevation = 0.dp) {
+    val shape = SauceShapes.button
+    Row(modifier.padding(6.dp).fillMaxWidth().height(IntrinsicSize.Min).selectableGroup()) {
         items.forEach { item ->
-            val selected = selectedTab == item.bottomBarConfiguration
-            NavigationBarItem(
-                modifier = Modifier.navigationNotifications(item),
-                selected = selected,
-                onClick = { onSelect(item.bottomBarConfiguration) },
-                icon = { NavigationIcon(item, selected, showLabels) },
-                label = if (showLabels) { { NavigationLabel(item.title, selected) } } else null,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colors.action,
-                    selectedTextColor = colors.action,
-                    indicatorColor = colors.actionSoft,
-                    unselectedIconColor = if (glass) colors.textSecondary else colors.textMuted,
-                    unselectedTextColor = if (glass) colors.textSecondary else colors.textMuted,
-                ),
+            val selected = item.bottomBarConfiguration == selectedTab
+            val foreground by animateColorAsState(
+                if (selected) colors.action else colors.textSecondary,
+                tween(SauceMotion.feedbackMillis),
+                label = "Navigation foreground",
             )
+            Column(
+                modifier = Modifier.weight(1f).fillMaxHeight().heightIn(min = 52.dp)
+                    .navigationTab(item, selected, shape, highlightInset = 2.dp) { onSelect(item.bottomBarConfiguration) }
+                    .padding(horizontal = SauceSpacing.extraSmall, vertical = SauceSpacing.extraSmall),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+            ) {
+                CompositionLocalProvider(LocalContentColor provides foreground) {
+                    NavigationIcon(item, selected, showLabels, profilePhotoUrl)
+                    if (showLabels) {
+                        Text(
+                            item.title,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = foreground,
+                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
         }
     }
-}
-
-private fun Modifier.navigationNotifications(item: BottomNavigationItem): Modifier = semantics {
-    val count = item.badgeCount?.takeIf { it > 0 }
-    if (count != null) stateDescription = "Уведомлений: $count"
-    else if (item.hasNews) stateDescription = "Есть обновления"
 }

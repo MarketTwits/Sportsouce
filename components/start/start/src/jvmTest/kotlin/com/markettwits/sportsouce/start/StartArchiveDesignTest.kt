@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.graphics.toArgb
@@ -33,9 +36,10 @@ class StartArchiveDesignTest {
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
             var opens = 0
             val selected = mutableListOf<Int>()
+            var archive by mutableStateOf(items)
             ImageComposeScene(width = 320, height = 1800, density = Density(1f, scale)) {
                 SauceTheme(darkTheme = dark) { Column(Modifier.fillMaxSize().background(SauceTheme.colors.background).verticalScroll(rememberScrollState())) {
-                    StartArchivePanel(Modifier.padding(16.dp), items, 2026, false, false, { opens++ }, {}, { selected += it.id })
+                    StartArchivePanel(Modifier.padding(16.dp), archive, 2026, false, false, { opens++ }, {}, { selected += it.id })
                 } }
             }.use { scene ->
                 scene.settle()
@@ -43,11 +47,34 @@ class StartArchiveDesignTest {
                 assertFalse(scene.texts().contains("25 октября 2022"))
                 assertFalse(scene.texts().contains("25 октября 2026"))
                 scene.assertTextFits()
-                val action = scene.nodes().single { it.config.contains(SemanticsActions.OnClick) && it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == "Архив стартов" } == true }
+                assertTrue(scene.nodes().any { it.config.contains(SemanticsProperties.Heading) &&
+                    it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == "Архив стартов" } == true })
+                val action = scene.card("Все 5 стартов")
+                val y = ceil(action.boundsInRoot.top).toInt()
+                val x = action.boundsInRoot.left.toInt() + 18
+                val afterFade = y + action.size.height * 3 / 4
+                val background = sauceColors(dark).surfaceSubtle.toArgb()
+                time += 100_000_000L
+                scene.render(time).use { image -> image.encodeToData()!!.use { data ->
+                    val bitmap = ImageIO.read(ByteArrayInputStream(data.bytes))
+                    assertNotEquals(background, bitmap.getRGB(x, y + 2), "The line continues into the full-list action")
+                    assertEquals(background, bitmap.getRGB(x, afterFade), "The line fades before the bottom of the action")
+                } }
                 action.config[SemanticsActions.OnClick].action!!.invoke(); assertEquals(1, opens)
                 val card = scene.nodes().single { it.config.contains(SemanticsActions.OnClick) && it.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == "25 октября 2024" } == true }
                 card.config[SemanticsActions.OnClick].action!!.invoke(); assertEquals(listOf(2024), selected)
                 if (scale == 1f) scene.save("archive-preview-${if (dark) "dark" else "light"}")
+
+                archive = items.drop(1)
+                scene.settle()
+                val completePreview = scene.card("Все 4 старта")
+                val lineEnd = ceil(completePreview.boundsInRoot.top).toInt()
+                time += 100_000_000L
+                scene.render(time).use { image -> image.encodeToData()!!.use { data ->
+                    val bitmap = ImageIO.read(ByteArrayInputStream(data.bytes))
+                    assertEquals(background, bitmap.getRGB(x, lineEnd + 2),
+                        "The current edition alone does not extend the preview line")
+                } }
             }
         }
     }

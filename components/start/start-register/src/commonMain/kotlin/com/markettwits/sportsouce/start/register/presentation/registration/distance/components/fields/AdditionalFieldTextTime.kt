@@ -1,12 +1,8 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.components.textField.TimeTextField
 import com.markettwits.core_ui.items.components.timer.domain.parseTimeData
 import com.markettwits.core_ui.items.components.timer.screens.rememberTimerPage
@@ -18,8 +14,6 @@ internal fun AdditionalFieldTextTime(
     field: StartRegistrationStatementAnswer,
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
-    AdditionalFiledTitle(field = field.field)
-
     val time = field.answer.string ?: ""
 
     val state = rememberTimerPage(timeState = mutableStateOf(
@@ -39,14 +33,12 @@ internal fun AdditionalFieldTextTime(
         )
         },
         textFiled = {
-            OutlinedTextFieldBase(
+            AdditionalFieldInput(
                 modifier = it,
-                label = "",
+                field = field.field,
                 value = time,
-                isEnabled = false,
-                onValueChange = {}
+                placeholder = "Выберите время",
             )
         }
     )
-    Spacer(modifier = Modifier.height(8.dp))
 }

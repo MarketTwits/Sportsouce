@@ -3,9 +3,9 @@ package com.markettwits.sportsouce.start.register.presentation.registration.dist
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.selection.SauceCheckboxRow
 import com.markettwits.core_ui.items.extensions.formatPrice
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Option
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 
@@ -21,7 +21,7 @@ internal fun AdditionalFieldMultiselect(
 
     Column(modifier = modifier.fillMaxWidth()) {
         AdditionalFiledTitle(
-            modifier = Modifier.padding(vertical = 4.dp),
+            modifier = Modifier.padding(bottom = SauceSpacing.small),
             field = field.field
         )
         options.forEach { option ->

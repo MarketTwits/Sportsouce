@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
@@ -64,6 +65,7 @@ internal fun StartScreenContent(
     onClickAddToFavourites: () -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
+    navigationOverlap: Dp = 0.dp,
 ) {
     key(data.id) {
         PullToRefreshScreen(isRefreshing = isLoading, onRefresh = onClickRetry) {
@@ -138,6 +140,7 @@ internal fun StartScreenContent(
                         if (data.startStatus.code == 3) {
                             StartRegistrationButton(
                                 modifier = Modifier.align(Alignment.BottomCenter)
+                                    .padding(bottom = navigationOverlap)
                                     .onSizeChanged { registrationHeight = it.height }
                                     .navigationBarsPadding()
                                     .padding(horizontal = 16.dp, vertical = 8.dp),

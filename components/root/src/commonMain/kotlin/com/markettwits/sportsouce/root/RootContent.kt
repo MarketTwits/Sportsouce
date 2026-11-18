@@ -37,6 +37,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
     }
     val onReview = reviewStack?.active?.instance is RootReviewComponent.Child.Review
     val onUpdate = reviewStack?.active?.instance is RootReviewComponent.Child.Notification
+    val profilePhotoUrl by component.profilePhotoUrl.collectAsState(initial = null)
     val notificationState by component.updateNotification.state.collectAsState()
     var retained by remember { mutableStateOf<InAppNotificationStore.State.ShownNotification?>(null) }
     val shown = notificationState as? InAppNotificationStore.State.ShownNotification
@@ -47,6 +48,7 @@ fun RootContent(component: RootComponent, modifier: Modifier = Modifier) {
                 BottomBarScaffold(
                     component = it.component,
                     navigationVisible = !onUpdate,
+                    profilePhotoUrl = profilePhotoUrl,
                     aboveNavigation = {
                         AnimatedVisibility(
                             visible = onReview && shown != null,

@@ -2,8 +2,8 @@ package com.markettwits.sportsouce.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi

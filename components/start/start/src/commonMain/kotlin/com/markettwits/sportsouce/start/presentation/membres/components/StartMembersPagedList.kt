@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.membres.components
 
 import androidx.compose.foundation.layout.*
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
 import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +24,7 @@ internal fun StartMembersPagedList(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp,
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp)
+            bottom = WindowInsets.navigationBars.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() + 16.dp)
     ) {
         if (totalCount > 0)
             item {

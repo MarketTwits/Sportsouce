@@ -9,6 +9,7 @@ import com.markettwits.sportsouce.review.root.RootReviewComponent
 import com.markettwits.sportsouce.root_profile.RootProfileComponent
 import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
 import kotlinx.serialization.Serializable
+import kotlinx.coroutines.flow.Flow
 import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 
@@ -16,6 +17,7 @@ interface RootComponent {
 
     val updateNotification: InAppNotificationComponent
     val updateNotificationRenderer: InAppNotificationRenderer
+    val profilePhotoUrl: Flow<String?>
 
     val childStack: Value<ChildStack<*, Child>>
 

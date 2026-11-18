@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markettwits.core_ui.items.components.navigation.bottomNavigationOverlap
 import com.markettwits.core_ui.items.event.EventEffect
 import com.markettwits.core_ui.items.extensions.showLongMessageWithDismiss
 import com.markettwits.core_ui.items.screens.FullImageScreen
@@ -29,6 +30,7 @@ fun StartScreen(
     isActive: Boolean = true,
 ) {
     val state by startComponent.start.collectAsState()
+    val navigationOverlap = bottomNavigationOverlap()
     var fullImage by rememberSaveable(state.startItem?.id) {
         mutableStateOf(false)
     }
@@ -46,7 +48,7 @@ fun StartScreen(
                 hostState = snackBarHostState,
             ) {
                 Snackbar(
-                    modifier = Modifier.padding(bottom = if (isShowRegButton) 60.dp else 10.dp),
+                    modifier = Modifier.padding(bottom = navigationOverlap + if (isShowRegButton) 60.dp else 10.dp),
                     contentColor = snackBarColors.content,
                     containerColor = snackBarColors.container,
                     dismissActionContentColor = snackBarColors.content,
@@ -66,6 +68,7 @@ fun StartScreen(
                 state.startItem?.let { data ->
                     StartScreenContent(
                         data = data,
+                        navigationOverlap = navigationOverlap,
                         favoriteState = state.favoriteState,
                         recommendedStarts = state.startsRecommended,
                         seriesStarts = state.startsSeries,

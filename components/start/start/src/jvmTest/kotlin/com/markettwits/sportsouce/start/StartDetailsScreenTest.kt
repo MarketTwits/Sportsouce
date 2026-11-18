@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.*
@@ -109,7 +110,7 @@ class StartDetailsScreenTest {
     }
 
     @Test
-    fun actualDetailsScreenFeedsItsPosterIntoRootGlassAndKeepsRegistrationSafe() {
+    fun actualDetailsScreenDrawsBehindTheDockAndKeepsRegistrationSafe() {
         val tabs = listOf(
             Triple("Старты", Icons.Default.Flag, BottomBarConfiguration.Home),
             Triple("Обзор", Icons.Default.Timeline, BottomBarConfiguration.Review),
@@ -128,7 +129,6 @@ class StartDetailsScreenTest {
             override fun obtainEvent(intent: StartSupportStore.Intent) {}
         }
         for (status in listOf(3, 6)) for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
-            var capture by mutableStateOf(true)
             val component = object : StartScreenComponent {
                 override val start = MutableStateFlow(StartScreenStore.State(
                     startItem = this@StartDetailsScreenTest.start.copy(startStatus = StartItem.StartStatus(status, "")),
@@ -140,32 +140,26 @@ class StartDetailsScreenTest {
             ImageComposeScene(width = 390, height = 400, density = Density(1f, scale)) {
                 SauceTheme(darkTheme = dark) {
                     BottomBarScaffold(bottom) {
-                        CompositionLocalProvider(LocalNavigationViewport provides if (capture) LocalNavigationViewport.current else null) {
+                        Box(Modifier.fillMaxSize().clipToBounds()) {
                             StartScreen(component, support)
                         }
                     }
                 }
             }.use { scene ->
                 scene.settle()
-                fun pixels() = scene.render((time + 100_000_000L).also { time = it }).use { image ->
-                    image.encodeToData()!!.use { data -> ImageIO.read(ByteArrayInputStream(data.bytes)) }
-                }
                 val navTop = scene.nodes().first { it.config.contains(SemanticsProperties.Selected) }.boundsInRoot.top
                 val button = if (status == 3) scene.action("Зарегистрироваться").boundsInRoot else null
                 if (button != null) assertTrue(button.bottom <= navTop)
-                val glass = pixels()
-                val name = "start-actual-glass-${if (dark) "dark" else "light"}-$status-${(scale * 100).toInt()}"
-                scene.save(name)
-                capture = false; scene.settle()
-                val opaque = pixels()
-                val y = (navTop + 20f).toInt()
-                val difference = (100..150).sumOf { x -> listOf(0, 8, 16).sumOf { shift ->
-                    abs(((glass.getRGB(x, y) shr shift) and 255) - ((opaque.getRGB(x, y) shr shift) and 255))
-                } }
-                assertTrue(difference > 50,
-                    "Actual screen must feed its poster into glass: difference=$difference dark=$dark status=$status font=$scale")
-                if (button != null) assertEquals(button, scene.action("Зарегистрироваться").boundsInRoot,
-                    "Capturing the scroll layer must not move the pinned registration button")
+                assertEquals(400f, scene.scroll().boundsInRoot.bottom)
+                scene.save("start-actual-glass-${if (dark) "dark" else "light"}-$status-${(scale * 100).toInt()}")
+                scene.scrollToEnd()
+                val lastSection = scene.nodes(true).first {
+                    it.config.getOrNull(SemanticsProperties.ContentDescription)?.contains("Написать комментарий") == true
+                }.boundsInRoot
+                if (button != null) assertEquals(button, scene.action("Зарегистрироваться").boundsInRoot)
+                val safeBottom = button?.top ?: navTop
+                assertTrue(lastSection.height > 0f && lastSection.bottom <= safeBottom,
+                    "Comment field must scroll clear of fixed controls: $lastSection, limit=$safeBottom, status=$status, font=$scale")
             }
         }
     }

@@ -43,10 +43,10 @@ internal fun rememberNavigationScrollViewport(): NavigationScrollViewport {
         root.overlap > 0 && current.root === root.root &&
         current.rect.top < root.rect.bottom - root.overlap &&
         current.rect.bottom >= root.rect.bottom - root.overlap - 1f
-    val extra = if (reachesNavigation) root.overlap else 0
-    val padding = if (reachesNavigation) with(density) {
-        (extra + (current.rect.bottom - (root.rect.bottom - root.overlap)).coerceAtLeast(0f)).toDp()
-    } else 0.dp
+    val extra = if (reachesNavigation) {
+        (root.rect.bottom - current.rect.bottom).roundToInt().coerceIn(0, root.overlap)
+    } else 0
+    val padding = if (reachesNavigation) with(density) { root.overlap.toDp() } else 0.dp
     val top = topHost?.bounds
     val reachesTop = !hasScrollParent && top != null && current != null &&
         current.root === top.root && top.rect.height > 0 &&
@@ -75,11 +75,8 @@ internal fun rememberNavigationScrollViewport(): NavigationScrollViewport {
             layout(child.width, (child.height - grow).coerceAtLeast(0)) { child.placeRelative(0, -growTop) }
         }
     val sourceKey = remember { Any() }
-    // Capture before ancestor Surface/Scaffold clipping. Enlarging a descendant alone cannot
-    // make it visible through an ancestor's clip, but root glass can sample this retained layer.
     return NavigationScrollViewport(
         modifier
-            .then(if (reachesNavigation) host.scrollSource(sourceKey) else Modifier)
             .then(if (reachesTop) Modifier.hazeSource(topHost.haze, key = sourceKey) else Modifier),
         padding + if (!hasScrollParent) safeBottom else 0.dp, topPadding,
     )

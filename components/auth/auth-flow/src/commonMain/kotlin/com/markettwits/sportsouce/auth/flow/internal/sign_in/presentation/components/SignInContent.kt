@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -66,8 +67,8 @@ internal fun SignInContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
                     .padding(bottom = paddingValues.calculateBottomPadding())
+                    .verticalScroll(rememberScrollState())
                     .padding(30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

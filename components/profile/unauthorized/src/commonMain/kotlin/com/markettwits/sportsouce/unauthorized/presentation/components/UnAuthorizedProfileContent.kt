@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.navigation.bottomNavigationOverlap
 import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceSpacing
@@ -55,28 +56,29 @@ internal fun UnAuthorizedProfileContent(
     val (parallax, scrollConnection) = rememberGuestProfileParallax(scroll, limit)
     BoxWithConstraints(Modifier.fillMaxSize().background(colors.surface)) {
         val pageHeight = maxHeight
+        val contentHeight = (pageHeight - bottomNavigationOverlap()).coerceAtLeast(0.dp)
         val landscape = maxWidth >= 600.dp && maxWidth > maxHeight
-        GuestProfileBackground(
-            content = content,
-            // The overscan used for parallax must stay inside the photo viewport.
-            // Otherwise it leaks into the navigation bar's rounded outer corners.
-            modifier = Modifier.matchParentSize().clipToBounds().graphicsLayer {
-                val overscan = 1f + (limit * 2f / size.height.coerceAtLeast(1f))
-                scaleX = motion.photoScale * overscan
-                scaleY = motion.photoScale * overscan
-                translationY = parallax.offset(scroll, limit)
-            },
-        )
-        Box(Modifier.matchParentSize().background(Brush.verticalGradient(
-            0f to Color.Black.copy(alpha = .62f),
-            .25f to Color.Black.copy(alpha = .38f),
-            .55f to Color.Black.copy(alpha = .08f),
-            1f to Color.Black.copy(alpha = .42f),
-        )))
+        Box(Modifier.fillMaxWidth().height(contentHeight).clipToBounds()) {
+            GuestProfileBackground(
+                content = content,
+                modifier = Modifier.matchParentSize().graphicsLayer {
+                    val overscan = 1f + (limit * 2f / size.height.coerceAtLeast(1f))
+                    scaleX = motion.photoScale * overscan
+                    scaleY = motion.photoScale * overscan
+                    translationY = parallax.offset(scroll, limit)
+                },
+            )
+            Box(Modifier.matchParentSize().background(Brush.verticalGradient(
+                0f to Color.Black.copy(alpha = .62f),
+                .25f to Color.Black.copy(alpha = .38f),
+                .55f to Color.Black.copy(alpha = .08f),
+                1f to Color.Black.copy(alpha = .42f),
+            )))
+        }
         if (landscape) {
             Row(
                 Modifier.fillMaxSize().nestedScroll(scrollConnection).sauceVerticalScroll(scroll)
-                    .heightIn(min = pageHeight).statusBarsPadding().padding(SauceSpacing.extraLarge),
+                    .heightIn(min = contentHeight).statusBarsPadding().padding(SauceSpacing.extraLarge),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(SauceSpacing.extraLarge),
             ) {
@@ -92,7 +94,7 @@ internal fun UnAuthorizedProfileContent(
         } else {
             val heroHeight = (pageHeight * .65f).coerceIn(260.dp, 680.dp)
             Column(
-                Modifier.fillMaxSize().nestedScroll(scrollConnection).sauceVerticalScroll(scroll).heightIn(min = pageHeight),
+                Modifier.fillMaxSize().nestedScroll(scrollConnection).sauceVerticalScroll(scroll).heightIn(min = contentHeight),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Box(Modifier.fillMaxWidth().heightIn(min = 260.dp)) {

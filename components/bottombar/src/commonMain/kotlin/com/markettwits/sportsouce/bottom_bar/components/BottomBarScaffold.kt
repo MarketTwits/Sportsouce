@@ -12,6 +12,7 @@ fun BottomBarScaffold(
     modifier: Modifier = Modifier,
     aboveNavigation: @Composable () -> Unit = {},
     navigationVisible: Boolean = true,
+    profilePhotoUrl: String? = null,
     content: @Composable () -> Unit
 ) {
 
@@ -25,6 +26,7 @@ fun BottomBarScaffold(
         selectedTab = state.selectedTab,
         content = content,
         aboveNavigation = aboveNavigation,
+        profilePhotoUrl = profilePhotoUrl,
         onClickTab = { item ->
             component.onClickTabBar(item)
         },

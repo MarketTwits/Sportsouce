@@ -1,12 +1,13 @@
 package com.markettwits.sportsouce.start.presentation.album.presentation.components
 
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid as LazyVerticalGrid
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalDensity
@@ -71,7 +72,7 @@ internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSe
     val photos = remember(items) { items.mapIndexed { index, url -> AlbumPhoto(index, url) } }
     val density = LocalDensity.current
     val bounce = remember { AlbumOverscrollEffect() }
-    val bottom = photoViewerHostInsets().asPaddingValues().calculateBottomPadding() + if (selection.isNotEmpty()) 100.dp else 0.dp
+    val bottom = photoViewerHostInsets().excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() + if (selection.isNotEmpty()) 100.dp else 0.dp
     BoxWithConstraints(modifier.fillMaxSize()) {
         val columns = with(AlbumGridCells) { with(density) { calculateCrossAxisCellSizes(maxWidth.roundToPx(), 1.dp.roundToPx()) } }
         SideEffect {

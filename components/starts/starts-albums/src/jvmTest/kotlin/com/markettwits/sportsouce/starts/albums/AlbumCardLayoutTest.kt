@@ -1,14 +1,16 @@
 package com.markettwits.sportsouce.starts.albums
 
 import app.cash.paging.*
-import app.cash.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.test.resetMain
-import com.markettwits.sportsouce.starts.albums.presentation.screen.StartsAlbumsContent
+import kotlinx.coroutines.flow.MutableStateFlow
+import com.markettwits.sportsouce.starts.albums.presentation.component.StartsAlbumsComponent
+import com.markettwits.sportsouce.starts.albums.presentation.screen.StartsAlbumsScreen
+import com.markettwits.sportsouce.starts.albums.presentation.store.StartsAlbumsStore
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -90,40 +92,61 @@ class AlbumCardLayoutTest {
             }
         }
     }
-    @Test fun albumsUseOneColumnOnPhoneAndMultipleColumnsOnWideScreens() {
+    @Test fun albumsFromDifferentStartsShareRowsOnWideScreens() {
         val albums = listOf(
             StartAlbumsItem.Album(1, "На старте", 10, ""),
             StartAlbumsItem.Album(2, "На финише", 20, ""),
+            StartAlbumsItem.Album(3, "Награждение", 30, ""),
         )
-        for (width in listOf(320, 800)) for (dark in listOf(false, true)) {
+        val firstStart = StartAlbumsItem(1, "Кросс", "15 октября 2026", listOf(albums[0]))
+        val secondStart = StartAlbumsItem(2, "Осенний трейл в окрестностях горнолыжного комплекса", "16 октября 2026", albums.drop(1))
+        for (width in listOf(320, 800, 1120)) for (dark in listOf(false, true)) {
             var selected: StartAlbumsItem.Album? = null
-            val flow = flowOf(PagingData.from(listOf(StartAlbumsItem(1, "Кросс", "15 октября 2026", albums)),
+            val flow = flowOf(PagingData.from(listOf(firstStart, secondStart),
                 sourceLoadStates = LoadStates(LoadStateNotLoading(false), LoadStateNotLoading(false), LoadStateNotLoading(false))))
+            val component = object : StartsAlbumsComponent {
+                override val state = MutableStateFlow(StartsAlbumsStore.State(items = flow))
+                override fun obtainEvent(intent: StartsAlbumsStore.Intent) {
+                    if (intent is StartsAlbumsStore.Intent.OpenAlbum) selected = intent.album
+                }
+            }
             ImageComposeScene(width = width, height = 1200, density = Density(1f)) {
                 SauceTheme(darkTheme = dark) {
-                    Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
-                        StartsAlbumsContent(flow.collectAsLazyPagingItems()) { selected = it }
-                    }
+                    StartsAlbumsScreen(component)
                 }
             }.use { scene ->
                 repeat(14) { scene.render(System.nanoTime() + it * 100_000_000L).close() }
                 val nodes = scene.semanticsOwners.flatMap { walk(it.unmergedRootSemanticsNode) }
                 fun text(value: String) = nodes.first { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { it.text == value } }
-                val first = text("На старте")
-                val second = text("На финише")
+                fun albumCard(label: String): SemanticsNode {
+                    var node = text(label)
+                    while (!node.config.contains(SemanticsActions.OnClick)) node = checkNotNull(node.parent)
+                    return node
+                }
+                val first = albumCard("10 фото")
+                val second = albumCard("20 фото")
+                val third = albumCard("30 фото")
                 if (width == 320) {
                     assertEquals(first.boundsInRoot.left, second.boundsInRoot.left)
                     assertTrue(second.boundsInRoot.top > first.boundsInRoot.bottom)
+                    assertTrue(text("10 фото").boundsInRoot.top - text("На старте").boundsInRoot.bottom in 0f..12f,
+                        "Short titles on phones must not reserve an empty second line")
                 } else {
                     assertEquals(first.boundsInRoot.top, second.boundsInRoot.top)
                     assertTrue(second.boundsInRoot.left > first.boundsInRoot.right)
+                    assertTrue(kotlin.math.abs(first.size.width - second.size.width) <= 1)
+                    assertEquals(first.size.height, second.size.height)
+                    assertTrue(walk(first).any { it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { label -> label.text == firstStart.name } })
+                    assertTrue(text("На финише · 16 октября 2026").boundsInRoot.top >= second.boundsInRoot.top)
+                    if (width == 1120) {
+                        assertEquals(first.boundsInRoot.top, third.boundsInRoot.top)
+                        assertTrue(third.boundsInRoot.left > second.boundsInRoot.right)
+                    } else {
+                        assertEquals(first.boundsInRoot.left, third.boundsInRoot.left)
+                        assertTrue(third.boundsInRoot.top > first.boundsInRoot.bottom)
+                    }
                 }
-                val count = text("10 фото")
-                assertTrue(count.boundsInRoot.top - first.boundsInRoot.bottom in 0f..12f,
-                    "Short album titles must not reserve an empty second line")
-                var card = second
-                while (!card.config.contains(SemanticsActions.OnClick)) card = checkNotNull(card.parent)
-                card.config[SemanticsActions.OnClick].action!!.invoke()
+                second.config[SemanticsActions.OnClick].action!!.invoke()
                 assertEquals(albums[1], selected)
                 scene.render(System.nanoTime() + 2_000_000_000L).use { image -> image.encodeToData()!!.use { data ->
                     File("build/design-system/albums-grid-${if (dark) "dark" else "light"}-$width.png").apply { parentFile.mkdirs(); writeBytes(data.bytes) }

@@ -23,39 +23,58 @@
 package com.markettwits.core_ui.items.components.toolbar
 
 import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.runtime.CompositionLocalProvider
 import com.markettwits.core_ui.items.components.topbar.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 @Stable
 class CollapsingToolbarScaffoldState(
     val toolbarState: CollapsingToolbarState,
     initialOffsetY: Int = 0
 ) {
-	val offsetY: Int
-		get() = offsetYState.value
+	val offsetY: Int by derivedStateOf { hiddenOffset.roundToInt() }
+	internal var hiddenOffset by mutableFloatStateOf(initialOffsetY.toFloat())
+		private set
 
-	internal val offsetYState = mutableStateOf(initialOffsetY)
+	private var offsetLimit: Int? = null
+
+	internal fun updateOffsetLimit(limit: Int) {
+		val previousLimit = offsetLimit
+		if (previousLimit == limit) return
+		val offset = if (previousLimit != null && previousLimit > 0) {
+			hiddenOffset * limit / previousLimit
+		} else hiddenOffset
+		hiddenOffset = offset.coerceIn(-limit.toFloat(), 0f)
+		offsetLimit = limit
+	}
+
+	internal fun dispatchOffsetDelta(delta: Float): Float {
+		val consumed = delta.coerceIn(-toolbarState.minHeight - hiddenOffset, -hiddenOffset)
+		hiddenOffset += consumed
+		return consumed
+	}
 }
 
 private class CollapsingToolbarScaffoldStateSaver :
@@ -102,18 +121,15 @@ fun CollapsingToolbarScaffold(
 ) {
 	val flingBehavior = ScrollableDefaults.flingBehavior()
 	val layoutDirection = LocalLayoutDirection.current
-	val density = LocalDensity.current
-
-	val nestedScrollConnection = remember(scrollStrategy, state) {
-		scrollStrategy.create(state.offsetYState, state.toolbarState, flingBehavior)
+	val nestedScrollConnection = remember(scrollStrategy, state, flingBehavior) {
+		ToolbarNestedScrollConnection(state, scrollStrategy, flingBehavior)
+	}
+	DisposableEffect(nestedScrollConnection, enabled) {
+		onDispose { nestedScrollConnection.cancelSettling() }
 	}
 
 	val glass = rememberSauceTopBarState()
 	val toolbarState = state.toolbarState
-	val statusBarHeight = with(density) {
-		WindowInsets.statusBars.asPaddingValues().calculateTopPadding().roundToPx()
-	}
-
 	Layout(
 		content = {
 			CollapsingToolbar(
@@ -149,37 +165,33 @@ fun CollapsingToolbarScaffold(
 			minWidth = 0,
 			minHeight = 0
 		)
-		val bodyConstraints = constraints.copy(
-			minWidth = 0,
-			minHeight = 0,
-			maxHeight = when (scrollStrategy) {
-				ScrollStrategy.ExitUntilCollapsed ->
-					(constraints.maxHeight - toolbarState.minHeight).coerceAtLeast(0)
-
-				ScrollStrategy.EnterAlways, ScrollStrategy.EnterAlwaysCollapsed ->
-					constraints.maxHeight
-			}
-		)
-
 		val toolbarPlaceable = measurables[0].measure(toolbarConstraints)
+		state.updateOffsetLimit(if (scrollStrategy == ScrollStrategy.ExitUntilCollapsed) 0 else toolbarState.minHeight)
+		val offset = state.offsetY
+		val bodyTop = (toolbarPlaceable.height + offset).coerceAtLeast(0)
 
 		val bodyMeasurables = measurables.subList(1, measurables.size)
 		val childrenAlignments = bodyMeasurables.map {
 			(it.parentData as? ScaffoldParentData)?.alignment
 		}
-		val bodyPlaceables = bodyMeasurables.map {
-			it.measure(bodyConstraints)
+		val bodyPlaceables = bodyMeasurables.mapIndexed { index, measurable ->
+			// Keep the bottom of the scroll viewport inside the scaffold as the app bar moves.
+			// Overlays anchored to the scaffold still receive its full constraints.
+			val height = if (constraints.hasBoundedHeight && childrenAlignments[index] == null) {
+				(constraints.maxHeight - bodyTop).coerceAtLeast(0)
+			} else constraints.maxHeight
+			measurable.measure(Constraints(maxWidth = constraints.maxWidth, maxHeight = height))
 		}
-
-		val toolbarHeight = toolbarPlaceable.height
 
 		val width = max(
 			toolbarPlaceable.width,
 			bodyPlaceables.maxOfOrNull { it.width } ?: 0
 		).coerceIn(constraints.minWidth, constraints.maxWidth)
 		val height = max(
-			toolbarHeight,
-			bodyPlaceables.maxOfOrNull { it.height } ?: 0
+			bodyTop,
+			bodyPlaceables.indices.maxOfOrNull { index ->
+				bodyPlaceables[index].height + if (childrenAlignments[index] == null) bodyTop else 0
+			} ?: 0
 		).coerceIn(constraints.minHeight, constraints.maxHeight)
 
 		layout(width, height) {
@@ -187,7 +199,7 @@ fun CollapsingToolbarScaffold(
 				val alignment = childrenAlignments[index]
 
 				if (alignment == null) {
-					placeable.placeRelative(0, toolbarHeight + state.offsetY)
+					placeable.placeRelative(0, bodyTop)
 				} else {
 					val offset = alignment.align(
 						size = IntSize(placeable.width, placeable.height),
@@ -197,11 +209,7 @@ fun CollapsingToolbarScaffold(
 					placeable.place(offset)
 				}
 			}
-			// Apply status bar height as base offset to position toolbar below status bar
-			// When collapsed, allow toolbar to hide behind status bar by reducing the offset
-			val baseStatusBarOffset = statusBarHeight
-			val collapseReduction = statusBarHeight * (1f - toolbarState.progress)
-			toolbarPlaceable.placeRelative(0, state.offsetY + baseStatusBarOffset - collapseReduction.toInt())
+			toolbarPlaceable.placeRelative(0, offset)
 		}
 	}
 }

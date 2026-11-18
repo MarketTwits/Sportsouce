@@ -10,12 +10,56 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.topbar.*
 import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.theme.sauceColors
 import java.io.ByteArrayInputStream
 import javax.imageio.ImageIO
 import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 class OverlayTopBarGlassTest {
+    @Test fun openingKeepsTheSurfaceCoveredUntilTheBackdropIsRecorded() {
+        for (dark in listOf(false, true)) {
+            var sourceAttached by mutableStateOf(false)
+            val fallback = sauceColors(dark).surface.toArgb()
+            val rawColor = if (dark) Color.Yellow else Color.Red
+            ImageComposeScene(width = 390, height = 250) {
+                SauceTheme(darkTheme = dark) {
+                    SauceTopBarOverlayHost {
+                        Box(Modifier.fillMaxSize().background(rawColor)) {
+                            if (sourceAttached) {
+                                SauceTopBarBackdrop(Modifier.fillMaxSize()) {
+                                    Box(Modifier.fillMaxSize().background(rawColor))
+                                }
+                            }
+                            SauceTopBarOverlay(Modifier.fillMaxWidth().height(56.dp)) {
+                                Box(Modifier.align(Alignment.Center).size(20.dp).background(Color.Green))
+                            }
+                        }
+                    }
+                }
+            }.use { scene ->
+                var time = 1_000_000_000L
+                fun frame() = scene.render((time + 16_666_667L).also { time = it }).use { image ->
+                    image.encodeToData()!!.use { ImageIO.read(ByteArrayInputStream(it.bytes)) }
+                }
+                fun distance(a: Int, b: Int) =
+                    listOf(0, 8, 16).sumOf { kotlin.math.abs((a shr it and 255) - (b shr it and 255)) }
+                assertEquals(fallback, frame().getRGB(370, 28), "First frame must cover the previous screen")
+                sourceAttached = true
+                val frames = List(20) {
+                    val image = frame()
+                    assertEquals(Color.Green.toArgb(), image.getRGB(195, 28), "Controls must stay sharp")
+                    distance(fallback, image.getRGB(370, 28))
+                }
+                assertTrue(frames.last() > 20, "Live glass must become visible: dark=$dark frames=$frames")
+                assertTrue(frames.any { it in 1 until frames.last() - 3 }, "Glass must reveal across multiple frames")
+                assertTrue(frames.max() <= frames.last() + 8, "The first frames must never expose the raw backdrop")
+                sourceAttached = false
+                assertEquals(fallback, frame().getRGB(370, 28), "Removing a source must restore the surface in the same frame")
+            }
+        }
+    }
+
     @Test fun floatingToolbarUsesTheSharedLiveGlassAndKeepsControlsOutOfItsBackdrop() {
         for (dark in listOf(false, true)) {
             var source by mutableStateOf(Color.Red)

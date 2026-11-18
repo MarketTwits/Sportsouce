@@ -4,12 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.club.dashboard.presentation.screen.ClubDashboardContent
 import com.markettwits.sportsouce.club.dashboard.presentation.components.ClubTrainingPreview
@@ -25,11 +28,78 @@ import com.markettwits.sportsouce.club.info.presentation.components.bottomsheet.
 import com.markettwits.sportsouce.club.info.domain.models.*
 import com.markettwits.sportsouce.club.registration.domain.WorkoutPrice
 import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.LocalDate
 import kotlin.test.*
 
 @OptIn(ExperimentalComposeUiApi::class)
 class ClubLayoutTest {
+    @Test fun coverAndGradientAnimateWithoutMovingTheLayoutAndRespectDisabledAnimations() {
+        for (animations in listOf(false, true)) {
+            val durationScale = object : MotionDurationScale {
+                override val scaleFactor = if (animations) 1f else 0f
+            }
+            ImageComposeScene(width = 390, height = 800, coroutineContext = Dispatchers.Unconfined + durationScale) {
+                SauceTheme(darkTheme = false) { ClubDashboardContent(ClubDashboardStore.State()) {} }
+            }.use { scene ->
+                var frameTime = 1_000_000_000L
+                fun advance(frames: Int) {
+                    repeat(frames) { frameTime += 50_000_000L; scene.render(frameTime).close() }
+                }
+                fun sample(x: IntProgression, y: IntProgression) = scene.render(frameTime).use {
+                    val pixels = it.toComposeImageBitmap().toPixelMap()
+                    y.flatMap { row -> x.map { column -> pixels[column, row] } }
+                }
+                advance(3)
+                val title = "Клуб «Спорт Союз»"
+                val titleBounds = scene.text(title)!!.boundsInRoot
+                val enteringPhoto = sample(64..320 step 24, 64..240 step 24)
+                advance(21)
+                assertEquals(animations, enteringPhoto != sample(64..320 step 24, 64..240 step 24))
+                val earlyGradient = sample(4..16 step 4, 8..150 step 16)
+                advance(60)
+                assertEquals(animations, earlyGradient != sample(4..16 step 4, 8..150 step 16))
+                assertEquals(titleBounds, scene.text(title)!!.boundsInRoot)
+            }
+        }
+    }
+
+    @Test fun backButtonKeepsItsBoundsAndChangesMaterialAtTheEndOfTheCover() {
+        var backClicks = 0
+        val state = ClubDashboardStore.State(hasLoaded = true)
+        ImageComposeScene(width = 390, height = 520) {
+            SauceTheme(darkTheme = false) {
+                Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+                    ClubDashboardContent(state, topContentPadding = 76.dp, onBack = { backClicks++ }) {}
+                }
+            }
+        }.use { scene ->
+            scene.settle()
+            fun backButton(): SemanticsNode {
+                var node = checkNotNull(scene.label("Назад"))
+                while (!node.config.contains(SemanticsActions.OnClick)) node = checkNotNull(node.parent)
+                return node
+            }
+            val bounds = backButton().boundsInRoot
+            fun buttonColor() = scene.render(time).use {
+                it.toComposeImageBitmap().toPixelMap()[bounds.center.x.toInt(), bounds.top.toInt() + 7]
+            }
+            val glass = buttonColor()
+            val scroll = scene.nodes().single { it.config.contains(SemanticsProperties.VerticalScrollAxisRange) }
+            scroll.config[SemanticsActions.ScrollBy].action!!.invoke(0f, 3000f)
+            scene.settle()
+            assertEquals(bounds, backButton().boundsInRoot)
+            val opaque = buttonColor()
+            assertNotEquals(glass, opaque)
+            scroll.config[SemanticsActions.ScrollBy].action!!.invoke(0f, -3000f)
+            scene.settle()
+            assertEquals(bounds, backButton().boundsInRoot)
+            assertNotEquals(opaque, buttonColor())
+            backButton().config[SemanticsActions.OnClick].action!!.invoke()
+            assertEquals(1, backClicks)
+        }
+    }
+
     @Test fun carouselCardsKeepTheirHeightForShortLongAndMissingTextAtBothFontScales() {
         val trainings = listOf(
             Training(1, "Бег", "<p>Коротко</p>", ""),

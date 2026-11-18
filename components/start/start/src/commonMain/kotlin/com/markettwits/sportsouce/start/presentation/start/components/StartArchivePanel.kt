@@ -10,6 +10,7 @@ import com.markettwits.core_ui.items.components.list.SauceActionRow
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceSpacing
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 @Composable
@@ -26,7 +27,7 @@ internal fun StartArchivePanel(
     when {
         items.isNotEmpty() -> StartSeriesPanel(
             modifier, items, currentStartId, onClickArchive, onClickStart,
-            title = "Архив стартов",
+            kind = StartRelatedKind.Archive,
             previewItems = items.filter { it.id != currentStartId }.takeLast(3),
         )
         loading -> Column(modifier.fillMaxWidth().semantics { contentDescription = "Загрузка архива стартов" },

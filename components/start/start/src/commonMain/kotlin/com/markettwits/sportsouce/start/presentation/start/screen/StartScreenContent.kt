@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.Role
-import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.screens.FullImageContent
 import com.markettwits.core_ui.items.theme.SauceTheme
@@ -29,6 +28,8 @@ import com.markettwits.sportsouce.start.presentation.membres.models.StartMembers
 import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
 import com.markettwits.sportsouce.start.presentation.start.components.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 
 @Composable
 internal fun StartScreenContent(
@@ -69,6 +70,8 @@ internal fun StartScreenContent(
             BoxWithConstraints(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
                 val wide = maxWidth >= 840.dp && maxHeight >= 600.dp
                 val scrollState = rememberScrollState()
+                val coverBackdrop = rememberHazeState()
+                var coverHeight by remember { mutableIntStateOf(0) }
                 val density = LocalDensity.current
                 var registrationHeight by remember { mutableIntStateOf(0) }
                 Row(Modifier.fillMaxSize()) {
@@ -90,11 +93,14 @@ internal fun StartScreenContent(
                                 .then(if (data.startStatus.code != 3) Modifier.navigationBarsPadding() else Modifier)
                         ) {
                             if (!wide) {
-                                Box(Modifier.semantics { contentDescription = "Открыть афишу старта" }
+                                Box(Modifier.onSizeChanged { coverHeight = it.height }
+                                    .hazeSource(coverBackdrop)
+                                    .semantics { contentDescription = "Открыть афишу старта" }
                                     .clickable(role = Role.Button, onClick = onClickImage)) {
                                     FullImageContent(
                                         backgroundColor = SauceTheme.colors.background,
                                         imageUrl = data.image,
+                                        backdropScrollOffset = { scrollState.value },
                                     )
                                 }
                             }
@@ -144,15 +150,15 @@ internal fun StartScreenContent(
                         }
                     }
                 }
-                BackFloatingActionButton(Modifier.align(Alignment.TopStart), onClickBack)
-                Row(Modifier.align(Alignment.TopEnd)) {
-                    StartShareActionButton(onClick = onClickShare)
-                    StartFavoriteActionButton(
-                        isFavorite = favoriteState.isFavorite,
-                        isLoading = favoriteState.isLoading(),
-                        onClick = onClickAddToFavourites,
-                    )
-                }
+                StartTopActions(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    backdrop = coverBackdrop,
+                    coverBottom = { if (wide) 0 else coverHeight - scrollState.value },
+                    favoriteState = favoriteState,
+                    onBack = onClickBack,
+                    onShare = onClickShare,
+                    onFavorite = onClickAddToFavourites,
+                )
             }
         }
     }

@@ -32,6 +32,8 @@ import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.domain.models.ShopExtraOptions
 import com.markettwits.sportsouce.shop.item.presentation.components.panes.ShopItemCompactPane
 import com.markettwits.sportsouce.shop.item.presentation.components.panes.ShopItemLargePane
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.flow.Flow
 import kotlin.math.min
 
@@ -52,7 +54,7 @@ internal fun ShopItemProductScreen(
     cartContent: @Composable (Modifier) -> Unit,
 ) {
 
-    val windowSize = calculateWindowSizeClass()
+    val isLarge = calculateWindowSizeClass().isLarge
     val snackbar = remember { SnackbarHostState() }
     LaunchedEffect(error) {
         if (error != null) {
@@ -69,7 +71,7 @@ internal fun ShopItemProductScreen(
             Scaffold(
                 snackbarHost = { SauceSnackbarHost(snackbar, tone = SauceSnackbarTone.Error) },
                 bottomBar = {
-                    if (!windowSize.isLarge)
+                    if (!isLarge)
                         cartContent(Modifier.fillMaxWidth())
                 },
                 containerColor = SauceTheme.colors.background
@@ -85,22 +87,28 @@ internal fun ShopItemProductScreen(
                 val safeTopPadding = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
                 val galleryTopPadding = safeTopPadding + SauceSpacing.small
                 val listState = rememberLazyListState()
+                val galleryBackdrop = rememberHazeState()
                 val galleryHeightPx = with(LocalDensity.current) { (ShopItemPhotoHeight + galleryTopPadding).roundToPx() }
-                val galleryAtStatusBar by remember(listState, galleryHeightPx) {
-                    derivedStateOf {
-                        listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset < galleryHeightPx
+                val galleryBottom = remember(listState, galleryHeightPx, isLarge) {
+                    {
+                        if (!isLarge && listState.firstVisibleItemIndex == 0) {
+                            galleryHeightPx - listState.firstVisibleItemScrollOffset
+                        } else {
+                            0
+                        }
                     }
                 }
+                val galleryAtStatusBar by remember(galleryBottom) { derivedStateOf { galleryBottom() > 0 } }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = paddingValues.calculateBottomPadding()),
                     state = listState,
-                    contentPadding = PaddingValues(top = if (windowSize.isLarge) safeTopPadding else 0.dp),
+                    contentPadding = PaddingValues(top = if (isLarge) safeTopPadding else 0.dp),
                 ) {
                     item {
-                        if (windowSize.isLarge) {
+                        if (isLarge) {
                             ShopItemLargePane(
                                 item = item,
                                 options = options,
@@ -113,6 +121,7 @@ internal fun ShopItemProductScreen(
                                 options = options,
                                 galleryTopPadding = galleryTopPadding,
                                 galleryAtStatusBar = galleryAtStatusBar,
+                                galleryModifier = Modifier.hazeSource(galleryBackdrop),
                                 onClickOption = onClickOption
                             )
                         }
@@ -131,6 +140,8 @@ internal fun ShopItemProductScreen(
                 }
                 ShopItemActionRow(
                     modifier = Modifier.fillMaxWidth(),
+                    galleryBackdrop = galleryBackdrop,
+                    galleryBottom = galleryBottom,
                     onClickGoBack = onClickGoBack,
                     onClickShare = onClickShare
                 )

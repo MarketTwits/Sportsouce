@@ -263,6 +263,40 @@ class StartDetailsScreenTest {
     }
 
     @Test
+    fun floatingActionsUseTheCoverBackdropAndKeepTheirBoundsWhenScrolledAway() {
+        val palette = sauceColors(dark = false)
+        ImageComposeScene(width = 390, height = 844) {
+            SauceTheme(darkTheme = false, materialColors = palette.material.copy(surfaceTint = palette.surfaceRaised)) {
+                Details(start)
+            }
+        }.use { scene ->
+            scene.settle()
+            val labels = listOf("Назад", "Поделиться стартом", "Добавить старт в избранное")
+            fun bounds() = labels.map { scene.descriptionAction(it).boundsInRoot }
+            val initialBounds = bounds()
+            fun buttonColors(): List<Int> {
+                time += 100_000_000L
+                return scene.render(time).use { image ->
+                    image.encodeToData()!!.use { data ->
+                        val bitmap = ImageIO.read(ByteArrayInputStream(data.bytes))
+                        initialBounds.map { bitmap.getRGB(it.center.x.toInt(), it.top.toInt() + 8) }
+                    }
+                }
+            }
+            val glass = buttonColors()
+            val coverBottom = scene.descriptionAction("Открыть афишу старта").boundsInRoot.bottom
+            scene.scrollBy(coverBottom)
+            assertEquals(initialBounds, bounds())
+            val opaque = buttonColors()
+            assertEquals(List(labels.size) { palette.surfaceRaised.toArgb() }, opaque)
+            labels.indices.forEach { assertNotEquals(opaque[it], glass[it], labels[it]) }
+            scene.scrollBy(-coverBottom)
+            assertEquals(initialBounds, bounds())
+            buttonColors().forEachIndexed { index, color -> assertNotEquals(opaque[index], color, labels[index]) }
+        }
+    }
+
+    @Test
     fun detailsKeepNavigationPayloadsAndFloatingActions() {
         var selected: List<StartMembersUi>? = null
         val actions = mutableListOf<String>()

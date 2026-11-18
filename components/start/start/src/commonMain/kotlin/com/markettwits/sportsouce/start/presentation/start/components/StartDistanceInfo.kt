@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -25,12 +27,15 @@ internal fun StartDistanceInfo(modifier: Modifier = Modifier, distances: List<Di
     var statisticsVisible by rememberSaveable { mutableStateOf(true) }
     StartContentBasePanel(modifier, "Дистанции", Icons.AutoMirrored.Filled.DirectionsRun,
         onHeaderClick = if (distances.size > 3) ({ expanded = !expanded }) else null, expanded = expanded) {
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
-            FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
+            FlowRow(
+                Modifier.fillMaxWidth().animateContentSize(tween(SauceMotion.feedbackMillis, easing = SauceMotion.feedbackEasing)),
+                horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
                 verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
                 (if (expanded) distances else distances.take(3)).forEach { SauceStatusBadge(it.name, showIndicator = false) }
             }
             if (!membersUi.isNullOrEmpty()) {
+                HorizontalDivider(color = SauceTheme.colors.border)
                 StartSectionHeading("Регистрации", Icons.Outlined.BarChart,
                     onClick = { statisticsVisible = !statisticsVisible }, expanded = statisticsVisible)
                 AnimatedVisibility(statisticsVisible,

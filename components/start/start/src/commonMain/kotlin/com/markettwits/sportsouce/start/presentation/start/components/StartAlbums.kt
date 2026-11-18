@@ -2,6 +2,8 @@ package com.markettwits.sportsouce.start.presentation.start.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
@@ -17,7 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
 import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
-import com.markettwits.core_ui.items.components.list.SauceActionRow
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid
 import com.markettwits.core_ui.items.image.AlbumImage
 import com.markettwits.core_ui.items.image.AlbumImageSize
@@ -29,26 +32,36 @@ internal fun StartAlbums(modifier: Modifier = Modifier, albums: List<StartItem.A
     val available = albums.filter { it.photos.isNotEmpty() }
     if (available.isEmpty()) return
     var allAlbums by rememberSaveable(available.map { it.id }) { mutableStateOf(false) }
-    StartContentBasePanel(modifier, label = "Фотоальбомы", icon = Icons.Outlined.PhotoLibrary) {
-        if (available.size == 1) StartAlbumPreview(available.single(), onClick = { onCLickFullAlbum(available.single()) })
-        else {
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = SauceSpacing.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+        ) {
+            StartSectionHeading("Фотоальбомы", modifier = Modifier.weight(1f))
+            if (available.size > 1) {
+                SauceButton("Все альбомы", { allAlbums = true }, variant = SauceButtonVariant.Text, fillWidth = false)
+            }
+        }
+        if (available.size == 1) {
+            val album = available.single()
+            StartAlbumPreview(album, Modifier.padding(horizontal = SauceSpacing.large), onClick = { onCLickFullAlbum(album) })
+        } else {
             BoxWithConstraints(Modifier.fillMaxWidth()) {
                 val largeText = LocalDensity.current.fontScale > 1.3f
                 val titleLines = if (largeText) 3 else 2
-                val cardWidth = if (maxWidth < 500.dp) maxWidth * .88f else ((maxWidth - 12.dp) / 2).coerceAtMost(360.dp)
-                val textHeight = with(LocalDensity.current) {
-                    (MaterialTheme.typography.titleSmall.lineHeight * titleLines).toDp()
-                }
-                LazyHorizontalGrid(rows = GridCells.Fixed(1), modifier = Modifier.fillMaxWidth()
-                    .height(cardWidth / (16f / 10f) + textHeight + 28.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                val cardWidth = if (maxWidth < 500.dp) maxWidth * .72f else ((maxWidth - 44.dp) / 2).coerceAtMost(360.dp)
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = SauceSpacing.large),
+                    horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
+                ) {
                     items(available, key = { it.id }) { album ->
                         StartAlbumPreview(album, Modifier.width(cardWidth), titleLines = titleLines, reserveTitleSpace = true,
                             onClick = { onCLickFullAlbum(album) })
                     }
                 }
             }
-            SauceActionRow("Все альбомы", { allAlbums = true }, icon = Icons.Outlined.PhotoLibrary, count = available.size.toString())
         }
     }
     if (allAlbums) DefaultModalBottomSheet(title = "Фотоальбомы", onDismissRequest = { allAlbums = false }) {

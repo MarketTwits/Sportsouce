@@ -12,11 +12,14 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
 import com.markettwits.core_ui.items.theme.Shapes
 
 @Composable
@@ -25,6 +28,7 @@ fun FullImageContent(
     imageUrl: String,
     isPortrait: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backdropScrollOffset: () -> Int = { 0 },
 ) {
     BoxWithConstraints(modifier.fillMaxWidth()) {
         val posterWidth = (maxWidth * .56f).coerceIn(0.dp, 320.dp)
@@ -33,61 +37,52 @@ fun FullImageContent(
             .aspectRatio(2f / 3f)
             .clip(Shapes.large)
         else Modifier.fillMaxSize().clip(Shapes.large)
+        val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
         val frameModifier = if (isPortrait) Modifier.fillMaxWidth()
-            .height(posterWidth * 1.5f + WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 36.dp)
+            .height(posterWidth * 1.5f + statusBarPadding + 60.dp)
         else Modifier.fillMaxSize().height(330.dp)
-        Box(frameModifier) {
+        Box(frameModifier.clip(RectangleShape)) {
             if (isPortrait) {
-                Box(modifier = Modifier.fillMaxWidth().height(380.dp)) {
+                Box(Modifier.matchParentSize()) {
                     SubcomposeAsyncImage(
-                        model = imageUrl,
-                        contentDescription = "",
+                        model = imageRequestCrossfade(imageUrl),
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
-                            .blur(radius = 6.dp),
+                            .graphicsLayer {
+                                val fraction = (backdropScrollOffset() / size.height.coerceAtLeast(1f)).coerceIn(0f, 1f)
+                                translationY = size.height * fraction * 0.16f
+                                alpha = 1f - fraction * 0.55f
+                            }
+                            .blur(radius = 4.dp),
                         error = {
-                            SubcomposeAsyncImageContent(
-                                modifier = modifier,
-                                painter = DefaultImages.EmptyImageStart()
-                            )
+                            SubcomposeAsyncImageContent(painter = DefaultImages.EmptyImageStart())
                         },
-                        success = {
-                            SubcomposeAsyncImageContent(modifier = modifier)
-                        }
                     )
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(
                                 brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        backgroundColor.copy(alpha = 0.05f),
-                                        backgroundColor.copy(alpha = 0.15f),
-                                        backgroundColor.copy(alpha = 0.25f),
-                                        backgroundColor.copy(alpha = 0.40f),
-                                        backgroundColor.copy(alpha = 0.50f),
-                                        backgroundColor.copy(alpha = 0.60f),
-                                        backgroundColor.copy(alpha = 0.80f),
-                                        backgroundColor.copy(alpha = 0.90f),
-                                        backgroundColor.copy(alpha = 1.0f)
-                                    )
+                                    0f to backgroundColor.copy(alpha = .68f),
+                                    .45f to backgroundColor.copy(alpha = .72f),
+                                    .77f to backgroundColor.copy(alpha = .89f),
+                                    .98f to backgroundColor,
                                 )
                             )
                     )
                 }
             }
             Card(
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(18.dp)
-                    .align(Alignment.Center),
+                modifier = if (isPortrait) Modifier.align(Alignment.TopCenter).padding(top = statusBarPadding + 52.dp)
+                    else Modifier.align(Alignment.Center).windowInsetsPadding(WindowInsets.statusBars).padding(18.dp),
                 shape = Shapes.large,
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 SubcomposeAsyncImage(
-                    model = imageUrl,
-                    contentDescription = "",
+                    model = imageRequestCrossfade(imageUrl),
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = imageModifier,
                     error = {
@@ -95,9 +90,6 @@ fun FullImageContent(
                             painter = DefaultImages.EmptyImageStart()
                         )
                     },
-                    success = {
-                        SubcomposeAsyncImageContent(modifier = modifier)
-                    }
                 )
             }
         }

@@ -21,9 +21,11 @@ internal fun ShopItemCompactPane(
     options: List<ShopExtraOptions>,
     galleryTopPadding: Dp,
     galleryAtStatusBar: Boolean,
+    galleryModifier: Modifier,
     onClickOption: (String) -> Unit,
 ) {
     ShopItemImageContent(
+        modifier = galleryModifier,
         imageUrl = item.visual.imageUrl,
         topContentPadding = galleryTopPadding,
         galleryAtStatusBar = galleryAtStatusBar,

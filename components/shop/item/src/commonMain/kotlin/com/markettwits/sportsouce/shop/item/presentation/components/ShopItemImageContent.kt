@@ -24,10 +24,11 @@ internal fun ShopItemImageContent(
     imageUrl: List<String>,
     topContentPadding: Dp,
     galleryAtStatusBar: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     var fullImage by rememberSaveable { mutableStateOf(false) }
     val pager = rememberPagerState { imageUrl.size }
-    Box(Modifier.fillMaxWidth().height(ShopItemPhotoHeight + topContentPadding)) {
+    Box(modifier.fillMaxWidth().height(ShopItemPhotoHeight + topContentPadding)) {
         if (imageUrl.isEmpty()) {
             SauceProductImage(null, Modifier.fillMaxSize(), topContentPadding = topContentPadding)
         } else {

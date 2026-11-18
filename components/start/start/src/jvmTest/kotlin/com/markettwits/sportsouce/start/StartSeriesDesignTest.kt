@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.*
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.sauceColors
 import com.markettwits.sportsouce.start.presentation.series.components.*
+import com.markettwits.sportsouce.start.presentation.start.components.StartSeriesPanel
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -108,6 +109,37 @@ class StartSeriesDesignTest {
                 node.config.getOrNull(SemanticsProperties.ContentDescription)?.contains("Назад") == true }
             back.config[SemanticsActions.OnClick].action!!.invoke(); assertEquals(2, backs)
             scene.save("start-series-screen")
+        }
+    }
+
+    @Test
+    fun previewIncludesTheCurrentStartEvenWhenItIsBeyondTheFirstThree() {
+        val series = items + listOf(item(4, 2027), item(5, 2028))
+        val opened = mutableListOf<StartsListItem>()
+        ImageComposeScene(width = 320, height = 900, density = Density(1f, 2f)) {
+            SauceTheme {
+                StartSeriesPanel(items = series, currentStartId = 4, onClickRelatedStarts = {}, onItemClick = { opened += it })
+            }
+        }.use { scene ->
+            scene.settle()
+            val selected = scene.nodes().single { it.config.getOrNull(SemanticsProperties.Selected) == true }
+            val subtitle = "Вы здесь · 25 октября 2027"
+            assertTrue(selected.config[SemanticsProperties.Text].any { it.text == subtitle })
+            val subtitleNode = scene.nodes(unmerged = true).single { node ->
+                node.config.getOrNull(SemanticsProperties.Text)?.any { it.text == subtitle } == true
+            }
+            val layouts = mutableListOf<TextLayoutResult>()
+            subtitleNode.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
+            val layout = layouts.single()
+            assertTrue(layout.getLineBottom(layout.lineCount - 1) <= subtitleNode.size.height + 1f)
+            assertFalse(selected.config.contains(SemanticsActions.OnClick))
+            assertFalse(scene.texts().contains(items.first().date))
+            val next = scene.nodes().single { node ->
+                node.config.getOrNull(SemanticsProperties.Text)?.any { it.text == series.last().date } == true
+            }
+            assertTrue(next.positionInRoot.y > selected.positionInRoot.y)
+            next.config[SemanticsActions.OnClick].action!!.invoke()
+            assertEquals(listOf(series.last()), opened)
         }
     }
 

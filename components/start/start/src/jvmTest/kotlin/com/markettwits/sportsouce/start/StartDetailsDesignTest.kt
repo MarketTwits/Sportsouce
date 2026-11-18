@@ -57,8 +57,7 @@ class StartDetailsDesignTest {
                         verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         StartTitle(title = "Кросс трейл Альбатрос — осенний старт")
                         StartExtraFieldsPanel(place = "Новосибирск, Горнолыжный комплекс Альбатрос", organizers = listOf(person), startDate = "20 сентября 2026")
-                        StartMembersPanel(membersCount = 123456) {}
-                        StartMembersResultPanel(membersResultCount = 1234) {}
+                        StartEntryActions(membersCount = 123456, resultsCount = 1234, onClickMembers = {}, onClickResults = {})
                         StartConditionGrid(conditionItems = listOf(StartItem.ConditionDetail.Regulation("<p>Регламент</p>"), StartItem.ConditionDetail.Statement("<p>Положение</p>")))
                         StartDistanceInfo(distances = distances, membersUi = members)
                         StartReviewPanel(reviewState = rating)
@@ -72,7 +71,7 @@ class StartDetailsDesignTest {
                     assertTrue(scene.texts().contains(value), "Missing $value")
                 }
                 assertTrue(scene.nodes().any { it.config.getOrNull(SemanticsProperties.ContentDescription)?.contains("Локация") == true })
-                val headingLefts = listOf("Участники", "Результаты", "Дистанции", "Регистрации").map { label ->
+                val headingLefts = listOf("Дистанции", "Регистрации").map { label ->
                     scene.nodes(unmerged = true).first { node -> node.config.contains(SemanticsActions.GetTextLayoutResult) &&
                         node.config.getOrNull(SemanticsProperties.Text)?.any { t -> t.text == label } == true }.positionInRoot.x
                 }
@@ -88,10 +87,10 @@ class StartDetailsDesignTest {
         var participants = 0; var results = 0
         ImageComposeScene(width = 320, height = 650, density = Density(1f, 2f)) {
             SauceTheme { Column {
-                StartMembersPanel(membersCount = 0) { error("Empty row clicked") }
-                StartMembersResultPanel(membersResultCount = 0) { error("Empty row clicked") }
-                StartMembersPanel(membersCount = 12345) { participants++ }
-                StartMembersResultPanel(membersResultCount = 678) { results++ }
+                StartEntryActions(membersCount = 0, resultsCount = 0,
+                    onClickMembers = { error("Empty action clicked") }, onClickResults = { error("Empty action clicked") })
+                StartEntryActions(membersCount = 12345, resultsCount = 678,
+                    onClickMembers = { participants++ }, onClickResults = { results++ })
             } }
         }.use { scene ->
             scene.settle(); scene.assertTextFits(); assertEquals(2, scene.targets().size)

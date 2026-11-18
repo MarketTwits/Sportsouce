@@ -7,7 +7,6 @@ import com.markettwits.sportsouce.club.info.domain.models.Training
 import com.markettwits.sportsouce.club.info.presentation.components.comands.CommandContent
 import com.markettwits.sportsouce.club.info.presentation.components.features.ClubFeaturesContent
 import com.markettwits.sportsouce.club.info.presentation.components.plan.ClubPlanContent
-import com.markettwits.sportsouce.club.info.presentation.components.questions.QuestionUi
 import com.markettwits.sportsouce.club.info.presentation.components.questions.QuestionsContent
 import com.markettwits.sportsouce.club.info.presentation.components.statistics.StatisticContents
 import com.markettwits.sportsouce.club.info.presentation.components.trainings.TrainingsContent
@@ -25,7 +24,7 @@ internal fun MenuBottomSheet(selectedTab: MenuBottomSheetType?, bottomSheetData:
         MenuBottomSheetType.OurTeam -> CommandContent(trainers = bottomSheetData.trainers, onRegisterClick = onTrainerRegister)
         is MenuBottomSheetType.TrainerDetails -> CommandContent(trainers = bottomSheetData.trainers,
             selectedTrainerId = selectedTab.id, onRegisterClick = onTrainerRegister)
-        MenuBottomSheetType.Faq -> QuestionsContent(questions = bottomSheetData.questions.map { QuestionUi(answer = it.answer, id = it.id, question = it.question, isSelected = false) })
+        MenuBottomSheetType.Faq -> QuestionsContent(questions = bottomSheetData.questions)
         MenuBottomSheetType.Statistics -> StatisticContents(statistics = bottomSheetData.statistics)
         null -> Unit
     }

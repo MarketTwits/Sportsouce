@@ -25,7 +25,7 @@ import com.markettwits.core_ui.items.theme.SauceShapes
 import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
-internal fun ClubPhoto(url: String, description: String, modifier: Modifier = Modifier, open: (() -> Unit)? = null,
+internal fun ClubPhoto(url: String, description: String?, modifier: Modifier = Modifier, open: (() -> Unit)? = null,
     shape: Shape = SauceShapes.card) {
     SubcomposeAsyncImage(model = imageRequestCrossfade(url), contentDescription = description,
         alignment = Alignment.TopCenter, contentScale = ContentScale.Crop, modifier = modifier.clip(shape)

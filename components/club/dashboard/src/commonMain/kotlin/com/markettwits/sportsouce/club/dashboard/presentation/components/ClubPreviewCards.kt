@@ -1,12 +1,16 @@
 package com.markettwits.sportsouce.club.dashboard.presentation.components
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,39 +25,72 @@ import com.markettwits.sportsouce.club.common.presentation.clubDirectionAccent
 import com.markettwits.sportsouce.club.info.domain.models.Trainer
 import com.markettwits.sportsouce.club.info.domain.models.Training
 
+private val PreviewPhotoShape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)
+
 @Composable
 internal fun ClubTrainingPreview(training: Training, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val colors = SauceTheme.colors
+    val accent = clubDirectionAccent(training.type).clubColors()
+    val titleStyle = MaterialTheme.typography.titleMedium
     val descriptionStyle = MaterialTheme.typography.bodySmall
-    val descriptionHeight = with(LocalDensity.current) { descriptionStyle.lineHeight.toDp() * 3 }
-    Surface(onClick = onClick, modifier = modifier.width(248.dp),
-        color = SauceTheme.colors.surface, shape = SauceShapes.card,
-        border = BorderStroke(1.dp, SauceTheme.colors.border)) {
-        Column {
-            ClubPhoto(training.imageUrl, training.type, Modifier.fillMaxWidth().aspectRatio(1.6f),
-                shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp))
-            Text(training.type, Modifier.padding(16.dp), style = MaterialTheme.typography.titleMedium,
-                minLines = 2, maxLines = 2, overflow = TextOverflow.Ellipsis, color = SauceTheme.colors.textPrimary)
-            // Reserve three scaled lines even for a short or absent description. LazyRow must
-            // not change its height when a taller card leaves the viewport.
-            HtmlText(text = training.htmlDescription,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp).heightIn(min = descriptionHeight),
-                style = descriptionStyle, maxLines = 3, overflow = TextOverflow.Ellipsis,
-                color = SauceTheme.colors.textSecondary, showImages = false)
+    val captionHeight = with(LocalDensity.current) { (titleStyle.lineHeight.toDp() + descriptionStyle.lineHeight.toDp()) * 2 } + 6.dp
+    ClubPreviewCard(modifier.width(248.dp), onClick, "Подробнее о направлении") {
+        ClubPhoto(training.imageUrl, null, Modifier.fillMaxWidth().aspectRatio(1.62f), shape = PreviewPhotoShape)
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp).heightIn(min = captionHeight),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    training.type, Modifier.weight(1f), style = titleStyle,
+                    maxLines = 2, overflow = TextOverflow.Ellipsis, color = colors.textPrimary,
+                )
+                Box(Modifier.size(30.dp).background(accent.container, SauceShapes.badge), contentAlignment = Alignment.Center) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, Modifier.size(19.dp), tint = accent.content)
+                }
+            }
+            HtmlText(
+                text = training.htmlDescription,
+                style = descriptionStyle, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                color = colors.textSecondary, showImages = false,
+            )
         }
     }
 }
 
 @Composable
 internal fun ClubTrainerPreview(trainer: Trainer, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    SauceClickTarget(onClick = onClick, modifier = modifier.width(184.dp), shape = SauceShapes.card,
-        onClickLabel = "Подробнее о тренере") {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            ClubPhoto(trainer.imageUrl, trainer.fullName(), Modifier.fillMaxWidth().height(220.dp))
-            Text(trainer.fullName(), style = MaterialTheme.typography.titleSmall, minLines = 2,
+    val titleStyle = MaterialTheme.typography.titleSmall
+    val sportsStyle = MaterialTheme.typography.bodySmall
+    val captionHeight = with(LocalDensity.current) { (titleStyle.lineHeight.toDp() + sportsStyle.lineHeight.toDp()) * 2 } + 6.dp
+    ClubPreviewCard(modifier.width(184.dp), onClick, "Подробнее о тренере") {
+        ClubPhoto(trainer.imageUrl, null, Modifier.fillMaxWidth().height(200.dp), shape = PreviewPhotoShape)
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 12.dp).heightIn(min = captionHeight),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(trainer.fullName(), style = titleStyle,
                 maxLines = 2, overflow = TextOverflow.Ellipsis, color = SauceTheme.colors.textPrimary)
-            Text(trainer.kindOfSports.joinToString(" · "), style = MaterialTheme.typography.bodySmall, minLines = 2,
+            Text(trainer.kindOfSports.joinToString(" · "), style = sportsStyle,
                 maxLines = 2, overflow = TextOverflow.Ellipsis,
                 color = clubDirectionAccent(trainer.kindOfSports.firstOrNull().orEmpty()).clubColors().content)
         }
+    }
+}
+
+@Composable
+private fun ClubPreviewCard(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    onClickLabel: String,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val colors = SauceTheme.colors
+    val shape = SauceShapes.card
+    SauceClickTarget(onClick = onClick, modifier = modifier, shape = shape, onClickLabel = onClickLabel) {
+        Column(
+            Modifier.fillMaxWidth().background(colors.surface, shape).border(1.dp, colors.border, shape),
+            content = content,
+        )
     }
 }

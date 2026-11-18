@@ -19,6 +19,7 @@ import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.sportsouce.start.register.presentation.distances.components.StartDistancesContent
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.*
+import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.RenderAdditionalFields
 import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.*
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.*
 import java.io.File as LocalFile
@@ -75,6 +76,41 @@ class StartFlowInteractionTest {
             assertEquals(0f, scene.scrollNode().config[SemanticsProperties.VerticalScrollAxisRange].value())
             current = "A"; scene.settle()
             assertEquals(firstScroll, scene.scrollNode().config[SemanticsProperties.VerticalScrollAxisRange].value(), 1f)
+        }
+    }
+
+    @Test
+    fun additionalFieldDescriptionsAndDependentControlsAreVisibleInTheForm() {
+        val plan = field.field.copy(
+            id = 284,
+            type = StartRegistrationAdditionalField.Type.TEXT,
+            title = "План на гонку",
+            description = "Пример: 24 круга или 100 км",
+        ).emptyAnswer()
+        val size = field.field.copy(id = 286, title = "Размер", description = null)
+        val merch = field.field.copy(id = 285, title = "Мерч стартового пакета", dependentFields = listOf(size),
+            description = "На фото показан пример мерча 2026 года").emptyAnswer()
+        var current by mutableStateOf(merch)
+        ImageComposeScene(width = 360, height = 520) {
+            SauceTheme(darkTheme = true) { RenderAdditionalFields(fields = listOf(plan, current), onFieldChanged = {}) }
+        }.use { scene ->
+            fun labels() = scene.nodes().flatMap { it.config.getOrNull(SemanticsProperties.Text).orEmpty() }.map { it.text }
+            scene.settle()
+            assertTrue("Пример: 24 круга или 100 км" in labels())
+            assertTrue("На фото показан пример мерча 2026 года" in labels())
+            assertFalse(labels().any { it.startsWith("Размер") })
+            current = merch.copy(answer = merch.answer.copy(singleSelect = 51))
+            scene.settle()
+            assertTrue(labels().any { it.startsWith("Размер") })
+            fun bounds(text: String) = scene.nodes(unmerged = true).last { node ->
+                node.config.getOrNull(SemanticsProperties.Text).orEmpty().any { it.text == text }
+            }.boundsInRoot
+            val selected = bounds("Одинаковая подпись")
+            val description = bounds("На фото показан пример мерча 2026 года")
+            val nextLabel = bounds("Размер *")
+            scene.save("registration-additional-fields-dark")
+            assertTrue(description.top - selected.bottom >= 8f, "Selected option: $selected, description: $description")
+            assertTrue(nextLabel.top - description.bottom >= 16f, "Description: $description, next field: $nextLabel")
         }
     }
 
@@ -183,9 +219,9 @@ class StartFlowInteractionTest {
     private fun ImageComposeScene.settle() {
         val time = System.nanoTime(); repeat(12) { render(time + it * 100_000_000L).close() }
     }
-    private fun ImageComposeScene.nodes(): List<SemanticsNode> {
+    private fun ImageComposeScene.nodes(unmerged: Boolean = false): List<SemanticsNode> {
         fun walk(n: SemanticsNode): List<SemanticsNode> = listOf(n) + n.children.flatMap(::walk)
-        return semanticsOwners.flatMap { walk(it.rootSemanticsNode) }
+        return semanticsOwners.flatMap { owner -> walk(if (unmerged) owner.unmergedRootSemanticsNode else owner.rootSemanticsNode) }
     }
     private fun ImageComposeScene.save(name: String) {
         render(System.nanoTime() + 2_000_000_000L).use { img ->

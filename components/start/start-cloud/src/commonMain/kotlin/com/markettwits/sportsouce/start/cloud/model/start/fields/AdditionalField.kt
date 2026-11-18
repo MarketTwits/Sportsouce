@@ -34,5 +34,7 @@ data class AdditionalField(
     @SerialName("type")
     val type: String,
     @SerialName("uuid")
-    val uuid: String
+    val uuid: String,
+    @SerialName("description")
+    val description: String? = null,
 )

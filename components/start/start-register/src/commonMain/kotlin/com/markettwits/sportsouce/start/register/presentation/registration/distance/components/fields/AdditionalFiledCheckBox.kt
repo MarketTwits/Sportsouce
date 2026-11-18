@@ -1,10 +1,7 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.selection.SauceCheckboxRow
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 
@@ -18,7 +15,6 @@ internal fun AdditionalFiledCheckBox(
     SauceCheckboxRow(modifier = modifier, checked = isChecked,
         onCheckedChange = { onChange(isChecked, field, onFieldChanged) },
         label = { AdditionalFiledTitle(field = field.field) })
-    Spacer(modifier = Modifier.height(8.dp))
 }
 
 private fun onChange(

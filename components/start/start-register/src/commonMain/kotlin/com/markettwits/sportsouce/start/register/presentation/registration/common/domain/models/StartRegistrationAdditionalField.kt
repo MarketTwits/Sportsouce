@@ -11,7 +11,10 @@ data class StartRegistrationAdditionalField(
     val options : List<Option>,
     val price : StartRegistrationFieldPrice,
     val isOptional : Boolean,
-    val dependentFields : List<StartRegistrationAdditionalField>
+    val dependentFields : List<StartRegistrationAdditionalField>,
+    val description: String? = null,
+    val expectedAnswerId: Int? = null,
+    val expectedAnswerUuid: String? = null,
 ){
     @Serializable
     enum class Type(val value : String){

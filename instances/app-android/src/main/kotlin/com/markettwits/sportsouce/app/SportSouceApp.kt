@@ -24,7 +24,7 @@ class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigur
         if (GlobalContext.getOrNull() == null) {
             try {
                 initKoin(
-                    modules = listOf(deepLinkModule)
+                    modules = listOf(deepLinkModule, androidUpdaterFlavorModule)
                 ) {
                     androidContext(this@SportSouceApp)
                 }

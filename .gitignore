@@ -6,6 +6,11 @@
 .externalNativeBuild
 .cxx
 .kotlin
+/tmp
+/docs
+/prototypes
+/META-INF
+.gradle-local
 /kotlin-js-store
 local.properties
 
@@ -14,6 +19,8 @@ local.properties
 /build-logic/build/classes/kotlin/main/
 
 **/build/
+__pycache__/
+*.pyc
 # IDEA/Android Studio Ignore exceptions
 # Project icon
 .DS_Store
@@ -22,3 +29,14 @@ local.properties
 # Project secrets config
 /secrets.properties
 /key-store.jks
+/service-account.json
+
+# Release workflow outputs
+/artifacts/
+/release-notes/
+/whatsnew/
+/update-manifest.json
+
+#AI
+CLAUDE.md
+AGENTS.md

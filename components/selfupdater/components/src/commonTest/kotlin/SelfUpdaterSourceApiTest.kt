@@ -1,73 +1,88 @@
+import com.markettwits.selfupdater.api.SelfUpdaterSourceApi
 import com.markettwits.selfupdater.impl.api.SelfUpdaterApiImpl
 import com.markettwits.selfupdater.models.SelfUpdateResult
 import com.markettwits.sportsouce.inappnotification.api.InAppNotificationListener
-import com.markettwits.sportsouce.inappnotification.api.InAppNotificationStorage
 import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 import com.markettwits.sportsouce.inappnotification.impl.storage.InAppNotificationStorageImpl
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
-
+@OptIn(ExperimentalCoroutinesApi::class)
 class SelfUpdaterSourceApiTest {
-    private val inAppNotificationStorage = InAppNotificationStorageImpl()
-    private val selfUpdater = SelfUpdaterApiImpl(
-        SelfUpdaterTest(
-            SelfUpdateResult.InProgress,
-            inAppNotificationStorage
-        ),
-    )
-    private val notificationComponent = InAppNotificationComponentMock(inAppNotificationStorage)
-
     @Test
-    fun check_start_check_update_manual() = runTest(timeout = Duration.ZERO) {
-        selfUpdater.startCheckUpdate(true)
-        val manual = selfUpdater.isSelfUpdateCanManualCheck()
-        assertEquals(manual, true)
-    }
+    fun notificationsAreDeliveredInOrderAndRetainedWhileUnsubscribed() = runTest {
+        val storage = InAppNotificationStorageImpl(backgroundScope)
+        val received = mutableListOf<InAppNotification>()
+        val listener = object : InAppNotificationListener {
+            override suspend fun onNewNotification(notification: InAppNotification) {
+                received += notification
+            }
+        }
 
-    @Test
-    fun check_start_check_update_not_manual() = runTest(timeout = Duration.ZERO) {
-        selfUpdater.startCheckUpdate(false)
-        val manual = selfUpdater.isSelfUpdateCanManualCheck()
-        assertEquals(manual, false)
-    }
+        storage.addNotification(InAppNotification.SelfUpdateStarted)
+        storage.subscribe(listener)
+        runCurrent()
+        assertEquals(listOf<InAppNotification>(InAppNotification.SelfUpdateStarted), received)
 
-    @Test
-    fun check_notification_started() = runTest(timeout = Duration.ZERO) {
-        selfUpdater.startCheckUpdate(false)
-        assertEquals(InAppNotification.SelfUpdateStarted, notificationComponent.innerNotification)
+        storage.unsubscribe()
+        storage.addNotification(InAppNotification.SelfUpdateStarted)
+        runCurrent()
+        assertEquals(1, received.size)
+        storage.subscribe(listener)
+        runCurrent()
+        assertEquals(2, received.size)
     }
 
     @Test
-    fun check_notification_updated() = runTest(timeout = Duration.ZERO) {
-        selfUpdater.isSelfUpdateCanManualCheck()
-        assertEquals(InAppNotification.SelfUpdateStarted, notificationComponent.innerNotification)
+    fun concurrentChecksAreRejectedAndGuardIsReleasedOnCancellation() = runTest {
+        val started = CompletableDeferred<Unit>()
+        val neverComplete = CompletableDeferred<Unit>()
+        val source = object : SelfUpdaterSourceApi {
+            override suspend fun checkUpdate(manual: Boolean): SelfUpdateResult {
+                started.complete(Unit)
+                neverComplete.await()
+                return SelfUpdateResult.NoUpdates
+            }
+            override fun getInstallSourceName() = "test"
+            override fun isSelfUpdateCanManualCheck() = true
+        }
+        val updater = SelfUpdaterApiImpl(source)
+        val first = launch { updater.startCheckUpdate() }
+        started.await()
+        assertTrue(updater.getInProgressState().value)
+        assertIs<SelfUpdateResult.InProgress>(updater.startCheckUpdate())
+        first.cancelAndJoin()
+        assertFalse(updater.getInProgressState().value)
     }
 
     @Test
-    fun check_notification_unsubscribe() = runTest(timeout = Duration.ZERO) {
-        notificationComponent.unsubscribe()
-        selfUpdater.isSelfUpdateCanManualCheck()
-        assertEquals(InAppNotification.HiddenApp({}), notificationComponent.innerNotification)
-    }
-}
-
-class InAppNotificationComponentMock(
-    private val notificationStorage: InAppNotificationStorage,
-) : InAppNotificationListener {
-    var innerNotification: InAppNotification = InAppNotification.HiddenApp({})
-
-    fun unsubscribe() {
-        notificationStorage.unsubscribe()
-    }
-
-    init {
-        notificationStorage.subscribe(this@InAppNotificationComponentMock)
-    }
-
-    override suspend fun onNewNotification(notification: InAppNotification) {
-        innerNotification = notification
+    fun manualFlagIsPassedToSourceAndErrorsReleaseGuard() = runTest {
+        var observedManual = false
+        var fail = false
+        val source = object : SelfUpdaterSourceApi {
+            override suspend fun checkUpdate(manual: Boolean): SelfUpdateResult {
+                observedManual = manual
+                if (fail) error("failed")
+                return SelfUpdateResult.NoUpdates
+            }
+            override fun getInstallSourceName() = "test"
+            override fun isSelfUpdateCanManualCheck() = true
+        }
+        val updater = SelfUpdaterApiImpl(source)
+        assertEquals(SelfUpdateResult.NoUpdates, updater.startCheckUpdate(true))
+        assertTrue(observedManual)
+        fail = true
+        assertIs<SelfUpdateResult.Error>(updater.startCheckUpdate(false))
+        assertFalse(observedManual)
+        assertFalse(updater.getInProgressState().value)
     }
 }

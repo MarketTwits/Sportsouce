@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.starts.common.data.mapper
 
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.core.time.TimePattern
+import com.markettwits.core.time.mapDateRange
 import com.markettwits.sportsouce.starts.cloud.model.NetworkKindOfSport
 import com.markettwits.sportsouce.starts.cloud.model.NetworkOrganizerPhotoRemoteItem
 import com.markettwits.sportsouce.starts.cloud.model.NetworkOrganizerRemoteItem
@@ -16,11 +17,15 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
     StartsCloudToListMapper {
     override fun mapSingle(items: List<NetworkStartRemoteItem>): List<StartsListItem> {
         val resultLists = items.map {
+            val date = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.start_date)
             StartsListItem(
                 id = it.id,
                 name = it.name,
                 image = it.posterLinkFile?.fullPath ?: "",
-                date = timeMapper.mapTime(TimePattern.FullWithEmptySpace, it.start_date),
+                date = date,
+                startDate = it.start_date,
+                dateRange = timeMapper.mapDateRange(it.start_date, it.end_date)
+                    .takeIf { range -> range != date },
                 statusCode = StartsListItem.StatusCode(
                     it.start_status.code,
                     it.start_status.name
@@ -29,8 +34,10 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
                 distance = it.condition_short ?: "",
                 kindOfSports = mapKindOfSports(it.kindOfSports),
                 organizers = mapOrganizers(it.organizers),
-                slots = mapSlots(it.open_slots_sum, it.total_slots_sum),
+                slots = mapSlots(it.open_slots_sum, it.total_slots_sum, isUnlimited = it.has_infinite_slots == true),
                 onMainPage = it.on_main_page ?: false,
+                hasAlbums = it.is_has_albums == true,
+                hasResults = it.results.isNotEmpty() || !it.results_link.isNullOrBlank(),
                 views = it.viewsCount,
                 description = it.description ?: "",
                 slug = it.slug ?: ""
@@ -65,11 +72,12 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
     private fun mapSlots(
         openSlots: JsonElement?,
         totalSlots: JsonElement?,
+        isUnlimited: Boolean,
     ): StartsListItem.Slots? {
         val open = openSlots.toNormalizedString()
         val total = totalSlots.toNormalizedString()
 
-        if (open == null && total == null) return null
+        if (!isUnlimited && open == null && total == null) return null
 
         val openNormalized = open ?: "0"
         val totalNormalized = total ?: ""
@@ -77,7 +85,8 @@ internal abstract class StartsCloudToListMapperAbstract(private val timeMapper: 
         return StartsListItem.Slots(
             openSlots = openNormalized,
             totalSlots = totalNormalized,
-            isAvailable = openNormalized.toIntOrNull()?.let { it > 0 } ?: false
+            isAvailable = isUnlimited || (openNormalized.toIntOrNull() ?: 0) > 0,
+            isUnlimited = isUnlimited,
         )
     }
 

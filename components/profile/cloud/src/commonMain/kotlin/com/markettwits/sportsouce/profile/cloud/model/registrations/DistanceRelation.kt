@@ -11,4 +11,6 @@ data class DistanceRelation(
     val id: Int? = null,
     @SerialName("name")
     val name: String? = null,
+    @SerialName("open_slots") val openSlots: Int? = null,
+    @SerialName("infinite_slots") val infiniteSlots: Boolean? = null,
 )

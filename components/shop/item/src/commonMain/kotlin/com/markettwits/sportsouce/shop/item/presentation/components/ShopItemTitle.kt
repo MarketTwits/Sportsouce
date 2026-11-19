@@ -7,17 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 internal fun ShopItemTitle(modifier: Modifier = Modifier, title: String) {
     Text(
         modifier = modifier.padding(vertical = 6.dp),
         text = title,
-        color = MaterialTheme.colorScheme.tertiary,
+        color = SauceTheme.colors.textPrimary,
         textAlign = TextAlign.Start,
-        fontSize = 18.sp,
-        fontFamily = FontNunito.bold(),
+        style = MaterialTheme.typography.titleMedium,
     )
 }

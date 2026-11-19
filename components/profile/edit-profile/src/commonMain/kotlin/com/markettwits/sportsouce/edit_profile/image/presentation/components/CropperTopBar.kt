@@ -6,38 +6,38 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.sp
+import com.markettwits.core_ui.items.components.topbar.sauceTopBarContainerColor
 import com.attafitamim.krop.core.crop.CropState
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CropperTopBar(state: CropState) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            actionIconContentColor = MaterialTheme.colorScheme.tertiary,
-            navigationIconContentColor = MaterialTheme.colorScheme.tertiary
+            containerColor = sauceTopBarContainerColor(),
+            scrolledContainerColor = sauceTopBarContainerColor(),
+            actionIconContentColor = SauceTheme.colors.textPrimary,
+            navigationIconContentColor = SauceTheme.colors.textPrimary
         ),
         title = {
             Text(
                 text = "Изменить фото профиля",
-                fontFamily = FontNunito.bold(),
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.tertiary
+                style = MaterialTheme.typography.titleMedium,
+                color = SauceTheme.colors.textPrimary
             )
         },
         navigationIcon = {
             IconButton(onClick = { state.done(accept = false) }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Отмена")
             }
         },
         actions = {
             IconButton(onClick = { state.reset() }) {
-                Icon(Icons.Default.Restore, null)
+                Icon(Icons.Default.Restore, "Сбросить кадрирование")
             }
             IconButton(onClick = { state.done(accept = true) }, enabled = !state.accepted) {
-                Icon(Icons.Default.Done, null)
+                Icon(Icons.Default.Done, "Применить")
             }
         }
     )

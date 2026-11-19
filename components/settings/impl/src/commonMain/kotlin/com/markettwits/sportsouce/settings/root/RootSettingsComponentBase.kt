@@ -15,7 +15,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
-import com.markettwits.selfupdater.components.selft_update.di.selfUpdateComponentModule
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 import com.markettwits.sportsouce.settings.internal.change_theme.component.ChangeThemeComponentBase
 import com.markettwits.sportsouce.settings.internal.change_theme.di.changeThemeModule
 import com.markettwits.sportsouce.settings.internal.settings_menu.component.HandleSettingsMenu
@@ -24,7 +24,8 @@ import com.markettwits.sportsouce.settings.internal.settings_menu.di.settingsMen
 
 class RootSettingsComponentBase(
     componentContext: ComponentContext,
-    private val pop: () -> Unit
+    private val pop: () -> Unit,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
 ) : RootSettingsComponent, HandleSettingsMenu,
     ComponentContext by componentContext {
 
@@ -33,7 +34,7 @@ class RootSettingsComponentBase(
     }
 
     private val scope = koinContext.getOrCreateKoinScope(
-        listOf(settingsMenuModule, changeThemeModule, selfUpdateComponentModule)
+        listOf(settingsMenuModule, changeThemeModule)
     )
 
     private val stackNavigation = StackNavigation<RootSettingsComponent.StackConfig>()
@@ -75,7 +76,7 @@ class RootSettingsComponentBase(
             RootSettingsComponent.StackConfig.SelfUpdate -> RootSettingsComponent.StackChild.SelfUpdate(
                 SelfUpdateComponentBase(
                     componentContext = componentContext,
-                    storeFactory = scope.get(),
+                    storeFactory = updateStoreFactory,
                     newAppVersion = null,
                     goBack = stackNavigation::pop
                 )

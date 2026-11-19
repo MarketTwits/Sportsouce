@@ -11,12 +11,24 @@ kotlin {
     }
 
     sourceSets {
+        commonTest.dependencies {
+            implementation(projects.components.profile.unauthorized)
+            implementation(projects.components.auth.authFlow)
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+        }
         commonMain.dependencies {
             implementation(projects.components.bottombar)
+            implementation(projects.components.auth.authService)
             implementation(projects.components.starts.starts)
             implementation(projects.components.profile.root)
+            implementation(projects.components.profile.upcomingStarts)
             implementation(projects.components.review)
+            implementation(projects.components.selfupdater.components)
+            implementation(projects.components.inappnotification.api)
             implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
             implementation(projects.components.core.koin)
             implementation(projects.components.deeplink.api)
             implementation(libs.bundles.decompose.compose)

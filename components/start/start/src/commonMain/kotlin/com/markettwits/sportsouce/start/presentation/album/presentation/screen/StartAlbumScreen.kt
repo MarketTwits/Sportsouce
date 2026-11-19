@@ -1,41 +1,44 @@
 package com.markettwits.sportsouce.start.presentation.album.presentation.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import app.cash.paging.compose.collectAsLazyPagingItems
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold
+import com.markettwits.core_ui.items.components.topbar.TopBarBase
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import com.markettwits.core_ui.items.screens.SaucePhotoViewerBackdrop
+import com.markettwits.core_ui.items.screens.photoViewerHostInsets
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
-import com.markettwits.sportsouce.start.presentation.album.presentation.components.AlbumEmptyCard
-import com.markettwits.sportsouce.start.presentation.album.presentation.components.StartAlbumScreenContent
+import com.markettwits.sportsouce.start.presentation.album.presentation.components.*
 import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStore
 
 @Composable
 fun StartAlbumScreen(component: StartAlbumComponent) {
     val state by component.state.collectAsState()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        if (state.images.isEmpty()) {
-            AlbumEmptyCard()
-        } else {
-            StartAlbumScreenContent(items = state.images)
-        }
-
-        BackFloatingActionButton(
-            modifier = Modifier.align(Alignment.TopStart),
-            back = {
-                component.obtainEvent(StartAlbumStore.Intent.GoBack)
+    val systemBarInsets = photoViewerHostInsets()
+    val horizontalInsets = WindowInsets.safeDrawing.union(systemBarInsets).only(WindowInsetsSides.Horizontal)
+    SaucePhotoViewerBackdrop(Modifier.fillMaxSize()) {
+        if (state.album != null || state.isLoading || state.error != null) {
+            AdaptivePane(Modifier.fillMaxSize().windowInsetsPadding(horizontalInsets)) {
+                PagedAlbumContent(state, state.photos.collectAsLazyPagingItems(),
+                    onRetry = { component.obtainEvent(StartAlbumStore.Intent.Retry) },
+                    onClear = { component.obtainEvent(StartAlbumStore.Intent.ClearTags) },
+                    onEvent = component::obtainEvent)
             }
-        )
-
+        } else SauceScaffold(
+            contentWindowInsets = horizontalInsets,
+            topBar = {
+                TopBarBase(modifier = Modifier.windowInsetsPadding(systemBarInsets.only(WindowInsetsSides.Top)),
+                    title = "Фотоальбом", isStatusBarHandle = false,
+                    goBack = { component.obtainEvent(StartAlbumStore.Intent.GoBack) })
+            }
+        ) { padding ->
+            AdaptivePane(Modifier.fillMaxSize().padding(padding)) {
+                if (state.images.isNotEmpty()) StartAlbumScreenContent(items = state.images, selection = state.selectedPhotos, onEvent = component::obtainEvent)
+                else AlbumEmptyCard()
+            }
+        }
     }
+    AlbumExportDialog(state, component::obtainEvent)
 }

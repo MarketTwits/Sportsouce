@@ -9,12 +9,14 @@ internal object BottomBarConfigurationMapper : BottomBarConfiguration.Mapper<Roo
             is BottomBarConfiguration.Home -> RootComponent.Configuration.Starts
             is BottomBarConfiguration.Profile -> RootComponent.Configuration.Profile
             is BottomBarConfiguration.Review -> RootComponent.Configuration.Review
+            is BottomBarConfiguration.MyStarts -> RootComponent.Configuration.MyStarts
         }
 
     override fun map(configuration: RootComponent.Configuration): BottomBarConfiguration =
         when (configuration) {
             is RootComponent.Configuration.Profile -> BottomBarConfiguration.Profile
             is RootComponent.Configuration.Review -> BottomBarConfiguration.Review
+            is RootComponent.Configuration.MyStarts -> BottomBarConfiguration.MyStarts
             is RootComponent.Configuration.Starts -> BottomBarConfiguration.Home
         }
 }

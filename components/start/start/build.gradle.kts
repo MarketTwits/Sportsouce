@@ -10,6 +10,11 @@ kotlin {
         namespace = "com.markettwits.start"
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     sourceSets.commonMain.dependencies {
         api(projects.components.starts.startsCommon)
         api(projects.components.starts.startsFavorites)
@@ -22,6 +27,7 @@ kotlin {
         implementation(projects.components.core.ui)
         implementation(projects.components.core.koin)
         implementation(projects.components.auth.authService)
+        implementation(projects.components.auth.authFlow)
         implementation(projects.components.start.startRegister)
         implementation(projects.components.start.startSupport)
         implementation(projects.components.core.cache)

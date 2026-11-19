@@ -10,6 +10,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Composable
@@ -17,6 +18,7 @@ fun Capturable(
     modifier: Modifier = Modifier,
     onCaptured: (ImageBitmap) -> Unit,
     captureController: CaptureController,
+    onFailure: (Throwable) -> Unit = { throw it },
     content: @Composable () -> Unit
 ) {
     val graphicsLayer = rememberGraphicsLayer()
@@ -31,7 +33,14 @@ fun Capturable(
                         }
                         drawLayer(graphicsLayer)
                         coroutineScope.launch {
-                            val bitmapResult = graphicsLayer.toImageBitmap()
+                            val bitmapResult = try {
+                                graphicsLayer.toImageBitmap()
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                onFailure(e)
+                                return@launch
+                            }
                             onCaptured(bitmapResult)
                         }
                         captureController.reset()

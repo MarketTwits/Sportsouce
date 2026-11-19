@@ -12,8 +12,8 @@ class MemberDetailExecutor(private val useCase: MemberDetailUseCase) :
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.Dismiss -> publish(Label.Dismiss)
-            is Intent.OnClickDelete -> deleteMember(state().member.id)
-            is Intent.OnClickEdit -> publish(Label.OnClickEdit)
+            is Intent.OnClickDelete -> if (!state().isLoading && state().member.id > 0) deleteMember(state().member.id)
+            is Intent.OnClickEdit -> if (!state().isLoading) publish(Label.OnClickEdit)
         }
     }
 
@@ -22,6 +22,7 @@ class MemberDetailExecutor(private val useCase: MemberDetailUseCase) :
             dispatch(Message.DeleteLoading)
             useCase.deleteMember(memberId).fold(
                 onSuccess = {
+                    dispatch(Message.DeleteSuccess)
                     publish(Label.MemberDeleted)
                 }, onFailure = {
                     dispatch(Message.DeleteFailure(it.mapToSauceError().mapToString()))

@@ -41,7 +41,7 @@ internal class StartsFavoritesExecutor(
 
         // Fetch fresh data from network
         scope.launch {
-            repository.refresh(forceRefresh = forceRefresh)
+            repository.refresh()
                 .onSuccess { freshStarts ->
                     // Always update with fresh data from network
                     dispatch(Message.Loaded(freshStarts))

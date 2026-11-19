@@ -3,10 +3,11 @@ package com.markettwits.sportsouce.unauthorized.presentation.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import com.markettwits.core_ui.items.components.progress.CircularProgressIndicatorBase
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -20,20 +21,19 @@ fun UnAuthorizedProfileScreen(component: UnAuthorizedProfileComponent) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(SauceTheme.colors.background)
     ) {
         when (state) {
             is UnAuthorizedProfileUiState.Base -> {}
             is UnAuthorizedProfileUiState.Error -> {
-                UnAuthorizedProfileContent(onClickAuth = {
-                    component.signIn()
-                })
+                val playIntro = remember(component) { component.consumeWelcomeIntro() }
+                UnAuthorizedProfileContent(playIntro = playIntro, content = (state as UnAuthorizedProfileUiState.Error).welcome,
+                    onClickAuth = component::signIn)
             }
             is UnAuthorizedProfileUiState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.error
+                    CircularProgressIndicatorBase(
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }

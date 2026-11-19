@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistanc
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import kotlin.time.Instant
 
 data class StartItem(
     val id: Int,
@@ -36,7 +37,9 @@ data class StartItem(
     val result: List<Result>,
     val usefulLinks: List<Result>,
     val startTimes: StartTimes,
+    val startArchive: StartArchive? = null,
 ) {
+    data class StartArchive(val id: Int, val name: String, val description: String)
     sealed class ConditionDetail(open val value: String) {
         data class Regulation(override val value: String) : ConditionDetail(value)
         data class Statement(override val value: String) : ConditionDetail(value)
@@ -92,6 +95,7 @@ data class StartItem(
         val endRegistry: String,
         val beginningStart: String,
         val endStart: String,
+        val startsAt: Instant? = null,
     )
 
     data class Result(
@@ -126,6 +130,10 @@ data class StartItem(
             val replies: List<Reply>,
             val updatedAt: String,
             val user: User,
+            val isQuestion: Boolean = false,
+            val isAnswered: Boolean = false,
+            val isReview: Boolean = false,
+            val averageScore: Double? = null,
         )
 
         data class User(
@@ -140,6 +148,7 @@ data class StartItem(
             val createdAt: String,
             val id: Int,
             val user: User,
+            val isAdminAnswer: Boolean = false,
         )
     }
 }

@@ -6,6 +6,13 @@ plugins {
 }
 
 kotlin {
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+        implementation(projects.components.core.cloud)
+        implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
+    }
+
 
     android {
         namespace = "com.markettwits.profile"
@@ -19,6 +26,8 @@ kotlin {
         implementation(projects.components.core.koin)
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
         implementation(projects.components.deeplink.api)
 
         implementation(projects.components.core.intent.api)
@@ -30,10 +39,12 @@ kotlin {
         implementation(projects.components.profile.editProfile)
         implementation(projects.components.profile.members)
         implementation(projects.components.profile.registrations)
+        implementation(projects.components.profile.results)
         implementation(projects.components.profile.cloud)
         
         implementation(projects.components.club.dashboard)
         implementation(projects.components.settings.impl)
+        implementation(projects.components.selfupdater.components)
         implementation(projects.components.shop.orders)
         implementation(projects.components.start.start)
         implementation(projects.components.starts.startsCommon)

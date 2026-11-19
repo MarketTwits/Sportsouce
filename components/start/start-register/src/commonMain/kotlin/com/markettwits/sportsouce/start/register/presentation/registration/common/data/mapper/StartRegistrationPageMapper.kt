@@ -5,7 +5,6 @@ import com.markettwits.core.time.TimePattern
 import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.User
 import com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember
 import com.markettwits.sportsouce.profile.members.member_common.domain.emptyProfileMember
-import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.sportsouce.start.cloud.model.start.fields.AdditionalField
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Stage
@@ -36,7 +35,6 @@ class StartRegistrationPageMapper(
                 id = it.id,
                 description = it.description ?: "",
                 title = it.name,
-                //additionalFields = mapStartAdditionalFields(it.additional_fields ?: emptyList()),
                 stages = mapStarStages(
                     user = user,
                     stages = it.stages,
@@ -46,16 +44,7 @@ class StartRegistrationPageMapper(
                 ),
                 price = mapStartRegistrationPrice(it.staticPrice),
                 format = it.format ?: "",
-                answers = mapStartAdditionalFields(it.additionalFields ?: emptyList()).map {
-                    StartRegistrationStatementAnswer(
-                        field = it,
-                        answer = StartRegisterAnswer(
-                            additionalFieldId = it.id,
-                            isOptional = it.isOptional,
-                            type = it.type.value
-                        )
-                    )
-                }
+                answers = mapStartAdditionalFields(it.additionalFields.orEmpty()).map { it.emptyAnswer() },
             )
         }
     }
@@ -89,6 +78,9 @@ class StartRegistrationPageMapper(
             userId = StartStatement.UserId.WithId(userId = user.id.toString()),
             stageId = stageId,
             members = profileMembers,
+            participantUserId = user.id,
+            patronymic = user.patronymic,
+            participantSource = ProfileMember.Source.Self,
         )
     }
 
@@ -118,12 +110,12 @@ class StartRegistrationPageMapper(
             paymentDisabled = false,
             yearDiscountApplied = false,
             distanceTitle = "",
-            userId = if (profileMember.userId == 0)
-                StartStatement.UserId.WithoutId
-            else
-                StartStatement.UserId.WithId(userId = profileMember.userId.toString()),
+            userId = StartStatement.UserId.WithoutId,
             stageId = stageId,
             members = profileMembers,
+            participantUserId = profileMember.participantUserId,
+            patronymic = profileMember.patronymic,
+            participantSource = profileMember.source,
             // answers = emptyList()
         )
     }
@@ -203,18 +195,7 @@ class StartRegistrationPageMapper(
                     name = stage.name,
                     length = stage.stageLength ?: "",
                     sex = stage.sex ?: "",
-                    additionalFields = mapStartAdditionalFields(
-                        stage.additionalFields ?: emptyList()
-                    ).map {
-                        StartRegistrationStatementAnswer(
-                            field = it,
-                            answer = StartRegisterAnswer(
-                                additionalFieldId = it.id,
-                                isOptional = it.isOptional,
-                                type = it.type.value
-                            )
-                        )
-                    }
+                    additionalFields = mapStartAdditionalFields(stage.additionalFields.orEmpty()).map { it.emptyAnswer() },
                 )
             )
         }
@@ -242,9 +223,10 @@ class StartRegistrationPageMapper(
                 price = mapStartRegistrationPrice(field.price),
                 title = field.name,
                 isOptional = field.is_optional,
-                dependentFields = mapStartAdditionalFields(
-                    field.dependent_fields ?: emptyList()
-                )
+                dependentFields = mapStartAdditionalFields(field.dependent_fields.orEmpty()),
+                description = field.description?.trim()?.takeIf { it.isNotEmpty() },
+                expectedAnswerId = field.expected_answer_id,
+                expectedAnswerUuid = field.expected_answer_uuid,
             )
         }
     }

@@ -2,65 +2,52 @@ package com.markettwits.core.errors.api.throwable
 
 import com.markettwits.core.log.TaggedLogger
 import com.markettwits.core.log.errorLog
-import io.ktor.client.call.*
-import io.ktor.client.network.sockets.*
-import io.ktor.client.plugins.*
-import kotlinx.coroutines.*
+import com.markettwits.core_cloud.provider.ServiceResponseException
+import com.markettwits.core_cloud.provider.responseErrorMessage
+import io.ktor.client.call.NoTransformationFoundException
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import io.ktor.client.plugins.ResponseException
+import io.ktor.serialization.ContentConvertException
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 
-
-@OptIn(ExperimentalCoroutinesApi::class)
 fun Throwable.mapToSauceError(): SauceError {
+    if (this is CancellationException) throw this
+    if (this is SauceError) return this
+
     TaggedLogger("SauceError").errorLog(this) { "Failed to execute operation" }
     return when {
-        this.isNetworkConnectionError() -> SauceError.Connection(this)
-        this is HttpRequestTimeoutException -> SauceError.Connection(this)
-        this is ResponseException -> {
-            val deferred = CompletableDeferred<ResponseError>()
-            CoroutineScope(Dispatchers.Main.immediate).launch {
-                try {
-                    val responseError = this@mapToSauceError.response.body<ResponseError>()
-                    deferred.complete(responseError)
-                } catch (e: Exception) {
-                    deferred.completeExceptionally(e)
-                }
-            }
-            val responseError = deferred.getCompleted()
-            if (responseError.statusCode == 404) {
-                SauceError.NotFound(Exception(responseError.message))
-            } else {
-                SauceError.WrongRequest(Exception(responseError.message))
-            }
-        }
-        this is SerializationException -> SauceError.JsonConverter(this)
+        this is ServiceResponseException -> SauceError.WrongRequest(this)
+        this is ResponseException -> mapResponseError()
+        this is HttpRequestTimeoutException || this.isNetworkConnectionError() -> SauceError.Connection(this)
+        this is SerializationException || this is ContentConvertException || this is NoTransformationFoundException ->
+            SauceError.JsonConverter(this)
         else -> SauceError.General(this)
     }
 }
 
+private fun ResponseException.mapResponseError(): SauceError =
+    when (response.status.value) {
+        404, 410 -> responseErrorMessage?.let { SauceError.WrongRequest(Exception(it, this)) } ?: SauceError.NotFound(this)
+        408 -> SauceError.Connection(this)
+        429 -> SauceError.General(this, "Слишком много запросов. Попробуйте немного позже.")
+        in 500..599 -> SauceError.General(this, "Сервис временно недоступен. Попробуйте позже.")
+        in 400..499 -> {
+            val message = responseErrorMessage ?: when (response.status.value) {
+                401 -> "Для продолжения войдите в аккаунт."
+                403 -> "У вас нет доступа к этим данным."
+                else -> "Не удалось выполнить запрос. Проверьте введённые данные."
+            }
+            SauceError.WrongRequest(Exception(message, this))
+        }
+        else -> SauceError.General(this)
+    }
 
 fun SauceError.mapToString(): String = when (this) {
-    is SauceError.Connection -> NETWORK_EXCEPTION_MESSAGE
-    is SauceError.Empty -> EMPTY_EXCEPTION_MESSAGE
-    is SauceError.General -> GENERAL_EXCEPTION_MESSAGE
-    is SauceError.JsonConverter -> SERIALIZATION_EXCEPTION_MESSAGE
-    is SauceError.NotFound -> EMPTY_EXCEPTION_MESSAGE
-    is SauceError.WrongRequest -> this.exception.message.toString()
+    is SauceError.Connection -> "Не удалось подключиться. Проверьте интернет и попробуйте снова."
+    is SauceError.Empty -> "Ничего не найдено."
+    is SauceError.General -> userMessage ?: "Произошла ошибка. Попробуйте ещё раз."
+    is SauceError.JsonConverter -> "Не удалось обработать данные. Попробуйте позже."
+    is SauceError.NotFound -> "Запрошенные данные не найдены."
+    is SauceError.WrongRequest -> exception.message?.takeIf { it.isNotBlank() } ?: "Не удалось выполнить запрос."
 }
-
-suspend fun Throwable.networkExceptionHandler(): Exception = when (this) {
-    is HttpRequestTimeoutException -> Exception(NETWORK_EXCEPTION_MESSAGE)
-    is SocketTimeoutException -> Exception(TIMEOUT_EXCEPTION_MESSAGE)
-    is SerializationException -> Exception(SERIALIZATION_EXCEPTION_MESSAGE)
-    is ResponseException -> runCatching { Exception(response.body<ResponseError>().message) }.getOrNull() ?: Exception(
-        GENERAL_EXCEPTION_MESSAGE
-    )
-    else -> Exception(this.message.toString())
-}
-
-private const val NETWORK_EXCEPTION_MESSAGE = "Проблема интернет с  соединением"
-private const val TIMEOUT_EXCEPTION_MESSAGE = "Не удалось загрузить данные"
-private const val SERIALIZATION_EXCEPTION_MESSAGE = "Ошибка обработки полученных данных"
-private const val GENERAL_EXCEPTION_MESSAGE = "Что то пошло не так..."
-private const val EMPTY_EXCEPTION_MESSAGE = "Ничего не найдено"
-
-

@@ -1,12 +1,15 @@
 package com.markettwits.sportsouce.start.cloud.api.start
 
+import com.markettwits.sportsouce.start.cloud.model.refund.StartRefundRulesRemote
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Reply
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationRequest
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
+import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
+import com.markettwits.sportsouce.start.cloud.model.filters.StartOrganizersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
@@ -19,11 +22,15 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 
 interface SportSauceStartApi {
 
+    suspend fun refundRules(startId: Int): StartRefundRulesRemote
+
     suspend fun start(startId: String): StartRemote
 
     suspend fun kindOfSports() : KindOfSportRemote
 
     suspend fun seasons() : StartSeasonsRemote
+
+    suspend fun organizers(offset: Int, limit: Int): StartOrganizersRemote
 
     suspend fun filters(startId: Int): FiltersRemote
 
@@ -58,6 +65,12 @@ interface SportSauceStartApi {
     ): StartMembersResultRowsV2
 
     suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse
+
+    suspend fun checkDonation(startId: Int, token: String?): StartDonationCheckRemote
+
+    suspend fun albumPhotos(albumId: Int, offset: Int, limit: Int, tags: List<String>): com.markettwits.sportsouce.start.cloud.model.start.fields.album.AlbumPhotosRemote
+
+    suspend fun album(albumId: Int): StartAlbum
 
     suspend fun albums(startId: Int): List<StartAlbum>
 

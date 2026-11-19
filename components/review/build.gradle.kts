@@ -5,6 +5,11 @@ plugins {
 }
 kotlin {
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     android {
         namespace = "com.markettwits.review"
     }
@@ -20,8 +25,11 @@ kotlin {
         implementation(projects.components.start.start)
         implementation(projects.components.starts.startsRandom)
         implementation(projects.components.starts.startsPopular)
+        implementation(projects.components.starts.startsAlbums)
         implementation(projects.components.core.time)
         implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
         implementation(projects.components.core.koin)
         implementation(projects.components.core.intent.api)
         implementation(projects.components.core.intent.impl)

@@ -68,6 +68,9 @@ interface AuthDataSource {
      */
     suspend fun userID() : Result<Int>
 
+    /** Reads the current account ID from stored credentials without a network request. */
+    suspend fun cachedUserId(): Result<Int>
+
     /**
      * Updates the profile information of the authenticated user.
      *

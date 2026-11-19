@@ -10,6 +10,7 @@ interface ProfileMembersRepository {
         withUser: Boolean = false
     ): Flow<List<ProfileMember>>
 
+    suspend fun memberDetail(memberId: Int): Result<ProfileMember>
     suspend fun deleteMember(memberId: Int): Result<Unit>
     suspend fun updateMember(profileMember: ProfileMember): Result<Unit>
     suspend fun addMember(profileMember: ProfileMember): Result<Unit>

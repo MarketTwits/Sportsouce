@@ -13,10 +13,12 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.components.profile.unauthorized)
             implementation(projects.components.profile.authorized)
+            implementation(projects.components.selfupdater.components)
             implementation(projects.components.auth.authFlow)
             implementation(projects.components.core.koin)
             implementation(libs.koin.core)
             implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
             implementation(libs.bundles.decompose.compose)
             implementation(libs.bundles.mviKotlin)
         }

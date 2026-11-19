@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.search.filter.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -10,6 +11,7 @@ import com.markettwits.sportsouce.start.search.filter.presentation.store.StartFi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -17,13 +19,12 @@ internal class StartFilterComponentBase(
     context: ComponentContext,
     private val storeFactory: StartFilerStoreFactory,
     private val filterUi: StartFilterUi? = null,
-    private val startFilter: StartFilter.Sorted? = null,
     private val pop: () -> Unit,
     private val show: (StartFilterUi, StartFilter.Sorted) -> Unit,
 ) : StartFilterComponent, ComponentContext by context {
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create(filterUi, startFilter)
+        storeFactory.create(filterUi)
     }
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -35,6 +36,7 @@ internal class StartFilterComponentBase(
     }
 
     init {
+        lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

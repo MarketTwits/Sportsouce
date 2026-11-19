@@ -28,18 +28,25 @@ internal class SportSauceClubsNetworkApiBase(
     private val client = httpClient.provide()
 
     override suspend fun trainers(): List<TrainersRemoteRow> {
-        val response = client.get("trainer")
+        val response = client.get("trainer") {
+            parameter("sorting", "order ASC")
+            parameter("maxResultCount", 100)
+        }
         return json.decodeFromString<TrainersRemote>(response.body<String>()).rows
     }
 
     override suspend fun workout(): List<WorkoutRemoteRow> {
-        val response = client.get("workout")
+        val response = client.get("workout") {
+            parameter("sorting", "order ASC")
+            parameter("maxResultCount", 100)
+        }
         return json.decodeFromString<WorkoutRemote>(response.body<String>()).rows
     }
 
     override suspend fun schedule(workoutId: Int?): List<ScheduleRemoteRow> {
         val response = client.get("schedule") {
-            parameter("workoutId", workoutId)
+            if (workoutId != null) parameter("workoutId", workoutId)
+            parameter("maxResultCount", 100)
         }
         return json.decodeFromString<ScheduleRemote>(response.body<String>()).rows
     }
@@ -50,12 +57,15 @@ internal class SportSauceClubsNetworkApiBase(
     }
 
     override suspend fun clubSettings(): List<ClubSettingsRemoteRow> {
-        val response = client.get("club-settings")
+        val response = client.get("club-settings") {
+            parameter("sorting", "order ASC")
+            parameter("maxResultCount", 100)
+        }
         return json.decodeFromString<ClubSettingsRemote>(response.body<String>()).rows
     }
 
     override suspend fun questions(): List<QuestionRemoteRow> {
-        val response = client.get("question")
+        val response = client.get("question") { parameter("maxResultCount", 100) }
         return json.decodeFromString<QuestionRemote>(response.body<String>()).rows
     }
 

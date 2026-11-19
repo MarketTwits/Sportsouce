@@ -9,7 +9,9 @@ import com.markettwits.sportsouce.shop.cart.presentation.page.component.ShopCart
 @Composable
 fun ShopCartItemWidget(
     modifier: Modifier = Modifier,
-    component: ShopCartPageComponent
+    component: ShopCartPageComponent,
+    enabled: Boolean = true,
+    available: Boolean = true,
 ) {
     val state by component.state.collectAsState()
 
@@ -17,7 +19,9 @@ fun ShopCartItemWidget(
         is ShopCartPageComponent.State.Empty ->
             ShopCartItemEmpty(
                 modifier = modifier,
-                onClickAddToCart = component::onClickAddToCart
+                onClickAddToCart = component::onClickAddToCart,
+                enabled = enabled && available,
+                available = available
             )
         is ShopCartPageComponent.State.InCart ->
             state.apply {
@@ -25,7 +29,8 @@ fun ShopCartItemWidget(
                     modifier = modifier,
                     countInCart = (state as ShopCartPageComponent.State.InCart).count.toInt(),
                     quantity = (state as ShopCartPageComponent.State.InCart).quantity,
-                    isIncreaseAvailable = (state as ShopCartPageComponent.State.InCart).isIncreaseAvailable,
+                    isIncreaseAvailable = enabled && (state as ShopCartPageComponent.State.InCart).isIncreaseAvailable,
+                    enabled = enabled,
                     onClickCart = component::onClickCart,
                     onClickRemoveFromCart = component::onClickRemove,
                     onClickAddToCart = component::onClickAddToCart

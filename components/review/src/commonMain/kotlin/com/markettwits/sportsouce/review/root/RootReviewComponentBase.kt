@@ -1,16 +1,22 @@
 package com.markettwits.sportsouce.review.root
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
+import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponentBase
+import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
+import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.slot.ChildSlot
-import com.arkivanov.decompose.router.slot.SlotNavigation
-import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
-import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
-import com.markettwits.selfupdater.components.notification.di.notificationModule
+import com.markettwits.selfupdater.components.notification.model.NewAppVersion
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.dashboard.di.clubDashboardModule
@@ -37,11 +43,18 @@ import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRando
 
 class RootReviewComponentBase(
     context: ComponentContext,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
+    override val notifications: NotificationApi,
 ) : RootReviewComponent,
     ComponentContext by context {
 
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
+
     private val navigation = StackNavigation<RootReviewComponent.Config>()
-    private val slotNavigation = SlotNavigation<RootReviewComponent.ConfigSlot>()
 
     private val koinContext = instanceKeeper.getOrCreate {
         ComponentKoinContext()
@@ -52,10 +65,10 @@ class RootReviewComponentBase(
             reviewRootModule,
             newsModule,
             reviewModule,
-            notificationModule,
             shopCatalogModule,
             clubDashboardModule,
-            workoutRegistrationModule
+            workoutRegistrationModule,
+            startAlbumModule
         )
     )
 
@@ -66,6 +79,12 @@ class RootReviewComponentBase(
         handleBackButton = true,
         childFactory = ::child,
     )
+
+    override fun openNotifications() { navigation.pushNew(RootReviewComponent.Config.Inbox) }
+
+    override fun popToRoot() {
+        navigation.popTo(0)
+    }
 
     private fun getInitialStack(): List<RootReviewComponent.Config> {
         return listOf(RootReviewComponent.Config.Review)
@@ -112,15 +131,9 @@ class RootReviewComponentBase(
         }
     }
 
-    override val childSlot: Value<ChildSlot<RootReviewComponent.ConfigSlot, RootReviewComponent.ChildSlot>> =
-        childSlot(
-            source = slotNavigation,
-            serializer = RootReviewComponent.ConfigSlot.serializer(),
-            initialConfiguration = {
-                RootReviewComponent.ConfigSlot.Notification
-            },
-            childFactory = ::slotChild
-        )
+    override fun openUpdate(version: NewAppVersion) {
+        navigation.pushNew(RootReviewComponent.Config.Notification(version))
+    }
 
     private fun child(
         config: RootReviewComponent.Config,
@@ -143,6 +156,7 @@ class RootReviewComponentBase(
                     onClickNews = {
                         navigation.pushNew(RootReviewComponent.Config.NewsEvent(it))
                     },
+                    onClickPhotoAlbum = { id -> navigation.pushNew(RootReviewComponent.Config.PhotoAlbum(id)) },
                     onClickSettings = {
                         navigation.pushNew(RootReviewComponent.Config.Settings)
                     },
@@ -163,6 +177,10 @@ class RootReviewComponentBase(
                         navigation.pushNew(RootReviewComponent.Config.NewsEvent(it))
                     }
                 )
+            )
+
+            is RootReviewComponent.Config.StartById -> RootReviewComponent.Child.Start(
+                RootStartScreenComponentBase(componentContext, StartScreenInput.Id(config.id), pop = navigation::pop)
             )
 
             is RootReviewComponent.Config.Start -> RootReviewComponent.Child.Start(
@@ -213,6 +231,15 @@ class RootReviewComponentBase(
                 )
             )
 
+            is RootReviewComponent.Config.Albums -> RootReviewComponent.Child.Albums(
+                RootStartsAlbumsComponentBase(componentContext, navigation::pop)
+            )
+
+            is RootReviewComponent.Config.PhotoAlbum -> RootReviewComponent.Child.PhotoAlbum(
+                StartAlbumComponentBase(componentContext = componentContext, storeFactory = scope.get(),
+                    albumId = config.albumId, pop = navigation::pop)
+            )
+
             is RootReviewComponent.Config.Search -> RootReviewComponent.Child.Search(
                 RootStartsSearchComponentBase(
                     context = componentContext,
@@ -224,15 +251,22 @@ class RootReviewComponentBase(
                 SelfUpdateComponentBase(
                     componentContext = componentContext,
                     newAppVersion = config.newAppVersion,
-                    storeFactory = scope.get(),
+                    storeFactory = updateStoreFactory,
                     goBack = navigation::pop
                 )
+            )
+
+            is RootReviewComponent.Config.Inbox -> RootReviewComponent.Child.Inbox(
+                notifications.createComponent(componentContext, onBack = { navigation.pop() }, onOpenStart = { id ->
+                    navigation.pushNew(RootReviewComponent.Config.StartById(id))
+                })
             )
 
             is RootReviewComponent.Config.Settings -> RootReviewComponent.Child.Settings(
                 RootSettingsComponentBase(
                     componentContext = componentContext,
-                    pop = navigation::pop
+                    pop = navigation::pop,
+                    updateStoreFactory = updateStoreFactory,
                 )
             )
 
@@ -253,30 +287,12 @@ class RootReviewComponentBase(
             )
         }
 
-    private fun slotChild(
-        configuration: RootReviewComponent.ConfigSlot,
-        componentContext: ComponentContext,
-    ): RootReviewComponent.ChildSlot = when (configuration) {
-
-        is RootReviewComponent.ConfigSlot.Notification -> RootReviewComponent.ChildSlot.Notification(
-            component = InAppNotificationComponentBase(
-                componentContext = componentContext,
-                notificationStorage = scope.get(),
-                storeFactory = scope.get(),
-                openFullScreen = {
-                    navigation.pushNew(RootReviewComponent.Config.Notification(it))
-                }
-            ),
-            render = scope.get()
-        )
-    }
-
     private fun handleMenu(itemId: Int): RootReviewComponent.Config {
         return when (itemId) {
             0 -> RootReviewComponent.Config.Popular
             1 -> RootReviewComponent.Config.News
             2 -> RootReviewComponent.Config.Club
-            3 -> RootReviewComponent.Config.Search
+            3 -> RootReviewComponent.Config.Albums
             4 -> RootReviewComponent.Config.Shop()
             577 -> RootReviewComponent.Config.Shop(categoryId = 577)
             582 -> RootReviewComponent.Config.Shop(categoryId = 582)

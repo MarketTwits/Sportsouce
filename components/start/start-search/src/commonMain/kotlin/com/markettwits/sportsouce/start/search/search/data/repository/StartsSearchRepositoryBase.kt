@@ -9,6 +9,8 @@ import com.markettwits.sportsouce.start.search.search.domain.SearchHistory
 import com.markettwits.sportsouce.start.search.search.domain.StartsSearch
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class StartsSearchRepositoryBase(
@@ -23,9 +25,9 @@ class StartsSearchRepositoryBase(
         sorted: StartFilter.Sorted,
         value: String,
     ): Flow<StartsSearch> =
-        history().map {
-            val starts = startsService.startWithFilter(filterMapper.map(filter, value))
-            cloudMapper.map(it, starts)
+        flow {
+            val starts = startsService.startWithFilter(filterMapper.map(filter, value, sorted))
+            emit(cloudMapper.map(history().first(), starts))
         }
 
     override suspend fun history(): Flow<List<String>> =

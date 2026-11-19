@@ -1,21 +1,15 @@
 package com.markettwits.core.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.unit.dp
 import coil3.compose.setSingletonImageLoaderFactory
 import com.markettwits.core.theme.component.ThemeComponent
 import com.markettwits.core.theme.components.isDark
 import com.markettwits.core.theme.components.systemColorPallet
 import com.markettwits.core_ui.items.image.asyncImageLoader
-import com.markettwits.core_ui.items.theme.AppTypography
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 fun SportSauceTheme(
@@ -43,12 +37,6 @@ private fun SportSauceTheme(
         context.asyncImageLoader()
     }
 
-    MaterialTheme(
-        shapes = Shapes(medium = RoundedCornerShape(size = 10.dp)),
-        colorScheme = colorScheme,
-        typography = AppTypography(),
-    ) {
-        CompositionLocalProvider(LocalDarkOrLightTheme provides isDark, content = content)
-    }
+    SauceTheme(darkTheme = isDark, materialColors = colorScheme, content = content)
 }
 

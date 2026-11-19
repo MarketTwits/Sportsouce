@@ -1,37 +1,41 @@
 package com.markettwits.sportsouce.profile.authorized.authorized.presentation.composable
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToString
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material3.HorizontalDivider
+import com.markettwits.core_ui.items.components.list.SauceActionRow
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
+import com.markettwits.core_ui.items.image.rememberImageBackdropTint
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
-import com.markettwits.core_ui.items.theme.LocalDarkOrLightTheme
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.rememberScreenSizeInfo
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun ProfileScreenContent(
     modifier: Modifier = Modifier,
@@ -49,115 +53,86 @@ internal fun ProfileScreenContent(
     onClickClub: () -> Unit,
     onClickStarts: () -> Unit,
     onClickOrders: () -> Unit,
+    onClickReceipts: () -> Unit,
     onClickFavorites: () -> Unit,
+    onClickResults: () -> Unit,
+    unreadNotifications: Int = 0,
+    onClickNotifications: () -> Unit = {},
     onClickEditProfile: () -> Unit,
     onClickRegistration: (StartOrderInfo) -> Unit,
     onClickRecentStart: (StartsListItem) -> Unit,
     onSocialNetworkClick: (String) -> Unit,
     onAddSocialNetwork: () -> Unit,
+    refreshError: SauceError? = null,
 ) {
-
     var isFullImage by rememberSaveable { mutableStateOf(false) }
     val intentAction = rememberIntentActionByPlatform()
-    val backgroundColor =
-        if (LocalDarkOrLightTheme.current) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.outlineVariant
-
-    // Calculate adaptive width for top bar
-    val windowSizeClass = calculateWindowSizeClass()
-    val screenWidth = rememberScreenSizeInfo().wDP
-    val maxWidth = when (windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> Dp.Unspecified
-        WindowWidthSizeClass.Medium -> (screenWidth * 0.8f).coerceAtMost(800.dp)
-        WindowWidthSizeClass.Expanded -> (screenWidth * 0.7f).coerceAtMost(1350.dp)
-        else -> Dp.Unspecified
-    }
-
-    PullToRefreshScreen(
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(backgroundColor)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Spacer(modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars))
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Column(
-                        modifier = Modifier.widthIn(max = maxWidth)
-                    ) {
-                        Spacer(Modifier.height(12.dp))
-                        ProfileInfoTopBar(
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            imageUrl = userImageUrl,
-                            userName = userName,
-                            userPhoneNumber = userPhoneNumber,
-                            socialNetwork = socialNetwork,
-                            onClickImage = { isFullImage = true },
-                            onClickEditProfile = onClickEditProfile,
-                            onSocialNetworkClick = onSocialNetworkClick,
-                            onAddSocialNetwork = onAddSocialNetwork
-                        )
-                        Spacer(Modifier.height(12.dp))
+    val scroll = rememberScrollState()
+    val colors = SauceTheme.colors
+    val statusBarHeight = WindowInsets.statusBars.getTop(LocalDensity.current)
+    var headerHeight by remember { mutableIntStateOf(0) }
+    var avatarColor by remember(userImageUrl) { mutableStateOf(Color.Unspecified) }
+    val profileTint by rememberImageBackdropTint(avatarColor.takeOrElse { colors.brand })
+    PullToRefreshScreen(isRefreshing = isRefreshing, onRefresh = onRefresh) {
+        Column(modifier.fillMaxSize().drawWithCache {
+            val gradientHeight = statusBarHeight + headerHeight + 44.dp.toPx()
+            val gradient = Brush.verticalGradient(
+                0f to profileTint,
+                .50f to profileTint,
+                1f to colors.background,
+                endY = gradientHeight,
+            )
+            onDrawBehind {
+                drawRect(colors.background)
+                val offset = scroll.value.toFloat()
+                if (offset < gradientHeight) translate(top = -offset) {
+                    drawRect(gradient, size = size.copy(height = gradientHeight))
+                }
+            }
+        }.verticalScroll(scroll)) {
+            Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
+            AdaptivePane(fillHeight = false) {
+                Column(Modifier.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                    ProfileInfoTopBar(modifier = Modifier.padding(horizontal = 16.dp).onSizeChanged { headerHeight = it.height },
+                        imageUrl = userImageUrl, userName = userName, userPhoneNumber = userPhoneNumber,
+                        socialNetwork = socialNetwork, onClickImage = { isFullImage = true }, onClickEditProfile = onClickEditProfile,
+                        onSocialNetworkClick = onSocialNetworkClick, onAddSocialNetwork = onAddSocialNetwork,
+                        onAvatarColor = { avatarColor = it }, headerTint = { profileTint })
+                    if (refreshError != null) OnBackgroundCard(Modifier.padding(horizontal = 16.dp)) {
+                        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Не удалось обновить профиль", style = MaterialTheme.typography.titleSmall,
+                                color = SauceTheme.colors.textPrimary)
+                            Text(refreshError.mapToString(), style = MaterialTheme.typography.bodyMedium,
+                                color = SauceTheme.colors.textSecondary)
+                            SauceButton("Повторить попытку", onRefresh, variant = SauceButtonVariant.Outlined)
+                        }
                     }
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ProfileRegistrationsBlock(registrations = userRegistrations,
+                            registrationsCount = userRegistrationsCount,
+                            onClickRegistration = onClickRegistration, onClickViewAll = onClickStarts)
+                        ProfileActionCards(modifier = Modifier.padding(horizontal = 16.dp), onClickFavorites = onClickFavorites, onClickMembers = onClickMembers, onClickResults = onClickResults, unreadNotifications = unreadNotifications, onClickNotifications = onClickNotifications)
+                    }
+                    Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ProfileSectionHeader("Покупки и оплаты")
+                        OnBackgroundCard {
+                            Column(Modifier.padding(8.dp)) {
+                                SauceActionRow("Мои заказы", onClickOrders, icon = Icons.Default.Inventory2)
+                                HorizontalDivider(color = SauceTheme.colors.border, modifier = Modifier.padding(horizontal = 8.dp))
+                                SauceActionRow("Оплаченные квитанции", onClickReceipts, icon = Icons.Default.ReceiptLong)
+                            }
+                        }
+                    }
+                    ProfileRecentStartsBlock(starts = recentStarts, onClickStart = onClickRecentStart)
+                    ProfileActionCadrs(modifier = Modifier.padding(horizontal = 16.dp), onClickClub = onClickClub, onClickSettings = oClickSettings,
+                        onClickHelp = { intentAction.openWebPage(SPORTSAUCE_TG_URL) })
+                    ProfileExtraInfoContent(Modifier.padding(horizontal = 16.dp))
+                    Spacer(Modifier.height(8.dp))
                 }
-            }
-            Spacer(Modifier.height(12.dp))
-            AdaptivePane {
-                Column {
-                    ProfileActionCards(
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        startsCount = userRegistrationsCount,
-                        registrations = userRegistrations,
-                        onClickOrders = onClickOrders,
-                        onClickStarts = onClickStarts,
-                        onClickFavorites = onClickFavorites,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileClubCards(onClick = onClickClub)
-                    Spacer(modifier = Modifier.height(20.dp))
-                    ProfileRegistrationsBlock(
-                        registrations = userRegistrations,
-                        onClickRegistration = onClickRegistration,
-                        onClickViewAll = onClickStarts
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileRecentStartsBlock(
-                        starts = recentStarts,
-                        onClickStart = onClickRecentStart
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileActionCadrs(
-                        onClickHelp = {
-                            intentAction.openWebPage(SPORTSAUCE_TG_URL)
-                        },
-                        onClickMembers = onClickMembers,
-                        onClickSettings = oClickSettings
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    ProfileExtraInfoContent()
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-            }
-        }
-        AnimatedVisibility(
-            visible = isFullImage
-        ) {
-            FullImageScreen(image = userImageUrl) {
-                isFullImage = false
             }
         }
     }
+    if (isFullImage) FullImageScreen(image = userImageUrl) { isFullImage = false }
 }
 
 private const val SPORTSAUCE_TG_URL = "https://t.me/sportsoyuznsk"

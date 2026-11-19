@@ -9,13 +9,13 @@ import sportsouce.components.core.ui.generated.resources.*
 fun PreloadFontResources(onFontReady: @Composable () ->  Unit ) {
     var areFontsReady by remember { mutableStateOf(false) }
 
-    val font1 by preloadFont(Res.font.nunito_light)
-    val font2 by preloadFont(Res.font.nunito_light)
-    val font3 by preloadFont(Res.font.nunito_regular)
-    val font4 by preloadFont(Res.font.nunito_medium)
-    val font5 by preloadFont(Res.font.nunito_bold)
-    val font6 by preloadFont(Res.font.nunito_semi_bold)
-    val font7 by preloadFont(Res.font.nunito_extra_bold)
+    val font1 by preloadFont(Res.font.roboto_light)
+    val font2 by preloadFont(Res.font.roboto_black)
+    val font3 by preloadFont(Res.font.roboto_regular)
+    val font4 by preloadFont(Res.font.roboto_medium)
+    val font5 by preloadFont(Res.font.roboto_bold)
+    val font6 by preloadFont(Res.font.roboto_semibold)
+    val font7 by preloadFont(Res.font.roboto_extrabold)
 
     LaunchedEffect(font1, font2, font3, font4, font5, font6, font7) {
         if (font1 != null && font2 != null && font3

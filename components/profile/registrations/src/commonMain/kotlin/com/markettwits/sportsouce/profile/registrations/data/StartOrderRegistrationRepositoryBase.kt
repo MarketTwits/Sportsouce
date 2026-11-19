@@ -1,55 +1,59 @@
 package com.markettwits.sportsouce.profile.registrations.data
 
-import com.markettwits.cahce.execute.base.ExecuteWithCache
-import com.markettwits.core_ui.items.extensions.retryRunCatchingAsync
+import com.markettwits.core_cloud.provider.ServiceResponseException
+import com.markettwits.sportsouce.auth.cloud.model.common.AuthException
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
-import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
-import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceRequest
+import com.markettwits.sportsouce.profile.cloud.registrations.UserRegistrationsDataSource
 import com.markettwits.sportsouce.profile.cloud.model.start_registration.StartRegistrationResponse
-import com.markettwits.sportsouce.profile.registrations.data.cache.UserStartsRegistrationsCache
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapper
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderPrice
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CancellationException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.http.HttpStatusCode
 
 class StartOrderRegistrationRepositoryBase(
     private val service: SportSauceNetworkProfileApi,
     private val auth: AuthDataSource,
     private val mapper: UserRegistrationsMapper,
-    private val cache: UserStartsRegistrationsCache,
-    private val executeWithCache: ExecuteWithCache,
+    private val registrationsDataSource: UserRegistrationsDataSource,
 ) : StartOrderRegistrationRepository {
 
-    override fun registrations(forced: Boolean): Flow<List<StartOrderInfo>> = flow {
-        executeWithCache.executeWithCache(
-            forced = forced,
-            cache = cache,
-            launch = ::launchRaw,
-            callback = { rawRegistrations ->
-                emit(mapper.map(rawRegistrations))
-            }
-        )
-    }
+    override fun registrations(forced: Boolean, allowCachedOnError: Boolean): Flow<List<StartOrderInfo>> = flow {
+        val userId = auth.userID().getOrThrow()
+        val cached = if (forced && !allowCachedOnError) null else registrationsDataSource.cached(userId)
+        if (!forced && cached != null) emit(mapper.map(cached))
 
-    private suspend fun launchRaw(): List<UserRegistration> {
-        val token = auth.updateToken().getOrThrow()
-        val user = auth.auth().getOrThrow()
-        return service.userRegistries(user.id, token)
+        val updated = try {
+            val token = auth.updateToken().getOrThrow()
+            registrationsDataSource.refresh(userId, token)
+        } catch (error: Exception) {
+            if (!allowCachedOnError || error is CancellationException || error is AuthException ||
+                (error is ClientRequestException && error.response.status == HttpStatusCode.Unauthorized)
+            ) throw error
+            val lastSnapshot = registrationsDataSource.cached(userId) ?: throw error
+            if (forced || lastSnapshot != cached) emit(mapper.map(lastSnapshot))
+            return@flow
+        }
+        if (forced || updated != cached) emit(mapper.map(updated))
     }
 
     override suspend fun currentUser(): Result<SharedUser> = auth.sharedUser()
 
     override suspend fun pay(id: Int): Result<String> {
-        return retryRunCatchingAsync {
-            val token = auth.updateToken()
-            val response = service.repay(id, token.getOrThrow())
-            when (response.payment) {
-                is StartRegistrationResponse.Payment.PaymentBase -> (response.payment as StartRegistrationResponse.Payment.PaymentBase).formUrl
-                is StartRegistrationResponse.Payment.PaymentString -> ""
-                else -> ""
+        return runCatching {
+            val response = service.repay(id, auth.updateToken().getOrThrow())
+            if (!response.success) throw ServiceResponseException("Не удалось перейти к оплате регистрации.")
+            when (val payment = response.payment) {
+                is StartRegistrationResponse.Payment.PaymentBase -> payment.formUrl
+                is StartRegistrationResponse.Payment.PaymentString -> payment.payment.takeIf {
+                    it.startsWith("https://") || it.startsWith("http://")
+                }.orEmpty()
+                null -> ""
             }
         }
     }
@@ -60,11 +64,7 @@ class StartOrderRegistrationRepositoryBase(
         startId: Int
     ): Result<StartOrderPrice> = runCatching {
         val token = auth.updateToken().getOrThrow()
-        val result = service.checkStartPrice(
-            startPriceRequest = StartPriceRequest(orderId, orderDistancesId, startId),
-            id = orderId,
-            token = token
-        )
+        val result = service.checkStartPrice(orderId, token)
         mapper.mapPrice(result)
     }
 }

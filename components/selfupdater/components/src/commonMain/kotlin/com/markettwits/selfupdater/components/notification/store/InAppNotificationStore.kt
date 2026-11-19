@@ -11,18 +11,23 @@ interface InAppNotificationStore : Store<Intent, State, Label> {
     sealed class State {
         data object NotPresent : State()
         data class ShownNotification(
-            val notification: InAppNotification
+            val notification: InAppNotification,
+            val pending: List<InAppNotification> = emptyList(),
         ) : State()
     }
 
     sealed interface Intent {
+        data object CheckForUpdates : Intent
+        data object ResumeUpdate : Intent
+        data object PauseUpdate : Intent
         data class OnNotificationHidden(val notification: InAppNotification) : Intent
         data class OnNewNotification(val notification: InAppNotification) : Intent
         data class OpenNotificationScreen(val notification: InAppNotification) : Intent
     }
 
     sealed interface Message {
-        data class UpdateState(val state: State) : Message
+        data class Enqueue(val notification: InAppNotification) : Message
+        data class Dismiss(val notification: InAppNotification) : Message
     }
 
     sealed interface Label {

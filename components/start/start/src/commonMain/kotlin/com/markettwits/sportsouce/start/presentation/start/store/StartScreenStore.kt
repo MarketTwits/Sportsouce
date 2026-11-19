@@ -20,8 +20,10 @@ import com.markettwits.crashlitics.api.tracker.ExceptionTracker
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Distance
 import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistance
 import com.markettwits.sportsouce.start.domain.StartItem
+import com.markettwits.sportsouce.start.domain.StartRefundRules
 import com.markettwits.sportsouce.start.domain.StartRepository
 import com.markettwits.sportsouce.start.domain.mapper.StartsListItemToStartItemMapper
+import com.markettwits.sportsouce.start.domain.requiresStartSignIn
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
 import com.markettwits.sportsouce.start.presentation.start.component.StartFavoriteState
@@ -30,11 +32,15 @@ import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStor
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStore.Label.*
 import com.markettwits.sportsouce.start.presentation.start.store.StartScreenStoreFactory.Msg.TriggerEvent
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
+        data object RefreshComments : Intent
+        data object RefreshFavorite : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
         data object OnClickRegistration : Intent
@@ -50,6 +56,9 @@ interface StartScreenStore : Store<Intent, State, Label> {
         data class OpenStartCommentsScreen(val mode: com.markettwits.sportsouce.start.presentation.start.component.CommentMode) :
             Intent
 
+        data object OnClickArchive : Intent
+        data object OnRetryRefundRules : Intent
+        data object OnRetryArchive : Intent
         data object OnClickRelatedStarts : Intent
         data object OnClickFavorite : Intent
     }
@@ -62,18 +71,25 @@ interface StartScreenStore : Store<Intent, State, Label> {
         val startItem: StartItem? = null,
         val startsRecommended: List<StartsListItem> = emptyList(),
         val startsSeries: List<StartsListItem> = emptyList(),
+        val startsArchive: List<StartsListItem> = emptyList(),
+        val archiveLoading: Boolean = false,
+        val archiveError: Boolean = false,
+        val refundRules: StartRefundRules? = null,
+        val refundRulesLoading: Boolean = false,
+        val refundRulesError: Boolean = false,
         val favoriteState: StartFavoriteState = StartFavoriteState.Loading(),
         val event: StateEventWithContent<EventContent> = consumed(),
     )
 
     sealed interface Label {
+        data class OnClickArchive(val startId: Int, val starts: List<StartsListItem>) : Label
         data object OnClickBack : Label
         data class OnClickRelatedStarts(val startId: Int, val relatedStarts: List<StartsListItem>) : Label
         data class OnApplyStartId(val startId: Int) : Label
         data class OnClickMembers(val startId: Int, val members: List<StartMembersUi>) : Label
         data class OnClickMembersResult(val startId: Int, val members: List<MemberResult>) : Label
         data class OnClickStartRecommended(val start: StartsListItem) : Label
-        data class OnClickFullAlbum(val images: List<String>) : Label
+        data class OnClickFullAlbum(val images: List<String>, val albumId: Int) : Label
         data class OnClickDistanceNew(
             val startId: Int,
             val distanceInfo: List<DistinctDistance>,
@@ -108,6 +124,7 @@ class StartScreenStoreFactory(
         ) {}
 
     private sealed interface Msg {
+        data class CommentsUpdated(val comments: StartItem.Comments) : Msg
         data object Loading : Msg
         data object OnConsumedEvent : Msg
         data class TriggerEvent(val message: String, val status: Boolean) : Msg
@@ -115,6 +132,11 @@ class StartScreenStoreFactory(
         data class StartInfoFailed(val exception: Throwable) : Msg
         data class StartsRecommendedSuccess(val data: List<StartsListItem>) : Msg
         data class StartsSeriesSuccess(val data: List<StartsListItem>) : Msg
+        data object RefundRulesLoading : Msg
+        data class RefundRulesLoaded(val data: StartRefundRules) : Msg
+        data class RefundRulesFailed(val startId: Int) : Msg
+        data object ArchiveLoading : Msg
+        data class ArchiveLoaded(val archiveId: Int, val items: List<StartsListItem>, val failed: Boolean = false) : Msg
         data class SetPartialStartItem(val data: StartItem) : Msg
         data class StartFavoriteUpdated(val state: StartFavoriteState) : Msg
     }
@@ -126,9 +148,18 @@ class StartScreenStoreFactory(
     ) : CoroutineExecutor<Intent, Unit, State, Msg, Label>(), LogTagProvider {
 
         override val tag: String = "StartScreenExecutorImpl"
+        private var archiveJob: Job? = null
+        private var refundRulesJob: Job? = null
+        private var favoriteJob: Job? = null
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
+                is Intent.RefreshComments -> state().startItem?.id?.let { id ->
+                    scope.launch {
+                        service.startComments(id).onSuccess { dispatch(Msg.CommentsUpdated(it)) }
+                    }
+                }
+                Intent.RefreshFavorite -> state().startItem?.id?.let(::getFavoriteStatus)
                 is Intent.OnClickBack -> publish(OnClickBack)
 
                 is Intent.OnClickMembers -> {
@@ -144,7 +175,7 @@ class StartScreenStoreFactory(
                         album.imageUrl
                     }
                     if (images.isNotEmpty()) {
-                        publish(OnClickFullAlbum(images))
+                        publish(OnClickFullAlbum(images, intent.album.id))
                     }
                 }
 
@@ -153,7 +184,9 @@ class StartScreenStoreFactory(
                 is Intent.OnClickUrl -> intentAction.openWebPage(intent.url)
                 is Intent.OnClickPhone -> intentAction.openPhone(intent.url)
                 is Intent.OnClickRegistration -> {
-                    state().startItem?.let { startItem ->
+                    val currentState = state()
+                    if (currentState.isLoading || currentState.isPartialData || currentState.error != null) return
+                    currentState.startItem?.let { startItem ->
                         when {
                             startItem.isExternalLinkRegistration() -> {
                                 intentAction.openWebPage(startItem.regLink)
@@ -201,6 +234,18 @@ class StartScreenStoreFactory(
                     }
                 }
 
+                Intent.OnClickArchive -> {
+                    val current = state()
+                    val startId = current.startItem?.id
+                    if (startId != null && current.startsArchive.isNotEmpty()) {
+                        publish(OnClickArchive(startId, current.startsArchive))
+                    }
+                }
+                Intent.OnRetryRefundRules -> if (refundRulesJob?.isActive != true) {
+                    state().startItem?.takeUnless { state().isPartialData }?.id?.let(::getRefundRules)
+                }
+                Intent.OnRetryArchive -> if (!state().archiveLoading) getArchiveStarts(state().startItem?.startArchive)
+
                 is Intent.OnClickRelatedStarts -> {
                     state().let { state ->
                         if (state.startsSeries.isNotEmpty() || state.startItem != null) {
@@ -214,9 +259,7 @@ class StartScreenStoreFactory(
                     }
                 }
 
-                Intent.OnClickFavorite -> scope.launch {
-                    onClickToFavorite()
-                }
+                Intent.OnClickFavorite -> onClickToFavorite()
             }
         }
 
@@ -246,51 +289,55 @@ class StartScreenStoreFactory(
                             errorLog { "Fail to fetch start ${exception.message}" }
                         }
                         dispatch(Msg.StartInfoFailed(exception))
+                        state().startItem?.id?.let(::getFavoriteStatus)
                     },
                     onSuccess = { startItem ->
                         publish(OnApplyStartId(startItem.id))
                         dispatch(Msg.StartInfoSuccess(startItem))
+                        getFavoriteStatus(startItem.id)
                         handleReRegistrationIfNeeded(startInput, startItem)
                         getSeriesStarts(startItem.startSeries)
+                        getArchiveStarts(startItem.startArchive)
+                        getRefundRules(startItem.id)
                     }
                 )
             }
             getRecommendedStarts(startIdString)
-            getFavoriteStatus(startIdString)
         }
 
-        private fun onClickToFavorite() = scope.launch {
-            val favorite = state().favoriteState
-            dispatch(
-                Msg.StartFavoriteUpdated(
-                    StartFavoriteState.Loading(
-                        favorite.isFavorite
-                    )
-                )
-            )
-            state().startItem?.let { item ->
-                if (favorite is StartFavoriteState.Default) {
-                    when (favorite.isFavorite) {
-                        true -> service.startRemoveFromFavorites(item)
-                        false -> service.startAddToFavorite(item)
-                    }.onSuccess {
-                        dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
-                    }.onFailure {
-                        dispatch(Msg.StartFavoriteUpdated(favorite))
-                        dispatch(TriggerEvent(it.mapToSauceError().mapToString(), false))
+        private fun onClickToFavorite() {
+            if (favoriteJob?.isActive == true) return
+            val favorite = state().favoriteState as? StartFavoriteState.Default ?: return
+            val item = state().startItem ?: return
+            dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading(favorite.isFavorite)))
+            favoriteJob = scope.launch {
+                val result = if (favorite.isFavorite) service.startRemoveFromFavorites(item) else service.startAddToFavorite(item)
+                result.onSuccess {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                }.onFailure {
+                    if (it is CancellationException) throw it
+                    val needsSignIn = it.requiresStartSignIn()
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(favorite.isFavorite && !needsSignIn)))
+                    val message = when {
+                        !needsSignIn -> it.mapToSauceError().mapToString()
+                        favorite.isFavorite -> "Войдите в аккаунт, чтобы убрать старт из избранного."
+                        else -> "Войдите в аккаунт, чтобы добавить старт в избранное."
                     }
+                    dispatch(TriggerEvent(message, false))
                 }
             }
         }
 
-        private fun getFavoriteStatus(startIdString: String) {
-            scope.launch {
-                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading()))
-                service.isStartInFavorite(startIdString).onSuccess {
-                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
-                }.onFailure {
-                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(false)))
+        private fun getFavoriteStatus(startId: Int) {
+            if (favoriteJob?.isActive == true) return
+            val previous = state().favoriteState.isFavorite
+            dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading(previous)))
+            favoriteJob = scope.launch {
+                val actual = service.isStartInFavorite(startId.toString()).getOrElse {
+                    if (it is CancellationException) throw it
+                    previous && !it.requiresStartSignIn()
                 }
+                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(actual)))
             }
         }
 
@@ -299,6 +346,35 @@ class StartScreenStoreFactory(
                 service.startsRecommended(startIdString).onSuccess {
                     dispatch(Msg.StartsRecommendedSuccess(it))
                 }
+            }
+        }
+
+        private fun getRefundRules(startId: Int) {
+            refundRulesJob?.cancel()
+            dispatch(Msg.RefundRulesLoading)
+            refundRulesJob = scope.launch {
+                service.refundRules(startId).fold(
+                    onSuccess = { dispatch(Msg.RefundRulesLoaded(it)) },
+                    onFailure = {
+                        if (it is CancellationException) throw it
+                        dispatch(Msg.RefundRulesFailed(startId))
+                    },
+                )
+            }
+        }
+
+        private fun getArchiveStarts(archive: StartItem.StartArchive?) {
+            archiveJob?.cancel()
+            if (archive == null) return
+            dispatch(Msg.ArchiveLoading)
+            archiveJob = scope.launch {
+                service.startsArchive(archive.id).fold(
+                    onSuccess = { dispatch(Msg.ArchiveLoaded(archive.id, it)) },
+                    onFailure = {
+                        if (it is CancellationException) throw it
+                        dispatch(Msg.ArchiveLoaded(archive.id, emptyList(), failed = true))
+                    }
+                )
             }
         }
 
@@ -359,6 +435,7 @@ class StartScreenStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State = when (msg) {
+            is Msg.CommentsUpdated -> copy(startItem = startItem?.copy(commentsRemote = msg.comments))
             is Msg.Loading -> copy(
                 isLoading = true,
                 error = null
@@ -368,22 +445,41 @@ class StartScreenStoreFactory(
                 event = consumed()
             )
 
+            // A failed refresh must not turn previously complete details into a preview.
             is Msg.StartInfoFailed -> copy(
                 isLoading = false,
                 error = msg.exception,
-                isPartialData = true
             )
 
             is Msg.StartInfoSuccess -> copy(
                 startItem = msg.data,
                 isLoading = false,
                 error = null,
-                isPartialData = false
+                isPartialData = false,
+                startsArchive = if (startItem?.startArchive?.id == msg.data.startArchive?.id) startsArchive else emptyList(),
+                archiveLoading = false,
+                archiveError = false,
+                refundRules = refundRules?.takeIf { it.startId == msg.data.id },
+                refundRulesLoading = false,
+                refundRulesError = false,
             )
 
             is Msg.StartsRecommendedSuccess -> copy(
                 startsRecommended = msg.data
             )
+
+            Msg.RefundRulesLoading -> copy(refundRulesLoading = true, refundRulesError = false)
+            is Msg.RefundRulesLoaded -> if (startItem?.id == msg.data.startId) copy(
+                refundRules = msg.data, refundRulesLoading = false, refundRulesError = false,
+            ) else this
+            is Msg.RefundRulesFailed -> if (startItem?.id == msg.startId) copy(
+                refundRulesLoading = false, refundRulesError = true,
+            ) else this
+
+            Msg.ArchiveLoading -> copy(archiveLoading = true, archiveError = false)
+            is Msg.ArchiveLoaded -> if (startItem?.startArchive?.id == msg.archiveId) copy(
+                startsArchive = msg.items, archiveLoading = false, archiveError = msg.failed
+            ) else this
 
             is Msg.StartsSeriesSuccess -> copy(
                 startsSeries = msg.data

@@ -19,7 +19,8 @@ import com.markettwits.sportsouce.starts.starts.presentation.components.TabBar
 
 @Composable
 fun StartsScreen(
-    component: StartsScreen
+    component: StartsScreen,
+    toolbarActions: @Composable () -> Unit = {},
 ) {
     val state by component.starts.subscribeAsState()
     var currentPage by remember { mutableIntStateOf(1) }
@@ -32,7 +33,8 @@ fun StartsScreen(
             Column {
                 StartsSearchBarPublic(
                     onClickSearchPanel = component::onSearchClick,
-                    onClickSettings = component::onSettingsClick
+                    onClickSettings = component::onSettingsClick,
+                    actions = { toolbarActions() }
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.start.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
 import com.markettwits.sportsouce.start.presentation.comments.component.StartCommentsComponent
 import com.markettwits.sportsouce.start.presentation.membres.component.StartMembersScreenComponent
@@ -15,6 +16,7 @@ import com.markettwits.sportsouce.start.presentation.start.component.StartScreen
 import com.markettwits.sportsouce.start.register.presentation.distances.component.StartDistancesInput
 import com.markettwits.sportsouce.start.register.root.RootStartRegister
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
+import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponent
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import kotlinx.serialization.Serializable
 
@@ -41,13 +43,20 @@ interface RootStartScreenComponent {
         data class StartRegistration(val input: StartDistancesInput) : Config()
 
         @Serializable
-        data class StartAlbum(val images: List<String>) : Config()
+        data class StartAlbum(val images: List<String>, val albumId: Int? = null) : Config()
 
         @Serializable
-        data class RelatedStarts(val starts: List<StartsListItem>, val currentStartId: Int) : Config()
+        data class RelatedStarts(
+            val starts: List<StartsListItem>,
+            val currentStartId: Int,
+            val kind: StartRelatedKind = StartRelatedKind.Series,
+        ) : Config()
 
         @Serializable
         data class StartComments(val startId: Int, val mode: CommentMode) : Config()
+
+        @Serializable
+        data object SupportAuth : Config()
     }
 
     sealed class Child {
@@ -68,5 +77,7 @@ interface RootStartScreenComponent {
         data class StartComments(val component: StartCommentsComponent) : Child()
 
         data class StartSeries(val component: StartSeriesComponent) : Child()
+
+        data class SupportAuth(val component: RootAuthFlowComponent) : Child()
     }
 }

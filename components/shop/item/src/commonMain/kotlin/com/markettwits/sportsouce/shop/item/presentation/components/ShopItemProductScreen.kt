@@ -1,16 +1,28 @@
 package com.markettwits.sportsouce.shop.item.presentation.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.lazy.rememberLazyListState
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import com.markettwits.core_ui.items.theme.SauceSpacing
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.ui.unit.dp
 import app.cash.paging.PagingData
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToString
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
 import com.markettwits.core_ui.items.window.calculateWindowSizeClass
@@ -20,6 +32,8 @@ import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.domain.models.ShopExtraOptions
 import com.markettwits.sportsouce.shop.item.presentation.components.panes.ShopItemCompactPane
 import com.markettwits.sportsouce.shop.item.presentation.components.panes.ShopItemLargePane
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.flow.Flow
 import kotlin.math.min
 
@@ -29,6 +43,7 @@ internal fun ShopItemProductScreen(
     item: ShopItem,
     options: List<ShopExtraOptions>,
     isLoading: Boolean,
+    error: SauceError?,
     similarProducts: Flow<PagingData<ShopItem>>,
     onClickOption: (String) -> Unit,
     onClickGoBack: () -> Unit,
@@ -39,7 +54,14 @@ internal fun ShopItemProductScreen(
     cartContent: @Composable (Modifier) -> Unit,
 ) {
 
-    val windowSize = calculateWindowSizeClass()
+    val isLarge = calculateWindowSizeClass().isLarge
+    val snackbar = remember { SnackbarHostState() }
+    LaunchedEffect(error) {
+        if (error != null) {
+            val result = snackbar.showSnackbar(error.mapToString(), actionLabel = "Повторить", withDismissAction = true)
+            if (result == SnackbarResult.ActionPerformed) onRefresh()
+        }
+    }
 
     AdaptivePane {
         PullToRefreshScreen(
@@ -47,11 +69,12 @@ internal fun ShopItemProductScreen(
             onRefresh = onRefresh,
         ) {
             Scaffold(
+                snackbarHost = { SauceSnackbarHost(snackbar, tone = SauceSnackbarTone.Error) },
                 bottomBar = {
-                    if (!windowSize.isLarge)
+                    if (!isLarge)
                         cartContent(Modifier.fillMaxWidth())
                 },
-                containerColor = Color.Transparent
+                containerColor = SauceTheme.colors.background
             ) { paddingValues ->
                 val similarItems = similarProducts.collectAsLazyPagingItems()
                 val screenWidth = rememberScreenSizeInfo().wDP
@@ -61,14 +84,31 @@ internal fun ShopItemProductScreen(
                 val columns = remember(screenWidth) {
                     min(maxColumns, ((screenWidth - horizontalPadding) / minColumnWidth).toInt()).coerceAtLeast(1)
                 }
+                val safeTopPadding = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
+                val galleryTopPadding = safeTopPadding + SauceSpacing.small
+                val listState = rememberLazyListState()
+                val galleryBackdrop = rememberHazeState()
+                val galleryHeightPx = with(LocalDensity.current) { (ShopItemPhotoHeight + galleryTopPadding).roundToPx() }
+                val galleryBottom = remember(listState, galleryHeightPx, isLarge) {
+                    {
+                        if (!isLarge && listState.firstVisibleItemIndex == 0) {
+                            galleryHeightPx - listState.firstVisibleItemScrollOffset
+                        } else {
+                            0
+                        }
+                    }
+                }
+                val galleryAtStatusBar by remember(galleryBottom) { derivedStateOf { galleryBottom() > 0 } }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = paddingValues.calculateBottomPadding())
+                        .padding(bottom = paddingValues.calculateBottomPadding()),
+                    state = listState,
+                    contentPadding = PaddingValues(top = if (isLarge) safeTopPadding else 0.dp),
                 ) {
                     item {
-                        if (windowSize.isLarge) {
+                        if (isLarge) {
                             ShopItemLargePane(
                                 item = item,
                                 options = options,
@@ -79,6 +119,9 @@ internal fun ShopItemProductScreen(
                             ShopItemCompactPane(
                                 item = item,
                                 options = options,
+                                galleryTopPadding = galleryTopPadding,
+                                galleryAtStatusBar = galleryAtStatusBar,
+                                galleryModifier = Modifier.hazeSource(galleryBackdrop),
                                 onClickOption = onClickOption
                             )
                         }
@@ -97,6 +140,8 @@ internal fun ShopItemProductScreen(
                 }
                 ShopItemActionRow(
                     modifier = Modifier.fillMaxWidth(),
+                    galleryBackdrop = galleryBackdrop,
+                    galleryBottom = galleryBottom,
                     onClickGoBack = onClickGoBack,
                     onClickShare = onClickShare
                 )

@@ -1,501 +1,120 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.screens.FullImageScreen
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.components.bottom_sheet.DefaultModalBottomSheet
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
+import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid
+import com.markettwits.core_ui.items.image.AlbumImage
+import com.markettwits.core_ui.items.image.AlbumImageSize
+import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.start.domain.StartItem
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun StartAlbums(
-    modifier: Modifier = Modifier,
-    albums: List<StartItem.Album>,
-    onCLickFullAlbum: (StartItem.Album) -> Unit,
-) {
-    var showAllAlbums by rememberSaveable { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    if (albums.isNotEmpty()) {
-        StartContentBasePanel(
-            modifier = modifier,
-            label = albums[0].name,
-            icon = Icons.Default.PhotoLibrary
+internal fun StartAlbums(modifier: Modifier = Modifier, albums: List<StartItem.Album>, onCLickFullAlbum: (StartItem.Album) -> Unit) {
+    val available = albums.filter { it.photos.isNotEmpty() }
+    if (available.isEmpty()) return
+    var allAlbums by rememberSaveable(available.map { it.id }) { mutableStateOf(false) }
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = SauceSpacing.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
         ) {
-            StartAlbumsContent(
-                album = albums[0].photos.take(6).reversed(),
-                hasMorePhotos = albums[0].photos.size > 6,
-                onCLickFullAlbum = { onCLickFullAlbum(albums[0]) },
-            )
-
-            if (albums.size > 1) {
-                ShowAllAlbumsButton(
-                    albumsCount = albums.size - 1,
-                    onClick = { showAllAlbums = true }
-                )
+            StartSectionHeading("Фотоальбомы", modifier = Modifier.weight(1f))
+            if (available.size > 1) {
+                SauceButton("Все альбомы", { allAlbums = true }, variant = SauceButtonVariant.Text, fillWidth = false)
             }
         }
-    }
-
-    if (showAllAlbums) {
-        ModalBottomSheet(
-            onDismissRequest = { showAllAlbums = false },
-            sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.background,
-            tonalElevation = 0.dp,
-        ) {
-            AllAlbumsContent(
-                albums = albums,
-                onCLickFullAlbum = onCLickFullAlbum,
-                onDismiss = { showAllAlbums = false }
-            )
-        }
-    }
-}
-
-@Composable
-private fun ShowAllAlbumsButton(
-    modifier: Modifier = Modifier,
-    albumsCount: Int,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 12.dp)
-            .clip(Shapes.medium)
-            .border(
-                width = 1.5.dp,
-                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
-                shape = Shapes.medium
-            )
-            .clickable { onClick() }
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.05f),
-                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
-                    )
-                )
-            )
-            .padding(vertical = 16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.PhotoLibrary,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Показать все альбомы ($albumsCount)",
-                fontSize = 15.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.secondary
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun AllAlbumsContent(
-    modifier: Modifier = Modifier,
-    albums: List<StartItem.Album>,
-    onCLickFullAlbum: (StartItem.Album) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Все альбомы",
-                fontSize = 22.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Закрыть",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
-        )
-
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(albums.filter { album -> album.photos.isNotEmpty() }) { album ->
-                AlbumGridItem(
-                    album = album,
-                    onClick = {
-                        onCLickFullAlbum(album)
-                        onDismiss()
+        if (available.size == 1) {
+            val album = available.single()
+            StartAlbumPreview(album, Modifier.padding(horizontal = SauceSpacing.large), onClick = { onCLickFullAlbum(album) })
+        } else {
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val largeText = LocalDensity.current.fontScale > 1.3f
+                val titleLines = if (largeText) 3 else 2
+                val cardWidth = if (maxWidth < 500.dp) maxWidth * .72f else ((maxWidth - 44.dp) / 2).coerceAtMost(360.dp)
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = SauceSpacing.large),
+                    horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
+                ) {
+                    items(available, key = { it.id }) { album ->
+                        StartAlbumPreview(album, Modifier.width(cardWidth), titleLines = titleLines, reserveTitleSpace = true,
+                            onClick = { onCLickFullAlbum(album) })
                     }
-                )
+                }
             }
         }
     }
+    if (allAlbums) DefaultModalBottomSheet(title = "Фотоальбомы", onDismissRequest = { allAlbums = false }) {
+        StartAlbumChoices(available, onCLickFullAlbum = { allAlbums = false; onCLickFullAlbum(it) })
+    }
 }
 
+/** One opening action per album; the collage shows its contents without a second photo viewer. */
 @Composable
-private fun AlbumGridItem(
-    modifier: Modifier = Modifier,
-    album: StartItem.Album,
-    onClick: () -> Unit,
-) {
-    var sizeImage by remember { mutableStateOf(IntSize.Zero) }
-    val gradient = Brush.verticalGradient(
-        colors = listOf(Color.Transparent, MaterialTheme.colorScheme.tertiary.copy(0.8f)),
-        startY = sizeImage.height.toFloat() / 3f,
-        endY = sizeImage.height.toFloat()
-    )
-
-    Box(
-        modifier = modifier
-            .aspectRatio(0.85f)
-            .clip(Shapes.large)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
-                shape = Shapes.large
-            )
-            .clickable { onClick() }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (album.photos.isNotEmpty()) {
-                SubcomposeAsyncImage(
-                    model = imageRequestCrossfade(album.photos.first().imageUrl),
-                    filterQuality = FilterQuality.Medium,
-                    contentDescription = album.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.2f))
-                        .onGloballyPositioned { sizeImage = it.size }
-                        .fillMaxSize(),
-                    error = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.primaryContainer),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.PhotoLibrary,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
-                                modifier = Modifier.size(48.dp)
-                            )
+internal fun StartAlbumPreview(album: StartItem.Album, modifier: Modifier = Modifier, titleLines: Int = 2,
+    reserveTitleSpace: Boolean = false, onClick: () -> Unit) {
+    val colors = SauceTheme.colors
+    SauceClickTarget(onClick = onClick, modifier = modifier.fillMaxWidth(), shape = SauceShapes.card, onClickLabel = "Открыть альбом") {
+        Column {
+            Box(Modifier.fillMaxWidth().aspectRatio(16f / 10f).clip(SauceShapes.card).background(colors.surfaceSubtle)) {
+                val cover = album.photos.filter { it.imageUrl.isNotBlank() }.distinctBy { it.imageUrl }.take(3)
+                Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                    AlbumImage(cover.firstOrNull()?.imageUrl.orEmpty(), AlbumImageSize.Cover,
+                        Modifier.weight(if (cover.size > 1) 2f else 1f).fillMaxHeight())
+                    if (cover.size > 1) Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        cover.drop(1).forEach { photo ->
+                            AlbumImage(photo.imageUrl, AlbumImageSize.Grid, Modifier.fillMaxWidth().weight(1f))
                         }
-                    },
-                    loading = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.primaryContainer)
-                        )
-                    },
-                    success = {
-                        SubcomposeAsyncImageContent(modifier = Modifier.align(Alignment.BottomCenter))
                     }
-                )
+                }
+                Surface(Modifier.align(Alignment.BottomStart).padding(10.dp), shape = SauceShapes.badge, color = colors.surface.copy(alpha = .94f)) {
+                    Row(Modifier.padding(horizontal = 10.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Icon(Icons.Outlined.PhotoLibrary, null, Modifier.size(16.dp), tint = colors.textSecondary)
+                        Text("${album.photos.size} фото",
+                            Modifier.width(IntrinsicSize.Max),
+                            style = MaterialTheme.typography.bodySmall, color = colors.textPrimary)
+                    }
+                }
             }
-        }
-
-        if (album.photos.isNotEmpty())
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(gradient)
-            )
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            Text(
-                text = album.name,
-                fontSize = 15.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onTertiary,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Photo,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.9f),
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "${album.photos.size} фото",
-                    fontSize = 13.sp,
-                    fontFamily = FontNunito.regular(),
-                    color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.9f)
-                )
+            Row(Modifier.fillMaxWidth().padding(start = 2.dp, end = 6.dp, top = 12.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(album.name.ifBlank { "Фотоальбом" }, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall,
+                    minLines = if (reserveTitleSpace) titleLines else 1, maxLines = titleLines, overflow = TextOverflow.Ellipsis, color = colors.textPrimary)
+                Icon(Icons.AutoMirrored.Outlined.ArrowForward, null, Modifier.size(20.dp), tint = colors.action)
             }
         }
     }
 }
 
 @Composable
-private fun StartAlbumsContent(
-    modifier: Modifier = Modifier,
-    album: List<StartItem.Album.Photo>,
-    hasMorePhotos: Boolean,
-    onCLickFullAlbum: () -> Unit,
-) {
-    var fullImage by rememberSaveable { mutableStateOf(false) }
-    var selectedImageIndex by rememberSaveable { mutableIntStateOf(-1) }
-
-    LazyRow(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 12.dp)
-    ) {
-        itemsIndexed(items = album) { index, item ->
-            StartAlbumItemContent(
-                modifier = Modifier.animateItem(
-                    fadeInSpec = null,
-                    fadeOutSpec = null,
-                    placementSpec = tween(600)
-                ),
-                image = item.imageUrl,
-                hashtag = item.tags.values.firstOrNull() ?: "",
-                onClickImage = {
-                    selectedImageIndex = index
-                    fullImage = true
-                }
-            )
+internal fun StartAlbumChoices(albums: List<StartItem.Album>, modifier: Modifier = Modifier, onCLickFullAlbum: (StartItem.Album) -> Unit) {
+    val fontScale = LocalDensity.current.fontScale
+    SauceLazyVerticalGrid(columns = GridCells.Adaptive(260.dp * fontScale.coerceAtMost(1.5f)), modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        items(albums.filter { it.photos.isNotEmpty() }, key = { it.id }) { album ->
+            StartAlbumPreview(album, titleLines = if (fontScale > 1.3f) 3 else 2, reserveTitleSpace = true,
+                onClick = { onCLickFullAlbum(album) })
         }
-        if (hasMorePhotos) {
-            item {
-                StartAlbumItemContentEmpty {
-                    onCLickFullAlbum()
-                }
-            }
-        }
-    }
-
-    if (fullImage) {
-        FullImageScreen(
-            selectedImageIndex = selectedImageIndex,
-            image = album.map { it.imageUrl }
-        ) {
-            fullImage = false
-            selectedImageIndex = -1
-        }
-    }
-}
-
-@Composable
-private fun StartAlbumItemContent(
-    modifier: Modifier = Modifier,
-    image: String,
-    hashtag: String,
-    onClickImage: () -> Unit,
-) {
-    var sizeImage by remember { mutableStateOf(IntSize.Zero) }
-    val gradient = Brush.verticalGradient(
-        colors = listOf(Color.Transparent, MaterialTheme.colorScheme.tertiary.copy(0.4f)),
-        startY = sizeImage.height.toFloat() / 4f,
-        endY = sizeImage.height.toFloat()
-    )
-
-    Box(
-        modifier = modifier
-            .padding(8.dp)
-            .size(width = 180.dp, height = 220.dp)
-            .clip(Shapes.large)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
-                shape = Shapes.large
-            )
-            .clickable { onClickImage() }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            SubcomposeAsyncImage(
-                model = imageRequestCrossfade(image),
-                filterQuality = FilterQuality.Medium,
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.2f))
-                    .onGloballyPositioned { sizeImage = it.size }
-                    .fillMaxSize(),
-                error = {
-                    Box(modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer))
-                },
-                loading = {
-                    Box(modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer))
-                },
-                success = {
-                    SubcomposeAsyncImageContent(modifier = Modifier.align(Alignment.BottomCenter))
-                }
-            )
-        }
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(gradient)
-        )
-        if (hashtag.isNotEmpty()) {
-            HashtagLabel(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .align(Alignment.TopStart),
-                hashtag = if (hashtag == "preview") "Превью" else hashtag
-            )
-        }
-    }
-}
-
-@Composable
-private fun StartAlbumItemContentEmpty(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    var sizeImage by remember { mutableStateOf(IntSize.Zero) }
-    val color = if (isSystemInDarkTheme()) {
-        MaterialTheme.colorScheme.onTertiary
-    } else {
-        MaterialTheme.colorScheme.tertiary
-    }
-    val gradient = Brush.verticalGradient(
-        colors = listOf(Color.Transparent, color.copy(0.5f)),
-        startY = sizeImage.height.toFloat() / 10,
-        endY = sizeImage.height.toFloat()
-    )
-
-    Box(
-        modifier = modifier
-            .padding(8.dp)
-            .size(width = 180.dp, height = 220.dp)
-            .clip(Shapes.large)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                shape = Shapes.large
-            )
-            .clickable { onClick() }
-    ) {
-        Box(
-            modifier = Modifier
-                .onGloballyPositioned { sizeImage = it.size }
-                .matchParentSize()
-                .background(gradient)
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "Ещё фото",
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                maxLines = 3,
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-    }
-}
-
-@Composable
-private fun HashtagLabel(
-    modifier: Modifier,
-    hashtag: String,
-) {
-    Box(
-        modifier = modifier
-            .clip(Shapes.medium)
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
-                    )
-                )
-            )
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Text(
-            text = hashtag,
-            fontSize = 11.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onSecondary
-        )
     }
 }

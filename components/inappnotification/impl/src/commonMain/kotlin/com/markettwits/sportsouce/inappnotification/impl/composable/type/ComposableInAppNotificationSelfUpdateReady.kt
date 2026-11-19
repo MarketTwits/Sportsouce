@@ -1,69 +1,44 @@
 package com.markettwits.sportsouce.inappnotification.impl.composable.type
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.inappnotification.api.model.InAppNotification
 
+/** A single action above navigation. Its parent owns visibility and animation. */
 @Composable
 internal fun ComposableInAppNotificationSelfUpdateReady(
     notification: InAppNotification.SelfUpdateReady,
     onClickAction: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(SportSouceColor.SportSouceRegistryOpenGreen.copy(0.1f))
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Для установки доступна новая версия",
-                color = SportSouceColor.SportSouceRegistryOpenGreen,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.bold(),
-                textAlign = TextAlign.Center
-            )
-            TextButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                shape = Shapes.medium,
-                onClick = {
-                    onClickAction()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = SportSouceColor.SportSouceRegistryOpenGreen)
-            ) {
-                Text(
-                    text = "Обновить приложение",
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.bold()
-                )
-            }
+    val action = when {
+        notification.informationalOnly -> "Доступно обновление сайта"
+        notification.desktopDiskImage -> "Открыть образ установки"
+        notification.desktopInstaller -> "Открыть установщик"
+        notification.readyToInstall -> "Установить обновление"
+        else -> "Обновить Sportsauce"
+    }
+    val colors = SauceTheme.colors.success
+    UpdateNoticeFrame(colors, actionLabel = action, onClick = onClickAction) {
+        Canvas(Modifier.size(16.dp)) {
+            val stroke = 2.dp.toPx()
+            val x = size.width / 2
+            val bottom = size.height * 0.65f
+            drawLine(colors.content, Offset(x, 0f), Offset(x, bottom), stroke, StrokeCap.Round)
+            drawLine(colors.content, Offset(size.width * 0.25f, size.height * 0.4f), Offset(x, bottom), stroke, StrokeCap.Round)
+            drawLine(colors.content, Offset(size.width * 0.75f, size.height * 0.4f), Offset(x, bottom), stroke, StrokeCap.Round)
+            drawLine(colors.content, Offset(size.width * 0.2f, size.height * 0.9f), Offset(size.width * 0.8f, size.height * 0.9f), stroke, StrokeCap.Round)
         }
+        Text(action, color = colors.content, style = MaterialTheme.typography.labelLarge,
+            textAlign = TextAlign.Center, modifier = Modifier.widthIn(max = 560.dp).weight(1f, fill = false))
     }
 }
-

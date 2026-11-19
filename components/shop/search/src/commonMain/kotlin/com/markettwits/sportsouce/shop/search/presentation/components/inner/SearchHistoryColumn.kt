@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.shop.search.presentation.components.inner
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -16,8 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
 
 @Composable
 internal fun ColumnScope.SearchHistoryColumn(
@@ -30,9 +30,8 @@ internal fun ColumnScope.SearchHistoryColumn(
                 .align(Alignment.Start)
                 .padding(10.dp),
             text = "НЕДАВНИЕ",
-            color = MaterialTheme.colorScheme.outline,
-            fontFamily = FontNunito.bold(),
-            fontSize = 14.sp,
+            color = SauceTheme.colors.textMuted,
+            style = MaterialTheme.typography.bodyMedium,
             overflow = TextOverflow.Visible
         )
     }
@@ -60,14 +59,13 @@ private fun SearchHistoryItem(
         Icon(
             imageVector = Icons.Default.AccessTime,
             contentDescription = "time",
-            tint = MaterialTheme.colorScheme.tertiary
+            tint = SauceTheme.colors.textPrimary
         )
         Spacer(modifier = Modifier.padding(horizontal = 4.dp))
         Text(
             text = value,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontFamily = FontNunito.semiBoldBold(),
-            fontSize = 16.sp,
+            color = SauceTheme.colors.textPrimary,
+            style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

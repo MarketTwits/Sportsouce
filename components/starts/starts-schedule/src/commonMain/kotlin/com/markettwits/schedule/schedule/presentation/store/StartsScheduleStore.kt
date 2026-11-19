@@ -1,6 +1,7 @@
 package com.markettwits.schedule.schedule.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.starts_common.domain.StartsListItem
 
 interface StartsScheduleStore :
@@ -14,8 +15,7 @@ interface StartsScheduleStore :
 
     data class State(
         val isLoading: Boolean = false,
-        val isError: Boolean = false,
-        val message: String = "",
+        val error: SauceError? = null,
         val actualStarts: List<StartsListItem> = emptyList(),
     )
 

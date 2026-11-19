@@ -30,5 +30,8 @@ data class ScheduleRemoteRow(
     @SerialName("workout")
     val workout: Workout? = null,
     @SerialName("workout_id")
-    val workoutId: Int? = null
+    val workoutId: Int? = null,
+    val note: String? = null,
+    val isTempDisabled: Boolean = false,
+    val order: Int = 0,
 )

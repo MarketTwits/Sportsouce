@@ -14,26 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 @Composable
 fun TopBarBase(
     modifier: Modifier = Modifier,
     title: String,
     isStatusBarHandle: Boolean = true,
+    titleMaxLines: Int = 2,
+    endAction: (@Composable () -> Unit)? = null,
     goBack: () -> Unit,
 ) {
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(
-                top = if (isStatusBarHandle)
-                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-                else 0.dp
-            )
+            .background(sauceTopBarContainerColor())
+            .then(if (isStatusBarHandle) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)
             .padding(start = 5.dp, end = 8.dp)
-            .padding(vertical = 2.dp)
+            .heightIn(min = 56.dp)
             .fillMaxWidth()
     ) {
         IconButton(
@@ -43,22 +40,26 @@ fun TopBarBase(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = "back",
-                tint = MaterialTheme.colorScheme.tertiary,
+                contentDescription = "Назад",
+                tint = SauceTheme.colors.textPrimary,
             )
         }
 
         Text(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(horizontal = 48.dp),
+                .padding(horizontal = 48.dp)
+                .fillMaxWidth(),
             text = title,
-            color = MaterialTheme.colorScheme.tertiary,
-            fontFamily = FontNunito.bold(),
-            fontSize = 18.sp,
-            textAlign = TextAlign.Start,
-            maxLines = 2,
+            color = SauceTheme.colors.textPrimary,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+            maxLines = titleMaxLines,
             overflow = TextOverflow.Ellipsis
         )
+
+        if (endAction != null) {
+            Box(Modifier.align(Alignment.CenterEnd)) { endAction() }
+        }
     }
 }

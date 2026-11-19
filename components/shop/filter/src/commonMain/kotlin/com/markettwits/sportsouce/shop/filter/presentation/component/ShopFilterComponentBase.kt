@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.shop.filter.presentation.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.markettwits.sportsouce.shop.filter.presentation.store.ShopFilterStore
@@ -26,11 +27,15 @@ class ShopFilterComponentBase(
     }
 
     init {
-        store.labels.onEach {
+        val labels = store.labels.onEach {
             when (it) {
                 is ShopFilterStore.Label.ApplyFilter -> output.applyFilter(it.result)
                 is ShopFilterStore.Label.GoBack -> output.goBack()
             }
         }.launchIn(CoroutineScope(Dispatchers.Main.immediate))
+        lifecycle.doOnDestroy {
+            labels.cancel()
+            store.dispose()
+        }
     }
 }

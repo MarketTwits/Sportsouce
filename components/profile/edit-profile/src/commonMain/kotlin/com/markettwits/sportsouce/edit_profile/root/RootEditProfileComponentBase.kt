@@ -22,6 +22,8 @@ import com.markettwits.sportsouce.edit_profile.sign_out.presentation.component.E
 import com.markettwits.sportsouce.edit_profile.social_network.di.editProfileSocialNetworkModule
 import com.markettwits.sportsouce.edit_profile.social_network.presentation.component.EditProfileSocialNetworkComponentBase
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
+import com.markettwits.sportsouce.edit_profile.sizes.di.profileSizesModule
+import com.markettwits.sportsouce.edit_profile.sizes.presentation.component.ProfileSizesComponentBase
 
 class RootEditProfileComponentBase(
     componentContext: ComponentContext,
@@ -42,7 +44,8 @@ class RootEditProfileComponentBase(
             editProfileInfoModule,
             editProfileImageModule,
             editProfileAboutModule,
-            editProfileSignOutModule
+            editProfileSignOutModule,
+            profileSizesModule,
         )
     )
     private val navigation = StackNavigation<RootEditProfileComponent.ConfigStack>()
@@ -107,6 +110,9 @@ class RootEditProfileComponentBase(
         componentContext: ComponentContext,
     ): RootEditProfileComponent.ChildStack =
         when (configStack) {
+            RootEditProfileComponent.ConfigStack.Sizes -> RootEditProfileComponent.ChildStack.Sizes(
+                ProfileSizesComponentBase(componentContext, scope.get(), navigation::pop)
+            )
             is RootEditProfileComponent.ConfigStack.ChangePassword -> RootEditProfileComponent.ChildStack.ChangePassword(
                 ChangePasswordComponent(
                     context = componentContext,
@@ -141,6 +147,7 @@ class RootEditProfileComponentBase(
 
     override fun obtainOutPut(output: EditProfileMenuComponentComponent.OutPut) {
         when (output) {
+            EditProfileMenuComponentComponent.OutPut.GoSizes -> navigation.pushNew(RootEditProfileComponent.ConfigStack.Sizes)
             is EditProfileMenuComponentComponent.OutPut.GoBack -> pop()
             is EditProfileMenuComponentComponent.OutPut.GoChangePassword -> navigation.pushNew(
                 RootEditProfileComponent.ConfigStack.ChangePassword

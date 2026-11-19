@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.core_ui.items.screens.AdaptivePane
+import androidx.compose.foundation.layout.*
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.start.register.presentation.success.icon.SuccessPaymantIc
 
@@ -25,45 +28,42 @@ import com.markettwits.sportsouce.start.register.presentation.success.icon.Succe
 fun RegisterSuccessScreen(
     component: RegisterSuccessComponent
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    AdaptivePane(modifier = Modifier.safeDrawingPadding()) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .align(Alignment.Center)
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 imageVector = SuccessPaymantIc,
-                contentDescription = "Success"
+                contentDescription = null
             )
             Spacer(modifier = Modifier.padding(14.dp))
             Text(
                 text = "Вы успешно зарегистрировались на старт",
-                color = MaterialTheme.colorScheme.tertiary,
+                color = SauceTheme.colors.textPrimary,
                 textAlign = TextAlign.Center,
-                fontFamily = FontNunito.bold(),
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.padding(14.dp))
             Text(
-                text = "Вы можете оплатите участие в личном кабинете",
-                color = MaterialTheme.colorScheme.outline,
+                text = "Вы можете оплатить участие в личном кабинете",
+                color = SauceTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
-                fontFamily = FontNunito.regular(),
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodyMedium,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.padding(14.dp))
-            ButtonContentBase(
+            SauceButton(
                 title = "Продолжить",
-                containerColor = MaterialTheme.colorScheme.secondary,
-                textColor = MaterialTheme.colorScheme.onSecondary,
                 onClick = {
                     component.onClickContinue()
                 }
             )
         }
+    }
     }
 }

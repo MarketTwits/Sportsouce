@@ -2,15 +2,13 @@ package com.markettwits.sportsouce.start.search.search.presentation.store
 
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.core.errors.api.throwable.mapToSauceError
-import com.markettwits.core.errors.api.throwable.mapToString
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.data.repository.StartsSearchRepository
-import com.markettwits.sportsouce.start.search.search.domain.CoroutineDebounceBase
-import com.markettwits.sportsouce.start.search.search.domain.Debouncing
-import com.markettwits.sportsouce.start.search.search.domain.StartsSearch
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore.*
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -18,7 +16,7 @@ import kotlinx.coroutines.launch
 class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     CoroutineExecutor<Intent, Unit, State, Message, Label>() {
 
-    private val debouncing: Debouncing by CoroutineDebounceBase(scope)
+    private var searchJob: Job? = null
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
@@ -56,7 +54,7 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     override fun executeAction(action: Unit) {
         scope.launch {
             repository.history().collect {
-                dispatch(Message.InfoLoaded(StartsSearch(it, emptyList())))
+                dispatch(Message.HistoryLoaded(it))
             }
         }
     }
@@ -76,66 +74,41 @@ class StartsSearchExecutor(private val repository: StartsSearchRepository) :
     }
 
     private fun onClickBrush(state: State) {
-        if (state.filter.filterIsEmpty()) {
-            dispatch(Message.Brush(true))
-        } else {
-            dispatch(Message.Brush(false))
-            starts(
-                state.sorted,
-                state.filter,
-                "",
-            )
-        }
+        dispatch(Message.Brush(state.filter.filterIsEmpty()))
+        starts(state.sorted, state.filter, "")
     }
 
     private fun onClickRemoveFilter(state: State) {
-        val modifiedItems = state.filter.items.map { filterGroupItem ->
-            filterGroupItem.copy(selected = emptyList())
-        }
-        val newState = state.filter.copy(items = modifiedItems)
-        dispatch(
-            Message.FilterApply(
-                filter = newState,
-                sorted = state.sorted
-            )
-        )
-        if (state.query.isBlank()) {
-            dispatch(Message.Brush(true))
-        } else {
-            starts(
-                state.sorted,
-                newState,
-                state.query,
-            )
-        }
+        val filter = state.filter.cleared()
+        val sorted = StartFilter.Sorted.Popular
+        dispatch(Message.FilterApply(filter, sorted))
+        starts(sorted, filter, state.query)
     }
 
     private fun onValueChanged(state: State, newValue: String) {
         dispatch(Message.ChangeTextFiled(newValue))
-        debouncing.debounce(
-            key = "search_query",
-            delay = 300L
-        ) {
-            starts(
-                sorted = state.sorted,
-                filterUi = state.filter,
-                value = newValue,
-            )
-        }
+        starts(state.sorted, state.filter, newValue, debounce = true)
     }
 
     private fun starts(
         sorted: StartFilter.Sorted,
         filterUi: StartFilterUi,
         value: String,
+        debounce: Boolean = false,
     ) {
-        scope.launch {
+        searchJob?.cancel()
+        if (value.isBlank() && filterUi.filterIsEmpty()) {
+            dispatch(Message.ClearResults)
+            return
+        }
+        searchJob = scope.launch {
+            if (debounce) delay(300L)
             repository.search(filterUi, sorted, value)
                 .onStart {
                     dispatch(Message.Loading)
                 }
                 .catch {
-                    dispatch(Message.InfoFailed(it.mapToSauceError().mapToString()))
+                    dispatch(Message.InfoFailed(it.mapToSauceError()))
                 }.collect {
                     dispatch(Message.InfoLoaded(it))
                 }

@@ -5,5 +5,6 @@ import com.markettwits.sportsouce.unauthorized.presentation.components.UnAuthori
 
 interface UnAuthorizedProfileComponent {
     val state: Value<UnAuthorizedProfileUiState>
+    fun consumeWelcomeIntro(): Boolean
     fun signIn()
 }

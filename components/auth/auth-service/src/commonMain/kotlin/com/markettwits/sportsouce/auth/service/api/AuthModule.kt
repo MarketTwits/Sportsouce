@@ -16,6 +16,9 @@ import com.markettwits.sportsouce.auth.service.internal.mapper.SignInRemoteToCac
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 
 val authDataSourceModule = module {
     includes(sportSauceNetworkAuthModule)
@@ -26,6 +29,12 @@ val authDataSourceModule = module {
     singleOf(::AuthCacheDataSourceBase) bind AuthCacheDataSource::class
     single<ObservableCache<User>> {
         UserCache()
+    }
+    single {
+        CachedProfilePhoto(get<ObservableCache<User>>().observe()
+            .map { (it?.photo as? User.Photo.WithPhoto)?.imageUrl()?.takeIf(String::isNotBlank) }
+            .catch { emit(null) }
+            .distinctUntilChanged())
     }
     singleOf(::UserCredentialCache)
 }

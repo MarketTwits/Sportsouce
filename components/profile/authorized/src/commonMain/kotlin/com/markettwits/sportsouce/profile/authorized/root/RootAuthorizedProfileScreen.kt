@@ -1,6 +1,12 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
+import com.markettwits.sportsouce.notification.impl.presentation.screen.NotificationScreen
+
+import androidx.compose.runtime.collectAsState
+
 import androidx.compose.runtime.Composable
+import com.markettwits.sportsouce.profile.results.presentation.screen.MyResultsScreen
+import com.markettwits.sportsouce.start.presentation.result.screen.StartMemberResultsScreen
 import androidx.compose.runtime.getValue
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
@@ -15,20 +21,27 @@ import com.markettwits.sportsouce.settings.root.RootSettingsScreen
 import com.markettwits.sportsouce.shop.orders.presentation.screen.ShopUserOrdersScreen
 import com.markettwits.sportsouce.start.root.RootStartScreen
 import com.markettwits.sportsouce.starts.favorites.presentation.screen.FavoriteStartsScreen
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsScreen
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentScreen
 
 @Composable
 fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
 
     val childStack by component.childStack.subscribeAsState()
+    val unread by component.notifications.unreadCount.collectAsState()
 
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = childStack,
         animation = stackAnimation(fade())
     ) {
         when (val child = it.instance) {
+            is RootAuthorizedProfileComponent.Child.Inbox -> NotificationScreen(child.component)
+            is RootAuthorizedProfileComponent.Child.ResultProtocol -> StartMemberResultsScreen(child.component)
+            is RootAuthorizedProfileComponent.Child.MyResults -> MyResultsScreen(child.component)
             
             is RootAuthorizedProfileComponent.Child.AuthProfile -> AuthorizedProfileScreen(
-                component = child.component
+                component = child.component,
+                unreadNotifications = unread,
             )
 
             is RootAuthorizedProfileComponent.Child.MyRegistries -> RootRegistrationsScreen(
@@ -58,6 +71,9 @@ fun RootAuthorizedProfileScreen(component: RootAuthorizedProfileComponent) {
             is RootAuthorizedProfileComponent.Child.ShopUserOrders -> ShopUserOrdersScreen(
                 component = child.component
             )
+
+            is RootAuthorizedProfileComponent.Child.PaidReceipts -> ReceiptsScreen(child.component)
+            is RootAuthorizedProfileComponent.Child.Receipt -> ReceiptDocumentScreen(child.component)
 
             is RootAuthorizedProfileComponent.Child.ClubDashboard -> RootClubScreen(component = child.component)
 

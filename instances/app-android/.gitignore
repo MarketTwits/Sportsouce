@@ -1,3 +1,7 @@
 /build
 /release
 /debug
+/github/debug/
+/github/release/
+/googlePlay/debug/
+/googlePlay/release/

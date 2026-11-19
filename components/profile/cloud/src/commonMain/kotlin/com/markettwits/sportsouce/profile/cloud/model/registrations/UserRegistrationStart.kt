@@ -17,4 +17,8 @@ data class UserRegistrationStart(
     val start_status: CloudStartStatus? = null,
     @DeprecatedField
     val coordinates: String? = null,
+    @SerialName("end_date")
+    val endDate: String? = null,
+    @SerialName("start_time") val startTime: String? = null,
+    @SerialName("smallImageFile") val smallImageFile: PosterLinkFile? = null,
 )

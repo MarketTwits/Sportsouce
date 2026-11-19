@@ -31,7 +31,7 @@ class MemberEditComponentBase(
         if (profileMember != null) {
             storeFactory.create(profileMember, MemberEditComponent.Mode.Edit)
         } else {
-            storeFactory.create(emptyProfileMember, MemberEditComponent.Mode.Add)
+            storeFactory.create(emptyProfileMember.copy(team = "Лично"), MemberEditComponent.Mode.Add)
         }
     }
     @OptIn(ExperimentalCoroutinesApi::class)

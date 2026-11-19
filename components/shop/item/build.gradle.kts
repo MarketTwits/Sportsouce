@@ -20,6 +20,7 @@ kotlin {
             implementation(projects.components.shop.cloud)
             implementation(projects.components.shop.cart)
             implementation(projects.components.core.ui)
+            implementation(projects.components.core.errors)
             implementation(projects.components.core.koin)
             implementation(projects.components.core.paging)
             implementation(projects.components.core.intent.api)

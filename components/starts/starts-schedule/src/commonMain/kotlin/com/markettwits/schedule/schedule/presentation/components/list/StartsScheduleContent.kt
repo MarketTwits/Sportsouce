@@ -11,7 +11,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.base_screen.FailedScreen
 import com.markettwits.core_ui.items.base_screen.LoadingFullScreen
 import com.markettwits.schedule.schedule.presentation.components.list.calendar_pager.StartsPagerCalendar
 import com.markettwits.schedule.schedule.presentation.components.list.calendar_pager.defaultStartCalendarPages
@@ -72,17 +71,5 @@ internal fun StartsScheduleLoadingContent(
         modifier = modifier.fillMaxSize(),
         content = {
             LoadingFullScreen()
-        })
-}
-
-@Composable
-internal fun StartsScheduleFailedContent(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        content = {
-            FailedScreen(onClickRetry = onClick::invoke)
         })
 }

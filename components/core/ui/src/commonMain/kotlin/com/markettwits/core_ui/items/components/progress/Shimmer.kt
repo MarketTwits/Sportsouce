@@ -6,7 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.withSaveLayer
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.abs
 
 /**
  * Custom modifier for flickering animation
@@ -34,7 +35,7 @@ import kotlin.math.sin
 fun Modifier.shimmer(
     gradientColors: List<Color> = listOf(
         Color.Transparent,
-        MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+        SauceTheme.colors.textMuted.copy(alpha = 0.15f),
         Color.Transparent,
     ),
     showShimmer: Boolean = true,
@@ -57,18 +58,17 @@ fun Modifier.shimmer(
         label = "shimmer translate animation"
     )
     val radians = (tiltAngle * PI / 180).toFloat()
-    return this then drawWithContent {
+    return drawWithContent {
         with(drawContext.canvas) {
+            val axis = Offset(cos(radians), sin(radians))
+            val extent = (size.width * abs(axis.x) + size.height * abs(axis.y)) / 2f
+            val band = maxOf(extent * 0.7f, 1f)
+            val position = -extent - band + (2f * extent + 2f * band) * translateAnimation
+            val center = Offset(size.width / 2f, size.height / 2f) + axis * position
             val brush = Brush.linearGradient(
                 colors = gradientColors,
-                start = Offset(
-                    size.width * translateAnimation * cos(radians),
-                    size.height * translateAnimation * sin(radians)
-                ),
-                end = Offset(
-                    2 * size.width * translateAnimation * cos(radians),
-                    2 * size.height * translateAnimation * sin(radians)
-                )
+                start = center - axis * band,
+                end = center + axis * band,
             )
             withSaveLayer(
                 bounds = size.toRect(),

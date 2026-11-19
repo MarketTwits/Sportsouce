@@ -5,24 +5,43 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.screens.FailedScreen
+import androidx.compose.ui.platform.LocalFocusManager
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarHost
+import com.markettwits.core_ui.items.components.snackbar.SauceSnackbarTone
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.start.search.search.presentation.component.StartsSearchComponent
 import com.markettwits.sportsouce.start.search.search.presentation.store.StartsSearchStore
+import kotlinx.coroutines.launch
 
 @Composable
 fun StartsSearchScreen(component: StartsSearchComponent) {
     val state by component.model.collectAsState()
+    val focusManager = LocalFocusManager.current
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val launchVoiceInput = rememberStartVoiceInput(
+        onRecognized = { component.obtainEvent(StartsSearchStore.Intent.ChangeTextFiled(it)) },
+        onError = { message ->
+            scope.launch { snackbar.showSnackbar(message, withDismissAction = true) }
+        },
+    )
 
     Scaffold(
         modifier = Modifier,
+        snackbarHost = { SauceSnackbarHost(snackbar, tone = SauceSnackbarTone.Error) },
         topBar = {
             StartsSearchBarInner(
                 query = state.query,
@@ -39,12 +58,17 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 onClickBack = {
                     component.obtainEvent(StartsSearchStore.Intent.OnClickBack)
                 },
+                onClickVoiceSearch = launchVoiceInput?.let { launch ->
+                    {
+                        focusManager.clearFocus()
+                        launch()
+                    }
+                },
             )
         },
         bottomBar = {
             AnimatedVisibility(
-                visible = state.filter.items.find { it.selected.isNotEmpty() }?.selected?.isNotEmpty()
-                    ?: false,
+                visible = !state.filter.filterIsEmpty(),
                 enter = slideInVertically(
                     initialOffsetY = { it },
                     animationSpec = tween(300, easing = FastOutSlowInEasing)
@@ -55,7 +79,7 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                 ) + fadeOut(animationSpec = tween(300))
             ) {
                 SearchFilterContent(
-                    filterParams = state.filter.selectedValueToString(),
+                    filter = state.filter,
                     onClickPanel = {
                         component.obtainEvent(StartsSearchStore.Intent.OnClickFilter)
                     },
@@ -68,17 +92,20 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(top = paddingValues.calculateTopPadding())
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
                 .background(MaterialTheme.colorScheme.background)
         ) {
+            val error = state.error
             val screenState = when {
                 state.isLoading -> ScreenState.LOADING
-                state.isError -> ScreenState.ERROR
+                error != null -> ScreenState.Error(error)
                 state.query.isEmpty() && state.filter.filterIsEmpty() -> ScreenState.HISTORY
                 else -> ScreenState.RESULTS
             }
             AnimatedContent(
                 targetState = screenState,
+                contentKey = { it::class },
                 transitionSpec = {
                     fadeIn(
                         animationSpec = tween(400, easing = FastOutSlowInEasing)
@@ -99,11 +126,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
                         LoadingFullScreen()
                     }
 
-                    ScreenState.ERROR -> {
-                        FailedScreen(message = state.message) {
-                            component.obtainEvent(StartsSearchStore.Intent.OnClickRetry)
-                        }
-                    }
+                    is ScreenState.Error -> currentState.error.SauceErrorScreen(
+                        onClickRetry = { component.obtainEvent(StartsSearchStore.Intent.OnClickRetry) },
+                    )
 
                     ScreenState.HISTORY -> {
                         if (state.searchHistory.isNotEmpty()) {
@@ -137,9 +162,9 @@ fun StartsSearchScreen(component: StartsSearchComponent) {
     }
 }
 
-private enum class ScreenState {
-    LOADING,
-    ERROR,
-    HISTORY,
-    RESULTS
+private sealed interface ScreenState {
+    data object LOADING : ScreenState
+    data class Error(val error: SauceError) : ScreenState
+    data object HISTORY : ScreenState
+    data object RESULTS : ScreenState
 }

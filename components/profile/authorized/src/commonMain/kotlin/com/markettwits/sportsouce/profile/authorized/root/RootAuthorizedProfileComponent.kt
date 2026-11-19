@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.api.NotificationComponent
+
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsouce.club.root.RootClubComponent
@@ -14,12 +17,23 @@ import com.markettwits.sportsouce.start.presentation.start.component.StartScreen
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.presentation.component.StartsFavoritesComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.profile.results.presentation.component.MyResultsComponent
+import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
 
 interface RootAuthorizedProfileComponent {
+
+    val notifications: NotificationApi
+    fun popToRoot()
+
     val childStack: Value<ChildStack<*, Child>>
 
     @Serializable
     sealed class Config {
+        @Serializable
+        data object Inbox : Config()
+
         @Serializable
         data object Members : Config()
 
@@ -45,14 +59,31 @@ interface RootAuthorizedProfileComponent {
         data object ShopUserOrders : Config()
 
         @Serializable
+        data object PaidReceipts : Config()
+
+        @Serializable
+        data class Receipt(val id: Int) : Config()
+
+        @Serializable
         data object Club : Config()
 
         @Serializable
         data object Favorites : Config()
+
+        @Serializable
+        data object MyResults : Config()
+
+        @Serializable
+        data class ResultProtocol(val startId: Int) : Config()
     }
 
 
     sealed class Child {
+        data class Inbox(val component: NotificationComponent) : Child()
+
+        data class ResultProtocol(val component: StartMemberResultsComponent) : Child()
+
+        data class MyResults(val component: MyResultsComponent) : Child()
 
         data class Members(val component: RootMembersComponentBase) : Child()
 
@@ -69,6 +100,10 @@ interface RootAuthorizedProfileComponent {
         data class Settings(val component: RootSettingsComponent) : Child()
 
         data class ShopUserOrders(val component : ShopUserOrdersComponent) : Child()
+
+        data class PaidReceipts(val component: ReceiptsComponent) : Child()
+
+        data class Receipt(val component: ReceiptDocumentComponent) : Child()
 
         data class ClubDashboard(val component : RootClubComponent) : Child()
 

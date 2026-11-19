@@ -4,6 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpFieldErrors
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStage
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStatement
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.store.SignUpStore.*
@@ -24,6 +25,9 @@ interface SignUpStore : Store<Intent, State, Label> {
         val currentStage: SignUpStage = SignUpStage.FIRST,
         val statement: SignUpStatement = SignUpStatement(),
         val event: StateEventWithContent<EventContent> = consumed(),
+        val errors: SignUpFieldErrors = SignUpFieldErrors(),
+        val validatedStages: Set<SignUpStage> = emptySet(),
+        val validationAttempt: Int = 0,
     )
 
     sealed interface Label {

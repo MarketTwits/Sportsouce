@@ -1,7 +1,9 @@
 package com.markettwits.sportsouce.starts.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.starts.cloud.model.NetworkPhotoArchive
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartFavoritesRequest
+import com.markettwits.sportsouce.starts.cloud.model.NetworkStartRemoteItem
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
 import com.markettwits.sportsouce.starts.cloud.model.StartStatusEntity
 import io.ktor.client.call.*
@@ -16,14 +18,39 @@ class SportSauceNetworkStartsApi(
 
     private val client = httpClient.provide()
 
-    suspend fun fetchFavorites(userId: String, token: String): NetworkStartsRemote {
-        val response = client.get("favorites/$userId") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
-            }
+    suspend fun photoArchive(offset: Int, limit: Int, filterText: String, year: Int?): NetworkPhotoArchive {
+        val response = client.get("photo-archive/starts") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+            if (filterText.isNotBlank()) parameter("filterText", filterText.trim())
+            if (year != null) parameter("year", year)
         }
         return json.decodeFromString(response.body<String>())
+    }
+
+    suspend fun fetchFavorites(userId: String, token: String): NetworkStartsRemote {
+        val starts = linkedMapOf<Int, NetworkStartRemoteItem>()
+        var offset = 0
+        do {
+            val response = client.get("favorites/$userId") {
+                parameter("skipCount", offset)
+                parameter("maxResultCount", 1000)
+                contentType(ContentType.Application.Json)
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer $token")
+                }
+            }
+            val page = json.decodeFromString<NetworkStartsRemote>(response.body<String>())
+            if (page.rows.isEmpty()) {
+                check(offset >= page.count) { "Incomplete favorites response" }
+                break
+            }
+            val previousSize = starts.size
+            page.rows.forEach { starts[it.id] = it }
+            check(starts.size > previousSize) { "Favorites pagination did not advance" }
+            offset += page.rows.size
+        } while (offset < page.count)
+        return NetworkStartsRemote(starts.size, starts.values.toList())
     }
 
     suspend fun addFavorites(startId: Int, userId: String, token: String) {
@@ -83,6 +110,11 @@ class SportSauceNetworkStartsApi(
         val serializer = NetworkStartsRemote.serializer()
         val response = client.get("start/$seriesId/related-start-series")
         return json.decodeFromString(serializer, response.body<String>())
+    }
+
+    suspend fun fetchArchive(archiveId: Int): NetworkStartsRemote {
+        val response = client.get("start/$archiveId/related-start-archive")
+        return json.decodeFromString(NetworkStartsRemote.serializer(), response.body<String>())
     }
 
     suspend fun fetchStartMain(): NetworkStartsRemote {

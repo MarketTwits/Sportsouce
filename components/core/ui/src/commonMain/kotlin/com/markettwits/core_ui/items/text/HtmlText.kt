@@ -15,18 +15,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.Role
+import androidx.compose.material3.Text
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.theme.Shapes
-import com.mohamedrejeb.richeditor.model.rememberRichTextState
-import com.mohamedrejeb.richeditor.ui.material.RichText
+import com.markettwits.core_ui.items.theme.SauceTheme
 
 /**
  * Simple Text composable to show the text with html styling from string
@@ -58,51 +61,41 @@ fun HtmlText(
     textAlign: TextAlign? = null,
     lineHeight: TextUnit = TextUnit.Unspecified,
     selectable: Boolean = false,
-    @Suppress("warning can be crash,")
     softWrap: Boolean = true,
-    @Suppress("warning can be crash,")
     maxLines: Int = Int.MAX_VALUE,
-    @Suppress("warning can be crash,")
     overflow: TextOverflow = TextOverflow.Visible,
+    showImages: Boolean = maxLines == Int.MAX_VALUE,
+    style: TextStyle = MaterialTheme.typography.bodyLarge,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
-    val state = rememberRichTextState()
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
-
-    var images by remember {
-        mutableStateOf(emptyList<String>())
+    val normalizedText = remember(text) { normalizeHtml(text) }
+    val cleanedText = remember(normalizedText) {
+        removeColorStylesFromHtml(removeImgTagsFromHtml(normalizedText))
     }
+    val images = remember(normalizedText) { extractImageUrlsFromHtml(normalizedText) }
 
-    val spaceColor = MaterialTheme.colorScheme.onBackground
-
-    LaunchedEffect(text, color) {
-        val normalizedText = normalizeHtml(text)
-        val cleanedText = removeColorStylesFromHtml(removeImgTagsFromHtml(normalizedText))
-        state.setHtml(cleanedText)
-        val actualColor = if (color == Color.Unspecified) {
-            spaceColor
-        } else {
-            color
-        }
-        state.config.linkColor = actualColor
-        state.config.codeSpanColor = actualColor
-        state.config.codeSpanBackgroundColor = Color.Transparent
-        state.config.codeSpanStrokeColor = Color.Transparent
-
-        images = extractImageUrlsFromHtml(normalizedText)
-    }
-
+    val actualColor = if (color == Color.Unspecified) SauceTheme.colors.textPrimary else color
+    val linkColor = SauceTheme.colors.action
+    val document = rememberHtmlDocument(cleanedText, linkColor, style.merge(TextStyle(
+        fontSize = fontSize, fontStyle = fontStyle, fontWeight = fontWeight, fontFamily = fontFamily,
+        letterSpacing = letterSpacing, lineHeight = lineHeight,
+    )))
 
     val selectionColor = TextSelectionColors(
-        handleColor = MaterialTheme.colorScheme.tertiary,
-        backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
+        handleColor = SauceTheme.colors.action,
+        backgroundColor = SauceTheme.colors.actionSoft
     )
 
     val richText = @Composable {
-        Column {
-            RichText(
-                state = state,
-                modifier = modifier,
-                color = color,
+        Column(modifier) {
+            // The editor's layout callback measures list markers in paragraphs that may have
+            // been clipped by our parent's height. Native Text can safely display the parsed
+            // document at any size without invoking that editing-only callback.
+            Text(
+                text = document,
+                modifier = Modifier.fillMaxWidth(),
+                color = actualColor,
                 fontSize = fontSize,
                 fontStyle = fontStyle,
                 fontWeight = fontWeight,
@@ -111,8 +104,13 @@ fun HtmlText(
                 letterSpacing = letterSpacing,
                 textDecoration = textDecoration,
                 textAlign = textAlign ?: TextAlign.Unspecified,
+                maxLines = maxLines,
+                softWrap = softWrap,
+                overflow = overflow,
+                style = style,
+                onTextLayout = onTextLayout,
             )
-            HtmlTextImages(
+            if (showImages) HtmlTextImages(
                 images = images,
                 onClickImage = { selectedImageUrl = it },
             )
@@ -148,12 +146,12 @@ private fun ColumnScope.HtmlTextImages(
     images.forEachIndexed { index, imageUrl ->
         SubcomposeAsyncImage(
             model = imageUrl,
-            contentDescription = "Describe image",
+            contentDescription = "Изображение ${index + 1} из ${images.size}",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(Shapes.medium)
-                .clickable { onClickImage(imageUrl) },
+                .clickable(role = Role.Button, onClickLabel = "Открыть изображение") { onClickImage(imageUrl) },
             loading = {
                 Box(
                     modifier = Modifier
@@ -172,6 +170,13 @@ private fun ColumnScope.HtmlTextImages(
             },
             success = {
                 SubcomposeAsyncImageContent()
+            },
+            error = {
+                Box(Modifier.fillMaxWidth().heightIn(min = 96.dp).background(SauceTheme.colors.surfaceSubtle)
+                    .padding(16.dp), contentAlignment = androidx.compose.ui.Alignment.Center) {
+                    Text("Изображение недоступно", color = SauceTheme.colors.textMuted,
+                        style = MaterialTheme.typography.bodyMedium)
+                }
             }
         )
 
@@ -181,7 +186,7 @@ private fun ColumnScope.HtmlTextImages(
     }
 }
 
-private fun normalizeHtml(html: String): String {
+internal fun normalizeHtml(html: String): String {
     val trimmed = html.trim()
     val unquoted = if (trimmed.startsWith("\"<") && trimmed.endsWith(">\"")) {
         trimmed.substring(1, trimmed.length - 1)
@@ -194,28 +199,18 @@ private fun normalizeHtml(html: String): String {
         .replace("\uFEFF", "")
 }
 
-private fun removeColorStylesFromHtml(html: String): String {
-    return html
-        .replace(Regex("""style\s*=\s*["'][^"']*color\s*:\s*[^;"']*[;"']?[^"']*["']""", RegexOption.IGNORE_CASE), "")
-        .replace(Regex("""<font[^>]*color\s*=\s*["'][^"']*["'][^>]*>""", RegexOption.IGNORE_CASE)) { matchResult ->
-            val fontTag = matchResult.value
-            fontTag.replace(Regex("""color\s*=\s*["'][^"']*["']""", RegexOption.IGNORE_CASE), "")
-        }
-        .replace(
-            Regex(
-                """<span[^>]*style\s*=\s*["'][^"']*color\s*:\s*[^;"']*[;"']?[^"']*["'][^>]*>""",
-                RegexOption.IGNORE_CASE
-            )
-        ) { matchResult ->
-            val spanTag = matchResult.value
-            val cleanedStyle = spanTag.replace(Regex("""color\s*:\s*[^;"']*[;"']?""", RegexOption.IGNORE_CASE), "")
-            if (cleanedStyle.contains("""style=""")) {
-                cleanedStyle.replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
-            } else {
-                cleanedStyle
-            }
-        }
-        .replace(Regex("""style\s*=\s*["']\s*["']""", RegexOption.IGNORE_CASE), "")
+internal fun removeColorStylesFromHtml(html: String): String {
+    val withoutColors = html.replace(
+        Regex("""\bstyle\s*=\s*(["'])([\s\S]*?)\1""", RegexOption.IGNORE_CASE)
+    ) { match ->
+        val declarations = match.groupValues[2].split(';').filter { declaration ->
+            declaration.substringBefore(':').trim().lowercase() !in setOf("color", "background", "background-color")
+        }.map(String::trim).filter(String::isNotEmpty)
+        if (declarations.isEmpty()) "" else "style=${match.groupValues[1]}${declarations.joinToString(";")}${match.groupValues[1]}"
+    }
+    return withoutColors.replace(Regex("""<font\b[^>]*>""", RegexOption.IGNORE_CASE)) { match ->
+        match.value.replace(Regex("""\s+color\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)""", RegexOption.IGNORE_CASE), "")
+    }
 }
 
 private fun removeImgTagsFromHtml(html: String): String {
@@ -223,7 +218,7 @@ private fun removeImgTagsFromHtml(html: String): String {
     return html.replace(imageRegex, "")
 }
 
-private fun extractImageUrlsFromHtml(html: String): List<String> {
+internal fun extractImageUrlsFromHtml(html: String): List<String> {
     val regex = """<img\s+[^>]*src\s*=\s*(['"])(.*?)\1""".toRegex(RegexOption.IGNORE_CASE)
     return regex.findAll(html).map { it.groupValues[2] }.distinct().toList()
 }

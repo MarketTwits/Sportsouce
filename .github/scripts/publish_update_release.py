@@ -114,10 +114,11 @@ def publish(repo, tag, source_sha, title, notes, assets):
         verify_published_release(repo, tag, source_sha, release, assets)
         return
     if release is None:
-        gh("release", "create", tag, "--draft", "--target", source_sha, "--title", title, "--notes", notes)
-        release = find_release(repo, tag)
-        if release is None:
-            raise RuntimeError("Created draft was not found")
+        release = json.loads(gh(
+            "api", "--method", "POST", f"repos/{repo}/releases",
+            "-f", f"tag_name={tag}", "-f", f"target_commitish={source_sha}",
+            "-f", f"name={title}", "-f", f"body={notes}", "-F", "draft=true",
+        ))
     validate_draft(release, source_sha)
     expected = {p.name: p for p in assets}
     existing = {asset["name"] for asset in release["assets"]}
@@ -137,9 +138,7 @@ def publish(repo, tag, source_sha, title, notes, assets):
         verified = Path(temp) / "verified"
         verified.mkdir()
         gh("release", "download", tag, "--dir", str(verified))
-        release = find_release(repo, tag)
-        if release is None:
-            raise RuntimeError("Draft disappeared during upload")
+        release = json.loads(gh("api", f"repos/{repo}/releases/{release['id']}"))
         validate_draft(release, source_sha)
         if (len(release["assets"]) != len(expected)
                 or {asset["name"] for asset in release["assets"]} != set(expected)

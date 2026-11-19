@@ -21,14 +21,19 @@ class PublishTest(unittest.TestCase):
             self.assets.append(path)
         manifest = update_manifest.create_manifest('1.0.0', '1', self.assets[1], 'arm64', self.assets[2], 'x64')
         self.assets[3].write_text(json.dumps(manifest), encoding='utf-8')
-        self.release = {'draft': True, 'prerelease': False, 'target_commitish': 'abc', 'assets': []}
+        self.release = {'id': 123, 'draft': True, 'prerelease': False, 'target_commitish': 'abc', 'assets': []}
         self.uploaded = {}
         self.calls = []
 
     def gh(self, *args, **kwargs):
         self.calls.append(args)
-        if args[:2] == ('release', 'create'):
-            return ''
+        if args[:4] == ('api', '--method', 'POST', 'repos/owner/repo/releases'):
+            self.assertIn('tag_name=1.0.0.1', args)
+            self.assertIn('target_commitish=abc', args)
+            self.assertIn('draft=true', args)
+            return json.dumps(self.release)
+        if args == ('api', 'repos/owner/repo/releases/123'):
+            return json.dumps(self.release)
         if args[:2] == ('release', 'upload'):
             for path in args[3:]:
                 self.uploaded[Path(path).name] = Path(path).read_bytes()
@@ -44,14 +49,11 @@ class PublishTest(unittest.TestCase):
         raise AssertionError(args)
 
     def run_publish(self, initial=None):
-        values = iter([initial, copy.deepcopy(self.release)] if initial is None else [initial])
-        def find(*args):
-            try:
-                return next(values)
-            except StopIteration:
-                return copy.deepcopy(self.release)
-        with patch.object(publisher, 'gh', side_effect=self.gh), patch.object(publisher, 'find_release', side_effect=find), patch.object(publisher, 'check_tag'):
+        with patch.object(publisher, 'gh', side_effect=self.gh), \
+             patch.object(publisher, 'find_release', return_value=initial) as find_release, \
+             patch.object(publisher, 'check_tag'):
             publisher.publish('owner/repo', '1.0.0.1', 'abc', 'title', 'notes', self.assets)
+            find_release.assert_called_once_with('owner/repo', '1.0.0.1')
 
     def test_new_draft_uploads_verifies_and_publishes(self):
         self.run_publish()
@@ -73,7 +75,7 @@ class PublishTest(unittest.TestCase):
              patch.object(publisher, 'find_release', return_value=release), \
              patch.object(publisher, 'check_tag', return_value=True):
             publisher.publish('owner/repo', '1.0.0.1', 'abc', 'title', 'notes', self.assets)
-        self.assertFalse(any(call[:2] in (('release', 'create'), ('release', 'upload'), ('release', 'edit')) for call in self.calls))
+        self.assertFalse(any(call[:3] == ('api', '--method', 'POST') or call[:2] in (('release', 'upload'), ('release', 'edit')) for call in self.calls))
 
     def test_incomplete_desktop_set_is_rejected_before_network(self):
         with patch.object(publisher, 'gh') as gh:
@@ -109,7 +111,7 @@ class PublishTest(unittest.TestCase):
              patch.object(publisher, 'find_release', return_value=release), \
              patch.object(publisher, 'check_tag', return_value=True):
             publisher.publish('owner/repo', '1.0.0.1', 'abc', 'title', 'notes', self.assets)
-        self.assertFalse(any(call[:2] in (('release', 'create'), ('release', 'upload'), ('release', 'edit')) for call in self.calls))
+        self.assertFalse(any(call[:3] == ('api', '--method', 'POST') or call[:2] in (('release', 'upload'), ('release', 'edit')) for call in self.calls))
 
     def test_retry_of_different_or_incomplete_published_release_fails_closed(self):
         self.uploaded = {path.name: path.read_bytes() for path in self.assets}
@@ -124,7 +126,7 @@ class PublishTest(unittest.TestCase):
             release['assets'].pop()
             with self.assertRaisesRegex(RuntimeError, 'asset set'):
                 publisher.publish('owner/repo', '1.0.0.1', 'abc', 'title', 'notes', self.assets)
-        self.assertFalse(any(call[:2] in (('release', 'create'), ('release', 'upload'), ('release', 'edit')) for call in self.calls))
+        self.assertFalse(any(call[:3] == ('api', '--method', 'POST') or call[:2] in (('release', 'upload'), ('release', 'edit')) for call in self.calls))
 
     def test_published_release_requires_existing_tag_and_stable_channel(self):
         release = {**self.release, 'draft': False}

@@ -51,6 +51,43 @@ class HtmlLayoutTest {
     }
 
     @Test
+    fun truncatedHtmlExposesOnlyRenderedCharacterBoundsToAccessibility() {
+        val html = "<p>Первый абзац</p><p>Второй абзац</p><p>Скрытый абзац</p>"
+        val maxLines = mutableStateOf(2)
+        var renderedLayout: TextLayoutResult? = null
+        ImageComposeScene(width = 320, height = 240) {
+            SauceTheme {
+                HtmlText(text = html, maxLines = maxLines.value, overflow = TextOverflow.Ellipsis) {
+                    renderedLayout = it
+                }
+            }
+        }.use { scene ->
+            fun checkCharacterBounds(isTruncated: Boolean) {
+                val node = scene.nodes().first { it.config.contains(SemanticsActions.GetTextLayoutResult) }
+                val accessibleText = node.config[SemanticsProperties.Text].single()
+                val layouts = mutableListOf<TextLayoutResult>()
+                assertTrue(node.config[SemanticsActions.GetTextLayoutResult].action?.invoke(layouts) == true)
+                val layout = layouts.single()
+
+                assertTrue(accessibleText.text.contains("Скрытый абзац"))
+                assertEquals(accessibleText.text, assertNotNull(renderedLayout).layoutInput.text.text)
+                assertEquals(isTruncated, layout.layoutInput.text.length < accessibleText.length)
+                for (offset in accessibleText.indices) {
+                    // Android's accessibility delegate asks only for offsets within the layout input.
+                    if (offset < layout.layoutInput.text.length) layout.getBoundingBox(offset)
+                }
+            }
+
+            settle(scene, 0L)
+            checkCharacterBounds(isTruncated = true)
+
+            maxLines.value = Int.MAX_VALUE
+            settle(scene, 2_000_000_000L)
+            checkCharacterBounds(isTruncated = false)
+        }
+    }
+
+    @Test
     fun expandingAndCollapsingHtmlKeepsAValidDocument() {
         ImageComposeScene(width = 320, height = 1200) {
             SauceTheme { ExpandableHtmlText(text = document, collapsedLines = 3) }

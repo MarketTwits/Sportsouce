@@ -91,14 +91,20 @@ class ReviewScreenDesignTest {
                 Palette(false) { NewsItemCard(newsInfo = news, cardWidth = 240.dp, onClick = {}) }
             }.use { scene ->
                 scene.settle()
-                val layouts = scene.nodes().flatMap { node ->
-                    mutableListOf<TextLayoutResult>().also { node.config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(it) }
+                val description = scene.nodes().single { node ->
+                    node.config.getOrNull(SemanticsProperties.Text)?.singleOrNull()
+                        ?.text?.startsWith("Приглашаем") == true
                 }
-                val body = layouts.single { it.layoutInput.text.text.startsWith("Приглашаем") }
+                val fullText = description.config[SemanticsProperties.Text].single().text
+                val layouts = mutableListOf<TextLayoutResult>()
+                assertTrue(description.config[SemanticsActions.GetTextLayoutResult].action?.invoke(layouts) == true)
+                val body = layouts.single()
                 scene.save("news-ellipsis-${(scale * 100).toInt()}")
                 assertEquals(2, body.lineCount)
                 assertEquals(TextOverflow.Ellipsis, body.layoutInput.overflow)
-                assertTrue(body.getLineEnd(1, visibleEnd = true) < body.layoutInput.text.length)
+                val renderedEnd = body.getLineEnd(1, visibleEnd = true)
+                assertTrue(renderedEnd in 1 until fullText.length)
+                assertEquals(fullText.substring(0, renderedEnd), body.layoutInput.text.text)
                 assertTrue(body.getLineBottom(1) <= body.size.height + 0.5f, "Both lines must fit at large font scale")
             }
         }

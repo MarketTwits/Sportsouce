@@ -2,6 +2,11 @@ name: Build and Release Android/Desktop Apps
 
 on:
   workflow_dispatch:
+    inputs:
+      skip_google_play:
+        description: Skip Google Play when this version is already uploaded
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -135,6 +140,7 @@ jobs:
         run: rm -f key-store.jks
 
   build-android-google-play-release:
+    if: ${{ !inputs.skip_google_play }}
     needs: prepare-release
     runs-on: ubuntu-latest
     steps:
@@ -352,17 +358,17 @@ jobs:
           if ($packages.Count -ne 1) { throw 'Expected exactly one MSI package for inspection' }
           $installer = New-Object -ComObject WindowsInstaller.Installer
           $database = $installer.OpenDatabase($packages[0].FullName, 0)
-          function Get-MsiProperty($name) {
-            $view = $database.OpenView("SELECT ``Value`` FROM ``Property`` WHERE ``Property``='$name'")
-            $view.Execute()
-            $record = $view.Fetch()
-            if ($null -eq $record) { throw "Missing MSI property $name" }
-            return $record.StringData(1)
+          $tableFile = 'sportsauce-msi-properties.idt'
+          $database.GetType().InvokeMember('Export', 'InvokeMethod', $null, $database, @('Property', $env:RUNNER_TEMP, $tableFile)) | Out-Null
+          $properties = @{}
+          foreach ($line in (Get-Content -LiteralPath (Join-Path $env:RUNNER_TEMP $tableFile) | Select-Object -Skip 3)) {
+            $key, $value = $line -split "`t", 2
+            $properties[$key] = $value
           }
           $parts = $env:VERSION_NAME.Split('.')
           $expectedVersion = "$($parts[0]).$($parts[1]).$env:VERSION_CODE"
-          if ((Get-MsiProperty 'ProductVersion') -ne $expectedVersion) { throw 'Incorrect MSI ProductVersion' }
-          if ((Get-MsiProperty 'UpgradeCode').Trim('{}') -ine '9ec0a591-801b-4bf9-92ad-97d887e046dd') { throw 'Incorrect MSI UpgradeCode' }
+          if ($properties['ProductVersion'] -ne $expectedVersion) { throw "Incorrect MSI ProductVersion: $($properties['ProductVersion'])" }
+          if ($properties['UpgradeCode'] -ine '{9ec0a591-801b-4bf9-92ad-97d887e046dd}') { throw "Incorrect MSI UpgradeCode: $($properties['UpgradeCode'])" }
 
       - name: Prepare EXE artifact
         id: exe

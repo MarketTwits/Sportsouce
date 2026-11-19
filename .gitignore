@@ -29,6 +29,13 @@ __pycache__/
 # Project secrets config
 /secrets.properties
 /key-store.jks
+/service-account.json
+
+# Release workflow outputs
+/artifacts/
+/release-notes/
+/whatsnew/
+/update-manifest.json
 
 #AI
 CLAUDE.md

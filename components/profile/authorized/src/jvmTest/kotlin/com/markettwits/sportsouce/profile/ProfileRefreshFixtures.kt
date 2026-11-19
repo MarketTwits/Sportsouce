@@ -23,6 +23,7 @@ internal class ProfileAuth : AuthDataSource {
     var authCalls = 0
     var onAuth: suspend () -> Unit = {}
     override suspend fun userID() = Result.success(current.id)
+    override suspend fun cachedUserId() = Result.success(current.id)
     override suspend fun auth(): Result<User> { authCalls++; onAuth(); return Result.success(current) }
     override suspend fun updateToken() = Result.success("test-token")
     override suspend fun user() = Result.success(current)

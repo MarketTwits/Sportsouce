@@ -10,6 +10,7 @@ kotlin {
         implementation(libs.kotlin.test)
         implementation(libs.kotlinx.coroutines.test)
         implementation(projects.components.core.cloud)
+        implementation(projects.components.core.cache)
         implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
     }
 

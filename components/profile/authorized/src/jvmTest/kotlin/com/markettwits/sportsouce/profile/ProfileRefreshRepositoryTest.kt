@@ -12,9 +12,9 @@ import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMembers
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepositoryBase
-import com.markettwits.sportsouce.profile.registrations.data.UserRegistrationsDataSource
-import com.markettwits.sportsouce.profile.registrations.data.cache.CachedUserRegistrations
-import com.markettwits.sportsouce.profile.registrations.data.cache.UserStartsRegistrationsCache
+import com.markettwits.sportsouce.profile.cloud.registrations.CachedUserRegistrations
+import com.markettwits.sportsouce.profile.cloud.registrations.UserRegistrationsDataSource
+import com.markettwits.sportsouce.profile.cloud.registrations.UserStartsRegistrationsCache
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapperBase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.*

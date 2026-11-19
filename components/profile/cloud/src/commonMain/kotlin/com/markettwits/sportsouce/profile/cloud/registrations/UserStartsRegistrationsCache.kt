@@ -1,4 +1,4 @@
-package com.markettwits.sportsouce.profile.registrations.data.cache
+package com.markettwits.sportsouce.profile.cloud.registrations
 
 import com.markettwits.cahce.Cache
 import com.markettwits.cahce.InStorageCacheDirectory

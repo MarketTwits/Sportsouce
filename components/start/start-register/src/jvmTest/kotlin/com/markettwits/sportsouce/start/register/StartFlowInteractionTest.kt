@@ -11,7 +11,10 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.value.MutableValue
 import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.sportsouce.start.cloud.model.start.fields.*
@@ -21,7 +24,11 @@ import com.markettwits.sportsouce.start.register.presentation.distances.componen
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.*
 import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.RenderAdditionalFields
 import com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields.*
+import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartRegistrationPageComponent
+import com.markettwits.sportsouce.start.register.presentation.registration.registration.component.StartStageComponent
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.*
+import com.markettwits.sportsouce.start.register.presentation.registration.registration.store.StartRegistrationPageStore
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File as LocalFile
 import kotlin.test.*
 
@@ -34,6 +41,52 @@ class StartFlowInteractionTest {
             listOf(Option(8, 51, null, "Одинаковая подпись"), Option(8, 98, null, "Одинаковая подпись")), StartRegistrationFieldPrice.Empty, false, emptyList()),
         StartRegisterAnswer(8, false, "Синглселект", singleSelect = 98),
     )
+
+    @Test
+    fun registrationToolbarFollowsTheActiveDistanceAndEllipsizesIt() {
+        val startTitle = "Тестовый старт"
+        val shortPage = page.copy(id = 1, title = "5 км", distance = distance.copy(title = "5 км"))
+        val component = object : StartRegistrationPageComponent {
+            override val pages = MutableValue(ChildStack<Int, StartStageComponent>(0, StartStageComponent.Empty))
+            override val state = MutableStateFlow(
+                StartRegistrationPageStore.State(
+                    stages = emptyList(),
+                    registrationInfo = StartRegistrationInfo(
+                        1, startTitle, paymentType = "", isPaymentDisabled = false, regType = StartRegType.Default,
+                    ),
+                    pagesState = StartRegistrationPageStore.PagesState(isLoading = false),
+                )
+            )
+            override fun obtainEvent(intent: StartRegistrationPageStore.Intent) = Unit
+
+            fun show(stage: StartRegistrationStagePage.Registration) {
+                pages.value = ChildStack(stage.id, object : StartStageComponent {
+                    override val value = stage
+                })
+            }
+        }
+        ImageComposeScene(width = 320, height = 600) {
+            SauceTheme { StartRegistrationPage(component = component) }
+        }.use { scene ->
+            fun titleLayout(title: String): TextLayoutResult {
+                scene.settle()
+                val titleNode = scene.nodes().single {
+                    it.config.getOrNull(SemanticsProperties.Text)?.any { text -> text.text == title } == true
+                }
+                val results = mutableListOf<TextLayoutResult>()
+                titleNode.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(results)
+                return results.single()
+            }
+            assertFalse(titleLayout(startTitle).hasVisualOverflow)
+            component.show(shortPage)
+            assertFalse(titleLayout(shortPage.title).hasVisualOverflow)
+            component.show(page)
+            val longTitle = titleLayout(page.title)
+            assertEquals(1, longTitle.lineCount)
+            assertTrue(longTitle.didOverflowHeight)
+            assertEquals(TextOverflow.Ellipsis, longTitle.layoutInput.overflow)
+        }
+    }
 
     @Test
     fun stageIndicatorFitsLongTitlesAndUsesPageIdentityInsteadOfPosition() {

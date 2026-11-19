@@ -21,6 +21,7 @@ fun TopBarBase(
     modifier: Modifier = Modifier,
     title: String,
     isStatusBarHandle: Boolean = true,
+    titleMaxLines: Int = 2,
     goBack: () -> Unit,
 ) {
     Box(
@@ -52,7 +53,7 @@ fun TopBarBase(
             color = SauceTheme.colors.textPrimary,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
-            maxLines = 2,
+            maxLines = titleMaxLines,
             overflow = TextOverflow.Ellipsis
         )
     }

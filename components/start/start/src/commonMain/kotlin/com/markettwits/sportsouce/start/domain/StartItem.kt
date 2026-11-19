@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.DistinctDistanc
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
+import kotlin.time.Instant
 
 data class StartItem(
     val id: Int,
@@ -94,6 +95,7 @@ data class StartItem(
         val endRegistry: String,
         val beginningStart: String,
         val endStart: String,
+        val startsAt: Instant? = null,
     )
 
     data class Result(

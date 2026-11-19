@@ -109,7 +109,7 @@ internal fun StartSupportPanel(
 }
 
 internal fun formatDonationAmount(kopecks: Long): String {
-    val rubles = kopecks / 100
+    val rubles = (kopecks / 100).toString().reversed().chunked(3).joinToString(" ").reversed()
     val fraction = (kopecks % 100).toString().padStart(2, '0')
     return if (kopecks % 100 == 0L) "$rubles ₽" else "$rubles,$fraction ₽"
 }

@@ -14,6 +14,7 @@ import com.markettwits.sportsouce.bottom_bar.model.BottomNavigationItem
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenComponent
 import com.markettwits.sportsouce.start.presentation.start.screen.StartScreen
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponent
+import com.markettwits.sportsouce.start.support.domain.StartDonationCheck
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.material3.Text
@@ -22,6 +23,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.markettwits.core_ui.items.components.navigation.LocalNavigationViewport
@@ -60,6 +62,7 @@ import javax.imageio.ImageIO
 import androidx.compose.ui.graphics.toArgb
 import com.markettwits.core_ui.items.theme.sauceColors
 import kotlin.math.abs
+import kotlin.time.Instant
 import kotlin.test.*
 
 /** Checks the real details screen viewport, rather than isolated sample cards. */
@@ -82,7 +85,76 @@ class StartDetailsScreenTest {
     )
 
     @Test
-    fun primaryFactsAndActionsPrecedeLongDescriptionAndFooterNeverCoversTheLastContent() {
+    fun registrationNoticeUsesOnlyTheCurrentStartAndShowsTheUnpaidAmount() {
+        val component = object : StartScreenComponent {
+            override val start = MutableStateFlow(StartScreenStore.State(startItem =
+                this@StartDetailsScreenTest.start.copy(
+                    startTimes = this@StartDetailsScreenTest.start.startTimes.copy(startsAt = Instant.parse("2099-08-14T07:00:00Z")),
+                ),
+            ))
+            override fun obtainEvent(intent: StartScreenStore.Intent) = Unit
+        }
+        val paid = StartDonationCheck("none", null, null, hasConfirmedRegistration = true)
+        val support = object : StartSupportComponent {
+            override val state = MutableStateFlow(StartSupportStore.State(startId = start.id + 1, registrationCheck = paid))
+            override fun obtainEvent(intent: StartSupportStore.Intent) = Unit
+        }
+        val registered = "Вы зарегистрированы на старт"
+        val reserved = "Слот зарезервирован"
+        val awaitingPayment = "Регистрация не оплачена — 7 500 ₽"
+        ImageComposeScene(width = 390, height = 844) {
+            SauceTheme { StartScreen(component, support) }
+        }.use { scene ->
+            fun hasNotice() = scene.nodes().any {
+                it.config.getOrNull(SemanticsProperties.Text).orEmpty().any { text ->
+                    text.text == registered || text.text == reserved || text.text == awaitingPayment
+                }
+            }
+            scene.settle()
+            assertFalse(hasNotice())
+
+            support.state.value = support.state.value.copy(startId = start.id)
+            scene.settle()
+            val button = scene.action("Зарегистрироваться").boundsInRoot
+            val reservedBounds = scene.text(reserved).boundsInRoot
+            assertTrue(reservedBounds.top >= button.bottom)
+            assertEquals(button.center.x, reservedBounds.center.x, 1f)
+            scene.save("start-registration-reserved")
+
+            component.start.value = component.start.value.copy(startItem = start)
+            scene.settle()
+            assertTrue(scene.text(registered).boundsInRoot.top >= button.bottom)
+
+            val unpaid = StartDonationCheck("none", StartDonationCheck.Registration(1, 3, 750000, true), null)
+            support.state.value = support.state.value.copy(registrationCheck = unpaid)
+            scene.settle()
+            val notice = scene.text(awaitingPayment)
+            assertTrue(notice.boundsInRoot.top >= button.bottom)
+            assertEquals(button.center.x, notice.boundsInRoot.center.x, 1f)
+            assertEquals(button, scene.action("Зарегистрироваться").boundsInRoot)
+            fun layoutOf(label: String): TextLayoutResult {
+                val node = scene.nodes(unmerged = true).first {
+                    it.config.getOrNull(SemanticsProperties.Text)?.any { text -> text.text == label } == true &&
+                        it.config.contains(SemanticsActions.GetTextLayoutResult)
+                }
+                val layouts = mutableListOf<TextLayoutResult>()
+                node.config[SemanticsActions.GetTextLayoutResult].action!!.invoke(layouts)
+                return layouts.single()
+            }
+            val layout = layoutOf(awaitingPayment)
+            assertFalse(layout.hasVisualOverflow, "${layout.size}, ${layout.layoutInput.constraints}")
+            assertEquals(TextAlign.Center, layout.layoutInput.style.textAlign)
+            assertTrue(layoutOf("Регистрация открыта").layoutInput.style.fontSize.value > layout.layoutInput.style.fontSize.value)
+            scene.save("start-registration-notice")
+
+            support.state.value = support.state.value.copy(registrationCheck = StartDonationCheck("none", null, null))
+            scene.settle()
+            assertFalse(hasNotice())
+        }
+    }
+
+    @Test
+    fun registrationIsBelowTheStatusThenMovesAboveTheLastContentWhenScrolled() {
         for (dark in listOf(false, true)) for (scale in listOf(1f, 2f)) {
             ImageComposeScene(width = 390, height = 844, density = Density(1f, scale)) {
                 SauceTheme(darkTheme = dark) { Details(start) }
@@ -90,21 +162,27 @@ class StartDetailsScreenTest {
                 scene.settle(); scene.assertTextFits()
                 val title = scene.text(start.title)
                 val date = scene.text(start.startTime)
-                val footer = scene.action("Зарегистрироваться")
+                val inline = scene.action("Зарегистрироваться").boundsInRoot
                 assertTrue(title.boundsInRoot.top >= 64f)
-                if (scale == 1f) assertTrue(date.boundsInRoot.bottom < footer.boundsInRoot.top, "Date should fit on the first screen")
+                if (scale == 1f) {
+                    val status = scene.text("Регистрация открыта").boundsInRoot
+                    assertTrue(status.bottom < inline.top)
+                    assertTrue(inline.bottom < date.boundsInRoot.top)
+                }
                 val description = scene.text("О старте")
                 for (label in listOf("Участники", "Результаты", "Дистанции", "Регламент")) {
                     assertTrue(scene.text(label).positionInRoot.y < description.positionInRoot.y, "$label is buried below the description")
                 }
-                val initialFooterTop = footer.boundsInRoot.top
                 scene.save("start-screen-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
                 scene.scrollToEnd(); scene.assertTextFits()
                 val last = scene.text("COMMENTS_END")
-                assertTrue(last.boundsInRoot.height > 0f && last.boundsInRoot.bottom <= scene.action("Зарегистрироваться").boundsInRoot.top,
+                val floating = scene.action("Зарегистрироваться").boundsInRoot
+                assertTrue(last.boundsInRoot.height > 0f && last.boundsInRoot.bottom <= floating.top,
                     "Last content must be reachable above registration")
-                assertEquals(initialFooterTop, scene.action("Зарегистрироваться").boundsInRoot.top)
+                if (scale == 1f) assertTrue(floating.width < inline.width)
                 scene.save("start-screen-end-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
+                scene.scrollBy(-100000f)
+                assertEquals(inline, scene.action("Зарегистрироваться").boundsInRoot)
             }
         }
     }
@@ -178,11 +256,10 @@ class StartDetailsScreenTest {
                 }
             }.use { scene ->
                 scene.settle()
-                val button = scene.action("Зарегистрироваться").boundsInRoot
                 assertEquals(844f, scene.scroll().boundsInRoot.bottom)
-                assertTrue(button.bottom <= 740f)
                 scene.scrollToEnd()
-                assertEquals(button, scene.action("Зарегистрироваться").boundsInRoot)
+                val button = scene.action("Зарегистрироваться").boundsInRoot
+                assertTrue(button.bottom <= 740f)
                 assertTrue(scene.text("COMMENTS_END").boundsInRoot.bottom <= button.top)
                 scene.assertTextFits()
                 scene.save("start-screen-global-glass-${if (dark) "dark" else "light"}-${(scale * 100).toInt()}")
@@ -199,7 +276,7 @@ class StartDetailsScreenTest {
             ImageComposeScene(width = 390, height = 844, density = Density(1f, scale)) {
                 SauceTheme(darkTheme = dark) { Details(start, loading = loading, partial = partial, error = error) }
             }.use { scene ->
-                scene.settle()
+                scene.settle(); scene.scrollToEnd()
                 val bounds = scene.action("Зарегистрироваться").boundsInRoot
                 fun assertGeometryAndBackground() {
                     repeat(6) {
@@ -310,6 +387,9 @@ class StartDetailsScreenTest {
             assertTrue(back.boundsInRoot.bottom <= 64f)
             val participants = scene.action("Участники")
             assertTrue(participants.boundsInRoot.top >= 64f)
+            scene.scrollToEnd()
+            scene.click("Зарегистрироваться")
+            assertEquals(2, actions.count { it == "register" })
         }
     }
 
@@ -453,6 +533,54 @@ class StartDetailsScreenTest {
 
             val event = assertIs<StateEventWithContentTriggered<*>>(store.state.event).content
             assertEquals(EventContent(false, "Войдите в аккаунт, чтобы добавить старт в избранное."), event)
+            assertFalse(assertIs<StartFavoriteState.Default>(store.state.favoriteState).isFavorite)
+        } finally {
+            store.dispose()
+            Dispatchers.resetMain()
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun favoriteCheckUsesTheResolvedStartIdAndKeepsTheHeartOnRefreshFailure() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val initialFavorite = CompletableDeferred<Unit>()
+        var status: Result<Boolean> = Result.success(true)
+        var removals = 0
+        val repository = object : StartRepository by unused<StartRepository>() {
+            override suspend fun refundRules(startId: Int) = Result.success(
+                StartRefundRules(startId, "", StartRefundRules.Source.Global, emptyList()))
+            override suspend fun start(startId: String, relaunch: Boolean) = Result.success(start)
+            override suspend fun startsRecommended(startId: String) = Result.success(emptyList<com.markettwits.sportsouce.starts.common.domain.StartsListItem>())
+            override suspend fun isStartInFavorite(startId: String): Result<Boolean> {
+                assertEquals(start.id.toString(), startId)
+                initialFavorite.await()
+                return status
+            }
+            override suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean> {
+                removals++
+                return Result.success(false)
+            }
+        }
+        val store = StartScreenStoreFactory(DefaultStoreFactory(), repository, unused<ExceptionTracker>(), unused<IntentAction>())
+            .create(StartScreenInput.Slug(start.slug))
+        try {
+            runCurrent()
+            assertIs<StartFavoriteState.Loading>(store.state.favoriteState)
+            store.accept(StartScreenStore.Intent.OnClickFavorite)
+            initialFavorite.complete(Unit)
+            advanceUntilIdle()
+            assertTrue(assertIs<StartFavoriteState.Default>(store.state.favoriteState).isFavorite)
+
+            status = Result.failure(IllegalStateException("Offline"))
+            store.accept(StartScreenStore.Intent.RefreshFavorite)
+            advanceUntilIdle()
+            assertTrue(assertIs<StartFavoriteState.Default>(store.state.favoriteState).isFavorite)
+
+            store.accept(StartScreenStore.Intent.OnClickFavorite)
+            store.accept(StartScreenStore.Intent.OnClickFavorite)
+            advanceUntilIdle()
+            assertEquals(1, removals)
             assertFalse(assertIs<StartFavoriteState.Default>(store.state.favoriteState).isFavorite)
         } finally {
             store.dispose()

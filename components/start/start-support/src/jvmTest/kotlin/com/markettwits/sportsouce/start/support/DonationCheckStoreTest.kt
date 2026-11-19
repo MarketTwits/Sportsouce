@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.start.support
 
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.IntentAction
+import com.markettwits.sportsouce.start.support.domain.CachedStartRegistration
 import com.markettwits.sportsouce.start.support.domain.StartDonationCheck
 import com.markettwits.sportsouce.start.support.domain.StartSupportUseCase
 import com.markettwits.sportsouce.start.support.domain.SupportAuthorizationRequired
@@ -22,13 +23,14 @@ class DonationCheckStoreTest {
     @BeforeTest fun setup() { Dispatchers.setMain(StandardTestDispatcher()) }
     @AfterTest fun cleanup() { Dispatchers.resetMain() }
 
-    @Test fun noRequestUntilOpenAndEachReopenChecksAgainWithoutSubmitting() = runTest {
+    @Test fun theStartAndDonationSheetShareAnInFlightCheckAndReopeningRefreshesIt() = runTest {
         val useCase = FakeUseCase()
         val urls = mutableListOf<String>()
         val store = store(useCase, urls)
         try {
             store.accept(Intent.ApplyStartId(326)); runCurrent()
-            assertTrue(useCase.checks.isEmpty())
+            assertEquals(listOf(326), useCase.checks)
+            assertEquals(CheckState.Idle, store.state.checkState)
             store.accept(Intent.OnOpen); runCurrent()
             assertEquals(listOf(326), useCase.checks)
             assertEquals(CheckState.Loading, store.state.checkState)
@@ -37,6 +39,7 @@ class DonationCheckStoreTest {
             useCase.response.complete(Result.success(none)); advanceUntilIdle()
             assertEquals(CheckState.Ready(none), store.state.checkState)
             store.accept(Intent.OnClose)
+            assertEquals(none, store.state.registrationCheck)
             useCase.response = CompletableDeferred()
             store.accept(Intent.OnOpen); runCurrent()
             assertEquals(listOf(326, 326), useCase.checks)
@@ -44,6 +47,51 @@ class DonationCheckStoreTest {
             assertFalse(store.state.donationConfirmed)
             assertTrue(urls.isEmpty())
             useCase.response.complete(Result.success(none)); advanceUntilIdle()
+        } finally { store.dispose() }
+    }
+
+    @Test fun openingAndResumingKeepTheRegistrationVisibleUntilRefreshConfirmsAChange() = runTest {
+        val useCase = FakeUseCase()
+        val store = store(useCase, mutableListOf())
+        val paid = unpaid.copy(risk = "none", registration = unpaid.registration!!.copy(paymentStatus = 1))
+        try {
+            useCase.cached = CachedStartRegistration(1, unpaid)
+            store.accept(Intent.ApplyStartId(326)); runCurrent()
+            assertEquals(unpaid, store.state.registrationCheck)
+            useCase.response.complete(Result.success(unpaid)); advanceUntilIdle()
+            assertEquals(unpaid, store.state.registrationCheck)
+            assertEquals(CheckState.Idle, store.state.checkState)
+
+            useCase.response = CompletableDeferred()
+            store.accept(Intent.OnResume); runCurrent()
+            assertEquals(unpaid, store.state.registrationCheck)
+            useCase.response.complete(Result.success(paid)); advanceUntilIdle()
+            assertEquals(paid, store.state.registrationCheck)
+
+            useCase.response = CompletableDeferred()
+            store.accept(Intent.OnResume); runCurrent()
+            assertEquals(paid, store.state.registrationCheck)
+            useCase.response.complete(Result.success(none.copy(isRegistrationKnown = false))); advanceUntilIdle()
+            assertEquals(paid, store.state.registrationCheck)
+
+            useCase.response = CompletableDeferred()
+            store.accept(Intent.OnResume); runCurrent()
+            useCase.response.complete(Result.failure(IllegalStateException("offline"))); advanceUntilIdle()
+            assertEquals(paid, store.state.registrationCheck)
+
+            useCase.response = CompletableDeferred()
+            store.accept(Intent.OnResume); runCurrent()
+            useCase.response.complete(Result.success(none)); advanceUntilIdle()
+            assertFalse(store.state.registrationCheck!!.hasRegistration)
+
+            useCase.cached = CachedStartRegistration(2, unpaid)
+            useCase.response = CompletableDeferred()
+            store.accept(Intent.OnResume); runCurrent()
+            assertEquals(unpaid, store.state.registrationCheck)
+            useCase.response.complete(Result.failure(SupportAuthorizationRequired())); advanceUntilIdle()
+            assertNull(store.state.registrationCheck)
+            assertFalse(store.state.isOpen)
+            assertEquals(List(6) { 326 }, useCase.checks)
         } finally { store.dispose() }
     }
 
@@ -124,10 +172,9 @@ class DonationCheckStoreTest {
             assertFalse(store.state.isOpen, "The sheet must be removed before navigation to login")
             assertTrue(store.state.awaitingAuth)
             useCase.response = CompletableDeferred<Result<StartDonationCheck>>().apply { complete(Result.success(unpaid)) }
-            store.accept(Intent.OnAuthReturned); advanceUntilIdle()
+            store.accept(Intent.OnResume); advanceUntilIdle()
             assertTrue(store.state.isOpen)
             assertTrue(store.state.sheetSession > firstSession, "Return must create a fresh sheet animation state")
-            store.accept(Intent.OnAuthReturned); advanceUntilIdle()
             assertEquals(CheckState.Ready(unpaid), store.state.checkState)
             assertFalse(store.state.donationConfirmed)
             assertEquals(listOf(326, 326), useCase.checks)
@@ -151,13 +198,15 @@ class DonationCheckStoreTest {
         }).create()
 
     private class FakeUseCase : StartSupportUseCase {
+        var cached = CachedStartRegistration(1, null)
+        override suspend fun cachedRegistration(startId: Int) = Result.success(cached)
         var response = CompletableDeferred<Result<StartDonationCheck>>()
         var payment = CompletableDeferred<Result<String>>()
         var donation = CompletableDeferred<Result<String>>()
         val checks = mutableListOf<Int>()
         val payments = mutableListOf<Int>()
         var donations = 0
-        override suspend fun checkDonation(startId: Int): Result<StartDonationCheck> {
+        override suspend fun checkDonation(startId: Int, refreshRegistrations: Boolean): Result<StartDonationCheck> {
             checks += startId
             val captured = response
             // Simulate an HTTP transport completing despite cancellation.

@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,13 @@ import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsCo
 internal fun StartStatus(modifier: Modifier = Modifier, organizers: List<Organizer>, kindOfSports: List<StartItem.KindOfSport>, startStatus: StartItem.StartStatus) {
     Row(modifier.fillMaxWidth().padding(horizontal = SauceSpacing.large, vertical = SauceSpacing.small),
         horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small), verticalAlignment = Alignment.CenterVertically) {
-        StartStatusBadge(startStatus.code, Modifier.weight(1f).heightIn(min = 40.dp), centered = true, singleLine = true)
+        StartStatusBadge(
+            statusCode = startStatus.code,
+            modifier = Modifier.weight(1f).heightIn(min = 40.dp),
+            centered = true,
+            singleLine = true,
+            labelStyle = MaterialTheme.typography.labelLarge,
+        )
         kindOfSports.take(2).forEach { sport ->
             val sportItem = StartsListItem.KindOfSport(sport.id, sport.name)
             val sportColor = startKindOfSportsColor(sportItem)

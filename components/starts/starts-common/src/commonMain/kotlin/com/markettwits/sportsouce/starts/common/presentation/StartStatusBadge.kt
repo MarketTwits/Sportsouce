@@ -1,7 +1,9 @@
 package com.markettwits.sportsouce.starts.common.presentation
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import com.markettwits.core_ui.items.components.status.SauceStatusBadge
 import com.markettwits.core_ui.items.components.status.SauceStatusTone
 
@@ -13,6 +15,7 @@ fun StartStatusBadge(
     compact: Boolean = false,
     centered: Boolean = false,
     singleLine: Boolean = false,
+    labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
     SauceStatusBadge(
         modifier = modifier,
@@ -20,6 +23,7 @@ fun StartStatusBadge(
         tone = startStatusTone(statusCode),
         centered = centered,
         singleLine = singleLine,
+        labelStyle = labelStyle,
     )
 }
 

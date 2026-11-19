@@ -6,7 +6,10 @@ import com.markettwits.sportsouce.start.support.data.StartSupportRepository
 internal class StartSupportUseCaseBase(private val repository: StartSupportRepository) :
     StartSupportUseCase {
 
-    override suspend fun checkDonation(startId: Int) = repository.checkDonation(startId)
+    override suspend fun cachedRegistration(startId: Int) = repository.cachedRegistration(startId)
+
+    override suspend fun checkDonation(startId: Int, refreshRegistrations: Boolean) =
+        repository.checkDonation(startId, refreshRegistrations)
     override suspend fun payRegistration(groupId: Int) = repository.payRegistration(groupId)
 
     override suspend fun donation(startId: Int, price: String): Result<String> =

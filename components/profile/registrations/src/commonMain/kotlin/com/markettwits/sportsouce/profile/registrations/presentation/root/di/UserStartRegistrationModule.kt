@@ -8,12 +8,9 @@ import com.markettwits.sportsouce.auth.service.api.authDataSourceModule
 import com.markettwits.sportsouce.profile.cloud.di.sportSauceNetworkProfileModule
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepositoryBase
-import com.markettwits.sportsouce.profile.registrations.data.UserRegistrationsDataSource
-import com.markettwits.sportsouce.profile.registrations.data.cache.UserStartsRegistrationsCache
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapper
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapperBase
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStoreFactory
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val userStartRegistrationModule = module {
@@ -25,8 +22,6 @@ val userStartRegistrationModule = module {
         intentActionModule
     )
 
-    single { UserStartsRegistrationsCache() }
-    singleOf(::UserRegistrationsDataSource)
     single<StartOrderRegistrationRepository> {
         StartOrderRegistrationRepositoryBase(
             service = get(),

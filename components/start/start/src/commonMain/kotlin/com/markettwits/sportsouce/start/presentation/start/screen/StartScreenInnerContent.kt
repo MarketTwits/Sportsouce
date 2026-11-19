@@ -42,6 +42,7 @@ internal fun StartScreenInnerContent(
     onClickRecommendedStart: (StartsListItem) -> Unit,
     comments: @Composable (Modifier) -> Unit,
     donations: @Composable (Modifier) -> Unit,
+    registration: @Composable () -> Unit = {},
 ) {
     val innerModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
 
@@ -59,6 +60,7 @@ internal fun StartScreenInnerContent(
                 kindOfSports = data.kindOfSports,
                 startStatus = data.startStatus
             )
+            registration()
             StartExtraFieldsPanel(
                 modifier = Modifier.padding(horizontal = SauceSpacing.large),
                 place = data.startPlace,

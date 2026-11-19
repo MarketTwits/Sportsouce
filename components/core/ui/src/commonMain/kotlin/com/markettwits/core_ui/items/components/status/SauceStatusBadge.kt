@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,9 +30,9 @@ fun SauceStatusBadge(
     showIndicator: Boolean = true,
     centered: Boolean = false,
     singleLine: Boolean = false,
+    labelStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
-    val style = MaterialTheme.typography.labelMedium
-    val measured = rememberTextMeasurer().measure(label, style = style)
+    val measured = rememberTextMeasurer().measure(label, style = labelStyle)
     val textWidth = with(LocalDensity.current) { measured.size.width.toDp() } + 1.dp
     val palette = SauceTheme.colors
     val colors = when (tone) {
@@ -53,7 +54,7 @@ fun SauceStatusBadge(
         ) {
             if (showIndicator) Box(Modifier.size(5.dp).background(colors.content, CircleShape))
             Text(text = label, modifier = Modifier.width(textWidth),
-                style = style,
+                style = labelStyle,
                 maxLines = if (singleLine) 1 else Int.MAX_VALUE,
                 overflow = if (singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
                 textAlign = if (centered) TextAlign.Center else TextAlign.Start)

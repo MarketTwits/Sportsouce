@@ -35,4 +35,24 @@ class ResponseErrorMessageTest {
             }
         }
     }
+
+    @Test
+    fun extractsFieldErrorsAndProblemDetailsAcrossHttpStatuses() = runTest {
+        val cases = listOf(
+            Triple(HttpStatusCode.UnprocessableEntity, """{"errors":{"name":["Укажите имя"],"year":{"message":"Проверьте год"}}}""",
+                "Укажите имя\nПроверьте год"),
+            Triple(HttpStatusCode.NotFound, """{"detail":"Регистрация не найдена"}""", "Регистрация не найдена"),
+            Triple(HttpStatusCode.InternalServerError, """{"error":{"message":"payment record not found"}}""", "payment record not found"),
+        )
+        for ((status, body, expected) in cases) {
+            HttpClient(MockEngine { respond(body, status) }) {
+                expectSuccess = true
+                captureResponseErrorMessages(Json)
+            }.use { client ->
+                val error = assertFailsWith<ResponseException> { client.get("https://api.example.test/") }
+                assertEquals(status, error.response.status)
+                assertEquals(expected, error.responseErrorMessage)
+            }
+        }
+    }
 }

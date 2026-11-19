@@ -6,8 +6,11 @@ import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.SauceShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -20,21 +23,26 @@ fun DefaultModalBottomSheet(
     title: String? = null,
     dragHandle: (@Composable () -> Unit)? = null,
     edgeToEdgeContent: Boolean = false,
+    dismissEnabled: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val canDismiss by rememberUpdatedState(dismissEnabled)
+    val dismiss = { if (canDismiss) onDismissRequest() }
     SauceModalBottomSheet(
         modifier = modifier,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded) { value ->
+            value != SheetValue.Hidden || canDismiss
+        },
         containerColor = SauceTheme.colors.surface,
         contentColor = SauceTheme.colors.textPrimary,
         shape = SauceShapes.sheet,
         tonalElevation = 0.dp,
         scrimColor = SauceTheme.colors.material.scrim.copy(alpha = 0.42f),
         dragHandle = dragHandle ?: { DefaultDragHandle() },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = dismiss,
         edgeToEdgeContent = edgeToEdgeContent,
     ) {
-        if (dragHandle == null) SheetHeader(dismiss = onDismissRequest, title = title)
+        if (dragHandle == null) SheetHeader(dismiss = dismiss, title = title)
         ProvideTextStyle(MaterialTheme.typography.bodyLarge) { content() }
     }
 }

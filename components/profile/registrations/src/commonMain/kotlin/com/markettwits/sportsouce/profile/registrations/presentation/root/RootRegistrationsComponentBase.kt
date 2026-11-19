@@ -7,6 +7,7 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+import com.markettwits.sportsouce.profile.registrations.presentation.management.RegistrationManagementComponent
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.component.StartOrderComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.component.RegistrationsComponentBase
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
@@ -41,6 +42,13 @@ class RootRegistrationsComponentBase(
             childFactory = ::child,
         )
 
+    private fun management(context: ComponentContext, refresh: () -> Unit) =
+        RegistrationManagementComponent(
+            context = context,
+            dependencies = RegistrationManagementComponent.Dependencies(scope.get(), scope.get(), scope.get(), scope.get()),
+            onRegistrationChanged = refresh,
+        )
+
     private fun child(
         configStack: RootRegistrationsComponent.ConfigStack,
         componentContext: ComponentContext,
@@ -66,6 +74,7 @@ class RootRegistrationsComponentBase(
                         exceptionTracker = scope.get()
                     ),
                     pop = pop::invoke,
+                    managementFactory = ::management,
                     onItemClick = {
                         stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Registration(it))
                     },
@@ -77,6 +86,7 @@ class RootRegistrationsComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     start = configStack.order,
+                    managementFactory = ::management,
                     dismiss = { stackNavigation.pop { popped -> if (!popped) pop() } },
                     openStart = {
                         stackNavigation.pushNew(RootRegistrationsComponent.ConfigStack.Start(it))

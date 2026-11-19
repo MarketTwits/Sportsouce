@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.sportsouce.auth.service.api.SharedUser
+import com.markettwits.sportsouce.profile.registrations.presentation.management.displayRegistrationDate
+import com.markettwits.sportsouce.profile.registrations.presentation.management.isCurrentUser
 import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.components.status.SauceStatusBadge
 import com.markettwits.core_ui.items.components.status.SauceStatusTone
@@ -33,6 +36,8 @@ fun OrderStartCard(
     modifier: Modifier = Modifier,
     item: StartOrderInfo,
     onClickStart: (Int) -> Unit,
+    user: SharedUser? = null,
+    extraContent: (@Composable () -> Unit)? = null,
 ) {
     OnBackgroundCard(modifier = modifier, onClick = { onClickStart(item.startId) }) {
         Column(Modifier.padding(SauceSpacing.medium), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -61,9 +66,10 @@ fun OrderStartCard(
                 }
             }
 
-            RegistrationMembersSummary(item)
+            RegistrationMembersSummary(item, user)
             HorizontalDivider(color = SauceTheme.colors.border)
-            RegistrationPaymentSummary(item)
+            RegistrationPaymentSummary(item, hasOptionPreview = extraContent != null)
+            extraContent?.invoke()
         }
     }
 }
@@ -93,36 +99,53 @@ private fun RegistrationChevron(modifier: Modifier = Modifier) {
 
 /** Team entries stay a summary in the list; every participant remains available in the details. */
 @Composable
-private fun RegistrationMembersSummary(item: StartOrderInfo) {
+private fun RegistrationMembersSummary(item: StartOrderInfo, user: SharedUser?) {
     if (item.members.isEmpty()) return
     val colors = SauceTheme.colors
     val member = item.members.singleOrNull()
     val names = member?.let { listOf(it.surname, it.name).filter(String::isNotBlank).joinToString(" ") }
     val title = names?.takeIf(String::isNotBlank) ?: "Участники: ${item.members.size}"
+    val isMine = item.members.any { it.isCurrentUser(user) }
     val distances = item.members.map { it.distanceName.trim() }.filter(String::isNotBlank).distinct()
     Row(horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small), verticalAlignment = Alignment.Top) {
         Icon(Icons.Outlined.PeopleOutline, null, Modifier.padding(top = 2.dp).size(16.dp), tint = colors.textMuted)
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(title, style = MaterialTheme.typography.bodyMedium, color = colors.textSecondary,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (isMine) SauceStatusBadge(if (member != null) "Это вы" else "Вы в составе", showIndicator = false)
             if (distances.isNotEmpty()) Text(distances.joinToString(", "),
                 style = MaterialTheme.typography.bodySmall, color = colors.textMuted,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (member != null) {
+                val metadata = listOfNotNull(
+                    member.birthday?.take(10)?.let(::displayRegistrationDate),
+                    member.teamName.takeUnless { it.isBlank() || it == "N/A" },
+                    member.ageGroupName.takeIf(String::isNotBlank),
+                    when {
+                        member.infiniteSlots -> "Слоты не ограничены"
+                        member.openSlots == 0 -> "Свободных слотов нет"
+                        member.openSlots != null -> "Свободных слотов: ${member.openSlots}"
+                        else -> null
+                    },
+                )
+                if (metadata.isNotEmpty()) Text(metadata.joinToString(" · "), style = MaterialTheme.typography.bodySmall,
+                    color = colors.textMuted)
+            }
         }
     }
 }
 
 @Composable
-private fun RegistrationPaymentSummary(item: StartOrderInfo) {
+private fun RegistrationPaymentSummary(item: StartOrderInfo, hasOptionPreview: Boolean) {
     val cost = item.cost.takeIf { it.isNotBlank() && it != "0" }
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         // At large text sizes the price moves below the badges instead of squeezing their labels.
         val stackPrice = maxWidth < 280.dp * LocalDensity.current.fontScale
         if (stackPrice) Column(verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
-            OrderStatusRow(item)
+            OrderStatusRow(item, hasOptionPreview)
             if (cost != null) RegistrationPrice(cost)
         } else Row(horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.weight(1f)) { OrderStatusRow(item) }
+            Box(Modifier.weight(1f)) { OrderStatusRow(item, hasOptionPreview) }
             if (cost != null) RegistrationPrice(cost)
         }
     }
@@ -134,14 +157,24 @@ private fun RegistrationPrice(cost: String) {
 }
 
 @Composable
-private fun OrderStatusRow(item: StartOrderInfo) {
+private fun OrderStatusRow(item: StartOrderInfo, hasOptionPreview: Boolean) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        SauceStatusBadge(item.payment.title, tone = when (item.payment) {
-            is StartOrderPaymentStatus.Success, is StartOrderPaymentStatus.Free -> SauceStatusTone.Success
-            is StartOrderPaymentStatus.NotPaid -> SauceStatusTone.Warning
-            is StartOrderPaymentStatus.PaymentCancelled -> SauceStatusTone.Danger
-            is StartOrderPaymentStatus.OnPlace, is StartOrderPaymentStatus.WithoutStatus -> SauceStatusTone.Neutral
-        })
+        SauceStatusBadge(
+            if (item.isRefunded) "Возврат оформлен" else item.payment.title,
+            tone = when {
+                item.isRefunded -> SauceStatusTone.Neutral
+                item.paymentCode == 7 -> SauceStatusTone.Warning
+                item.paymentCode == 3 -> SauceStatusTone.Danger
+                else -> when (item.payment) {
+                    is StartOrderPaymentStatus.Success, is StartOrderPaymentStatus.Free -> SauceStatusTone.Success
+                    is StartOrderPaymentStatus.NotPaid -> SauceStatusTone.Warning
+                    is StartOrderPaymentStatus.PaymentCancelled -> SauceStatusTone.Danger
+                    is StartOrderPaymentStatus.OnPlace, is StartOrderPaymentStatus.WithoutStatus -> SauceStatusTone.Neutral
+                }
+            },
+        )
+        if (!item.isRefunded && item.hasUnpaidOptions) SauceStatusBadge("Есть неоплаченные опции", tone = SauceStatusTone.Warning)
+        else if (item.hasPaidOptions && !hasOptionPreview) SauceStatusBadge("Дополнительные опции", showIndicator = false)
         if (item.members.any { it.results.isNotEmpty() }) SauceStatusBadge("Результаты", showIndicator = false)
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class UserRegistrationsRemote(
     @SerialName("count")
-    val count: Int,
+    val count: Int? = null,
     @SerialName("rows")
     val rows: List<UserRegistration>
 )

@@ -17,14 +17,14 @@ internal fun StartOrderTabRow(
     priceResult: StartOrderStore.StartPriceResult,
     coroutineScope: CoroutineScope,
 ) {
-    val labels = listOf("Обзор", "Участники", "Оплата") + if (orderInfo.payment.isPaid) listOf("Поделиться") else emptyList()
+    val labels = listOf("Старт", "Участники", "Оплата") + if (orderInfo.payment.isPaid && !orderInfo.isRefunded) listOf("Поделиться") else emptyList()
     SauceTopBarSection {
         SauceScrollableTabs(
             labels = labels,
             selectedIndex = pagerState.currentPage.coerceIn(labels.indices),
             onSelected = { index -> coroutineScope.launch { pagerState.animateScrollToPage(index) } },
             trailingContent = { index ->
-                if (index == 0 && priceResult is StartOrderStore.StartPriceResult.Success && !orderInfo.payment.isPaid) {
+                if (index == 0 && priceResult is StartOrderStore.StartPriceResult.Success && !orderInfo.payment.isPaid && !orderInfo.isRefunded) {
                     PulsingIndicator(color = SauceTheme.colors.warning.content)
                 } else if (index == 1 && orderInfo.members.any { it.results.isNotEmpty() }) {
                     PulsingIndicator(color = SauceTheme.colors.action)

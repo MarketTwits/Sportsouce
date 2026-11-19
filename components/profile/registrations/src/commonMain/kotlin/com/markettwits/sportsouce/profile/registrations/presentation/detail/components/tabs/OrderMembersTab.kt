@@ -1,294 +1,135 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Icon
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.SwapHoriz
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import com.markettwits.core_ui.items.components.list.SauceActionRow
+import com.markettwits.core_ui.items.components.status.SauceStatusBadge
+import com.markettwits.core_ui.items.theme.SauceSpacing
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.auth.service.api.SharedUser
+import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderMember
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.MemberResultsCard
+import com.markettwits.sportsouce.profile.registrations.presentation.management.InlineRegistrationError
+import com.markettwits.sportsouce.profile.registrations.presentation.management.displayRegistrationDate
+import com.markettwits.sportsouce.profile.registrations.presentation.management.isCurrentUser
+import com.markettwits.sportsouce.profile.registrations.presentation.management.isRegistrationPast
 
 @Composable
-fun OrderMembersTab(members: List<StartOrderMember>) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Group,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(20.dp)
-            )
-            Text(
-                text = "Все участники",
-                fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Box(
-                modifier = Modifier
-                    .background(
-                        MaterialTheme.colorScheme.primary,
-                        Shapes.small
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = "${members.size}",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onBackground
+internal fun OrderMembersTab(
+    order: StartOrderInfo,
+    user: SharedUser?,
+    onCorrect: ((StartOrderMember) -> Unit)?,
+    onDistance: (() -> Unit)?,
+    transfersError: String?,
+    onRetryTransfers: (() -> Unit)?,
+    slotActions: (@Composable (StartOrderMember) -> Unit)?,
+) {
+    val past = order.isRegistrationPast()
+    OrderDetailPage {
+        if (past || order.isRefunded) RegistrationStatusBanner(order, archived = past)
+        if (transfersError != null) {
+            Column(verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+                InlineRegistrationError(transfersError, title = "Не удалось проверить передачу слота")
+                if (onRetryTransfers != null) {
+                    SauceActionRow("Повторить проверку", onRetryTransfers, icon = Icons.Outlined.Sync)
+                }
+            }
+        }
+        if (order.members.isEmpty()) {
+            OrderSectionCard {
+                Text("Данных об участниках пока нет.", Modifier.padding(SauceSpacing.large),
+                    style = MaterialTheme.typography.bodyMedium, color = SauceTheme.colors.textSecondary)
+            }
+        }
+        order.members.forEachIndexed { index, member ->
+            key(member.id ?: index) {
+                RegistrationMemberCard(
+                    member = member,
+                    currentUser = member.isCurrentUser(user),
+                    showOpenSlots = !past && !order.isRefunded,
+                    onCorrect = member.id?.let { onCorrect?.let { action -> { action(member) } } },
+                    onDistance = onDistance.takeIf { member.id != null },
+                    slotActions = if (member.id != null && slotActions != null) ({ slotActions(member) }) else null,
                 )
             }
         }
-
-        members.forEach { member ->
-            MemberCard(member = member)
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 @Composable
-private fun MemberCard(member: StartOrderMember) {
-    val fullName = "${member.surname} ${member.name}"
-    var isShowResult by remember { mutableStateOf(false) }
-    val hasResults = member.results.isNotEmpty()
-
-    Box(
-        modifier = Modifier
-            .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.primary)
-            .fillMaxWidth()
-            .then(
-                if (hasResults) {
-                    Modifier.clickable(
-                        onClick = { isShowResult = !isShowResult }
-                    )
-                } else Modifier
-            )
-    ) {
-        Column(
-            modifier = Modifier.padding(14.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val initials = fullName.split(" ")
-                    .take(2).joinToString("") { it.firstOrNull()?.toString() ?: "" }
-
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(44.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.outline,
-                            shape = CircleShape
-                        )
-                ) {
-                    Text(
-                        text = initials,
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        fontSize = 15.sp,
-                        fontFamily = FontNunito.semiBoldBold()
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = fullName,
-                        fontSize = 15.sp,
-                        fontFamily = FontNunito.bold(),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Группа:",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                        )
-                        Text(
-                            text = member.ageGroupName,
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.medium(),
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Дистанция:",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                        )
-                        Text(
-                            text = member.distanceName,
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.medium(),
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-
-                if (hasResults) {
-                    Icon(
-                        imageVector = if (isShowResult) Icons.Default.KeyboardArrowUp
-                        else Icons.Default.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(Shapes.small)
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                MemberInfoRow(label = "Команда", value = member.teamName)
-                MemberInfoRow(label = "Формат", value = member.formatName)
-                MemberInfoRow(label = "Пол", value = member.genderName)
-            }
-
-            AnimatedVisibility(
-                visible = isShowResult && hasResults,
-                enter = expandVertically(
-                    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
-                ) + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(Shapes.small)
-                            .background(MaterialTheme.colorScheme.outlineVariant)
-                            .padding(12.dp)
-                    ) {
-                        MemberResultsCard(
-                            result = member.results.first()
-                        )
-                    }
-                }
-            }
-        }
-
-        if (hasResults) {
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 10.dp, end = 10.dp),
-                color = MaterialTheme.colorScheme.secondary,
-                shape = Shapes.small
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.EmojiEvents,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Text(
-                        text = "Результат",
-                        fontSize = 11.sp,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun MemberInfoRow(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: String,
+private fun RegistrationMemberCard(
+    member: StartOrderMember,
+    currentUser: Boolean,
+    showOpenSlots: Boolean,
+    onCorrect: (() -> Unit)?,
+    onDistance: (() -> Unit)?,
+    slotActions: (@Composable () -> Unit)?,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "$label:",
-            fontSize = 14.sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
-            text = value,
-            fontSize = 14.sp,
-            fontFamily = FontNunito.medium(),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+    val colors = SauceTheme.colors
+    var resultsExpanded by rememberSaveable { mutableStateOf(false) }
+    val personalDetails = listOfNotNull(
+        member.genderName.takeUnless { it.isBlank() || it == "N/A" },
+        member.birthday?.take(10)?.takeIf(String::isNotBlank)?.let(::displayRegistrationDate),
+    )
+    val fields = listOf(
+        "Дистанция" to member.distanceName,
+        "Группа" to member.ageGroupName,
+        "Команда" to member.teamName,
+        "Формат" to member.formatName,
+    ).filter { (_, value) -> value.isNotBlank() && value != "N/A" }
+
+    OrderSectionCard {
+        Column(Modifier.padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+            if (currentUser) SauceStatusBadge("Это вы", showIndicator = false)
+            OrderSectionHeading("${member.surname} ${member.name}".trim())
+            if (personalDetails.isNotEmpty()) Text(personalDetails.joinToString(" · "),
+                style = MaterialTheme.typography.bodyMedium, color = colors.textSecondary)
+        }
+        if (fields.isNotEmpty() || showOpenSlots && (member.infiniteSlots || member.openSlots != null)) {
+            OrderSectionDivider()
+            Column(Modifier.padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+                fields.forEach { (label, value) -> OrderInfoLine(label, value) }
+                if (showOpenSlots && (member.infiniteSlots || member.openSlots != null)) {
+                    OrderInfoLine("Свободные слоты", if (member.infiniteSlots) "Не ограничены" else member.openSlots.toString())
+                }
+            }
+        }
+        val actionPadding = PaddingValues(horizontal = SauceSpacing.large, vertical = SauceSpacing.medium)
+        if (member.results.isNotEmpty()) {
+            OrderSectionDivider()
+            SauceActionRow("Результаты", { resultsExpanded = !resultsExpanded },
+                modifier = Modifier.semantics { stateDescription = if (resultsExpanded) "Развёрнуто" else "Свёрнуто" },
+                icon = Icons.Outlined.EmojiEvents, contentPadding = actionPadding,
+                trailingIcon = if (resultsExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore)
+            AnimatedVisibility(resultsExpanded) {
+                Column(Modifier.padding(SauceSpacing.large), verticalArrangement = Arrangement.spacedBy(SauceSpacing.large)) {
+                    member.results.forEach { MemberResultsCard(it) }
+                }
+            }
+        }
+        if (onCorrect != null) {
+            OrderSectionDivider()
+            SauceActionRow("Исправить опечатку", onCorrect, icon = Icons.Outlined.Edit, contentPadding = actionPadding)
+        }
+        if (onDistance != null) {
+            OrderSectionDivider()
+            SauceActionRow("Изменить дистанцию", onDistance, icon = Icons.Outlined.SwapHoriz, contentPadding = actionPadding)
+        }
+        slotActions?.invoke()
     }
 }

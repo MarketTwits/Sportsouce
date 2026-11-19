@@ -15,6 +15,12 @@ interface IntentAction {
      */
     fun openWebPage(url: String)
 
+    /** Reports whether the platform accepted the request to open a web page. */
+    fun tryOpenWebPage(url: String): Boolean {
+        openWebPage(url)
+        return true
+    }
+
     /**
      * Initiates an action to dial a phone number.
      *

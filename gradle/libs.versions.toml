@@ -1,7 +1,7 @@
 [versions]
 #plugins
 versionName = "2.0.0"
-versionCode = "10423"
+versionCode = "10424"
 jvm = "11"
 kotlin = "2.3.10" # https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-compatibility-guide.html#version-compatibility
 agp = "9.0.0-alpha06" # https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility

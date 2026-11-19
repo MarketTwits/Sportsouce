@@ -12,9 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.getTextLayoutResult
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextLayoutInput
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -81,6 +84,13 @@ fun HtmlText(
         fontSize = fontSize, fontStyle = fontStyle, fontWeight = fontWeight, fontFamily = fontFamily,
         letterSpacing = letterSpacing, lineHeight = lineHeight,
     )))
+    var accessibilityLayout by remember(document) { mutableStateOf<TextLayoutResult?>(null) }
+    val textModifier = Modifier.fillMaxWidth().semantics {
+        getTextLayoutResult { results ->
+            val layout = accessibilityLayout ?: return@getTextLayoutResult false
+            results.add(layout)
+        }
+    }
 
     val selectionColor = TextSelectionColors(
         handleColor = SauceTheme.colors.action,
@@ -94,7 +104,7 @@ fun HtmlText(
             // document at any size without invoking that editing-only callback.
             Text(
                 text = document,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = textModifier,
                 color = actualColor,
                 fontSize = fontSize,
                 fontStyle = fontStyle,
@@ -108,7 +118,10 @@ fun HtmlText(
                 softWrap = softWrap,
                 overflow = overflow,
                 style = style,
-                onTextLayout = onTextLayout,
+                onTextLayout = { layout ->
+                    accessibilityLayout = layout.withRenderedCharacterBounds()
+                    onTextLayout(layout)
+                },
             )
             if (showImages) HtmlTextImages(
                 images = images,
@@ -132,6 +145,29 @@ fun HtmlText(
             onDismiss = { selectedImageUrl = null }
         )
     }
+}
+
+private fun TextLayoutResult.withRenderedCharacterBounds(): TextLayoutResult {
+    if (!hasVisualOverflow || layoutInput.text.paragraphStyles.isEmpty()) return this
+    val renderedEnd = if (lineCount > 0) getLineEnd(lineCount - 1, visibleEnd = true) else 0
+    if (renderedEnd >= layoutInput.text.length) return this
+
+    // Android asks for character bounds up to layoutInput.text.length. A truncated
+    // MultiParagraph can omit entire paragraphs. Keep the spoken text and existing
+    // geometry, but expose only the rendered character range to the layout action.
+    val input = layoutInput
+    return copy(layoutInput = TextLayoutInput(
+        text = input.text.subSequence(0, renderedEnd),
+        style = input.style,
+        placeholders = input.placeholders,
+        maxLines = input.maxLines,
+        softWrap = input.softWrap,
+        overflow = input.overflow,
+        density = input.density,
+        layoutDirection = input.layoutDirection,
+        fontFamilyResolver = input.fontFamilyResolver,
+        constraints = input.constraints,
+    ))
 }
 
 @Composable

@@ -189,7 +189,6 @@ internal fun StartScreenContent(
                                                         isLoading = isLoading,
                                                         isPartialData = isPartialData,
                                                         hasError = error != null,
-                                                        tonal = true,
                                                         isInteractive = !showFloatingRegistration,
                                                         onClickRegistration = onClickRegistration,
                                                     )

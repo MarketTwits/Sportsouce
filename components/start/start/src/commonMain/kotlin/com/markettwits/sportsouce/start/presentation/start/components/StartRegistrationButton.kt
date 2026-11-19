@@ -25,7 +25,6 @@ internal fun StartRegistrationButton(
     isLoading: Boolean = false,
     isPartialData: Boolean = false,
     hasError: Boolean = false,
-    tonal: Boolean = false,
     isInteractive: Boolean = true,
     onClickRegistration: () -> Unit,
 ) {
@@ -41,8 +40,8 @@ internal fun StartRegistrationButton(
             .shimmer(showShimmer = waitingForData && isInteractive, durationMillis = 1400)
             .semantics { if (waitingForData) stateDescription = "Загрузка данных старта" },
         isEnabled = ready,
-        containerColor = if (tonal) colors.actionSoft else colors.action,
-        textColor = if (tonal) colors.action else colors.onAction,
+        containerColor = colors.action,
+        textColor = colors.onAction,
         onClick = { if (ready && isInteractive) onClickRegistration() },
         showContent = true,
         content = {

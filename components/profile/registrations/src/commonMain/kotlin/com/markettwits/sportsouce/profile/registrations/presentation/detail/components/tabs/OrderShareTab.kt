@@ -1,6 +1,5 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs
 
-import com.markettwits.core_ui.items.components.navigation.sauceVerticalScroll as verticalScroll
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -31,10 +30,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.liveRegion
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -57,6 +52,8 @@ import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.intent.composable.rememberIntentActionByPlatform
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
+
+import com.markettwits.sportsouce.profile.registrations.presentation.management.InlineRegistrationError
 
 private enum class ShareCardStyle(val title: String) {
     Poster("Постер"),
@@ -86,28 +83,26 @@ fun OrderShareTab(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = SauceSpacing.large, vertical = SauceSpacing.medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    OrderDetailPage {
         Column(
-            modifier = Modifier.widthIn(max = 420.dp).fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
+            modifier = Modifier.align(Alignment.CenterHorizontally).widthIn(max = 420.dp).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(SauceSpacing.large),
         ) {
-            Text(
-                "Стиль карточки",
-                modifier = Modifier.semantics { heading() },
-                color = colors.textPrimary,
-                style = MaterialTheme.typography.titleSmall,
-            )
-            ShareStyleSelector(styleIndex, enabled = pendingAction == null) { styleIndex = it }
+            OrderSectionCard {
+                Column(Modifier.fillMaxWidth().padding(SauceSpacing.large),
+                    verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+                    OrderSectionHeading("Стиль карточки")
+                    ShareStyleSelector(styleIndex, enabled = pendingAction == null) { styleIndex = it }
+                }
+            }
             Capturable(
                 modifier = Modifier.fillMaxWidth().clip(SauceShapes.card)
                     .background(colors.surface).border(1.dp, colors.border, SauceShapes.card),
                 captureController = captureController,
+                onFailure = {
+                    exportFailed = true
+                    pendingAction = null
+                },
                 onCaptured = { bitmap ->
                     pendingAction?.let { action ->
                         val filename = "sportsauce-registration-${startOrderInfo.id}"
@@ -142,14 +137,7 @@ fun OrderShareTab(
                 pendingAction = pendingAction,
                 onExport = requestExport,
             )
-            if (exportFailed) {
-                Text(
-                    "Не удалось подготовить карточку. Попробуйте ещё раз.",
-                    modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
-                    color = colors.danger.content,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+            if (exportFailed) InlineRegistrationError("Не удалось подготовить карточку. Попробуйте ещё раз.")
         }
     }
 }

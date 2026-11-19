@@ -15,6 +15,10 @@ class IntentActionBase(
     private val context: Context,
 ) : IntentAction {
     override fun openWebPage(url: String) {
+        tryOpenWebPage(url)
+    }
+
+    override fun tryOpenWebPage(url: String): Boolean =
         try {
             val webpage =
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -22,10 +26,11 @@ class IntentActionBase(
                 } else Uri.parse(url)
             val intent = Intent(Intent.ACTION_VIEW, webpage).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
+            true
         } catch (e: Exception) {
-            Log.e("mt05", "Ошибка при открытии веб страницы")
+            Log.e("mt05", "Ошибка при открытии веб страницы", e)
+            false
         }
-    }
 
     override fun openPhone(phone: String) {
         val callIntent: Intent =

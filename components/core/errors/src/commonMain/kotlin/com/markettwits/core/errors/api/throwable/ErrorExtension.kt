@@ -2,6 +2,7 @@ package com.markettwits.core.errors.api.throwable
 
 import com.markettwits.core.log.TaggedLogger
 import com.markettwits.core.log.errorLog
+import com.markettwits.core_cloud.provider.ServiceResponseException
 import com.markettwits.core_cloud.provider.responseErrorMessage
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.plugins.HttpRequestTimeoutException
@@ -16,6 +17,7 @@ fun Throwable.mapToSauceError(): SauceError {
 
     TaggedLogger("SauceError").errorLog(this) { "Failed to execute operation" }
     return when {
+        this is ServiceResponseException -> SauceError.WrongRequest(this)
         this is ResponseException -> mapResponseError()
         this is HttpRequestTimeoutException || this.isNetworkConnectionError() -> SauceError.Connection(this)
         this is SerializationException || this is ContentConvertException || this is NoTransformationFoundException ->
@@ -26,7 +28,7 @@ fun Throwable.mapToSauceError(): SauceError {
 
 private fun ResponseException.mapResponseError(): SauceError =
     when (response.status.value) {
-        404, 410 -> SauceError.NotFound(this)
+        404, 410 -> responseErrorMessage?.let { SauceError.WrongRequest(Exception(it, this)) } ?: SauceError.NotFound(this)
         408 -> SauceError.Connection(this)
         429 -> SauceError.General(this, "Слишком много запросов. Попробуйте немного позже.")
         in 500..599 -> SauceError.General(this, "Сервис временно недоступен. Попробуйте позже.")

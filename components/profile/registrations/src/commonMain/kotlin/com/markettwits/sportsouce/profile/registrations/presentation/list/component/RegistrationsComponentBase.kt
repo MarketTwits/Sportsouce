@@ -13,6 +13,7 @@ import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.list.components.filter.FilterItem
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsDataStoreFactory
 import com.markettwits.sportsouce.profile.registrations.presentation.list.store.RegistrationsStore
+import com.markettwits.sportsouce.profile.registrations.presentation.management.RegistrationManagementComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,13 +25,16 @@ class RegistrationsComponentBase(
     component: ComponentContext,
     private val storeFactory: RegistrationsDataStoreFactory,
     private val pop: () -> Unit,
-    private val onItemClick: (itemId: StartOrderInfo) -> Unit
+    private val onItemClick: (itemId: StartOrderInfo) -> Unit,
+    managementFactory: ((ComponentContext, () -> Unit) -> RegistrationManagementComponent)? = null,
 ) : RegistrationsComponent, ComponentContext by component {
 
     private val store = instanceKeeper.getStore {
         storeFactory.create()
     }
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    override val management = managementFactory?.invoke(component) { store.accept(RegistrationsStore.Intent.Resume) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val value: StateFlow<RegistrationsStore.State> = store.stateFlow
@@ -57,7 +61,10 @@ class RegistrationsComponentBase(
     }
 
     init {
-        lifecycle.doOnResume { store.accept(RegistrationsStore.Intent.Resume) }
+        lifecycle.doOnResume {
+            store.accept(RegistrationsStore.Intent.Resume)
+            management?.accept(RegistrationManagementComponent.Intent.ReloadPreviews)
+        }
         lifecycle.doOnPause { store.accept(RegistrationsStore.Intent.Pause) }
         lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {

@@ -1,12 +1,14 @@
 package com.markettwits.sportsouce.profile.cloud
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.core_cloud.provider.ServiceResponseException
+import com.markettwits.core_cloud.provider.requireServiceSuccess
+import com.markettwits.core_cloud.provider.serviceErrorMessage
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMemberRequest
 import com.markettwits.sportsouce.profile.cloud.model.members.ProfileMembers
 import com.markettwits.sportsouce.profile.cloud.model.members.MemberMutationResponse
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistration
 import com.markettwits.sportsouce.profile.cloud.model.registrations.UserRegistrationsRemote
-import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceRequest
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceResponse
 import com.markettwits.sportsouce.profile.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.sportsouce.profile.cloud.model.update.ChangePasswordRequest
@@ -16,6 +18,13 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.buildJsonObject
 
 class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
 
@@ -82,13 +91,24 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
     }
 
     suspend fun userRegistries(userId: Int, token: String): List<UserRegistration> {
-        val response = client.get("user/startsByUserId/$userId?maxResultCount=1000") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
+        val rows = mutableListOf<UserRegistration>()
+        val seen = hashSetOf<Any>()
+        var offset = 0
+        val pageSize = 1000
+        while (true) {
+            val response = client.get("user/startsByUserId/$userId") {
+                bearerAuth(token)
+                parameter("maxResultCount", pageSize)
+                if (offset > 0) parameter("skipCount", offset)
             }
+            val page = json.decodeFromJsonElement<UserRegistrationsRemote>(readRegistrationPayload(response, json))
+            val newRows = page.rows.filter { seen.add(it.id ?: it) }
+            if (newRows.isEmpty()) break
+            rows += newRows
+            offset += page.rows.size
+            if (page.count?.let { offset >= it } ?: (page.rows.size < pageSize)) break
         }
-        return json.decodeFromString<UserRegistrationsRemote>(response.body()).rows
+        return rows
     }
 
     suspend fun changePassword(
@@ -125,7 +145,7 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
         }
-        return json.decodeFromString(response.body())
+        return json.decodeFromJsonElement(readRegistrationPayload(response, json))
     }
 
     suspend fun repay(id : Int, token: String) : StartRegistrationResponse {
@@ -135,21 +155,30 @@ class SportSauceNetworkProfileApi(httpClient: HttpClientProvider) {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
         }
-        return json.decodeFromString(response.body())
+        return json.decodeFromJsonElement(readRegistrationPayload(response, json))
     }
 
-    suspend fun checkStartPrice(
-        startPriceRequest: StartPriceRequest,
-        id : Int,
-        token: String
-    ) : StartPriceResponse {
+    suspend fun checkStartPrice(id: Int, token: String): StartPriceResponse {
         val response = client.post("member-start/$id/price") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
             }
-            setBody(startPriceRequest)
+            setBody(buildJsonObject {})
         }
-        return json.decodeFromString(StartPriceResponse.serializer(), response.body())
+        return json.decodeFromJsonElement(readRegistrationPayload(response, json))
     }
 }
+
+
+internal suspend fun readRegistrationPayload(response: HttpResponse, json: Json) =
+    json.parseToJsonElement(response.body<String>()).also { payload ->
+        payload.requireServiceSuccess("Не удалось получить данные регистрации.")
+        if (payload is JsonObject && payload.keys.all { it in RegistrationErrorKeys } &&
+            (payload["success"] as? JsonPrimitive)?.booleanOrNull != true) {
+            payload.serviceErrorMessage()?.let { throw ServiceResponseException(it) }
+        }
+    }
+
+private val RegistrationErrorKeys = setOf("message", "detail", "title", "error_description", "reason",
+    "status", "statusCode", "ok", "success", "timestamp", "path")

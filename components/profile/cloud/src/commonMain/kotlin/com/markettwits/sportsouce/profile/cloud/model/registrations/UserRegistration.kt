@@ -45,4 +45,9 @@ data class UserRegistration(
     val updatedAt: String? = null,
     @SerialName("user_id")
     val userId: Int? = null,
+    @SerialName("groupId") val groupId: Int? = null,
+    @SerialName("group_id") val legacyGroupId: Int? = null,
+    @SerialName("payment_group_id") val paymentGroupId: Int? = null,
+    @SerialName("paymentGroupId") val camelPaymentGroupId: Int? = null,
+    @SerialName("has_unpaid_additional_fields") val hasUnpaidAdditionalFields: Boolean? = null,
 )

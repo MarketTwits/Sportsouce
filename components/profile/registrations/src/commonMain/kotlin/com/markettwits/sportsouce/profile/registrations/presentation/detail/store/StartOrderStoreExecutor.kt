@@ -1,7 +1,5 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.store
 
-import com.markettwits.core.errors.api.throwable.mapToSauceError
-import com.markettwits.core.errors.api.throwable.mapToString
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.markettwits.IntentAction
 import com.markettwits.core.log.LogTagProvider
@@ -9,6 +7,8 @@ import com.markettwits.core.log.errorLog
 import com.markettwits.sportsouce.profile.registrations.data.StartOrderRegistrationRepository
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderType
+import com.markettwits.sportsouce.profile.registrations.presentation.management.inlinePaymentAvailable
+import com.markettwits.sportsouce.profile.registrations.presentation.management.registrationError
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.*
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.Label.OnClickStart
 import kotlinx.coroutines.CancellationException
@@ -24,6 +24,8 @@ class StartOrderStoreExecutor(
     override val tag: String = "StartOrderStoreExecutor (Detail)"
     private var refreshJob: Job? = null
     private var priceJob: Job? = null
+    private var paymentJob: Job? = null
+    private var pendingPaymentLink: Pair<Int, String>? = null
     private var loadedOrder: StartOrderInfo? = null
     private var followReRegistration = false
 
@@ -35,11 +37,14 @@ class StartOrderStoreExecutor(
                 refreshJob?.cancel()
                 dispatch(Message.RefreshStatus(false))
             }
-            Intent.DismissRefreshError -> if (state().refreshError != null) dispatch(Message.RefreshStatus(false))
+            Intent.DismissRefreshError -> if (state().refreshError != null) dispatch(Message.RefreshStatus(state().isRefreshing))
             is Intent.OnClickPay -> getPaymentUrl(intent.orderId)
             is Intent.OnClickStart -> publish(OnClickStart(intent.startId))
             is Intent.OnClickUpdatePrice -> getActualPrice(state().startOrderInfo)
-            is Intent.OnClickHelp -> intentAction.openWebPage("https://t.me/sportsoyuznsk")
+            is Intent.OnClickHelp -> {
+                val opened = runCatching { intentAction.tryOpenWebPage("https://t.me/sportsoyuznsk") }.getOrDefault(false)
+                if (!opened) dispatch(Message.RefreshStatus(state().isRefreshing, "Не удалось открыть ссылку на поддержку."))
+            }
             is Intent.OnClickReRegistration -> {
                 followReRegistration = true
                 publish(Label.OnClickReRegistration(intent.startId, intent.orderId))
@@ -59,6 +64,7 @@ class StartOrderStoreExecutor(
         if (userInitiated) dispatch(Message.RefreshStatus(true))
         refreshJob = scope.launch {
             try {
+                var found = false
                 repository.registrations(
                     forced = userInitiated || followReRegistration,
                     allowCachedOnError = !userInitiated,
@@ -75,6 +81,7 @@ class StartOrderStoreExecutor(
                     }
                     if (replacement != null) followReRegistration = false
                     val refreshed = replacement ?: sameStartOrders.firstOrNull { it.id == current.id } ?: return@collect
+                    found = true
                     val updated = refreshed.copy(
                         image = refreshed.image.ifBlank { current.image },
                         dateEndCloud = refreshed.dateEndCloud ?: current.dateEndCloud,
@@ -94,12 +101,12 @@ class StartOrderStoreExecutor(
                         if (userInitiated) price.join()
                     }
                 }
-                if (userInitiated) dispatch(Message.RefreshStatus(false))
+                if (userInitiated) dispatch(Message.RefreshStatus(false, if (found) null else "Эта регистрация больше недоступна."))
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 ensureActive()
-                if (userInitiated) dispatch(Message.RefreshStatus(false, e.mapToSauceError().mapToString()))
+                if (userInitiated) dispatch(Message.RefreshStatus(false, e.registrationError()))
                 errorLog(e) { "Failed to refresh order ${state().startOrderInfo.id}" }
             }
         }
@@ -108,7 +115,7 @@ class StartOrderStoreExecutor(
     private fun getActualPrice(orderInfo: StartOrderInfo): Job {
         priceJob?.cancel()
         val job = scope.launch {
-            if (orderInfo.payment.isPaid) {
+            if (!orderInfo.inlinePaymentAvailable()) {
                 dispatch(Message.GetPriceDontRequired)
             } else {
                 dispatch(Message.GetPriceLoading)
@@ -119,9 +126,10 @@ class StartOrderStoreExecutor(
                 )
                 ensureActive()
                 result.fold(onSuccess = {
-                    dispatch(Message.GetPriceSuccess(it.totalPrice))
+                    if (it.isRequired) dispatch(Message.GetPriceSuccess(it.totalPrice))
+                    else dispatch(Message.GetPriceDontRequired)
                 }, onFailure = {
-                    dispatch(Message.GetPriceFailed(it.mapToSauceError().mapToString()))
+                    dispatch(Message.GetPriceFailed(it.registrationError()))
                     errorLog(it) { "Failed when try get price for order ${orderInfo.id}" }
                 })
             }
@@ -131,20 +139,26 @@ class StartOrderStoreExecutor(
     }
 
     private fun getPaymentUrl(id: Int) {
-        scope.launch {
-            if (state().startOrderInfo.id != id) return@launch
+        if (paymentJob?.isActive == true || state().startOrderInfo.id != id) return
+        paymentJob = scope.launch {
             dispatch(Message.GetPriceLoading)
-            val result = repository.pay(id)
+            val cachedLink = pendingPaymentLink?.takeIf { it.first == id }?.second
+            val result = if (cachedLink != null) Result.success(cachedLink) else repository.pay(id)
             ensureActive()
             if (state().startOrderInfo.id != id) return@launch
             result.fold(
-                onSuccess = {
-                    dispatch(Message.GetPriceSuccess(state().startOrderInfo.cost))
-                    intentAction.openWebPage(it)
+                onSuccess = { url ->
+                    if (url.isBlank()) {
+                        dispatch(Message.GetPriceDontRequired)
+                        refreshOrder(userInitiated = false)
+                    } else {
+                        val opened = runCatching { intentAction.tryOpenWebPage(url) }.getOrDefault(false)
+                        pendingPaymentLink = if (opened) null else id to url
+                        if (opened) dispatch(Message.GetPriceSuccess(state().startOrderInfo.cost))
+                        else dispatch(Message.GetPriceFailed("Не удалось открыть страницу оплаты. Попробуйте ещё раз."))
+                    }
                 },
-                onFailure = {
-                    dispatch(Message.GetPriceFailed(it.mapToSauceError().mapToString()))
-                }
+                onFailure = { dispatch(Message.GetPriceFailed(it.registrationError())) },
             )
         }
     }

@@ -22,4 +22,9 @@ data class StartOrderInfo(
     val isRefunded: Boolean = false,
     val startStatusCode: Int? = null,
     val dateEndCloud: String? = null,
+    val paymentCode: Int? = null,
+    val paymentGroupId: Int? = null,
+    val paidKopecks: Int? = null,
+    val hasUnpaidOptions: Boolean = false,
+    val hasPaidOptions: Boolean = false,
 )

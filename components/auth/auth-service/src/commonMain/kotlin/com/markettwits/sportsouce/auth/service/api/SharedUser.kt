@@ -11,6 +11,7 @@ data class SharedUser(
     val surname : String,
     val phone : String,
     val imageUrl : String,
+    val birthday: String? = null,
 )
 
 fun User.mapToShared() : SharedUser = SharedUser(
@@ -19,6 +20,7 @@ fun User.mapToShared() : SharedUser = SharedUser(
     name = name,
     phone = number,
     surname = surname,
+    birthday = birthday,
     imageUrl = when(photo){
         is User.Photo.EmptyPhoto -> ""
         is User.Photo.WithPhoto -> (photo as User.Photo.WithPhoto).imageUrl()

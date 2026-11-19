@@ -22,6 +22,7 @@ fun TopBarBase(
     title: String,
     isStatusBarHandle: Boolean = true,
     titleMaxLines: Int = 2,
+    endAction: (@Composable () -> Unit)? = null,
     goBack: () -> Unit,
 ) {
     Box(
@@ -56,5 +57,9 @@ fun TopBarBase(
             maxLines = titleMaxLines,
             overflow = TextOverflow.Ellipsis
         )
+
+        if (endAction != null) {
+            Box(Modifier.align(Alignment.CenterEnd)) { endAction() }
+        }
     }
 }

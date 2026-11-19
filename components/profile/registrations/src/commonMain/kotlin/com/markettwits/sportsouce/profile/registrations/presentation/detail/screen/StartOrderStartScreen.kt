@@ -26,11 +26,14 @@ import com.markettwits.sportsouce.profile.registrations.presentation.detail.comp
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderPaymentTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs.OrderShareTab
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
+import com.markettwits.sportsouce.profile.registrations.presentation.management.*
+import com.markettwits.sportsouce.profile.registrations.presentation.management.RegistrationManagementComponent.Intent
+import com.markettwits.sportsouce.profile.registrations.presentation.management.RegistrationManagementComponent.Sheet
 
 @Composable
 fun rememberStartOrderPagerState(orderInfo: StartOrderInfo): PagerState {
-    val pageCount = remember(orderInfo.payment.isPaid) {
-        if (orderInfo.payment.isPaid) 4 else 3
+    val pageCount = remember(orderInfo.payment.isPaid, orderInfo.isRefunded) {
+        if (orderInfo.payment.isPaid && !orderInfo.isRefunded) 4 else 3
     }
     return rememberPagerState(pageCount = { pageCount })
 }
@@ -38,7 +41,32 @@ fun rememberStartOrderPagerState(orderInfo: StartOrderInfo): PagerState {
 @Composable
 fun StartOrderStartScreen(component: StartOrderComponent) {
     val state by component.state.collectAsState()
-    val pagerState = rememberStartOrderPagerState(state.startOrderInfo)
+    val management = component.management
+    val managementSnackbar = remember { SnackbarHostState() }
+    val managementState = management?.state?.collectAsState()?.value
+    val loadedOrder = state.startOrderInfo
+    val order = if (managementState?.refundedOrderIds?.contains(loadedOrder.id) == true) {
+        loadedOrder.copy(isRefunded = true)
+    } else loadedOrder
+    if (management != null && !order.isRefunded && !order.isRegistrationPast()) {
+        LaunchedEffect(management, order.id, managementState?.previewGeneration) {
+            management.accept(Intent.PreviewOptions(order.id))
+        }
+    }
+    val changeDistance = {
+        component.obtainEvent(StartOrderStore.Intent.OnClickReRegistration(order.startId, order.id))
+    }
+    val pay = {
+        if (management != null) management.accept(Intent.Open(Sheet.Pay(order)))
+        else component.obtainEvent(StartOrderStore.Intent.OnClickPay(order.id))
+    }
+    val updatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) }
+    val refund = management?.takeIf { order.canRefund() }?.let { manager ->
+        { manager.accept(Intent.Open(Sheet.Refund(order))) }
+    }
+    val registrationOptions = managementState?.optionPreviews?.get(order.id)
+    val manageOptions = management?.let { manager -> { manager.accept(Intent.Open(Sheet.Options(order))) } }
+    val pagerState = rememberStartOrderPagerState(order)
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val inheritedBottomPadding = LocalScrollContentBottomPadding.current
@@ -52,12 +80,17 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
 
     Scaffold(
         topBar = {
-            TopBarWithClip(title = "Детали регистрации") {
+            TopBarWithClip(title = order.id.takeIf { it > 0 }?.let { "Регистрация № $it" } ?: "Детали регистрации") {
                 component.obtainEvent(StartOrderStore.Intent.Dismiss)
             }
         },
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SauceSnackbarHost(snackbarHostState, tone = SauceSnackbarTone.Error) },
+        snackbarHost = {
+            androidx.compose.foundation.layout.Box {
+                SauceSnackbarHost(snackbarHostState, tone = SauceSnackbarTone.Error)
+                SauceSnackbarHost(managementSnackbar)
+            }
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -66,7 +99,7 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
         ) {
             StartOrderTabRow(
                 pagerState = pagerState,
-                orderInfo = state.startOrderInfo,
+                orderInfo = order,
                 priceResult = state.startPriceResult,
                 coroutineScope = coroutineScope
             )
@@ -77,7 +110,11 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                     PullToRefreshScreen(
                         modifier = Modifier.fillMaxSize(),
                         isRefreshing = state.isRefreshing,
-                        onRefresh = { component.obtainEvent(StartOrderStore.Intent.RefreshOrder(userInitiated = true)) },
+                        onRefresh = {
+                            management?.accept(Intent.LoadParticipantContext)
+                            management?.accept(Intent.ReloadPreviews)
+                            component.obtainEvent(StartOrderStore.Intent.RefreshOrder(userInitiated = true))
+                        },
                     ) {
                         HorizontalPager(
                             state = pagerState,
@@ -85,33 +122,51 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
                         ) { page ->
                             when (page) {
                                 0 -> OrderOverviewTab(
-                                    orderInfo = state.startOrderInfo,
-                                    priceState = state.startPriceResult,
-                                    onClickStart = { component.obtainEvent(StartOrderStore.Intent.OnClickStart(it)) },
-                                    onClickPay = { component.obtainEvent(StartOrderStore.Intent.OnClickPay(state.startOrderInfo.id)) },
-                                    onUpdatePrice = { component.obtainEvent(StartOrderStore.Intent.OnClickUpdatePrice) },
+                                    order = order,
+                                    price = state.startPriceResult,
+                                    options = registrationOptions,
+                                    optionsError = managementState?.optionPreviewErrors?.get(order.id),
+                                    onOpenStart = order.startId.takeIf { it > 0 }?.let { id ->
+                                        { component.obtainEvent(StartOrderStore.Intent.OnClickStart(id)) }
+                                    },
+                                    onPay = pay,
+                                    onUpdatePrice = updatePrice,
                                     onHelp = { component.obtainEvent(StartOrderStore.Intent.OnClickHelp) },
-                                    onReRegistration = {
-                                        component.obtainEvent(
-                                            StartOrderStore.Intent.OnClickReRegistration(
-                                                state.startOrderInfo.startId,
-                                                state.startOrderInfo.id
-                                            )
-                                        )
-                                    }
+                                    onChangeDistance = changeDistance,
+                                    onManageOptions = manageOptions,
+                                    onRefund = refund,
                                 )
 
                                 1 -> OrderMembersTab(
-                                    members = state.startOrderInfo.members
+                                    order = order,
+                                    user = managementState?.user,
+                                    transfersError = managementState?.transfersError?.takeIf { order.canManageSlot() },
+                                    onRetryTransfers = management?.let { { it.accept(Intent.LoadParticipantContext) } },
+                                    onCorrect = management?.let { manager -> { manager.accept(Intent.Open(Sheet.Correct(it))) } },
+                                    onDistance = changeDistance.takeIf { order.canManageSlot() },
+                                    slotActions = management?.let { manager ->
+                                        { member ->
+                                            RegistrationSlotActions(
+                                                member = member, state = managementState, component = manager,
+                                                available = order.canManageSlot(),
+                                            )
+                                        }
+                                    },
                                 )
 
                                 2 -> OrderPaymentTab(
-                                    orderInfo = state.startOrderInfo,
-                                    priceState = state.startPriceResult
+                                    order = order,
+                                    price = state.startPriceResult,
+                                    canOpenPayment = management != null,
+                                    options = registrationOptions,
+                                    onManageOptions = manageOptions,
+                                    onPay = pay,
+                                    onUpdatePrice = updatePrice,
+                                    onRefund = refund,
                                 )
 
-                                3 -> if (state.startOrderInfo.payment.isPaid) {
-                                    OrderShareTab(state.startOrderInfo)
+                                3 -> if (order.payment.isPaid && !order.isRefunded) {
+                                    OrderShareTab(order)
                                 }
                             }
                         }
@@ -120,4 +175,5 @@ fun StartOrderStartScreen(component: StartOrderComponent) {
             }
         }
     }
+    if (management != null) RegistrationManagementFeedback(management, managementSnackbar)
 }

@@ -11,5 +11,10 @@ data class StartOrderMember(
     val distanceName : String,
     val genderName : String,
     val formatName : String,
-    val results: List<StartOrderMemberResult>
+    val results: List<StartOrderMemberResult>,
+    val id: Int? = null,
+    val participantUserId: Int? = null,
+    val birthday: String? = null,
+    val infiniteSlots: Boolean = false,
+    val openSlots: Int? = null,
 )

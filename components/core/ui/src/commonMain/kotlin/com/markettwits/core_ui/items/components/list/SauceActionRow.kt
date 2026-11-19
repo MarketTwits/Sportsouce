@@ -28,6 +28,7 @@ fun SauceActionRow(
     titleStyle: TextStyle = MaterialTheme.typography.titleSmall,
     destructive: Boolean = false,
     subtitleMaxLines: Int = Int.MAX_VALUE,
+    trailingIcon: ImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
 ) {
     val colors = SauceTheme.colors
     val titleColor = if (destructive) colors.danger.content else colors.textPrimary
@@ -47,7 +48,7 @@ fun SauceActionRow(
                     if (narrow && !count.isNullOrBlank()) ActionRowCount(count)
                 }
                 if (!narrow && !count.isNullOrBlank()) ActionRowCount(count)
-                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
+                Icon(trailingIcon, null,
                     Modifier.size(SauceSizes.icon), tint = colors.textMuted)
             }
         }

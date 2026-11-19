@@ -3,6 +3,7 @@ package com.markettwits.sportsouce.starts.cloud
 import com.markettwits.core_cloud.provider.HttpClientProvider
 import com.markettwits.sportsouce.starts.cloud.model.NetworkPhotoArchive
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartFavoritesRequest
+import com.markettwits.sportsouce.starts.cloud.model.NetworkStartRemoteItem
 import com.markettwits.sportsouce.starts.cloud.model.NetworkStartsRemote
 import com.markettwits.sportsouce.starts.cloud.model.StartStatusEntity
 import io.ktor.client.call.*
@@ -28,13 +29,28 @@ class SportSauceNetworkStartsApi(
     }
 
     suspend fun fetchFavorites(userId: String, token: String): NetworkStartsRemote {
-        val response = client.get("favorites/$userId") {
-            contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $token")
+        val starts = linkedMapOf<Int, NetworkStartRemoteItem>()
+        var offset = 0
+        do {
+            val response = client.get("favorites/$userId") {
+                parameter("skipCount", offset)
+                parameter("maxResultCount", 1000)
+                contentType(ContentType.Application.Json)
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer $token")
+                }
             }
-        }
-        return json.decodeFromString(response.body<String>())
+            val page = json.decodeFromString<NetworkStartsRemote>(response.body<String>())
+            if (page.rows.isEmpty()) {
+                check(offset >= page.count) { "Incomplete favorites response" }
+                break
+            }
+            val previousSize = starts.size
+            page.rows.forEach { starts[it.id] = it }
+            check(starts.size > previousSize) { "Favorites pagination did not advance" }
+            offset += page.rows.size
+        } while (offset < page.count)
+        return NetworkStartsRemote(starts.size, starts.values.toList())
     }
 
     suspend fun addFavorites(startId: Int, userId: String, token: String) {

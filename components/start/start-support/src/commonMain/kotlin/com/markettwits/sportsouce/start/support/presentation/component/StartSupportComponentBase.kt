@@ -26,7 +26,7 @@ class StartSupportComponentBase(
     override val state: StateFlow<StartSupportStore.State> = store.stateFlow
 
     init {
-        lifecycle.doOnResume { store.accept(StartSupportStore.Intent.OnAuthReturned) }
+        lifecycle.doOnResume { store.accept(StartSupportStore.Intent.OnResume) }
         store.labels.onEach { label ->
             when (label) {
                 StartSupportStore.Label.SignIn -> onSignIn()

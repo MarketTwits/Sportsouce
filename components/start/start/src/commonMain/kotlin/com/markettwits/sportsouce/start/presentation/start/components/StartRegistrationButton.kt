@@ -6,6 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
@@ -22,20 +25,25 @@ internal fun StartRegistrationButton(
     isLoading: Boolean = false,
     isPartialData: Boolean = false,
     hasError: Boolean = false,
+    tonal: Boolean = false,
+    isInteractive: Boolean = true,
     onClickRegistration: () -> Unit,
 ) {
     if (startStatus.code != 3) return
     val ready = !isLoading && !isPartialData && !hasError
     val waitingForData = (isLoading || isPartialData) && !hasError
     val colors = SauceTheme.colors
+    val interactionModifier = if (isInteractive) Modifier else Modifier
+        .focusProperties { canFocus = false }
+        .clearAndSetSemantics { hideFromAccessibility() }
     ButtonContentBase(
-        modifier = modifier.clip(SauceShapes.button)
-            .shimmer(showShimmer = waitingForData, durationMillis = 1400)
+        modifier = modifier.then(interactionModifier).clip(SauceShapes.button)
+            .shimmer(showShimmer = waitingForData && isInteractive, durationMillis = 1400)
             .semantics { if (waitingForData) stateDescription = "Загрузка данных старта" },
         isEnabled = ready,
-        containerColor = colors.action,
-        textColor = colors.onAction,
-        onClick = { if (ready) onClickRegistration() },
+        containerColor = if (tonal) colors.actionSoft else colors.action,
+        textColor = if (tonal) colors.action else colors.onAction,
+        onClick = { if (ready && isInteractive) onClickRegistration() },
         showContent = true,
         content = {
             Text(

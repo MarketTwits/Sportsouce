@@ -74,6 +74,10 @@ internal class BaseAuthDataSource(
         user().getOrThrow().id
     }
 
+    override suspend fun cachedUserId(): Result<Int> = runCatching {
+        authCache.read().userId.toInt()
+    }
+
     override suspend fun updateUser(request: ChangeProfileInfoRequest): Result<Unit> = runCatching {
         updateToken().fold(onSuccess = {
             remoteService.changeProfileInfo(request, it)

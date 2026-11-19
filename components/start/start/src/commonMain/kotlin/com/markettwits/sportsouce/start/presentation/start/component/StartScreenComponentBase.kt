@@ -44,6 +44,7 @@ class StartScreenComponentBase(
     override val start: StateFlow<StartScreenStore.State> = store.stateFlow
 
     private var refreshCommentsOnResume = false
+    private var hasResumed = false
 
     override fun obtainEvent(intent: StartScreenStore.Intent) {
         if (intent is StartScreenStore.Intent.OpenStartCommentsScreen) refreshCommentsOnResume = true
@@ -52,6 +53,8 @@ class StartScreenComponentBase(
 
     init {
         lifecycle.doOnResume {
+            if (hasResumed) store.accept(StartScreenStore.Intent.RefreshFavorite)
+            hasResumed = true
             if (refreshCommentsOnResume) {
                 refreshCommentsOnResume = false
                 store.accept(StartScreenStore.Intent.RefreshComments)

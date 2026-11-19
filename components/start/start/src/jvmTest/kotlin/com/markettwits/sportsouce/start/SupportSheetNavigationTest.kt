@@ -49,7 +49,9 @@ class SupportSheetNavigationTest {
                 val lifecycle = LifecycleRegistry().apply { resume() }
                 val navigation = StackNavigation<Page>()
                 val useCase = object : StartSupportUseCase {
-                    override suspend fun checkDonation(startId: Int): Result<StartDonationCheck> {
+                    override suspend fun cachedRegistration(startId: Int) = Result.success(CachedStartRegistration(1, null))
+
+                    override suspend fun checkDonation(startId: Int, refreshRegistrations: Boolean): Result<StartDonationCheck> {
                         checks++
                         return if (signedIn) Result.success(StartDonationCheck("none", null, null))
                             else Result.failure(SupportAuthorizationRequired())
@@ -91,8 +93,9 @@ class SupportSheetNavigationTest {
                         }
                     }.use { scene ->
                         scene.settle()
+                        val checksBeforeOpen = checks
                         scene.click("Поддержать проект")
-                        assertEquals(1, checks)
+                        assertEquals(checksBeforeOpen + 1, checks)
                         repeat(4) { iteration ->
                             scene.assertSheetVisible("Войти", dark)
                             scene.click("Войти")

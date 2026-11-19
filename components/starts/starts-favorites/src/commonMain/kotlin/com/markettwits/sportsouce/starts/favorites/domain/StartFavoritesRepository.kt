@@ -12,9 +12,8 @@ interface StartFavoritesRepository {
 
     /**
      * Refreshes favorites from network and updates cache
-     * @param forceRefresh If true, ignores ongoing refresh and starts a new one
      */
-    suspend fun refresh(forceRefresh: Boolean = false): Result<List<StartsListItem>>
+    suspend fun refresh(): Result<List<StartsListItem>>
 
     /**
      * Adds start to favorites (optimistic update with rollback on failure)
@@ -27,7 +26,7 @@ interface StartFavoritesRepository {
     suspend fun remove(startsListItem: StartsListItem)
 
     /**
-     * Checks if start is in favorites. Refreshes from network if cache is not initialized yet.
+     * Checks the current server membership and refreshes the local list.
      */
     suspend fun isStartInFavorite(startId: Int): Result<Boolean>
 }

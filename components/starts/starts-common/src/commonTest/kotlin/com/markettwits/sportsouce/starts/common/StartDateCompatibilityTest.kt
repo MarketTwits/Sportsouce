@@ -78,6 +78,36 @@ class StartDateCompatibilityTest {
         } finally { client.close() }
     }
 
+    @Test fun favoritesReadEveryPageEvenWhenTheServerCapsThePageSize() = runTest {
+        val base = json.parseToJsonElement(payload).jsonObject
+        val offsets = mutableListOf<String>()
+        val client = HttpClient(MockEngine { request ->
+            assertEquals("/favorites/42", request.url.encodedPath)
+            assertEquals("Bearer token", request.headers[HttpHeaders.Authorization])
+            assertEquals("1000", request.url.parameters["maxResultCount"])
+            val offset = assertNotNull(request.url.parameters["skipCount"])
+            offsets += offset
+            val ids = when (offset) {
+                "0" -> listOf(301, 302)
+                "2" -> listOf(309)
+                else -> error("Unexpected offset: $offset")
+            }
+            val response = buildJsonObject {
+                put("count", 3)
+                put("rows", JsonArray(ids.map { JsonObject(base + ("id" to JsonPrimitive(it))) }))
+            }
+            respond(response.toString(), headers = headersOf(HttpHeaders.ContentType, "application/json"))
+        }) { expectSuccess = true; defaultRequest { url("https://api.example.test/") } }
+        try {
+            val api = SportSauceStartsApiBase(SportSauceNetworkStartsApi(object : HttpClientProvider {
+                override fun provide(loggerEnabled: Boolean) = client
+                override fun json() = json
+            }), StartsCloudToListMapperBase(BaseTimeMapper()))
+            assertEquals(listOf(301, 302, 309), api.fetchFavoriteStarts(42, "token").map { it.id })
+            assertEquals(listOf("0", "2"), offsets)
+        } finally { client.close() }
+    }
+
     @Test fun availabilityUsesPublishedAlbumsAndResultsIndependently() {
         val fields = json.parseToJsonElement(payload).jsonObject
         val protocol = buildJsonObject {

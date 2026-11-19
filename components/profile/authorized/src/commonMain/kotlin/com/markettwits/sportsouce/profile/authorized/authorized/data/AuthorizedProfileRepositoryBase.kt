@@ -6,7 +6,7 @@ import com.markettwits.sportsouce.profile.authorized.authorized.data.mapper.Auth
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.AuthorizedProfileRepository
 import com.markettwits.sportsouce.profile.authorized.authorized.domain.UserProfile
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
-import com.markettwits.sportsouce.profile.registrations.data.UserRegistrationsDataSource
+import com.markettwits.sportsouce.profile.cloud.registrations.UserRegistrationsDataSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow

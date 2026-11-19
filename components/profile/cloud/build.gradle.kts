@@ -18,6 +18,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(projects.components.core.cloud)
+            implementation(projects.components.core.cache)
         }
     }
 }

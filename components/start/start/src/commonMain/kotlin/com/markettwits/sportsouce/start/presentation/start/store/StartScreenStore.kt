@@ -40,6 +40,7 @@ interface StartScreenStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data object RefreshComments : Intent
+        data object RefreshFavorite : Intent
         data object OnClickBack : Intent
         data object OnClickRetry : Intent
         data object OnClickRegistration : Intent
@@ -149,6 +150,7 @@ class StartScreenStoreFactory(
         override val tag: String = "StartScreenExecutorImpl"
         private var archiveJob: Job? = null
         private var refundRulesJob: Job? = null
+        private var favoriteJob: Job? = null
 
         override fun executeIntent(intent: Intent) {
             when (intent) {
@@ -157,6 +159,7 @@ class StartScreenStoreFactory(
                         service.startComments(id).onSuccess { dispatch(Msg.CommentsUpdated(it)) }
                     }
                 }
+                Intent.RefreshFavorite -> state().startItem?.id?.let(::getFavoriteStatus)
                 is Intent.OnClickBack -> publish(OnClickBack)
 
                 is Intent.OnClickMembers -> {
@@ -256,9 +259,7 @@ class StartScreenStoreFactory(
                     }
                 }
 
-                Intent.OnClickFavorite -> scope.launch {
-                    onClickToFavorite()
-                }
+                Intent.OnClickFavorite -> onClickToFavorite()
             }
         }
 
@@ -288,10 +289,12 @@ class StartScreenStoreFactory(
                             errorLog { "Fail to fetch start ${exception.message}" }
                         }
                         dispatch(Msg.StartInfoFailed(exception))
+                        state().startItem?.id?.let(::getFavoriteStatus)
                     },
                     onSuccess = { startItem ->
                         publish(OnApplyStartId(startItem.id))
                         dispatch(Msg.StartInfoSuccess(startItem))
+                        getFavoriteStatus(startItem.id)
                         handleReRegistrationIfNeeded(startInput, startItem)
                         getSeriesStarts(startItem.startSeries)
                         getArchiveStarts(startItem.startArchive)
@@ -300,46 +303,41 @@ class StartScreenStoreFactory(
                 )
             }
             getRecommendedStarts(startIdString)
-            getFavoriteStatus(startIdString)
         }
 
-        private fun onClickToFavorite() = scope.launch {
-            val favorite = state().favoriteState
-            dispatch(
-                Msg.StartFavoriteUpdated(
-                    StartFavoriteState.Loading(
-                        favorite.isFavorite
-                    )
-                )
-            )
-            state().startItem?.let { item ->
-                if (favorite is StartFavoriteState.Default) {
-                    when (favorite.isFavorite) {
-                        true -> service.startRemoveFromFavorites(item)
-                        false -> service.startAddToFavorite(item)
-                    }.onSuccess {
-                        dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
-                    }.onFailure {
-                        dispatch(Msg.StartFavoriteUpdated(favorite))
-                        val message = when {
-                            !it.requiresStartSignIn() -> it.mapToSauceError().mapToString()
-                            favorite.isFavorite -> "Войдите в аккаунт, чтобы убрать старт из избранного."
-                            else -> "Войдите в аккаунт, чтобы добавить старт в избранное."
-                        }
-                        dispatch(TriggerEvent(message, false))
+        private fun onClickToFavorite() {
+            if (favoriteJob?.isActive == true) return
+            val favorite = state().favoriteState as? StartFavoriteState.Default ?: return
+            val item = state().startItem ?: return
+            dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading(favorite.isFavorite)))
+            favoriteJob = scope.launch {
+                val result = if (favorite.isFavorite) service.startRemoveFromFavorites(item) else service.startAddToFavorite(item)
+                result.onSuccess {
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
+                }.onFailure {
+                    if (it is CancellationException) throw it
+                    val needsSignIn = it.requiresStartSignIn()
+                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(favorite.isFavorite && !needsSignIn)))
+                    val message = when {
+                        !needsSignIn -> it.mapToSauceError().mapToString()
+                        favorite.isFavorite -> "Войдите в аккаунт, чтобы убрать старт из избранного."
+                        else -> "Войдите в аккаунт, чтобы добавить старт в избранное."
                     }
+                    dispatch(TriggerEvent(message, false))
                 }
             }
         }
 
-        private fun getFavoriteStatus(startIdString: String) {
-            scope.launch {
-                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading()))
-                service.isStartInFavorite(startIdString).onSuccess {
-                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(it)))
-                }.onFailure {
-                    dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(false)))
+        private fun getFavoriteStatus(startId: Int) {
+            if (favoriteJob?.isActive == true) return
+            val previous = state().favoriteState.isFavorite
+            dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Loading(previous)))
+            favoriteJob = scope.launch {
+                val actual = service.isStartInFavorite(startId.toString()).getOrElse {
+                    if (it is CancellationException) throw it
+                    previous && !it.requiresStartSignIn()
                 }
+                dispatch(Msg.StartFavoriteUpdated(StartFavoriteState.Default(actual)))
             }
         }
 

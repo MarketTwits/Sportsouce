@@ -43,6 +43,9 @@ fun StartRegistrationPage(
     val state by component.state.collectAsState()
 
     val pages by component.pages.subscribeAsState()
+    val activeStage = pages.active.instance.value
+    val distanceTitle = (activeStage as? StartRegistrationStagePage.Registration)
+        ?.title?.takeIf { it.isNotBlank() }
 
     val snackBarHostState by remember {
         mutableStateOf(SnackbarHostState())
@@ -54,7 +57,10 @@ fun StartRegistrationPage(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopBarBase(title = state.registrationInfo.startTitle) {
+            TopBarBase(
+                title = distanceTitle ?: state.registrationInfo.startTitle,
+                titleMaxLines = if (distanceTitle != null) 1 else 2,
+            ) {
                 component.obtainEvent(StartRegistrationPageStore.Intent.OnClickGoBack)
             }
         },

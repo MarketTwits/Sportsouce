@@ -16,23 +16,27 @@ internal class StartSupportExecutor(
 ) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     private var checkJob: Job? = null
     private var paymentJob: Job? = null
-    private var generation = 0
+    private var registrationAccountId: Int? = null
 
     override fun executeIntent(intent: Intent) {
         when (intent) {
             is Intent.OnChangeValue -> if (!state().isLoading) dispatch(Message.OnValueChanged(intent.value))
             Intent.OnClickSupport -> donate()
             Intent.OnConsumedEvent -> dispatch(Message.OnConsumedEvent)
-            is Intent.ApplyStartId -> if (intent.startId != state().startId) {
-                cancelRequests()
-                dispatch(Message.UpdateStartId(intent.startId))
-                if (state().isOpen) checkRegistration()
+            is Intent.ApplyStartId -> {
+                val sameStart = intent.startId == state().startId
+                if (!sameStart) {
+                    checkJob?.cancel()
+                    paymentJob?.cancel()
+                    dispatch(Message.UpdateStartId(intent.startId))
+                }
+                checkRegistration(refreshRegistrations = sameStart)
             }
             Intent.OnOpen -> {
                 if (!state().isOpen) open()
             }
             Intent.OnClose -> {
-                cancelRequests()
+                paymentJob?.cancel()
                 dispatch(Message.Close)
             }
             Intent.OnRetryCheck -> if (state().isOpen && !state().isLoading) checkRegistration()
@@ -41,35 +45,46 @@ internal class StartSupportExecutor(
             }
             Intent.OnPayRegistration -> payRegistration()
             Intent.OnSignIn -> if (state().isOpen && state().checkState == CheckState.AuthorizationRequired) {
-                cancelRequests()
                 dispatch(Message.SuspendForAuth)
                 publish(Label.SignIn)
             }
-            Intent.OnAuthReturned -> if (state().awaitingAuth) open()
+            Intent.OnResume -> {
+                if (state().awaitingAuth) {
+                    open()
+                } else if (state().startId != null && !state().isLoading) {
+                    checkJob?.cancel()
+                    checkRegistration(refreshRegistrations = true)
+                }
+            }
         }
     }
 
     private fun open() {
-        cancelRequests()
         dispatch(Message.Open)
         checkRegistration()
     }
 
-    private fun cancelRequests() {
-        generation++
-        checkJob?.cancel()
-        paymentJob?.cancel()
-    }
-
-    private fun checkRegistration() {
-        checkJob?.cancel()
+    private fun checkRegistration(refreshRegistrations: Boolean = false) {
         val startId = state().startId ?: return
-        val requestGeneration = ++generation
-        dispatch(Message.CheckLoading)
+        if (checkJob?.isActive == true || state().isLoading || state().awaitingAuth) return
+        if (state().isOpen) dispatch(Message.CheckLoading)
         checkJob = scope.launch {
-            val result = useCase.checkDonation(startId)
+            val cached = useCase.cachedRegistration(startId)
             coroutineContext.ensureActive()
-            if (generation != requestGeneration || !state().isOpen || state().startId != startId) return@launch
+            val snapshot = cached.getOrNull()
+            if (snapshot != null) {
+                if (registrationAccountId != snapshot.accountId || state().registrationCheck == null) {
+                    dispatch(Message.ShowCachedRegistration(snapshot.check))
+                }
+                registrationAccountId = snapshot.accountId
+            } else if (cached.exceptionOrNull() is SupportAuthorizationRequired) {
+                registrationAccountId = null
+                dispatch(Message.AuthorizationRequired)
+                return@launch
+            }
+            val result = useCase.checkDonation(startId, refreshRegistrations)
+            coroutineContext.ensureActive()
+            if (state().startId != startId) return@launch
             result.fold(
                 onSuccess = { dispatch(Message.CheckReady(it)) },
                 onFailure = {
@@ -103,12 +118,11 @@ internal class StartSupportExecutor(
     }
 
     private fun launchPayment(request: suspend () -> Result<String>) {
-        val requestGeneration = generation
         dispatch(Message.Loading)
         paymentJob = scope.launch {
             val result = request()
             coroutineContext.ensureActive()
-            if (generation != requestGeneration || !state().isOpen) return@launch
+            if (!state().isOpen) return@launch
             result.fold(
                 onSuccess = { url ->
                     if (url.isBlank()) {

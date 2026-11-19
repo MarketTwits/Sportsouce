@@ -22,6 +22,7 @@ interface StartSupportStore : Store<Intent, State, Label> {
         val amountError: String? = null,
         val awaitingAuth: Boolean = false,
         val sheetSession: Int = 0,
+        val registrationCheck: StartDonationCheck? = null,
     )
 
     sealed interface CheckState {
@@ -43,7 +44,7 @@ interface StartSupportStore : Store<Intent, State, Label> {
         data object OnConfirmDonation : Intent
         data object OnPayRegistration : Intent
         data object OnSignIn : Intent
-        data object OnAuthReturned : Intent
+        data object OnResume : Intent
     }
 
     sealed interface Message {
@@ -58,6 +59,7 @@ interface StartSupportStore : Store<Intent, State, Label> {
         data object CheckLoading : Message
         data object CheckFailed : Message
         data class CheckReady(val result: StartDonationCheck) : Message
+        data class ShowCachedRegistration(val result: StartDonationCheck?) : Message
         data object ConfirmDonation : Message
         data class InvalidAmount(val message: String) : Message
         data object AuthorizationRequired : Message

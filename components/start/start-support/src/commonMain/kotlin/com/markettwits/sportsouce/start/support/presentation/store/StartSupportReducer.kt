@@ -38,13 +38,18 @@ internal object StartSupportReducer : Reducer<State, Message> {
             Message.Close -> copy(isOpen = false, isLoading = false, checkState = CheckState.Idle,
                 donationConfirmed = false, eventWithContent = consumed(), awaitingAuth = false)
             Message.CheckLoading -> copy(checkState = CheckState.Loading, donationConfirmed = false)
-            Message.CheckFailed -> copy(checkState = CheckState.Failed)
-            is Message.CheckReady -> copy(checkState = CheckState.Ready(msg.result))
+            Message.CheckFailed -> if (isOpen) copy(checkState = CheckState.Failed) else this
+            is Message.CheckReady -> copy(
+                checkState = if (isOpen) CheckState.Ready(msg.result) else CheckState.Idle,
+                registrationCheck = if (msg.result.isRegistrationKnown) msg.result else registrationCheck,
+            )
+            is Message.ShowCachedRegistration -> copy(registrationCheck = msg.result)
             Message.ConfirmDonation -> copy(donationConfirmed = true)
             is Message.InvalidAmount -> copy(amountError = msg.message)
-            Message.AuthorizationRequired -> copy(checkState = CheckState.AuthorizationRequired,
+            Message.AuthorizationRequired -> copy(
+                checkState = if (isOpen) CheckState.AuthorizationRequired else CheckState.Idle,
                 isLoading = false, isError = false, donationConfirmed = false, amountError = null,
-                eventWithContent = consumed())
+                eventWithContent = consumed(), registrationCheck = null)
             Message.SuspendForAuth -> copy(isOpen = false, awaitingAuth = true, isLoading = false,
                 checkState = CheckState.Idle, donationConfirmed = false, eventWithContent = consumed())
         }

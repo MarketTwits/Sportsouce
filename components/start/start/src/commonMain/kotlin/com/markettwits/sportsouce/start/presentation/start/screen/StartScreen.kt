@@ -30,6 +30,7 @@ fun StartScreen(
     isActive: Boolean = true,
 ) {
     val state by startComponent.start.collectAsState()
+    val supportState by startSupportComponent.state.collectAsState()
     val navigationOverlap = bottomNavigationOverlap()
     var fullImage by rememberSaveable(state.startItem?.id) {
         mutableStateOf(false)
@@ -69,6 +70,7 @@ fun StartScreen(
                     StartScreenContent(
                         data = data,
                         navigationOverlap = navigationOverlap,
+                        registrationCheck = supportState.registrationCheck.takeIf { supportState.startId == data.id },
                         favoriteState = state.favoriteState,
                         recommendedStarts = state.startsRecommended,
                         seriesStarts = state.startsSeries,

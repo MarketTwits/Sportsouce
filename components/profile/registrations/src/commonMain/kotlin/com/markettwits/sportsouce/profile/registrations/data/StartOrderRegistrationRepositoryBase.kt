@@ -5,6 +5,7 @@ import com.markettwits.sportsouce.auth.cloud.model.common.AuthException
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.profile.cloud.SportSauceNetworkProfileApi
+import com.markettwits.sportsouce.profile.cloud.registrations.UserRegistrationsDataSource
 import com.markettwits.sportsouce.profile.cloud.model.start_price.StartPriceRequest
 import com.markettwits.sportsouce.profile.cloud.model.start_registration.StartRegistrationResponse
 import com.markettwits.sportsouce.profile.registrations.data.mapper.UserRegistrationsMapper

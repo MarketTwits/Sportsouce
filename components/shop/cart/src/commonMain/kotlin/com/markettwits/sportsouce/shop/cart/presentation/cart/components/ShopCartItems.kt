@@ -4,13 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,8 +23,8 @@ internal fun LazyListScope.ShopCartItems(
     onClickDecrease: (ShopItemCart) -> Unit,
     onClickDelete : (ShopItemCart) -> Unit,
 ) {
-    itemsIndexed(items = items, itemContent = { index,item ->
-        AnimationBox(key = index){
+    items(items = items, key = { it.item.id }) { item ->
+        AnimationBox {
             ShopCartItem(
                 modifier = modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                 shopCartItemCart = item,
@@ -36,17 +34,16 @@ internal fun LazyListScope.ShopCartItems(
                 onClickDelete = onClickDelete
             )
         }
-    })
+    }
 }
 
 @Composable
 private fun <T> T.AnimationBox(
-    key : Any = Unit,
-    enter: EnterTransition = expandVertically() + fadeIn(),
-    exit: ExitTransition = fadeOut() + shrinkVertically(),
+    enter: EnterTransition = fadeIn(),
+    exit: ExitTransition = fadeOut(),
     content: @Composable T.() -> Unit
 ) {
-    val state = remember(key) {
+    val state = remember {
         MutableTransitionState(false).apply {
             targetState = true
         }

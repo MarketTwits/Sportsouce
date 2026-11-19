@@ -9,11 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.components.buttons.ButtonContentBase
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.sportsouce.start.register.presentation.registration.common.components.RegistrationActions
+import com.markettwits.core_ui.items.theme.SauceSpacing
 import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationPriceResult
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
@@ -22,83 +21,40 @@ import com.markettwits.sportsouce.start.register.presentation.registration.regis
 fun StartRegistrationStagePage.Registration.ButtonContent(
     modifier: Modifier = Modifier,
     onClickGoBack: () -> Unit,
-    onClickGoNext: () -> Unit
+    onClickGoNext: () -> Unit,
 ) {
-    Row(
+    RegistrationActions(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (isGoBackAvailable) {
-            StartRegistrationStageButton(
-                modifier = Modifier.weight(1f),
-                title = "Назад",
-                onClick = onClickGoBack
-            )
-        }
-        if (isGoNextAvailable) {
-            StartRegistrationStageButton(
-                modifier = Modifier.weight(1f),
-                title = "Вперед",
-                onClick = onClickGoNext
-            )
-        }
-    }
+        primaryTitle = if (isGoNextAvailable) "Вперёд" else null,
+        onPrimaryClick = onClickGoNext,
+        onBackClick = if (isGoBackAvailable) onClickGoBack else null,
+    )
 }
 
 @Composable
 fun StartRegistrationStagePage.Pay.ButtonContent(
     modifier: Modifier = Modifier,
+    loading: Boolean = false,
     onClickGoBack: () -> Unit,
     onClickPay: () -> Unit,
     onClickSave: () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         if (startInfo.regType is StartRegType.ReReg) {
-            ReRegistrationInfoBanner(
-                modifier = Modifier.padding(10.dp),
-            )
+            ReRegistrationInfoBanner(modifier = Modifier.padding(horizontal = SauceSpacing.large))
         }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            StartRegistrationStageButton(
-                modifier = Modifier.weight(1f),
-                title = "Назад",
-                onClick = onClickGoBack
-            )
-            when (price) {
-                is StartRegistrationPriceResult.Empty -> {
-
-                }
-
-            is StartRegistrationPriceResult.Free -> {
-                StartRegistrationStageButton(
-                    modifier = Modifier.weight(1f),
-                    title = "Зарегистрироваться",
-                    onClick = onClickSave
-                )
-            }
-
-                is StartRegistrationPriceResult.Value -> {
-                    StartRegistrationStageButton(
-                        modifier = Modifier.weight(1f),
-                        title = "Оплатить",
-                        onClick = onClickPay
-                    )
-
-                    StartRegistrationStageButton(
-                        modifier = Modifier.weight(1f),
-                        title = "Сохранить",
-                        onClick = onClickSave
-                    )
-                }
-            }
-        }
+        RegistrationActions(
+            primaryTitle = when (price) {
+                StartRegistrationPriceResult.Empty -> null
+                StartRegistrationPriceResult.Free -> "Зарегистрироваться"
+                is StartRegistrationPriceResult.Value -> "Оплатить"
+            },
+            onPrimaryClick = if (price is StartRegistrationPriceResult.Free) onClickSave else onClickPay,
+            secondaryTitle = if (price is StartRegistrationPriceResult.Value) "Сохранить" else null,
+            onSecondaryClick = onClickSave,
+            onBackClick = onClickGoBack,
+            loading = loading,
+        )
     }
 }
 
@@ -109,11 +65,11 @@ private fun ReRegistrationInfoBanner(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = SportSouceColor.SportSouceRegistryCommingSoonYellow.copy(alpha = 0.15f)
+            containerColor = SauceTheme.colors.warning.container
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = SportSouceColor.SportSouceRegistryCommingSoonYellow
+            color = SauceTheme.colors.warning.content
         ),
         shape = Shapes.medium
     ) {
@@ -128,40 +84,21 @@ private fun ReRegistrationInfoBanner(
                 modifier = Modifier.size(24.dp),
                 imageVector = Icons.Filled.Sync,
                 contentDescription = "Перерегистрация",
-                tint = SportSouceColor.SportSouceRegistryCommingSoonYellow
+                tint = SauceTheme.colors.warning.content
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = "Перерегистрация",
-                    fontFamily = FontNunito.bold(),
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = "Вы изменяете свою текущую регистрацию",
-                    fontFamily = FontNunito.regular(),
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = SauceTheme.colors.textSecondary
                 )
             }
         }
     }
-}
-
-@Composable
-private fun StartRegistrationStageButton(
-    modifier: Modifier = Modifier,
-    title: String,
-    onClick: () -> Unit
-) {
-    ButtonContentBase(
-        modifier = modifier.padding(4.dp),
-        containerColor = MaterialTheme.colorScheme.secondary,
-        shape = Shapes.medium,
-        maxLines = 1,
-        textColor = MaterialTheme.colorScheme.onSecondary,
-        title = title,
-        onClick = onClick
-    )
 }

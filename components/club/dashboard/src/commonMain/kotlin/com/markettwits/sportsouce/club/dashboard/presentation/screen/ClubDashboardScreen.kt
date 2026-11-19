@@ -2,166 +2,218 @@ package com.markettwits.sportsouce.club.dashboard.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.markettwits.core.errors.api.composable.SauceErrorSimpleContent
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
 import com.markettwits.core_ui.items.components.buttons.BackFloatingActionButton
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
+import com.markettwits.core_ui.items.components.buttons.rememberSauceFloatingActionGlass
+import com.markettwits.core_ui.items.components.navigation.LocalScrollContentBottomPadding
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn
+import com.markettwits.core_ui.items.components.navigation.bottomNavigationOverlap
+import com.markettwits.core_ui.items.components.topbar.LocalSauceTopBar
 import com.markettwits.core_ui.items.screens.AdaptivePane
 import com.markettwits.core_ui.items.screens.PullToRefreshScreen
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.club.common.presentation.ClubLoading
+import com.markettwits.sportsouce.club.common.presentation.ClubNotice
 import com.markettwits.sportsouce.club.dashboard.presentation.component.ClubDashboardComponent
 import com.markettwits.sportsouce.club.dashboard.presentation.components.*
 import com.markettwits.sportsouce.club.dashboard.presentation.store.ClubDashboardStore
 import com.markettwits.sportsouce.club.info.presentation.components.bottomsheet.MenuBottomSheetType
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 
-enum class MenuItemColor(val colors: List<Color>) {
-    PLAN(listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))), // Indigo to Purple
-    TRAININGS(listOf(Color(0xFF10B981), Color(0xFF059669))), // Emerald gradient
-    CLUB_BONUSES(listOf(Color(0xFFF59E0B), Color(0xFFEF4444))), // Amber to Red
-    OUR_TEAM(listOf(Color(0xFF3B82F6), Color(0xFF1D4ED8))), // Blue gradient
-    SUBSCRIPTIONS(listOf(Color(0xFF8B5CF6), Color(0xFFEC4899))), // Purple to Pink
-    SCHEDULE(listOf(Color(0xFF06B6D4), Color(0xFF0891B2))), // Cyan gradient
-    FAQ(listOf(Color(0xFF84CC16), Color(0xFF65A30D))), // Lime gradient
-    STATISTICS(listOf(Color(0xFFE11D48), Color(0xFFBE185D))) // Rose gradient
+private val ClubGutter = 20.dp
+private const val IntroKey = "intro"
+
+@Composable
+fun ClubDashboardScreen(component: ClubDashboardComponent) {
+    val state by component.state.collectAsState()
+    val systemBottom = WindowInsets.safeDrawing.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding()
+    val scrollBottom = LocalScrollContentBottomPadding.current + (systemBottom - bottomNavigationOverlap()).coerceAtLeast(0.dp)
+    Box(Modifier.fillMaxSize().background(SauceTheme.colors.background)) {
+        CompositionLocalProvider(
+            LocalSauceTopBar provides null,
+            LocalScrollContentBottomPadding provides scrollBottom,
+        ) {
+            val topInset = WindowInsets.safeDrawing.asPaddingValues().calculateTopPadding()
+            AdaptivePane(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))) {
+                ClubDashboardContent(
+                    state = state,
+                    topContentPadding = topInset + 56.dp,
+                    statusBarInset = topInset,
+                    onBack = { component.obtainEvent(ClubDashboardStore.Intent.OnClickBack) },
+                    event = component::obtainEvent,
+                )
+            }
+        }
+    }
 }
 
 @Composable
-fun ClubDashboardScreen(
-    component: ClubDashboardComponent,
+internal fun ClubDashboardContent(
+    state: ClubDashboardStore.State,
+    topContentPadding: Dp = 20.dp,
+    onBack: (() -> Unit)? = null,
+    statusBarInset: Dp = 0.dp,
+    event: (ClubDashboardStore.Intent) -> Unit,
 ) {
-    val state by component.state.collectAsState()
-
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()
-    ) {
-        PullToRefreshScreen(
-            isRefreshing = state.bottomSheetData.features.isNotEmpty() && state.isLoading,
-            onRefresh = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
-        ) {
-            LazyColumn {
-                item {
-                    ClubDashboardHeader()
+    val data = state.bottomSheetData
+    val listState = rememberLazyListState()
+    val heroBackdrop = rememberHazeState()
+    val parallaxDistance = with(LocalDensity.current) { 264.dp.toPx() }
+    val statusBarFadeDistance = with(LocalDensity.current) { 48.dp.toPx() }
+    val open: (MenuBottomSheetType) -> Unit = { event(ClubDashboardStore.Intent.OpenClubInfoDetail(it, data)) }
+    val retry = { event(ClubDashboardStore.Intent.RetryRequest) }
+    Box(Modifier.fillMaxSize()) {
+        PullToRefreshScreen(isRefreshing = state.isLoading && state.hasLoaded, onRefresh = retry) {
+            SauceLazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                contentPadding = PaddingValues(bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(28.dp),
+            ) {
+                item(key = IntroKey) {
+                    ClubDashboardHeader(
+                        modifier = if (onBack != null) Modifier.hazeSource(heroBackdrop) else Modifier,
+                        imageUrl = data.mainImage?.imageUrl.orEmpty(),
+                        statistics = data.statistics,
+                        topPadding = topContentPadding,
+                        scrollFraction = {
+                            if (listState.firstVisibleItemIndex == 0) listState.firstVisibleItemScrollOffset / parallaxDistance else 1f
+                        },
+                        onSchedule = { event(ClubDashboardStore.Intent.OnClickSchedule) },
+                        onStatistics = { open(MenuBottomSheetType.Statistics) },
+                    )
                 }
-                item {
-                    AdaptivePane {
-                        Column(
-                            modifier = Modifier
-                                .offset(y = (-100).dp)
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth()
-                        ) {
-
-                            if (state.error == null && !state.isLoading) {
-                                SubscriptionInfoCard {
-                                    component.obtainEvent(ClubDashboardStore.Intent.OnClickSubscriptions)
+                if (state.error != null) item(key = "error") {
+                    ClubInsetSection {
+                        ClubNotice("Не удалось загрузить информацию о клубе", "Проверьте соединение и повторите попытку.", retry)
+                    }
+                }
+                when {
+                    state.isLoading && !state.hasLoaded -> item(key = "loading") {
+                        ClubInsetSection { ClubLoading() }
+                    }
+                    state.hasLoaded -> {
+                        item(key = "directions") {
+                            ClubCarouselSection("Направления тренировок", { open(MenuBottomSheetType.Trainings) }) {
+                                items(data.trainings, key = { it.id }) { training ->
+                                    ClubTrainingPreview(training) { open(MenuBottomSheetType.TrainingDetails(training.id)) }
                                 }
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ClubMenuGrid(
-                                    onPlanClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.Plan,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    },
-                                    onTrainingsClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.Trainings,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    },
-                                    onClubBonusesClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.ClubBonuses,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    },
-                                    onOurTeamClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.OurTeam,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    }
-                                )
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ClubScheduleCard {
-                                    component.obtainEvent(ClubDashboardStore.Intent.OnClickSchedule)
-                                }
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ClubMoreSection(
-                                    onFaqClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.Faq,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    },
-                                    onStatisticClick = {
-                                        component.obtainEvent(
-                                            ClubDashboardStore.Intent.OpenClubInfoDetail(
-                                                MenuBottomSheetType.Statistics,
-                                                state.bottomSheetData
-                                            )
-                                        )
-                                    }
+                            }
+                        }
+                        item(key = "subscriptions") {
+                            ClubInsetSection {
+                                SubscriptionInfoCard(
+                                    onClick = { event(ClubDashboardStore.Intent.OnClickSubscriptions) },
+                                    onTrialClick = { open(MenuBottomSheetType.Trainings) },
                                 )
                             }
-
-                            if (state.isLoading) {
-                                ClubShimmerInfoCard()
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ClubShimmerMenuGrid()
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ClubShimmerInfoCard()
-
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                ShimmerMoreSection()
+                        }
+                        item(key = "trainers") {
+                            ClubCarouselSection("Наши тренеры", { open(MenuBottomSheetType.OurTeam) }) {
+                                items(data.trainers, key = { it.id }) { trainer ->
+                                    ClubTrainerPreview(trainer) { open(MenuBottomSheetType.TrainerDetails(trainer.id)) }
+                                }
                             }
-
-                            state.error?.SauceErrorSimpleContent(
-                                onClickRetry = { component.obtainEvent(ClubDashboardStore.Intent.RetryRequest) }
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+                        item(key = "about") {
+                            ClubInsetSection {
+                                ClubAboutSection(
+                                    onPlanClick = { open(MenuBottomSheetType.Plan) },
+                                    onClubBonusesClick = { open(MenuBottomSheetType.ClubBonuses) },
+                                    onFaqClick = { open(MenuBottomSheetType.Faq) },
+                                    questionCount = data.questions.size,
+                                    onStatisticsClick = if (data.statistics.isEmpty()) {
+                                        { open(MenuBottomSheetType.Statistics) }
+                                    } else null,
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-        BackFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-        ) {
-            component.obtainEvent(ClubDashboardStore.Intent.OnClickBack)
+        if (statusBarInset > 0.dp) {
+            Spacer(
+                Modifier.fillMaxWidth().height(statusBarInset)
+                    .graphicsLayer {
+                        alpha = if (listState.firstVisibleItemIndex > 0) 1f else
+                            (listState.firstVisibleItemScrollOffset / statusBarFadeDistance).coerceIn(0f, 1f)
+                    }
+                    .background(SauceTheme.colors.background),
+            )
         }
+        if (onBack != null) {
+            val glass = rememberSauceFloatingActionGlass(
+                backdrop = heroBackdrop,
+                tint = SauceTheme.colors.surfaceSubtle.copy(alpha = .54f),
+            ) {
+                listState.layoutInfo.visibleItemsInfo.firstOrNull { it.key == IntroKey }
+                    ?.let { it.offset + it.size } ?: 0
+            }
+            BackFloatingActionButton(Modifier.align(Alignment.TopStart), glass = glass, back = onBack)
+        }
+    }
+}
 
+@Composable
+private fun ClubInsetSection(content: @Composable () -> Unit) {
+    Box(Modifier.fillMaxWidth().padding(horizontal = ClubGutter)) { content() }
+}
+
+@Composable
+private fun ClubCarouselSection(title: String, onClick: () -> Unit, content: LazyListScope.() -> Unit) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        ClubInsetSection {
+            SauceClickTarget(modifier = Modifier.fillMaxWidth(), onClick = onClick, onClickLabel = "Показать все") {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Text(
+                        title,
+                        Modifier.weight(1f).semantics { heading() },
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = SauceTheme.colors.textPrimary,
+                    )
+                    Box(
+                        Modifier.size(36.dp).background(SauceTheme.colors.actionSoft, SauceShapes.field),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.size(19.dp), tint = SauceTheme.colors.action)
+                    }
+                }
+            }
+        }
+        LazyRow(
+            Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = ClubGutter),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            content = content,
+        )
     }
 }

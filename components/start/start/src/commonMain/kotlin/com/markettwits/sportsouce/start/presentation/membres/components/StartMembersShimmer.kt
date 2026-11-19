@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,7 +20,7 @@ fun StartMembersShimmer(modifier: Modifier = Modifier) {
             top = 16.dp,
             start = 16.dp,
             end = 16.dp,
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp
+            bottom = WindowInsets.navigationBars.excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() + 16.dp
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

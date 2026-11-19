@@ -1,21 +1,16 @@
 package com.markettwits.core_ui.items.text
 
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -48,47 +43,35 @@ fun ClickableText(
     onLinkClick: ((String) -> Unit)? = null
 ) {
 
-    val phoneRegex = """\+?\d[\d\s]+\d""".toRegex()
-    val urlRegex = """https?://\S+""".toRegex()
     val localUriHandler = LocalUriHandler.current
-
-    val annotatedText = buildAnnotatedString {
-        append(text)
-
-        // Обработка телефонных номеров
-        phoneRegex.findAll(text).forEach { matchResult ->
-            addStyle(
-                style = SpanStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    textDecoration = TextDecoration.Underline
-                ),
-                start = matchResult.range.first,
-                end = matchResult.range.last + 1
-            )
-            addStringAnnotation(
-                tag = "PHONE",
-                annotation = matchResult.value,
-                start = matchResult.range.first,
-                end = matchResult.range.last + 1
-            )
-        }
-
-        // Обработка URL-адресов
-        urlRegex.findAll(text).forEach { matchResult ->
-            addStyle(
-                style = SpanStyle(
-                    color = MaterialTheme.colorScheme.secondary,
-                    textDecoration = TextDecoration.Underline
-                ),
-                start = matchResult.range.first,
-                end = matchResult.range.last + 1
-            )
-            addStringAnnotation(
-                tag = "URL",
-                annotation = matchResult.value,
-                start = matchResult.range.first,
-                end = matchResult.range.last + 1
-            )
+    val linkColor = MaterialTheme.colorScheme.secondary
+    val annotatedText = remember(text, linkColor, onPhoneClick, onLinkClick, localUriHandler) {
+        buildAnnotatedString {
+            append(text)
+            val linkStyle = TextLinkStyles(SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline))
+            val urls = urlRegex.findAll(text).toList()
+            urls.forEach { match ->
+                val url = match.value.trimEnd('.', ',', ';', ':')
+                addLink(
+                    LinkAnnotation.Url(url, linkStyle) {
+                        if (onLinkClick != null) onLinkClick(url) else localUriHandler.openUri(url)
+                    },
+                    start = match.range.first,
+                    end = match.range.first + url.length,
+                )
+            }
+            // Phone actions are opt-in. Ordinary numbers in user text keep their original appearance.
+            if (onPhoneClick != null) phoneRegex.findAll(text).forEach { match ->
+                val digits = match.value.count(Char::isDigit)
+                val overlapsUrl = urls.any { it.range.first <= match.range.last && match.range.first <= it.range.last }
+                if (digits in 7..15 && !overlapsUrl) {
+                    addLink(
+                        LinkAnnotation.Clickable("phone", linkStyle) { onPhoneClick(match.value) },
+                        start = match.range.first,
+                        end = match.range.last + 1,
+                    )
+                }
+            }
         }
     }
 
@@ -106,36 +89,16 @@ fun ClickableText(
         )
     )
 
-    var textLayoutResultState by remember { mutableStateOf<TextLayoutResult?>(null) }
-
     Text(
         text = annotatedText,
-        modifier = modifier
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    textLayoutResultState?.let { textLayoutResult ->
-                        val position = textLayoutResult.getOffsetForPosition(offset)
-                        annotatedText.getStringAnnotations(position, position).firstOrNull()
-                            ?.let { annotation ->
-                                when (annotation.tag) {
-                                    "PHONE" -> onPhoneClick?.invoke(annotation.item)
-                                    "URL" -> if (onLinkClick != null) {
-                                        onLinkClick(annotation.item)
-                                    } else {
-                                        localUriHandler.openUri(annotation.item)
-                                    }
-                                }
-                            }
-                    }
-                }
-            },
+        modifier = modifier,
         style = textStyle,
         overflow = overflow,
         softWrap = softWrap,
         maxLines = maxLines,
         minLines = minLines,
-        onTextLayout = {
-            textLayoutResultState = it
-        }
     )
 }
+
+private val phoneRegex = Regex("""(?<![\p{L}\d])\+?\d[\d ()-]*\d(?![\p{L}\d])""")
+private val urlRegex = Regex("""https?://[^\s<>]+""")

@@ -1,5 +1,11 @@
 package com.markettwits.sportsouce.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.impl.di.userNotificationModule
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
@@ -9,13 +15,20 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.sportsauce.deeplink.model.Deeplink
+import com.markettwits.sportsouce.auth.service.api.CachedProfilePhoto
+import com.markettwits.sportsouce.auth.service.api.authDataSourceModule
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentBase
 import com.markettwits.sportsouce.bottom_bar.component.component.BottomBarComponentHandle
 import com.markettwits.sportsouce.bottom_bar.di.bottomBarModule
 import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
+import com.markettwits.sportsouce.profile.upcoming.UpcomingStartsComponent
 import com.markettwits.sportsouce.review.root.RootReviewComponentBase
 import com.markettwits.sportsouce.root_profile.RootProfileComponentBase
 import com.markettwits.sportsouce.starts.root.RootStartsComponentBase
+import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponentBase
+import com.markettwits.selfupdater.components.notification.di.notificationModule
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
+import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 
 class RootComponentBase(
     componentContext: ComponentContext,
@@ -23,7 +36,18 @@ class RootComponentBase(
 
     private val scope = instanceKeeper.getOrCreate {
         ComponentKoinContext()
-    }.getOrCreateKoinScope(listOf(bottomBarModule))
+    }.getOrCreateKoinScope(listOf(bottomBarModule, notificationModule, userNotificationModule, authDataSourceModule))
+
+    override val profilePhotoUrl = scope.get<CachedProfilePhoto>().url
+
+    private val notifications: NotificationApi = scope.get()
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
+
+    private val updateStoreFactory: SelfUpdateStoreFactory = scope.get()
 
     private val stackNavigation = StackNavigation<RootComponent.Configuration>()
 
@@ -40,6 +64,17 @@ class RootComponentBase(
         return listOf(RootComponent.Configuration.Review)
     }
 
+    override val updateNotification = InAppNotificationComponentBase(
+        componentContext = componentContext,
+        notificationStorage = scope.get(),
+        storeFactory = scope.get(),
+        openFullScreen = { version ->
+            stackNavigation.bringToFront(RootComponent.Configuration.Review)
+            (childStack.value.active.instance as? RootComponent.Child.Review)?.component?.openUpdate(version)
+        },
+    )
+    override val updateNotificationRenderer: InAppNotificationRenderer = scope.get()
+
     override val slotChild: Value<ChildSlot<*, RootComponent.Navigation>> = childSlot(
         source = slotNavigation,
         serializer = RootComponent.SlotConfiguration.serializer(),
@@ -55,19 +90,43 @@ class RootComponentBase(
             is RootComponent.Configuration.Starts -> RootComponent.Child.Starts(
                 RootStartsComponentBase(
                     componentContext = componentContext,
-                    deeplink = null
+                    deeplink = null,
+                    updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                 )
             )
 
             is RootComponent.Configuration.Profile -> RootComponent.Child.Profile(
                 RootProfileComponentBase(
-                    componentContext = componentContext
+                    componentContext = componentContext,
+                    updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
+                    onSignedOut = {
+                        childStack.value.items.forEach { child ->
+                            (child.instance as? RootComponent.Child.MyStarts)?.component?.clearSession()
+                        }
+                    },
                 )
             )
 
             is RootComponent.Configuration.Review -> RootComponent.Child.Review(
                 RootReviewComponentBase(
-                    context = componentContext
+                    context = componentContext,
+                    updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
+                )
+            )
+
+            is RootComponent.Configuration.MyStarts -> RootComponent.Child.MyStarts(
+                UpcomingStartsComponent(
+                    context = componentContext,
+                    notifications = notifications,
+                    updateStoreFactory = updateStoreFactory,
+                    openStarts = {
+                        stackNavigation.bringToFront(RootComponent.Configuration.Starts) {
+                            (childStack.value.active.instance as? RootComponent.Child.Starts)?.component?.popToRoot()
+                        }
+                    },
                 )
             )
         }
@@ -131,9 +190,18 @@ class RootComponentBase(
                     componentContext = componentContext,
                     navigationComponentHandle = object : BottomBarComponentHandle {
                         override fun navigateTo(bottomBarConfiguration: BottomBarConfiguration) {
-                            stackNavigation.bringToFront(
-                                BottomBarConfigurationMapper.map(bottomBarConfiguration)
-                            )
+                            val target = BottomBarConfigurationMapper.map(bottomBarConfiguration)
+                            val active = childStack.value.active
+                            if (active.configuration == target) {
+                                when (val child = active.instance) {
+                                    is RootComponent.Child.Starts -> child.component.popToRoot()
+                                    is RootComponent.Child.Review -> child.component.popToRoot()
+                                    is RootComponent.Child.Profile -> child.component.popToRoot()
+                                    is RootComponent.Child.MyStarts -> child.component.popToRoot()
+                                }
+                            } else {
+                                stackNavigation.bringToFront(target)
+                            }
                         }
 
                         override fun getActiveConfiguration(observer: (BottomBarConfiguration) -> Unit) {

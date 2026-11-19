@@ -1,13 +1,15 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.api.NotificationComponent
+
+import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsComponent
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.markettwits.selfupdater.components.notification.component.InAppNotificationComponent
 import com.markettwits.selfupdater.components.notification.model.NewAppVersion
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponent
 import com.markettwits.sportsauce.deeplink.model.Deeplink
 import com.markettwits.sportsouce.club.root.RootClubComponent
-import com.markettwits.sportsouce.inappnotification.api.InAppNotificationRenderer
 import com.markettwits.sportsouce.news.common.model.NewsItem
 import com.markettwits.sportsouce.news.news_event.component.NewsEventComponent
 import com.markettwits.sportsouce.news.news_list.component.NewsComponent
@@ -21,10 +23,17 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularComponent
 import com.markettwits.sportsouce.starts.random.root.presentation.RootStartRandomComponent
 import kotlinx.serialization.Serializable
+import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponent
 
 interface RootReviewComponent {
+
+    val notifications: NotificationApi
+    fun openNotifications()
+
+    fun popToRoot()
+
     val childStack: Value<ChildStack<*, Child>>
-    val childSlot: Value<com.arkivanov.decompose.router.slot.ChildSlot<ConfigSlot, ChildSlot>>
+    fun openUpdate(version: NewAppVersion)
 
     fun handleDeeplink(deeplink: Deeplink.News)
     fun handleDeeplink(deeplink: Deeplink.Clubs)
@@ -40,6 +49,9 @@ interface RootReviewComponent {
         data class Start(val startItem: StartsListItem) : Config
 
         @Serializable
+        data class StartById(val id: Int) : Config
+
+        @Serializable
         data object Random : Config
 
         @Serializable
@@ -47,6 +59,12 @@ interface RootReviewComponent {
 
         @Serializable
         data object Search : Config
+
+        @Serializable
+        data object Albums : Config
+
+        @Serializable
+        data class PhotoAlbum(val albumId: Int) : Config
 
         @Serializable
         data object News : Config
@@ -59,6 +77,9 @@ interface RootReviewComponent {
 
         @Serializable
         data class Notification(val newAppVersion: NewAppVersion) : Config
+
+        @Serializable
+        data object Inbox : Config
 
         @Serializable
         data object Settings : Config
@@ -81,22 +102,13 @@ interface RootReviewComponent {
         data class NewsEvent(val component: NewsEventComponent) : Child
         data class News(val component: RootNewsComponent) : Child
         data class Search(val component: RootStartsSearchComponent) : Child
+        data class Albums(val component: RootStartsAlbumsComponent) : Child
+        data class PhotoAlbum(val component: StartAlbumComponent) : Child
         data class Notification(val component: SelfUpdateComponent) : Child
+        data class Inbox(val component: NotificationComponent) : Child
         data class Settings(val component: RootSettingsComponent) : Child
         data class Club(val component: RootClubComponent) : Child
         data class Shop(val component: RootShopCatalogComponent) : Child
     }
 
-    @Serializable
-    sealed class ConfigSlot {
-        @Serializable
-        data object Notification : ConfigSlot()
-    }
-
-    sealed class ChildSlot {
-        data class Notification(
-            val component: InAppNotificationComponent,
-            val render: InAppNotificationRenderer
-        ) : ChildSlot()
-    }
 }

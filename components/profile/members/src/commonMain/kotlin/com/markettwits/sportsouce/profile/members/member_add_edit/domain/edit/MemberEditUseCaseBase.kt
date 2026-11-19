@@ -19,6 +19,8 @@ class MemberEditUseCaseBase(
         }
 
 
+    override suspend fun member(memberId: Int): Result<ProfileMember> = profileRepository.memberDetail(memberId)
+
     override suspend fun teams(): Result<List<Team>> =
         teamsCityRepository.teams()
 

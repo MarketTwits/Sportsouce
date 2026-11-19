@@ -1,6 +1,9 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import com.arkivanov.essenty.lifecycle.doOnPause
+import com.arkivanov.essenty.lifecycle.doOnResume
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -9,9 +12,11 @@ import com.markettwits.sportsouce.bottom_bar.component.listener.BottomBarVisibil
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
 import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStoreFactory
+import com.markettwits.sportsouce.profile.registrations.presentation.management.RegistrationManagementComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -22,12 +27,15 @@ class StartOrderComponentBase(
     private val dismiss: () -> Unit,
     private val openStart: (Int) -> Unit,
     private val onReRegistration: (startId: Int, orderId: Int) -> Unit,
+    managementFactory: ((ComponentContext, () -> Unit) -> RegistrationManagementComponent)? = null,
 ) : StartOrderComponent, BottomBarComponentHandler(),
     ComponentContext by componentContext {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
     private val store = instanceKeeper.getStore {
         storeFactory.create(start)
     }
+    override val management = managementFactory?.invoke(componentContext) { store.accept(StartOrderStore.Intent.RefreshOrder()) }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override val state: StateFlow<StartOrderStore.State> = store.stateFlow
 
@@ -37,6 +45,13 @@ class StartOrderComponentBase(
 
     init {
         subscribeOnBottomBar(BottomBarVisibilityStrategy.AlwaysInvisible)
+        lifecycle.doOnResume {
+            store.accept(StartOrderStore.Intent.RefreshOrder())
+            management?.accept(RegistrationManagementComponent.Intent.LoadParticipantContext)
+            management?.accept(RegistrationManagementComponent.Intent.ReloadPreviews)
+        }
+        lifecycle.doOnPause { store.accept(StartOrderStore.Intent.CancelOrderRefresh) }
+        lifecycle.doOnDestroy { scope.cancel() }
         scope.launch {
             store.labels.collect {
                 when (it) {

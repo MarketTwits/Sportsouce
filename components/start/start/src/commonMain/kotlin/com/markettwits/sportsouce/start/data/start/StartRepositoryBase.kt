@@ -25,6 +25,8 @@ import com.markettwits.sportsouce.start.cloud.model.start.fields.album.StartAlbu
 import com.markettwits.sportsouce.start.data.start.mapper.members.StartMembersNewToUiMapper
 import com.markettwits.sportsouce.start.data.start.mapper.start.StartRemoteToUiMapper
 import com.markettwits.sportsouce.start.domain.*
+import com.markettwits.sportsouce.start.data.start.mapper.toDomain
+import kotlinx.coroutines.CancellationException
 import com.markettwits.sportsouce.start.domain.mapper.StartItemToStartsListItemMapper
 import com.markettwits.sportsouce.start.presentation.membres.models.StartMembersUi
 import com.markettwits.sportsouce.start.presentation.result.model.MemberResult
@@ -92,21 +94,18 @@ internal class StartRepositoryBase(
     override suspend fun startAddToFavorite(startItem: StartItem): Result<Boolean> = runCatching {
         val startsListItem = StartItemToStartsListItemMapper.map(startItem)
         favoritesRepository.add(startsListItem)
-        isStartInFavorite(startItem.id.toString()).getOrDefault(false)
+        true
     }
 
     override suspend fun startRemoveFromFavorites(startItem: StartItem): Result<Boolean> = runCatching {
         val startsListItem = StartItemToStartsListItemMapper.map(startItem)
         favoritesRepository.remove(startsListItem)
-        isStartInFavorite(startItem.id.toString()).getOrDefault(false)
+        false
     }
 
-    override suspend fun isStartInFavorite(startId: String): Result<Boolean> {
-        val numericStartId = startId.toIntOrNull() ?: run {
-            val startData = startService.start(startId)
-            startData.id
-        }
-        return favoritesRepository.isStartInFavorite(numericStartId)
+    override suspend fun isStartInFavorite(startId: String): Result<Boolean> = runCatching {
+        val numericStartId = startId.toIntOrNull() ?: startService.start(startId).id
+        favoritesRepository.isStartInFavorite(numericStartId).getOrThrow()
     }
 
     override suspend fun startMembersResult(startId: Int, maxResultCount: Int): List<MemberResult> {
@@ -132,7 +131,11 @@ internal class StartRepositoryBase(
     override suspend fun startComments(startId: Int): Result<StartItem.Comments> =
         retryRunCatchingAsync {
             val value = startService.comments(startId)
-            startMapper.map(value)
+            val comments = startMapper.map(value)
+            cache.get(startId)?.getOrNull()?.let { cached ->
+                cache.set(key = startId, value = Result.success(cached.copy(commentsRemote = comments)))
+            }
+            comments
         }
 
     override suspend fun startsRecommended(startId: String): Result<List<StartsListItem>> =
@@ -148,6 +151,16 @@ internal class StartRepositoryBase(
 
     override suspend fun startsSeries(seriesId: Int): Result<List<StartsListItem>> = runCatching {
         startsService.fetchRelatedStarts(seriesId)
+    }
+
+    override suspend fun refundRules(startId: Int): Result<StartRefundRules> = runCatching {
+        val response = startService.refundRules(startId)
+        require(response.startId == startId)
+        response.toDomain()
+    }.onFailure { if (it is CancellationException) throw it }
+
+    override suspend fun startsArchive(archiveId: Int): Result<List<StartsListItem>> = runCatching {
+        startsService.fetchArchiveStarts(archiveId)
     }
 
     private suspend fun launches(startId: String): Result<StartItem> {
@@ -184,18 +197,17 @@ internal class StartRepositoryBase(
         startId: Int,
         comment: String,
         id: Int,
-        subComment: Boolean
+        subComment: Boolean,
+        isQuestion: Boolean,
     ): CommentUiState {
         return try {
             val token = authService.updateToken().getOrThrow()
-            val userId = authService.auth().getOrThrow().id
             if (subComment)
                 startService.writeSubComment(
                     subComment = StartSubCommentRequest(
                         comment = comment,
-                        parentCommentId = id,
-                        personId = userId.toString(),
-                        startId = startId
+                        parentCommentId = id.toString(),
+                        startId = startId.toString()
                     ),
                     token = token
                 )
@@ -203,16 +215,18 @@ internal class StartRepositoryBase(
                 startService.writeComment(
                     startCommentRequest = StartCommentRequest(
                         comment = comment,
-                        startId = id,
-                        personId = userId.toString(),
-                        isReview = false, //TODO replace after add review selector
-                        averageScore = 0.0 //TODO replace after add review selector
+                        startId = startId.toString(),
+                        isReview = false,
+                        isQuestion = isQuestion
                     ),
                     token = token
                 )
             CommentUiState.Success
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            CommentUiState.Error(e.mapToSauceError().mapToString())
+            if (e.requiresStartSignIn()) CommentUiState.AuthorizationRequired
+            else CommentUiState.Error(e.mapToSauceError().mapToString())
         }
     }
 

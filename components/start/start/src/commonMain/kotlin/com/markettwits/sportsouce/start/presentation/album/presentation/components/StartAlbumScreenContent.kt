@@ -1,242 +1,108 @@
 package com.markettwits.sportsouce.start.presentation.album.presentation.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import com.markettwits.core_ui.items.components.navigation.excludeReservedBottomInset
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
+import com.markettwits.core_ui.items.components.navigation.SauceLazyVerticalGrid as LazyVerticalGrid
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import kotlin.math.roundToInt
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.progress.shimmer
-import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.screens.FullImageScreen
-import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.window.calculateWindowSizeClass
-import com.markettwits.core_ui.items.window.screenWidthDp
+import com.markettwits.core_ui.items.components.buttons.ScrollToTopBabButton
+import com.markettwits.core_ui.items.screens.SaucePhotoViewer
+import com.markettwits.core_ui.items.screens.photoViewerHostInsets
+import com.markettwits.core_ui.items.theme.*
+import com.markettwits.sportsouce.start.presentation.common.components.StartPhoto
 import kotlinx.coroutines.launch
+import com.markettwits.sportsouce.start.presentation.album.domain.AlbumPhoto
+import com.markettwits.sportsouce.start.presentation.album.presentation.store.StartAlbumStore
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun StartAlbumScreenContent(
-    modifier: Modifier = Modifier,
-    items: List<String>,
-
-    ) {
-    var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
-    var loadedItemCount by rememberSaveable { mutableIntStateOf(20) }
-
-    val loadedItems = remember(items, loadedItemCount) {
-        items.take(loadedItemCount.coerceAtMost(items.size))
-    }
-
-    val scrollableState = rememberLazyGridState()
-    val screenWidth = calculateWindowSizeClass().screenWidthDp
-
-    val columnCount = rememberSaveable(screenWidth) {
-        val minColumnWidth = 140.dp
-        val calculatedColumns = (screenWidth / minColumnWidth).toInt()
-        calculatedColumns.coerceIn(2, 5)
-    }
-
-    val showScrollToTopButton by remember {
-        derivedStateOf {
-            scrollableState.firstVisibleItemIndex > columnCount * 2
-        }
-    }
-
-    val coroutineScope = rememberCoroutineScope()
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showScrollToTopButton,
-                enter = fadeIn(animationSpec = tween(300)) + scaleIn(
-                    animationSpec = tween(300),
-                    initialScale = 0.8f
-                ),
-                exit = fadeOut(animationSpec = tween(300)) + scaleOut(
-                    animationSpec = tween(300),
-                    targetScale = 0.8f
-                ),
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                FloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            scrollableState.animateScrollToItem(0)
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.secondary,
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 6.dp,
-                        pressedElevation = 12.dp
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowUp,
-                        contentDescription = "Прокрутить наверх"
-                    )
+fun StartAlbumScreenContent(modifier: Modifier = Modifier, items: List<String>, selection: Map<Int, AlbumPhoto> = emptyMap(), onEvent: (StartAlbumStore.Intent) -> Unit = {}) {
+    key(items) {
+        val sources = remember { AlbumPhotoSources() }
+        BoxWithConstraints(modifier.fillMaxSize()) {
+            var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
+            val state = rememberLazyGridState()
+            val scope = rememberCoroutineScope()
+            val columns = if (maxWidth < 600.dp) 3 else (maxWidth / 160.dp).toInt().coerceAtLeast(3)
+            val showScrollToTop by remember(columns) { derivedStateOf { state.firstVisibleItemIndex > columns * 2 } }
+            Scaffold(Modifier.fillMaxSize(), containerColor = SauceTheme.colors.background,
+                contentWindowInsets = WindowInsets(0),
+                floatingActionButton = {
+                    if (showScrollToTop) ScrollToTopBabButton { scope.launch { state.animateScrollToItem(0) } }
+                }) { padding ->
+                StartAlbumPhotoGrid(items, state, onSelectImage = {
+                    if (selection.isNotEmpty()) onEvent(StartAlbumStore.Intent.TogglePhoto(AlbumPhoto(it, items[it]))) else selectedIndex = it
+                }, modifier = Modifier.padding(padding), sources = sources, selection = selection, onEvent = onEvent)
+            }
+            if (selection.isNotEmpty()) AlbumSelectionPanel(selection.size, { onEvent(StartAlbumStore.Intent.ClearSelection) },
+                { onEvent(StartAlbumStore.Intent.ShareSelection) }, { onEvent(StartAlbumStore.Intent.DownloadSelection) }, Modifier.align(Alignment.BottomCenter))
+            if (selectedIndex in items.indices) SaucePhotoViewer(images = items, initialIndex = selectedIndex, title = "Фотоальбом",
+                onShare = { onEvent(StartAlbumStore.Intent.SharePhotos(listOf(AlbumPhoto(it, items[it])))) },
+                onDownload = { onEvent(StartAlbumStore.Intent.DownloadPhotos(listOf(AlbumPhoto(it, items[it])))) },
+                transitionSource = sources[selectedIndex], prepareReturn = { index ->
+                    state.revealAlbumPhoto(index)
+                    withFrameNanos { }; withFrameNanos { }
+                    sources[index]
+                }) { index ->
+                scope.launch {
+                    state.revealAlbumPhoto(index)
+                    selectedIndex = -1
                 }
             }
         }
-    ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize(),
-            state = scrollableState,
-            columns = GridCells.Fixed(columnCount),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            contentPadding = PaddingValues(4.dp),
-            content = {
-                itemsIndexed(
-                    items = loadedItems,
-                    key = { index, item -> item + index }
-                ) { index, content ->
-                    ImageCardContent(
-                        imageUrl = content,
-                        onClick = { selectedIndex = index }
-                    )
-                }
-                if (loadedItems.size < items.size) {
-                    item(span = { GridItemSpan(columnCount) }) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp)
-                                .padding(vertical = 16.dp, horizontal = 32.dp)
-                                .shimmer()
-                                .clip(Shapes.medium)
-                                .background(MaterialTheme.colorScheme.tertiaryContainer)
-                        )
-                    }
-                }
-                item(
-                    span = { GridItemSpan(columnCount) },
-                ) {
-                    Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
-                }
-            }
-        )
-
-
-    }
-
-    if (selectedIndex != -1) {
-        FullImageScreen(
-            selectedImageIndex = selectedIndex,
-            image = items
-        ) {
-            selectedIndex = -1
-        }
-    }
-
-    LaunchedEffect(scrollableState) {
-        snapshotFlow {
-            scrollableState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-        }
-            .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null &&
-                    lastVisibleIndex >= loadedItemCount - 10 &&
-                    loadedItemCount < items.size
-                ) {
-                    loadedItemCount = (loadedItemCount + 20).coerceAtMost(items.size)
-                }
-            }
     }
 }
 
+/** Lazy grid cells keep decoding incremental even for albums supplied as a complete list. */
 @Composable
-private fun ImageCardContent(
-    modifier: Modifier = Modifier,
-    imageUrl: String,
-    onClick: (String) -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(0.75f)
-            .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
-    ) {
-        SubcomposeAsyncImage(
-            model = imageRequestCrossfade(imageUrl),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            error = {
-                ErrorImagePlaceholder()
-            },
-            success = {
-                SubcomposeAsyncImageContent(
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { onClick(imageUrl) }
-                )
-            },
-            loading = {
-                LoadingImagePlaceholder()
-            }
-        )
-    }
-}
-
-@Composable
-private fun LoadingImagePlaceholder() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .shimmer()
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
-    )
-}
-
-@Composable
-private fun ErrorImagePlaceholder() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.tertiaryContainer),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ErrorOutline,
-                tint = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f),
-                contentDescription = null,
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Ошибка загрузки",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.6f),
-                textAlign = TextAlign.Center,
-                fontSize = 10.sp
-            )
+internal fun StartAlbumPhotoGrid(items: List<String>, state: LazyGridState, onSelectImage: (Int) -> Unit, modifier: Modifier = Modifier,
+    sources: AlbumPhotoSources = remember { AlbumPhotoSources() }, selection: Map<Int, AlbumPhoto> = emptyMap(), onEvent: (StartAlbumStore.Intent) -> Unit = {}) {
+    val photos = remember(items) { items.mapIndexed { index, url -> AlbumPhoto(index, url) } }
+    val density = LocalDensity.current
+    val bounce = remember { AlbumOverscrollEffect() }
+    val bottom = photoViewerHostInsets().excludeReservedBottomInset().asPaddingValues().calculateBottomPadding() + if (selection.isNotEmpty()) 100.dp else 0.dp
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        val columns = with(AlbumGridCells) { with(density) { calculateCrossAxisCellSizes(maxWidth.roundToPx(), 1.dp.roundToPx()) } }
+        SideEffect {
+            bounce.viewportHeight = with(density) { maxHeight.toPx() }
+            bounce.updateBounds { if (it > 0f) !state.canScrollBackward else !state.canScrollForward }
         }
+        LazyVerticalGrid(columns = AlbumGridCells, state = state, modifier = Modifier.fillMaxSize()
+            .offset { IntOffset(0, bounce.offset.roundToInt()) }
+            .albumSelectionGesture(state, sources, photos, selection) { onEvent(StartAlbumStore.Intent.SelectPhotos(it)) },
+            overscrollEffect = bounce,
+            contentPadding = PaddingValues(top = 12.dp, bottom = bottom),
+            horizontalArrangement = Arrangement.spacedBy(1.dp), verticalArrangement = Arrangement.spacedBy(1.dp)) {
+            itemsIndexed(items, key = { index, _ -> "photo-$index" }) { index, url ->
+                AlbumPhotoTile(index, url, "Фото ${index + 1} из ${items.size}", sources, selection.isNotEmpty(), index in selection,
+                    onLongClick = { onEvent(StartAlbumStore.Intent.TogglePhoto(photos[index])) }) { onSelectImage(index) }
+            }
+        }
+        AlbumScrollbar(state, AlbumScrollLayout(emptyList(), items.size, columns.size,
+            (columns.firstOrNull() ?: 0).toFloat(), with(density) { 1.dp.roundToPx().toFloat() },
+            with(density) { 12.dp.toPx() }, with(density) { bottom.toPx() }), bounce,
+            with(density) { maxHeight.toPx() }, 8.dp, bottom + 8.dp, Modifier.fillMaxSize(), enabled = selection.isEmpty())
     }
+
+}
+
+/** Preserve the viewport when the photo is already fully visible, otherwise reveal its row. */
+internal suspend fun LazyGridState.revealAlbumPhoto(gridIndex: Int, pinnedHeaderHeight: Int = 0) {
+    val viewport = layoutInfo
+    val safeTop = viewport.viewportStartOffset + pinnedHeaderHeight
+    val visible = viewport.visibleItemsInfo.any { it.index == gridIndex &&
+        it.offset.y >= safeTop && it.offset.y + it.size.height <= viewport.viewportEndOffset }
+    if (!visible) scrollToItem(gridIndex, -safeTop)
 }

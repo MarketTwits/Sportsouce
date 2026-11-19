@@ -1,148 +1,60 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseOutCubic
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import com.markettwits.core_ui.items.theme.*
 import com.markettwits.sportsouce.start.cloud.model.start.fields.Organizer
-import kotlinx.coroutines.delay
 
 @Composable
-internal fun StartExtraFieldsPanel(
-    modifier: Modifier = Modifier,
-    place: String,
-    organizers: List<Organizer>,
-    startDate: String,
-    isPartialData: Boolean = false,
-) {
-    // Create a unique key for this data combination
-    val dataKey = "${startDate}_${place}_${organizers.joinToString { it.name }}"
-
-    // Animation states for staggered appearance (top to bottom)
-    var showDateRow by rememberSaveable(dataKey) { mutableStateOf(false) }
-    var showPlaceRow by rememberSaveable(dataKey) { mutableStateOf(false) }
-    var showOrganizersRow by rememberSaveable(dataKey) { mutableStateOf(false) }
-    var hasAnimated by rememberSaveable(dataKey) { mutableStateOf(false) }
-
-    // Staggered animation timing - trigger when data changes
-    LaunchedEffect(startDate, place, organizers, isPartialData) {
-        if (!hasAnimated && !isPartialData) {
-            delay(50) // Small delay to ensure reset
-
-            if (startDate.isNotEmpty()) {
-                showDateRow = true
-                delay(150) // Slightly longer delay for smoother sequence
-            }
-            if (place.isNotEmpty()) {
-                showPlaceRow = true
-                delay(150)
-            }
-            if (organizers.isNotEmpty()) {
-                showOrganizersRow = true
-            }
-            hasAnimated = true
-        } else if (hasAnimated && !isPartialData) {
-            // Show immediately if already animated and data is fully loaded
-            if (startDate.isNotEmpty()) showDateRow = true
-            if (place.isNotEmpty()) showPlaceRow = true
-            if (organizers.isNotEmpty()) showOrganizersRow = true
-        }
-    }
-
+internal fun StartExtraFieldsPanel(modifier: Modifier = Modifier, place: String, organizers: List<Organizer>,
+    startDate: String, isPartialData: Boolean = false) {
+    if (isPartialData || (startDate.isBlank() && place.isBlank() && organizers.isEmpty())) return
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        modifier = modifier.fillMaxWidth().clip(SauceShapes.card),
+        verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall),
     ) {
-        if (startDate.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showDateRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
-            ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.DateRange,
-                    value = startDate,
-                )
-            }
-        }
-        if (place.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showPlaceRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
-            ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.Place,
-                    value = place,
-                )
-            }
-        }
-        if (organizers.isNotEmpty()) {
-            AnimatedVisibility(
-                visible = showOrganizersRow,
-                enter = fadeIn(animationSpec = tween(durationMillis = 500, easing = EaseOutCubic)) +
-                        slideInVertically(
-                            animationSpec = tween(durationMillis = 500, easing = EaseOutCubic),
-                            initialOffsetY = { it / 8 } // More subtle slide distance
-                        )
-            ) {
-                StartExtraFiledRow(
-                    icon = Icons.Outlined.PersonOutline,
-                    value = "Организаторы ${organizers.joinToString(", ") { it.name }}"
-                )
-            }
-        }
+        if (startDate.isNotBlank()) StartExtraFieldRow(Icons.Outlined.DateRange, "Дата старта", startDate)
+        if (place.isNotBlank()) StartExtraFieldRow(Icons.Outlined.Place, "Место проведения", place)
+        if (organizers.isNotEmpty()) StartExtraFieldRow(
+            Icons.Outlined.PersonOutline,
+            if (organizers.size == 1) "Организатор" else "Организаторы",
+            organizers.joinToString { it.name },
+        )
     }
 }
 
 @Composable
-private fun StartExtraFiledRow(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    value: String,
-) {
+private fun StartExtraFieldRow(icon: ImageVector, label: String, value: String) {
+    val colors = SauceTheme.colors
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+        modifier = Modifier.fillMaxWidth().background(colors.surfaceSubtle)
+            .padding(horizontal = SauceSpacing.large, vertical = SauceSpacing.medium),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = "icon",
-            tint = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.size(20.dp)
-        )
-        Text(
-            text = value,
-            color = MaterialTheme.colorScheme.onBackground,
-            fontFamily = FontNunito.medium(),
-            fontSize = 14.sp,
-            modifier = Modifier.weight(1f)
-        )
+        Box(
+            modifier = Modifier.size(36.dp).background(
+                color = colors.actionSoft,
+                shape = SauceShapes.badge,
+            ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(icon, null, Modifier.size(20.dp), tint = colors.action)
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(label, Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelMedium, color = colors.textSecondary)
+            Text(value, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodyMedium, color = colors.textPrimary)
+        }
     }
 }

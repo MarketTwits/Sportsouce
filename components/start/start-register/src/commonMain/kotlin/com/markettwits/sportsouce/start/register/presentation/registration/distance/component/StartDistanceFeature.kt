@@ -3,9 +3,10 @@ package com.markettwits.sportsouce.start.register.presentation.registration.dist
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStageWithStatement
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.hasValue
+import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.visibleAdditionalFieldAnswers
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidatorBase
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.components.StartRegistrationStagePage
 import kotlinx.coroutines.CoroutineScope
@@ -127,12 +128,11 @@ class StartDistanceFeature(
     ): StartRegistrationStagePage.Registration {
         val registration = state.value
         val updatedStages = registration.distance.stages.map { stageWithStatement ->
-            val needsUpdate = stageWithStatement.stage.additionalFields.any {
-                it.field.id == startRegisterAnswer.field.id
-            }
-            if (needsUpdate) {
+            val fields = stageWithStatement.stage.additionalFields
+            val updatedFields = updateAnswers(fields, startRegisterAnswer)
+            if (updatedFields !== fields) {
                 val updatedStage = stageWithStatement.stage.copy(
-                    additionalFields = updateAnswers(stageWithStatement.stage.additionalFields, startRegisterAnswer)
+                    additionalFields = updatedFields,
                 )
                 stageWithStatement.copy(stage = updatedStage)
             } else {
@@ -163,21 +163,12 @@ class StartDistanceFeature(
         startRegisterAnswer: StartRegistrationStatementAnswer
     ): List<StartRegistrationStatementAnswer> {
         val fieldId = startRegisterAnswer.field.id
-        val answerExists = answers.any { it.field.id == fieldId }
+        if (answers.visibleAdditionalFieldAnswers().none { it.field.id == fieldId }) return answers
 
-        return if (answerExists) {
-            answers.map { if (it.field.id == fieldId) startRegisterAnswer else it }
-        } else {
-            val isAnswerEmpty = startRegisterAnswer.answer.let { answer ->
-                answer.string.isNullOrEmpty() &&
-                        answer.number == null &&
-                        answer.bool == null &&
-                        answer.date.isNullOrEmpty() &&
-                        answer.multiSelect.isNullOrEmpty() &&
-                        answer.singleSelect == null
-            }
-
-            if (isAnswerEmpty) answers else answers + startRegisterAnswer
+        return when {
+            answers.any { it.field.id == fieldId } -> answers.map { if (it.field.id == fieldId) startRegisterAnswer else it }
+            startRegisterAnswer.hasValue() -> answers + startRegisterAnswer
+            else -> answers
         }
     }
 
@@ -186,53 +177,9 @@ class StartDistanceFeature(
         onSuccess: () -> Unit,
         onMessage: (EventContent) -> Unit,
     ) {
-        val requiredFieldIdsFromDistance = page.distance.answers
-            .map { it.field }
-            .filter { !it.isOptional }
-            .map { it.id }
-
-        val requiredFieldIdsFromStages = page.distance.stages
-            .flatMap { it.stage.additionalFields }
-            .map { it.field }
-            .filter { !it.isOptional }
-            .map { it.id }
-
-        val requiredFieldIds = requiredFieldIdsFromDistance + requiredFieldIdsFromStages
-
-        val providedAnswerIdsFromDistance = page.distance.answers
-            .filter { answer ->
-                val field = answer.field
-                when (field.type) {
-                    StartRegistrationAdditionalField.Type.TEXT -> !answer.answer.string.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
-                    StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
-                    StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
-                    StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
-                }
-            }
-            .map { it.field.id }
-
-        val providedAnswerIdsFromStages = page.distance.stages
-            .flatMap { it.stage.additionalFields }
-            .filter { answer ->
-                val field = answer.field
-                when (field.type) {
-                    StartRegistrationAdditionalField.Type.TEXT -> !answer.answer.string.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.NUMBER -> answer.answer.number != null
-                    StartRegistrationAdditionalField.Type.CHECKBOX -> answer.answer.bool != null
-                    StartRegistrationAdditionalField.Type.DATA -> !answer.answer.date.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.TIME -> !answer.answer.string.isNullOrBlank()
-                    StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.answer.multiSelect.isNullOrEmpty()
-                    StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.answer.singleSelect != null
-                }
-            }
-            .map { it.field.id }
-
-        val providedAnswerIds = providedAnswerIdsFromDistance + providedAnswerIdsFromStages
-
-        if (requiredFieldIds.all { it in providedAnswerIds }) {
+        val visibleAnswers = page.distance.answers.visibleAdditionalFieldAnswers() +
+            page.distance.stages.flatMap { it.stage.additionalFields.visibleAdditionalFieldAnswers() }
+        if (visibleAnswers.all { it.field.isOptional || it.hasValue() }) {
             onSuccess()
         } else {
             onMessage(EventContent(false, "Заполните обязательные дополнительные поля"))

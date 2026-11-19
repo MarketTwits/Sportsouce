@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.start.data.start.mapper.start
 
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.core.time.TimePattern
+import com.markettwits.core.time.mapDateRange
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMemberItem
@@ -49,10 +50,7 @@ internal class StartRemoteToUiMapperBase(
                         code = startRemote.startStatus.code,
                         name = startRemote.startStatus.name
                     ),
-                    startTime = timeMapper.mapTime(
-                        TimePattern.FullWithEmptySpace,
-                        startRemote.startDate
-                    ),
+                    startTime = timeMapper.mapDateRange(startRemote.startDate, startRemote.endDate),
                     slug = startRemote.slug ?: "",
                     startData = timeMapper.mapTime(
                         TimePattern.FullWithEmptySpace,
@@ -99,6 +97,9 @@ internal class StartRemoteToUiMapperBase(
                             description = it.description,
                         )
                     } ?: StartItem.StartSeries.Empty,
+                    startArchive = startRemote.archive?.takeIf { it.id > 0 }?.let {
+                        StartItem.StartArchive(it.id, it.name, it.description)
+                    },
                     distanceInfoNew = startRemote.distinctDistances.values.toList(),
                     kindOfSports = startRemote.kindOfSports?.map {
                         StartItem.KindOfSport(
@@ -145,10 +146,7 @@ internal class StartRemoteToUiMapperBase(
                         code = startRemote.startData.startStatus.code,
                         name = startRemote.startData.startStatus.name
                     ),
-                    startTime = timeMapper.mapTime(
-                        TimePattern.FullWithEmptySpace,
-                        startRemote.startData.startDate
-                    ),
+                    startTime = timeMapper.mapDateRange(startRemote.startData.startDate, startRemote.startData.endDate),
                     startData = timeMapper.mapTime(
                         TimePattern.FullWithEmptySpace,
                         startRemote.startData.startDate

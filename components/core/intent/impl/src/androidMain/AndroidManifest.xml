@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
     <application>
+        <activity android:name="com.markettwits.AndroidAlbumStoragePermissionActivity"
+                  android:exported="false" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.fileprovider"

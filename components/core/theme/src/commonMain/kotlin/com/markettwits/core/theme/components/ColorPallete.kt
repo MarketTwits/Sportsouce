@@ -14,7 +14,7 @@ internal fun systemColorPallet(
         ColorTheme.DarkTheme -> DarkColorScheme
         ColorTheme.LightTheme -> LightColorScheme
         ColorTheme.System -> if (systemIsDark) DarkColorScheme else LightColorScheme
-    }.toAnimatePallet()
+    }
 }
 
 @Composable

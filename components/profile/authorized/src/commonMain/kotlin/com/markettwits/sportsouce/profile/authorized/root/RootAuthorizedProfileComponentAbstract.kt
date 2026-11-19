@@ -1,6 +1,14 @@
 package com.markettwits.sportsouce.profile.authorized.root
 
+import com.arkivanov.essenty.lifecycle.doOnResume
+import com.arkivanov.essenty.lifecycle.doOnDestroy
+import kotlinx.coroutines.*
+
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.arkivanov.decompose.ComponentContext
+import com.markettwits.sportsouce.profile.results.presentation.component.MyResultsComponentBase
+import com.markettwits.sportsouce.start.presentation.result.component.StartMemberResultsComponentBase
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.markettwits.getOrCreateKoinScope
@@ -17,15 +25,26 @@ import com.markettwits.sportsouce.shop.orders.presentation.component.ShopUserOrd
 import com.markettwits.sportsouce.start.presentation.start.component.StartScreenInput
 import com.markettwits.sportsouce.start.root.RootStartScreenComponentBase
 import com.markettwits.sportsouce.starts.favorites.di.createStartsFavoritesComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptsComponent
+import com.markettwits.sportsouce.profile.authorized.receipts.ReceiptDocumentComponent
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 
 abstract class RootAuthorizedProfileComponentAbstract(
     componentContext: ComponentContext,
     private val signOut: () -> Unit,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
+    override val notifications: NotificationApi,
 ) : ComponentContext by componentContext, RootAuthorizedProfileComponent {
 
     private val scope = getOrCreateKoinScope(
         listOf(rootProfileModule)
     )
+
+    private val notificationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    init {
+        lifecycle.doOnResume { notificationScope.launch { notifications.refreshUnreadCount() } }
+        lifecycle.doOnDestroy { notificationScope.cancel() }
+    }
 
     private val navigation = StackNavigation<RootAuthorizedProfileComponent.Config>()
 
@@ -39,16 +58,37 @@ abstract class RootAuthorizedProfileComponentAbstract(
         )
 
 
+    override fun popToRoot() {
+        navigation.popTo(0)
+    }
+
     private fun childStack(
         config: RootAuthorizedProfileComponent.Config,
         componentContext: ComponentContext,
     ): RootAuthorizedProfileComponent.Child = when (config) {
+        RootAuthorizedProfileComponent.Config.Inbox -> Inbox(
+            notifications.createComponent(componentContext, onBack = { navigation.pop() }, onOpenStart = { id ->
+                navigation.pushNew(RootAuthorizedProfileComponent.Config.Start(StartScreenInput.Id(id)))
+            })
+        )
+
         is RootAuthorizedProfileComponent.Config.AuthProfile -> AuthProfile(
             AuthorizedProfileComponentBase(
                 componentContext = componentContext,
                 storeFactory = scope.get(),
                 event = { handleAuthorizedProfileEvent(it, navigation) }
             )
+        )
+
+        RootAuthorizedProfileComponent.Config.MyResults -> MyResults(
+            MyResultsComponentBase(componentContext, back = { navigation.pop() }, openStart = { id ->
+                navigation.pushNew(RootAuthorizedProfileComponent.Config.Start(StartScreenInput.Id(id)))
+            }, openResult = { id -> navigation.pushNew(RootAuthorizedProfileComponent.Config.ResultProtocol(id)) })
+        )
+
+        is RootAuthorizedProfileComponent.Config.ResultProtocol -> ResultProtocol(
+            StartMemberResultsComponentBase(componentContext, scope.get(), scope.get(), emptyList(), config.startId,
+                goBack = { navigation.pop() })
         )
 
         is RootAuthorizedProfileComponent.Config.MyRegistries -> MyRegistries(
@@ -95,6 +135,7 @@ abstract class RootAuthorizedProfileComponentAbstract(
             RootSettingsComponentBase(
                 componentContext = componentContext,
                 pop = navigation::pop,
+                updateStoreFactory = updateStoreFactory,
             )
         )
 
@@ -108,6 +149,15 @@ abstract class RootAuthorizedProfileComponentAbstract(
                     }
                 }
             )
+        )
+
+        is RootAuthorizedProfileComponent.Config.PaidReceipts -> PaidReceipts(
+            ReceiptsComponent(componentContext, scope.get(), back = { navigation.pop() },
+                open = { navigation.pushNew(RootAuthorizedProfileComponent.Config.Receipt(it.id)) })
+        )
+
+        is RootAuthorizedProfileComponent.Config.Receipt -> Receipt(
+            ReceiptDocumentComponent(componentContext, scope.get(), config.id, back = { navigation.pop() })
         )
 
         is RootAuthorizedProfileComponent.Config.Club -> ClubDashboard(

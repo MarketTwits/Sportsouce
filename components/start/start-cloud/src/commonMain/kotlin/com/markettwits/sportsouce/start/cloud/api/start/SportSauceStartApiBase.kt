@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.cloud.api.start
 
 import com.markettwits.core_cloud.provider.HttpClientProvider
+import com.markettwits.sportsouce.start.cloud.model.refund.StartRefundRulesRemote
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.request.StartSubCommentRequest
 import com.markettwits.sportsouce.start.cloud.model.comments.response.Comment
@@ -8,7 +9,9 @@ import com.markettwits.sportsouce.start.cloud.model.comments.response.Reply
 import com.markettwits.sportsouce.start.cloud.model.comments.response.StartCommentsRemote
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationRequest
 import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationResponse
+import com.markettwits.sportsouce.start.cloud.model.donation.StartDonationCheckRemote
 import com.markettwits.sportsouce.start.cloud.model.filters.FiltersRemote
+import com.markettwits.sportsouce.start.cloud.model.filters.StartOrganizersRemote
 import com.markettwits.sportsouce.start.cloud.model.kindofsport.KindOfSportRemote
 import com.markettwits.sportsouce.start.cloud.model.members.StartMember
 import com.markettwits.sportsouce.start.cloud.model.members.StartMembersRemote
@@ -31,6 +34,11 @@ internal class SportSauceStartApiBase(
 
     private val client = httpClient.provide()
 
+    override suspend fun refundRules(startId: Int): StartRefundRulesRemote {
+        val response = client.get("start/$startId/refund-rules/effective")
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun start(startId: String): StartRemote {
         val response = client.get("start/$startId")
         return json.decodeFromString(response.body<String>())
@@ -43,6 +51,14 @@ internal class SportSauceStartApiBase(
 
     override suspend fun seasons(): StartSeasonsRemote {
         val response = client.get("season")
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun organizers(offset: Int, limit: Int): StartOrganizersRemote {
+        val response = client.get("organizer") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+        }
         return json.decodeFromString(response.body<String>())
     }
 
@@ -120,6 +136,14 @@ internal class SportSauceStartApiBase(
         return json.decodeFromString<StartMembersResultRowsV2>(response.body<String>())
     }
 
+    override suspend fun checkDonation(startId: Int, token: String?): StartDonationCheckRemote {
+        val response = client.get("donations/check") {
+            parameter("startId", startId)
+            if (!token.isNullOrBlank()) bearerAuth(token)
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
     override suspend fun donation(startDonationRequest: StartDonationRequest): StartDonationResponse {
         val response = client.post("donations") {
             contentType(ContentType.Application.Json)
@@ -159,6 +183,21 @@ internal class SportSauceStartApiBase(
             setBody(subComment)
         }
         return json.decodeFromString(response.body())
+    }
+
+    override suspend fun albumPhotos(albumId: Int, offset: Int, limit: Int, tags: List<String>): com.markettwits.sportsouce.start.cloud.model.start.fields.album.AlbumPhotosRemote {
+        val response = client.get("album/photo") {
+            parameter("skipCount", offset)
+            parameter("maxResultCount", limit)
+            parameter("album_id", albumId)
+            if (tags.isNotEmpty()) parameter("tags", tags.joinToString(","))
+        }
+        return json.decodeFromString(response.body<String>())
+    }
+
+    override suspend fun album(albumId: Int): StartAlbum {
+        val response = client.get("album/$albumId")
+        return json.decodeFromString(response.body<String>())
     }
 
     override suspend fun albums(startId: Int): List<StartAlbum> {

@@ -14,6 +14,8 @@ interface AuthorizedProfileComponent {
     fun obtainOutput(outPut: Output)
 
     sealed interface Output {
+        data object Notifications : Output
+        data object MyResults : Output
         data object Favorites : Output
         data object AllRegistries : Output
         data object EditProfile : Output
@@ -25,5 +27,6 @@ interface AuthorizedProfileComponent {
         data class Start(val input: StartScreenInput) : Output
         data object Settings : Output
         data object UserOrders : Output
+        data object PaidReceipts : Output
     }
 }

@@ -8,6 +8,7 @@ class StartRegisterResultMapper {
     fun mapResult(
         response : StartRegistrationResponse
     ) : StartRegistrationResult {
+        check(response.success) { "Сервер не подтвердил регистрацию. Попробуйте ещё раз." }
         val payment =
             if (response.payment is StartRegistrationResponse.Payment.PaymentBase)
                 (response.payment as StartRegistrationResponse.Payment.PaymentBase).formUrl else ""

@@ -26,5 +26,9 @@ data class StartRegisterMember(
     @SerialName("team")
     val team: String,
     @SerialName("user_id")
-    val userId: String,
+    val userId: String? = null,
+    @SerialName("participant_user_id")
+    val participantUserId: Int? = null,
+    @SerialName("patronymic")
+    val patronymic: String? = null,
 )

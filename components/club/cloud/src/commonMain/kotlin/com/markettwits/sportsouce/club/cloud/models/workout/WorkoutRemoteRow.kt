@@ -16,4 +16,6 @@ data class WorkoutRemoteRow(
     val id: Int,
     @SerialName("type")
     val type: String,
+    val order: Int = 0,
+    val isHidden: Boolean = false,
 )

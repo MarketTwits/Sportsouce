@@ -2,11 +2,7 @@ package com.markettwits.selfupdater.thirdparty.github.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-
-private const val RELEASE_SUFFIX = "-release"
-private const val DEBUG_SUFFIX = "-debug"
-private const val APK_EXTENSION = ".apk"
+import com.markettwits.selfupdater.models.ReleaseVersion
 
 @Serializable
 data class GithubRelease(
@@ -15,24 +11,24 @@ data class GithubRelease(
     @SerialName("assets")
     val assets: List<GithubAsset>,
     @SerialName("name")
-    val name: String,
+    val name: String? = null,
     @SerialName("prerelease")
-    val preRelease: Boolean,
+    val preRelease: Boolean = false,
+    @SerialName("draft")
+    val draft: Boolean = false,
     @SerialName("body")
-    val description: String
+    val description: String? = null
 ) {
-    fun getDownloadUrl(isDev: Boolean): String? {
-        val suffix = if (isDev) DEBUG_SUFFIX else RELEASE_SUFFIX
-        val matchingAssets = assets.filter { it.name.contains(suffix) }
-        return matchingAssets.firstOrNull()?.browserDownloadUrl
-    }
-
-    fun getVersion(isDev: Boolean): String {
-        return if (isDev) {
-            tagName.removeSuffix(DEBUG_SUFFIX)
-        } else {
-            tagName.removeSuffix(RELEASE_SUFFIX)
-        }
+    fun androidAsset(): GithubAsset {
+        require(!draft && !preRelease) { "Release is not stable" }
+        val version = requireNotNull(ReleaseVersion.fromTag(tagName)) { "Invalid release tag" }
+        val expectedName = "Sportsauce-${version.versionName}-${version.buildNumber}.apk"
+        val matches = assets.filter { it.name == expectedName && it.state == "uploaded" && it.size > 0 }
+        require(matches.size == 1) { "Expected one uploaded Android APK" }
+        val asset = matches.single()
+        val expectedUrl = "https://github.com/MarketTwits/Sportsouce/releases/download/$tagName/$expectedName"
+        require(asset.browserDownloadUrl == expectedUrl) { "Unexpected Android APK URL" }
+        return asset
     }
 }
 
@@ -41,5 +37,17 @@ data class GithubAsset(
     @SerialName("name")
     val name: String,
     @SerialName("browser_download_url")
-    val browserDownloadUrl: String
-)
+    val browserDownloadUrl: String,
+    @SerialName("state")
+    val state: String,
+    @SerialName("size")
+    val size: Long,
+    @SerialName("digest")
+    val digest: String? = null,
+) {
+    fun sha256OrNull(): String? {
+        val value = digest?.removePrefix("sha256:") ?: return null
+        if (digest != "sha256:$value" || value.length != 64 || value.any { it !in '0'..'9' && it !in 'a'..'f' }) return null
+        return value
+    }
+}

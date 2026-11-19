@@ -1,146 +1,35 @@
 package com.markettwits.sportsouce.shop.item.presentation.components
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.progress.shimmer
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.components.commerce.SauceProductImage
 import com.markettwits.core_ui.items.screens.FullImageScreen
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
-
+import com.markettwits.core_ui.items.theme.*
 
 @Composable
-internal fun ShopItemImagePager(
-    modifier: Modifier,
-    imageUrl: List<String>,
-) {
-    var selectedIndex by remember { mutableStateOf(0) }
-    var isFullImage by remember { mutableStateOf(false) }
-
-    Column(modifier = modifier.fillMaxSize()) {
-        if (imageUrl.isNotEmpty()) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(Shapes.large)
-                    .background(Color.White)
-                    .noRippleClickable {
-                        isFullImage = true
-                    },
-                model = imageRequestCrossfade(imageUrl[selectedIndex]),
-                contentDescription = "",
-                contentScale = ContentScale.Fit,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.outlineVariant)
-                            .shimmer(
-                                tiltAngle = 30,
-                                gradientColors = listOf(
-                                    Color.Transparent,
-                                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
-                                    Color.Transparent,
-                                )
-                            )
-                    )
-                },
-                success = {
-                    SubcomposeAsyncImageContent()
-                })
-            Row(
-                modifier = Modifier
-                    .padding(top = 14.dp)
-                    .horizontalScroll(rememberScrollState())
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                imageUrl.forEachIndexed { index, image ->
-                    val scale = animateFloatAsState(
-                        targetValue = if (index == selectedIndex) 1.1f else 1f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
-                        label = "Scale animation"
-                    )
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(4.dp)
-                            .scale(scale.value)
-                            .border(
-                                width = if (index == selectedIndex) 3.dp else 0.dp,
-                                color = if (index == selectedIndex) MaterialTheme.colorScheme.secondary else Color.Transparent,
-                                shape = Shapes.medium
-                            )
-                            .clip(Shapes.medium)
-                            .background(Color.White)
-                            .clickable { selectedIndex = index },
-                        model = imageRequestCrossfade(image),
-                        contentDescription = "Thumbnail",
-                    )
-                }
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.tertiaryContainer)
-                    .fillMaxSize()
-                    .defaultMinSize(minHeight = 400.dp)
-                    .clip(Shapes.large),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Image,
-                        contentDescription = "No image",
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                    Text(
-                        text = "Изображение отсутствует",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.outline,
-                        fontFamily = FontNunito.medium(),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-            }
+internal fun ShopItemImagePager(modifier: Modifier, imageUrl: List<String>) {
+    var selected by remember(imageUrl) { mutableStateOf(0) }
+    var fullImage by remember { mutableStateOf(false) }
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Surface(onClick = { if (imageUrl.isNotEmpty()) fullImage = true }, shape = SauceShapes.card) {
+            SauceProductImage(imageUrl.getOrNull(selected), Modifier.fillMaxWidth().aspectRatio(1f))
         }
-        if (isFullImage) {
-            FullImageScreen(
-                image = imageUrl,
-                selectedImageIndex = selectedIndex,
-                onDismiss = {
-                    isFullImage = false
+        if (imageUrl.size > 1) Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            imageUrl.forEachIndexed { index, url ->
+                Surface(onClick = { selected = index }, shape = SauceShapes.field,
+                    border = BorderStroke(1.dp, if (index == selected) SauceTheme.colors.action else SauceTheme.colors.border)) {
+                    SauceProductImage(url, Modifier.size(80.dp))
                 }
-            )
+            }
         }
     }
+    if (fullImage && imageUrl.isNotEmpty()) FullImageScreen(image = imageUrl, selectedImageIndex = selected,
+        onDismiss = { fullImage = false })
 }

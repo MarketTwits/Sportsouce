@@ -3,15 +3,15 @@ package com.markettwits.sportsouce.start.register.presentation.registration.comm
 import com.markettwits.core.time.TimeMapper
 import com.markettwits.sportsouce.start.cloud.model.register.price.StartRegisterPriceRequest
 import com.markettwits.sportsouce.start.cloud.model.register.price.StartRegisterPriceResponse
-import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterAnswer
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterDistance
 import com.markettwits.sportsouce.start.cloud.model.register.price.fields.StartRegisterMember
 import com.markettwits.sportsouce.start.register.domain.StartRegType
 import com.markettwits.sportsouce.start.register.domain.StartStatement
-import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationAdditionalField
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationDistance
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationPriceResult
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
+import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.hasValue
+import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.visibleAdditionalFieldAnswers
 
 class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
 
@@ -72,20 +72,10 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
         commonAnswers: List<StartRegistrationStatementAnswer>,
         statementAnswers: List<StartRegistrationStatementAnswer>,
     ): StartRegisterMember {
-        val items: MutableList<StartRegistrationStatementAnswer> =
-            emptyList<StartRegistrationStatementAnswer>().toMutableList()
-
-        statementAnswers.forEach { value ->
-            items.add(value)
-        }
-
-        commonAnswers.forEach { value ->
-            items.add(value)
-        }
-
-        val member = StartRegisterMember(
-            answers = mapAnswers(items),
-            birthday = timeMapper.mapTimeToCloud(time = birthday),
+        val visibleAnswers = statementAnswers.visibleAdditionalFieldAnswers() + commonAnswers.visibleAdditionalFieldAnswers()
+        return StartRegisterMember(
+            answers = visibleAnswers.filter { !it.field.isOptional || it.hasValue() }.map { it.answer },
+            birthday = timeMapper.mapTimeToCloud(time = birthday).substringBefore('T'),
             city = city,
             email = email.trim().takeIf { it.isNotEmpty() },
             gender = sex,
@@ -94,33 +84,10 @@ class StartRegisterPriceMapper(private val timeMapper: TimeMapper) {
             stageId = stageId,
             surname = surname,
             team = team,
-            userId = userId.userId
+            userId = userId.userId.takeIf { participantSource == com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember.Source.Self && userId is StartStatement.UserId.WithId },
+            participantUserId = participantUserId?.takeIf { it > 0 },
+            patronymic = patronymic?.trim()?.takeIf { it.isNotEmpty() },
         )
-
-        return member
-    }
-
-    private fun mapAnswers(answers: List<StartRegistrationStatementAnswer>): List<StartRegisterAnswer> {
-        return answers.filter { statementAnswer ->
-
-            val field = statementAnswer.field
-
-            val answer = statementAnswer.answer
-
-            // Если поле обязательное, всегда оставляем
-            if (!field.isOptional) return@filter true
-
-            // Для опциональных полей проверяем значения на основе типа
-            when (field.type) {
-                StartRegistrationAdditionalField.Type.TEXT -> !answer.string.isNullOrBlank()
-                StartRegistrationAdditionalField.Type.NUMBER -> answer.number != null
-                StartRegistrationAdditionalField.Type.CHECKBOX -> answer.bool != null
-                StartRegistrationAdditionalField.Type.DATA -> !answer.date.isNullOrBlank()
-                StartRegistrationAdditionalField.Type.TIME -> !answer.date.isNullOrBlank()
-                StartRegistrationAdditionalField.Type.MULTISELECT -> !answer.multiSelect.isNullOrEmpty()
-                StartRegistrationAdditionalField.Type.SINGLE_SELECT -> answer.singleSelect != null
-            }
-        }.map { it.answer }
 
     }
 }

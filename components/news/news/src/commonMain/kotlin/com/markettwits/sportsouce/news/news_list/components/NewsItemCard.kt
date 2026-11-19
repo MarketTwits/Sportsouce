@@ -1,26 +1,35 @@
 package com.markettwits.sportsouce.news.news_list.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
-import com.markettwits.core_ui.items.components.progress.shimmer
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import com.markettwits.core_ui.items.components.progress.SauceSkeleton
 import com.markettwits.core_ui.items.image.DefaultImages
+import com.markettwits.core_ui.items.image.dominantImageColor
+import com.markettwits.core_ui.items.image.enableImageColorSampling
 import com.markettwits.core_ui.items.text.HtmlText
 import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.theme.SauceTheme
 import com.markettwits.sportsouce.news.common.model.NewsItem
 
 @Composable
@@ -28,72 +37,105 @@ fun NewsItemCard(
     modifier: Modifier = Modifier,
     newsInfo: NewsItem,
     cardWidth: Dp = 270.dp,
-    cardHeight: Dp = 240.dp,
+    onCoverColor: ((Color) -> Unit)? = null,
+    coverOverlay: @Composable BoxScope.() -> Unit = {},
     onClick: (NewsItem) -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .size(width = cardWidth, height = cardHeight)
-            .clip(Shapes.medium)
-            .clickable { onClick(newsInfo) }
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(2.5f)
-        ) {
+    NewsCardLayout(
+        modifier = modifier.clip(Shapes.medium).clickable(role = Role.Button) { onClick(newsInfo) },
+        cardWidth = cardWidth,
+        image = {
+            val context = LocalPlatformContext.current
+            val sampleCover = onCoverColor != null
+            val model = remember(context, newsInfo.imageUrl, sampleCover) {
+                if (sampleCover) ImageRequest.Builder(context)
+                    .data(newsInfo.imageUrl)
+                    .enableImageColorSampling()
+                    .build()
+                else newsInfo.imageUrl
+            }
             SubcomposeAsyncImage(
-                model = newsInfo.imageUrl,
+                model = model,
                 contentDescription = newsInfo.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(Shapes.medium),
+                    .border(1.dp, SauceTheme.colors.border, Shapes.medium),
                 error = {
                     SubcomposeAsyncImageContent(
                         painter = DefaultImages.EmptyImageStart(),
                         contentScale = ContentScale.Crop
                     )
                 },
-                success = {
+                success = { state ->
+                    if (onCoverColor != null) {
+                        val density = LocalDensity.current
+                        val direction = LocalLayoutDirection.current
+                        LaunchedEffect(state, newsInfo.imageUrl) {
+                            onCoverColor(state.painter.dominantImageColor(density, direction))
+                        }
+                    }
                     SubcomposeAsyncImageContent()
                 },
                 loading = {
-                    OnBackgroundCard(
-                        modifier = Modifier.shimmer(
-                            tiltAngle = 30,
-                            gradientColors = listOf(
-                                Color.Transparent,
-                                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                                Color.Transparent,
-                            )
-                        )
-                    ) {}
+                    SauceSkeleton(Modifier.fillMaxSize(), Shapes.medium)
                 }
             )
+            coverOverlay()
+        },
+    ) {
+        Text(
+            overflow = TextOverflow.Ellipsis,
+            text = newsInfo.title,
+            maxLines = 1,
+            fontSize = 16.sp,
+            lineHeight = NewsTitleLineHeight,
+            fontFamily = FontNunito.bold(),
+            color = SauceTheme.colors.textPrimary,
+        )
+        HtmlText(
+            modifier = Modifier.heightIn(min = with(LocalDensity.current) { (NewsDescriptionLineHeight * 2).toDp() }),
+            text = newsInfo.fullDescription,
+            lineHeight = NewsDescriptionLineHeight,
+            fontSize = 14.sp,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = FontNunito.regular(),
+            color = SauceTheme.colors.textSecondary,
+        )
+    }
+}
+
+@Composable
+internal fun NewsItemCardShimmer(cardWidth: Dp) {
+    val titleHeight = with(LocalDensity.current) { NewsTitleLineHeight.toDp() }
+    val lineHeight = with(LocalDensity.current) { NewsDescriptionLineHeight.toDp() }
+    NewsCardLayout(cardWidth = cardWidth,
+        image = { SauceSkeleton(Modifier.fillMaxSize(), Shapes.medium) }) {
+        Box(Modifier.fillMaxWidth().height(titleHeight)) {
+            SauceSkeleton(Modifier.fillMaxWidth(0.65f).height(titleHeight * 0.8f))
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1.25f)
-                .padding(top = 8.dp)
-        ) {
-            Text(
-                overflow = TextOverflow.Ellipsis,
-                text = newsInfo.title,
-                maxLines = 1,
-                fontSize = 16.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.tertiary,
-            )
-            HtmlText(
-                modifier = Modifier.heightIn(max = 35.dp),
-                text = newsInfo.fullDescription,
-                lineHeight = 16.sp,
-                fontSize = 12.sp,
-                fontFamily = FontNunito.regular(),
-                color = MaterialTheme.colorScheme.outline,
-            )
+        Column(Modifier.fillMaxWidth().height(lineHeight * 2), verticalArrangement = Arrangement.SpaceEvenly) {
+            SauceSkeleton(Modifier.fillMaxWidth(0.95f).height(lineHeight * 0.65f))
+            SauceSkeleton(Modifier.fillMaxWidth(0.7f).height(lineHeight * 0.65f))
         }
     }
 }
+
+/** The image stays stable; text grows with font scale instead of being clipped by card height. */
+@Composable
+private fun NewsCardLayout(
+    modifier: Modifier = Modifier,
+    cardWidth: Dp,
+    image: @Composable BoxScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(modifier.width(cardWidth)) {
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(Shapes.medium), content = image)
+        Column(Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp), content = content)
+    }
+}
+
+private val NewsTitleLineHeight = 20.sp
+private val NewsDescriptionLineHeight = 20.sp

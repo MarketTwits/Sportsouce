@@ -1,15 +1,15 @@
 package com.markettwits.sportsouce.shop.item.presentation.components
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.cash.paging.LoadStateLoading
 import app.cash.paging.compose.LazyPagingItems
-import com.markettwits.core_ui.items.theme.FontNunito
 import com.markettwits.sportsouce.shop.domain.model.ShopItem
 import com.markettwits.sportsouce.shop.item.presentation.components.similar.ShopItemSimilarCard
 import com.markettwits.sportsouce.shop.item.presentation.components.similar.ShopItemSimilarShimmerCard
@@ -26,9 +26,8 @@ fun LazyListScope.similarProductsItems(
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             text = "Похожие товары",
-            fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontFamily = FontNunito.bold()
+            style = MaterialTheme.typography.titleMedium,
+            color = SauceTheme.colors.textPrimary,
         )
     }
 

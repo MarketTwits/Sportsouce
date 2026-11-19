@@ -13,5 +13,5 @@ sealed class SauceError(private val throwable: Throwable) : Throwable(throwable)
 
     data class Empty(val exception: Throwable) : SauceError(exception)
 
-    data class General(val exception: Throwable) : SauceError(exception)
+    data class General(val exception: Throwable, val userMessage: String? = null) : SauceError(exception)
 }

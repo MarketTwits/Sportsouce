@@ -10,9 +10,19 @@ kotlin {
         namespace = "com.markettwits.registrations"
     }
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
+    sourceSets.androidMain.dependencies { implementation(libs.compose.activity) }
+
     sourceSets.commonMain.dependencies {
         
         implementation(projects.components.auth.authService)
+        implementation(projects.components.auth.authCloud)
+        implementation(libs.ktor.core)
+        implementation(libs.kotlinx.datetime)
         implementation(projects.components.profile.cloud)
         implementation(projects.components.core.ui)
         implementation(projects.components.start.start)
@@ -26,6 +36,7 @@ kotlin {
         implementation(projects.components.core.capturable)
         implementation(projects.components.core.cache)
         implementation(projects.components.core.errors)
+        implementation(projects.components.core.cloud)
         implementation(projects.components.analytics.crashlytics)
         implementation(projects.components.bottombar)
         implementation(libs.koin.core)

@@ -1,17 +1,9 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.DropDownSpinner
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 
@@ -22,50 +14,27 @@ internal fun AdditionalFieldSingleSelect(
     onFieldChanged: (StartRegistrationStatementAnswer) -> Unit
 ) {
 
-    val options by remember {
-        mutableStateOf(field.field.options)
+    val options = field.field.options.map { option ->
+        val title = option.price?.takeIf { it != 0 }?.let { "${option.title} (${it.formatPrice()} ₽)" } ?: option.title
+        AdditionalFieldOption(option.id, title)
     }
-
-    val selectedOption = field.field.options.find { it.id == field.answer.singleSelect }
-
-
-    Column(modifier = modifier.fillMaxWidth()) {
-
-        AdditionalFiledTitle(field = field.field)
-
-        val visibleList = options.map {
-            if (it.price != null)
-                "${it.title} Цена: (${it.price.formatPrice()} ₽)"
-            else it.title
-        }
-
-        DropDownSpinner(
-            itemList = visibleList,
-            selectedItem = field.answer.singleSelect,
-            onItemSelected = { id, item ->
-                onFieldChanged(
-                    field.copy(
-                        answer = field.answer.copy(
-                            singleSelect = options.getOrNull(id)?.id,
-                        )
-                    )
-                )
-            },
-            textFiled = {
-                val value = buildString {
-                    append(selectedOption?.title.orEmpty())
-
-                    selectedOption?.price
-                        ?.takeIf { it != 0 }
-                        ?.let { append(" (${it.formatPrice()} ₽)") }
-                }
-                OutlinedTextFieldBase(
-                    label = "",
-                    value = value,
-                    isEnabled = false
-                ) {}
-            }
+    val selection = options.find { it.id == field.answer.singleSelect }
+    DropDownSpinner(
+        modifier = modifier.fillMaxWidth(),
+        itemList = options,
+        selectedItem = selection,
+        onItemSelected = { index, _ ->
+            onFieldChanged(field.copy(answer = field.answer.copy(singleSelect = options[index].id)))
+        },
+    ) {
+        AdditionalFieldInput(
+            field = field.field,
+            value = selection?.title.orEmpty(),
+            placeholder = "Выберите вариант",
         )
-        Spacer(modifier = Modifier.height(8.dp))
     }
+}
+
+private data class AdditionalFieldOption(val id: Int, val title: String) {
+    override fun toString(): String = title
 }

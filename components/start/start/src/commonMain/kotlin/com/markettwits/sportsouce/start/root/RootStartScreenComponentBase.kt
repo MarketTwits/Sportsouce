@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.markettwits.ComponentKoinContext
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.infoLog
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.start.di.startModule
 import com.markettwits.sportsouce.start.presentation.album.di.startAlbumModule
 import com.markettwits.sportsouce.start.presentation.album.presentation.component.StartAlbumComponentBase
@@ -26,6 +27,7 @@ import com.markettwits.sportsouce.start.register.root.RootStartRegisterBase
 import com.markettwits.sportsouce.start.support.di.startSupportModule
 import com.markettwits.sportsouce.start.support.presentation.component.StartSupportComponentBase
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore
+import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponentBase
 
 class RootStartScreenComponentBase(
     context: ComponentContext,
@@ -65,6 +67,7 @@ class RootStartScreenComponentBase(
                 val supportComponent = StartSupportComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
+                    onSignIn = { navigation.pushNew(RootStartScreenComponent.Config.SupportAuth) },
                 )
                 RootStartScreenComponent.Child.Start(
                     component = StartScreenComponentBase(
@@ -81,8 +84,8 @@ class RootStartScreenComponentBase(
                         members = { id: Int, list: List<StartMembersUi> ->
                             navigation.pushNew(RootStartScreenComponent.Config.StartMembers(id, list))
                         },
-                        album = {
-                            navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(it))
+                        album = { images, albumId ->
+                            navigation.pushNew(RootStartScreenComponent.Config.StartAlbum(images, albumId))
                         },
                         registerNew = {
                             val config = RootStartScreenComponent.Config.StartRegistration(it)
@@ -108,7 +111,11 @@ class RootStartScreenComponentBase(
                             supportComponent.obtainEvent(StartSupportStore.Intent.ApplyStartId(it))
                         },
                         onOpenStartCommentsScreen = { startId, mode ->
-                            navigation.pushNew(RootStartScreenComponent.Config.StartComments(startId, mode))
+                            navigation.openStartComments(startId, mode)
+                        },
+                        archiveStarts = { startId, starts ->
+                            navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(starts, startId,
+                                StartRelatedKind.Archive))
                         },
                         relatedStarts = { startId, relatedStarts ->
                             navigation.pushNew(RootStartScreenComponent.Config.RelatedStarts(relatedStarts, startId))
@@ -116,6 +123,11 @@ class RootStartScreenComponentBase(
                     ),
                     supportComponent = supportComponent)
             }
+
+            RootStartScreenComponent.Config.SupportAuth -> RootStartScreenComponent.Child.SupportAuth(
+                RootAuthFlowComponentBase(context = componentContext,
+                    goProfile = { navigation.pop() }, goBack = { navigation.pop() })
+            )
 
             is RootStartScreenComponent.Config.StartMembers -> RootStartScreenComponent.Child.StartMembers(
                 StartMembersScreenComponent(
@@ -145,7 +157,8 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     pop = navigation::pop,
-                    images = config.images
+                    images = config.images,
+                    albumId = config.albumId
                 )
             )
 
@@ -172,17 +185,8 @@ class RootStartScreenComponentBase(
                     startId = config.startId,
                     mode = config.mode,
                     onBack = navigation::pop,
-                    onNavigateToReplies = { commentId: Int, replier: String, commentData: com.markettwits.sportsouce.start.presentation.start.component.CommentData ->
-                        navigation.pushNew(
-                            RootStartScreenComponent.Config.StartComments(
-                                startId = config.startId,
-                                mode = CommentMode.Reply(
-                                    replier = replier,
-                                    messageId = commentId,
-                                    parentComment = commentData
-                                )
-                            )
-                        )
+                    onNavigateToReplies = { mode ->
+                        navigation.pushNew(RootStartScreenComponent.Config.StartComments(config.startId, mode))
                     }
                 )
                 RootStartScreenComponent.Child.StartComments(component)
@@ -193,6 +197,7 @@ class RootStartScreenComponentBase(
                     componentContext = componentContext,
                     storeFactory = DefaultStoreFactory(),
                     items = config.starts,
+                    kind = config.kind,
                     currentStartId = config.currentStartId,
                     onClickBack = {
                         navigation.pop()
@@ -208,4 +213,5 @@ class RootStartScreenComponentBase(
             )
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.start.search.search.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.sportsouce.start.search.filter.domain.StartFilter
 import com.markettwits.sportsouce.start.search.filter.presentation.component.StartFilterUi
 import com.markettwits.sportsouce.start.search.search.domain.StartsSearch
@@ -9,9 +10,8 @@ import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 
 interface StartsSearchStore : Store<Intent, State, Label> {
     data class State(
-        val isError: Boolean = false,
         val isLoading: Boolean = false,
-        val message: String = "",
+        val error: SauceError? = null,
         val query: String = "",
         val starts: List<StartsListItem> = emptyList(),
         val searchHistory: List<String> = emptyList(),
@@ -34,9 +34,11 @@ interface StartsSearchStore : Store<Intent, State, Label> {
 
     sealed interface Message {
         data object Loading : Message
+        data object ClearResults : Message
+        data class HistoryLoaded(val items: List<String>) : Message
         data class ChangeTextFiled(val value: String) : Message
         data class InfoLoaded(val starts: StartsSearch) : Message
-        data class InfoFailed(val message: String) : Message
+        data class InfoFailed(val error: SauceError) : Message
         data class FilterApply(val filter: StartFilterUi, val sorted: StartFilter.Sorted) : Message
         data class Brush(val brushWithItems: Boolean) : Message
         data class DeleteHistoryItem(val value: String) : Message

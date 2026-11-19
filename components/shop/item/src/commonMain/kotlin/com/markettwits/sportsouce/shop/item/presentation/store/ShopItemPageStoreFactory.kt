@@ -28,7 +28,10 @@ class ShopItemPageStoreFactory(
         ShopItemPageStore, Store<Intent, State, Label> by storeFactory.create(
         name = "ShopItemPageStore",
         initialState = State(
-            false, false, "", shopItem = shopItem, emptyList(), emptyFlow()
+            isLoading = false,
+            shopItem = shopItem,
+            shopItemOptions = emptyList(),
+            similarProducts = emptyFlow(),
         ),
         bootstrapper = SimpleBootstrapper(Unit),
         executorFactory = { ShopItemPageExecutor(repository, intentAction, id) },

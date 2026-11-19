@@ -3,6 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+android {
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("googlePlay") { dimension = "distribution" }
+        create("github") { dimension = "distribution" }
+    }
+}
+
 dependencies {
     implementation(projects.components.core.theme)
     implementation(projects.components.core.ui)
@@ -19,4 +27,7 @@ dependencies {
     implementation(libs.tracer.crash.report)
     implementation(libs.koin.android)
     implementation(projects.components.core.koin)
+    implementation(projects.components.selfupdater.thirdparty.api)
+    add("githubImplementation", projects.components.selfupdater.api)
+    add("githubImplementation", projects.components.inappnotification.api)
 }

@@ -1,5 +1,7 @@
 package com.markettwits.sportsouce.shop.cart.presentation.cart.components
 
+import com.markettwits.core_ui.items.theme.SauceTheme
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
@@ -10,9 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 
 @Composable
 internal fun ShopCartDropDownMenu(
@@ -47,7 +46,7 @@ private fun ShopItemsOptionMenu(
         modifier = modifier,
         expanded = isShow,
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = SauceTheme.colors.background,
         content = {
             items.forEach {
                 DropdownMenuItem(text = {
@@ -56,9 +55,8 @@ private fun ShopItemsOptionMenu(
                             .padding(2.dp)
                             .animateContentSize(),
                         text = it.title,
-                        fontSize = 12.sp,
-                        fontFamily = FontNunito.medium(),
-                        color = if (it.isBase) MaterialTheme.colorScheme.onPrimary else SportSouceColor.SportSouceLightRed
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (it.isBase) SauceTheme.colors.textPrimary else SauceTheme.colors.danger.content
                     )
                 }, onClick = {
                     it.action()

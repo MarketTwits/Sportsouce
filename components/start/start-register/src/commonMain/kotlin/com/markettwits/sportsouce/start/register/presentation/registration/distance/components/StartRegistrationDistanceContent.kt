@@ -40,7 +40,7 @@ internal fun StartRegistrationDistanceContent(
             )
         }
         RenderAdditionalFields(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             fields = distance.answers,
             onFieldChanged = onChangeDistanceField
         )
@@ -61,15 +61,11 @@ private fun StartRegistrationMemberContent(
     ) {
     val isMemberValid = RegistrationMemberValidatorBase().validateFields(startStatement).isSuccess
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                modifier = Modifier.weight(1f),
                 text = title,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontFamily = FontNunito.semiBoldBold(),
@@ -77,7 +73,6 @@ private fun StartRegistrationMemberContent(
                 overflow = TextOverflow.Ellipsis
             )
             if (!isMemberValid) {
-                Spacer(modifier = Modifier.width(10.dp))
                 Text(
                     text = "* Данные для регистрации не заполнены",
                     color = if (isValidationError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
@@ -94,7 +89,7 @@ private fun StartRegistrationMemberContent(
             onClickStartStatement = onClickStartStatement
         )
         RenderAdditionalFields(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             fields = additionalFields,
             onFieldChanged = onChangeAdditionalField
         )

@@ -30,7 +30,7 @@ object StartsListItemToStartItemMapper {
             ),
             startData = startsListItem.date,
             startAlbum = emptyList(), // Not available in StartsListItem
-            startTime = "", // Not available in StartsListItem
+            startTime = startsListItem.displayDate,
             description = startsListItem.description,
             paymentDisabled = false, // Not available in StartsListItem
             regLink = "", // Not available in StartsListItem

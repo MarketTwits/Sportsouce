@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -16,12 +16,12 @@ fun ScrollToTopBabButton(
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.secondary
+        containerColor = SauceTheme.colors.surfaceRaised,
+        contentColor = SauceTheme.colors.action
     ) {
         Icon(
             imageVector = Icons.Default.KeyboardArrowUp,
-            contentDescription = "Scroll to top"
+            contentDescription = "Прокрутить вверх"
         )
     }
 }

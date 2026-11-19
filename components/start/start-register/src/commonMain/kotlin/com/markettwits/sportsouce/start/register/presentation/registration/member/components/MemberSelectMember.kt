@@ -14,6 +14,7 @@ fun MemberSelectMember(
     modifier: Modifier = Modifier,
     selectedNameSurname: String,
     members: List<ProfileMember>,
+    enabled: Boolean = true,
     onMemberSelected: (ProfileMember) -> Unit,
 ) {
     Column(
@@ -24,10 +25,16 @@ fun MemberSelectMember(
             onItemSelected = { index, user ->
                 if (user != null) onMemberSelected(members[index])
             },
-            itemList = members.map { "${it.surname} ${it.name}" },
+            itemList = members.map { member ->
+                val label = member.registrationLabel()
+                if (members.count { it.registrationLabel() == label } > 1)
+                    "$label · ${member.birthday.ifBlank { "№ ${member.participantUserId ?: member.id}" }}"
+                else label
+            },
+            enabled = enabled && members.isNotEmpty(),
         ) {
             OutlinedTextFieldBase(
-                label = "Выберите из существующих участников",
+                label = "Кого регистрируем",
                 value = selectedNameSurname,
                 isEnabled = false,
                 onValueChange = {}

@@ -3,7 +3,7 @@ package com.kizitonwose.calendar.compose
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
+import com.markettwits.core_ui.items.components.navigation.SauceLazyColumn as LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable

@@ -1,5 +1,8 @@
 package com.markettwits.sportsouce.starts.root
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+import com.markettwits.sportsouce.notification.api.NotificationComponent
+
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.markettwits.sportsauce.deeplink.model.Deeplink
@@ -11,6 +14,12 @@ import com.markettwits.sportsouce.starts.starts.presentation.component.StartsScr
 import kotlinx.serialization.Serializable
 
 interface RootStartsComponent {
+
+    val notifications: NotificationApi
+    fun openNotifications()
+
+    fun popToRoot()
+
 
     val configStack: Value<ChildStack<Config, Child>>
 
@@ -28,6 +37,9 @@ interface RootStartsComponent {
         data object Search : Config()
 
         @Serializable
+        data object Inbox : Config()
+
+        @Serializable
         data object Settings : Config()
     }
 
@@ -36,6 +48,7 @@ interface RootStartsComponent {
         data class Start(val component: RootStartScreenComponent) : Child()
         data class Starts(val component: StartsScreenComponent) : Child()
         data class Search(val component: RootStartsSearchComponent) : Child()
+        data class Inbox(val component: NotificationComponent) : Child()
         data class Settings(val component: RootSettingsComponent) : Child()
     }
 }

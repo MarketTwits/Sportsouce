@@ -21,7 +21,7 @@ data class NetworkStartRemoteItem(
     val createdAt: String,
     val description: String? = "",
     val driving_directions: String?,
-    val end_date: String,
+    val end_date: String? = null,
     val finish_reg: String?,
     val id: Int,
     val isClosed: Boolean?,
@@ -60,4 +60,6 @@ data class NetworkStartRemoteItem(
     val total_slots_sum: JsonElement? = null,
     val updatedAt: String,
     val viewsCount: Int,
+    val is_has_albums: Boolean? = false,
+    val has_infinite_slots: Boolean? = null,
 )

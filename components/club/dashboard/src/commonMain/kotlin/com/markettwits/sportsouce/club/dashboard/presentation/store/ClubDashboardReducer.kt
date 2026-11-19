@@ -9,7 +9,7 @@ internal object ClubDashboardReducer : Reducer<State, Message> {
         return when (msg) {
             is Message.Failed -> copy(isLoading = false, error = msg.error)
             is Message.Loading -> copy(isLoading = true, error = null)
-            is Message.UpdateBottomSheetData -> copy(bottomSheetData = msg.data, isLoading = false, error = null)
+            is Message.UpdateBottomSheetData -> copy(bottomSheetData = msg.data, isLoading = false, error = null, hasLoaded = true)
         }
     }
 }

@@ -1,10 +1,17 @@
 package com.markettwits.sportsouce.review.root
 
+import com.markettwits.sportsouce.notification.impl.presentation.screen.NotificationScreen
+
+import com.markettwits.sportsouce.notification.impl.presentation.components.NotificationButton
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
+import com.markettwits.sportsouce.starts.albums.root.RootStartsAlbumsScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.markettwits.sportsouce.start.presentation.album.presentation.screen.StartAlbumScreen
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.arkivanov.decompose.router.slot.child
-import com.markettwits.selfupdater.components.notification.screen.NotificationScreen
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
 import com.markettwits.sportsouce.club.root.RootClubScreen
 import com.markettwits.sportsouce.news.news_event.screen.NewsEventScreen
@@ -18,7 +25,8 @@ import com.markettwits.sportsouce.starts.popular.root.RootStartsPopularScreen
 import com.markettwits.sportsouce.starts.random.root.presentation.RootRandomStartScreen
 
 @Composable
-fun RootReviewScreen(component: RootReviewComponent) {
+fun RootReviewScreen(component: RootReviewComponent, notification: @Composable (Modifier) -> Unit = {}) {
+    val unread by component.notifications.unreadCount.collectAsState()
     com.arkivanov.decompose.extensions.compose.stack.Children(
         stack = component.childStack,
         animation = stackAnimation(fade()),
@@ -27,20 +35,13 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.Review -> {
                 ReviewScreen(
                     component = child.component,
-                    notification = {
-                        component.childSlot.child?.instance?.also { child ->
-                            when (child) {
-                                is RootReviewComponent.ChildSlot.Notification -> NotificationScreen(
-                                    modifier = it,
-                                    notificationComponent = child.component,
-                                    renderer = child.render
-                                )
-                            }
-                        }
-                    })
+                    notification = notification,
+                    toolbarActions = { NotificationButton(unread, component::openNotifications) })
             }
 
             is RootReviewComponent.Child.Start -> RootStartScreen(child.component)
+            is RootReviewComponent.Child.PhotoAlbum -> StartAlbumScreen(child.component)
+            is RootReviewComponent.Child.Albums -> RootStartsAlbumsScreen(child.component)
             is RootReviewComponent.Child.Search -> RootStartsSearchScreen(component = child.component)
             is RootReviewComponent.Child.Random -> RootRandomStartScreen(component = child.component)
             //is RootReviewComponent.Child.Schedule -> RootStartsScheduleScreen(component = child.component)
@@ -48,6 +49,7 @@ fun RootReviewScreen(component: RootReviewComponent) {
             is RootReviewComponent.Child.News -> RootNewsScreen(component = child.component)
             is RootReviewComponent.Child.NewsEvent -> NewsEventScreen(component = child.component)
             is RootReviewComponent.Child.Notification -> SelfUpdateScreen(component = child.component)
+            is RootReviewComponent.Child.Inbox -> NotificationScreen(child.component)
             is RootReviewComponent.Child.Settings -> RootSettingsScreen(component = child.component)
             is RootReviewComponent.Child.Club -> RootClubScreen(component = child.component)
             is RootReviewComponent.Child.Shop -> RootShopCatalogScreen(component = child.component)

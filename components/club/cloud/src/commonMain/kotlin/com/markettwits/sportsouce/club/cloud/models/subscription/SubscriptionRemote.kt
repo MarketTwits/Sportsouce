@@ -14,13 +14,13 @@ data class SubscriptionRemote(
     @SerialName("id")
     val id: Int,
     @SerialName("kindOfSportId")
-    val kindOfSportId: Int,
+    val kindOfSportId: Int? = null,
     @SerialName("isPriseDependsOnCount")
     val isPriseDependsOnCount : Boolean,
     @SerialName("maxAmount")
     val maxAmount : Int?,
     @SerialName("color")
-    val color : SubscriptionColor,
+    val color : SubscriptionColor = SubscriptionColor.BLUE,
     @SerialName("name")
     val name: String,
     @SerialName("price")
@@ -28,5 +28,6 @@ data class SubscriptionRemote(
     @SerialName("type")
     val type: String,
     @SerialName("updatedAt")
-    val updatedAt: String
+    val updatedAt: String,
+    val order: Int = 0,
 )

@@ -1,7 +1,7 @@
 package com.markettwits.sportsouce.profile.registrations.data.mapper
 
 import com.markettwits.core.time.TimeMapper
-import com.markettwits.core.time.TimePattern
+import com.markettwits.core.time.mapDateRange
 import com.markettwits.core_ui.items.extensions.formatPrice
 import com.markettwits.sportsouce.profile.cloud.model.registrations.Group
 import com.markettwits.sportsouce.profile.cloud.model.registrations.MemberResult
@@ -16,18 +16,15 @@ class UserRegistrationsMapperBase(
 ) : UserRegistrationsMapper {
 
     override fun map(start: UserRegistration): StartOrderInfo {
-        val dateStartCloud = start.start?.startDate ?: ""
+        val dateStartCloud = start.start?.startDate ?: start.start?.startTime.orEmpty()
         val orderType = mapOrderType(start.previousGroupId)
 
         return StartOrderInfo(
             id = start.id ?: Random.nextInt(),
-            startId = start.startId ?: Random.nextInt(),
+            startId = start.startId ?: start.start?.id ?: 0,
             name = start.start?.name ?: "Без названия",
-            image = start.start?.posterLinkFile?.fullPath ?: "",
-            dateStartPreview = timeMapper.mapTime(
-                TimePattern.FullWithEmptySpace,
-                dateStartCloud
-            ),
+            image = start.start?.posterLinkFile?.fullPath ?: start.start?.smallImageFile?.fullPath.orEmpty(),
+            dateStartPreview = timeMapper.mapDateRange(dateStartCloud, start.start?.endDate),
             dateStartCloud = dateStartCloud,
             members = start.members?.map { member ->
                 val ageGroup = member.ageGroup?.name ?: mapStartGroup(member.group)
@@ -41,6 +38,11 @@ class UserRegistrationsMapperBase(
                     distanceName = distance,
                     genderName = member.gender ?: "N/A",
                     formatName = format,
+                    id = member.id,
+                    participantUserId = member.participantUserId,
+                    birthday = member.birthday,
+                    infiniteSlots = member.distanceRelation?.infiniteSlots == true,
+                    openSlots = member.distanceRelation?.openSlots,
                     results = member.results?.map { mapMemberResult(it) } ?: emptyList()
                 )
             } ?: emptyList(),
@@ -55,6 +57,16 @@ class UserRegistrationsMapperBase(
                 successPaymentReason = start.successPaymentReason
             ),
             isReRegistrationAvailable = isReRegistrationAvailable(dateStartCloud, orderType),
+            isRefunded = start.isRefunded == true,
+            startStatusCode = start.start?.start_status?.code,
+            dateEndCloud = start.start?.endDate,
+            paymentCode = start.payment,
+            paymentGroupId = listOfNotNull(start.groupId, start.legacyGroupId, start.paymentGroupId, start.camelPaymentGroupId, start.id)
+                .firstOrNull { it > 0 },
+            paidKopecks = start.price?.takeUnless { start.payment in setOf(0, 6) },
+            hasUnpaidOptions = start.hasUnpaidAdditionalFields == true || start.payment == 7,
+            hasPaidOptions = (start.priceOfAdditionalFields ?: 0) > 0,
+
         )
     }
 
@@ -78,10 +90,11 @@ class UserRegistrationsMapperBase(
         val reason = successPaymentReason ?: ""
         return when (payment) {
             0 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
-            1 -> StartOrderPaymentStatus.Success(paymentReason = reason)
+            1, 5 -> StartOrderPaymentStatus.Success(paymentReason = reason)
             2 -> StartOrderPaymentStatus.OnPlace(paymentReason = reason)
             4 -> StartOrderPaymentStatus.Free(paymentReason = reason)
-            3 -> StartOrderPaymentStatus.NotPaid(isPaid = false)
+            3 -> StartOrderPaymentStatus.NotPaid(title = "Слоты закончились")
+            7 -> StartOrderPaymentStatus.Success(title = "Частично оплачено", paymentReason = reason)
             else -> StartOrderPaymentStatus.NotPaid()
         }
     }

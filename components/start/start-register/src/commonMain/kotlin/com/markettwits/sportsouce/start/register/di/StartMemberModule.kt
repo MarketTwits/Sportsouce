@@ -17,6 +17,7 @@ import com.markettwits.sportsouce.start.register.presentation.registration.commo
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.StartRegistrationRepository
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidator
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationMemberValidatorBase
+import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.RegistrationParticipantsRepository
 import com.markettwits.sportsouce.start.register.presentation.registration.member.store.RegistrationMemberStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.registration.pay.store.StartPayStoreFactory
 import com.markettwits.sportsouce.start.register.presentation.registration.registration.store.StartRegistrationPageStoreFactory
@@ -40,6 +41,7 @@ val startRegistrationModule = module {
     //Repository
     singleOf(::DefaultStoreFactory) bind StoreFactory::class
     singleOf(::RegistrationMemberValidatorBase) bind RegistrationMemberValidator::class
+    singleOf(::RegistrationParticipantsRepository)
     singleOf(::BaseTimeMapper) bind TimeMapper::class
     //New Register
     singleOf(::StartRegistrationPageStoreFactory)

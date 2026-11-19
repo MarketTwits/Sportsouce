@@ -4,14 +4,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.markettwits.core_ui.items.components.top_bar.TopBarWithClip
 import com.markettwits.schedule.schedule.presentation.component.StartsScheduleComponent
-import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleFailedContent
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleLoadingContent
 import com.markettwits.schedule.schedule.presentation.components.list.StartsScheduleSuccessContent
 import com.markettwits.schedule.schedule.presentation.store.StartsScheduleStore
@@ -31,11 +31,9 @@ internal fun StartsScheduleScreen(component: StartsScheduleComponent) {
                 .padding(top = it.calculateTopPadding())
                 .fillMaxSize()
         ) {
-            if (state.isError) {
-                StartsScheduleFailedContent(onClick = {
-                    component.obtainEvent(StartsScheduleStore.Intent.Launch)
-                })
-            }
+            state.error?.SauceErrorScreen(
+                onClickRetry = { component.obtainEvent(StartsScheduleStore.Intent.Launch) },
+            )
             if (state.isLoading) {
                 StartsScheduleLoadingContent()
             }

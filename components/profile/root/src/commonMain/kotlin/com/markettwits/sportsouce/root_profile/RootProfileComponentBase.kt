@@ -1,10 +1,13 @@
 package com.markettwits.sportsouce.root_profile
 
+import com.markettwits.sportsouce.notification.api.NotificationApi
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.router.stack.replaceCurrent
@@ -14,9 +17,13 @@ import com.markettwits.sportsouce.auth.flow.api.root.RootAuthFlowComponentBase
 import com.markettwits.sportsouce.profile.authorized.root.RootAuthorizedProfileComponentBase
 import com.markettwits.sportsouce.unauthorized.di.unAuthorizedModule
 import com.markettwits.sportsouce.unauthorized.presentation.component.UnAuthorizedProfileComponentBase
+import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
 
 class RootProfileComponentBase(
     componentContext: ComponentContext,
+    private val updateStoreFactory: SelfUpdateStoreFactory,
+    private val notifications: NotificationApi,
+    private val onSignedOut: () -> Unit = {},
 ) : ComponentContext by componentContext, RootProfileComponent {
 
     private val koinContext = instanceKeeper.getOrCreate {
@@ -37,6 +44,12 @@ class RootProfileComponentBase(
             childFactory = ::child,
         )
 
+    override fun popToRoot() {
+        navigation.popTo(0) {
+            (childStack.value.active.instance as? RootProfileComponent.Child.AuthProfile)?.component?.popToRoot()
+        }
+    }
+
     @OptIn(DelicateDecomposeApi::class)
     private fun child(
         config: RootProfileComponent.Config,
@@ -46,7 +59,11 @@ class RootProfileComponentBase(
             is RootProfileComponent.Config.AuthProfile -> RootProfileComponent.Child.AuthProfile(
                 RootAuthorizedProfileComponentBase(
                     componentContext = componentContext,
+                    updateStoreFactory = updateStoreFactory,
+                    notifications = notifications,
                     signOut = {
+                        notifications.clear()
+                        onSignedOut()
                         navigation.replaceAll(RootProfileComponent.Config.UnAuthProfile)
                     }
                 )
@@ -56,6 +73,7 @@ class RootProfileComponentBase(
                 UnAuthorizedProfileComponentBase(
                     context = componentContext,
                     useCase = scope.get(),
+                    welcomeRepository = scope.get(),
                     goSignIn = {
                         navigation.push(RootProfileComponent.Config.AuthFlow)
                     },

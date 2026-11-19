@@ -36,7 +36,10 @@ class ShopFilterExecutor(
 
             is Intent.OnClickResetCategory -> onClickResetCategory()
 
-            is Intent.OnClickRetry -> launch()
+            is Intent.OnClickRetry -> {
+                val category = state().selectedCategoryPath.lastOrNull()
+                if (category != null) updateOptionsByCategory(category.id) else launch(initialCategoryId)
+            }
         }
     }
 

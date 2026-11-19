@@ -15,7 +15,7 @@ fun RootProfileScreen(component: RootProfileComponent) {
     val childStack by component.childStack.subscribeAsState()
     Children(
         stack = childStack,
-        animation = stackAnimation(fade())
+        animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
             is RootProfileComponent.Child.AuthProfile -> RootAuthorizedProfileScreen(component = child.component)

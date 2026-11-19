@@ -1,350 +1,209 @@
 package com.markettwits.sportsouce.club.dashboard.presentation.components
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DownhillSkiing
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.Pool
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.MotionDurationScale
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.markettwits.core_ui.items.theme.FontNunito
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.image.imageRequestCrossfade
+import com.markettwits.core_ui.items.theme.SauceShapes
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.club.common.presentation.ClubMetricsRow
+import com.markettwits.sportsouce.club.info.domain.models.Statistic
 import org.jetbrains.compose.resources.painterResource
 import sportsouce.components.club.dashboard.generated.resources.Res
 import sportsouce.components.club.dashboard.generated.resources.im_club_main_image
 
 @Composable
-fun ClubDashboardHeader() {
-    val infiniteTransition = rememberInfiniteTransition(label = "header_animation")
-
-    val floatAnimation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "float_animation"
-    )
-
-    val borderAnimation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "border_animation"
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(450.dp)
+internal fun ClubDashboardHeader(
+    modifier: Modifier = Modifier,
+    imageUrl: String,
+    statistics: List<Statistic>,
+    topPadding: Dp,
+    scrollFraction: () -> Float,
+    onSchedule: () -> Unit,
+    onStatistics: () -> Unit,
+) {
+    var introPlayed by rememberSaveable { mutableStateOf(false) }
+    val photoReveal = remember { Animatable(if (introPlayed) 1f else 0f) }
+    var motionEnabled by remember { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        val motionScale = coroutineContext[MotionDurationScale]
+        snapshotFlow { (motionScale?.scaleFactor ?: 1f) > 0f }.collect { motionEnabled = it }
+    }
+    LaunchedEffect(photoReveal) {
+        if (!introPlayed) {
+            introPlayed = true
+            photoReveal.animateTo(1f, tween(850))
+        }
+    }
+    val gradientPhase = if (motionEnabled) {
+        rememberInfiniteTransition(label = "Club cover gradient").animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(7600, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
+            label = "Gradient drift",
+        )
+    } else {
+        rememberUpdatedState(0f)
+    }
+    val description: @Composable () -> Unit = { ClubIntroduction(onSchedule) }
+    val photo: @Composable (Modifier) -> Unit = { modifier ->
+        ClubCoverPhoto(imageUrl, modifier.aspectRatio(1.18f)) {
+            val reveal = if (motionEnabled) photoReveal.value else 1f
+            val scroll = if (motionEnabled) scrollFraction().coerceIn(0f, 1f) else 0f
+            val zoom = 1f + .065f * (1f - reveal) + .075f * scroll
+            scaleX = zoom
+            scaleY = zoom
+            translationY = size.height * .03f * scroll
+            alpha = .88f + .12f * reveal
+        }
+    }
+    Column(
+        modifier.fillMaxWidth().clubHeroBackground { gradientPhase.value }
+            .padding(start = 20.dp, end = 20.dp, top = topPadding, bottom = 4.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        // Background image with overlay
-        Image(
-            painter = painterResource(Res.drawable.im_club_main_image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
-        )
+        BoxWithConstraints(Modifier.fillMaxWidth()) {
+            if (maxWidth >= 620.dp) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(28.dp)) {
+                    photo(Modifier.weight(1.1f))
+                    Column(Modifier.weight(1f)) { description() }
+                }
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                    photo(Modifier.fillMaxWidth())
+                    description()
+                }
+            }
+        }
+        if (statistics.isNotEmpty()) ClubStatisticsStrip(statistics.take(2), onStatistics)
+    }
+}
 
-        // Dark overlay for text readability
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
-                        )
-                    )
-                )
-        )
-
-        // Decorative animated circles
-        SportDecorativeElements(floatAnimation)
-
-        // Smooth bottom transition
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .align(Alignment.BottomCenter)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-                            MaterialTheme.colorScheme.background
-                        )
-                    )
-                )
-        )
-
-        // Main content card with animated border
-        Card(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .wrapContentSize()
-                .drawBehind {
-                    val strokeWidth = 1.5.dp.toPx()
-                    val gradientColors = listOf(
-                        Color(0xFF5AE4C0),
-                        Color(0xFF70BFF5),
-                        Color(0xFF8B5CF6),
-                        Color(0xFFEC4899),
-                        Color(0xFF5AE4C0)
-                    )
-
-                    val gradientStart = (borderAnimation * gradientColors.size).toInt()
-                    val currentColors = mutableListOf<Color>()
-                    for (i in 0 until 3) {
-                        val index = (gradientStart + i) % gradientColors.size
-                        currentColors.add(gradientColors[index])
-                    }
-
-                    drawRoundRect(
-                        brush = Brush.linearGradient(currentColors),
-                        style = Stroke(width = strokeWidth),
-                        cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx())
-                    )
-                },
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
-                    alpha = if (isSystemInDarkTheme()) 0.95f else 0.92f
-                )
+@Composable
+private fun ClubCoverPhoto(
+    imageUrl: String,
+    modifier: Modifier,
+    motion: GraphicsLayerScope.() -> Unit,
+) {
+    val shape = SauceShapes.card
+    val cropAlignment = BiasAlignment(horizontalBias = 0f, verticalBias = -.55f)
+    Box(modifier.clip(shape).background(SauceTheme.colors.surfaceSubtle)) {
+        Box(Modifier.matchParentSize().graphicsLayer(motion)) {
+            Image(
+                painter = painterResource(Res.drawable.im_club_main_image),
+                contentDescription = "Тренировки и команда Спорт Союз",
+                modifier = Modifier.fillMaxSize(),
+                alignment = cropAlignment,
+                contentScale = ContentScale.Crop,
             )
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(12.dp)
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                // Animated logo background
-                AnimatedIconBackground(
-                    colors = listOf(Color(0xFF5AE4C0), Color(0xFF70BFF5)),
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.EmojiEvents,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Gradient title text
-                val gradientColors = listOf(
-                    Color(0xFF5AE4C0),
-                    Color(0xFF70BFF5),
-                    Color(0xFF8B5CF6),
-                    Color(0xFFEC4899)
+            if (imageUrl.isNotBlank()) {
+                SubcomposeAsyncImage(
+                    model = imageRequestCrossfade(imageUrl),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    alignment = cropAlignment,
+                    contentScale = ContentScale.Crop,
+                    loading = {},
+                    error = {},
+                    success = { SubcomposeAsyncImageContent() },
                 )
-
-                val animatedBrush = Brush.linearGradient(
-                    colors = gradientColors,
-                    start = Offset(
-                        x = floatAnimation * 200f,
-                        y = 0f
-                    ),
-                    end = Offset(
-                        x = floatAnimation * 200f + 150f,
-                        y = 0f
-                    )
-                )
-
-                Text(
-                    text = "СПОРТ СОЮЗ",
-                    fontSize = 30.sp,
-                    fontFamily = FontNunito.black(),
-                    letterSpacing = 1.sp,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(brush = animatedBrush)
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-
-                Text(
-                    text = "КОМАНДА И КЛУБ",
-                    fontSize = 16.sp,
-                    fontFamily = FontNunito.bold(),
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Sport icons row
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SportIcon(
-                        icon = Icons.Default.DownhillSkiing,
-                        label = "Лыжи",
-                        animationValue = floatAnimation,
-                        colors = listOf(Color(0xFF3B82F6), Color(0xFF1D4ED8))
-                    )
-                    SportIcon(
-                        icon = Icons.Default.Pool,
-                        label = "Плавание",
-                        animationValue = floatAnimation,
-                        delay = 1000,
-                        colors = listOf(Color(0xFF06B6D4), Color(0xFF0891B2))
-                    )
-                    SportIcon(
-                        icon = Icons.Default.FitnessCenter,
-                        label = "Бег",
-                        animationValue = floatAnimation,
-                        delay = 2000,
-                        colors = listOf(Color(0xFF10B981), Color(0xFF059669))
-                    )
-                }
             }
         }
     }
 }
 
 @Composable
-internal fun AnimatedIconBackground(
-    colors: List<Color>,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-) {
-    val infiniteTransition = rememberInfiniteTransition(label = "gradient_animation")
-
-    val animatedFloat by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "gradient_shift"
-    )
-
-    val backgroundColors = colors.map { color ->
-        Color(
-            red = color.red,
-            green = color.green,
-            blue = color.blue,
-            alpha = 0.1f + (animatedFloat * 0.05f)
-        )
-    }
-
-    val iconColors = colors
-
-    Box(
-        modifier = modifier
-            .background(
-                brush = Brush.radialGradient(
-                    colors = backgroundColors,
-                    radius = 50f + (animatedFloat * 20f)
-                ),
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        CompositionLocalProvider(
-            LocalContentColor provides iconColors.first()
-        ) {
-            content()
+private fun ClubIntroduction(onSchedule: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            Icon(Icons.Outlined.Place, null, Modifier.size(16.dp), tint = SauceTheme.colors.action)
+            Text("Новосибирск", style = MaterialTheme.typography.labelLarge, color = SauceTheme.colors.action)
         }
-    }
-}
-
-@Composable
-private fun SportDecorativeElements(animationValue: Float) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Floating circles with different animations
-        repeat(6) { index ->
-            val offsetX = (50 + index * 60).dp
-            val offsetY = (100 + index * 45).dp
-            val size = (20 + index * 8).dp
-            val opacity = 0.1f + (animationValue * 0.15f)
-
-            Box(
-                modifier = Modifier
-                    .offset(
-                        x = offsetX + (animationValue * 10).dp, // Уменьшили с 20 до 10
-                        y = offsetY + (kotlin.math.sin(animationValue * kotlin.math.PI + index) * 5).dp // Уменьшили с 10 до 5
-                    )
-                    .size(size)
-                    .background(
-                        color = if (index % 2 == 0)
-                            Color(0xFF5AE4C0).copy(alpha = opacity)
-                        else
-                            Color(0xFF70BFF5).copy(alpha = opacity),
-                        shape = CircleShape
-                    )
-            )
-        }
-    }
-}
-
-@Composable
-private fun SportIcon(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    animationValue: Float,
-    colors: List<Color>,
-    delay: Int = 0,
-) {
-    val adjustedAnimation = (animationValue + delay / 4000f) % 1f
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .offset(y = (kotlin.math.sin(adjustedAnimation * 2 * kotlin.math.PI) * 2).dp)
-            .wrapContentSize()
-    ) {
-        AnimatedIconBackground(
-            colors = colors,
-            modifier = Modifier.size(28.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = colors.first(),
-                modifier = Modifier.size(16.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = label,
-            fontSize = 13.sp,
-            fontFamily = FontNunito.medium(),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.85f),
-            textAlign = TextAlign.Center
+            "Клуб «Спорт Союз»",
+            Modifier.semantics { heading() },
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold,
+            color = SauceTheme.colors.textPrimary,
         )
+        Text(
+            "Бег, плавание и лыжи. Тренируйтесь в группе и готовьтесь к стартам вместе.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = SauceTheme.colors.textSecondary,
+        )
+        SauceButton("Расписание тренировок", onSchedule, modifier = Modifier.fillMaxWidth().padding(top = 6.dp))
+    }
+}
+
+@Composable
+private fun ClubStatisticsStrip(statistics: List<Statistic>, onClick: () -> Unit) {
+    val colors = SauceTheme.colors
+    Surface(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = SauceShapes.card,
+        color = colors.surface.copy(alpha = .82f),
+        border = BorderStroke(1.dp, colors.border),
+    ) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    "Клуб в цифрах",
+                    Modifier.weight(1f).semantics { heading() },
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colors.textPrimary,
+                )
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.size(20.dp), tint = colors.action)
+            }
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val columns = if (maxWidth >= 220.dp * LocalDensity.current.fontScale) 2 else 1
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    statistics.chunked(columns).forEach { metrics ->
+                        ClubMetricsRow(metrics, compact = true)
+                    }
+                }
+            }
+        }
     }
 }

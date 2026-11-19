@@ -5,12 +5,18 @@ plugins {
 }
 kotlin {
 
+    sourceSets.commonTest.dependencies {
+        implementation(libs.kotlin.test)
+        implementation(libs.kotlinx.coroutines.test)
+    }
+
     android {
         namespace = "com.markettwits.starts"
     }
 
     sourceSets.commonMain.dependencies {
         implementation(projects.components.settings.impl)
+        implementation(projects.components.selfupdater.components)
         implementation(projects.components.core.time)
         implementation(projects.components.core.cache)
         implementation(projects.components.core.errors)
@@ -18,6 +24,8 @@ kotlin {
         implementation(projects.components.start.start)
         implementation(projects.components.start.startSearch)
         implementation(projects.components.core.ui)
+            implementation(projects.components.notification.api)
+            implementation(projects.components.notification.impl)
         implementation(projects.components.analytics.crashlytics)
         implementation(projects.components.starts.startsCommon)
         implementation(projects.components.deeplink.api)

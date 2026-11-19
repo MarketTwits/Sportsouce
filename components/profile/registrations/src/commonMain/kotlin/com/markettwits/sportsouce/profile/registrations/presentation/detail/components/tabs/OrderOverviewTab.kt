@@ -1,540 +1,222 @@
 package com.markettwits.sportsouce.profile.registrations.presentation.detail.components.tabs
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.ConfirmationNumber
+import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.ShoppingBag
+import androidx.compose.material.icons.outlined.SwapHoriz
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.progress.shimmer
-import com.markettwits.core_ui.items.extensions.noRippleClickable
-import com.markettwits.core_ui.items.image.DefaultImages
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
-import com.markettwits.core_ui.items.theme.SportSouceColor
+import com.markettwits.core_ui.items.components.list.SauceActionRow
+import com.markettwits.core_ui.items.theme.SauceSpacing
+import com.markettwits.core_ui.items.theme.SauceTheme
+import com.markettwits.sportsouce.profile.cloud.model.registrations.RegistrationOptions
 import com.markettwits.sportsouce.profile.registrations.domain.StartOrderInfo
-import com.markettwits.sportsouce.profile.registrations.domain.StartOrderMember
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.mapOrderStatusColor
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.mapOrderStatusIcon
-import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.components.start.RegistrationsCardImageCard
+import com.markettwits.sportsouce.profile.registrations.presentation.detail.store.StartOrderStore.StartPriceResult
+import com.markettwits.sportsouce.profile.registrations.presentation.management.InlineRegistrationError
+import com.markettwits.sportsouce.profile.registrations.presentation.management.canManageSlot
+import com.markettwits.sportsouce.profile.registrations.presentation.management.hasOptionsToPay
+import com.markettwits.sportsouce.profile.registrations.presentation.management.inlinePaymentAvailable
+import com.markettwits.sportsouce.profile.registrations.presentation.management.isRegistrationPast
 
 @Composable
-fun OrderOverviewTab(
-    orderInfo: StartOrderInfo,
-    priceState: StartOrderStore.StartPriceResult,
-    onClickStart: (Int) -> Unit,
-    onClickPay: () -> Unit,
+internal fun OrderOverviewTab(
+    order: StartOrderInfo,
+    price: StartPriceResult,
+    options: RegistrationOptions?,
+    onOpenStart: (() -> Unit)?,
+    onPay: () -> Unit,
     onUpdatePrice: () -> Unit,
     onHelp: () -> Unit,
-    onReRegistration: () -> Unit,
+    onChangeDistance: () -> Unit,
+    onManageOptions: (() -> Unit)?,
+    onRefund: (() -> Unit)?,
+    optionsError: String? = null,
 ) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        StartInfoCard(
-            orderInfo = orderInfo,
-            onClickStart = onClickStart
+    val past = order.isRegistrationPast()
+    val showOptionsPayment = onManageOptions != null && order.hasOptionsToPay(options)
+    OrderDetailPage {
+        RegistrationStartSummary(order, onOpenStart)
+        RegistrationStatusBanner(
+            order,
+            archived = past,
+            actions = if (order.inlinePaymentAvailable()) ({
+                RegistrationPaymentActions(price, onManageOptions != null, onPay, onUpdatePrice)
+            }) else null,
         )
-
-        PrimaryMemberCard(orderInfo = orderInfo)
-
-        PaymentStatusCard(orderInfo = orderInfo)
-
-        ActionsCard(
-            orderInfo = orderInfo,
-            priceState = priceState,
-            onClickPay = onClickPay,
-            onUpdatePrice = onUpdatePrice,
+        if (showOptionsPayment && onManageOptions != null) RegistrationOptionsDueBanner(order, options, onManageOptions)
+        RegistrationOverviewActions(
+            options = options,
+            optionsError = optionsError.takeUnless { showOptionsPayment },
+            onChangeDistance = onChangeDistance.takeIf { order.canManageSlot() },
+            onManageOptions = onManageOptions.takeUnless { past || order.isRefunded || showOptionsPayment },
+            onRefund = onRefund,
             onHelp = onHelp,
-            onReRegistration = onReRegistration
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-
-@Composable
-private fun StartInfoCard(
-    orderInfo: StartOrderInfo,
-    onClickStart: (Int) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.primary)
-            .noRippleClickable { onClickStart(orderInfo.startId) }
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
-        ) {
-            SubcomposeAsyncImage(
-                model = orderInfo.image.takeIf { it.isNotEmpty() },
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .shimmer(
-                                tiltAngle = 30,
-                                gradientColors = listOf(
-                                    Color.Transparent,
-                                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                                    Color.Transparent,
-                                )
-                            )
-                    )
-                },
-                error = {
-                    SubcomposeAsyncImageContent(
-                        modifier = Modifier.fillMaxSize(),
-                        painter = DefaultImages.EmptyImageStart()
-                    )
-                }
-            )
-        }
-
-        Text(
-            text = orderInfo.name,
-            fontSize = 16.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onBackground,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            InfoChip(
-                icon = Icons.Default.CalendarToday,
-                label = "Дата",
-                value = orderInfo.dateStartPreview,
-                modifier = Modifier.weight(1f)
-            )
-            InfoChip(
-                icon = Icons.Default.Numbers,
-                label = "ID заказа",
-                value = "#${orderInfo.id}",
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun InfoChip(
-    icon: ImageVector,
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .clip(Shapes.small)
-            .background(MaterialTheme.colorScheme.outlineVariant)
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(14.dp)
-            )
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                fontFamily = FontNunito.medium(),
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
-        }
-        Text(
-            text = value,
-            fontSize = 12.sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            color = MaterialTheme.colorScheme.onBackground,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
         )
     }
 }
 
 @Composable
-private fun PrimaryMemberCard(orderInfo: StartOrderInfo) {
-    if (orderInfo.members.isNotEmpty()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(Shapes.medium)
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+private fun RegistrationStartSummary(order: StartOrderInfo, onOpenStart: (() -> Unit)?) {
+    val colors = SauceTheme.colors
+    val distances = order.members.map { it.distanceName.trim() }.filter(String::isNotEmpty).groupingBy { it }.eachCount()
+    OrderSectionCard {
+        Column(Modifier.fillMaxWidth()) {
+            BoxWithConstraints(
+                Modifier.fillMaxWidth().padding(SauceSpacing.large),
             ) {
-                Icon(
-                    imageVector = Icons.Default.Group,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "Участники",
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "${orderInfo.members.size}",
-                    fontSize = 12.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                )
+                val showPoster = order.image.isNotBlank() && maxWidth >= 250.dp * LocalDensity.current.fontScale
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(SauceSpacing.large),
+                ) {
+                    if (showPoster) RegistrationsCardImageCard(
+                        image = order.image,
+                        modifier = Modifier.size(width = 64.dp, height = 80.dp),
+                    )
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+                        Text(
+                            text = order.name.ifBlank { order.startTitle }.ifBlank { "Старт" },
+                            modifier = Modifier.semantics { heading() },
+                            style = MaterialTheme.typography.titleLarge,
+                            color = colors.textPrimary,
+                        )
+                        if (order.dateStartPreview.isNotBlank()) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+                            ) {
+                                Icon(Icons.Outlined.CalendarToday, null, Modifier.size(16.dp), tint = colors.textMuted)
+                                Text(order.dateStartPreview, style = MaterialTheme.typography.bodyMedium, color = colors.textSecondary)
+                            }
+                        }
+                    }
+                }
             }
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                orderInfo.members.forEach { member ->
-                    CompactMemberRow(member = member)
+            if (distances.isNotEmpty()) {
+                HorizontalDivider(Modifier.padding(horizontal = SauceSpacing.large), color = colors.border)
+                BoxWithConstraints(Modifier.fillMaxWidth().padding(SauceSpacing.large)) {
+                    val inlineCount = maxWidth >= 250.dp * LocalDensity.current.fontScale
+                    Column(verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+                        Text(
+                            if (distances.size == 1) "Дистанция" else "Дистанции",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colors.textMuted,
+                        )
+                        distances.forEach { (distance, count) ->
+                            val countLabel = participantCount(count).takeIf { order.members.size > 1 }
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+                            ) {
+                                Icon(Icons.Outlined.ConfirmationNumber, null, Modifier.size(18.dp), tint = colors.action)
+                                Column(Modifier.weight(1f)) {
+                                    Text(distance, style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
+                                    if (!inlineCount && countLabel != null) {
+                                        Text(countLabel, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                                    }
+                                }
+                                if (inlineCount && countLabel != null) {
+                                    Text(countLabel, style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (onOpenStart != null) {
+                HorizontalDivider(Modifier.padding(horizontal = SauceSpacing.large), color = colors.border)
+                BoxWithConstraints(Modifier.fillMaxWidth()) {
+                    val showIcon = maxWidth >= 300.dp * LocalDensity.current.fontScale
+                    SauceActionRow("Открыть страницу старта", onOpenStart, icon = Icons.Outlined.Flag.takeIf { showIcon },
+                        contentPadding = PaddingValues(horizontal = SauceSpacing.large, vertical = SauceSpacing.medium))
                 }
             }
         }
     }
 }
 
-@Composable
-private fun PaymentStatusCard(orderInfo: StartOrderInfo) {
-    val statusColor = mapOrderStatusColor(orderInfo.payment)
-    val statusIcon = mapOrderStatusIcon(orderInfo.payment)
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.AccountBalanceWallet,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(16.dp)
-            )
-            Text(
-                text = "Статус оплаты",
-                fontSize = 14.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(Shapes.small)
-                .background(MaterialTheme.colorScheme.outlineVariant)
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = statusColor.copy(alpha = 0.1f),
-                        shape = CircleShape
-                    )
-                    .padding(6.dp)
-            ) {
-                Icon(
-                    imageVector = statusIcon,
-                    contentDescription = null,
-                    tint = statusColor,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-
-            Text(
-                text = orderInfo.payment.title,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
+private fun participantCount(count: Int): String {
+    val noun = when {
+        count % 100 in 11..14 -> "участников"
+        count % 10 == 1 -> "участник"
+        count % 10 in 2..4 -> "участника"
+        else -> "участников"
     }
+    return "$count $noun"
 }
 
 @Composable
-private fun ActionsCard(
-    orderInfo: StartOrderInfo,
-    priceState: StartOrderStore.StartPriceResult,
-    onClickPay: () -> Unit,
-    onUpdatePrice: () -> Unit,
+private fun RegistrationOverviewActions(
+    options: RegistrationOptions?,
+    optionsError: String?,
+    onChangeDistance: (() -> Unit)?,
+    onManageOptions: (() -> Unit)?,
+    onRefund: (() -> Unit)?,
     onHelp: () -> Unit,
-    onReRegistration: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Shapes.medium)
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = "Действия",
-            fontSize = 15.sp,
-            fontFamily = FontNunito.bold(),
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        if (priceState is StartOrderStore.StartPriceResult.Success) {
-            Button(
-                onClick = onClickPay,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                ),
-                shape = Shapes.small
-            ) {
-                Row(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Payment,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "Оплатить ${priceState.price} ₽",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-            }
-        } else if (priceState is StartOrderStore.StartPriceResult.Loading) {
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth(),
-                enabled = false,
-                colors = ButtonDefaults.buttonColors(
-                    disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
-                ),
-                shape = Shapes.small
-            ) {
-                Row(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        strokeWidth = 2.dp
-                    )
-                    Text(
-                        text = "Загрузка...",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-            }
-        }
-
-        if (orderInfo.isReRegistrationAvailable) {
-            Button(
-                onClick = onReRegistration,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = SportSouceColor.SportSouceRegistryOpenGreen
-                ),
-                shape = Shapes.small
-            ) {
-                Row(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSecondary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "Изменить регистрацию",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                }
-            }
-        }
-
-        Button(
-            onClick = onUpdatePrice,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = priceState !is StartOrderStore.StartPriceResult.Loading,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.outlineVariant,
-                disabledContainerColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
-            ),
-            shape = Shapes.small
-        ) {
-            Row(
-                modifier = Modifier.padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                if (priceState is StartOrderStore.StartPriceResult.Loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-                Text(
-                    text = if (priceState is StartOrderStore.StartPriceResult.Loading) "Обновление..." else "Обновить цену",
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-
-        Button(
-            onClick = onHelp,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.outlineVariant
-            ),
-            shape = Shapes.small
-        ) {
-            Row(
-                modifier = Modifier.padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Help,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "Требуется помощь",
-                    fontSize = 14.sp,
-                    fontFamily = FontNunito.semiBoldBold(),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
+    val colors = SauceTheme.colors
+    val optionSubtitle = when {
+        options?.paidOptions?.any { it.pendingChangeRequest?.status == "awaiting_payment" } == true -> "Ожидается доплата"
+        options?.paidOptions?.any { it.pendingChangeRequest?.status == "pending" } == true -> "Изменение на проверке"
+        options?.options?.any { it.status == "available" } == true -> "Можно добавить опции"
+        else -> null
     }
-}
-
-@Composable
-private fun CompactMemberRow(member: StartOrderMember) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Shapes.small)
-            .background(MaterialTheme.colorScheme.outlineVariant)
-            .padding(10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        val fullName = "${member.surname} ${member.name}"
-        val initials = fullName.split(" ")
-            .take(2).joinToString("") { it.firstOrNull()?.toString() ?: "" }
-
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(36.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = CircleShape
-                )
-        ) {
-            Text(
-                text = initials,
-                color = MaterialTheme.colorScheme.onSecondary,
-                fontSize = 13.sp,
-                fontFamily = FontNunito.semiBoldBold()
+    Column(verticalArrangement = Arrangement.spacedBy(SauceSpacing.small)) {
+        OrderSectionHeading("Действия с регистрацией")
+        if (optionsError != null && onManageOptions != null) {
+            InlineRegistrationError(
+                optionsError, title = "Не удалось загрузить опции",
             )
         }
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = fullName,
-                fontSize = 14.sp,
-                fontFamily = FontNunito.semiBoldBold(),
-                color = MaterialTheme.colorScheme.onBackground,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = "${member.ageGroupName} • ${member.distanceName}",
-                fontSize = 12.sp,
-                fontFamily = FontNunito.medium(),
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+        OrderSectionCard {
+            BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val showIcons = maxWidth >= 300.dp * LocalDensity.current.fontScale
+                val padding = PaddingValues(horizontal = SauceSpacing.large, vertical = SauceSpacing.medium)
+                val titleStyle = if (showIcons) MaterialTheme.typography.titleSmall else MaterialTheme.typography.bodyMedium
+                Column(Modifier.fillMaxWidth()) {
+                    if (onChangeDistance != null) {
+                        SauceActionRow("Изменить дистанцию", onChangeDistance, icon = Icons.Outlined.SwapHoriz.takeIf { showIcons },
+                            contentPadding = padding, titleStyle = titleStyle)
+                        HorizontalDivider(Modifier.padding(horizontal = SauceSpacing.large), color = colors.border)
+                    }
+                    if (onManageOptions != null) {
+                        SauceActionRow(if (showIcons) "Дополнительные опции" else "Опции", onManageOptions, subtitle = optionSubtitle,
+                            icon = Icons.Outlined.ShoppingBag.takeIf { showIcons }, contentPadding = padding, titleStyle = titleStyle)
+                        HorizontalDivider(Modifier.padding(horizontal = SauceSpacing.large), color = colors.border)
+                    }
+                    if (onRefund != null) {
+                        SauceActionRow("Вернуть слот", onRefund, icon = Icons.Outlined.Timer.takeIf { showIcons },
+                            contentPadding = padding, titleStyle = titleStyle)
+                        HorizontalDivider(Modifier.padding(horizontal = SauceSpacing.large), color = colors.border)
+                    }
+                    SauceActionRow("Помощь с регистрацией", onHelp, icon = Icons.Outlined.HelpOutline.takeIf { showIcons },
+                        contentPadding = padding, titleStyle = titleStyle)
+                }
+            }
         }
     }
 }

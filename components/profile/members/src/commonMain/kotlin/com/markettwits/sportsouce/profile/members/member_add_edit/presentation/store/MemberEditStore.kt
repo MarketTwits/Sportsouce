@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.profile.members.member_add_edit.presentation.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.markettwits.core.errors.api.throwable.SauceError
 import com.markettwits.core_ui.items.event.EventContent
 import com.markettwits.core_ui.items.event.StateEventWithContent
 import com.markettwits.core_ui.items.event.consumed
@@ -14,7 +15,11 @@ import com.markettwits.sportsouce.teams_city.domain.Team
 
 interface MemberEditStore : Store<Intent, State, Label> {
     data class State(
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
+        val isSaving: Boolean = false,
+        val loadError: SauceError? = null,
+        val teamsLoading: Boolean = true,
+        val teamsError: Boolean = false,
         val isError: Boolean = false,
         val message: String = "",
         val member: ProfileMember = emptyProfileMember,
@@ -29,12 +34,18 @@ interface MemberEditStore : Store<Intent, State, Label> {
         data class OnValueChanged(val member: ProfileMember) : Intent
         data object Save : Intent
         data object Retry : Intent
+        data object RetryTeams : Intent
     }
 
     sealed interface Message {
         data object Loading : Message
         data class Error(val message: String) : Message
-        data class Loaded(val teams: List<Team>) : Message
+        data class LoadError(val error: SauceError) : Message
+        data class Loaded(val teams: List<Team>, val member: ProfileMember? = null) : Message
+        data object Saving : Message
+        data object TeamsLoading : Message
+        data class TeamsLoaded(val teams: List<Team>) : Message
+        data object TeamsFailed : Message
         data class UpdateSuccess(val message: String) : Message
         data class OnValueChanged(val member: ProfileMember) : Message
         data object OnConsumedEvent : Message

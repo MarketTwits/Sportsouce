@@ -2,11 +2,11 @@ package com.markettwits.sportsouce.starts.favorites.data
 
 import com.markettwits.core.log.LogTagProvider
 import com.markettwits.core.log.errorLog
-import com.markettwits.core.log.infoLog
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
 import com.markettwits.sportsouce.starts.common.domain.SportSauceStartsApi
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
 import com.markettwits.sportsouce.starts.favorites.domain.StartFavoritesRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,113 +24,58 @@ internal class StartFavoritesRepositoryBase(
     override val favorites: StateFlow<List<StartsListItem>> = _favorites.asStateFlow()
 
     private val mutex = Mutex()
-    private var isRefreshing = false
-    private var favoritesInitialized = false
+    private var cachedUserId: Int? = null
 
-    /**
-     * Loads favorites from network and updates cache
-     */
-    override suspend fun refresh(forceRefresh: Boolean): Result<List<StartsListItem>> {
-        // Prevent multiple simultaneous refresh calls (unless force refresh)
-        if (!forceRefresh && isRefreshing) {
-            infoLog { "Refresh already in progress, skipping" }
-            return Result.success(_favorites.value)
-        }
-
-        return runCatching {
-            isRefreshing = true
-            infoLog { "Refreshing favorites from network (forceRefresh=$forceRefresh)" }
+    override suspend fun refresh(): Result<List<StartsListItem>> = runCatching {
+        mutex.withLock {
             val token = authDataSource.updateToken().getOrThrow()
-            val userId = authDataSource.sharedUser().getOrThrow().id
-            val favoritesList = startsApi.fetchFavoriteStarts(userId, token)
+            val userId = authDataSource.userID().getOrThrow()
+            selectUser(userId)
+            fetchFavorites(userId, token)
+        }
+    }.onFailure { error ->
+        if (error is CancellationException) throw error
+        errorLog { "Failed to refresh favorites: ${error.message}" }
+    }
 
-            mutex.withLock {
-                favoritesInitialized = true
-                _favorites.value = favoritesList
+    override suspend fun add(startsListItem: StartsListItem) = setFavorite(startsListItem, true)
+
+    override suspend fun remove(startsListItem: StartsListItem) = setFavorite(startsListItem, false)
+
+    override suspend fun isStartInFavorite(startId: Int): Result<Boolean> =
+        refresh().map { favorites -> favorites.any { it.id == startId } }
+
+    private suspend fun setFavorite(item: StartsListItem, favorite: Boolean): Unit = mutex.withLock {
+        val token = authDataSource.updateToken().getOrThrow()
+        val userId = authDataSource.userID().getOrThrow()
+        selectUser(userId)
+        val previous = _favorites.value
+        _favorites.value = if (favorite) (previous + item).distinctBy { it.id } else previous.filterNot { it.id == item.id }
+
+        try {
+            if (favorite) startsApi.addToFavorite(userId, token, item.id)
+            else startsApi.removeFromFavorite(userId, token, item.id)
+        } catch (cancelled: CancellationException) {
+            _favorites.value = previous
+            throw cancelled
+        } catch (error: Exception) {
+            _favorites.value = previous
+            // A rejected write can mean that the requested state is already set on the server.
+            val actual = runCatching { fetchFavorites(userId, token) }.getOrElse {
+                if (it is CancellationException) throw it
+                throw error
             }
-
-            infoLog { "Favorites refreshed: ${favoritesList.size} items" }
-            favoritesList
-        }.onFailure { error ->
-            errorLog { "Failed to refresh favorites: ${error.message}" }
-        }.also {
-            isRefreshing = false
+            if (actual.any { it.id == item.id } != favorite) throw error
         }
     }
 
-    override suspend fun add(startsListItem: StartsListItem) {
-        // Optimistically update cache first
-        val (previousList, wasInitialized) = mutex.withLock {
-            val previousList = _favorites.value
-            val wasInitialized = favoritesInitialized
-            if (_favorites.value.none { it.id == startsListItem.id }) {
-                favoritesInitialized = true
-                _favorites.value = _favorites.value + startsListItem
-                infoLog { "Optimistically added start ${startsListItem.id} to favorites" }
-            }
-            previousList to wasInitialized
-        }
-
-        runCatching {
-            val token = authDataSource.updateToken().getOrThrow()
-            val userId = authDataSource.auth().getOrThrow().id
-            startsApi.addToFavorite(
-                startId = startsListItem.id,
-                userId = userId,
-                token = token
-            )
-            mutex.withLock {
-                favoritesInitialized = true
-            }
-            infoLog { "Successfully added start ${startsListItem.id} to favorites on server" }
-        }.onFailure { error ->
-            errorLog { "Failed to add start ${startsListItem.id} to favorites: ${error.message}" }
-            mutex.withLock {
-                favoritesInitialized = wasInitialized
-                _favorites.value = previousList
-            }
-            throw error
+    private fun selectUser(userId: Int) {
+        if (cachedUserId != userId) {
+            cachedUserId = userId
+            _favorites.value = emptyList()
         }
     }
 
-    override suspend fun remove(startsListItem: StartsListItem) {
-        // Store previous state for potential rollback
-        val (previousList, wasInitialized) = mutex.withLock {
-            val previousList = _favorites.value
-            val wasInitialized = favoritesInitialized
-            _favorites.value = _favorites.value.filter { it.id != startsListItem.id }
-            favoritesInitialized = true
-            infoLog { "Optimistically removed start ${startsListItem.id} from favorites" }
-            previousList to wasInitialized
-        }
-
-        runCatching {
-            val token = authDataSource.updateToken().getOrThrow()
-            val userId = authDataSource.auth().getOrThrow().id
-            startsApi.removeFromFavorite(
-                startId = startsListItem.id,
-                userId = userId,
-                token = token
-            )
-            mutex.withLock {
-                favoritesInitialized = true
-            }
-            infoLog { "Successfully removed start ${startsListItem.id} from favorites on server" }
-        }.onFailure { error ->
-            errorLog { "Failed to remove start ${startsListItem.id} from favorites: ${error.message}" }
-            mutex.withLock {
-                favoritesInitialized = wasInitialized
-                _favorites.value = previousList
-            }
-            throw error
-        }
-    }
-
-    override suspend fun isStartInFavorite(startId: Int): Result<Boolean> = runCatching {
-        if (!favoritesInitialized) {
-            refresh().getOrThrow()
-        }
-        // Cache is initialized at this point, so check local state
-        _favorites.value.any { it.id == startId }
-    }
+    private suspend fun fetchFavorites(userId: Int, token: String): List<StartsListItem> =
+        startsApi.fetchFavoriteStarts(userId, token).also { _favorites.value = it }
 }

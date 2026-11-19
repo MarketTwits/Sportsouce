@@ -10,6 +10,8 @@ internal fun handleAuthorizedProfileEvent(
     navigation: StackNavigation<RootAuthorizedProfileComponent.Config>,
 ) {
     when (outPut) {
+        AuthorizedProfileComponent.Output.Notifications -> navigation.pushNew(RootAuthorizedProfileComponent.Config.Inbox)
+        AuthorizedProfileComponent.Output.MyResults -> navigation.pushNew(RootAuthorizedProfileComponent.Config.MyResults)
         is AuthorizedProfileComponent.Output.EditProfile -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.EditProfileMenu()
         )
@@ -42,6 +44,10 @@ internal fun handleAuthorizedProfileEvent(
 
         is AuthorizedProfileComponent.Output.UserOrders -> navigation.pushNew(
             RootAuthorizedProfileComponent.Config.ShopUserOrders
+        )
+
+        is AuthorizedProfileComponent.Output.PaidReceipts -> navigation.pushNew(
+            RootAuthorizedProfileComponent.Config.PaidReceipts
         )
 
         is AuthorizedProfileComponent.Output.Club -> navigation.pushNew(

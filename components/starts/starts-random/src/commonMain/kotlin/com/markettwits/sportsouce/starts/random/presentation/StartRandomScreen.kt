@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.markettwits.core_ui.items.screens.FailedScreen
+import com.markettwits.core.errors.api.composable.SauceErrorScreen
 import com.markettwits.core_ui.items.screens.LoadingFullScreen
 import com.markettwits.sportsouce.starts.random.presentation.store.StartRandomStore
 
@@ -23,15 +23,9 @@ fun StartRandomScreen(component: StartRandomComponent) {
         if (state.isLoading) {
             LoadingFullScreen()
         }
-        if (state.isError) {
-            FailedScreen(
-                message = state.message,
-                onClickBack = {
-                    component.obtainEvent(StartRandomStore.Intent.GoBack)
-                },
-                onClickRetry = {
-                    component.obtainEvent(StartRandomStore.Intent.Retry)
-                })
-        }
+        state.error?.SauceErrorScreen(
+            onClickGoBack = { component.obtainEvent(StartRandomStore.Intent.GoBack) },
+            onClickRetry = { component.obtainEvent(StartRandomStore.Intent.Retry) },
+        )
     }
 }

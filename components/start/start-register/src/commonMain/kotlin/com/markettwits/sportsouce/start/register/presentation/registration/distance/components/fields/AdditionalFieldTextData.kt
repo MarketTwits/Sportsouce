@@ -1,14 +1,10 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.distance.components.fields
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.markettwits.core.time.BaseTimeMapper
 import com.markettwits.core.time.TimePattern
 import com.markettwits.core_ui.items.components.textField.CalendarTextFiled
-import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.sportsouce.start.register.presentation.registration.common.domain.models.StartRegistrationStatementAnswer
 
 @Composable
@@ -29,12 +25,11 @@ internal fun AdditionalFieldTextData(
     CalendarTextFiled(
         modifier = modifier,
         textFiled = {
-            OutlinedTextFieldBase(
+            AdditionalFieldInput(
                 modifier = it,
-                label = field.field.title,
-                isEnabled = false,
+                field = field.field,
                 value = text,
-                onValueChange = {}
+                placeholder = "Выберите дату",
             )
         },
         onValueChanged = {
@@ -50,5 +45,4 @@ internal fun AdditionalFieldTextData(
             )
         }
     )
-    Spacer(modifier = Modifier.height(8.dp))
 }

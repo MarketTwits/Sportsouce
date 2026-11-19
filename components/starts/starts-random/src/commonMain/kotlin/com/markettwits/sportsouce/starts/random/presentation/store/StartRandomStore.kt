@@ -5,7 +5,8 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.markettwits.core.errors.api.throwable.networkExceptionHandler
+import com.markettwits.core.errors.api.throwable.SauceError
+import com.markettwits.core.errors.api.throwable.mapToSauceError
 import com.markettwits.sportsouce.starts.random.data.RandomRepository
 import com.markettwits.sportsouce.starts.random.presentation.store.StartRandomStore.Intent
 import com.markettwits.sportsouce.starts.random.presentation.store.StartRandomStore.Label
@@ -21,8 +22,7 @@ interface StartRandomStore : Store<Intent, State, Label> {
 
     data class State(
         val isLoading : Boolean = false,
-        val isError : Boolean = false,
-        val message : String = "",
+        val error: SauceError? = null,
         val data : Int = 0
     )
 
@@ -48,7 +48,7 @@ internal class StartRandomStoreFactory(
     private sealed interface Msg {
         data object Loading : Msg
         data class InfoLoaded(val id: Int) : Msg
-        data class InfoFailed(val message: String) : Msg
+        data class InfoFailed(val error: SauceError) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
@@ -63,7 +63,7 @@ internal class StartRandomStoreFactory(
             scope.launch {
                 dispatch(Msg.Loading)
                 repository.randomStart().onFailure {
-                    dispatch(Msg.InfoFailed(it.networkExceptionHandler().message.toString()))
+                    dispatch(Msg.InfoFailed(it.mapToSauceError()))
                 }.onSuccess {
                     publish(Label.OpenStart(it))
                     dispatch(Msg.InfoLoaded(it))
@@ -79,7 +79,7 @@ internal class StartRandomStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State =
             when (msg) {
-               is Msg.InfoFailed -> State(isError = true, message = msg.message)
+               is Msg.InfoFailed -> State(error = msg.error)
                 is Msg.InfoLoaded -> State(data = msg.id)
                 is Msg.Loading -> State(isLoading = true)
             }

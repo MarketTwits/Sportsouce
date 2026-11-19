@@ -18,13 +18,20 @@ data class StartsListItem(
     val organizers: List<Organizer> = emptyList(),
     val slots: Slots? = null,
     val views: Int,
+    // Keep date as the original single date for existing caches and date-based consumers.
+    val dateRange: String? = null,
+    val startDate: String? = null,
+    val hasAlbums: Boolean = false,
+    val hasResults: Boolean = false,
 ) {
+    val displayDate: String get() = dateRange?.takeIf { it.isNotBlank() } ?: date
 
     @Serializable
     data class Slots(
         val openSlots: String,
         val totalSlots: String,
         val isAvailable: Boolean,
+        val isUnlimited: Boolean = false,
     )
 
     @Serializable

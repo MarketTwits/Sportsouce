@@ -1,7 +1,18 @@
 package com.markettwits.sportsouce.start.presentation.comments.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
+import kotlin.math.roundToInt
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material3.Icon
+import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
+import com.markettwits.core_ui.items.components.progress.SauceSkeleton
+import com.markettwits.core_ui.items.components.status.SauceStatusBadge
+import com.markettwits.core_ui.items.components.status.SauceStatusTone
+import com.markettwits.core_ui.items.theme.SauceTheme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,13 +26,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.SubcomposeAsyncImage
-import com.markettwits.core_ui.items.components.progress.shimmer
 import com.markettwits.core_ui.items.screens.FullImageScreen
 import com.markettwits.core_ui.items.text.ClickableText
 import com.markettwits.core_ui.items.theme.FontNunito
@@ -36,41 +50,24 @@ fun StartCommentsCompactPanel(
     maxComments: Int = 5,
     onClickViewAll: () -> Unit,
     onClickReply: (String, Int) -> Unit,
+    onClickShowReplies: (Int) -> Unit,
     onClickTextField: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+        FlowRow(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = "Комментарии",
-                fontSize = 18.sp,
-                fontFamily = FontNunito.bold(),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-
+            Text("Комментарии", style = MaterialTheme.typography.titleMedium, color = SauceTheme.colors.textPrimary)
             if (comments.rows.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .clip(Shapes.small)
-                        .clickable { onClickViewAll() }
-                        .padding(horizontal = 4.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = "Показать все (${comments.rows.size})",
-                        fontSize = 14.sp,
-                        fontFamily = FontNunito.semiBoldBold(),
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
+                SauceButton("Все · ${comments.rows.size}", onClickViewAll,
+                    variant = SauceButtonVariant.Text, fillWidth = false)
             }
         }
 
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (comments.rows.isNotEmpty()) {
                 val displayComments = comments.rows.take(maxComments)
                 displayComments.forEach {
@@ -80,12 +77,16 @@ fun StartCommentsCompactPanel(
                         userName = "${it.user.surname} ${it.user.name}",
                         commentCreateDate = it.createdAt,
                         message = it.comment,
+                        isQuestion = it.isQuestion,
+                        isAnswered = it.isAnswered,
+                        isReview = it.isReview,
+                        averageScore = it.averageScore,
                         onClickReply = {
                             onClickReply(it.user.name, it.id)
                         },
                         replies = it.replies,
                         showRepliesButton = false,
-                        onClickShowReplies = null
+                        onClickShowReplies = { onClickShowReplies(it.id) }
                     )
                 }
             } else {
@@ -125,235 +126,128 @@ internal fun StartCommentCard(
     isReply: Boolean = false,
     showRepliesButton: Boolean = true,
     onClickShowReplies: (() -> Unit)? = null,
+    isQuestion: Boolean = false,
+    isAnswered: Boolean = false,
+    isReview: Boolean = false,
+    averageScore: Double? = null,
+    isAdminAnswer: Boolean = false,
+    actionsEnabled: Boolean = true,
 ) {
-    var showReply by rememberSaveable {
-        mutableStateOf(false)
-    }
+    var showReply by rememberSaveable { mutableStateOf(false) }
+    var showAvatar by rememberSaveable { mutableStateOf(false) }
+    val colors = SauceTheme.colors
+    if (showAvatar && userImageUrl.isNotBlank()) FullImageScreen(image = userImageUrl) { showAvatar = false }
 
-    var isShowAvatarDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val hasReplies = !isReply && replies.isNotEmpty()
+    var headerHeight by remember { mutableIntStateOf(0) }
+    var actionsHeight by remember { mutableIntStateOf(0) }
+    var repliesButtonHeight by remember { mutableIntStateOf(0) }
 
-    if (isShowAvatarDialog) {
-        FullImageScreen(image = userImageUrl) {
-            isShowAvatarDialog = false
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Row {
-            Box {
-                if (userImageUrl.isNotEmpty())
-                    SubcomposeAsyncImage(
-                        modifier = Modifier
-                            .clip(Shapes.large)
-                            .size(36.dp)
-                            .clickable { isShowAvatarDialog = true },
-                        model = userImageUrl,
-                        contentDescription = userName,
-                        contentScale = ContentScale.Crop,
-                        loading = {
-                            LoadingAvatar(size = 36.dp)
-                        },
-                        error = {
-                            EmptyAvatar(userName = userName, size = 36.dp)
-                        }
-                    )
-                else
-                    EmptyAvatar(userName = userName, size = 36.dp)
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = userName,
-                        fontSize = 15.sp,
-                        fontFamily = FontNunito.bold(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = commentCreateDate,
-                        fontSize = 13.sp,
-                        fontFamily = FontNunito.regular(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.outline
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                val selectionColor = TextSelectionColors(
-                    handleColor = MaterialTheme.colorScheme.tertiary,
-                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer
-                )
-                CompositionLocalProvider(LocalTextSelectionColors provides selectionColor) {
-                    SelectionContainer {
-                        ClickableText(
-                            text = message,
-                            fontSize = 15.sp,
-                            fontFamily = FontNunito.regular(),
-                            lineHeight = 20.sp,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier.padding(top = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (!isReply) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(Shapes.small)
-                                    .clickable { onClickReply() }
-                                    .padding(horizontal = 4.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "Ответить",
-                                    fontSize = 13.sp,
-                                    fontFamily = FontNunito.semiBoldBold(),
-                                    color = MaterialTheme.colorScheme.outline
-                                )
+    OnBackgroundCard(modifier) {
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+            Column(
+                Modifier.fillMaxWidth().drawBehind {
+                    if (hasReplies && headerHeight > 0 && actionsHeight > 0 && repliesButtonHeight > 0) {
+                        val x = 18.dp.toPx()
+                        val startY = headerHeight / 2f + 18.dp.toPx() + 4.dp.toPx()
+                        // The replies action stays the anchor even when the other action wraps below it.
+                        val endY = size.height - actionsHeight + repliesButtonHeight / 2f
+                        val radius = 16.dp.toPx().coerceAtMost((endY - startY).coerceAtLeast(0f))
+                        if (endY > startY) {
+                            val path = Path().apply {
+                                moveTo(x, startY)
+                                lineTo(x, endY - radius)
+                                quadraticTo(x, endY, x + radius, endY)
+                                lineTo(46.dp.toPx(), endY)
                             }
-                        }
-
-                        if (replies.isNotEmpty() && !showRepliesButton) {
-                            Text(
-                                text = "${replies.size} ${if (replies.size == 1) "ответ" else if (replies.size < 5) "ответа" else "ответов"}",
-                                fontSize = 13.sp,
-                                fontFamily = FontNunito.regular(),
-                                color = MaterialTheme.colorScheme.outline
-                            )
+                            drawPath(path, colors.border, style = Stroke(width = 1.dp.toPx(), cap = StrokeCap.Round))
                         }
                     }
-
-                    if (!isReply && replies.isNotEmpty() && showRepliesButton && !showReply) {
-                        Box(
-                            modifier = Modifier
-                                .clip(Shapes.small)
-                                .clickable {
-                                    if (onClickShowReplies != null) {
-                                        onClickShowReplies()
-                                    } else {
-                                        showReply = !showReply
-                                    }
+                },
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Row(Modifier.onSizeChanged { headerHeight = it.height }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (userImageUrl.isNotBlank()) {
+                        SubcomposeAsyncImage(
+                            model = userImageUrl,
+                            contentDescription = "Фото: $userName",
+                            modifier = Modifier.size(36.dp).clip(CircleShape).clickable { showAvatar = true },
+                            contentScale = ContentScale.Crop,
+                            loading = { SauceSkeleton(Modifier.fillMaxSize(), CircleShape) },
+                            error = { EmptyAvatar() },
+                        )
+                    } else EmptyAvatar()
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(userName, style = MaterialTheme.typography.titleSmall, color = colors.textPrimary)
+                        Text(commentCreateDate, style = MaterialTheme.typography.bodySmall, color = colors.textMuted)
+                    }
+                }
+                Column(Modifier.fillMaxWidth().padding(start = if (hasReplies) 46.dp else 0.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (isQuestion || isReview || isAdminAnswer) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            if (isQuestion) {
+                                SauceStatusBadge("Вопрос", tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Warning, showIndicator = false)
+                                SauceStatusBadge(if (isAnswered) "Есть ответ" else "Ждёт ответа",
+                                    tone = if (isAnswered) SauceStatusTone.Success else SauceStatusTone.Danger,
+                                    showIndicator = isAnswered)
+                            }
+                            if (isAdminAnswer) SauceStatusBadge("Администратор", tone = SauceStatusTone.Success, showIndicator = false)
+                            if (isReview) {
+                                SauceStatusBadge("Отзыв", showIndicator = false)
+                                averageScore?.takeIf { it.isFinite() && it > 0 }?.let {
+                                    SauceStatusBadge("★ ${((it.coerceAtMost(5.0) * 10).roundToInt() / 10.0)}", tone = SauceStatusTone.Warning, showIndicator = false)
                                 }
-                                .padding(horizontal = 4.dp, vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = "Показать ${replies.size} ${if (replies.size == 1) "ответ" else if (replies.size < 5) "ответа" else "ответов"}",
-                                fontSize = 14.sp,
-                                fontFamily = FontNunito.bold(),
-                                color = MaterialTheme.colorScheme.secondary
-                            )
+                            }
                         }
                     }
-                }
-
-                if (!isReply && replies.isNotEmpty() && showRepliesButton) {
-
-                    AnimatedVisibility(
-                        visible = showReply,
-                        enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(
-                            animationSpec = tween(durationMillis = 300)
-                        ),
-                        exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(
-                            animationSpec = tween(durationMillis = 300)
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(start = 12.dp, top = 8.dp)) {
-                            replies.forEach {
-                                StartCommentCard(
-                                    modifier = Modifier,
-                                    isReply = true,
-                                    userName = "${it.user.surname} ${it.user.name}",
-                                    commentCreateDate = it.createdAt,
-                                    message = it.comment,
-                                    userImageUrl = it.user.photo ?: "",
-                                    onClickReply = {}
+                    CompositionLocalProvider(LocalTextSelectionColors provides TextSelectionColors(colors.action, colors.actionSoft)) {
+                        SelectionContainer {
+                            ClickableText(text = message, fontSize = 14.sp, lineHeight = 21.sp,
+                                fontFamily = FontNunito.regular(), color = colors.textPrimary)
+                        }
+                    }
+                    if (!isReply) {
+                        FlowRow(Modifier.fillMaxWidth().onSizeChanged { actionsHeight = it.height }, horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (replies.isNotEmpty()) {
+                                SauceButton(
+                                    modifier = Modifier.onSizeChanged { repliesButtonHeight = it.height },
+                                    title = if (!showRepliesButton) "Ответы · ${replies.size}" else if (showReply) "Скрыть ответы" else "Ответы · ${replies.size}",
+                                    variant = SauceButtonVariant.Text,
+                                    fillWidth = false,
+                                    enabled = actionsEnabled,
+                                    onClick = {
+                                        if (onClickShowReplies != null) onClickShowReplies()
+                                        else if (showRepliesButton) showReply = !showReply
+                                        else onClickReply()
+                                    },
                                 )
                             }
-                            Box(
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                                    .clip(Shapes.small)
-                                    .clickable { showReply = !showReply }
-                                    .padding(horizontal = 4.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "Скрыть",
-                                    fontSize = 14.sp,
-                                    fontFamily = FontNunito.bold(),
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
-                            }
+                            SauceButton("Ответить", onClickReply, variant = SauceButtonVariant.Text, enabled = actionsEnabled, fillWidth = false)
                         }
                     }
                 }
             }
+            AnimatedVisibility(showReply && showRepliesButton && !isReply) {
+                Column(Modifier.padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    replies.forEach { reply ->
+                        StartCommentCard(
+                            userImageUrl = reply.user.photo.orEmpty(), userName = "${reply.user.surname} ${reply.user.name}".trim(),
+                            commentCreateDate = reply.createdAt, message = reply.comment, isReply = true,
+                            isAdminAnswer = reply.isAdminAnswer, onClickReply = {},
+                        )
+                    }
+                }
+            }
         }
-
     }
 }
 
 @Composable
-private fun EmptyAvatar(
-    modifier: Modifier = Modifier,
-    userName: String,
-    size: androidx.compose.ui.unit.Dp = 40.dp,
-) {
-    Box(
-        modifier = modifier
-            .clip(Shapes.large)
-            .size(size)
-            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "",
-            fontSize = (size.value * 0.45f).sp,
-            fontFamily = FontNunito.semiBoldBold(),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onTertiary
-        )
+private fun EmptyAvatar() {
+    Box(Modifier.size(36.dp).background(SauceTheme.colors.surfaceSubtle, CircleShape), contentAlignment = Alignment.Center) {
+        Icon(Icons.Default.PersonOutline, contentDescription = null,
+            modifier = Modifier.size(20.dp), tint = SauceTheme.colors.textMuted)
     }
 }
-
-@Composable
-private fun LoadingAvatar(
-    modifier: Modifier = Modifier,
-    size: androidx.compose.ui.unit.Dp = 40.dp,
-) {
-    Box(
-        modifier = modifier
-            .clip(Shapes.large)
-            .size(size)
-            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
-            .shimmer(
-                tiltAngle = 30,
-                gradientColors = listOf(
-                    Color.Transparent,
-                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),
-                    Color.Transparent,
-                )
-            )
-    ) {}
-}
-

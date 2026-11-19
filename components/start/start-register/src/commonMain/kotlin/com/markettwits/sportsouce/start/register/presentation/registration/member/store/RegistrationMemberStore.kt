@@ -13,6 +13,9 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
         val userNumber: Int,
         val value: StartStatement,
         val members: List<ProfileMember>,
+        val membersLoading: Boolean = true,
+        val membersLoaded: Boolean = false,
+        val membersError: String? = null,
         val isSuggestAddDialogVisible: Boolean = false,
         val isAddMemberDialogVisible: Boolean = false,
         val addMemberRelationType: String = "Партнер по команде",
@@ -23,7 +26,11 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
         val isPendingContinueAfterAdd: Boolean = false,
         val isAddMemberLoading: Boolean = false,
         val event: StateEventWithContent<EventContent> = consumed(),
-    )
+    ) {
+        val isSelectedTeamAvailable: Boolean get() = value.participantSource != ProfileMember.Source.Team ||
+            (membersLoaded && !membersLoading && members.any { it.source == ProfileMember.Source.Team &&
+                it.participantUserId == value.participantUserId && value.participantUserId != null })
+    }
 
     sealed interface Intent {
         data object OnClickContinue : Intent
@@ -39,11 +46,15 @@ interface RegistrationMemberStore : Store<Intent, State, Label> {
         data object OnConsumedEvent : Intent
         data object Pop : Intent
         data class ChangeFiled(val startStatement: StartStatement) : Intent
+        data class SelectMember(val member: ProfileMember) : Intent
+        data object RetryMembers : Intent
     }
 
     sealed interface Message {
         data class OnValueChanged(val startStatement: StartStatement) : Message
         data class OnMembersChanged(val members: List<ProfileMember>) : Message
+        data object MembersLoading : Message
+        data class MembersFailed(val message: String) : Message
         data class ChangeSuggestAddDialogState(val show: Boolean) : Message
         data class ChangeAddMemberDialogState(val show: Boolean) : Message
         data class ChangeAddMemberRelationType(val value: String) : Message

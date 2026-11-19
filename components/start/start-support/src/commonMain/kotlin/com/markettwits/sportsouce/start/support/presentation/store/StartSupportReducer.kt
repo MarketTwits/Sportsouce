@@ -6,6 +6,7 @@ import com.markettwits.core_ui.items.event.consumed
 import com.markettwits.core_ui.items.event.triggered
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.Message
 import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.State
+import com.markettwits.sportsouce.start.support.presentation.store.StartSupportStore.CheckState
 
 internal object StartSupportReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
@@ -20,7 +21,7 @@ internal object StartSupportReducer : Reducer<State, Message> {
             )
 
             is Message.Loading -> copy(isLoading = true, isError = false)
-            is Message.OnValueChanged -> copy(cost = msg.value)
+            is Message.OnValueChanged -> copy(cost = msg.value, amountError = null)
             is Message.Success -> copy(
                 isSuccess = true,
                 isLoading = false,
@@ -30,7 +31,27 @@ internal object StartSupportReducer : Reducer<State, Message> {
                 )
             )
             is Message.OnConsumedEvent -> copy(eventWithContent = consumed())
-            is Message.UpdateStartId -> copy(startId = msg.startId)
+            is Message.UpdateStartId -> if (startId == msg.startId) this else State(startId = msg.startId, isOpen = isOpen)
+            Message.Open -> copy(isOpen = true, checkState = CheckState.Loading, donationConfirmed = false,
+                amountError = null, isError = false, isSuccess = false, message = "", eventWithContent = consumed(),
+                awaitingAuth = false, sheetSession = sheetSession + 1)
+            Message.Close -> copy(isOpen = false, isLoading = false, checkState = CheckState.Idle,
+                donationConfirmed = false, eventWithContent = consumed(), awaitingAuth = false)
+            Message.CheckLoading -> copy(checkState = CheckState.Loading, donationConfirmed = false)
+            Message.CheckFailed -> if (isOpen) copy(checkState = CheckState.Failed) else this
+            is Message.CheckReady -> copy(
+                checkState = if (isOpen) CheckState.Ready(msg.result) else CheckState.Idle,
+                registrationCheck = if (msg.result.isRegistrationKnown) msg.result else registrationCheck,
+            )
+            is Message.ShowCachedRegistration -> copy(registrationCheck = msg.result)
+            Message.ConfirmDonation -> copy(donationConfirmed = true)
+            is Message.InvalidAmount -> copy(amountError = msg.message)
+            Message.AuthorizationRequired -> copy(
+                checkState = if (isOpen) CheckState.AuthorizationRequired else CheckState.Idle,
+                isLoading = false, isError = false, donationConfirmed = false, amountError = null,
+                eventWithContent = consumed(), registrationCheck = null)
+            Message.SuspendForAuth -> copy(isOpen = false, awaitingAuth = true, isLoading = false,
+                checkState = CheckState.Idle, donationConfirmed = false, eventWithContent = consumed())
         }
     }
 }

@@ -31,4 +31,5 @@ data class Member(
     val group: String? = null,
     @DeprecatedField
     val format: String? = null,
+    @SerialName("participant_user_id") val participantUserId: Int? = null,
 )

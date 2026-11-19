@@ -1,30 +1,42 @@
 package com.markettwits.sportsouce.start.presentation.start.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.layout.onVisibilityChanged
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.SubcomposeAsyncImage
-import coil3.compose.SubcomposeAsyncImageContent
-import com.markettwits.core_ui.items.components.cards.OnBackgroundCard
+import coil3.compose.AsyncImage
+import com.markettwits.core_ui.items.components.buttons.SauceClickTarget
 import com.markettwits.core_ui.items.image.DefaultImages
 import com.markettwits.core_ui.items.image.imageRequestCrossfade
-import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.Shapes
+import com.markettwits.core_ui.items.theme.*
+import com.markettwits.sportsouce.start.presentation.series.StartRelatedKind
 import com.markettwits.sportsouce.starts.common.domain.StartsListItem
-import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsColor
-import com.markettwits.sportsouce.starts.common.presentation.startKindOfSportsIcon
 
 @Composable
 internal fun StartSeriesPanel(
@@ -33,79 +45,80 @@ internal fun StartSeriesPanel(
     currentStartId: Int,
     onClickRelatedStarts: () -> Unit,
     onItemClick: (StartsListItem) -> Unit,
+    kind: StartRelatedKind = StartRelatedKind.Series,
+    previewItems: List<StartsListItem> = seriesPreview(items, currentStartId),
 ) {
-    if (items.isNotEmpty()) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp)
+    if (items.isEmpty()) return
+    val colors = SauceTheme.colors
+    val previewableCount = if (kind == StartRelatedKind.Archive) items.count { it.id != currentStartId } else items.size
+    val showContinuation = previewItems.isNotEmpty() && previewableCount > previewItems.size
+    val connector = colors.controlBorder.copy(alpha = .55f)
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(SauceSpacing.medium)) {
+        Row(
+            modifier = Modifier.width(IntrinsicSize.Max),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
         ) {
-            // Header with title and "Show more" button
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Связанные старты",
-                    fontSize = 18.sp,
-                    fontFamily = FontNunito.bold(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-
-                // Show "Show more" or "Show all" button
-                if (items.size > 3) {
-                    val remainingCount = items.size - 3
-                    Box(
-                        modifier = Modifier
-                            .clip(Shapes.small)
-                            .clickable { onClickRelatedStarts() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = "Показать ещё $remainingCount",
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .clip(Shapes.small)
-                            .clickable { onClickRelatedStarts() }
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = "Показать всё",
-                            fontSize = 12.sp,
-                            fontFamily = FontNunito.semiBoldBold(),
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                }
+            Text(
+                text = kind.title,
+                modifier = Modifier.weight(1f).semantics { heading() },
+                style = MaterialTheme.typography.titleMedium,
+                color = colors.textPrimary,
+            )
+            Surface(shape = SauceShapes.badge, color = colors.surfaceSubtle, contentColor = colors.textSecondary) {
+                Text(items.size.toString(), Modifier.padding(horizontal = 8.dp, vertical = 4.dp).width(IntrinsicSize.Max),
+                    style = MaterialTheme.typography.labelMedium)
             }
+        }
 
-            // Vertical list, showing only first 3 items
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items.take(3).forEach { item ->
-                    SeriesCard(
+        Surface(shape = SauceShapes.card, color = colors.surfaceSubtle) {
+            Column(Modifier.fillMaxWidth().padding(top = SauceSpacing.extraSmall)) {
+                previewItems.forEachIndexed { index, item ->
+                    StartTimelineEntry(
                         item = item,
-                        isCurrentStart = item.id == currentStartId,
-                        onClick = { onItemClick(item) }
+                        isCurrent = item.id == currentStartId,
+                        hasPrevious = index > 0,
+                        hasNext = index < previewItems.lastIndex || showContinuation,
+                        onClick = { onItemClick(item) },
                     )
+                }
+                SauceClickTarget(
+                    onClick = onClickRelatedStarts,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(
+                        topStart = CornerSize(0.dp),
+                        topEnd = CornerSize(0.dp),
+                        bottomStart = SauceShapes.card.bottomStart,
+                        bottomEnd = SauceShapes.card.bottomEnd,
+                    ),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)
+                            .drawBehind {
+                                if (showContinuation) {
+                                    val x = timelineMarkerX()
+                                    val fadeEnd = size.height / 2
+                                    drawLine(
+                                        brush = Brush.verticalGradient(listOf(connector, connector.copy(alpha = 0f)), endY = fadeEnd),
+                                        start = Offset(x, 0f),
+                                        end = Offset(x, fadeEnd),
+                                        strokeWidth = TimelineStroke.toPx(),
+                                    )
+                                }
+                            }
+                            .padding(start = TimelineInset, end = SauceSpacing.medium,
+                                top = SauceSpacing.small, bottom = SauceSpacing.small),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(SauceSpacing.small),
+                    ) {
+                        Text(
+                            text = allStartsLabel(items.size),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = colors.action,
+                        )
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, Modifier.size(20.dp), tint = colors.action)
+                    }
                 }
             }
         }
@@ -113,149 +126,107 @@ internal fun StartSeriesPanel(
 }
 
 @Composable
-private fun SeriesCard(
-    modifier: Modifier = Modifier,
+private fun StartTimelineEntry(
     item: StartsListItem,
-    isCurrentStart: Boolean = false,
+    isCurrent: Boolean,
+    hasPrevious: Boolean,
+    hasNext: Boolean,
     onClick: () -> Unit,
 ) {
-    Box(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        OnBackgroundCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            onClick = if (!isCurrentStart) onClick else null,
+    val colors = SauceTheme.colors
+    var markerSeen by rememberSaveable(item.id) { mutableStateOf(false) }
+    val markerProgress = if (isCurrent) animateFloatAsState(
+        targetValue = if (markerSeen) 1f else 0f,
+        animationSpec = tween(SauceMotion.progressMillis, easing = SauceMotion.progressEasing),
+        label = "Current start marker",
+    ) else null
+    val content: @Composable () -> Unit = {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .drawBehind {
+                    val x = timelineMarkerX()
+                    val y = size.height / 2
+                    val gap = if (isCurrent) 13.dp.toPx() else 7.dp.toPx()
+                    val connector = colors.controlBorder.copy(alpha = .55f)
+                    if (hasPrevious) drawLine(connector, Offset(x, 0f), Offset(x, y - gap), strokeWidth = TimelineStroke.toPx())
+                    if (hasNext) drawLine(connector, Offset(x, y + gap), Offset(x, size.height), strokeWidth = TimelineStroke.toPx())
+                    if (markerProgress != null) {
+                        val progress = markerProgress.value
+                        val center = Offset(x, y)
+                        drawCircle(
+                            colors.action.copy(alpha = .12f + .10f * progress),
+                            radius = (6f + 3.5f * progress).dp.toPx(),
+                            center = center,
+                        )
+                        drawCircle(colors.action, radius = (3.5f + 2f * progress).dp.toPx(), center = center)
+                    } else {
+                        drawCircle(colors.textMuted, radius = 3.dp.toPx(), center = Offset(x, y))
+                    }
+                }
+                .padding(start = TimelineInset, end = SauceSpacing.medium,
+                    top = SauceSpacing.small, bottom = SauceSpacing.small),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(SauceSpacing.medium),
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Left accent bar for current start
-                if (isCurrentStart) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.secondary)
-                    )
+            val placeholder = DefaultImages.EmptyImageStart()
+            AsyncImage(
+                model = imageRequestCrossfade(item.image),
+                contentDescription = null,
+                placeholder = placeholder,
+                error = placeholder,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(width = 48.dp, height = 72.dp).clip(SauceShapes.badge),
+            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(SauceSpacing.extraSmall)) {
+                Text(item.name, Modifier.fillMaxWidth(), style = MaterialTheme.typography.titleSmall,
+                    color = colors.textPrimary)
+                val date = item.displayDate
+                val subtitle = when {
+                    !isCurrent -> date
+                    date.isBlank() -> "Вы здесь"
+                    else -> "Вы здесь · $date"
                 }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Image with fixed width
-                    Box(
-                        modifier = Modifier
-                            .width(70.dp)
-                            .fillMaxHeight()
-                            .clip(Shapes.medium)
-                    ) {
-                        SubcomposeAsyncImage(
-                            model = imageRequestCrossfade(model = item.image),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                            error = {
-                                SubcomposeAsyncImageContent(
-                                    modifier = Modifier,
-                                    painter = DefaultImages.EmptyImageStart()
-                                )
-                            },
-                            success = {
-                                SubcomposeAsyncImageContent(modifier = Modifier)
-                            }
-                        )
-                    }
-
-                    // Content
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        // Title
-                        Text(
-                            text = item.name,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontFamily = FontNunito.bold(),
-                            fontSize = 14.sp,
-                            lineHeight = 18.sp,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 2
-                        )
-
-                        // Date
-                        Text(
-                            text = item.date,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                            fontFamily = FontNunito.medium(),
-                            fontSize = 12.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
-                        // Sport kind badges
-                        if (item.kindOfSports.isNotEmpty()) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                item.kindOfSports.take(2).forEach { sportKind ->
-                                    Surface(
-                                        color = startKindOfSportsColor(sportKind).copy(alpha = 0.15f),
-                                        shape = Shapes.small
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(
-                                                horizontal = 8.dp,
-                                                vertical = 4.dp
-                                            ),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                                        ) {
-                                            Icon(
-                                                imageVector = startKindOfSportsIcon(sportKind),
-                                                contentDescription = null,
-                                                tint = startKindOfSportsColor(sportKind),
-                                                modifier = Modifier.size(12.dp)
-                                            )
-                                            Text(
-                                                text = sportKind.name,
-                                                fontSize = 10.sp,
-                                                fontFamily = FontNunito.semiBoldBold(),
-                                                color = startKindOfSportsColor(sportKind),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (isCurrentStart) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f),
-                            shape = Shapes.small
-                        ) {
-                            Text(
-                                text = "Вы здесь",
-                                color = MaterialTheme.colorScheme.secondary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Clip,
-                                fontFamily = FontNunito.bold(),
-                                fontSize = 10.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-                    }
+                if (subtitle.isNotBlank()) {
+                    Text(subtitle, Modifier.fillMaxWidth(), style = MaterialTheme.typography.bodySmall,
+                        color = if (isCurrent) colors.action else colors.textSecondary)
                 }
+            }
+            if (!isCurrent) {
+                Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, Modifier.size(20.dp), tint = colors.textMuted)
             }
         }
     }
+    if (isCurrent) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .onVisibilityChanged(minFractionVisible = .6f) { visible ->
+                    if (visible) markerSeen = true
+                }
+                .semantics(mergeDescendants = true) { selected = true },
+        ) { content() }
+    } else {
+        SauceClickTarget(onClick = onClick, modifier = Modifier.fillMaxWidth()) { content() }
+    }
+}
+
+private val TimelineInset = 34.dp
+private val TimelineStroke = 1.5.dp
+
+private fun seriesPreview(items: List<StartsListItem>, currentStartId: Int): List<StartsListItem> {
+    val limit = 3
+    val currentIndex = items.indexOfFirst { it.id == currentStartId }
+    val firstIndex = if (currentIndex >= limit) {
+        (currentIndex - 1).coerceAtMost(items.size - limit)
+    } else 0
+    return items.drop(firstIndex).take(limit)
+}
+
+private fun DrawScope.timelineMarkerX(): Float =
+    if (layoutDirection == LayoutDirection.Ltr) 18.dp.toPx() else size.width - 18.dp.toPx()
+
+private fun allStartsLabel(count: Int): String = when {
+    count % 100 in 11..14 -> "Все $count стартов"
+    count % 10 == 1 -> "Показать $count старт"
+    count % 10 in 2..4 -> "Все $count старта"
+    else -> "Все $count стартов"
 }

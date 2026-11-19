@@ -11,10 +11,14 @@ import org.w3c.files.BlobPropertyBag
 
 class IntentActionWeb : IntentAction {
     override fun openWebPage(url: String) {
+        tryOpenWebPage(url)
+    }
+
+    override fun tryOpenWebPage(url: String): Boolean {
         val formattedUrl = if (!url.startsWith("http://") && !url.startsWith("https://")) {
             "http://$url"
         } else url
-        window.open(formattedUrl, "_blank")
+        return window.open(formattedUrl, "_blank") != null
     }
 
     override fun openPhone(phone: String) {

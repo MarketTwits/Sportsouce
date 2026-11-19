@@ -1,18 +1,18 @@
 package com.markettwits.sportsouce.start.register.presentation.registration.member.screen
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectableGroup
+import com.markettwits.core_ui.items.components.selection.SauceRadioRow
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
+import com.markettwits.core_ui.items.components.buttons.SauceButton
+import com.markettwits.core_ui.items.components.buttons.SauceButtonVariant
 import com.markettwits.core_ui.items.theme.FontNunito
-import com.markettwits.core_ui.items.theme.SportSouceColor
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.isValidEmail
 import com.markettwits.sportsouce.start.register.presentation.registration.member.domain.isValidPhone
 
@@ -71,14 +71,11 @@ internal fun AddMemberToProfileDialog(
                     fontFamily = FontNunito.semiBoldBold()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                relationTypes.forEach { item ->
-                    RelationTypeOption(
-                        text = item.title,
-                        isSelected = relationType == item.value,
-                        accentColor = item.accentColor(),
-                        onClick = { onRelationTypeChanged(item.value) }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Column(Modifier.selectableGroup()) {
+                    relationTypes.forEach { item ->
+                        SauceRadioRow(label = item.title, selected = relationType == item.value,
+                            onClick = { onRelationTypeChanged(item.value) })
+                    }
                 }
 
                 if (!dialogErrorMessage.isNullOrBlank()) {
@@ -133,85 +130,17 @@ internal fun AddMemberToProfileDialog(
             }
         },
         confirmButton = {
-            if (isLoading) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-            } else {
-                TextButton(onClick = onConfirm) {
-                    Text(
-                        text = "Добавить",
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontFamily = FontNunito.semiBoldBold()
-                    )
-                }
-            }
+            SauceButton("Добавить", onConfirm, fillWidth = false,
+                enabled = !isLoading, loading = isLoading)
         },
         dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-                enabled = !isLoading
-            ) {
-                Text(
-                    text = "Отмена",
-                    color = MaterialTheme.colorScheme.tertiary,
-                    fontFamily = FontNunito.semiBoldBold()
-                )
-            }
-        }
+            SauceButton("Отмена", onDismiss, fillWidth = false,
+                variant = SauceButtonVariant.Text, enabled = !isLoading)
+        },
     )
-}
-
-@Composable
-private fun RelationTypeOption(
-    text: String,
-    isSelected: Boolean,
-    accentColor: Color,
-    onClick: () -> Unit,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(
-            width = 1.dp,
-            color = if (isSelected) accentColor else MaterialTheme.colorScheme.outline
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 6.dp)
-        ) {
-            Checkbox(
-                checked = isSelected,
-                onCheckedChange = { onClick() },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = accentColor,
-                    checkmarkColor = MaterialTheme.colorScheme.onSecondary,
-                    uncheckedColor = MaterialTheme.colorScheme.outline
-                )
-            )
-            Text(
-                modifier = Modifier.padding(top = 12.dp),
-                text = text,
-                color = if (isSelected) accentColor else MaterialTheme.colorScheme.onPrimary,
-                fontFamily = FontNunito.medium()
-            )
-        }
-    }
 }
 
 private data class RelationTypeUi(
     val value: String,
     val title: String,
 )
-
-@Composable
-private fun RelationTypeUi.accentColor(): Color = when (value) {
-    "Друг" -> SportSouceColor.SportSouceRegistryOpenGreen
-    "Партнер по команде" -> MaterialTheme.colorScheme.secondary
-    else -> MaterialTheme.colorScheme.tertiary
-}

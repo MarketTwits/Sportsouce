@@ -11,8 +11,7 @@ interface ScheduleStore : Store<ScheduleStore.Intent, ScheduleStore.State, Sched
         val schedules: List<Schedule> = emptyList(),
         val selectedSchedule: Schedule? = null,
         val selectedWorkoutId: Int? = null,
-        val workoutTypes: List<String> = emptyList(),
-        val allWorkoutTypes: List<String> = emptyList(),
+        val allSchedules: List<Schedule> = emptyList(),
         val isLoading: Boolean = false,
         val error: SauceError? = null,
     )
@@ -27,8 +26,7 @@ interface ScheduleStore : Store<ScheduleStore.Intent, ScheduleStore.State, Sched
     sealed interface Message {
         data object Loading : Message
         data class Failed(val error: SauceError) : Message
-        data class Loaded(val schedules: List<Schedule>, val workoutTypes: List<String>) : Message
-        data class LoadedAllWorkoutTypes(val allWorkoutTypes: List<String>) : Message
+        data class Loaded(val schedules: List<Schedule>) : Message
         data class UpdateSelectedSchedule(val schedule: Schedule?) : Message
         data class UpdateSelectedWorkoutType(val workoutId: Int?) : Message
     }

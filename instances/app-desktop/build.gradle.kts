@@ -10,6 +10,17 @@ plugins {
 val desktopMainClass = "com.markettwits.sportsouce.app.desktop.MainKt"
 val desktopPackageName = "SportSauce"
 val desktopPackageVersion = libs.versions.versionName
+val desktopBuildNumber = libs.versions.versionCode
+val windowsPackageVersion = providers.provider {
+    val version = desktopPackageVersion.get().split('.')
+    require(version.size == 3 && version.all { it.toIntOrNull() != null }) { "Desktop version must be major.minor.patch" }
+    val (major, minor, patch) = version.map { it.toInt() }
+    val build = desktopBuildNumber.get().toIntOrNull()
+    require(major in 0..255 && minor in 0..255 && patch >= 0 && build != null && build in 1..65535 && build > patch) {
+        "Desktop Windows version exceeds MSI limits or would not upgrade the previous package"
+    }
+    "$major.$minor.$build"
+}
 val desktopVendor = "MarketTwits"
 val desktopDescription = "SportSauce Desktop Application"
 val desktopWindowsMenuGroup = "SportSauce"
@@ -43,6 +54,11 @@ kotlin {
         implementation(projects.components.core.koin)
         implementation(projects.components.deeplink.api)
         implementation(projects.components.root)
+        implementation(projects.components.selfupdater.components)
+        implementation(projects.components.selfupdater.thirdparty.api)
+        implementation(projects.components.selfupdater.thirdparty.github)
+        implementation(projects.components.selfupdater.api)
+        implementation(libs.kotlinx.serialization.json)
         implementation(projects.components.core.theme)
         implementation(libs.bundles.decompose.compose)
         implementation(projects.components.core.cache)
@@ -83,6 +99,8 @@ compose.desktop {
                 iconFile.set(project.file("desktopAppIcons/LinuxSportSauceIcon.png"))
             }
             windows {
+                // MSI compares only three fields; the release build must participate in ordering.
+                packageVersion = windowsPackageVersion.get()
                 iconFile.set(project.file("desktopAppIcons/WindowsSportSauceIcon.ico"))
                 shortcut = true
                 menuGroup = desktopWindowsMenuGroup
@@ -94,6 +112,8 @@ compose.desktop {
                 packageName = desktopPackageName
                 dockName = desktopPackageName
                 bundleID = desktopMacBundleId
+                packageBuildVersion = desktopBuildNumber.get()
+                dmgPackageBuildVersion = desktopBuildNumber.get()
 
                 signing {
                     sign.set(env("SPORTSAUCE_MAC_SIGN").map(String::toBoolean).orElse(false))
@@ -114,4 +134,15 @@ compose.desktop {
             configurationFiles.from(project.file("compose-desktop.pro"))
         }
     }
+}
+
+val catalogCompilation = kotlin.targets.getByName("jvm").compilations.getByName("main")
+tasks.register<JavaExec>("renderDesignSystemCatalog") {
+    group = "verification"
+    description = "Render shared Compose components in light and dark themes without network access"
+    dependsOn("jvmMainClasses")
+    mainClass.set("com.markettwits.sportsouce.app.desktop.DesignSystemCatalogKt")
+    classpath = catalogCompilation.output.allOutputs + catalogCompilation.runtimeDependencyFiles!!
+    args(layout.buildDirectory.dir("design-system").get().asFile.absolutePath)
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(21)) })
 }

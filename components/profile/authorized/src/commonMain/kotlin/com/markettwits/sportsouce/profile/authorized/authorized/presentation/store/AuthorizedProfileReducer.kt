@@ -7,9 +7,9 @@ import com.markettwits.sportsouce.profile.authorized.authorized.presentation.sto
 object AuthorizedProfileReducer : Reducer<State, Message> {
     override fun State.reduce(msg: Message): State {
         return when (msg) {
-            is Message.Loading -> copy(isLoading = true, error = null)
-            is Message.LoadingFailed -> copy(isLoading = false, error = msg.error)
-            is Message.LoadingSuccess -> copy(user = msg.user, isLoading = false, error = null)
+            is Message.Loading -> copy(isLoading = true, isRefreshing = msg.forced, error = null)
+            is Message.LoadingFailed -> copy(isLoading = false, isRefreshing = false, error = msg.error)
+            is Message.LoadingSuccess -> copy(user = msg.user, isLoading = false, isRefreshing = false, error = null)
             is Message.RecentStartsLoaded -> copy(recentStarts = msg.starts)
         }
     }

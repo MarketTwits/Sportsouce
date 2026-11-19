@@ -32,7 +32,12 @@
 -keep class **$$serializer { *; }
 -dontnote **$$serializer
 
+# JNI looks up the class and callback by their exact JVM names.
+-keep class com.markettwits.selfupdater.thirdparty.api.SparkleJniDriver { *; }
+
 # Suppress known desktop/JVM-only noise from optional Android/debug integrations.
+# Preview is a design-time annotation excluded from the packaged runtime classpath.
+-dontwarn org.jetbrains.compose.ui.tooling.preview.Preview
 -dontwarn android.util.**
 -dontwarn io.ktor.utils.io.jvm.javaio.PollersKt
 -dontwarn kotlin.Deprecated$Container

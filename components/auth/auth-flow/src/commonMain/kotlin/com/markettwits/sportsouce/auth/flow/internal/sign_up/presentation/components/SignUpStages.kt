@@ -3,6 +3,9 @@ package com.markettwits.sportsouce.auth.flow.internal.sign_up.presentation.compo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
@@ -19,6 +22,7 @@ import com.markettwits.core_ui.items.components.textField.DropDownSpinner
 import com.markettwits.core_ui.items.components.textField.OutlinePhoneTextFiled
 import com.markettwits.core_ui.items.components.textField.OutlinedTextFieldBase
 import com.markettwits.sportsouce.auth.flow.internal.common.OutlinePasswordTextField
+import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpFieldErrors
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStage
 import com.markettwits.sportsouce.auth.flow.internal.sign_up.domain.model.SignUpStatement
 
@@ -31,11 +35,26 @@ fun SignUpStages(
     onValueChanged: (SignUpStatement) -> Unit,
     onNextStage: () -> Unit = {},
     onRegister: () -> Unit = {},
+    errors: SignUpFieldErrors = SignUpFieldErrors(),
+    validationAttempt: Int = 0,
+    enabled: Boolean = true,
 ) {
     // Focus requesters for each stage
     val emailFocusRequester = remember { FocusRequester() }
     val surnameFocusRequester = remember { FocusRequester() }
     val repeatPasswordFocusRequester = remember { FocusRequester() }
+
+    val fieldPositions = remember { List(8) { BringIntoViewRequester() } }
+    LaunchedEffect(validationAttempt) {
+        if (validationAttempt > 0) {
+            val candidates = when (signUpStage) {
+                SignUpStage.FIRST -> listOf(0 to errors.phone, 1 to errors.email)
+                SignUpStage.SECOND -> listOf(2 to errors.name, 3 to errors.surname, 4 to errors.sex, 5 to errors.birthday)
+                SignUpStage.THIRD -> listOf(6 to errors.password, 7 to errors.repeatPassword)
+            }
+            candidates.firstOrNull { it.second != null }?.let { fieldPositions[it.first].bringIntoView() }
+        }
+    }
 
     Column(
         modifier = modifier,
@@ -43,21 +62,26 @@ fun SignUpStages(
         when (signUpStage) {
             SignUpStage.FIRST -> {
                 OutlinePhoneTextFiled(
-                    modifier = modifier,
+                    modifier = modifier.bringIntoViewRequester(fieldPositions[0]),
                     label = "Телефон",
                     value = statement.phone,
+                    errorMessage = errors.phone,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
                         imeAction = ImeAction.Next
                     ),
+                    keyboardActions = KeyboardActions(onNext = { emailFocusRequester.requestFocus() }),
                 ) {
                     onValueChanged(statement.copy(phone = it))
                 }
                 Spacer(Modifier.height(10.dp))
                 OutlinedTextFieldBase(
-                    modifier = modifier.focusRequester(emailFocusRequester),
+                    modifier = modifier.focusRequester(emailFocusRequester).bringIntoViewRequester(fieldPositions[1]),
                     label = "Почта",
                     value = statement.email,
+                    errorMessage = errors.email,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Done
@@ -75,9 +99,11 @@ fun SignUpStages(
 
             SignUpStage.SECOND -> {
                 OutlinedTextFieldBase(
-                    modifier = modifier,
-                    label = "Полное имя",
+                    modifier = modifier.bringIntoViewRequester(fieldPositions[2]),
+                    label = "Имя",
                     value = statement.name,
+                    errorMessage = errors.name,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
@@ -91,9 +117,11 @@ fun SignUpStages(
                 }
                 Spacer(Modifier.height(10.dp))
                 OutlinedTextFieldBase(
-                    modifier = modifier.focusRequester(surnameFocusRequester),
+                    modifier = modifier.focusRequester(surnameFocusRequester).bringIntoViewRequester(fieldPositions[3]),
                     label = "Фамилия",
                     value = statement.surname,
+                    errorMessage = errors.surname,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
                     ),
@@ -114,14 +142,16 @@ fun SignUpStages(
                 DropDownSpinner(
                     itemList = sexList,
                     selectedItem = statement.sex,
-                    onItemSelected = { id, item ->
+                    enabled = enabled,
+                    onItemSelected = { _, item ->
                         onValueChanged(statement.copy(sex = item))
                     },
                     textFiled = {
                         OutlinedTextFieldBase(
-                            modifier = modifier,
+                            modifier = modifier.bringIntoViewRequester(fieldPositions[4]),
                             label = "Пол",
                             value = statement.sex,
+                            errorMessage = errors.sex,
                             isEnabled = false
                         ) {}
                     }
@@ -131,11 +161,13 @@ fun SignUpStages(
 
                 CalendarTextFiled(
                     modifier = modifier,
+                    enabled = enabled,
                     textFiled = {
                         OutlinedTextFieldBase(
-                            modifier = it,
+                            modifier = it.bringIntoViewRequester(fieldPositions[5]),
                             label = "Дата рождения",
                             value = statement.birthday,
+                            errorMessage = errors.birthday,
                             isEnabled = false
                         ) {}
                     },
@@ -147,9 +179,11 @@ fun SignUpStages(
 
             SignUpStage.THIRD -> {
                 OutlinePasswordTextField(
-                    modifier = modifier,
+                    modifier = modifier.bringIntoViewRequester(fieldPositions[6]),
                     label = "Пароль",
                     value = statement.password,
+                    errorMessage = errors.password,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next
@@ -164,9 +198,11 @@ fun SignUpStages(
                 }
                 Spacer(Modifier.height(10.dp))
                 OutlinePasswordTextField(
-                    modifier = modifier.focusRequester(repeatPasswordFocusRequester),
+                    modifier = modifier.focusRequester(repeatPasswordFocusRequester).bringIntoViewRequester(fieldPositions[7]),
                     label = "Подтвердите пароль",
                     value = statement.repeatPassword,
+                    errorMessage = errors.repeatPassword,
+                    isEnabled = enabled,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done

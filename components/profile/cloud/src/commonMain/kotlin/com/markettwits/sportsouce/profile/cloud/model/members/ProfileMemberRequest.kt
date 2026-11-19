@@ -3,7 +3,7 @@ package com.markettwits.sportsouce.profile.cloud.model.members
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/** @see id in post request should be null */
+/** Owner belongs to creation only. Updating uses the id in the URL. */
 
 @Serializable
 data class ProfileMemberRequest(
@@ -12,7 +12,7 @@ data class ProfileMemberRequest(
     @SerialName("child")
     val child: Boolean,
     @SerialName("email")
-    val email: String,
+    val email: String?,
     @SerialName("gender")
     val gender: String,
     @SerialName("id")
@@ -28,5 +28,5 @@ data class ProfileMemberRequest(
     @SerialName("type")
     val type: String,
     @SerialName("user_id")
-    val userId: String
+    val userId: String? = null
 )

@@ -50,6 +50,7 @@ internal fun StartRegistrationMemberCard(
                 team = startStatement.team,
                 phone = startStatement.phone,
                 email = startStatement.email,
+                isTeamMember = startStatement.participantSource == com.markettwits.sportsouce.profile.members.member_common.domain.ProfileMember.Source.Team,
                 onClick = { onClickStartStatement(startStatement) }
             )
         }, onFailure = {
@@ -254,6 +255,7 @@ internal fun UserCardAvailable(
     phone: String,
     email: String,
     onClick: () -> Unit,
+    isTeamMember: Boolean = false,
 ) {
     Card(
         modifier = modifier
@@ -268,6 +270,10 @@ internal fun UserCardAvailable(
             modifier = Modifier
                 .padding(16.dp)
         ) {
+            if (isTeamMember) {
+                com.markettwits.sportsouce.start.register.presentation.registration.member.components.RegistrationTeamBadge()
+                Spacer(Modifier.height(8.dp))
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

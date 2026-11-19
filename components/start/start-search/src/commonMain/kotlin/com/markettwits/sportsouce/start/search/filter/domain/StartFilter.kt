@@ -8,7 +8,8 @@ data class StartFilter(
     val startSeason: List<String>,
     val startStatus: List<StartActual>,
     val city: List<String>,
-    val sorted: Sorted
+    val sorted: Sorted,
+    val organizers: List<String> = emptyList(),
 ) {
     @Serializable
     data class StartActual(

@@ -2,65 +2,35 @@ package com.markettwits.sportsouce.review.review.data
 
 import com.markettwits.core_ui.items.extensions.Fifth
 import com.markettwits.sportsouce.news.common.NewsRepository
-import com.markettwits.sportsouce.review.review.data.cache.ReviewCache
+import com.markettwits.cahce.Cache
+import kotlinx.coroutines.CancellationException
 import com.markettwits.sportsouce.review.review.domain.Review
 import com.markettwits.sportsouce.review.review.domain.ReviewRepository
 import com.markettwits.sportsouce.shop.catalog.domain.ShopCatalogRepository
 import com.markettwits.sportsouce.starts.common.domain.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ReviewRepositoryBase(
     private val startsService: SportSauceStartsApi,
     private val newsService: NewsRepository,
     private val productsService: ShopCatalogRepository,
-    private val cache: ReviewCache,
+    private val cache: Cache<Review>,
 ) : ReviewRepository {
-    override suspend fun review(forced: Boolean): Flow<Review> =
-        if (forced) {
-            flow {
-                val cached = cache.get()
-                runCatching {
-                    refreshReview { emit(it) }
-                }.onFailure { error ->
-                    if (cached != null) {
-                        emit(cached)
-                    } else {
-                        throw error
-                    }
-                }
-            }
-        } else {
-            channelFlow {
-                val cacheObserver = launch {
-                    cache.observe()
-                        .filterNotNull()
-                        .collect(::send)
-                }
-                val refreshJob = launch {
-                    runCatching { refreshReview() }
-                        .onFailure { error ->
-                            if (cache.get() == null) {
-                                close(error)
-                            }
-                        }
-                }
-                awaitClose {
-                    cacheObserver.cancel()
-                    refreshJob.cancel()
-                }
-            }
+    override suspend fun review(forced: Boolean): Flow<Review> = flow {
+        val cached = cache.get()
+        if (!forced && cached != null) emit(cached)
+        try {
+            refreshReview { emit(it) }
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
+            if (cached == null) throw error
+            if (forced) emit(cache.get() ?: cached)
         }
-
-    private suspend fun refreshReview() {
-        refreshReview {}
     }
 
     private suspend fun refreshReview(emit: suspend (Review) -> Unit) {

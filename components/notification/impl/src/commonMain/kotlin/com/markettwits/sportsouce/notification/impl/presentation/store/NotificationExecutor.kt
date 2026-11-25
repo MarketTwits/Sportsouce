@@ -10,7 +10,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class NotificationExecutor(private val repository: NotificationRepository) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
+internal class NotificationExecutor(
+    private val repository: NotificationRepository,
+    private val permission: PushPermission,
+) : CoroutineExecutor<Intent, Unit, State, Message, Label>() {
     private val filter = MutableStateFlow(NotificationFilter.All)
     private var countJob: Job? = null
     override fun executeAction(action: Unit) {
@@ -30,6 +33,7 @@ internal class NotificationExecutor(private val repository: NotificationReposito
             else page.map(reads::apply).filter(selected::matches)
         }.cachedIn(scope)))
         scope.launch { repository.unreadCount.collect { dispatch(Message.Count(it)) } }
+        scope.launch { permission.state.collect { dispatch(Message.Permission(it)) } }
         refreshCount()
     }
 
@@ -38,8 +42,12 @@ internal class NotificationExecutor(private val repository: NotificationReposito
             Intent.MessageShown -> dispatch(Message.Error(null))
             Intent.Back -> publish(Label.Back)
             Intent.SignIn -> publish(Label.SignIn)
+            Intent.RequestPushPermission -> permission.request()
+            Intent.EnablePushOnDevice -> permission.enable()
+            Intent.OpenPushSettings -> permission.openSettings()
             Intent.Refresh -> { dispatch(Message.Refresh(true)); refreshCount() }
             Intent.Resume -> { dispatch(Message.Refresh(false)); refreshCount() }
+            Intent.InboxChanged -> dispatch(Message.Refresh(false))
             Intent.RefreshFinished -> dispatch(Message.RefreshFinished)
             is Intent.Filter -> {
                 filter.value = intent.filter

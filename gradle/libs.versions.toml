@@ -34,6 +34,8 @@ compose-activity = "1.12.4" # https://developer.android.com/jetpack/androidx/rel
 compose-preview = "1.10.4" # https://mvnrepository.com/artifact/androidx.compose.ui/ui-tooling-preview
 appcompat = "1.7.1" # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidxCredentials = "1.5.0" # https://developer.android.com/jetpack/androidx/releases/credentials
+googleServices = "4.6.0"
+firebaseMessaging = "26.0.2"
 decompose = "3.4.0" # https://github.com/arkivanov/Decompose
 reaktive = "2.4.0" # https://github.com/badoo/Reaktive
 mvikotlin = "4.3.0" # https://github.com/arkivanov/MVIKotlin
@@ -46,6 +48,7 @@ androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidxCredentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-animation = { group = "org.jetbrains.compose.animation", name = "animation", version.ref = "compose" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
@@ -76,6 +79,7 @@ jetbrains-kotlinWrappers-kotlinWrappersBom = { group = "org.jetbrains.kotlin-wra
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
@@ -128,6 +132,7 @@ buildConfigPlugin = { module = "com.github.gmazzo.buildconfig:plugin", version.r
 tracer-gradle-plugin = { module = "ru.ok.tracer:ru.ok.tracer.gradle.plugin", version.ref = "tracer" }
 
 [plugins]
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

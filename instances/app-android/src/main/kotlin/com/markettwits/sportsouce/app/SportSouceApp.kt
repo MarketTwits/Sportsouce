@@ -9,11 +9,11 @@ import com.markettwits.crashlitics.configuration.AnalyticsConfiguration
 import com.markettwits.crashlitics.configuration.AnalyticsConfigurationBase
 import com.markettwits.initKoin
 import com.markettwits.sportsauce.deeplink.impl.di.deepLinkModule
+import com.markettwits.sportsouce.notification.impl.di.androidPushModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
 
 class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigurationBase() {
-
     override fun onCreate() {
         super.onCreate()
         CurrentActivityHolder.register(this)
@@ -24,7 +24,7 @@ class SportSouceApp : Application(), AnalyticsConfiguration by AnalyticsConfigur
         if (GlobalContext.getOrNull() == null) {
             try {
                 initKoin(
-                    modules = listOf(deepLinkModule, androidUpdaterFlavorModule)
+                    modules = listOf(deepLinkModule, androidUpdaterFlavorModule, androidPushModule)
                 ) {
                     androidContext(this@SportSouceApp)
                 }

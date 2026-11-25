@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface NotificationApi {
     val unreadCount: StateFlow<Int>
     suspend fun refreshUnreadCount()
+    fun invalidateInbox()
     /** Immediately discard the previous account's notification state on sign-out. */
     fun clear()
     fun createComponent(

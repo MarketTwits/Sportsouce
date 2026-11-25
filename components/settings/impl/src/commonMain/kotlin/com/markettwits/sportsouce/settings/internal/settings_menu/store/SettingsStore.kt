@@ -10,11 +10,13 @@ interface SettingsStore : Store<Intent, State, Label> {
         val version: ApplicationVersion?,
         val cacheSize: String = "Загрузка...",
         val showClearCacheDialog: Boolean = false,
+        val showNotificationSettings: Boolean = false,
     )
 
     sealed interface Intent {
         data object GoBack : Intent
         data class OnClickItemMenu(val itemId: Int) : Intent
+        data object OpenNotificationSettings : Intent
         data object ShowClearCacheDialog : Intent
         data object HideClearCacheDialog : Intent
         data object ClearCache : Intent

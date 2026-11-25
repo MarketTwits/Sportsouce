@@ -12,12 +12,14 @@ import com.markettwits.sportsouce.notification.api.NotificationComponent
 import com.markettwits.sportsouce.notification.impl.presentation.store.*
 import com.markettwits.sportsouce.notification.api.store.NotificationStore
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class NotificationComponentBase(
     context: ComponentContext,
     factory: NotificationStoreFactory,
+    inboxUpdates: Flow<Unit>,
     onBack: () -> Unit,
     onOpenStart: (Int) -> Unit,
 ) : NotificationComponent, ComponentContext by context {
@@ -35,6 +37,11 @@ internal class NotificationComponentBase(
     init {
         lifecycle.doOnResume { store.accept(NotificationStore.Intent.Resume) }
         lifecycle.doOnDestroy { scope.cancel() }
+        scope.launch {
+            inboxUpdates.collect {
+                if (lifecycle.state == Lifecycle.State.RESUMED) store.accept(NotificationStore.Intent.InboxChanged)
+            }
+        }
         scope.launch {
             store.labels.collect { label -> when (label) {
                 NotificationStore.Label.Back -> onBack()

@@ -18,14 +18,20 @@ internal class NotificationRepositoryBase(
 ) : NotificationRepository {
     private val count = MutableStateFlow(0)
     private val reads = MutableStateFlow(NotificationReadState())
+    private val changes = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     override val unreadCount = count.asStateFlow()
     override val readState = reads.asStateFlow()
+    override val inboxUpdates = changes.asSharedFlow()
     private val writes = Mutex()
     private val countRefresh = Mutex()
     private var accountId: Int? = null
     private var requestVersion = 0
 
     override fun clear() = reset(invalidatePages = true)
+
+    override fun invalidateInbox() {
+        changes.tryEmit(Unit)
+    }
 
     private fun reset(invalidatePages: Boolean) {
         accountId = null

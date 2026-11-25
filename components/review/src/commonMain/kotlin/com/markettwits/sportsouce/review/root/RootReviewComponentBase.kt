@@ -80,7 +80,11 @@ class RootReviewComponentBase(
         childFactory = ::child,
     )
 
-    override fun openNotifications() { navigation.pushNew(RootReviewComponent.Config.Inbox) }
+    override fun openNotifications() {
+        if (childStack.value.active.configuration != RootReviewComponent.Config.Inbox) {
+            navigation.bringToFront(RootReviewComponent.Config.Inbox)
+        }
+    }
 
     override fun popToRoot() {
         navigation.popTo(0)

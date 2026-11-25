@@ -1,6 +1,7 @@
 package com.markettwits.sportsouce.settings.internal.settings_menu.component
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
@@ -9,6 +10,7 @@ import com.markettwits.sportsouce.settings.internal.settings_menu.store.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -17,13 +19,14 @@ class SettingsComponentBase(
     componentContext: ComponentContext,
     private val storeFactory: SettingsStoreFactory,
     private val pop: () -> Unit,
-    private val output: (SettingsOutput) -> Unit
+    private val output: (SettingsOutput) -> Unit,
+    showNotificationSettings: Boolean = false,
 ) : SettingsComponent, ComponentContext by componentContext {
 
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val store = instanceKeeper.getStore {
-        storeFactory.create()
+        storeFactory.create(showNotificationSettings)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -33,6 +36,7 @@ class SettingsComponentBase(
     }
 
     init {
+        lifecycle.doOnDestroy(scope::cancel)
         store.labels.onEach {
             when (it) {
                 is SettingsStore.Label.GoBack -> pop()

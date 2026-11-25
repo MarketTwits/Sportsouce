@@ -6,10 +6,15 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.markettwits.sportsouce.notification.api.store.NotificationStore
 import com.markettwits.sportsouce.notification.api.store.NotificationStore.*
 import com.markettwits.sportsouce.notification.impl.domain.NotificationRepository
+import com.markettwits.sportsouce.notification.impl.domain.PushPermission
 
-internal class NotificationStoreFactory(private val storeFactory: StoreFactory, private val repository: NotificationRepository) {
+internal class NotificationStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val repository: NotificationRepository,
+    private val permission: PushPermission = PushPermission.Unavailable,
+) {
     fun create(): NotificationStore = object : NotificationStore, Store<Intent, State, Label> by storeFactory.create(
         name = "NotificationStore", initialState = State(), bootstrapper = SimpleBootstrapper(Unit),
-        executorFactory = { NotificationExecutor(repository) }, reducer = NotificationReducer,
+        executorFactory = { NotificationExecutor(repository, permission) }, reducer = NotificationReducer,
     ) {}
 }

@@ -19,6 +19,7 @@ kotlin {
             implementation(projects.components.selfupdater.api)
             implementation(projects.components.selfupdater.ver)
             implementation(projects.components.settings.api)
+            implementation(projects.components.notification.api)
             implementation(libs.kotlinx.serialization.json)
             implementation(projects.components.core.cache)
             implementation(projects.components.core.ui)

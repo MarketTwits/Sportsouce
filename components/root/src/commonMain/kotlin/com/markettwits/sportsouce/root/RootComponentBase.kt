@@ -64,6 +64,17 @@ class RootComponentBase(
         return listOf(RootComponent.Configuration.Review)
     }
 
+    fun openNotifications() {
+        stackNavigation.bringToFront(RootComponent.Configuration.Review) {
+            (childStack.value.active.instance as? RootComponent.Child.Review)?.component?.openNotifications()
+        }
+    }
+
+    fun onPushReceived() {
+        notifications.invalidateInbox()
+        notificationScope.launch { notifications.refreshUnreadCount() }
+    }
+
     override val updateNotification = InAppNotificationComponentBase(
         componentContext = componentContext,
         notificationStorage = scope.get(),

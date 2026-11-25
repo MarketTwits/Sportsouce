@@ -61,6 +61,8 @@ class NotificationDesignTest {
         val repository = object : NotificationRepository {
             override val unreadCount = MutableStateFlow(1)
             override val readState = MutableStateFlow(NotificationReadState())
+            override val inboxUpdates = kotlinx.coroutines.flow.emptyFlow<Unit>()
+            override fun invalidateInbox() = Unit
             override suspend fun page(offset: Int, limit: Int): NotificationPage {
                 requests += offset
                 return NotificationPage(41, (offset until minOf(offset + limit, 41)).map { index ->

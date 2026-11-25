@@ -16,11 +16,14 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.markettwits.ComponentKoinContext
 import com.markettwits.selfupdater.components.selft_update.component.SelfUpdateComponentBase
 import com.markettwits.selfupdater.components.selft_update.store.store.SelfUpdateStoreFactory
+import com.markettwits.sportsouce.notification.api.PushNotificationPreferences
 import com.markettwits.sportsouce.settings.internal.change_theme.component.ChangeThemeComponentBase
 import com.markettwits.sportsouce.settings.internal.change_theme.di.changeThemeModule
+import com.markettwits.sportsouce.settings.internal.notifications.NotificationSettingsComponent
 import com.markettwits.sportsouce.settings.internal.settings_menu.component.HandleSettingsMenu
 import com.markettwits.sportsouce.settings.internal.settings_menu.component.SettingsComponentBase
 import com.markettwits.sportsouce.settings.internal.settings_menu.di.settingsMenuModule
+import org.koin.mp.KoinPlatform
 
 class RootSettingsComponentBase(
     componentContext: ComponentContext,
@@ -36,6 +39,9 @@ class RootSettingsComponentBase(
     private val scope = koinContext.getOrCreateKoinScope(
         listOf(settingsMenuModule, changeThemeModule)
     )
+
+    private val notificationPreferences = scope.getOrNull<PushNotificationPreferences>()
+        ?: KoinPlatform.getKoinOrNull()?.getOrNull<PushNotificationPreferences>()
 
     private val stackNavigation = StackNavigation<RootSettingsComponent.StackConfig>()
 
@@ -69,7 +75,17 @@ class RootSettingsComponentBase(
                     componentContext = componentContext,
                     storeFactory = scope.get(),
                     pop = pop::invoke,
-                    output = { it.handleOutput(this) }
+                    output = { it.handleOutput(this) },
+                    showNotificationSettings = notificationPreferences != null,
+                )
+            )
+
+            RootSettingsComponent.StackConfig.NotificationSettings -> RootSettingsComponent.StackChild.NotificationSettings(
+                NotificationSettingsComponent(
+                    context = componentContext,
+                    factory = scope.get(),
+                    preferences = requireNotNull(notificationPreferences),
+                    onBack = stackNavigation::pop,
                 )
             )
 
@@ -103,5 +119,9 @@ class RootSettingsComponentBase(
 
     override fun openCheckUpdatesScreen() {
         stackNavigation.pushNew(RootSettingsComponent.StackConfig.SelfUpdate)
+    }
+
+    override fun openNotificationSettings() {
+        if (notificationPreferences != null) stackNavigation.pushNew(RootSettingsComponent.StackConfig.NotificationSettings)
     }
 }

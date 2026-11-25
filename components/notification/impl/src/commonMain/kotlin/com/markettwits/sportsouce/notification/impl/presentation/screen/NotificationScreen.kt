@@ -89,11 +89,21 @@ internal fun NotificationContent(state: State, unread: Int, event: (Intent) -> U
                         Text("О ваших стартах, регистрациях и профиле", style = MaterialTheme.typography.bodySmall,
                             color = SauceTheme.colors.textSecondary)
                     }
+                    if (!guest && state.pushPermission == PushPermissionState.Granted) {
+                        IconButton(onClick = { event(Intent.OpenPushSettings) }, modifier = Modifier.clip(SauceShapes.button)) {
+                            Icon(Icons.Outlined.NotificationsActive, "Настройки пуш-уведомлений", tint = SauceTheme.colors.action)
+                        }
+                    }
                     if ((unread > 0 || feed.itemSnapshotList.items.any { !it.isRead }) && !guest) IconButton(onClick = { event(Intent.ReadAll) },
                         enabled = !state.readingAll && state.pending.isEmpty(), modifier = Modifier.clip(SauceShapes.button)) {
                         if (state.readingAll) CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
                         else Icon(Icons.Outlined.DoneAll, "Прочитать все", tint = SauceTheme.colors.action)
                     }
+                }
+            }
+            if (!guest && state.pushPermission != PushPermissionState.Hidden && state.pushPermission != PushPermissionState.Granted) {
+                item("push-permission", span = { GridItemSpan(maxLineSpan) }) {
+                    PushPermissionCard(state.pushPermission, event)
                 }
             }
             if (!guest) item("filters", span = { GridItemSpan(maxLineSpan) }) {
@@ -127,6 +137,43 @@ internal fun NotificationContent(state: State, unread: Int, event: (Intent) -> U
                     InboxMessage("Не удалось загрузить следующие уведомления", "Уже загруженные сообщения доступны.", "Повторить", feed::retry)
                 }
                 else -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+private fun PushPermissionCard(state: PushPermissionState, event: (Intent) -> Unit) {
+    val settingsOnly = state == PushPermissionState.Settings
+    OnBackgroundCard(Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Outlined.NotificationsNone, null, tint = SauceTheme.colors.action)
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("Пуш-уведомления выключены", style = MaterialTheme.typography.titleSmall)
+                    Text(
+                        when (state) {
+                            PushPermissionState.Settings -> "Разрешите уведомления в системных настройках."
+                            PushPermissionState.DisabledInApp -> "Пуши отключены для этого устройства."
+                            PushPermissionState.Explain -> "Лента доступна без разрешения. Включите пуши, чтобы получать напоминания о стартах и изменениях в регистрациях на телефоне."
+                            else -> "Включите напоминания о стартах и изменениях в регистрациях."
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = SauceTheme.colors.textSecondary,
+                    )
+                }
+            }
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                if (!settingsOnly) {
+                    SauceButton("Включить пуши", {
+                        event(if (state == PushPermissionState.DisabledInApp) Intent.EnablePushOnDevice else Intent.RequestPushPermission)
+                    },
+                        variant = SauceButtonVariant.Soft, fillWidth = false)
+                }
+                if (settingsOnly || state == PushPermissionState.RetryOrSettings) {
+                    SauceButton("Открыть настройки", { event(Intent.OpenPushSettings) },
+                        variant = if (settingsOnly) SauceButtonVariant.Soft else SauceButtonVariant.Text, fillWidth = false)
+                }
             }
         }
     }

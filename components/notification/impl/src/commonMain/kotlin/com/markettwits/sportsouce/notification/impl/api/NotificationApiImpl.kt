@@ -13,11 +13,12 @@ internal class NotificationApiImpl(
 ) : NotificationApi {
     override val unreadCount = repository.unreadCount
     override fun clear() = repository.clear()
+    override fun invalidateInbox() = repository.invalidateInbox()
     override suspend fun refreshUnreadCount() {
         try { repository.refreshUnreadCount() }
         catch (cancelled: CancellationException) { throw cancelled }
         catch (_: Exception) { /* Keep the last count during a temporary connection failure. */ }
     }
     override fun createComponent(context: ComponentContext, onBack: () -> Unit, onOpenStart: (Int) -> Unit) =
-        NotificationComponentBase(context, factory, onBack, onOpenStart)
+        NotificationComponentBase(context, factory, repository.inboxUpdates, onBack, onOpenStart)
 }

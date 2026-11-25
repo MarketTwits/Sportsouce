@@ -29,6 +29,7 @@ class ProfileNavigationResetTest {
         try {
             val factory = dependencies.getOrCreateKoinScope(listOf(notificationModule)).get<SelfUpdateStoreFactory>()
             val root = RootAuthorizedProfileComponentBase(DefaultComponentContext(lifecycle), factory, {}, object : NotificationApi {
+                override fun invalidateInbox() = Unit
                 override val unreadCount = MutableStateFlow(0)
                 override suspend fun refreshUnreadCount() = Unit
                 override fun clear() = Unit

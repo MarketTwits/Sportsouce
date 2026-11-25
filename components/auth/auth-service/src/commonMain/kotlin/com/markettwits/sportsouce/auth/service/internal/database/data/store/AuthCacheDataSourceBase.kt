@@ -17,8 +17,11 @@ internal class AuthCacheDataSourceBase(
     }
 
     override suspend fun read(): CredentialRealmCache =
-        userCache.get() ?: throw AuthException("Для продолжения авторизуйтесь в приложении")
+        current() ?: throw AuthException("Для продолжения авторизуйтесь в приложении")
 
+    override suspend fun current() = userCache.get()
+
+    override fun observe() = userCache.observe()
 
     override suspend fun clearAll() {
         userCache.clear()

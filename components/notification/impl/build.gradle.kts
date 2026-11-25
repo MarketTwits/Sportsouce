@@ -5,7 +5,10 @@ plugins {
 }
 
 kotlin {
-    android { namespace = "com.markettwits.notification.impl" }
+    android {
+        namespace = "com.markettwits.notification.impl"
+        androidResources { enable = true }
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(projects.components.notification.api)
@@ -17,6 +20,7 @@ kotlin {
             implementation(projects.components.core.ui)
             implementation(projects.components.core.paging)
             implementation(projects.components.core.koin)
+            implementation(projects.components.core.log)
             implementation(projects.components.core.intent.composable)
             implementation(projects.components.core.intent.api)
             implementation(libs.kotlinx.serialization.json)
@@ -25,7 +29,13 @@ kotlin {
             implementation(libs.bundles.mviKotlin)
             implementation(libs.koin.core)
         }
-        androidMain.dependencies { implementation(libs.compose.activity) }
+        androidMain.dependencies {
+            implementation(libs.androidx.core)
+            implementation(libs.compose.activity)
+            implementation(libs.firebase.messaging)
+            implementation(libs.koin.android)
+            implementation(libs.kotlinx.coroutines.play.services)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)

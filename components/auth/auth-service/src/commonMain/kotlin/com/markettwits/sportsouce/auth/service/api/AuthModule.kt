@@ -16,13 +16,25 @@ import com.markettwits.sportsouce.auth.service.internal.mapper.SignInRemoteToCac
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.mp.KoinPlatform
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 val authDataSourceModule = module {
     includes(sportSauceNetworkAuthModule)
-    singleOf(::BaseAuthDataSource) bind AuthDataSource::class
+    single {
+        BaseAuthDataSource(
+            remoteService = get(),
+            signInCacheMapper = get(),
+            userInfoCache = get(),
+            tokenManager = get(),
+            authCache = get(),
+            beforeClear = getOrNull<AuthSessionEnding>()
+                ?: KoinPlatform.getKoinOrNull()?.getOrNull<AuthSessionEnding>(),
+        )
+    } bind AuthDataSource::class
+    singleOf(::CachedAuthSessionBase) bind CachedAuthSession::class
     singleOf(::TokenManagerBase) bind TokenManager::class
     singleOf(::ExecuteWithCacheBase) bind ExecuteWithCache::class
     singleOf(::SignInRemoteToCacheMapper) bind SignInRemoteToCacheMapper::class

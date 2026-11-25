@@ -14,16 +14,18 @@ class SettingsStoreFactory(
     private val intentAction: IntentAction
 ) {
 
-    fun create(): SettingsStore = SettingsStoreImpl(intentAction, versionManager)
+    fun create(showNotificationSettings: Boolean): SettingsStore =
+        SettingsStoreImpl(intentAction, versionManager, showNotificationSettings)
 
 
     private inner class SettingsStoreImpl(
         private val intentAction: IntentAction,
         private val versionManager: ApplicationVersionManager,
+        showNotificationSettings: Boolean,
     ) : SettingsStore,
         Store<Intent, State, Label> by storeFactory.create(
             name = "SettingsStore",
-            initialState = State(null),
+            initialState = State(null, showNotificationSettings = showNotificationSettings),
             bootstrapper = SimpleBootstrapper(Unit),
             executorFactory = { SettingsExecutor(intentAction, versionManager, CacheManagerImpl()) },
             reducer = SettingsReducer

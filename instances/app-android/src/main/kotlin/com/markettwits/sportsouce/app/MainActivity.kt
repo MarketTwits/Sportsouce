@@ -13,6 +13,7 @@ import com.markettwits.core.theme.SportSauceTheme
 import com.markettwits.core.theme.component.ThemeComponentBase
 import com.markettwits.sportsauce.deeplink.api.DeepLinkParser
 import com.markettwits.sportsauce.deeplink.model.Deeplink
+import com.markettwits.sportsouce.notification.impl.push.AndroidNotificationHost
 import com.markettwits.sportsouce.root.RootComponentBase
 import com.markettwits.sportsouce.root.RootContent
 import kotlinx.coroutines.launch
@@ -24,7 +25,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var rootComponent: RootComponentBase
     private lateinit var themeComponent: ThemeComponentBase
-    
+    private lateinit var notificationHost: AndroidNotificationHost
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,6 +38,11 @@ class MainActivity : ComponentActivity() {
         val defaultComponentContext = defaultComponentContext()
         rootComponent = RootComponentBase(defaultComponentContext)
         themeComponent = ThemeComponentBase(defaultComponentContext)
+        notificationHost = AndroidNotificationHost(
+            activity = this,
+            onOpenInbox = rootComponent::openNotifications,
+            onInboxChanged = rootComponent::onPushReceived,
+        )
 
         setContent {
             SportSauceTheme(
@@ -55,11 +62,13 @@ class MainActivity : ComponentActivity() {
         initialDeeplink?.let { deeplink ->
             rootComponent.handleDeeplink(deeplink)
         }
+        notificationHost.handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        notificationHost.handleIntent(intent)
 
         lifecycleScope.launch {
             parseDeeplinkOrNull(intent)?.let { deeplink ->

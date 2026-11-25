@@ -18,6 +18,7 @@ import com.markettwits.sportsouce.settings.internal.settings_menu.component.Sett
 import com.markettwits.sportsouce.settings.internal.settings_menu.components.SettingsContent
 import com.markettwits.sportsouce.settings.internal.settings_menu.components.defaultApplicationElements
 import com.markettwits.sportsouce.settings.internal.settings_menu.components.defaultSocialElements
+import com.markettwits.sportsouce.settings.internal.settings_menu.components.notificationSettingsMenuItem
 import com.markettwits.sportsouce.settings.internal.settings_menu.store.SettingsStore
 import com.markettwits.core_ui.items.components.topbar.SauceScaffold as Scaffold
 
@@ -26,7 +27,10 @@ fun SettingsScreen(component: SettingsComponent) {
 
     val isSystemInDarkTheme = LocalDarkOrLightTheme.current
     val state by component.state.collectAsState()
-    val applicationItems = defaultApplicationElements(isSystemInDarkTheme, state.cacheSize)
+    val applicationItems = buildList {
+        addAll(defaultApplicationElements(isSystemInDarkTheme, state.cacheSize))
+        if (state.showNotificationSettings) add(notificationSettingsMenuItem)
+    }
 
     Scaffold(
         topBar = {
@@ -43,7 +47,10 @@ fun SettingsScreen(component: SettingsComponent) {
             versionName = state.version?.versionName ?: "",
             versionBuildNumber = state.version?.versionBuildNumber ?: "",
             onClickMenu = {
-                component.obtainEvent(SettingsStore.Intent.OnClickItemMenu(it.id))
+                component.obtainEvent(
+                    if (it == notificationSettingsMenuItem) SettingsStore.Intent.OpenNotificationSettings
+                    else SettingsStore.Intent.OnClickItemMenu(it.id),
+                )
             }
         )
     }

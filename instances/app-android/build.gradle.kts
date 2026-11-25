@@ -1,6 +1,7 @@
 plugins {
     id("android.application.convention")
     id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -21,6 +22,7 @@ dependencies {
     implementation(projects.components.core.log)
     implementation(projects.components.deeplink.api)
     implementation(projects.components.deeplink.impl)
+    implementation(projects.components.notification.impl)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.compose.activity)
     implementation(libs.bundles.decompose.compose)

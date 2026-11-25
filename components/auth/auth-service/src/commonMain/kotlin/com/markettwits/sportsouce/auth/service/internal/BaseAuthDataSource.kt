@@ -7,6 +7,8 @@ import com.markettwits.sportsouce.auth.cloud.model.sign_in.request.SignInRequest
 import com.markettwits.sportsouce.auth.cloud.model.sign_in.response.User
 import com.markettwits.sportsouce.auth.cloud.model.sign_up.SignUpRequest
 import com.markettwits.sportsouce.auth.service.api.AuthDataSource
+import com.markettwits.sportsouce.auth.service.api.AuthSession
+import com.markettwits.sportsouce.auth.service.api.AuthSessionEnding
 import com.markettwits.sportsouce.auth.service.api.SharedUser
 import com.markettwits.sportsouce.auth.service.api.mapToShared
 import com.markettwits.sportsouce.auth.service.internal.database.data.store.AuthCacheDataSource
@@ -14,6 +16,7 @@ import com.markettwits.sportsouce.auth.service.internal.manager.TokenManager
 import com.markettwits.sportsouce.auth.service.internal.mapper.SignInRemoteToCacheMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.CancellationException
 
 internal class BaseAuthDataSource(
     private val remoteService: SportSauceNetworkAuthApi,
@@ -21,6 +24,7 @@ internal class BaseAuthDataSource(
     private val userInfoCache: ObservableCache<User>,
     private val tokenManager: TokenManager,
     private val authCache: AuthCacheDataSource,
+    private val beforeClear: AuthSessionEnding?,
 ) : AuthDataSource {
 
     override suspend fun register(signUpRequest: SignUpRequest): Result<Unit> =
@@ -109,6 +113,15 @@ internal class BaseAuthDataSource(
     }
 
     override suspend fun clear() {
+        if (beforeClear != null) {
+            try {
+                authCache.current()?.let { beforeClear.beforeClear(AuthSession(it.userId.toInt(), it.accessToken)) }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Clearing local credentials must still work when the device is offline.
+            }
+        }
         authCache.clearAll()
         userInfoCache.clear()
     }

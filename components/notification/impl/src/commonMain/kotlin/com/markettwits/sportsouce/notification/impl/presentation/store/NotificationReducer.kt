@@ -13,6 +13,7 @@ internal object NotificationReducer : Reducer<State, Message> {
         is Message.Pending -> copy(pending = msg.ids)
         is Message.ReadingAll -> copy(readingAll = msg.value)
         is Message.Refresh -> copy(refreshVersion = refreshVersion + 1, refreshing = refreshing || msg.visible)
+        is Message.Permission -> copy(pushPermission = msg.value)
         Message.RefreshFinished -> copy(refreshing = false)
     }
 }

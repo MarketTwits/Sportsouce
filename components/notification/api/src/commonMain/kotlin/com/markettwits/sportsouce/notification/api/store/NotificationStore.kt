@@ -16,6 +16,7 @@ interface NotificationStore : Store<NotificationStore.Intent, NotificationStore.
         val readingAll: Boolean = false,
         val refreshing: Boolean = false,
         val refreshVersion: Int = 0,
+        val pushPermission: PushPermissionState = PushPermissionState.Hidden,
     )
     sealed interface Intent {
         data object MessageShown : Intent
@@ -23,8 +24,12 @@ interface NotificationStore : Store<NotificationStore.Intent, NotificationStore.
         data object SignIn : Intent
         data object Refresh : Intent
         data object Resume : Intent
+        data object InboxChanged : Intent
         data object RefreshFinished : Intent
         data object ReadAll : Intent
+        data object RequestPushPermission : Intent
+        data object EnablePushOnDevice : Intent
+        data object OpenPushSettings : Intent
         data class Filter(val filter: NotificationFilter) : Intent
         data class Read(val item: InboxNotification, val openStart: Boolean = false) : Intent
     }
@@ -36,6 +41,7 @@ interface NotificationStore : Store<NotificationStore.Intent, NotificationStore.
         data class Pending(val ids: Set<Int>) : Message
         data class ReadingAll(val value: Boolean) : Message
         data class Refresh(val visible: Boolean) : Message
+        data class Permission(val value: PushPermissionState) : Message
         data object RefreshFinished : Message
     }
     sealed interface Label {

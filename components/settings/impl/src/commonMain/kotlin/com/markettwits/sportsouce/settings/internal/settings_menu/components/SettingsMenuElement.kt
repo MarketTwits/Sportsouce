@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Gite
 import androidx.compose.material.icons.outlined.NightsStay
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,6 +31,13 @@ sealed interface SettingsMenuElement {
         override val icon: ImageVector
     ) : SettingsMenuElement
 }
+
+internal val notificationSettingsMenuItem = SettingsMenuElement.WithDescription(
+    description = "Пуши, звук и вибрация",
+    id = 2,
+    title = "Уведомления",
+    icon = Icons.Outlined.Notifications,
+)
 
 internal fun defaultApplicationElements(
     isDarkTheme: Boolean,

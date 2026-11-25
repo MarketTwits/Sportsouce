@@ -14,4 +14,10 @@ sealed interface SettingsOutput {
             handleSettingsMenu.openCheckUpdatesScreen()
         }
     }
+
+    data object NotificationSettings : SettingsOutput {
+        override fun handleOutput(handleSettingsMenu: HandleSettingsMenu) {
+            handleSettingsMenu.openNotificationSettings()
+        }
+    }
 }

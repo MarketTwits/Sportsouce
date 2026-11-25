@@ -7,14 +7,22 @@ import com.markettwits.sportsouce.notification.api.NotificationApi
 import com.markettwits.sportsouce.notification.impl.api.NotificationApiImpl
 import com.markettwits.sportsouce.notification.impl.data.*
 import com.markettwits.sportsouce.notification.impl.domain.NotificationRepository
+import com.markettwits.sportsouce.notification.impl.domain.PushPermission
 import com.markettwits.sportsouce.notification.impl.presentation.store.NotificationStoreFactory
 import org.koin.dsl.module
+import org.koin.mp.KoinPlatform
 
 /** Installed once at the application root; every tab receives the same notification service. */
 val userNotificationModule = module {
     includes(authDataSourceModule)
     single { NotificationRemoteApi(SportSauceHttpClientProvider()) }
     single<NotificationRepository> { NotificationRepositoryBase(get(), get()) }
-    factory { NotificationStoreFactory(DefaultStoreFactory(), get()) }
+    factory {
+        NotificationStoreFactory(
+            DefaultStoreFactory(), get(),
+            getOrNull<PushPermission>() ?: KoinPlatform.getKoinOrNull()?.getOrNull<PushPermission>()
+                ?: PushPermission.Unavailable,
+        )
+    }
     single<NotificationApi> { NotificationApiImpl(get(), get()) }
 }

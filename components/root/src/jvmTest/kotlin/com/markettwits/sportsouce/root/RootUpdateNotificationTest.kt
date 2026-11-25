@@ -2,6 +2,7 @@ package com.markettwits.sportsouce.root
 
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.create
 import com.arkivanov.essenty.lifecycle.destroy
 import com.markettwits.selfupdater.components.notification.store.InAppNotificationStore
 import com.markettwits.sportsouce.bottom_bar.model.BottomBarConfiguration
@@ -21,6 +22,33 @@ import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RootUpdateNotificationTest {
+    @Test
+    fun pushOpensTheInboxAndReusesItForRepeatedTaps() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val lifecycle = LifecycleRegistry()
+        try {
+            val root = RootComponentBase(DefaultComponentContext(lifecycle))
+            lifecycle.create()
+            val bottom = assertIs<RootComponent.Navigation.BottomBar>(root.slotChild.value.child?.instance)
+            bottom.component.onClickTabBar(BottomBarConfiguration.Home)
+            assertIs<RootComponent.Child.Starts>(root.childStack.value.active.instance)
+
+            root.openNotifications()
+            val review = assertIs<RootComponent.Child.Review>(root.childStack.value.active.instance)
+            val inbox = assertIs<RootReviewComponent.Child.Inbox>(review.component.childStack.value.active.instance)
+
+            root.openNotifications()
+            assertSame(inbox.component, assertIs<RootReviewComponent.Child.Inbox>(
+                review.component.childStack.value.active.instance,
+            ).component)
+            assertEquals(1, review.component.childStack.value.backStack.size)
+        } finally {
+            lifecycle.destroy()
+            runCurrent()
+            Dispatchers.resetMain()
+        }
+    }
+
     @Test
     fun progressStripReopensTheUpdateScreenWithoutDiscardingProgress() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))

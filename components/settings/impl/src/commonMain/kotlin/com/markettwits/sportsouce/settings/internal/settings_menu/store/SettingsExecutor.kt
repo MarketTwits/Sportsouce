@@ -17,6 +17,9 @@ class SettingsExecutor(
         when (intent) {
             is Intent.GoBack -> publish(Label.GoBack)
             is Intent.OnClickItemMenu -> obtainMenu(intent.itemId)
+            Intent.OpenNotificationSettings -> if (state().showNotificationSettings) {
+                publish(Label.OutPut(SettingsOutput.NotificationSettings))
+            }
             is Intent.ShowClearCacheDialog -> dispatch(Message.ShowClearCacheDialog(true))
             is Intent.HideClearCacheDialog -> dispatch(Message.ShowClearCacheDialog(false))
             is Intent.ClearCache -> clearCache()

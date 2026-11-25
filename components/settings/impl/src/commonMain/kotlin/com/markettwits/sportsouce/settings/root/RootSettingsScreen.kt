@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.markettwits.selfupdater.components.selft_update.screen.SelfUpdateScreen
 import com.markettwits.sportsouce.settings.internal.change_theme.components.ChangeThemeScreen
+import com.markettwits.sportsouce.settings.internal.notifications.NotificationSettingsScreen
 import com.markettwits.sportsouce.settings.internal.settings_menu.screen.SettingsScreen
 
 @Composable
@@ -29,6 +30,7 @@ fun RootSettingsScreen(component: RootSettingsComponent) {
         when (val child = it.instance) {
             is RootSettingsComponent.StackChild.SettingsMenu -> SettingsScreen(component = child.component)
             is RootSettingsComponent.StackChild.SelfUpdate -> SelfUpdateScreen(component = child.component)
+            is RootSettingsComponent.StackChild.NotificationSettings -> NotificationSettingsScreen(component = child.component)
         }
     }
 }
